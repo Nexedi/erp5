@@ -42,7 +42,6 @@ document_classes = updateGlobals( this_module, globals(),
 
 # Define object classes and tools
 import Form, FSForm, ListBox, ReportBox, MatrixBox
-from Tool import SelectionTool
 import OOoChart, PDFTemplate, Report, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
@@ -56,7 +55,7 @@ from Products.CMFCore.utils import registerIcon
 
 object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate,
                    Report.ERP5Report)
-portal_tools = ( SelectionTool.SelectionTool, PreferenceTool.PreferenceTool )
+portal_tools = ( PreferenceTool.PreferenceTool, )
 content_classes = ( )
 content_constructors = ()
 
@@ -196,6 +195,4 @@ ModuleSecurityInfo('Products.ERP5Form.MultiRelationField').declarePublic('SUB_FI
 allow_module('Products.ERP5Form.Selection')
 import Selection
 allow_class(Selection)
-
-__module_aliases__ = ('Products.ERP5Form.SelectionTool', SelectionTool),
 

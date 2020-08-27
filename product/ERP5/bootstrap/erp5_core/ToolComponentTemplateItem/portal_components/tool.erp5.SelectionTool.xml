@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Tool Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>SelectionTool</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Products.ERP5Form.Tool.SelectionTool</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>tool.erp5.SelectionTool</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Tool Component</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W:1006, 38: Redefining name \'x\' from outer scope (line 1809) (redefined-outer-name)</string>
+                <string>W:1052, 40: Redefining name \'x\' from outer scope (line 1809) (redefined-outer-name)</string>
+                <string>W:1199, 39: Redefining name \'x\' from outer scope (line 1809) (redefined-outer-name)</string>
+                <string>W:1287, 40: Redefining name \'x\' from outer scope (line 1809) (redefined-outer-name)</string>
+                <string>W:1441, 10: Redefining name \'security_property_id\' from outer scope (line 1839) (redefined-outer-name)</string>
+                <string>W:1909,  4: Redefining name \'portal_selection_wrapper\' from outer scope (line 1829) (redefined-outer-name)</string>
+                <string>W:1940,  4: Redefining name \'new_property_id\' from outer scope (line 1879) (redefined-outer-name)</string>
+                <string>W:1945,  6: Redefining name \'new_security_property_id\' from outer scope (line 1884) (redefined-outer-name)</string>
+                <string>W:1943,  4: Redefining name \'security_property\' from outer scope (line 1840) (redefined-outer-name)</string>
+                <string>W:1942,  4: Redefining name \'security_property_id\' from outer scope (line 1839) (redefined-outer-name)</string>
+                <string>W:1908,  6: Redefining name \'property_id\' from outer scope (line 1828) (redefined-outer-name)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

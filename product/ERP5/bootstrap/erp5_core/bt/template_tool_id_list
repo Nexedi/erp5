@@ -11,7 +11,9 @@ portal_memcached
 portal_notifications
 portal_orders
 portal_password
+portal_preferences
 portal_rules
+portal_selections
 portal_sessions
 portal_simulation
 portal_tests

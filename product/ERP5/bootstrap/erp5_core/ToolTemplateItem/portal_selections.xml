@@ -1,0 +1,3354 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Selection Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>portal_selections</string> </value>
+        </item>
+        <item>
+            <key> <string>selection_data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>zope</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="SelectionPersistentMapping" module="Products.ERP5Form.Tool.SelectionTool"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>ComponentTool_viewContentList_listbox_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>OAuthTool_viewOAuthTokenList_listbox_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>PropertySheetTool_viewContentList_listbox_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>PropertySheet_view_listbox_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>base_type_action_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>business_template_migrate_source_code_from_filesystem_view_component_list_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>business_template_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>catalog_view_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>folder_delete_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>preference_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>related_object_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>template_tool_download_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>template_tool_install_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>template_tool_multi_installation_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>template_tool_upgrade_selection</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>reference</string>
+                  <string>reference</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_components/ComponentTool_viewContentList?selection_name=ComponentTool_viewContentList_listbox_selection&selection_index=0
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_components/searchFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>ComponentTool_viewContentList_listbox_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_components/ComponentTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>ComponentTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>ComponentTool_viewContentList_listbox_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>page_start</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_status_message</string> </key>
+                    <value> <string>Deleted.</string> </value>
+                </item>
+                <item>
+                    <key> <string>reference</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>reference, id, version, translated_portal_type, translated_validation_state_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_jump</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>ComponentTool_viewContentList_listbox_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>3</int> </value>
+                </item>
+                <item>
+                    <key> <string>translated_portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>translated_validation_state_title</string> </key>
+                    <value> <string>Draft</string> </value>
+                </item>
+                <item>
+                    <key> <string>version</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple>
+                <tuple>
+                  <string>portal_categories</string>
+                </tuple>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_oauth/OAuthTool_viewOAuthTokenList?selection_name=OAuthTool_viewOAuthTokenList_listbox_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_oauth/searchFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>OAuthTool_viewOAuthTokenList_listbox_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>reference, translated_validation_state_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>id</string>
+                  <string>Name</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>29</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_property_sheets/PropertySheetTool_viewContentList?selection_name=PropertySheetTool_viewContentList_listbox_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_property_sheets/searchFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>PropertySheetTool_viewContentList_listbox_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <string>Property Sheet</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>id, children_reference</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>247</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_property_sheets/OOoTemplate/PropertySheet_view?selection_name=default</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_property_sheets/OOoTemplate/objectValues</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>PropertySheet_view_listbox_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_property_sheets/PropertySheetTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>checked_permission</string> </key>
+                    <value> <string>View</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_mode</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>PropertySheetTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>15</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>PropertySheetTool_viewContentList_listbox_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_status_message</string> </key>
+                    <value> <string>Data updated.</string> </value>
+                </item>
+                <item>
+                    <key> <string>reset</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>title, portal_type</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <string>7</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>PropertySheetTool_viewContentList_listbox_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>action_type_title</string>
+                  <string></string>
+                </tuple>
+                <tuple>
+                  <string>float_index</string>
+                  <string></string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_types/OOo%20Template/BaseType_viewAction?selection_name=portal_type_selection&selection_index=1
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_types/OOo Template/objectValues</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>base_type_action_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_types/OOo%20Template/BaseType_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>checked_permission</string> </key>
+                    <value> <string>View</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_mode</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>BaseType_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>15</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_types/OOo Template</string> </value>
+                </item>
+                <item>
+                    <key> <string>object_uid</string> </key>
+                    <value> <string>44400</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <string>Action Information</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>reference, title, action_type_title, float_index, visible</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>portal_type_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list>
+                <string>VG9vbCBDb21wb25lbnR8U2VsZWN0aW9uVG9vbHxQcm9kdWN0cy5FUlA1Rm9ybS5Ub29sLlNlbGVjdGlvblRvb2w=</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>116</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_templates/280/BusinessTemplate_viewMigrateSourceCodeFromFilesystemDialog?selection_name=default</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_templates/280/getMigratableSourceCodeFromFilesystemList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>business_template_migrate_source_code_from_filesystem_view_component_list_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/280/BusinessTemplate_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>default_field_your_version</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_category</string> </key>
+                    <value> <string>None</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_id</string> </key>
+                    <value> <string>BusinessTemplate_viewMigrateSourceCodeFromFilesystemDialog</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_method</string> </key>
+                    <value> <string>migrateSourceCodeFromFilesystem</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_mode</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>BusinessTemplate_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>business_template_migrate_source_code_from_filesystem_view_component_list_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>5810a24543eaa63d45944f7b74485d7d</string> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_templates/107</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>reference, source_reference, portal_type</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <string>0</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>business_template_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>117</int> </value>
+                </item>
+                <item>
+                    <key> <string>uids</string> </key>
+                    <value>
+                      <list>
+                        <string>VGVzdCBDb21wb25lbnR8dGVzdERhdGVVdGlsc3xQcm9kdWN0cy5FUlA1VHlwZS50ZXN0cy50ZXN0RGF0ZVV0aWxz</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>uncheckAll</string> </key>
+                    <value> <string>listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>modification_date</string>
+                  <string>descending</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewBusinessTemplateList?selection_name=business_template_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_templates/searchFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>business_template_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>empty</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>TemplateTool_viewBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>business_template_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>page_start</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_status_message</string> </key>
+                    <value> <string>Business Template erp5_archive, erp5_big_file installed</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <string>Business Template</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>select_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>id, title, version, short_revision, description, translated_installation_state_title, translated_building_state_title, modification_date</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_jump</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>business_template_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>erp5_core</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>2</int> </value>
+                </item>
+                <item>
+                    <key> <string>version</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="11" aka="AAAAAAAAAAs=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>201</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_catalog/erp5_mysql_innodb/Catalog_viewContentList?selection_name=default</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_catalog/erp5_mysql_innodb/objectValues</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>catalog_view_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>checked_permission</string> </key>
+                    <value> <string>View</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>title, id, translated_portal_type</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>202</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="12" aka="AAAAAAAAAAw=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>reference</string>
+                  <string>reference</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_components/Folder_viewDeleteDialog?selection_name=ComponentTool_viewContentList_listbox_selection&selection_index=0
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_components/Folder_getDeleteObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>folder_delete_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Folder_deleteObjectList</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_components/ComponentTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>ComponentTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>ComponentTool_viewContentList_listbox_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>reference</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>reference, id, version, translated_portal_type, translated_validation_state_title, related_object_list_quantity</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_jump</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>ComponentTool_viewContentList_listbox_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>translated_portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>translated_validation_state_title</string> </key>
+                    <value> <string>Draft</string> </value>
+                </item>
+                <item>
+                    <key> <string>uid</string> </key>
+                    <value>
+                      <list>
+                        <int>69600</int>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>uids</string> </key>
+                    <value>
+                      <list>
+                        <string>69600</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>version</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="13" aka="AAAAAAAAAA0=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>id</string>
+                  <string>id</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>9</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_types/TypesTool_viewContentList?selection_name=portal_type_selection&selection_index=0
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_types/searchFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>portal_type_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_types/TypesTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>TypesTool_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>id</string> </key>
+                    <value> <string>%Form%</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>portal_type_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>page_start</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>id, translated_portal_type, description, translated_validation_state_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_jump</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>portal_type_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
+                    <key> <string>translated_portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>translated_validation_state_title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="14" aka="AAAAAAAAAA4=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list>
+                <tuple>
+                  <string>title</string>
+                  <string>ascending</string>
+                </tuple>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_preferences/PreferenceTool_viewPreferenceList?selection_name=preference_selection&selection_index=0
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_preferences/searchFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>preference_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_preferences/PreferenceTool_viewPreferenceList</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>PreferenceTool_viewPreferenceList</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>preference_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <string>Preference</string>
+                        <string>System Preference</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>select_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>title, description, translated_preference_state_title, Preference_getPriorityAsText</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_jump</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>preference_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>%</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>3</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="15" aka="AAAAAAAAAA8=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_components/tool.erp5.PreferenceTool/Base_viewMetadata?selection_name=default</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_components/tool.erp5.PreferenceTool/Base_getRelatedObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>related_object_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_components/tool.erp5.PreferenceTool/ComponentMixin_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>checked_permission</string> </key>
+                    <value> <string>View</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_mode</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>ComponentMixin_view</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_layout</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>15</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_components/tool.erp5.PreferenceTool</string> </value>
+                </item>
+                <item>
+                    <key> <string>object_uid</string> </key>
+                    <value> <string>68700</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>relative_url, title, portal_type</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="16" aka="AAAAAAAAABA=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list>
+                <string>KFMnL3NyYy9uZXhlZGkvZXJwNS9lcnA1L2J0NScKcDEKUydlcnA1X29hdXRoJwpwMgp0Lg==</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_templates/TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog?selection_name=business_template_selection&selection_index=
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_templates/TemplateTool_getRepositoryBusinessTemplateList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>template_tool_download_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_category</string> </key>
+                    <value> <string>object_exchange</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_id</string> </key>
+                    <value> <string>TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_method</string> </key>
+                    <value> <string>TemplateTool_downloadRepositoryBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>view</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>50</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>template_tool_download_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_templates</string> </value>
+                </item>
+                <item>
+                    <key> <string>page_start</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>reset</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>title, version, revision, description, dependency_list, license, version_state_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_dialog</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog?reset=1</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>business_template_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>erp5_oauth</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>3</int> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string>TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="17" aka="AAAAAAAAABE=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list>
+                <string>KFMnL3NyYy9uZXhlZGkvZXJwNS9lcnA1L2J0NScKcDEKUydlcnA1X2FyY2hpdmUnCnAyCnQu</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>49</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?selection_name=business_template_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_templates/TemplateTool_getRepositoryBusinessTemplateList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>template_tool_install_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_category</string> </key>
+                    <value> <string>object_exchange</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>view</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>50</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_templates</string> </value>
+                </item>
+                <item>
+                    <key> <string>reset</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>title, version, short_revision, description, dependency_list, provision_list, license, version_state_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>business_template_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>341</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="18" aka="AAAAAAAAABI=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewMultiInstallationDialog?selection_name=default</string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_templates/TemplateTool_getModifiedObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>template_tool_multi_installation_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Base_callDialogMethod</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>all_languages</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>bt_list</string> </key>
+                    <value>
+                      <list>
+                        <string>278</string>
+                        <string>279</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewMultiInstallationDialog</string> </value>
+                </item>
+                <item>
+                    <key> <string>default_field_your_update_catalog</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>default_field_your_update_translation</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_category</string> </key>
+                    <value> <string>None</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_id</string> </key>
+                    <value> <string>TemplateTool_viewMultiInstallationDialog</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_method</string> </key>
+                    <value> <string>TemplateTool_installBusinessTemplateListAction</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>BusinessTemplate_installationChoice</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_selection_name</string> </key>
+                    <value> <string>template_tool_multi_installation_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>md5_object_uid_list</string> </key>
+                    <value> <string>d751713988987e9331980363e24189ce</string> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_templates</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>object_id, object_class, bt_title, object_state, choice</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_favorite</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select_language</string> </key>
+                    <value> <string>en</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_module</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>update_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="19" aka="AAAAAAAAABM=">
+    <pickle>
+      <global name="Selection" module="Products.ERP5Form.Selection"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>checked_uids</string> </key>
+            <value>
+              <list>
+                <string>KFMnL3NyYy9uZXhlZGkvZXJwNS9lcnA1L2J0NScKcDEKUydlcnA1X2JpZ19maWxlJwpwMgp0Lg==</string>
+                <string>KFMnL3NyYy9uZXhlZGkvZXJwNS9lcnA1L2J0NScKcDEKUydlcnA1X2FyY2hpdmUnCnAyCnQu</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>columns</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_path</string> </key>
+            <value>
+              <tuple>
+                <string>portal_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>domain_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>flat_list_mode</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>invert_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>list_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+http://localhost:2200/erp5/portal_templates/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog?selection_name=business_template_selection&selection_index=0
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>method_path</string> </key>
+            <value> <string>/erp5/portal_templates/getUpdatedRepositoryBusinessTemplateList</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>template_tool_upgrade_selection</string> </value>
+        </item>
+        <item>
+            <key> <string>params</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cancel_url</string> </key>
+                    <value> <string>http://localhost:2200/erp5/portal_templates/TemplateTool_viewBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>dialog_category</string> </key>
+                    <value> <string>object_exchange</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>TemplateTool_viewBusinessTemplateList</string> </value>
+                </item>
+                <item>
+                    <key> <string>ignore_unknown_columns</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>limit</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_lines</string> </key>
+                    <value> <int>50</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_start</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>object_path</string> </key>
+                    <value> <string>/erp5/portal_templates</string> </value>
+                </item>
+                <item>
+                    <key> <string>reset</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>select_columns</string> </key>
+                    <value> <string>title, version, installed_version, short_revision, installed_revision, description, dependency_list, license</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_index</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>business_template_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>total_size</string> </key>
+                    <value> <int>2</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>report</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_opened</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>report_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>report_tree_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>sort_on</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uids</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

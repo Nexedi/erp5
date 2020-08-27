@@ -32,6 +32,7 @@ test.erp5.testNotificationTool
 test.erp5.testPerson
 test.erp5.testQueryModule
 test.erp5.testRestrictedPythonSecurity
+test.erp5.testSelectionTool
 test.erp5.testSessionTool
 test.erp5.testTimeout
 test.erp5.testTimerService

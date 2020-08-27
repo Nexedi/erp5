@@ -2131,7 +2131,6 @@ class ERP5Generator(PortalGenerator):
                      'CMF Activity SQL Server Connection')
 
     # Add ERP5Form Tools
-    addERP5Tool(p, 'portal_selections', 'Selection Tool')
     addERP5Tool(p, 'portal_preferences', 'Preference Tool')
 
     # Add Message Catalog
