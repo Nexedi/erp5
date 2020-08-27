@@ -240,7 +240,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
       self.tic()
     else:
-      test_page = getattr(self.portal.web_page_module, id1)
+      test_page = getattr(self.portal.web_page_module, id1, None) or getattr(self.portal.document_module, id1)
 
     pdf_kw = dict(
       reference=test_page.getReference(),
@@ -379,6 +379,30 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       **dict(
         use_skin="Slide",
         test_method="WebPage_exportAsSlideshow"
+      )
+    )
+
+  def test_pdfPresentationOdpToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_presentation_odp",
+      "template_test_presentaion_odp_slide_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        test_method="Presentation_viewAsSlideshow",
+        format="pdf"
+      )
+    )
+
+  def test_pdfPresentationPptxToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_presentation_pptx",
+      "template_test_presentaion_pptx_slide_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        test_method="Presentation_viewAsSlideshow",
+        format="pdf"
       )
     )
 
