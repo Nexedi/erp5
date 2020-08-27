@@ -84,8 +84,7 @@
     })
 
     .declareMethod('render', function render(options) {
-      var queue,
-        gadget = this,
+      var gadget = this,
         state_dict = {
           first_call: true,
           label_text: options.field_json.title || '',
@@ -113,7 +112,6 @@
         i,
         queue,
         new_div;
-      console.log(modification_dict);
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
           container_element: gadget.element.querySelector('div'),
@@ -184,7 +182,7 @@
             }
           } else if (queue) {
             queue
-             .push(function () {
+              .push(function () {
                 return gadget.getDeclaredGadget(SCOPE);
               });
           } else {
