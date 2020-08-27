@@ -318,8 +318,8 @@ if getDetails(doc_content) > -1:
       # XXX split content above 1600 chars into multiple details tags?
       doc_content = doc_content.replace(slide, details)
 
-# ======================== Format: html/mhtml ==================================
-if doc_format == "html": #or doc_format == "mhtml":
+# ======================== Format: html ==================================
+if doc_format == "html":
   doc_output = doc.WebPage_createSlideshow(
     doc_format=doc_format,
     doc_theme=doc_theme.get("theme"),
@@ -338,25 +338,21 @@ if doc_format == "html": #or doc_format == "mhtml":
     doc_content=doc_content
   )
 
-  if doc_format == "html":
-    return doc.Base_finishWebPageCreation(
-      doc_download=doc_download,
-      doc_save=doc_save,
-      doc_version=doc_version,
-      doc_title=doc_title,
-      doc_relative_url=doc_relative_url,
-      doc_aggregate_list=doc_aggregate_list,
-      doc_language=doc_language,
-      doc_modification_date=doc_modification_date,
-      doc_reference=doc_reference,
-      doc_full_reference=doc_full_reference,
-      doc_html_file=doc_output
-    )
-  if doc_format == "mhtml":
-    context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
-    return doc.Base_convertHtmlToSingleFile(doc_output, allow_script=True)
+  return doc.Base_finishWebPageCreation(
+    doc_download=doc_download,
+    doc_save=doc_save,
+    doc_version=doc_version,
+    doc_title=doc_title,
+    doc_relative_url=doc_relative_url,
+    doc_aggregate_list=doc_aggregate_list,
+    doc_language=doc_language,
+    doc_modification_date=doc_modification_date,
+    doc_reference=doc_reference,
+    doc_full_reference=doc_full_reference,
+    doc_html_file=doc_output
+  )
 
-# ============================= Format: pdf ====================================
+# ============================= Format: pdf/mhtml ====================================
 if doc_format == "pdf" or doc_format == "mhtml":
   doc_slideshow_footer = doc.WebPage_createSlideshowFooter(
     doc_format=doc_format,
@@ -385,20 +381,9 @@ if doc_format == "pdf" or doc_format == "mhtml":
     doc_css=doc_css,
     doc_orientation="ci-orientation-portrait" if doc_display_notes else "ci-corientation-landscape"
   )
-
   # outputting just the content requires to drop wrapping <divs> (reveal/slides)
   # and add extra css to recreate the same layout. so a separate output=content
   # instead of defaulting to None
-  # doc_slideshow_content = doc.WebPage_createSlideshowContent(
-  #  doc_format=doc_format,
-  #  doc_theme=doc_theme.get("theme"),
-  #  doc_title=doc_title,
-  #  doc_language=doc_language,
-  #  doc_template_css_url=doc_theme.get("template_css_url"),
-  #  doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
-  #  doc_theme_css_url=doc_theme.get("theme_css_url"),
-  #  doc_content=doc_content
-  #)
   if doc_display_notes:
     doc_slideshow_notes = doc.WebPage_createSlideshowNotes(
       doc_format=doc_format,
