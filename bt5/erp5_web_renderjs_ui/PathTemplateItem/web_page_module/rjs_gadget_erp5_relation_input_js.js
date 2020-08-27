@@ -280,7 +280,6 @@
                 .push(function (url) {
                   plane.href = url;
                   plane.className = JUMP_ON_CLASS_STR;
-                  return gadget.notifyValid();
                 });
             }
 
