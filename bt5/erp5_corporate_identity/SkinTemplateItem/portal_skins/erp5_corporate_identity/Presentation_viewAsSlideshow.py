@@ -97,4 +97,4 @@ if context.getPortalType() in ["Presentation"]:
     output = output + section_start + go_1st + go_2nd + section_end
 
   kw["remote_content"] = output
-  return context.WebPage_viewAsSlideshowWIP(*args, **kw)
+  return context.WebPage_viewAsSlideshow(*args, **kw)
