@@ -1,4 +1,4 @@
-/*global window, document, rJS */
+/*global window, document, rJS, RSVP*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS) {
+(function (window, document, rJS, RSVP) {
   "use strict";
 
   var SCOPE = 'field';
@@ -102,15 +102,8 @@
       if (state_dict.label === undefined) {
         state_dict.label = true;
       }
-      queue = this.changeState(state_dict);
+      return this.changeState(state_dict);
 
-      if (options.field_json.error_text) {
-        queue
-         .push(function () {
-            gadget.checkValidity();
-          });
-      }
-      return queue;
     })
 
     .onStateChange(function onStateChange(modification_dict) {
@@ -120,6 +113,7 @@
         i,
         queue,
         new_div;
+      console.log(modification_dict);
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
           container_element: gadget.element.querySelector('div'),
@@ -202,6 +196,12 @@
             });
         }
       }
+      if (modification_dict.hasOwnProperty('error_text')) {
+        return this.getDeclaredGadget(SCOPE)
+          .push(function (gadget) {
+            return gadget.changeState(modification_dict);
+          });
+      }
     })
 
     .declareMethod("checkValidity", function checkValidity() {
@@ -277,4 +277,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS));
+}(window, document, rJS, RSVP));
