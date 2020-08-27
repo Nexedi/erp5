@@ -150,6 +150,15 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     output_string = web_page.WebPage_validateImage(img_string=img_string)
     self.assertEqual(output_string, '<img src="Template.Test.Image.Map?version=1&amp;format=">')
 
+    img_string = '<img src="Template.Test.Image.Map?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string, img_fullscreen_link=True)
+    self.assertEqual(output_string, '<a target="_blank" rel="noopener noreferrer" href="Template.Test.Image.Map?version=1&amp;format=" title="Template Test Image Map"><img src="Template.Test.Image.Map?version=1&amp;format="><a>')
+
+    img_string = '<img src="Template.Test.Image.Map?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string, img_wrap=True)
+    self.assertEqual(output_string, '<p class="ci-book-img" style="text-align:center"><img src="Template.Test.Image.Map?version=1&amp;format="></p>')
+
+
   def test_getTemplateProxyParameter_override_person(self):
     output_dict_list = self.test_person.Base_getTemplateProxyParameter(
       parameter='override_person',
