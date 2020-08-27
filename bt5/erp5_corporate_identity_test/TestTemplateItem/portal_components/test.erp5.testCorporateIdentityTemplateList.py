@@ -404,6 +404,42 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Slide')
+  def test_pdfConvertToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_convert_to_slideview",
+      "template_test_convert_to_slideview_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=2,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
+
+  @changeSkin('Slide')
+  def test_pdfAddLastSlide(self):
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_slide_last_slide_relative_url='web_page_module/template_test_last_slide_html'
+    )
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_convert_to_slideview",
+      "template_test_last_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=4,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_slide_last_slide_relative_url=''
+    )
+    self.tic()
+
+  @changeSkin('Slide')
   def test_pdfSlideShowForAnonymous(self):
     """
       Test for anonymous:
