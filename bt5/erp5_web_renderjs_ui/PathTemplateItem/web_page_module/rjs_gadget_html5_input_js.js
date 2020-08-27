@@ -44,7 +44,6 @@
     .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('input'),
         tmp; // general use short-scope variable
-
       if (this.state.type === 'checkbox') {
         textarea.checked = this.state.checked;
       } else {
@@ -119,6 +118,14 @@
         this.element.insertBefore(tmp, textarea);
         tmp = undefined;
       }
+      if (modification_dict.error_text &&
+          !textarea.classList.contains("is-invalid")) {
+        textarea.classList.add("is-invalid");
+      } else if (!modification_dict.error_text &&
+                 textarea.classList.contains("is-invalid")) {
+        textarea.classList.remove("is-invalid");
+      }
+
     })
 
     .declareService(function focus() {
@@ -242,6 +249,10 @@
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
+      var input = this.element.querySelector('input');
+      if (!input.classList.contains("is-invalid")) {
+        input.classList.add("is-invalid");
+      }
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 

@@ -65,6 +65,7 @@
           name: field_json.key,
           key: field_json.key,
           title: field_json.title,
+          error_text: field_json.error_text,
           timezone_style: field_json.timezone_style,
           date_only: field_json.date_only,
           hide_day: field_json.hide_day,
@@ -112,7 +113,8 @@
           editable: gadget.state.editable,
           required: gadget.state.required,
           type: gadget.state.date_only ? "date" : "datetime-local",
-          hidden: gadget.state.hidden
+          hidden: gadget.state.hidden,
+          error_text: modification_dict.error_text
         },
         select_state = {
           name: gadget.state.key + '_select',
@@ -120,7 +122,8 @@
           item_list: ZONE_LIST,
           editable: gadget.state.editable,
           required: gadget.state.required,
-          hidden: gadget.state.hidden
+          hidden: gadget.state.hidden,
+          error_text: modification_dict.error_text
               // name: field_json.key,
               // title: field_json.title
         },
