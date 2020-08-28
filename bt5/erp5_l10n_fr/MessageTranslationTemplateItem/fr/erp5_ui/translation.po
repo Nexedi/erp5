@@ -7364,7 +7364,7 @@ msgid "Medium Image Width"
 msgstr "Largeur des images de taille moyenne"
 
 msgid "Meeting"
-msgstr "Rendez-vous"
+msgstr "Réunion"
 
 msgid "Meeting Detailed Report"
 msgstr "Rapport détaillé"
