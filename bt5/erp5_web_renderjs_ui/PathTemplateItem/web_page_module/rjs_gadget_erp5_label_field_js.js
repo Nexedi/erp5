@@ -1,4 +1,4 @@
-/*global window, document, rJS, RSVP*/
+/*global window, document, rJS*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS, RSVP) {
+(function (window, document, rJS) {
   "use strict";
 
   var SCOPE = 'field';
@@ -84,19 +84,17 @@
     })
 
     .declareMethod('render', function render(options) {
-      var queue,
-        gadget = this,
-        state_dict = {
-          first_call: true,
-          label_text: options.field_json.title || '',
-          label: options.label,
-          field_url: getFieldTypeGadgetUrl(options.field_type),
-          error_text: options.field_json.error_text || '',
-          options: options,
-          scope: options.field_json.key,
-          hidden: options.field_json.hidden,
-          css_class: options.field_json.css_class
-        };
+      var state_dict = {
+        first_call: true,
+        label_text: options.field_json.title || '',
+        label: options.label,
+        field_url: getFieldTypeGadgetUrl(options.field_type),
+        error_text: options.field_json.error_text || '',
+        options: options,
+        scope: options.field_json.key,
+        hidden: options.field_json.hidden,
+        css_class: options.field_json.css_class
+      };
       // RenderJS would overwrite default value with empty variables :-(
       // So we have to mitigate this behaviour
       if (state_dict.label === undefined) {
@@ -112,6 +110,7 @@
         css_class,
         i,
         queue,
+        input,
         new_div;
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
@@ -146,12 +145,19 @@
         }
       }
 
-      /*if (modification_dict.hasOwnProperty('error_text')) {
-        this.getDeclaredGadget(SCOPE)
-          .push(function (gadget) {
-            return gadget.changeState(modification_dict);
-          });
-      }*/
+      if (modification_dict.hasOwnProperty('error_text')) {
+        /* XXX - The goal here is notify input element that there is an error. How? */
+        /* The code below is not good because sometimes is select*/
+        /* At the same, call checkValidity does not work */
+        input = gadget.element.querySelector("input");
+        if (input) {
+          if (!input.classList.contains("is-invalid")) {
+            input.classList.add("is-invalid");
+          } else if (input.classList.contains("is-invalid")) {
+            input.classList.remove("is-invalid");
+          }
+        }
+      }
 
       if (modification_dict.hasOwnProperty('options')) {
         if (this.state.field_url) {
@@ -190,7 +196,7 @@
             }
           } else if (queue) {
             queue
-             .push(function () {
+              .push(function () {
                 return gadget.getDeclaredGadget(SCOPE);
               });
           } else {
@@ -277,4 +283,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS));
