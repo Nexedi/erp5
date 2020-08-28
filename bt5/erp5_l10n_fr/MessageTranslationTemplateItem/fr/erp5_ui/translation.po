@@ -1456,8 +1456,11 @@ msgstr "Au moins une section doit être définie."
 msgid "Attach Document"
 msgstr "Attacher un document"
 
+msgid "Attachment"
+msgstr "Pièce jointe"
+
 msgid "Attachments"
-msgstr "Fichiers joints"
+msgstr "Pièces jointes"
 
 msgid "Attachments:"
 msgstr "Pièces jointes:"
