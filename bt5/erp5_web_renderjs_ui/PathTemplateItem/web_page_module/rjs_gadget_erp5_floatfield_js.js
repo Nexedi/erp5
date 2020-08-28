@@ -35,6 +35,7 @@
           name: field_json.key,
           title: field_json.title,
           precision: window.parseFloat(field_json.precision),
+          error_text: field_json.error_text || "",
           // erp5 always put value into "default" (never "value")
           value: window.parseFloat(field_json.default),
           text_content: '',
