@@ -12,13 +12,11 @@ import re
 blank = ""
 for link in re.findall('([^[]<a.*?</a>[^]])', doc_content or blank):
   link_reference_list = re.findall('href=\"(.*?)\"', link)
-  if len(link_reference_list) == 0:
-    link_reference = re.findall("href=\'(.*?)\'", link)
-  if len(link_reference_list) == 0:
-    link_reference = None
-  else:
+  if link_reference_list:
     link_reference = link_reference_list[0]
-  if link_reference.find("report=") > -1:
+    if link_reference.find("report=") > -1:
+      link_reference = None
+  else:
     link_reference = None
 
   # only internal references can be embedded

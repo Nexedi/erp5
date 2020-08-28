@@ -40,10 +40,6 @@ from base64 import b64encode
 blank = ''
 pref = context.getPortalObject().portal_preferences
 
-# ------------------ HTML cleanup/converter methods ----------------------------
-def translateText(snip):
-  return book_localiser.erp5_ui.gettext(snip, lang=book_language).encode('UTF-8').strip()
-
 # -------------------------- Setup ---------------------------------------------
 book = context
 book_format = kw.get('format') or 'html'
@@ -69,7 +65,6 @@ override_logo_reference = kw.get('override_logo_reference')
 override_batch_mode = kw.get('batch_mode')
 
 # -------------------------- Document Parameters  ------------------------------
-book_localiser = book.getPortalObject().Localizer
 book_relative_url = book.getRelativeUrl()
 book_prefix = pref.getPreferredCorporateIdentityTemplateBookDocumentPrefix() or "Book."
 book_rendering_fix = book.WebPage_getPdfOutputRenderingFix() or blank
@@ -96,7 +91,7 @@ if override_batch_mode:
   book_revision = "1"
 
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
-if book_language and book_language != blank:
+if book_language:
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
 else:
   book_language = blank
@@ -201,7 +196,7 @@ else:
 # table of content has to be created manually to run over everything that
 # should be indexed in the toc
 if book_include_content_table:
-  book_translated_toc_title = translateText("Table of Contents")
+  book_translated_toc_title = context.Base_translateString("Table of Contents", lang=book_language)
   if book_format == "pdf":
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
       book_toc_title=book_translated_toc_title,
@@ -271,11 +266,10 @@ if book_format == "html" or book_format == "mhtml":
       doc_html_file=book_output
     )
 
-  if book_format == "mhtml":
-    return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
+  return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
-if book_format == "pdf":
+elif book_format == "pdf":
   book_cover = book.WebPage_createBookCover(
     book_theme=book_theme.get("theme"),
     book_title=book_title,
