@@ -46,7 +46,7 @@ class TestTradeReports(ERP5ReportTestCase):
             'erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_simulation_test', 'erp5_configurator_standard_trade_template', )
 
-  def login(self):
+  def login(self, *args, **kw):
     """login with Manager roles."""
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', 'manager', ['Manager', 'Assignee', 'Assignor',
@@ -104,7 +104,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                   id=group_id)
     # create organisations (with no organisation member of g3)
     if not self.organisation_module.has_key('Organisation_1'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
@@ -117,7 +117,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               default_address_zip_code='111',
                               default_address_city='City', )
     if not self.organisation_module.has_key('Organisation_2'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
                               title='Organisation_2',
@@ -126,7 +126,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               site='demo_site_B')
     # no group no site
     if not self.organisation_module.has_key('Organisation_3'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_3',
                               title='Organisation_3',
@@ -144,7 +144,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Create resources
     module = self.portal.product_module
     if not module.has_key('product_B'):
-      product = module.newContent(
+      module.newContent(
           portal_type='Product',
           id='product_B',
           title='product_B',
@@ -152,7 +152,7 @@ class TestTradeReports(ERP5ReportTestCase):
           quantity_unit='kg'
           )
     if not module.has_key('product_A'):
-      product = module.newContent(
+      module.newContent(
           portal_type='Product',
           id='product_A',
           title='product_A',
@@ -160,7 +160,7 @@ class TestTradeReports(ERP5ReportTestCase):
           quantity_unit='g'
           )
     if not module.has_key('product_C'):
-      product = module.newContent(
+      module.newContent(
           portal_type='Product',
           id='product_C',
           title='variated product',
@@ -208,7 +208,7 @@ class TestTradeReports(ERP5ReportTestCase):
     """Creates an inventory.
     """
     inventory = self.inventory_module.newContent(portal_type='Inventory', **kw)
-    inventory_line = inventory.newContent(portal_type='Inventory Line',
+    inventory.newContent(portal_type='Inventory Line',
                                           resource=resource,
                                           inventory=quantity)
 
@@ -220,13 +220,15 @@ class TestTradeReports(ERP5ReportTestCase):
     return inventory
 
   @reindex
-  def _makeOneSaleOrder(self, resource_dict={}, cancel=False, **kw):
+  def _makeOneSaleOrder(self, resource_dict=None, cancel=False, **kw):
     """
     Create a sale order
     """
+    if resource_dict is None:
+      resource_dict = {}
     sale_order = self.sale_order_module.newContent(portal_type="Sale Order", **kw)
     for product, values in resource_dict.iteritems():
-      sale_order_line = sale_order.newContent(portal_type="Sale Order Line",
+      sale_order.newContent(portal_type="Sale Order Line",
                                               resource=product,
                                               quantity=values["quantity"],
                                               price=values["price"])
@@ -240,7 +242,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
   def _createSaleOrdersForSaleOrderReportTest(self):
     # Create sales orders to be used in testSaleOrderReportXXX tests
-    first = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 1',
               destination_value=self.organisation_module.Organisation_1,
               destination_section_value=self.organisation_module.Organisation_1,
@@ -252,7 +254,7 @@ class TestTradeReports(ERP5ReportTestCase):
               resource_dict = {'product_module/product_A':{"quantity":11, "price":3},
                                'product_module/product_B':{"quantity":7, "price":6},}
               )
-    second = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 2',
               destination_value=self.organisation_module.Organisation_1,
               destination_section_value=self.organisation_module.Organisation_1,
@@ -263,7 +265,7 @@ class TestTradeReports(ERP5ReportTestCase):
               start_date=DateTime(2007, 2, 2),
               resource_dict = {'product_module/product_A':{"quantity":3, "price":3},}
               )
-    third = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 3',
               destination_value=self.organisation_module.Organisation_2,
               destination_section_value=self.organisation_module.Organisation_2,
@@ -275,7 +277,7 @@ class TestTradeReports(ERP5ReportTestCase):
               resource_dict = {'product_module/product_A':{"quantity":5, "price":3},
                                'product_module/product_B':{"quantity":1, "price":6},}
               )
-    fourth = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 4',
               destination_value=self.organisation_module.Organisation_1,
               destination_section_value=self.organisation_module.Organisation_1,
@@ -305,7 +307,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g2'
 
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -331,7 +333,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g2'
 
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -428,7 +430,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g2'
 
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -520,7 +522,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['group_by'] = "both"
     request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g1'
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -600,7 +602,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['group_by'] = "both"
     request['simulation_state'] = ['draft',]
     request['section_category'] = 'group/g2'
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -676,7 +678,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g2'
 
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -718,7 +720,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['group_by'] = "client"
     request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g1'
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -761,7 +763,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
     request['section_category'] = 'group/g2'
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -834,7 +836,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
     request['section_category'] = 'group/g3'
-    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    parameter_dict, _, _ = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
     self.tic()
@@ -863,7 +865,7 @@ class TestTradeReports(ERP5ReportTestCase):
   def _createInventoryForStockReportTest(self):
     # Create inventories
     # Create inventories
-    first = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 1',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
@@ -873,7 +875,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=11,
               )
 
-    second = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 2',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
@@ -882,7 +884,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=22,
               )
 
-    third = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 3',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
@@ -891,7 +893,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=33,
               )
 
-    fourth = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 4',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_2,
@@ -1093,7 +1095,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
   def _createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest(self):
     # Create inventories
-    first = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 1',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
@@ -1102,7 +1104,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=22,
               )
 
-    second = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 2',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
@@ -1111,7 +1113,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=-22,
               )
 
-    third = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 3',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
@@ -1120,7 +1122,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=-33,
               )
 
-    fourth = self._makeOneInventory(
+    self._makeOneInventory(
               title='Inventory 4',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_2,
@@ -1401,7 +1403,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
   def test_Folder_generateWorkflowReport(self):
     # Create sales orders
-    first = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 1',
               destination_value=self.organisation_module.Organisation_1,
               destination_section_value=self.organisation_module.Organisation_1,
@@ -1413,7 +1415,7 @@ class TestTradeReports(ERP5ReportTestCase):
               resource_dict = {'product_module/product_A':{"quantity":11, "price":3},
                                'product_module/product_B':{"quantity":7, "price":6},}
               )
-    second = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 2',
               destination_value=self.organisation_module.Organisation_1,
               destination_section_value=self.organisation_module.Organisation_1,
@@ -1424,7 +1426,7 @@ class TestTradeReports(ERP5ReportTestCase):
               start_date=DateTime(2007, 2, 2),
               resource_dict = {'product_module/product_A':{"quantity":3, "price":3},}
               )
-    third = self._makeOneSaleOrder(
+    self._makeOneSaleOrder(
               title='SO 4',
               destination_value=self.organisation_module.Organisation_1,
               destination_section_value=self.organisation_module.Organisation_1,

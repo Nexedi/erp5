@@ -12,3 +12,4 @@ test.erp5.testPackingListRoundingPrecision
 test.erp5.testPurchaseOrder
 test.erp5.testReturnedOrder
 test.erp5.testReturnedSalePackingList
+test.erp5.testTradeReports
