@@ -100,8 +100,8 @@ class TestRSS(ERP5TypeTestCase):
     portal=self.getPortal()
     request=self.app.REQUEST
 
-    request.set('portal_skin', 'RSS');
-    portal.portal_skins.changeSkin('RSS');
+    request.set('portal_skin', 'RSS')
+    portal.portal_skins.changeSkin('RSS')
 
     one = self.portal.person_module.one
     two = self.portal.person_module.two
@@ -146,8 +146,8 @@ class TestRSS(ERP5TypeTestCase):
     portal=self.getPortal()
     request=self.app.REQUEST
 
-    request.set('portal_skin', 'RSS');
-    portal.portal_skins.changeSkin('RSS');
+    request.set('portal_skin', 'RSS')
+    portal.portal_skins.changeSkin('RSS')
 
     self.getPortal().manage_addProduct['ERP5Form'].addERP5Form('Test_view', 'View')
     portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
