@@ -1592,6 +1592,24 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
+  def test_pdfBookReferenceTableUnescape(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_reference_table_unescape_html",
+      "template_test_book_reference_table_unescape_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_content_table=1,
+        include_reference_table = 1
+      )
+    )
+  @changeSkin('Book')
   def test_pdfBookPrint(self):
     """
       Test:
