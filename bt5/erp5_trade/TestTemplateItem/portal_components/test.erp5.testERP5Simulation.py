@@ -32,7 +32,7 @@ This test is experimental for new simulation implementation.
 
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from erp5.component.test.testPackingList import TestPackingListMixin
 
 from Products.PythonScripts.Utility import allow_class
 class DummySolverConfiguration(object):
@@ -97,9 +97,9 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
     solver_process_tool = self.portal.portal_solver_processes
     solver_process = solver_process_tool.newSolverProcess(packing_list)
     sequence.edit(solver_process=solver_process)
-    quantity_solver_decision = filter(
-      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
-      solver_process.contentValues())[0]
+    quantity_solver_decision = [
+      x for x in solver_process.contentValues()
+      if x.getCausalityValue().getTestedProperty()=='quantity'][0]
     # use Quantity Split Solver.
     quantity_solver_decision.setSolverValue(
         self.portal.portal_solvers['Quantity Split Solver'])
@@ -113,8 +113,6 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
     # build split deliveries manually. XXX ad-hoc
     previous_tag = None
     for delivery_builder in packing_list.getBuilderList():
-      this_builder_tag = '%s_split_%s' % (packing_list.getPath(),
-                                          delivery_builder.getId())
       after_tag = []
       if previous_tag:
         after_tag.append(previous_tag)

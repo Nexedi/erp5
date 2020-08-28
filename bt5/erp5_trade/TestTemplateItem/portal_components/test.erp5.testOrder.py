@@ -39,7 +39,8 @@ from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.CMFCore.utils import getToolByName
+
+import Products.ERP5.tests
 
 class TestOrderMixin(SubcontentReindexingWrapper):
 
@@ -106,7 +107,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     self.createUser('manager', ['Manager'])
     self.loginByUserName('manager')
     self.category_tool = self.getCategoryTool()
-    portal_catalog = self.getCatalogTool()
+    #portal_catalog = self.getCatalogTool()
     #portal_catalog.manage_catalogClear()
     self.createCategories()
     self.validateRules()
@@ -138,30 +139,30 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     size_category_list = ['Baby', 'Child', 'Man', 'Woman']
     if len(category_tool.size.contentValues()) == 0 :
       for category_id in size_category_list:
-        o = category_tool.size.newContent(portal_type='Category',
+        category_tool.size.newContent(portal_type='Category',
                                                id=category_id)
       for category_id in ['32', '34']:
-        o = category_tool.size.Child.newContent(portal_type='Category',
-                                                     id=category_id)
+        category_tool.size.Child.newContent(portal_type='Category',
+                                            id=category_id)
 
     colour_category_list = ['blue', 'green']
     if len(category_tool.colour.contentValues()) == 0 :
       for category_id in colour_category_list:
-        o = category_tool.colour.newContent(portal_type='Category',
-                                                 id=category_id)
+        category_tool.colour.newContent(portal_type='Category',
+                                        id=category_id)
 
     industrial_phase_category_list = ['phase1', 'phase2',
                                       'supply_phase1', 'supply_phase2']
     if len(category_tool.industrial_phase.contentValues()) == 0:
       for category_id in industrial_phase_category_list:
-        o = category_tool.industrial_phase.newContent(
+        category_tool.industrial_phase.newContent(
                                                  portal_type='Category',
                                                  id=category_id)
 
     product_line_category_list = ['apparel', 'cancel']
     if len(category_tool.product_line.contentValues()) == 0:
       for category_id in product_line_category_list:
-        o = category_tool.product_line.newContent(
+        category_tool.product_line.newContent(
                                                  portal_type='Category',
                                                  id=category_id)
 
@@ -311,9 +312,9 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                                    portal_type=organisation_portal_type)
     organisation = organisation_module.newContent( \
                                    portal_type=organisation_portal_type)
-    bank_account = organisation.newContent(id='bank',
-                                           portal_type='Bank Account',
-                                           title='bank%s' % organisation.getId())
+    organisation.newContent(id='bank',
+                            portal_type='Bank Account',
+                            title='bank%s' % organisation.getId())
     organisation.setDefaultAddressStreetAddress('rue xv')
     organisation.setDefaultAddressZipCode('12345')
     if title is None:
@@ -420,7 +421,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       Check if the matrix of the current order line is empty.
     """
     order_line = sequence.get('order_line')
-    base_id = 'movement'
+#    base_id = 'movement'
 #     vcl = list(order_line.getVariationCategoryList())
 #     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
@@ -450,22 +451,21 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     """
     order_line = sequence.get('order_line')
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
-    order_line.deleteContent( map(lambda x: x.getId(), cell_list) )
+    order_line.deleteContent([x.getId() for x in cell_list])
 
   def stepSetOrderLineEmptyVCL(self,sequence=None, sequence_list=None, **kw):
     """
       Delete the current order line's variation category list
     """
     order_line = sequence.get('order_line')
-    resource = sequence.get('resource')
     order_line.setVariationCategoryList([])
 
-  def splitList(self, list):
+  def splitList(self, l):
     """
       Split a list and return tuple with the 2 half
     """
-    middle = len(list)/2 + len(list)%2
-    return ( list[:middle] , list[middle:] )
+    middle = len(l)/2 + len(l)%2
+    return ( l[:middle] , l[middle:] )
 
   def stepSetOrderLineHalfVCL(self,sequence=None, sequence_list=None, **kw):
     """
@@ -509,13 +509,13 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     cell_range = order_line.OrderLine_asCellRange(matrixbox=0)
 
     l = len(vcl)
-    s = sum(map(lambda x: len(x), cell_range))
+    s = sum([len(x) for x in cell_range])
     self.assertEqual(l,s)
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
     if cell_range == []:
       self.assertEqual(len(cell_key_list), 0)
     else:
-      len_range = map(lambda x: len(x), cell_range)
+      len_range = [len(x) for x in cell_range]
       self.assertEqual(len(cell_key_list), reduce(lambda x,y: x*y, len_range))
 
   def stepCompleteOrderLineMatrix(self,sequence=None, sequence_list=None, \
@@ -550,8 +550,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     cell_key_list.sort()
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     self.assertEqual(len(cell_list), len(cell_key_list))
-    price = 100
-    quantity = 200
+#    price = 100
+#    quantity = 200
     for cell_key in cell_key_list:
       self.assertTrue(order_line.hasCell(base_id=base_id, *cell_key))
       cell = order_line.getCell(base_id=base_id, *cell_key)
@@ -561,8 +561,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
 #       self.assertEqual(quantity, cell.getProperty('quantity'))
 #       self.failIfDifferentSet(cell.getMembershipCriterionCategoryList(),
 #                               cell_key)
-      price += 1
-      quantity += 1
+#      price += 1
+#      quantity += 1
 
   def stepCheckOrderLineVRCL(self, sequence=None, sequence_list=None, **kw):
     """
@@ -586,7 +586,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order_line = sequence.get('order_line')
     vrcl = order_line.getVariationRangeCategoryList()
     vrcil = order_line.getVariationRangeCategoryItemList()
-    self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
+    self.failIfDifferentSet(vrcl, [x[1] for x in vrcil])
 
   def stepSetOrderLineDefaultValues(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -715,7 +715,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
-    order_line_list = map(lambda x: x.getObject(), order_line_list)
+    order_line_list = [x.getObject() for x in order_line_list]
     total_quantity = 0
     for order_line in order_line_list:
       total_quantity += order_line.getTotalQuantity()
@@ -735,7 +735,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
-    order_line_list = map(lambda x: x.getObject(), order_line_list)
+    order_line_list = [x.getObject() for x in order_line_list]
     total_price = 0
     for order_line in order_line_list:
       total_price += order_line.getTotalPrice()
@@ -755,7 +755,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
-    order_line_list = map(lambda x: x.getObject(), order_line_list)
+    order_line_list = [x.getObject() for x in  order_line_list]
     total_price = 0
     for order_line in order_line_list:
       total_price += order_line.getTotalPrice()
@@ -800,24 +800,24 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order = sequence.get('order')
     self.assertEqual('planned', order.getSimulationState())
 
-  def checkAcquisition(self, object, acquired_object):
+  def checkAcquisition(self, obj, acquired_object):
     """
       Check if properties are well acquired
     """
     # packing_list_movement, simulation_movement
 
-    self.assertEqual(acquired_object.getStartDate(), object.getStartDate())
-    self.assertEqual(acquired_object.getStopDate(), object.getStopDate())
+    self.assertEqual(acquired_object.getStartDate(), obj.getStartDate())
+    self.assertEqual(acquired_object.getStopDate(), obj.getStopDate())
     self.assertEqual(acquired_object.getSourceValue(), \
-                      object.getSourceValue())
+                      obj.getSourceValue())
     self.assertEqual(acquired_object.getDestinationValue(), \
-                      object.getDestinationValue())
+                      obj.getDestinationValue())
 
 
     self.assertEqual(acquired_object.getSourceSectionValue(), \
-                      object.getSourceSectionValue())
+                      obj.getSourceSectionValue())
     self.assertEqual(acquired_object.getDestinationSectionValue(), \
-                      object.getDestinationSectionValue())
+                      obj.getDestinationSectionValue())
 
   def stepCheckOrderLineAcquisition(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -880,7 +880,6 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       self.assertTrue(applied_rule is not None)
 
       # Test if applied rule has a specialise value with passed rule_reference
-      portal_rules = getToolByName(order, 'portal_rules')
       self.assertEqual(rule_reference,
                         applied_rule.getSpecialiseReference())
 
@@ -2254,7 +2253,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # Create recursively sub lines, and check that the ovement number
     # is still the same.
-    for i in range(5):
+    for _ in range(5):
       sub_order_line = sub_order_line.newContent(
           portal_type=self.order_line_portal_type)
       self.assertEqual(2, len(order.getMovementList()))
@@ -2287,9 +2286,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     cell_key_list = list(sub_order_line.getCellKeyList(base_id=base_id))
     cell_key_list.sort()
     for cell_key in cell_key_list:
-      cell = sub_order_line.newCell(base_id=base_id,
-                                portal_type=self.order_cell_portal_type,
-                                *cell_key)
+      sub_order_line.newCell(base_id=base_id,
+                             portal_type=self.order_cell_portal_type,
+                             *cell_key)
     self.assertEqual(2-1+len(cell_key_list), len(order.getMovementList()))
 
     # Check that cells defined on a non leaf line are not returned.
@@ -2301,9 +2300,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     cell_key_list = list(order_line.getCellKeyList(base_id=base_id))
     cell_key_list.sort()
     for cell_key in cell_key_list:
-      cell = order_line.newCell(base_id=base_id,
-                                portal_type=self.order_cell_portal_type,
-                                *cell_key)
+      order_line.newCell(base_id=base_id,
+                         portal_type=self.order_cell_portal_type,
+                         *cell_key)
     self.assertEqual(2-1+len(cell_key_list), len(order.getMovementList()))
 
     # Make sure that portal_type argument works correctly.
@@ -2491,7 +2490,6 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # add sub_cell to sub_line, only sub_cell is movement
     sub_order_line.setVariationCategoryList(order_line_vcl)
-    sub_cell_key = sub_order_line.getCellKeyList(base_id=base_id)[0]
     sub_cell = sub_order_line.newCell(
         base_id=base_id,
         portal_type=self.order_cell_portal_type,
@@ -2740,10 +2738,10 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               destination_value=client,
                               destination_section_value=client)
     order.setReference('OrderReference')
-    line = order.newContent(portal_type=self.order_line_portal_type,
-                            resource_value=resource,
-                            quantity=10,
-                            price=3)
+    order.newContent(portal_type=self.order_line_portal_type,
+                     resource_value=resource,
+                     quantity=10,
+                     price=3)
     order.confirm()
     self.tic()
 
@@ -2776,10 +2774,10 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = order.newContent(portal_type=self.order_line_portal_type,
-                            resource_value=resource,
-                            quantity=10,
-                            price=3)
+    order.newContent(portal_type=self.order_line_portal_type,
+                     resource_value=resource,
+                     quantity=10,
+                     price=3)
     order.confirm()
     self.tic()
 
@@ -2797,7 +2795,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',)
-    image = FileUpload(os.path.join(os.path.dirname(__file__),
+    image = FileUpload(os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
                       'test_data', 'images', 'erp5_logo.png'))
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client',
@@ -2814,10 +2812,10 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = order.newContent(portal_type=self.order_line_portal_type,
-                            resource_value=resource,
-                            quantity=10,
-                            price=3)
+    order.newContent(portal_type=self.order_line_portal_type,
+                     resource_value=resource,
+                     quantity=10,
+                     price=3)
     order.confirm()
     self.tic()
 
@@ -2834,7 +2832,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',)
-    image = FileUpload(os.path.join(os.path.dirname(__file__),
+    image = FileUpload(os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
                       'test_data', 'images', 'erp5_logo.bmp'))
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client',
@@ -2844,7 +2842,6 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     vendor = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Vendor',
                               default_image_file=image)
-    from OFS.Image import Pdata
     self.assertTrue(isinstance(vendor.getDefaultImageValue().data, Pdata))
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
@@ -2855,10 +2852,10 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = order.newContent(portal_type=self.order_line_portal_type,
-                            resource_value=resource,
-                            quantity=10,
-                            price=3)
+    order.newContent(portal_type=self.order_line_portal_type,
+                     resource_value=resource,
+                     quantity=10,
+                     price=3)
     order.confirm()
     self.tic()
 
@@ -2898,11 +2895,11 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = order.newContent(portal_type=self.order_line_portal_type,
-                            reference='à',
-                            resource_value=resource,
-                            quantity=10,
-                            price=3)
+    order.newContent(portal_type=self.order_line_portal_type,
+                     reference='à',
+                     resource_value=resource,
+                     quantity=10,
+                     price=3)
     order.confirm()
     self.tic()
 

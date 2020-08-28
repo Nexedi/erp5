@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#          Romain Courteaud <romain@nexedi.com>
+# Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
+#          Nicolas Dumazet <nicolas.dumazet@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,39 +28,31 @@
 
 import unittest
 
-from testOrder import TestOrder
+from erp5.component.test.testPurchaseOrder import TestPurchaseOrder
 
-class TestPurchaseOrder(TestOrder):
+class TestInternalOrder(TestPurchaseOrder):
   """
     Test business template erp5_trade
   """
   run_all_test = 1
-  order_portal_type = 'Purchase Order'
-  order_line_portal_type = 'Purchase Order Line'
-  order_cell_portal_type = 'Purchase Order Cell'
-  packing_list_portal_type = 'Purchase Packing List'
-  packing_list_line_portal_type = 'Purchase Packing List Line'
-  packing_list_cell_portal_type = 'Purchase Packing List Cell'
-  delivery_builder_id = 'purchase_packing_list_builder'
+  order_portal_type = 'Internal Order'
+  order_line_portal_type = 'Internal Order Line'
+  order_cell_portal_type = 'Internal Order Cell'
+  packing_list_portal_type = 'Internal Packing List'
+  packing_list_line_portal_type = 'Internal Packing List Line'
+  packing_list_cell_portal_type = 'Internal Packing List Cell'
+  delivery_builder_id = 'internal_packing_list_builder'
 
   def getTitle(self):
-    return "Purchase Order"
+    return "Internal Order"
 
-  def test_19_getMovementList(self, quiet=0, run=run_all_test):
+  def test_order_payment_condition_copied(self):
     """
-    Surcharge this test, because hierarchical lines are not enable in purchase
-    order.
-    """
-
-  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0,
-                                                         run=run_all_test):
-    """
-    Surcharge this test, because hierarchical lines are not enable in purchase
-    order.
+    No Payment conditions for Internal Orders
     """
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPurchaseOrder))
+  suite.addTest(unittest.makeSuite(TestInternalOrder))
   return suite
 

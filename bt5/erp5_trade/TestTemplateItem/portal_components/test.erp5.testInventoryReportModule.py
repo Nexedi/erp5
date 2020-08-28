@@ -30,8 +30,7 @@ import unittest
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testOrder import TestOrderMixin
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from erp5.component.test.testOrder import TestOrderMixin
 
 class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
   """
@@ -44,7 +43,6 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     """
     """
     return super(TestInventoryReportModule, self).getBusinessTemplateList() + ('erp5_accounting', 'erp5_mrp',)
-  
 
   def getTitle(self):
     return "Inventory Report Module"
@@ -858,5 +856,5 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
 
 def _test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInventoryModule))
+  suite.addTest(unittest.makeSuite(TestInventoryReportModule))
   return suite

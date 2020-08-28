@@ -36,8 +36,8 @@ from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
+from erp5.component.module.TestInvoiceMixin import TestSaleInvoiceMixin
 
 class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   """Test methods for sale and purchase invoice.
@@ -149,7 +149,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     invoice.start()
     self.assertEqual('started', invoice.getSimulationState())
 
-  def stepAddInvoiceTransactionLines(self, sequence=None, sequence_list=[]):
+  def stepAddInvoiceTransactionLines(self, sequence=None, sequence_list=None):
     """
     add some invoice and accounting lines to the invoice
     """
@@ -164,7 +164,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
                                    id='income', source='account_module/sale',
                                    destination='account_module/purchase', quantity=1665)
 
-  def stepAddInvoiceLinesManyTransactions(self, sequence=None, sequence_list=[]):
+  def stepAddInvoiceLinesManyTransactions(self, sequence=None, sequence_list=None):
     """
     add some invoice and accounting lines to the invoice
     """
@@ -384,10 +384,10 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = invoice.newContent(portal_type=self.invoice_line_portal_type,
-                            resource_value=resource,
-                            quantity=10,
-                            price=3)
+    invoice.newContent(portal_type=self.invoice_line_portal_type,
+                       resource_value=resource,
+                       quantity=10,
+                       price=3)
     invoice.confirm()
     self.tic()
 

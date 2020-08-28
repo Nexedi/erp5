@@ -28,43 +28,39 @@
 
 import unittest
 
-from testOrder import TestOrder
+from erp5.component.test.testOrder import TestOrder
 
-class TestReturnedSaleOrder(TestOrder):
+class TestPurchaseOrder(TestOrder):
   """
-    Test Returned Sale Order
-  """
-  run_all_test = 1
-  order_portal_type = 'Returned Sale Order'
-  order_line_portal_type = 'Returned Sale Order Line'
-  order_cell_portal_type = 'Returned Sale Order Cell'
-  packing_list_portal_type = 'Returned Sale Packing List'
-  packing_list_line_portal_type = 'Returned Sale Packing List Line'
-  packing_list_cell_portal_type = 'Returned Sale Packing List Cell'
-  delivery_builder_id = 'returned_sale_packing_list_builder'
-
-  def getTitle(self):
-    return "Returned Sale Order"
-
-class TestReturnedPurchaseOrder(TestOrder):
-  """
-    Test Returned Purchase Order
+    Test business template erp5_trade
   """
   run_all_test = 1
-  order_portal_type = 'Returned Purchase Order'
-  order_line_portal_type = 'Returned Purchase Order Line'
-  order_cell_portal_type = 'Returned Purchase Order Cell'
-  packing_list_portal_type = 'Returned Purchase Packing List'
-  packing_list_line_portal_type = 'Returned Purchase Packing List Line'
-  packing_list_cell_portal_type = 'Returned Purchase Packing List Cell'
-  delivery_builder_id = 'returned_purchase_packing_list_builder'
+  order_portal_type = 'Purchase Order'
+  order_line_portal_type = 'Purchase Order Line'
+  order_cell_portal_type = 'Purchase Order Cell'
+  packing_list_portal_type = 'Purchase Packing List'
+  packing_list_line_portal_type = 'Purchase Packing List Line'
+  packing_list_cell_portal_type = 'Purchase Packing List Cell'
+  delivery_builder_id = 'purchase_packing_list_builder'
 
   def getTitle(self):
-    return "Returned Purchase Order"
+    return "Purchase Order"
+
+  def test_19_getMovementList(self, quiet=0, run=run_all_test):
+    """
+    Surcharge this test, because hierarchical lines are not enable in purchase
+    order.
+    """
+
+  def test_20_testHierarchicalOrderAppliedRuleGeneration(self, quiet=0,
+                                                         run=run_all_test):
+    """
+    Surcharge this test, because hierarchical lines are not enable in purchase
+    order.
+    """
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestReturnedPurchaseOrder))
-  suite.addTest(unittest.makeSuite(TestReturnedSaleOrder))
+  suite.addTest(unittest.makeSuite(TestPurchaseOrder))
   return suite
 

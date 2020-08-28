@@ -28,7 +28,7 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from erp5.component.test.testOrder import TestOrderMixin
 
 class TestRuleMixin(TestOrderMixin):
   """
@@ -138,7 +138,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     test that when a rule's test method returns False, it will not apply
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'wrong_script', 'rule',
+    createZODBPythonScript(skin_folder, 'wrong_script', 'rule',
         'return False')
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('wrong_script')
@@ -154,7 +154,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     test that when a rule's test method returns True, it will apply
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
@@ -171,7 +171,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     a good script
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
@@ -189,7 +189,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     it will not apply
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
@@ -208,7 +208,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     apply
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
@@ -359,7 +359,7 @@ return context.generatePredicate(
     XXX as expand is triggered here, make sure rules won't be created forever
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'rule_script', 'rule',
         "return False")
 
     # wrong reference
@@ -408,11 +408,11 @@ return context.generatePredicate(
     XXX as expand is triggered here, make sure rules won't be created forever
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
 
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
     delivery_rule = self.getRule('default_delivery_rule')
@@ -536,11 +536,11 @@ return context.generatePredicate(
     - test that nothing is changed if at least one child is delivered
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
 
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
     delivery_rule = self.getRule('default_delivery_rule')
@@ -622,11 +622,11 @@ return context.generatePredicate(
     - test that nothing is changed if at least one child is delivered
     """
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
 
     skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
+    createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
     delivery_rule = self.getRule('default_delivery_rule')

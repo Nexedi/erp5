@@ -31,7 +31,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testPackingList import TestPackingListMixin
+from erp5.component.test.testPackingList import TestPackingListMixin
 from DateTime import DateTime
 from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
@@ -60,7 +60,6 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
 
   def beforeTearDown(self):
     self.abort()
-    self.tic()
     for folder in (self.portal.organisation_module,
                    self.portal.sale_order_module,
                    self.portal.inventory_module,
@@ -84,9 +83,8 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     user = uf.getUserById('member').__of__(uf)
     newSecurityManager(None, user)
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.loginAsManager()
-    portal = self.getPortal()
     self.createCategories()
     self.validateRules()
     self.setUpPreferences()
@@ -231,7 +229,6 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     """
     create a inventory
     """
-    portal = self.getPortal()
     organisation =  sequence.get('organisation1')
     inventory = self._getInventoryModule().newContent()
     inventory.edit(start_date=self.first_date_string,
@@ -407,7 +404,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
         portal_type=self.returned_packing_list_cell_portal_type)
     self.assertEqual(2, len(cell_list))
     # delete cells
-    rplwc_line.deleteContent(map(lambda x: x.getId(), cell_list))
+    rplwc_line.deleteContent([x.getId() for x in cell_list])
     self.commit()
 
     cell_list = rplwc_line.objectValues(
@@ -518,8 +515,8 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
     sequence_list.addSequenceString(sequence_string)
     try:
       sequence_list.play(self, quiet=quiet)
-    except UnsupportedWorkflowMethod, e:
-      self.assertTrue(True)
+    except UnsupportedWorkflowMethod:
+      pass
 
   def test_04_ReturnedSalePackingListCreating(self, quiet=quiet,
                                               run=run_all_test):
