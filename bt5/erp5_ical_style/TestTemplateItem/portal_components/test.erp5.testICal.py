@@ -63,7 +63,7 @@ class TestICal(ERP5TypeTestCase):
     """
     if hasattr(self.portal.person_module, 'one'):
       self.portal.person_module.manage_delObjects(['one'])
-    one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
+    self.portal.person_module.newContent(id="one", title="One", description="Person One")
     self.tic()
 
   def parseICalFeed(self,  feed_string):
@@ -87,8 +87,8 @@ class TestICal(ERP5TypeTestCase):
     """
       Get the feed using form rendered by ical_view pt
     """
-    self.request.set('portal_skin', 'iCal');
-    self.portal.portal_skins.changeSkin('iCal');
+    self.request.set('portal_skin', 'iCal')
+    self.portal.portal_skins.changeSkin('iCal')
 
     feed_string = module.Folder_viewContentListAsICal()
     return self.parseICalFeed(feed_string)
@@ -225,8 +225,8 @@ class TestICal(ERP5TypeTestCase):
     In this case pt for render current form('Test_view') is default page template(form_view)
     """
     if not run: return
-    self.request.set('portal_skin', 'iCal');
-    self.portal.portal_skins.changeSkin('iCal');
+    self.request.set('portal_skin', 'iCal')
+    self.portal.portal_skins.changeSkin('iCal')
 
     self.portal.manage_addProduct['ERP5Form'].addERP5Form('Test_view', 'View')
     self.portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
@@ -245,7 +245,6 @@ class TestICal(ERP5TypeTestCase):
                count_method='countFolder',
                selection_name='ical_folder_selection'))
 
-    module = self.portal.person_module
     one = self.portal.person_module.one
     feed_string = self.portal.person_module.Test_view()
     feed_dict = self.parseICalFeed(feed_string)
