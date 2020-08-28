@@ -1453,6 +1453,12 @@ msgstr "Fichiers joints"
 msgid "Attachments:"
 msgstr "Pièces jointes:"
 
+msgid "Attachment"
+msgstr "Pièce jointe"
+
+msgid "Attachment: "
+msgstr "Pièce jointe: "
+
 msgid "Attendance"
 msgstr "Présence"
 
