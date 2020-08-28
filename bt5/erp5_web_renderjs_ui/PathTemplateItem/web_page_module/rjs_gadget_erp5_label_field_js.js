@@ -113,7 +113,6 @@
         i,
         queue,
         new_div;
-      console.log(modification_dict);
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
           container_element: gadget.element.querySelector('div'),
@@ -146,6 +145,13 @@
           this.props.container_element.removeChild(this.props.label_element);
         }
       }
+
+      /*if (modification_dict.hasOwnProperty('error_text')) {
+        this.getDeclaredGadget(SCOPE)
+          .push(function (gadget) {
+            return gadget.changeState(modification_dict);
+          });
+      }*/
 
       if (modification_dict.hasOwnProperty('options')) {
         if (this.state.field_url) {
@@ -195,12 +201,6 @@
               return field_gadget.render(gadget.state.options);
             });
         }
-      }
-      if (modification_dict.hasOwnProperty('error_text')) {
-        return this.getDeclaredGadget(SCOPE)
-          .push(function (gadget) {
-            return gadget.changeState(modification_dict);
-          });
       }
     })
 
