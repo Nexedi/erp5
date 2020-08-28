@@ -12545,13 +12545,13 @@ msgid "Support Requests"
 msgstr "Demandes d'assistance"
 
 msgid "Support Requests to Close"
-msgstr "Demandes d'assistances à fermer"
+msgstr "Demandes d'assistance à fermer"
 
 msgid "Support Requests to Open"
-msgstr "Demandes d'assistances à ouvrir"
+msgstr "Demandes d'assistance à ouvrir"
 
 msgid "Support Requests to Submit"
-msgstr "Demandes d'assistances à soumettre"
+msgstr "Demandes d'assistance à soumettre"
 
 msgid "Surcharge Ratio"
 msgstr "Ratio de surcharge"
