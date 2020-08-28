@@ -51,7 +51,7 @@ book_download = int(kw.get('document_download') or 0)
 book_save = int(kw.get('document_save') or 0)
 book_display_svg = kw.get('display_svg') or 'png'
 
-book_include_content_table = int(kw.get('include_content_table') or 1)
+book_include_content_table = int(kw.get('include_content_table') or 0)
 book_include_history_table = int(kw.get('include_history_table') or 0)
 book_include_reference_table = int(kw.get('include_reference_table') or 0)
 book_include_linked_content = int(kw.get('include_linked_content') or 0)
