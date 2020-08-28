@@ -70,7 +70,7 @@ class TestBug(ERP5TypeTestCase):
            , 'erp5_project'
            )
 
-  def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def afterSetUp(self):
     """
       Initialize the ERP5 site.
     """
@@ -193,7 +193,6 @@ class TestBug(ERP5TypeTestCase):
       Create Person 2
     """
     person = self.createPerson()
-    project = sequence.get("project")
     person.setDefaultEmailText("person2@localhost")
     sequence.edit(person2 = person)
 
@@ -313,7 +312,7 @@ class TestBug(ERP5TypeTestCase):
     """
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
+    _, _, messageText = last_message
     from email.parser import Parser
     p = Parser()
     m = p.parsestr(messageText)
@@ -541,7 +540,6 @@ class TestBug(ERP5TypeTestCase):
 
   def test_06_BugLineClone(self):
     bug_portal_type = 'Bug'
-    bug_line_portal_type = 'Bug Line'
     module = self.portal.getDefaultModule(portal_type=bug_portal_type)
     bug = module.newContent(portal_type=bug_portal_type)
     bug_line = bug.newContent(portal_type='Bug Line')
@@ -550,7 +548,6 @@ class TestBug(ERP5TypeTestCase):
 
   def test_07_Bug_BugLineSendFastInput(self):
     bug_portal_type = 'Bug'
-    bug_line_portal_type = 'Bug Line'
     module = self.portal.getDefaultModule(portal_type=bug_portal_type)
     bug = module.newContent(portal_type=bug_portal_type)
 
@@ -592,11 +589,10 @@ class TestBug(ERP5TypeTestCase):
     """
     self.loginByUserName('mame')
     bug_portal_type = 'Bug'
-    bug_line_portal_type = 'Bug Line'
     module = self.portal.getDefaultModule(portal_type=bug_portal_type)
     bug = module.newContent(portal_type=bug_portal_type)
     bug_line = bug.newContent(portal_type='Bug Line')
-    cloned_bug_line = bug_line.Base_createCloneDocument(batch_mode=1)
+    bug_line.Base_createCloneDocument(batch_mode=1)
     self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
     self.assertEqual(bug.getSimulationState(), 'confirmed')
     self.tic()
