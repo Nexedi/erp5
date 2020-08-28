@@ -35,8 +35,8 @@ pref = context.getPortalObject().portal_preferences
 # -------------------------- Setup ---------------------------------------------
 letter = context
 letter_format = kw.get('format') or 'html'
-letter_display_source_adress = kw.get('letter_display_source_adress', None)
-letter_display_head = int(kw.get('dislay_head') or 1)
+letter_display_source_address = int(kw.get('display_source_address') or 0)
+letter_display_head = int(kw.get('display_head') or 0)
 letter_display_svg = kw.get('display_svg') or 'png'
 letter_download = int(kw.get('document_download') or 0)
 letter_save = int(kw.get('document_save') or 0)
@@ -155,7 +155,7 @@ if letter_format == "html":
     letter_source_country_code=letter_source.get("codification", blank),
     letter_source_country=letter_source.get("country", blank),
     letter_content = letter_content,
-    letter_display_source_adress=letter_display_source_adress,
+    letter_display_source_address=letter_display_source_address,
     letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
     letter_source_vat=letter_source.get("vat", blank),
     letter_source_corporate_registration=letter_source.get("corporate_registration", blank),
@@ -221,7 +221,7 @@ if letter_format == "pdf":
     letter_source_postal_code=letter_source.get("postal_code", blank),
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
-    letter_display_source_adress=letter_display_source_adress,
+    letter_display_source_address=letter_display_source_address,
     letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
     letter_content = letter_content
   )
