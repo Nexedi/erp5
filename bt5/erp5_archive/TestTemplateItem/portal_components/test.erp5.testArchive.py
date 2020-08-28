@@ -73,7 +73,7 @@ class TestArchive(InventoryAPITestCase):
     self.getPortal().portal_activities.manageClearActivities()
     self.tic()
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
@@ -101,7 +101,7 @@ class TestArchive(InventoryAPITestCase):
     # zsql method will look at preference and use the one
     # defined by the archive
     result = zsql_method(connection_id=connection_id)
-    path_list = map(lambda x: x['path'],result)
+    path_list = [x['path'] for x in result]
     return path_list
 
   def checkRelativeUrlInSQLPathList(self,url_list,connection_id=None):
@@ -121,7 +121,7 @@ class TestArchive(InventoryAPITestCase):
       self.assertTrue(path not in  path_list)
 
   @reindex
-  def _makeInventory(self, date):
+  def _makeInventory(self, date): # pylint: disable=arguments-differ
     """
     Create inventory, use to check if they goes to the right catalog
     """
@@ -347,7 +347,8 @@ class TestArchive(InventoryAPITestCase):
   def test_MaximumRecursionDepthExceededWithComplexSecurity(self):
     skin = self.portal.portal_skins.custom
     colour = self.portal.portal_categories.colour
-    colour.hasObject('green') or colour.newContent('green')
+    if not colour.hasObject('green'):
+      colour.newContent('green')
     login = str(time.time())
     script_id = ["ERP5Type_getSecurityCategoryMapping",
                  "ERP5Type_getSecurityCategory"]
