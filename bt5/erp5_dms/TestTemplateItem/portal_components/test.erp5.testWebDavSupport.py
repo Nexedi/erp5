@@ -31,8 +31,7 @@
 import unittest
 import os
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import DummyLocalizer,\
-     createZODBPythonScript, FileUpload
+from Products.ERP5Type.tests.utils import FileUpload
 from unittest import expectedFailure
 
 import httplib
@@ -42,7 +41,9 @@ from DateTime import DateTime
 from lxml import etree
 
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_data', name)
+  import Products.ERP5.tests
+  return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+                      'test_data', name)
 
 def makeFileUpload(name, as_name=None):
   if as_name is None:
@@ -71,7 +72,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
             )
 
   def afterSetUp(self):
-    portal = self.getPortal()
+    pass
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))

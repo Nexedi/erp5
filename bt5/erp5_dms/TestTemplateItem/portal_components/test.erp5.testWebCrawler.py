@@ -29,7 +29,8 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import urlnorm # This library is imported to detect lack of
+import urlnorm # pylint: disable=unused-import
+               # This library is imported to detect lack of
                # urlnorm availibility in python environment
 
 
@@ -152,11 +153,11 @@ class TestWebCrawler(ERP5TypeTestCase):
                                       title='Section 1',
                                       id='section1',
                                       aggregate_value=section1a_page)
-    web_section2 = web_site.newContent(portal_type=web_section_portal_type,
+    web_site.newContent(portal_type=web_section_portal_type,
                                       title='Section 2',
                                       id='section2',
                                       aggregate_value=section1a_page)
-    web_section1a = web_section1.newContent(
+    web_section1.newContent(
                                           portal_type=web_section_portal_type,
                                           title='Section 1a',
                                           id='section 1a', #add a space in id
