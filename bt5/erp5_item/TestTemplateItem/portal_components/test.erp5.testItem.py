@@ -32,7 +32,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
+from erp5.component.module.TestInvoiceMixin import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 

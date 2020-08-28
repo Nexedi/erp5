@@ -34,7 +34,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from erp5.component.test.testOrder import TestOrderMixin
 from DateTime import DateTime
 
 def getTree(self):
@@ -526,7 +526,6 @@ class TestPackingListMixin(TestOrderMixin):
     simulation_movement_list = applied_rule.objectValues()
     self.assertEqual(len(simulation_movement_list),1)
     order_line = sequence.get('order_line')
-    packing_list = sequence.get('packing_list')
     packing_list_line = sequence.get('packing_list_line')
     for simulation_movement in simulation_movement_list:
       self.assertEqual(simulation_movement.getDeliveryValue(), order_line)
@@ -679,16 +678,16 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     self._solveDivergence(packing_list, 'quantity', 'Adopt Solver')
 
-  def _solveDivergence(self, document, property, solver, **kw):
+  def _solveDivergence(self, document, property_, solver, **kw):
     """Solve divergence by using solver tool"""
     solver_process_tool = self.portal.portal_solver_processes
     solver_process = solver_process_tool.newSolverProcess(document)
     solver_decision, = [x for x in solver_process.contentValues()
-      if x.getCausalityValue().getTestedProperty() == property]
+      if x.getCausalityValue().getTestedProperty() == property_]
     # use Quantity Accept Solver.
     solver_decision.setSolverValue(self.portal.portal_solvers[solver])
     # configure for Accept Solver.
-    solver_decision.updateConfiguration(tested_property_list=[property], **kw)
+    solver_decision.updateConfiguration(tested_property_list=[property_], **kw)
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
@@ -729,8 +728,6 @@ class TestPackingListMixin(TestOrderMixin):
     """
       Look if the packing list has new previsions
     """
-    old_packing_list_line = sequence.get('packing_list_line')
-    packing_list_line = old_packing_list_line.aq_parent[str(int(old_packing_list_line.getId())-1)]
     resource = sequence.get('resource')
     for line in sequence.get('packing_list').getMovementList():
       self.assertEqual(line.getResourceValue(), resource)
@@ -1033,7 +1030,6 @@ class TestPackingListMixin(TestOrderMixin):
     def checkLineSet(delivery, expected_set):
       line_list = delivery.getMovementList()
       self.assertEqual(len(line_list), len(expected_set))
-      found_set = set([(x.getResource(), x.getQuantity(), x.getPrice()) for x in line_list])
     expected_set = set([(resource, self.default_quantity, 555),
                         (resource, self.default_quantity+1, 555)])
     checkLineSet(packing_list1, expected_set)
@@ -1780,7 +1776,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = packing_list.newContent(
+    packing_list.newContent(
                             portal_type=self.packing_list_line_portal_type,
                             resource_value=resource,
                             quantity=10,
@@ -1865,11 +1861,11 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual('cancelled', simulation_movement.getSimulationState())
 
   def stepCreateSourceAccount(self, sequence=None, **kw):
-    organisation = self.stepCreateOrganisation(sequence, None, 'dummy_source')
+    self.stepCreateOrganisation(sequence, None, 'dummy_source')
     sequence.edit(source_account = sequence.get('dummy_source')['bank'])
 
   def stepCreateDestinationAccount(self, sequence=None, **kw):
-    organisation = self.stepCreateOrganisation(sequence, None,
+    self.stepCreateOrganisation(sequence, None,
         'dummy_destination')
     sequence.edit(destination_account = sequence.get('dummy_destination')
         ['bank'])
@@ -2238,7 +2234,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     TestPackingListMixin.afterSetUp(self)
     solver_process_type_info = self.portal.portal_types['Solver Process']
     self.original_allowed_content_types = \
@@ -2246,7 +2242,7 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     self.added_target_solver_list = []
 
   @UnrestrictedMethod
-  def beforeTearDown(self, quiet=1, run=1):
+  def beforeTearDown(self):
     super(TestSolvingPackingList, self).beforeTearDown()
     self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       solver=())
@@ -2317,9 +2313,10 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
                                                   sequence_list=None):
     packing_list = sequence.get('packing_list')
     order = packing_list.getCausalityValue()
-    new_packing_list = filter(lambda x:x != packing_list,
-                              order.getCausalityRelatedValueList(
-      portal_type=packing_list.getPortalType()))[0]
+    new_packing_list = [
+      x for x in order.getCausalityRelatedValueList(
+        portal_type=packing_list.getPortalType())
+      if x != packing_list][0]
     self.assertEqual(len(packing_list.getMovementList()),
                       len(order.getMovementList()) - 10)
     self.assertEqual(len(new_packing_list.getMovementList()), 10)

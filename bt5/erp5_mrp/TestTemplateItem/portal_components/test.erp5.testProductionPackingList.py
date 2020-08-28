@@ -33,7 +33,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.test.testProductionOrder import TestProductionOrderMixin
-from Products.ERP5.tests.testPackingList import TestPackingListMixin
+from erp5.component.test.testPackingList import TestPackingListMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPackingListMixin, \

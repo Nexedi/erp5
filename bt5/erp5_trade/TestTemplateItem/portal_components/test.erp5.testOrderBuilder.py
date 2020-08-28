@@ -27,14 +27,11 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from erp5.component.test.testOrder import TestOrderMixin
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
 
@@ -425,9 +422,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def createSelectMethodForBuilder(self):
-    portal = self.getPortal()
-
   def checkOrderBuilderStockOptimisationResult(self, expected_result, **kw):
     result_list = [(x.getResource(), x.getVariationText(), x.getQuantity(),
                     x.getStartDate().strftime("%Y/%m/%d"),
@@ -449,7 +443,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     self.pinDateTime(fixed_date)
     self.createOrderBuilder()
     self.fillOrderBuilder()
-    node_1_uid = node_1.getUid()
     self.checkOrderBuilderStockOptimisationResult([], node_uid=node_1.getUid())
     self._makeMovement(quantity=-3, destination_value=node_1, simulation_state='confirmed')
     resource_url = self.resource.getRelativeUrl()
@@ -465,7 +458,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     """
     node_1 = self.node_1
     node_2 = self.node_2
-    resource = self.resource
     self.createOrderBuilder()
     self.fillOrderBuilder()
     fixed_date = DateTime('2016/08/10')
@@ -506,7 +498,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     fixed_date = DateTime('2018/01/03')
     self.pinDateTime(fixed_date)
     resource_url = self.resource.getRelativeUrl()
-    node_uid_list = [node_1.getUid(), self.node_2.getUid()]
     self.checkOrderBuilderStockOptimisationResult([], node_uid=node_1.getUid())
     movement = self._makeMovement(quantity=3, destination_value=node_1, simulation_state='delivered',
                        start_date=DateTime('2018/01/10'), variation_category_list=variation_category_list)
@@ -549,7 +540,6 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
     self.assertTrue('auto_planned' in self.portal.getPortalFutureInventoryStateList())
     # end of patch
-    resource = self.resource
     self.createOrderBuilder()
     self.fillOrderBuilder()
     fixed_date = DateTime('2018/09/21')
@@ -563,10 +553,10 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     self._makeMovement(quantity=-5, destination_value=self.node_1, simulation_state='confirmed',
                        start_date=DateTime('2018/09/21'))
     checkStockOptimisationForTwoNodes([(resource_url, '', 5.0, '2018/09/21', '2018/09/21')])
-    auto_planned_one = self._makeMovement(quantity=3, destination_value=self.node_2, simulation_state='auto_planned',
+    self._makeMovement(quantity=3, destination_value=self.node_2, simulation_state='auto_planned',
                        start_date=DateTime('2018/09/18'))
     checkStockOptimisationForTwoNodes([(resource_url, '', 2.0, '2018/09/21', '2018/09/21')])
-    auto_planned_two = self._makeMovement(quantity=2, destination_value=self.node_1, simulation_state='auto_planned',
+    self._makeMovement(quantity=2, destination_value=self.node_1, simulation_state='auto_planned',
                        start_date=DateTime('2018/09/19'))
     checkStockOptimisationForTwoNodes([])
     # But if we more stock than expected, auto planned movements should be reduced

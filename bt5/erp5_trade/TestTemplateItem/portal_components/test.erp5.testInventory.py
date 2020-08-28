@@ -50,7 +50,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from erp5.component.test.testOrder import TestOrderMixin
 from Products.ERP5Form.Selection import DomainSelection
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from textwrap import dedent
@@ -96,7 +96,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       preference.enable()
     self.tic()
 
-  def afterSetUp(self, quiet=1, run=run_all_test):
+  def afterSetUp(self):
     self.login()
     self.category_tool = self.getCategoryTool()
     self.createCategories()
@@ -122,13 +122,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.tic()
 
   def createCategory(self, parent, id_list):
-      last_category = None
-      for category_id in id_list:
-        if type(category_id) == type('a'):
-          last_category = parent.newContent(portal_type='Category',
-                                            id=category_id)
-        else:
-          self.createCategory(last_category, category_id)
+    last_category = None
+    for category_id in id_list:
+      if isinstance(category_id, str):
+        last_category = parent.newContent(portal_type='Category',
+                                          id=category_id)
+      else:
+        self.createCategory(last_category, category_id)
 
   def stepCreateItemList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -245,7 +245,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory = self.createInventory(sequence=sequence)
     inventory_list = sequence.get('inventory_list',[])
     inventory.edit(full_inventory=True)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 101)
@@ -260,7 +260,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory = self.createInventory(sequence=sequence)
     inventory_list = sequence.get('inventory_list',[])
     inventory.edit(full_inventory=False)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 101)
@@ -272,7 +272,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test partial inventory behavior with multiple resource
     """
-    inventory_list = sequence.get('inventory_list')
     simulation = self.getPortal().portal_simulation
 
     # First resource, must not have changed
@@ -353,7 +352,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     section = sequence.get('section')
     mirror_node = sequence.get('mirror_node')
     mirror_section = sequence.get('mirror_section')
-    resource = sequence.get('resource')
     packing_list_module = self.getPortal().getDefaultModule(
                               portal_type=self.packing_list_portal_type)
     packing_list = packing_list_module.newContent(
@@ -478,7 +476,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           - node 9
     """
     organisation_list = []
-    for i in range(10):
+    for _ in range(10):
       self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list, **kw)
       organisation_list.append(sequence.get('organisation'))
 
@@ -500,7 +498,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       Create some variated resources to manipulate during the test
     """
     resource_list = []
-    for i in range(3):
+    for _ in range(3):
       self.stepCreateVariatedResource(sequence=sequence, sequence_list=sequence_list, **kw)
       resource_list.append(sequence.get('resource'))
     sequence.edit(
@@ -647,7 +645,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     delivery_line_list = []
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    order = sequence.get('order')
     packing_list_module = self.getPortal().getDefaultModule(self.packing_list_portal_type)
 
     for data in data_list:
@@ -662,7 +659,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                       [x for x in data.items() if x[0] in ('start_date',)]
       property_dict = {}
       property_dict['price_currency'] = self.price_currency
-      for (id, value) in property_list: property_dict[id] = value
+      for (id_, value) in property_list:
+        property_dict[id_] = value
       packing_list.edit(**property_dict)
       for line in data['lines']:
         # Create Packing List Line
@@ -920,7 +918,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
 
     """
-    simulation = self.getPortal().portal_simulation
     delivery = sequence.get('packing_list_list')[0]
     expected_values_list = [
       {'text':delivery['1']['movement_0_0_0'],
@@ -1113,7 +1110,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test getInventory with a section_category argument
     """
-    organisation_list = sequence.get('organisation_list')
     expected_values_list = [
       {'id':'testing_category/a/aa', 'values':[{'inventory':274.5},] },
       {'id':'testing_category/z/zc', 'values':[{'inventory':152.},] },
@@ -1135,7 +1131,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test getInventory with a payment_category argument
     """
-    organisation_list = sequence.get('organisation_list')
     expected_values_list = [
       {'id':'testing_category/a/aa', 'values':[{'inventory':274.5},] },
       {'id':'testing_category/z/zc', 'values':[{'inventory':-426.5},] },
@@ -1157,7 +1152,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test getInventory with a node_category argument
     """
-    organisation_list = sequence.get('organisation_list')
     expected_values_list = [
       {'id':'testing_category/z/zb/zba', 'values':[{'inventory':162.},] },
       {'id':'testing_category/z/zb/zbb', 'values':[{'inventory':112.5},] },
@@ -1178,7 +1172,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test getInventory with a section_category argument
     """
-    organisation_list = sequence.get('organisation_list')
     expected_values_list = [
       {'id':'testing_category/a/aa', 'values':[{'inventory':-274.5},] },
       {'id':'testing_category/z/zc', 'values':[{'inventory':-152.},] },
@@ -1308,7 +1301,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         if method is None:
           LOG('TEST ERROR : Simulation Tool has no %s method'
               % method_name, 0, '')
-          self.assertTrue(0)
+          raise AssertionError
         a_inventory = method(section=organisation_url,
                              omit_transit=omit_transit,
                              transit_simulation_state=transit_simulation_state,
@@ -1705,12 +1698,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         if not hasattr(inventory, attr):
           LOG('TEST ERROR : Result of getInventoryList has no %s attribute' % attr, 0, '')
           LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
-          self.assertTrue(0)
+          raise RuntimeError
         a_attributes[attr] = getattr(inventory, attr)
       a_inventory = inventory.inventory
       # Build a function to filter on attributes
       def cmpfunction(item):
-        for (key, value) in a_attributes.items():
+        for (key, value) in a_attributes.items(): # pylint: disable=cell-var-from-loop
           if item[key] != value:
             return 0
         return 1
@@ -1722,7 +1715,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           expected_list.append(dict(exp))
           expected_list[-1].update({'id':i})
       # Now, look in these lines for one which has the same inventory
-      found_list = filter(lambda x:x['inventory'] == a_inventory, expected_list)
+      found_list = [x for x in expected_list if x['inventory'] == a_inventory]
       if len(found_list) == 0:
         LOG('TEST ERROR : Found a line with getInventoryList which is not expected.', 0, 'Found line : %s (inventory : %s) ; expected values with these attributes : %s' % (a_attributes, a_inventory, expected_list))
         LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
@@ -1757,7 +1750,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test Inventory Module behavior
     """
-    resource = sequence.get('resource')
     variation_category_list = sequence.get('variation_1')
     quantity = 1
     self.checkVariatedInventory(variation_category_list=variation_category_list,
@@ -1771,7 +1763,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test Inventory Module behavior
     """
-    resource = sequence.get('resource')
     variation_category_list = sequence.get('variation_1')
     quantity = 100
     self.checkVariatedInventory(variation_category_list=variation_category_list,
@@ -1785,7 +1776,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test Inventory Module behavior
     """
-    resource = sequence.get('resource')
     variation_category_list = sequence.get('variation_1')
     quantity = 5
     self.checkVariatedInventory(variation_category_list=variation_category_list,
@@ -1799,7 +1789,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test Inventory Module behavior
     """
-    resource = sequence.get('resource')
     variation_category_list = sequence.get('variation_1')
     quantity = 5
     self.checkVariatedInventory(variation_category_list=variation_category_list,
@@ -1813,7 +1802,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test full inventory with variated resource
     """
-    resource = sequence.get('resource')
     variation_category_list = sequence.get('variation_1')
     # Test first resource
     quantity = 55
@@ -1862,7 +1850,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
       Test Full inventory behavior
     """
-    inventory_list = sequence.get('inventory_list')
+    sequence.get('inventory_list')
     simulation = self.getPortal().portal_simulation
 
     # First resource, must be zero
@@ -1934,27 +1922,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                                portal_type='Product')
     resource_value.setProductLine('level1/level2')
     sequence.edit(first_resource=resource_value)
-
-
-  def stepCreateTwoResourceFullInventory(self,
-                                         sequence=None,
-                                         sequence_list=None,
-                                         **kw):
-    """ Create a full Inventory which includes two inventory lines """
-    inventory = self.createInventory(sequence=sequence)
-    inventory_list = sequence.get('inventory_list',[])
-    inventory.edit(full_inventory=True)
-    inventory_line = inventory.newContent(
-      portal_type = self.inventory_line_portal_type,
-      resource_value = sequence.get("first_resource"),
-      inventory = 10)
-    inventory_line = inventory.newContent(
-      portal_type = self.inventory_line_portal_type,
-      resource_value = sequence.get("second_resource"),
-      inventory = 100)
-    inventory.deliver()
-    inventory_list.append(inventory)
-    sequence.edit(inventory_list=inventory_list)
 
   def stepTestFullInventoryWithResourceCategory(self,
                                                 sequence=None,
@@ -2035,7 +2002,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
      Make sure that we can use section_category parameter with Full inventory.
     """
     node = sequence.get('node')
-    section = sequence.get('section')
     getInventory = self.getSimulationTool().getInventory
     self.assertEqual(202, getInventory(node_uid=node.getUid()))
     self.assertEqual(101, getInventory(section_category='group/level1/level2',
@@ -2065,7 +2031,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
      Make sure that we can use node_category parameter with Full inventory.
     """
-    node = sequence.get('node')
     section = sequence.get('section')
     getInventory = self.getSimulationTool().getInventory
     self.assertEqual(202, getInventory(section_uid=section.getUid()))
@@ -2097,7 +2062,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                    destination_section_value=sequence.get('section'),
                    destination_value=destination_value,
                    start_date=start_date)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = resource_value,
       inventory = 100)
@@ -2301,7 +2266,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory = self.createInventory(sequence=sequence,
                                      full=False, start_date=start_date)
     inventory_list = sequence.get('inventory_list',[])
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type=self.inventory_line_portal_type,
       resource_value=resource_value,
       inventory=inventory_quantity)
@@ -2416,11 +2381,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory = self.createInventory(sequence=sequence)
     inventory_list = sequence.get('inventory_list',[])
     inventory.edit(full_inventory=True)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("first_resource"),
       inventory = 10)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 100)
@@ -2439,7 +2404,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     if kw.get('inventory1', None) is not None:
       inventory1 = kw['inventory1']
     else:
-      inventory_1 = 10
+      inventory1 = 10
     if kw.get('inventory2', None) is not None:
       inventory2 = kw['inventory2']
     else:
@@ -2449,11 +2414,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list = sequence.get('inventory_list',[])
     inventory.edit(full_inventory=True,
                    start_date=start_date)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("resource"),
       inventory = inventory1)
-    inventory_line = inventory.newContent(
+    inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = inventory2)
@@ -2558,7 +2523,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     to_date=DateTime(self.two_resource_full_inventory2_start_date)
     self.getPortalObject().portal_simulation.getCurrentInventoryList(
       to_date=to_date,
-      section=section_value.getRelativeUrl(),
+      section=section_value.getRelativeUrl(), # pylint: disable=undefined-variable
       node=node_value.getRelativeUrl(),
       group_by_variation=1,
       group_by_sub_variation=1,
@@ -3279,7 +3244,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   def test_15_FullInventoryCanCreatesManyVirtualCompensationMovement(self, quiet=0, run=run_all_test):
     organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
     resource_value_list = []
-    for i in range(2000):
+    for _ in range(2000):
       resource_value_list.append(self.portal.product_module.newContent(portal_type='Product'))
 
     self.commit()

@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
-#          Nicolas Dumazet <nicolas.dumazet@nexedi.com>
+# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+#          Courteaud Romain <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,32 +27,19 @@
 ##############################################################################
 
 import unittest
+from erp5.component.test.testPackingList import TestPackingList
 
-from testPurchaseOrder import TestPurchaseOrder
-
-class TestInternalOrder(TestPurchaseOrder):
+class TestPackingListRoundingPrecision(TestPackingList):
   """
-    Test business template erp5_trade
+  Test that Order/Packing List haven't rounding issues with float values.
+  The idea was contributed by Lukasz Nowak
   """
-  run_all_test = 1
-  order_portal_type = 'Internal Order'
-  order_line_portal_type = 'Internal Order Line'
-  order_cell_portal_type = 'Internal Order Cell'
-  packing_list_portal_type = 'Internal Packing List'
-  packing_list_line_portal_type = 'Internal Packing List Line'
-  packing_list_cell_portal_type = 'Internal Packing List Cell'
-  delivery_builder_id = 'internal_packing_list_builder'
+  default_quantity = 59.333333333333336
 
   def getTitle(self):
-    return "Internal Order"
-
-  def test_order_payment_condition_copied(self):
-    """
-    No Payment conditions for Internal Orders
-    """
+    return "Packing List Rounding Precision"
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestInternalOrder))
+  suite.addTest(unittest.makeSuite(TestPackingListRoundingPrecision))
   return suite
-

@@ -29,7 +29,7 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence
-from Products.ERP5.tests.testPackingList import TestPackingListMixin
+from erp5.component.test.testPackingList import TestPackingListMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
@@ -65,7 +65,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
 
   @UnrestrictedMethod
   def stepResetDeliveringRule(self, sequence):
-    original_rule = rule = self.getDeliveringRule()
+    rule = self.getDeliveringRule()
     self.assertEqual(rule.getId(), 'new_delivery_simulation_rule')
     # We clone the rule and clean it up to be able to experiment with it
     portal_rules = self.portal.portal_rules
@@ -97,7 +97,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence['packing_list']
     # XXX-Leo can't we just use sequence['packing_list_line']?
     movement = packing_list.getMovementList()[0]
-    rule = self.getDeliveringRule()
     sequence.edit(
         packing_list=packing_list,
         movement=movement,
@@ -108,7 +107,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     """
     Modify the quantity of the delivery movement
     """
-    packing_list = sequence.get('packing_list')
     movement = sequence.get('movement')
     movement.setQuantity(movement.getQuantity()+1234)
 
@@ -442,7 +440,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
 
   def stepSetNewPrice(self, sequence=None,
                          sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
     movement = sequence.get('movement')
     movement.setPrice(movement.getPrice()+1234)
 

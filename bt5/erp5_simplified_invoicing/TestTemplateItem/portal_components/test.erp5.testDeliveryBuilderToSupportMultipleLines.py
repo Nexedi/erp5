@@ -32,7 +32,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
+from erp5.component.module.TestInvoiceMixin import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestNestedLineMixin(TestSaleInvoiceMixin):
@@ -335,7 +335,8 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
           return True
         return False
     self.tic(stop_condition=stop_condition)
-    update_causality_message_uid, = prioritize_uid_list
+    self.assertEqual(len(prioritize_uid_list), 1)
+    update_causality_message_uid = prioritize_uid_list[0]
     for table in 'message', 'message_queue':
       self.portal.cmf_activity_sql_connection.manage_test("""
         update %s
@@ -348,7 +349,7 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
   @expectedFailure
   def test_04_MergingMultipleSaleOrders(self, quiet=quiet):
     sequence_list = SequenceList()
-    sequence = sequence_list.addSequenceString(self.DEFAULT_SEQUENCE + \
+    sequence_list.addSequenceString(self.DEFAULT_SEQUENCE + \
     """
       stepCreateOrder
       stepSetOrderProfile

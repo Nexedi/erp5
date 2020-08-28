@@ -30,7 +30,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from erp5.component.test.testOrder import TestOrderMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
@@ -275,7 +275,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     We will put default values for an inventory
     """
     date = DateTime(self.first_date_string)
-    inventory = self.createInventory(start_date=date,sequence=sequence)
+    self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
@@ -286,7 +286,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     We will put default values for an inventory
     """
     date = DateTime(self.second_date_string)
-    inventory = self.createInventory(start_date=date,sequence=sequence)
+    self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity - 10
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
@@ -392,7 +392,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     - size/Child/34 100   item1,item2
     """
     date = DateTime(self.first_date_string)
-    inventory = self.createInventory(start_date=date,sequence=sequence)
+    self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
@@ -464,7 +464,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     - size/Child/34 90    item1
     """
     date = DateTime(self.second_date_string)
-    inventory = self.createInventory(start_date=date,sequence=sequence)
+    self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity - 10
     item_list = sequence.get('item_list')
     self.createVariatedInventoryLine(start_date=date,
