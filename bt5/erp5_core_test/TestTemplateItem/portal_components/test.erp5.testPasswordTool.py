@@ -68,7 +68,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
     self.assertNotEquals(uf.getUser(login), None)
-    for plugin_name, plugin in uf._getOb('plugins').listPlugins(
+    for _, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
                   {'login':login, 'password':password}) is not None:
@@ -163,7 +163,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
+    mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
 
@@ -455,19 +455,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertTrue("portal_status_message=User+user-login+does+not+have+an+email+"\
         "address%2C+please+contact+site+administrator+directly" in str(ret))
 
-class TestPasswordToolWithCRM(TestPasswordTool):
-  """
-  Test reset of password
-  """
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_crm',)
-
-  def getTitle(self):
-    return "Password Tool with CRM"
-
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPasswordTool))
-  suite.addTest(unittest.makeSuite(TestPasswordToolWithCRM))
   return suite
