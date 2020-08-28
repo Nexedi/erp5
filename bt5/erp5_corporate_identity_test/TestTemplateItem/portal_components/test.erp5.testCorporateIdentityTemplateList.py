@@ -634,7 +634,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_letter_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -653,7 +654,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_letter_output_expected_002_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -678,7 +680,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -719,7 +722,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -741,7 +745,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -769,7 +774,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -793,7 +799,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -818,7 +825,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -842,7 +850,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -867,7 +876,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -892,7 +902,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -918,7 +929,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -943,7 +955,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -969,7 +982,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -996,7 +1010,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -1022,7 +1037,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Letter",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
     self.portal.portal_preferences.default_site_preference.edit(
@@ -1053,7 +1069,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_relative_url="organisation_module/template_test_organisation",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -1080,7 +1097,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_relative_url="person_module/template_test_no_member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -1122,7 +1140,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       **dict(
         page_number=0,
         test_method="WebPage_printAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
