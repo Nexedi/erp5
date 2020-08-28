@@ -1327,7 +1327,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
-  def testhtmlBookAllOptions(self):
+  def test_htmlBookAllOptions(self):
     """
       Test:
       - Web Page as Book
@@ -1372,6 +1372,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         override_revision=1,
+        include_content_table=1,
         lang="de"
       )
     )
@@ -1413,13 +1414,14 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
   # XXX change to a single pdf from which pics are generated!
   @changeSkin('Book')
-  def testpdfBookAllOptions(self):
+  def test_pdfBookAllOptions(self):
     """
       Test:
       - Web Page as Book
@@ -1454,7 +1456,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   # duplicate, just for page 5
   @changeSkin('Book')
-  def testpdfBookAllOptionsDupe(self):
+  def test_pdfBookAllOptionsDupe(self):
     """
       Test:
       - Web Page as Book
@@ -1489,7 +1491,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   # duplicate, just for page 10
   @changeSkin('Book')
-  def testpdfBookAllOptionsDoubleDupe(self):
+  def test_pdfBookAllOptionsDoubleDupe(self):
     """
       Test:
       - Web Page as Book
@@ -1539,7 +1541,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         test_method="WebPage_exportAsBook",
         page_number=1,
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
@@ -1561,7 +1564,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
@@ -1582,7 +1586,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         test_method="WebPage_printAsBook",
         page_number=1,
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
