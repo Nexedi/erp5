@@ -111,28 +111,36 @@ class CrmTestCase(ERP5ReportTestCase):
 
     if simulation_state == 'assigned':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ticket=self.portal.restrictedTraverse(ev.getFollowUp())
       self._doWorkflowAction(ev,'assign_action',
                          follow_up_ticket_type = ticket.getPortalType(),
                          follow_up_ticket_title = ticket.getTitle())
+      """
     elif simulation_state == 'planned':
       ev.plan()
     elif simulation_state == 'posted':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ev.start()
+      """
     elif simulation_state == 'delivered':
       ev.start()
       ev.deliver()
     elif simulation_state == 'new':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ev.receive()
+      """
     elif simulation_state == 'acknowledged':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ticket=self.portal.restrictedTraverse(ev.getFollowUp())
       self._doWorkflowAction(ev,'assign_action',
                          follow_up_ticket_type = ticket.getPortalType(),
                          follow_up_ticket_title = ticket.getTitle())
       self._doWorkflowAction(ev, 'acknowledge_action')
+      """
     elif simulation_state == 'cancelled':
       ev.stop()
       ev.cancel()
@@ -140,25 +148,31 @@ class CrmTestCase(ERP5ReportTestCase):
       ev.delete()
     elif simulation_state == 'expired':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ev.receive()
       ev.expire()
+      """
     elif simulation_state == 'responded':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ev.receive()
       ev.respond()
+      """
     elif simulation_state == 'started':
       ev.start()
     elif simulation_state == 'ordered':
       raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      """
       ev.plan()
       ev.order()
+      """
     elif simulation_state == 'stopped':
       ev.stop()
     # sanity check
     self.assertEqual(simulation_state, ev.getSimulationState())
     return ev
 
-  def login(self):
+  def login(self, *args, **kw):
     """login with Manager roles."""
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', 'manager', ['Manager', 'Assignee', 'Assignor',
@@ -181,43 +195,43 @@ class CrmTestCase(ERP5ReportTestCase):
     # create group category
     if not self.portal_categories['group'].has_key('demo_group'):
       group=self.portal_categories.group
-      subgroup = group.newContent(portal_type='Category',
+      group.newContent(portal_type='Category',
                                 title='demo_group',
                                 reference='demo_group',
                                 id='demo_group')
     # create users and organisations
     if not self.person_module.has_key('Person_1'):
-      user = self.portal.person_module.newContent(
+      self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
     if not self.person_module.has_key('Person_2'):
-      user = self.portal.person_module.newContent(
+      self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
                               title='Person_2',
                               id='Person_2')
     if not self.person_module.has_key('Person_3'):
-      user = self.portal.person_module.newContent(
+      self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_3',
                               title='Person_3',
                               id='Person_3')
     if not self.organisation_module.has_key('Organisation_1'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1')
     if not self.organisation_module.has_key('Organisation_2'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
                               title='Organisation_2',
                               id='Organisation_2')
     if not self.organisation_module.has_key('My_organisation'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='My_organisation',
                               title='My_organisation',
@@ -301,7 +315,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventOut2=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
               simulation_state='planned',
@@ -309,7 +323,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 1, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventOut3=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Out 3 of First',
               simulation_state='delivered',
@@ -317,7 +331,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventIn1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of First',
               simulation_state='stopped',
@@ -342,7 +356,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=second.getRelativeUrl())
-    eventOut2=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
               simulation_state='delivered',
@@ -350,7 +364,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
               follow_up=second.getRelativeUrl())
-    eventInt1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
               simulation_state='stopped',
@@ -472,7 +486,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 7, 1, 1),
               causality=first_event_out1.getRelativeUrl())
     # creating one free event for test
-    free_event_out1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='delivered',
@@ -610,7 +624,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventOut2=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
               simulation_state='planned',
@@ -618,7 +632,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 1, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventOut3=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Out 3 of First',
               simulation_state='delivered',
@@ -626,7 +640,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventIn1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of First',
               simulation_state='stopped',
@@ -651,7 +665,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=second.getRelativeUrl())
-    eventOut2=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
               simulation_state='delivered',
@@ -659,7 +673,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
               follow_up=second.getRelativeUrl())
-    eventInt1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
               simulation_state='stopped',
@@ -780,7 +794,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 7, 1, 1),
               causality=first_event_out1.getRelativeUrl())
     # creating one free event for test
-    free_event_out1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='delivered',
@@ -918,7 +932,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=first.getRelativeUrl())
-    first_event_inc2 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Inc 2 of First',
               simulation_state='stopped',
@@ -926,7 +940,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 1, 1, 1),
               follow_up=first.getRelativeUrl())
-    first_event_inc3=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Inc 3 of First',
               simulation_state='stopped',
@@ -934,7 +948,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=first.getRelativeUrl())
-    first_event_out1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Inc 1 of First',
               simulation_state='delivered',
@@ -943,7 +957,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 7, 1, 1),
               causality=first_event_inc1.getRelativeUrl())
     # creating one free event for test
-    feEvInc1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='stopped',
@@ -959,7 +973,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=second.getRelativeUrl())
-    second_event_inc2 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Inc 2 of Second',
               simulation_state='stopped',
@@ -967,7 +981,7 @@ class TestCrmReports(CrmTestCase):
               source_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
               follow_up=second.getRelativeUrl())
-    second_event_out1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Inc 1 of Second',
               simulation_state='delivered',
@@ -1088,7 +1102,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 7, 1, 1),
               causality=first_event_inc1.getRelativeUrl())
     # creating one free event for test
-    feEvInc1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='stopped',
@@ -1226,7 +1240,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventOut2=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Out 2 of First',
               simulation_state='planned',
@@ -1234,7 +1248,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 1, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventOut3=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Out 3 of First',
               simulation_state='delivered',
@@ -1242,7 +1256,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=first.getRelativeUrl())
-    eventIn1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of First',
               simulation_state='stopped',
@@ -1267,7 +1281,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=second.getRelativeUrl())
-    eventOut2=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Out 2 of Second',
               simulation_state='delivered',
@@ -1275,7 +1289,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 2, 2, 1),
               follow_up=second.getRelativeUrl())
-    eventInt1=self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Response to Out 1 of Second',
               simulation_state='stopped',
@@ -1396,7 +1410,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 7, 1, 1),
               causality=first_event_out1.getRelativeUrl())
     # creating one free event for test
-    free_event_out1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='delivered',
@@ -1539,7 +1553,7 @@ class TestCrmReports(CrmTestCase):
               stop_date=DateTime(2007, 12, 31))
 
     # creating events in every incoming-outgoing state related with tickets
-    event1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event 1',
               simulation_state='acknowledged',
@@ -1547,7 +1561,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=sale_opportunity.getRelativeUrl())
-    event2 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event 2',
               simulation_state='assigned',
@@ -1555,7 +1569,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 1, 1, 1),
               follow_up=campaign.getRelativeUrl())
-    event3 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Event 3',
               simulation_state='cancelled',
@@ -1563,7 +1577,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=meeting.getRelativeUrl())
-    event4 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Event 4',
               simulation_state='expired',
@@ -1587,7 +1601,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=campaign.getRelativeUrl())
-    event7 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Event 7',
               simulation_state='delivered',
@@ -1595,7 +1609,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=meeting.getRelativeUrl())
-    event8 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Event 8',
               simulation_state='planned',
@@ -1620,14 +1634,14 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=campaign.getRelativeUrl())
     # creating free event for unassigned
-    free_event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='delivered',
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 2, 1, 1))
-    free_event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 2',
               simulation_state='stopped',
@@ -1635,7 +1649,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 2, 1, 1))
     # creating events in every non incoming-outgoing state related with tickets
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event deleted 1',
               simulation_state='draft',
@@ -1643,7 +1657,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=sale_opportunity.getRelativeUrl())
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event deleted 2',
               simulation_state='deleted',
@@ -1653,7 +1667,7 @@ class TestCrmReports(CrmTestCase):
               follow_up=campaign.getRelativeUrl())
     # creating events in incoming-outgoing state related with tickets
     # by causality with one related event
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event causality 1',
               simulation_state='stopped',
@@ -1661,7 +1675,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               causality=event9.getRelativeUrl())
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event causality 2',
               simulation_state='stopped',
@@ -1671,7 +1685,7 @@ class TestCrmReports(CrmTestCase):
               causality=event10.getRelativeUrl())
     # creating events related with same ticket by follow-up and causality
     # Only must count one time (follow-up)
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event both 1',
               simulation_state='stopped',
@@ -1680,7 +1694,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 3, 1, 1),
               causality=event5.getRelativeUrl(),
               follow_up=sale_opportunity.getRelativeUrl())
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event both 2',
               simulation_state='responded',
@@ -1881,7 +1895,7 @@ class TestCrmReports(CrmTestCase):
               stop_date=DateTime(2007, 12, 31))
 
     # creating events in every incoming-outgoing state related with tickets
-    event1 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event 1',
               simulation_state='acknowledged',
@@ -1889,7 +1903,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=sale_opportunity.getRelativeUrl())
-    event2 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event 2',
               simulation_state='assigned',
@@ -1897,7 +1911,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_2,
               start_date=DateTime(2007, 2, 1, 1, 1),
               follow_up=campaign.getRelativeUrl())
-    event3 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Event 3',
               simulation_state='cancelled',
@@ -1905,7 +1919,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=meeting.getRelativeUrl())
-    event4 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Event 4',
               simulation_state='expired',
@@ -1929,7 +1943,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=campaign.getRelativeUrl())
-    event7 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Mail Message',
               title='Event 7',
               simulation_state='delivered',
@@ -1937,7 +1951,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=meeting.getRelativeUrl())
-    event8 = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Phone Call',
               title='Event 8',
               simulation_state='planned',
@@ -1962,14 +1976,14 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 3, 1, 1),
               follow_up=campaign.getRelativeUrl())
     # creating free event for unassigned
-    free_event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 1',
               simulation_state='delivered',
               source_value=self.organisation_module.My_organisation,
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 2, 1, 1))
-    free_event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Free 2',
               simulation_state='stopped',
@@ -1977,7 +1991,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_3,
               start_date=DateTime(2007, 2, 2, 1, 1))
     # creating events in every non incoming-outgoing state related with tickets
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event deleted 1',
               simulation_state='draft',
@@ -1985,7 +1999,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               follow_up=sale_opportunity.getRelativeUrl())
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event deleted 2',
               simulation_state='deleted',
@@ -1995,7 +2009,7 @@ class TestCrmReports(CrmTestCase):
               follow_up=campaign.getRelativeUrl())
     # creating events in incoming-outgoing state related with tickets
     # by causality with one related event
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event causality 1',
               simulation_state='stopped',
@@ -2003,7 +2017,7 @@ class TestCrmReports(CrmTestCase):
               destination_value=self.person_module.Person_1,
               start_date=DateTime(2007, 2, 2, 1, 1),
               causality=event9.getRelativeUrl())
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event causality 2',
               simulation_state='stopped',
@@ -2013,7 +2027,7 @@ class TestCrmReports(CrmTestCase):
               causality=event10.getRelativeUrl())
     # creating events related with same ticket by follow-up and causality
     # Only must count one time (follow-up)
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Fax Message',
               title='Event both 1',
               simulation_state='stopped',
@@ -2022,7 +2036,7 @@ class TestCrmReports(CrmTestCase):
               start_date=DateTime(2007, 2, 3, 1, 1),
               causality=event5.getRelativeUrl(),
               follow_up=sale_opportunity.getRelativeUrl())
-    event = self._makeOneEvent(
+    self._makeOneEvent(
               portal_type='Letter',
               title='Event both 2',
               simulation_state='responded',

@@ -43,8 +43,11 @@ from email.mime.text import MIMEText
 from email import encoders, message_from_string
 from DateTime import DateTime
 
+import Products.ERP5.tests
+
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_data', 'crm_emails', name)
+  return os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+                      'test_data', 'crm_emails', name)
 
 def makeFileUpload(name):
   path = makeFilePath(name)
@@ -108,7 +111,6 @@ class TestCRM(BaseTestCRM):
   def test_Event_CreateRelatedEvent(self):
     # test workflow to create a related event from responded event
     event_module = self.portal.event_module
-    portal_workflow = self.portal.portal_workflow
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',)
     for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
         'Acknowledgement']:
@@ -152,7 +154,6 @@ class TestCRM(BaseTestCRM):
 
   def test_Ticket_CreateRelatedEvent(self):
     # test action to create a related event from a ticket
-    event_module_url = self.portal.event_module.absolute_url()
     ticket = self.portal.meeting_module.newContent(portal_type='Meeting')
     for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
         'Acknowledgement']:
@@ -416,7 +417,6 @@ class TestCRM(BaseTestCRM):
     """
     portal_type = "Support Request"
     title = "Title of the Support Request"
-    content = "This is the content of the Support Request"
     module = self.portal.support_request_module
     support_request = module.newContent(portal_type=portal_type,
                                         title=title,)
@@ -550,7 +550,7 @@ class TestCRM(BaseTestCRM):
     self.assertEqual(event_list, [])
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Mail Message')
     self.assertNotEquals(event_list, [])
-    destination_list = map(lambda x: x.getDestinationValue(), event_list)
+    destination_list = [x.getDestinationValue() for x in event_list]
     self.assertEqual(destination_list, [first_user])
     mail_message = event_list[0]
     self.assertEqual(sender.getRelativeUrl(), mail_message.getSource())
@@ -571,10 +571,10 @@ class TestCRM(BaseTestCRM):
     self.assertEqual([], event_list)
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Visit')
     self.assertNotEquals([], event_list)
-    destination_uid_list = map(lambda x: x.getDestinationUid(), event_list)
+    destination_uid_list = [x.getDestinationUid() for x in event_list]
     self.assertEqual([organisation.getUid()], destination_uid_list)
 
-    resource_value_list = map(lambda x: x.getResourceValue(), event_list)
+    resource_value_list = [x.getResourceValue() for x in event_list]
     self.assertEqual([service], resource_value_list)
 
   def test_OutcomePath(self):
@@ -648,8 +648,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
   def _readTestData(self, filename):
     """read test data from data directory."""
-    return file(os.path.join(os.path.dirname(__file__),
-                             'test_data', 'crm_emails', filename)).read()
+    return file(makeFilePath(filename)).read()
 
   def _ingestMail(self, filename=None, data=None):
     """ingest an email from the mail in data dir named `filename`"""
@@ -685,8 +684,6 @@ class TestCRMMailIngestion(BaseTestCRM):
       ('"He<" <he@erp5.org>', ['person_module/he']),
     )
     portal = self.portal
-    Base_getEntityListFromFromHeader = portal.Base_getEntityListFromFromHeader
-    pc = self.portal.portal_catalog
     for header, expected_paths in expected_values:
       paths = [entity.getRelativeUrl()
                for entity in portal.Base_getEntityListFromFromHeader(header)]
@@ -771,7 +768,7 @@ class TestCRMMailIngestion(BaseTestCRM):
   def test_getPropertyDictFromContent_and_defined_arrow(self):
     # If source/destination are set on event, then getPropertyDictFromContent
     # should not lookup one based on email address.
-    person = self.portal.person_module.newContent(
+    self.portal.person_module.newContent(
         portal_type='Person',
         default_email_coordinate_text='destination@example.com',)
     organisation = self.portal.organisation_module.newContent(
@@ -970,10 +967,10 @@ class TestCRMMailIngestion(BaseTestCRM):
     portal_type = 'Mail Message'
     event = self.portal.getDefaultModule(portal_type).newContent(portal_type=portal_type)
     # build message content with flwd attachment
-    plain_text_message = 'You can read this'
     html_filename = 'broken_html.html'
-    file_path = '%s/test_data/%s' % (__file__.rstrip('c').replace(__name__+'.py', ''),
-                                     html_filename,)
+    file_path = '%s/test_data/%s' % (
+      os.path.dirname(Products.ERP5.tests.__file__),
+      html_filename)
     html_message = open(file_path, 'r').read()
     message = MIMEMultipart('alternative')
     message.attach(MIMEText('text plain content', _charset='utf-8'))
@@ -1998,7 +1995,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     mail_message.send(extra_header_dict={"X-test-header": "test"})
     self.tic()
-    (from_url, to_url, last_message,), = self.portal.MailHost._message_list
+    (_, _, last_message,), = self.portal.MailHost._message_list
     message = message_from_string(last_message)
     self.assertEqual("test", message.get("X-test-header"))
 
