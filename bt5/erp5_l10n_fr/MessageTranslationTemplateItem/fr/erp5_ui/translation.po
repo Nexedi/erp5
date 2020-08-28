@@ -2129,7 +2129,7 @@ msgid "Cancelled [state in task_workflow]"
 msgstr "Annulé"
 
 msgid "Cancelled [state in ticket_workflow]"
-msgstr "Annulé"
+msgstr "Annulée"
 
 msgid "Cancelled."
 msgstr "Annulé."
@@ -2615,7 +2615,7 @@ msgid "Closed [state in project_workflow]"
 msgstr "Clôturé"
 
 msgid "Closed [state in ticket_workflow]"
-msgstr "Clôturé"
+msgstr "Fermée"
 
 msgid "Closing Balance"
 msgstr "Soldes finaux"
@@ -3968,7 +3968,7 @@ msgid "Deleted [state in task_workflow]"
 msgstr "Supprimé"
 
 msgid "Deleted [state in ticket_workflow]"
-msgstr "Supprimé"
+msgstr "Supprimée"
 
 msgid "Deleted [state in validation_workflow]"
 msgstr "Supprimé"
@@ -7937,13 +7937,13 @@ msgid "Open [state in project_workflow]"
 msgstr "Ouvert"
 
 msgid "Open [state in ticket_workflow]"
-msgstr "Ouvert"
+msgstr "Ouverte"
 
 msgid "Open the account and helps input transactions on it"
 msgstr "Permet d'ouvrir un compte et d'y ajouter des transactions."
 
 msgid "Opened [state in ticket_workflow]"
-msgstr "Ouvert"
+msgstr "Ouverte"
 
 msgid "Opening Balance"
 msgstr "Soldes Initiaux"
@@ -11776,6 +11776,9 @@ msgstr "Soumis"
 msgid "Submitted [state in sale_opportunity_workflow]"
 msgstr "Soumis"
 
+msgid "Submitted [state in ticket_workflow]"
+msgstr "Soumise"
+
 msgid "Subpages"
 msgstr "Sous-pages"
 
@@ -11960,7 +11963,7 @@ msgid "Suspended [state in project_workflow]"
 msgstr "Suspendu"
 
 msgid "Suspended [state in ticket_workflow]"
-msgstr "Suspendu"
+msgstr "Suspendue"
 
 msgid "Symbol"
 msgstr "Symbole"
