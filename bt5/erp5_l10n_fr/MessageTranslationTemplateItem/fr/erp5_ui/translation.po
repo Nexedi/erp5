@@ -14653,6 +14653,9 @@ msgstr "Différences entre les révisions"
 msgid "View Employees"
 msgstr "Salariés"
 
+msgid "View Latest Support Requests"
+msgstr "Voir les dernières demandes d'assistance"
+
 msgid "View Mode Listbox"
 msgstr "Listbox mode vue"
 
