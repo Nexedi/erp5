@@ -110,7 +110,6 @@
         css_class,
         i,
         queue,
-        input,
         new_div;
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
@@ -144,19 +143,8 @@
           this.props.container_element.removeChild(this.props.label_element);
         }
       }
-
       if (modification_dict.hasOwnProperty('error_text')) {
-        /* XXX - The goal here is notify input element that there is an error. How? */
-        /* The code below is not good because sometimes is select*/
-        /* At the same, call checkValidity does not work */
-        input = gadget.element.querySelector("input");
-        if (input) {
-          if (!input.classList.contains("is-invalid")) {
-            input.classList.add("is-invalid");
-          } else if (input.classList.contains("is-invalid")) {
-            input.classList.remove("is-invalid");
-          }
-        }
+        return this.checkValidity(modification_dict.error_text);
       }
 
       if (modification_dict.hasOwnProperty('options')) {
@@ -220,7 +208,7 @@
           }
           return true;
         });
-    }, {mutex: 'changestate'})
+    }, {mutex: 'checkvalidity'})
 
     .declareMethod('getContent', function getContent() {
       var argument_list = arguments;
