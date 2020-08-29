@@ -143,9 +143,6 @@
           this.props.container_element.removeChild(this.props.label_element);
         }
       }
-      if (modification_dict.hasOwnProperty('error_text')) {
-        return this.checkValidity(modification_dict.error_text);
-      }
 
       if (modification_dict.hasOwnProperty('options')) {
         if (this.state.field_url) {
@@ -196,6 +193,10 @@
             });
         }
       }
+      if (modification_dict.hasOwnProperty('error_text')) {
+        return this.checkValidity(modification_dict.error_text);
+      }
+
     })
 
     .declareMethod("checkValidity", function checkValidity() {
