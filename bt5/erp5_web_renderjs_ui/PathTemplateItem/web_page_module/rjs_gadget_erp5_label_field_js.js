@@ -190,7 +190,11 @@
           return queue
             .push(function (field_gadget) {
               return field_gadget.render(gadget.state.options);
+            })
+            .push(function (field_gadget) {
+              return gadget.checkValidity(modification_dict.error_text);
             });
+
         }
       }
       if (modification_dict.hasOwnProperty('error_text')) {
@@ -199,8 +203,8 @@
 
     })
 
-    .declareMethod("checkValidity", function checkValidity() {
-      var error_text = this.state.error_text;
+    .declareMethod("checkValidity", function checkValidity(err_text) {
+      var error_text = err_text || this.state.error_text;
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
           // XXX Implement checkValidity on all fields
