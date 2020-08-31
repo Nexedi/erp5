@@ -62,39 +62,33 @@ if (doc_content.find('${WebPage_')):
 for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
   link_reference = None
   link_reference_list = re.findall('href=\"(.*?)\"', link)
-  if len(link_reference_list) == 0:
-    link_reference = re.findall("href=\'(.*?)\'", link)
-  if len(link_reference_list) == 0:
-    link_reference = None
-  if len(link_reference_list) > 0:
+  if link_reference_list:
     link_reference = link_reference_list[0]
+    if link_reference is not None and link_reference.find("report=") > -1:
+      # url for report, check if report can be found.
+      report_name = None
+      link_split = link_reference.split("?")
+      if len(link_split) > 1:
+        link_relative_url = link_split[0]
+        link_param_list = link_split[1].replace("&amp;", "&").split("&")
+        link_param_dict = {}
+        link_param_dict["document_language"] = doc_language
+        link_param_dict["format"] = doc_format
+        for param in link_param_list:
+          param_key, param_value = param.split("=")
+          if param_key == "report":
+            report_name = param_value
+          else:
+            link_param_dict[param_key] = param_value
 
-  if link_reference is not None and link_reference.find("report=") > -1:
-
-    # url for report, check if report can be found.
-    report_name = None
-    link_split = link_reference.split("?")
-    if len(link_split) > 1:
-      link_relative_url = link_split[0]
-      link_param_list = link_split[1].replace("&amp;", "&").split("&")
-      link_param_dict = {}
-      link_param_dict["document_language"] = doc_language
-      link_param_dict["format"] = doc_format
-      for param in link_param_list:
-        param_key, param_value = param.split("=")
-        if param_key == "report":
-          report_name = param_value
-        else:
-          link_param_dict[param_key] = param_value
-
-      # XXX report must be callable directly and generate the full output
-      if report_name is not None:
-        target_context = document.restrictedTraverse(link_relative_url, None)
-        if target_context is not None:
-          target_caller = getattr(target_context, report_name, None)
-          if target_caller is not None:
-            substitution_content = target_caller(**link_param_dict)
-            # Note: switched to report returning a tuple with (content, header-title, header-subtitle)
-            doc_content = doc_content.replace(link, substitution_content[0].encode("utf-8").strip())
+        # XXX report must be callable directly and generate the full output
+        if report_name is not None:
+          target_context = document.restrictedTraverse(link_relative_url, None)
+          if target_context is not None:
+            target_caller = getattr(target_context, report_name, None)
+            if target_caller is not None:
+              substitution_content = target_caller(**link_param_dict)
+              # Note: switched to report returning a tuple with (content, header-title, header-subtitle)
+              doc_content = doc_content.replace(link, substitution_content[0].encode("utf-8").strip())
 
 return doc_content
