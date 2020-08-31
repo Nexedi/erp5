@@ -1,1 +1,2 @@
-return ['test back compat embed report']
+import json
+return ['test report %s' % json.dumps(kw)]

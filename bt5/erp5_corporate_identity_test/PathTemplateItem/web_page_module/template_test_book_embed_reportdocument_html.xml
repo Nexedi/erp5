@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Image" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -60,70 +60,62 @@
             </value>
         </item>
         <item>
-            <key> <string>_count</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <tuple>
+                <string>contributor/person_module/template_test_member</string>
+                <string>contributor/person_module/template_test_author</string>
+                <string>follow_up/sale_opportunity_module/template_test_embed_sale_opportunity</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>58b8fed1f94e8a6ce4f94edc0411fa93</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/x-bmp</string> </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>height</string> </key>
-            <value> <int>842</int> </value>
+            <key> <string>default_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Sample description</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>template_test_book_embed_report_back_compat_bmp</string> </value>
+            <value> <string>template_test_book_embed_reportdocument_html</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Image</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
-            <key> <string>width</string> </key>
-            <value> <int>595</int> </value>
+            <key> <string>short_title</string> </key>
+            <value> <string>Template Test Book.Embed.ReportDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Template Test Book.Embed.ReportDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Length" module="BTrees.Length"/>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>

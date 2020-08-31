@@ -1611,12 +1611,12 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
-  def test_pdfBookEmbedReportBackCompat(self):
+  def test_pdfBookEmbedReport(self):
     """
     """
     self.runPdfTestPattern(
-      "template_test_book_embed_reportdocument_back_compat_html",
-      "template_test_book_embed_report_back_compat_bmp",
+      "template_test_book_embed_reportdocument_html",
+      "template_test_book_embed_report_bmp",
       "template_test_image_source_pdf",
       **dict(
         page_number=2,
