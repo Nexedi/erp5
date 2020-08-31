@@ -13806,6 +13806,7 @@ return new Parser;
           result_list,
           local_roles,
           local_role_found = false,
+          selection_domain_found = false,
           selection_domain,
           sort_list = [],
           group_list = [];
@@ -13856,18 +13857,23 @@ return new Parser;
 
                   result_list = isSingleDomain(sub_query);
                   if (result_list) {
-                    parsed_query.query_list.splice(i, 1);
-                    query = jIO.Query.objectToSearchText(parsed_query);
-                    if (selection_domain) {
-                      for (key in result_list) {
-                        if (result_list.hasOwnProperty(key)) {
-                          selection_domain[key] = result_list[key];
+                    selection_domain_found = false;
+                    for (key in result_list) {
+                      if (result_list.hasOwnProperty(key) &&
+                          ((selection_domain === undefined) ||
+                           (!selection_domain.hasOwnProperty(key)))) {
+                        if (selection_domain === undefined) {
+                          selection_domain = {};
                         }
+                        selection_domain[key] = result_list[key];
+                        selection_domain_found = true;
                       }
-                    } else {
-                      selection_domain = result_list;
                     }
-                    i -= 1;
+                    if (selection_domain_found === true) {
+                      parsed_query.query_list.splice(i, 1);
+                      query = jIO.Query.objectToSearchText(parsed_query);
+                      i -= 1;
+                    }
                   }
 
                 }
