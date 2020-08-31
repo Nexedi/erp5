@@ -11,6 +11,6 @@ context.manage_delObjects(ids=[
   )
 ])
 
-context.Person_initUserId()
+context.initUserId()
 if not context.REQUEST.get('is_business_template_installation', 0):
   context.setReference(None)

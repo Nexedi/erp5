@@ -138,7 +138,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
         self.hasMiddleName() or \
         self._baseHasTitle()
 
-  def __checkUserIdAvailability(self, pas_plugin_class, user_id=None, login=None):
+  def __checkUserIdAvailability(self, pas_plugin_class, user_id=None, login=None, check_concurrent_execution=True):
     # Encode reference to hex to prevent uppercase/lowercase conflict in
     # activity table (when calling countMessageWithTag)
     if user_id:
@@ -163,12 +163,15 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
             exact_match=True,
           )
         ):
-          raise UserExistsError(user_id)
+          raise UserExistsError(user_id or login)
       else:
         # PAS is used, without expected enumeration plugin: property has no
         # effect on user enumeration, skip checks.
         # XXX: what if desired plugin becomes active later ?
         return
+
+    if not check_concurrent_execution:
+      return
     # Check that there is no reindexation related to reference indexation
     if self.getPortalObject().portal_activities.countMessageWithTag(tag):
       raise UserExistsError(user_id)
@@ -220,6 +223,53 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
           user_id=value,
         )
       self._baseSetUserId(value)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'initUserId')
+  def initUserId(self):
+    """Initialize user id.
+
+    ERP5 guarantees unicity of user id when setUserId is called, but this
+    comes at the expense of performance, because two transactions are not
+    allowed to change any user id at a time.
+    This implementation uses an id generator which already guarantees the
+    unicity of generated values, so when using this method we can trust
+    ourselves and don't need setUserId to check unicity of the user id
+    we are generating with other concurrent generations.
+    We ignore the risk that another concurrent transaction might be modifying
+    a user with a conflicting user id (using another method than initUserId)
+    and only check we are not generating an user id that would already be
+    used before, in case some user ids were already set by other methods than
+    initUserId - the most probable case being migration of persons created
+    before introduction of user id and ERP5 Logins.
+
+    If user id are really important in a project(which is very unlikely), this
+    method can be customized in a type based method named Person_initUserId
+    """
+    method = self.getTypeBasedMethod('initUserId')
+    if method is not None:
+      return method()
+    if not self.hasUserId():
+      portal = self.getPortalObject()
+      user_id = 'P%i' % portal.portal_ids.generateNewId(
+          id_group='user_id',
+          id_generator='non_continuous_integer_increasing',
+      )
+      self.__checkUserIdAvailability(
+          pas_plugin_class=ERP5LoginUserManager,
+          user_id=user_id,
+          check_concurrent_execution=False
+      )
+      # until migration from ERP5UserManager -> ERP5UserManager is completed
+      # we want to make sure we are not generating a user id that was used
+      # as a reference of a not yet migrated person, otherwise we'll have a
+      # duplicate when this person will be migrated.
+      self.__checkUserIdAvailability(
+          pas_plugin_class=ERP5UserManager,
+          login=user_id,
+          check_concurrent_execution=False
+      )
+      self._baseSetUserId(user_id)
+      self.reindexObject()
 
   # Time management
   security.declareProtected(Permissions.AccessContentsInformation,
