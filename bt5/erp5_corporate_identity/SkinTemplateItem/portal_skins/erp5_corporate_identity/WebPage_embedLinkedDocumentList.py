@@ -16,7 +16,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content or blank):
     link_reference = link_reference_list[0]
     if link_reference.find("report=") == -1:
       # only internal references can be embedded
-      if link_reference.find("http") == -1:
+      if link_reference.lower().find("http") == -1:
         try:
           link_doc = context.restrictedTraverse(link_reference.split("?")[0])
           doc_content = doc_content.replace(link, link_doc.asStrippedHTML())
