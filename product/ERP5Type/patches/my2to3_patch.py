@@ -2,6 +2,7 @@ import inspect, new, os
 from compiler import future, pyassem, walk
 
 from Acquisition import aq_parent
+from ZODB.broken import BrokenModified
 from my2to3.trace import apply_fixers, patch_imports, tracing_functions
 from Products.PageTemplates.ZRPythonExpr import PythonExpr
 from Products.PythonScripts.PythonScript import _marker, PythonScript, PythonScriptTracebackSupplement
@@ -39,12 +40,17 @@ if my2to3_action == "trace":
         #   We need the file path (i.e. self.get_filepath()). This information
         #   is contained in state['_filepath'], but it is not always the case.
         #   Calling ___setstate__ before makes this information available.
+        # XXX: above comment not up-to-date
         new_body = apply_fixers(state['_body'], self.get_filepath())
         if new_body != state['_body']:
           state['_body'] = new_body
           # This time, it's called to update the body.
           self.___setstate__(state)
           self._compile()
+          self._p_changed = False
+
+    def __reduce__(self, *args):
+      raise BrokenModified(self)
 
     # Add new "builtins" which the script can access
     def _exec(self, bound_names, args, kw):
@@ -164,7 +170,6 @@ elif my2to3_action == "whatever":
         else:
           if caller[1] == __file__ and caller[2] == 126:
             # Patch, to add "future" features
-            # See https://github.com/python/cpython/blob/8d21aa21f2cbc6d50aab3f420bb23be1d081dac4/Lib/compiler/pycodegen.py#L214
             futures = self.get_module().futures
             assert futures == (), futures
             self.get_module().futures = ("division",) # TODO: ...
