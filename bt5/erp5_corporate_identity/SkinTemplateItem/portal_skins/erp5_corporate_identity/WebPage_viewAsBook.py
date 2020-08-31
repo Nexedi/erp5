@@ -95,7 +95,8 @@ if book_language:
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
 else:
   book_language = blank
-if book_reference is None:
+
+if not book_reference:
   book_reference = book_prefix + book_title.replace(" ", ".")
 book_full_reference = '-'.join([book_reference, book_version, book_language])
 
@@ -131,11 +132,11 @@ if book_include_history_table:
   book_version_list = []
   book_distribution_list = []
 
-# old generate book
+# old generate book, this embed link like <a href="Template.Test.Book.Embeddable.Document">This link should be embedded</a>
 if book_include_linked_content:
   book_content = book.WebPage_embedLinkedDocumentList(doc_content=book_content)
 
-# embed reports
+# embed reports, link like <a href="project_module/1234?report=bam>, which has report=
 if book_include_report_content:
   book_report_css_list = pref.getPreferredCorporateIdentityTemplateReportCssList() or []
   book_report_js_list = pref.getPreferredCorporateIdentityTemplateReportJsList() or []
