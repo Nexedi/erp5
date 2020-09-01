@@ -2953,7 +2953,69 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if err_list:
       self.fail(''.join(err_list))
 
-  # TODO: test with cells ?
+  def test_Order_viewAsODT_cell(self):
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type
+    ).newContent(
+        portal_type=self.resource_portal_type,
+        title='Resource Title',
+        variation_base_category_list=['size']
+    )
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              specialise=self.business_process,
+                              title='Order',
+                              start_date=self.datetime,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    order_line = order.newContent(
+        portal_type=self.order_line_portal_type,
+        resource_value=resource,)
+    order_line.setVariationBaseCategoryList(('size', ))
+    order_line.setVariationCategoryList(['size/Child/32'])
+
+    order_cell = order_line.newCell(
+        'size/Child/32',
+        base_id='movement',)
+    order_cell.edit(
+        quantity=10,
+        price=3)
+
+    order.confirm()
+    self.tic()
+
+    # we use "${resource title} ${variation}" by for lines
+    self.assertEqual(
+        order.Order_getODTDataDict()['line_list'][-1]['description'],
+        ('Resource Title 32',))
+    # unless resource has a description, then we use "${resource description} ${variation}"
+    resource.setDescription('Resource Description')
+    self.assertEqual(
+        order.Order_getODTDataDict()['line_list'][-1]['description'],
+        ('Resource Description 32',))
+    # If the descrption is multi line, we use "," separated lines for ${resource description}
+    resource.setDescription('Resource\nDescription')
+    self.assertEqual(
+        order.Order_getODTDataDict()['line_list'][-1]['description'],
+        ('Resource, Description 32',))
+    # There use to be an error when description is only \n. In that case it should only use title
+    resource.setDescription('\n')
+    self.assertEqual(
+        order.Order_getODTDataDict()['line_list'][-1]['description'],
+        ('Resource Title 32',))
+
+    odt = order.Order_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
 
   def test_subcontent_reindexing(self):
     """Tests, that modification on Order are propagated to lines and cells
