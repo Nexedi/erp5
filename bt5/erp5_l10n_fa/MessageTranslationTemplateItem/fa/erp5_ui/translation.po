@@ -1155,7 +1155,7 @@ msgstr ""
 msgid "Bank Account Number"
 msgstr ""
 
-msgid "Bank Account TItle"
+msgid "Bank Account Title"
 msgstr ""
 
 msgid "Bank Accounts"

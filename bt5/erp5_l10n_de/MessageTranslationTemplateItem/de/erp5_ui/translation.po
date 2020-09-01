@@ -722,9 +722,6 @@ msgstr "Kontoschlüssel"
 msgid "Bank Account Number"
 msgstr "Kontonummer"
 
-msgid "Bank Account TItle"
-msgstr "Kontotitel"
-
 msgid "Bank Account Title"
 msgstr "Kontotitel"
 
