@@ -89,6 +89,17 @@ def test_suite():
   suite = unittest.TestSuite()
   tested_business_template = os.environ['TESTED_BUSINESS_TEMPLATE']
 
+  if tested_business_template == 'erp5_invoicing':
+    from Testing import ZopeTestCase
+    ZopeTestCase._print(
+      '\nDo nothing: Invoice Line container is defined in '
+      'erp5_{simplified,advanced}_invoicing so you should run those instead\n')
+    return suite
+  tested_business_template_list = [tested_business_template]
+  if tested_business_template in ('erp5_simplified_invoicing',
+                                    'erp5_advanced_invoicing'):
+    tested_business_template_list.append('erp5_invoicing')
+
   testclass = type(
       'CodingStyleTest %s' % tested_business_template,
       (CodingStyleTest,),
@@ -102,7 +113,7 @@ def test_suite():
   testXHTML.addTestMethodDynamically(
       testclass,
       testXHTML.validator,
-      (tested_business_template,),
+      tested_business_template_list,
       expected_failure_list=(
           # this view needs VCS preference set (this test suite does not support
           # setting preferences, but this might be a way to fix this).
