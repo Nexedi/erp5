@@ -118,7 +118,7 @@ def unicodeDict(d):
 
 for line in getSubLineList(context):
   prod_desc = line.getResource() is not None and \
-           line.getResourceValue().getDescription() or (
+           getFieldAsString(line.getResourceValue().getDescription()) or (
     request.get('international_form') and line.getResourceTitle() or line.getResourceTranslatedTitle() )
   if use_line_title:
     desc = (line.getTitle(), )
