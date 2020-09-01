@@ -180,6 +180,9 @@ ignored_skin_id_set = {
   'PdmZuite_reset',
   'PdmZuite_CommonTemplateForRenderjsUi',
   'PdmZuite_checkStockBrowserForRenderjsUi',
+  'AdvancedInvoiceTransaction_postTransactionLineGeneration',
+  'InvoiceTransaction_jumpToOrder',
+  'InvoiceTransaction_jumpToPackingList',
 }
 
 # Generic method to check consistency of a skin item

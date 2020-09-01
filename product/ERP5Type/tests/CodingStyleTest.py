@@ -99,10 +99,17 @@ def test_suite():
       },
   )
 
+  tested_business_template_list = [tested_business_template]
+  # erp5_invoicing doesn't define a container for Invoice Line: defined in
+  # erp5_simplified_invoicing (SIT/PIT) and erp5_advanced_invoicing (SI/PI)
+  if tested_business_template in ('erp5_simplified_invoicing',
+                                  'erp5_advanced_invoicing'):
+    tested_business_template_list.append('erp5_invoicing')
+
   testXHTML.addTestMethodDynamically(
       testclass,
       testXHTML.validator,
-      (tested_business_template,),
+      tested_business_template_list,
       expected_failure_list=(
           # this view needs VCS preference set (this test suite does not support
           # setting preferences, but this might be a way to fix this).
