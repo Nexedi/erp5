@@ -158,6 +158,41 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     output_string = web_page.WebPage_validateImage(img_string=img_string, img_wrap=True)
     self.assertEqual(output_string, '<p class="ci-book-img" style="text-align:center"><img src="Template.Test.Image.Map?version=1&amp;format="></p>')
 
+  def test_webPage_embedLinkedDocumentList(self):
+    web_page = self.portal.web_page_module.template_test_slideshow_input_001_en_html
+
+    doc_content = '<div> [<a href="Https://Template.Test.Book.Embeddable.Document">This link should be embedded</a>] </div>'
+    output =web_page.WebPage_embedLinkedDocumentList(doc_content)
+    self.assertEqual(doc_content, output)
+
+    doc_content = '<div> [<a href="Template.Test.Book.Embeddable.Document">This link should be embedded</a>] </div>'
+    output =web_page.WebPage_embedLinkedDocumentList(doc_content)
+    self.assertEqual(doc_content, output)
+
+    # be careful of space between <div> <a>
+    doc_content = '<div> <a href="Template.Test.Book.Embeddable.Document">This link should be embedded</a> </div>'
+    output =web_page.WebPage_embedLinkedDocumentList(doc_content)
+    self.assertEqual(output, '<div>%s</div>' %web_page.restrictedTraverse('Template.Test.Book.Embeddable.Document').asStrippedHTML())
+
+  def test_webPage_embedReportDocumentList(self):
+    web_page_no_follow_up = self.portal.web_page_module.template_test_slideshow_input_001_en_html
+    web_page_with_follow_up = self.portal.web_page_module.template_test_book_embed_reportdocument_html
+
+    doc_content = '<div>${WebPage_insertFollowUpCorporareIdentityTestReport}</div>'
+    output =web_page_no_follow_up.WebPage_embedReportDocumentList(doc_content)
+    self.assertEqual(output, doc_content)
+
+    output =web_page_with_follow_up.WebPage_embedReportDocumentList(doc_content)
+    self.assertEqual(output, '<div>%s</div>' % web_page_with_follow_up.Base_generateCorporareIdentityTestReport()[0])
+
+    # it has no matter with/without follow up
+    doc_content = '<div> <a href="sale_opportunity_module/template_test_embed_sale_opportunity?report=Base_generateCorporareIdentityTestReport&amp;test=23"></a> </div>'
+    output =web_page_with_follow_up.WebPage_embedReportDocumentList(doc_content)
+    self.assertEqual(output, '<div>test report {"test": "23", "document_language": null, "format": null}</div>')
+
+    doc_content = '<div> <a href="sale_opportunity_module/template_test_embed_sale_opportunity?report=Base_generateCorporareIdentityTestReport&amp;test=23"></a> </div>'
+    output =web_page_no_follow_up.WebPage_embedReportDocumentList(doc_content)
+    self.assertEqual(output, '<div>test report {"test": "23", "document_language": null, "format": null}</div>')
 
   def test_getTemplateProxyParameter_override_person(self):
     output_dict_list = self.test_person.Base_getTemplateProxyParameter(
