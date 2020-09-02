@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5.tests.testTradeModelLine import TestTradeModelLine
+from erp5.component.test.testTradeModelLine import TestTradeModelLine
 
 class TestTradeModelLinePurchase(TestTradeModelLine):
   invoice_portal_type = 'Purchase Invoice Transaction'
