@@ -27,7 +27,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
-from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineMixin
+from erp5.component.test.testTradeModelLine import TestTradeModelLineMixin
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex

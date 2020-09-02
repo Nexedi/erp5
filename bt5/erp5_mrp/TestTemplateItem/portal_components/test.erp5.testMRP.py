@@ -28,7 +28,7 @@
 
 import unittest
 from DateTime import DateTime
-from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from erp5.component.test.testBPMCore import TestBPMMixin
 
 class TestMRPMixin(TestBPMMixin):
 

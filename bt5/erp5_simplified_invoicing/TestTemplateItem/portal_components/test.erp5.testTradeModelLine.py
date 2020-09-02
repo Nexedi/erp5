@@ -33,7 +33,7 @@ import random
 import unittest
 from unittest import expectedFailure
 
-from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from erp5.component.test.testBPMCore import TestBPMMixin
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
@@ -413,11 +413,11 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def checkTradeModelRuleSimulationExpand(self, delivery):
     expected_result_dict = self[delivery.getPath()]
-    price_currency = self['price_currency']
 
     for line in delivery.getMovementList():
-      simulation_movement_list, = \
-        self.getTradeModelSimulationMovementList(line)
+      simulation_movement_list_list = self.getTradeModelSimulationMovementList(line)
+      self.assertEqual(len(simulation_movement_list_list), 1)
+      simulation_movement_list = simulation_movement_list_list[0]
       result_dict = {sm.getResourceValue().getUse(): sm
                      for sm in simulation_movement_list}
       self.assertEqual(len(simulation_movement_list),
@@ -662,7 +662,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       self.test_01_OrderWithSimpleTaxedAndDiscountedLines('packing_list')
 
     for line in packing_list.getMovementList():
-        line.setQuantity(line.getQuantity() *
+      line.setQuantity(line.getQuantity() *
           self.modified_packing_list_line_quantity_ratio)
     self.tic()
     self.checkCausalityState(packing_list, 'diverged')
@@ -1179,10 +1179,10 @@ return lambda *args, **kw: 1""")
     base_contribution_list = 'base_amount/tax', bounded_fee
     kw = {'portal_type': self.order_line_portal_type,
           'base_contribution_list': base_contribution_list}
-    order_line_1 = order.newContent(price=1000, quantity=1,
-                                    resource_value=resource_A, **kw)
-    order_line_2 = order.newContent(price=500, quantity=1,
-                                    resource_value=resource_B, **kw)
+    order.newContent(price=1000, quantity=1,
+                     resource_value=resource_A, **kw)
+    order.newContent(price=500, quantity=1,
+                     resource_value=resource_B, **kw)
     amount_list = order.getGeneratedAmountList()
     self.assertEqual([75], [x.getTotalPrice() for x in amount_list])
 
@@ -1206,12 +1206,12 @@ return lambda *args, **kw: 1""")
                                             base_application=fixed_quantity,
                                             price=1)
     # for delivery level
-    discount = self.createTradeModelLine(trade_condition,
-                                         reference='DISCOUNT_B',
-                                         resource_value=tax,
-                                         base_application=fixed_quantity,
-                                         target_delivery=True,
-                                         quantity=10, price=-1)
+    self.createTradeModelLine(trade_condition,
+                              reference='DISCOUNT_B',
+                              resource_value=tax,
+                              base_application=fixed_quantity,
+                              target_delivery=True,
+                              quantity=10, price=-1)
 
     self.commit()# flush transactional cache
 

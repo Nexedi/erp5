@@ -252,7 +252,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     # Order ---> TC (123)
     #
     # price should be 123
-    supply_line = self.trade_condition.newContent(
+    self.trade_condition.newContent(
                                     portal_type=self.supply_line_type,
                                     resource_value=self.resource,
                                     base_price=123)
@@ -347,10 +347,10 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           source_section_value=self.vendor,
                                           destination_section_value=self.client)
     other_supply.validate()
-    other_supply_line = other_supply.newContent(
+    other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
-    supply_line = self.trade_condition.newContent(
+    self.trade_condition.newContent(
                                     portal_type=self.supply_line_type,
                                     resource_value=self.resource,
                                     base_price=2)
@@ -426,10 +426,10 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           source_section_value=self.vendor,
                                           destination_section_value=self.client)
     other_supply.validate()
-    other_supply_line = other_supply.newContent(
+    other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
-    supply_line = self.trade_condition.newContent(
+    self.trade_condition.newContent(
                                     portal_type=self.supply_line_type,
                                     resource_value=self.resource,
                                     base_price=2)
@@ -458,11 +458,11 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           source_section_value=self.vendor,
                                           destination_section_value=self.client)
     other_supply.validate()
-    other_supply_line = other_supply.newContent(
+    other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
     self.trade_condition.setReference(self.id())
-    supply_line = self.trade_condition.newContent(
+    self.trade_condition.newContent(
                                     portal_type=self.supply_line_type,
                                     resource_value=self.resource,
                                     base_price=2)
@@ -482,7 +482,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
   def test_supply_line_in_other_trade_condition_does_not_apply(self):
     """Supply lines from trade condition not related to an order does not apply.
     """
-    supply_line = self.trade_condition.newContent(
+    self.trade_condition.newContent(
                                     portal_type=self.supply_line_type,
                                     resource_value=self.resource,
                                     base_price=2)
@@ -502,14 +502,14 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
   def test_supply_line_section(self):
     # if a supply lines defines a section, it has priority over supply lines
     # not defining sections
-    other_entity = self.portal.organisation_module.newContent(
+    self.portal.organisation_module.newContent(
                                       portal_type='Organisation',
                                       title='Other')
     supply = self.portal.getDefaultModule(self.supply_type
                              ).newContent(portal_type=self.supply_type,
                                           resource_value=self.resource,)
     supply.validate()
-    supply_line = supply.newContent(
+    supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
 
@@ -519,7 +519,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           destination_section_value=self.client,
                                           source_section_value=self.vendor)
     other_supply.validate()
-    other_supply_line = other_supply.newContent(
+    other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=2)
 

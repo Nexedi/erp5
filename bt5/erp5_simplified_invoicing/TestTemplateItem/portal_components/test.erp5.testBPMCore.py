@@ -166,7 +166,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     return business_link
 
   def createTradeModelPath(self, business_process=None,
-                           criterion_property_dict={}, **kw):
+                           criterion_property_dict=None, **kw):
     if business_process is None:
       business_process = self.createBusinessProcess()
     if kw.get('reference') and not kw.get('id'):
@@ -175,8 +175,8 @@ class TestBPMMixin(ERP5TypeTestCase):
       portal_type=self.trade_model_path_portal_type, **kw)
     if criterion_property_dict:
       trade_model_path._setCriterionPropertyList(tuple(criterion_property_dict))
-      for property, identity in criterion_property_dict.iteritems():
-        trade_model_path.setCriterion(property, identity)
+      for property_, identity in criterion_property_dict.iteritems():
+        trade_model_path.setCriterion(property_, identity)
     reference = kw.get('reference', None)
     if reference is not None:
       setattr(self, reference, trade_model_path)
@@ -605,6 +605,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     checkExpectedDates(self.delivery_simulation_movement.getParentValue(),
                        base_date, base_date + 2)
 
+    # pylint: disable=anomalous-backslash-in-string
     """
     XXX More complex scenarios must be tested, like when several path are
     possible like this :

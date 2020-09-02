@@ -5,9 +5,10 @@ erp5_simulation
 erp5_apparel
 erp5_project
 erp5_configurator_standard_solver
-erp5_simulation_test_trade_template
 erp5_simulation_test
+erp5_simulation_test_trade_template
 erp5_administration
 erp5_dummy_movement
 erp5_configurator_standard_accounting_template
 erp5_configurator_standard_invoicing_template
+erp5_item

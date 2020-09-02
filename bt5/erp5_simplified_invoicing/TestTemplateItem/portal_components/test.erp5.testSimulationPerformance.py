@@ -31,7 +31,7 @@ from test import pystone
 from time import time
 pystone.clock = time
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
-from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineSale
+from erp5.component.test.testTradeModelLine import TestTradeModelLineSale
 
 if ERP5TypeTestLoader._testMethodPrefix == 'test':
   ERP5TypeTestLoader._testMethodPrefix = 'perf'

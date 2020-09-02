@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineMixin
+from erp5.component.test.testTradeModelLine import TestTradeModelLineMixin
 
 
 class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
