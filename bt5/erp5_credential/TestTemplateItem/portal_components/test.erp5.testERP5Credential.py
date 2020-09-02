@@ -165,7 +165,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._enablePreference()
 
   # Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
-  def decode_email(self, file):
+  def decode_email(self, file_):
     # Prepare result
     theMail = {
       'attachment_list': [],
@@ -174,9 +174,9 @@ class TestERP5Credential(ERP5TypeTestCase):
       'headers': {}
     }
     # Get Message
-    msg = email.message_from_string(file)
+    msg = email.message_from_string(file_)
     # Back up original file
-    theMail['__original__'] = file
+    theMail['__original__'] = file_
     # Recode headers to UTF-8 if needed
     for key, value in msg.items():
       decoded_value_list = decode_header(value)
@@ -188,7 +188,7 @@ class TestERP5Credential(ERP5TypeTestCase):
                    'to', 'from', 'cc', 'sender', 'reply-to'):
       header_field = theMail['headers'].get(header)
       if header_field:
-          theMail['headers'][header] = parseaddr(header_field)[1]
+        theMail['headers'][header] = parseaddr(header_field)[1]
     # Get attachments
     body_found = 0
     for part in msg.walk():
@@ -252,7 +252,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.logout()
 
-  def stepSetCredentialAssignmentPropertyList(self, sequence={}):
+  def stepSetCredentialAssignmentPropertyList(self, sequence=None):
     category_list = sequence.get("category_list",
         ["role/internal", "function/member"])
     self.login()
@@ -321,8 +321,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    for plugin_name, plugin in uf._getOb('plugins').listPlugins(
-                                IAuthenticationPlugin):
+    for _, plugin in uf._getOb('plugins').listPlugins(IAuthenticationPlugin):
       if plugin.authenticateCredentials(
                   {'login': login, 'password': password}) is not None:
         break
@@ -450,7 +449,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._assertUserDoesNotExists('homie', 'secret')
 
     # check that informations on the person object have been updated
-    person_module = self.portal.getDefaultModule('Person')
     related_login_result = self.portal.portal_catalog(portal_type='ERP5 Login', reference='homie')
     self.assertEqual(len(related_login_result), 1)
     related_person = related_login_result[0].getParentValue()
@@ -742,7 +740,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       Check an email containing the usernames list as been sent
     '''
     person_list = sequence.get('person_list')
-    email = sequence.get('default_email_text')
+    email_text = sequence.get('default_email_text')
     # after accept, only one email is send containing the reset link
     previous_message = self.portal.MailHost._previous_message
     last_message = self.portal.MailHost._last_message
@@ -760,7 +758,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     # check the mail is sent to the requester :
     send_to = decoded_message['headers']['to']
-    self.assertEqual(email, send_to)
+    self.assertEqual(email_text, send_to)
 
   def stepCheckPasswordChange(self, sequence=None, sequence_list=None, **kw):
     """
@@ -782,7 +780,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         url = line[line.find('http:'):]
     url = url.strip()
     self.assertNotEquals(url, None)
-    response = self.publish(url)
+    self.publish(url)
     parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
     self.assertTrue('reset_key' in parameters)
     key = parameters['reset_key'][0]
@@ -1070,8 +1068,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     mfrom, mto, message_text = last_message
     self.assertEqual(mfrom, 'Portal Administrator <postmaster@localhost>')
     self.assertEqual(['Vifib Test <barney@duff.com>'], mto)
-    self.assertNotEquals(re.search("Subject\:.*Welcome", message_text), None)
-    self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
+    self.assertNotEquals(re.search(r"Subject\:.*Welcome", message_text), None)
+    self.assertNotEquals(re.search(r"Hello\ Vifib\ Test\,", message_text), None)
     decoded_message = self.decode_email(last_message[2])
     body_message = decoded_message['body']
     self.assertNotEquals(re.search("key=%s" % mail_message.getReference(),
