@@ -1,5 +1,6 @@
 ##############################################################################
 #
+
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #          Mikolaj Antoszkiewicz <mikolaj@erp5.pl>
 #
@@ -31,7 +32,7 @@ from unittest import expectedFailure
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testTask import TestTaskMixin
+from erp5.component.test.testTask import TestTaskMixin
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 
 class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
@@ -290,7 +291,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     """
     Use the divergence API to adopt the decision.
     """
-    task_report = sequence.get('task_report')
     # XXX Check task report solver proposition in UI
 
   def stepCheckTaskReportDates(self, sequence=None, **kw):

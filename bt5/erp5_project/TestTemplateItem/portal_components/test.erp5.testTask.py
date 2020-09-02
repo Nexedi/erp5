@@ -280,7 +280,6 @@ class TestTaskMixin:
     """
     task = sequence.get('task')
     project = sequence.get('project')
-    resource = sequence.get('resource_list')[0]
     organisation_list = sequence.get('organisation_list')
     organisation1 = organisation_list[0]
     organisation2 = organisation_list[1]
@@ -302,7 +301,6 @@ class TestTaskMixin:
     self.stepSetTaskValues(sequence=sequence,
                            sequence_list=sequence_list, **kw)
     task = sequence.get('task')
-    project = sequence.get('project')
     resource = sequence.get('resource_list')[0]
     requirement = sequence.get('requirement')
     task.edit(task_line_resource_value = resource,
@@ -361,7 +359,6 @@ class TestTaskMixin:
       Create task report line and fill with dummy data.
     """
     resource = sequence.get('resource_list')[0]
-    portal = self.getPortal()
     task_report = sequence.get('task_report')
     task_report_line = task_report.newContent(
                              portal_type=self.task_report_line_portal_type)
@@ -442,15 +439,15 @@ class TestTaskMixin:
     # XXX
     # Task line not precisely tested
     for task_line in task_content_list:
-        task_report_resource_list = \
+      task_report_resource_list = \
             [line.getResource() for line in task_report.contentValues()]
-        task_report_quantity_list = \
+      task_report_quantity_list = \
             [line.getQuantity() for line in task_report.contentValues()]
-        task_report_price_list = \
+      task_report_price_list = \
             [line.getPrice() for line in task_report.contentValues()]
-        self.assertTrue(task_line.getResource() in task_report_resource_list)
-        self.assertTrue(task_line.getQuantity() in task_report_quantity_list)
-        self.assertTrue(task_line.getPrice() in task_report_price_list)
+      self.assertTrue(task_line.getResource() in task_report_resource_list)
+      self.assertTrue(task_line.getQuantity() in task_report_quantity_list)
+      self.assertTrue(task_line.getPrice() in task_report_price_list)
 
     for task_report_line in task_report.contentValues(portal_type='Task Report Line'):
       simulation_movement = task_report_line.getDeliveryRelatedValue()
