@@ -6690,6 +6690,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.CodingStyle',
       'Products.ERP5Type.tests.CodingStyleTest',
       'Products.ERP5Type.tests.CodingStyleTestCase',
+      # Install all bt5s
+      'Products.ERP5.tests.testSpellChecking',
+      'Products.ERP5.tests.testTranslation',
+      'Products.ERP5.tests.testXHTML',
+      'Products.ERP5Type.tests.testNamingConvention',
       ## Classes which are not actual ERP5 objects and we do not handle that
       ## in ZODB Components (IOW it should be a Portal Type as class) and
       ## according to jp, this is not needed as everything should be Portal
