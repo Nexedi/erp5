@@ -94,7 +94,7 @@
         .push(function () {
           return jIO.util.ajax({
             type: "GET",
-            url: new URL('./ERP5Site_getUserName', window.location.href)
+            url: new URL('./Base_getUserCaption', window.location.href)
           });
         })
         .push(function (result) {
