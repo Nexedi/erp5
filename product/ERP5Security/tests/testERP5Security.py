@@ -887,22 +887,6 @@ class TestMigration(UserManagementTestCase):
           self.portal.person_module.newContent,
           portal_type='Person',)
 
-  def test_NonMigratedPersonCanBecomeUserLater(self):
-    self._enableERP5UsersPlugin()
-    non_migrated_person = self.portal.person_module.newContent(
-        portal_type='Person',
-        user_id=None,
-    )
-    self.tic()
-
-    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
-    self.tic()
-    non_migrated_person.newContent(portal_type='Assignment').open()
-    non_migrated_person.newContent(portal_type='ERP5 Login', reference='login', password='password').validate()
-    self.tic()
-    self._assertUserExists('login', 'password')
-    self.assertTrue(non_migrated_person.getUserId())
-
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
   def getTitle(self):
