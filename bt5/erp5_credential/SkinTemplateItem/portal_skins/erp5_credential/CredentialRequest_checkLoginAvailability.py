@@ -7,6 +7,8 @@ portal = context.getPortalObject()
 if value:
   # Same tag is used as in ERP5 Login _setReference, in order to protect against
   # concurrency between Credential Request and ERP5 Login object too
+  #
+  # XXX: value.encode('hex') may exceed 'tag' column length (255)...
   if context.getPortalObject().portal_activities.countMessageWithTag('set_login_' + value.encode('hex')):
     return False
 
