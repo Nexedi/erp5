@@ -15,7 +15,9 @@ def generateSectionListHTML(result_list, section_list):
   if (section_list):
     result_list.append('<ul>')
     for section in section_list:
-      result_list.append('<li><a href="%s">%s</a>' % (_(section['url']), __(section['translated_title'])))
+      # Add missing / suffix to get correct relative url generation
+      # XXX Fix WebSection_getSiteMapTree instead, but no idea what would be the site effects
+      result_list.append('<li><a href="%s/">%s</a>' % (_(section['url']), __(section['translated_title'])))
       generateSectionListHTML(result_list, section['subsection'])
       result_list.append('</li>')
     result_list.append('</ul>')
