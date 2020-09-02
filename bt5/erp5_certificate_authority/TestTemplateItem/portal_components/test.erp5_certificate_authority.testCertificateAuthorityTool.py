@@ -62,7 +62,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
 
   def test_person_revoke_certificate(self):
-    user_id, login = self._createPerson()
+    _, login = self._createPerson()
     self.loginByUserName(login)
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     self.assertRaises(ValueError, person.revokeCertificate)
@@ -84,8 +84,8 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.assertRaises(ValueError, person.getCertificate)
 
   def test_person_request_certificate_for_another(self):
-    user_id, login = self._createPerson()
-    user_id2, login2 = self._createPerson()
+    _, login = self._createPerson()
+    _, login2 = self._createPerson()
     self.loginByUserName(login)
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     self.loginByUserName(login2)
@@ -93,7 +93,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
 
   def test_person_revoke_certificate_for_another(self):
     user_id, login = self._createPerson()
-    user_id2, login2 = self._createPerson()
+    _, login2 = self._createPerson()
     self.loginByUserName(login)
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
