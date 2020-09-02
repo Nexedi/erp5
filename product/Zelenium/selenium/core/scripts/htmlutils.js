@@ -356,7 +356,7 @@ function triggerEvent(element, eventType, canBubble, controlKeyDown, altKeyDown,
 function getKeyCodeFromKeySequence(keySequence) {
     var match = /^\\(\d{1,3})$/.exec(keySequence);
     if (match != null) {
-        return match[1];
+        return parseInt(match[1], 10);
     }
     match = /^.$/.exec(keySequence);
     if (match != null) {
@@ -366,7 +366,7 @@ function getKeyCodeFromKeySequence(keySequence) {
     // 1 digit ascii codes will break however because they are used for the digit chars
     match = /^\d{2,3}$/.exec(keySequence);
     if (match != null) {
-        return match[0];
+        return parseInt(match[0], 10);
     }
     throw new SeleniumError("invalid keySequence");
 }
@@ -390,7 +390,18 @@ function triggerKeyEvent(element, eventType, keySequence, canBubble, controlKeyD
     }
     else {
         var evt;
-        if (window.KeyEvent) {
+        if (window.KeyboardEvent) {
+          evt = new KeyboardEvent(eventType, {
+            ctrlKey: controlKeyDown,
+            altKey: altKeyDown,
+            shiftKey: shiftKeyDown,
+            metaKey: metaKeyDown,
+            keyCode: keycode,
+            which: keycode,
+            cancelable: true,
+            bubbles: canBubble
+          });
+        } else if (window.KeyEvent) {
             evt = document.createEvent('KeyEvents');
             evt.initKeyEvent(eventType, true, true, window, controlKeyDown, altKeyDown, shiftKeyDown, metaKeyDown, keycode, keycode);
         } else {
@@ -406,7 +417,23 @@ function triggerKeyEvent(element, eventType, keySequence, canBubble, controlKeyD
             evt.which = keycode;
         }
 
-        element.dispatchEvent(evt);
+        const dispatched = element.dispatchEvent(evt);
+
+        // perform "Implicit submission" of the form, as specified in
+        // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#implicit-submission
+        if (  keycode === 13
+                && dispatched
+                && (eventType === "keypress" || eventType === "keyup")
+                && (element.type === "text" || element.type === "password")
+                && element.form
+                && window.SubmitEvent ) {
+            const defaultButton = element.form.querySelector("input[type='submit']");
+            if (defaultButton && !defaultButton.disabled) {
+                defaultButton.click();
+            } else {
+                element.form.requestSubmit();
+            }
+        }
     }
 }
 
