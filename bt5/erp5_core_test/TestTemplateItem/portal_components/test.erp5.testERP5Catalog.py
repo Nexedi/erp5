@@ -33,7 +33,6 @@ from random import randint
 import sys
 import threading
 import traceback
-import unittest
 import six
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
@@ -101,7 +100,7 @@ class TransactionThread(threading.Thread):
       # Login
       newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
       self.payload(portal_value=portal_value)
-    except Exception as self.exception:
+    except Exception as self.exception: # pylint: disable=redefine-in-handler
       if six.PY2:
         self.exception.__traceback__ = sys.exc_info()[2]
 
@@ -116,7 +115,7 @@ class TransactionThread(threading.Thread):
       self.exception = None
       if exception is not None:
         if six.PY3:
-          raise exception
+          raise exception # pylint: disable=raising-bad-type
         six.reraise(exception, None, exception.__traceback__)
 
   def __enter__(self):
@@ -212,8 +211,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   __cleanups = ()
 
-  def _addCleanup(self, callable):
-    self.__cleanups += (callable,)
+  def _addCleanup(self, callable_obj):
+    self.__cleanups += (callable_obj,)
     return callable
 
   def afterSetUp(self):
@@ -289,7 +288,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(organisation_module_list),1)
 
   def test_03_CreateAndDeleteObject(self):
-    portal_catalog = self.getCatalogTool()
     person_module = self.getPersonModule()
     person = person_module.newContent(id='1',portal_type='Person')
     address = person.newContent(portal_type='Address')
@@ -395,7 +393,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Now we will try the same thing as previous test and look at searchFolder
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual([],folder_object_list)
-    person = person_module.newContent(id='4',portal_type='Person',)
+    person_module.newContent(id='4',portal_type='Person',)
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
@@ -412,7 +410,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual([],folder_object_list)
 
-    person = person_module.newContent(id='4',portal_type='Person')
+    person_module.newContent(id='4',portal_type='Person')
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
@@ -429,7 +427,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual([],folder_object_list)
 
-    person = person_module.newContent(id='4',portal_type='Person')
+    person_module.newContent(id='4',portal_type='Person')
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
@@ -441,11 +439,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def test_10_OrderedSearchFolder(self):
     person_module = self.getPersonModule()
-    person_uid_list = [
-      person_module.newContent(id='a', portal_type='Person', title='a', description='z').getUid(),
-      person_module.newContent(id='b', portal_type='Person', title='a', description='y').getUid(),
-      person_module.newContent(id='c', portal_type='Person', title='a', description='x').getUid(),
-    ]
+    person_module.newContent(id='a', portal_type='Person', title='a', description='z').getUid()
+    person_module.newContent(id='b', portal_type='Person', title='a', description='y').getUid()
+    person_module.newContent(id='c', portal_type='Person', title='a', description='x').getUid()
     self.tic()
     self.assertEqual(
       ['a','b','c'],
@@ -589,14 +585,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     from Products.ZSQLCatalog.SQLCatalog import UID_BUFFER_SIZE
     uid_dict = {}
-    for i in xrange(UID_BUFFER_SIZE * 3):
+    for _ in xrange(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
       self.assertTrue(isinstance(uid, long))
       self.assertFalse(uid in uid_dict)
       uid_dict[uid] = None
 
   def test_17_CreationDate_ModificationDate(self):
-    portal_catalog = self.getCatalogTool()
     portal = self.getPortal()
     sql_connection = self.getSQLConnection()
 
@@ -637,7 +632,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
 
     title = 'Sébastien'
-    person = person_module.newContent(id='5',portal_type='Person',title=title)
+    person_module.newContent(id='5',portal_type='Person',title=title)
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['5'],folder_object_list)
@@ -649,7 +644,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
 
     title = 'Sébastien'
-    person = person_module.newContent(id='5',portal_type='Person', title=title)
+    person_module.newContent(id='5',portal_type='Person', title=title)
     self.tic()
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
@@ -785,7 +780,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     portal.manage_delObjects('erp5_sql_connection')
     # Then it must be impossible to delete an object
-    uid = person.getUid()
     unindex = portal_catalog.unindexObject
     self.assertRaises(AttributeError,unindex,person,uid=person.getUid())
     self.abort()
@@ -864,8 +858,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = portal.organisation_module.\
                    newContent(portal_type="Organisation")
     person_module = portal.person_module
-    person_1 = person_module.newContent(portal_type="Person")
-    person_2 = person_module.newContent(portal_type="Person",
+    person_module.newContent(portal_type="Person")
+    person_module.newContent(portal_type="Person",
                  career_subordination_value=organisation)
     self.tic()
     self.assertEqual(len(person_module.searchFolder()),
@@ -875,7 +869,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """Check that sorting on a related key that does not support left join.
     """
     portal = self.getPortalObject()
-    org_a = self._makeOrganisation(title='abc', default_address_city='abc')
+    self._makeOrganisation(title='abc', default_address_city='abc')
 
     # now turn the z_related_grand_parent into an old-style method, without
     # RELATED_QUERY_SEPARATOR
@@ -883,7 +877,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     old_src = method.src
 
     @self._addCleanup
-    def cleanGrandParentMethod(self):
+    def cleanGrandParentMethod(self): # pylint: disable=unused-variable
       method.manage_edit(method.title, method.connection_id,
                          method.arguments_src, old_src)
 
@@ -891,8 +885,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     method.manage_edit(method.title, method.connection_id, method.arguments_src,
                        src)
 
-    query = dict(grand_parent_portal_type="Organisation Module",
-                 parent_reference=org_a.getReference())
     self.tic()
     self.assertNotEquals(0, len(portal.portal_catalog(
       portal_type='Address',
@@ -960,8 +952,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """use a dict as a keyword parameter, with max range parameter ( < )
     """
     org_a = self._makeOrganisation(title='A')
-    org_b = self._makeOrganisation(title='B')
-    org_c = self._makeOrganisation(title='C')
+    self._makeOrganisation(title='B')
+    self._makeOrganisation(title='C')
 
     self.assertEqual([org_a.getPath()],
         [x.path for x in self.getCatalogTool()(
@@ -971,7 +963,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_35_SimpleQueryDictWithMinRangeParameter(self):
     """use a dict as a keyword parameter, with min range parameter ( >= )
     """
-    org_a = self._makeOrganisation(title='A')
+    self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
 
@@ -986,7 +978,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     org_a = self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
-    org_c = self._makeOrganisation(title='C')
+    self._makeOrganisation(title='C')
 
     self.failIfDifferentSet([org_a.getPath(), org_b.getPath()],
         [x.path for x in self.getCatalogTool()(
@@ -996,9 +988,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_37_SimpleQueryDictWithMinMaxRangeParameter(self):
     """use a dict as a keyword parameter, with minmax range parameter ( >=  < )
     """
-    org_a = self._makeOrganisation(title='A')
+    self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
-    org_c = self._makeOrganisation(title='C')
+    self._makeOrganisation(title='C')
 
     self.assertEqual([org_b.getPath()],
         [x.path for x in self.getCatalogTool()(
@@ -1008,7 +1000,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_38_SimpleQueryDictWithMinNgtRangeParameter(self):
     """use a dict as a keyword parameter, with minngt range parameter ( >= <= )
     """
-    org_a = self._makeOrganisation(title='A')
+    self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
 
@@ -1020,7 +1012,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_QueryDictFromRequest(self):
     """use a dict from REQUEST as a keyword parameter.
     """
-    org_a = self._makeOrganisation(title='A')
+    self._makeOrganisation(title='A')
     org_b = self._makeOrganisation(title='B')
     org_c = self._makeOrganisation(title='C')
 
@@ -1118,7 +1110,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue('this' in ob.SearchableText(), ob.SearchableText())
     # add some other objects, we need to create a minimum quantity of data for
     # full text queries to work correctly
-    for i in range(10):
+    for _ in range(10):
       otherob = folder.newContent()
       otherob.setTitle('Something different')
       self.assertFalse('this' in otherob.SearchableText(), otherob.SearchableText())
@@ -1148,7 +1140,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation', SearchableText='different')[0][0])
 
   def test_43_ManagePasteObject(self):
-    portal_catalog = self.getCatalogTool()
     person_module = self.getPersonModule()
     person = person_module.newContent(id='1',portal_type='Person')
     self.tic()
@@ -1160,7 +1151,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlInSQLPathList(path_list)
 
   def test_44_ParentRelatedKeys(self):
-    portal_catalog = self.getCatalogTool()
     person_module = self.getPersonModule()
     person_module.reindexObject()
     person = person_module.newContent(id='1',portal_type='Person')
@@ -1346,8 +1336,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     for destination_sql_connection_id, source_sql_connection_id in \
           zip(destination_sql_connection_id_list,
               source_sql_connection_id_list):
-        if source_sql_connection_id != destination_sql_connection_id:
-          sql_connection_id_dict[destination_sql_connection_id] = \
+      if source_sql_connection_id != destination_sql_connection_id:
+        sql_connection_id_dict[destination_sql_connection_id] = \
               source_sql_connection_id
     portal_catalog.changeSQLConnectionIds(
       folder=portal.portal_skins,
@@ -1504,7 +1494,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     cases to decrease a lot the number of aliases
     """
     org_a = self._makeOrganisation(title='abc',default_address_city='abc')
-    module = self.getOrganisationModule()
     self.tic()
     # First try without aliases
     query1 = Query(parent_portal_type="Organisation")
@@ -1540,7 +1529,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       sql = "UPDATE catalog SET modification_date='%s' '\
           'WHERE uid=%s" %\
           (date,uid)
-      result = sql_connection.manage_test(sql)
+      sql_connection.manage_test(sql)
     updateDate(org_a,'2007-01-12 01:02:03')
     updateDate(org_b,'2006-02-24 15:09:06')
 
@@ -1583,7 +1572,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',**catalog_kw)])
 
   def test_54_FixIntUid(self):
-    portal_catalog = self.getCatalogTool()
     portal = self.getPortal()
 
     module = portal.getDefaultModule('Organisation')
@@ -1621,7 +1609,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Add a script to create uid list
     catalog = self.getCatalogTool().getSQLCatalog()
     script_id = 'z0_zCreateUid'
-    script = createZODBPythonScript(
+    createZODBPythonScript(
       catalog,
       script_id,
       '*args,**kw',
@@ -1752,7 +1740,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     perm = 'View'
     folder = self.getOrganisationModule()
-    portal_type = 'Organisation'
     sub_portal_type_id = 'Address'
     sub_portal_type = self.getPortal().portal_types._getOb(sub_portal_type_id)
 
@@ -2106,8 +2093,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       for acquire_view_permission in (True, False):
         for view_role_list in (['Owner', 'Author'],
                                ['Author']):
-          object = object_dict[getObjectDictKey()]
-          result = query('SELECT roles_and_users.uid FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND allowedRolesAndUsers = "user:bar:Whatever"' % (object.uid, ))
+          obj = object_dict[getObjectDictKey()]
+          result = query('SELECT roles_and_users.uid FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND allowedRolesAndUsers = "user:bar:Whatever"' % (obj.uid, ))
           self.assertEqual(len(result), 0, '%r: len(%r) != 0' % (getObjectDictKey(), result))
 
     # Check that no 'bar' role are in security table when 'foo' has local
@@ -2119,12 +2106,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       for acquire_view_permission in (True, False):
         for view_role_list in (['Owner', 'Author'],
                                ['Author']):
-          object = object_dict[getObjectDictKey()]
-          result = query('SELECT roles_and_users.uid, roles_and_users.allowedRolesAndUsers FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND roles_and_users.allowedRolesAndUsers LIKE "user:bar%%"' % (object.uid, ))
+          obj = object_dict[getObjectDictKey()]
+          result = query('SELECT roles_and_users.uid, roles_and_users.allowedRolesAndUsers FROM roles_and_users, catalog WHERE roles_and_users.uid = catalog.security_uid AND catalog.uid = %i AND roles_and_users.allowedRolesAndUsers LIKE "user:bar%%"' % (obj.uid, ))
           self.assertEqual(len(result), 0, '%r: len(%r) != 0' % (getObjectDictKey(), result))
 
   def test_RealOwnerIndexing(self):
-    logout = self.logout
     user1 = 'local_foo'
     user2 = 'local_bar'
     uf = self.getPortal().acl_users
@@ -2136,8 +2122,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder.manage_setLocalRoles(user1, ['Author', 'Auditor'])
     folder.manage_setLocalRoles(user2, ['Author', 'Auditor'])
     portal_type = 'Organisation'
-
-    sql_connection = self.getSQLConnection()
 
     self.loginByUserName(user2)
     obj2 = folder.newContent(portal_type=portal_type)
@@ -2273,7 +2257,6 @@ VALUES
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, ], [x.getObject() for x in result])
-      method = obj.portal_catalog
       result = obj.portal_catalog(portal_type=portal_type, local_roles='Owner')
       self.assertSameSet([], [x.getObject() for x in result])
       result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
@@ -2311,7 +2294,6 @@ VALUES
       self.commit()
 
   def test_MonoValueAssigneeIndexing(self):
-    logout = self.logout
     user1 = 'local_foo'
     user2 = 'local_bar'
     uf = self.getPortal().acl_users
@@ -2324,7 +2306,6 @@ VALUES
     folder.manage_setLocalRoles(user2, ['Author', 'Auditor'])
     portal_type = 'Organisation'
 
-    sql_connection = self.getSQLConnection()
 
     self.loginByUserName(user2)
     obj2 = folder.newContent(portal_type=portal_type)
@@ -2480,7 +2461,6 @@ VALUES
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, ], [x.getObject() for x in result])
-      method = obj.portal_catalog
       result = obj.portal_catalog(portal_type=portal_type, local_roles='Assignee')
       self.assertSameSet([], [x.getObject() for x in result])
       result = obj.portal_catalog(portal_type=portal_type, local_roles='Auditor')
@@ -2521,13 +2501,12 @@ VALUES
       self.commit()
 
   def test_UserOrGroupRoleIndexing(self):
-    logout = self.logout
     user1 = 'a_great_user_name'
     user1_group = 'a_great_user_group'
     uf = self.getPortal().acl_users
     uf._doAddUser(user1, user1, ['Member', ], [])
     uf.zodb_groups.addGroup( user1_group, user1_group, user1_group)
-    new = uf.zodb_groups.addPrincipalToGroup( user1, user1_group )
+    uf.zodb_groups.addPrincipalToGroup( user1, user1_group )
 
     perm = 'View'
     folder = self.getOrganisationModule()
@@ -2638,7 +2617,6 @@ VALUES
     sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
         [local_roles_table]
 
-    portal = self.getPortal()
     self.commit()
 
     try:
@@ -2789,13 +2767,12 @@ VALUES
       self.commit()
 
   def test_UserOrGroupLocalRoleIndexing(self):
-    logout = self.logout
     user1 = 'another_great_user_name'
     user1_group = 'another_great_user_group'
     uf = self.getPortal().acl_users
     uf._doAddUser(user1, user1, ['Member', ], [])
     uf.zodb_groups.addGroup( user1_group, user1_group, user1_group)
-    new = uf.zodb_groups.addPrincipalToGroup( user1, user1_group )
+    uf.zodb_groups.addPrincipalToGroup( user1, user1_group )
 
     perm = 'View'
     folder = self.getOrganisationModule()
@@ -2897,7 +2874,6 @@ VALUES
     sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
         [local_roles_table]
 
-    portal = self.getPortal()
     self.commit()
 
     try:
@@ -3125,7 +3101,6 @@ VALUES
     sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
         [local_roles_table]
 
-    portal = self.getPortal()
     self.commit()
 
     try:
@@ -3179,7 +3154,7 @@ VALUES
       ZopeTestCase._print('\n Skipping test_ObjectReindexatoinConcurency (portal_activities not found)')
       return
 
-    container = organisation_module = portal.organisation_module
+    container = portal.organisation_module
     document_1 = container.newContent()
     document_1_1 = document_1.newContent()
     document_1_2 = document_1.newContent()
@@ -3345,8 +3320,8 @@ VALUES
     """
     portal_type = 'Organisation'
     folder = self.getOrganisationModule()
-    first_doc = folder.newContent(portal_type=portal_type, reference="doc 1")
-    second_doc = folder.newContent(portal_type=portal_type, reference="doc 2", description="test")
+    folder.newContent(portal_type=portal_type, reference="doc 1")
+    folder.newContent(portal_type=portal_type, reference="doc 2", description="test")
     self.tic()
     result = folder.portal_catalog(portal_type=portal_type, reference='doc %', description='%')
     self.assertEqual(len(result), 2)
@@ -3365,7 +3340,7 @@ VALUES
     portal = self.portal
     def _create(**kw):
       return portal.organisation_module.newContent(portal_type='Organisation', **kw)
-    def create(id, related_obect_list):
+    def create(id, related_obect_list): # pylint: disable=redefined-builtin
       return _create(id=id,
         site_value_list=related_obect_list,
         function_value_list=related_obect_list)
@@ -3383,7 +3358,7 @@ VALUES
     object_1  = create('object_1',  [related_1])
     object_2  = create('object_2',  [related_2])
     object_3  = create('object_3',  [related_3])
-    object_4  = create('object_4',  [related_4])
+    create('object_4',  [related_4])
     object_12 = create('object_12', [related_1, related_2])
     object_13 = create('object_13', [related_1, related_3])
     object_14 = create('object_14', [related_1, related_4])
@@ -3891,7 +3866,7 @@ VALUES
     old_src = method.src
 
     @self._addCleanup
-    def cleanGrandParentMethod(self):
+    def cleanGrandParentMethod(self): # pylint: disable=unused-variable
       method.manage_edit(method.title, method.connection_id,
                          method.arguments_src, old_src)
 
@@ -3942,26 +3917,26 @@ VALUES
     self.portal.portal_activities.__class__.doSomething = doSomething
     now = DateTime()
     try:
-        organisation_list = []
-        for x in xrange(0,300):
-          organisation_list.append(
+      organisation_list = []
+      for _ in xrange(0,300):
+        organisation_list.append(
             self.portal.organisation_module.newContent().getPath())
-        self.tic()
-        self.portal.portal_catalog.searchAndActivate(
+      self.tic()
+      self.portal.portal_catalog.searchAndActivate(
              creation_date={'query': now, 'range': 'min'},
              method_id="dummyDoSomething",
              group_kw = {"group_method_id" : "portal_activities/doSomething",
                          "group_method_cost": 0.5},
-        )
-        self.tic()
-        self.assertEqual(150, len(group_method_call_list))
-        organisation_call_list = []
-        for call_path_list in group_method_call_list:
-          self.assertEqual(2, len(call_path_list))
-          organisation_call_list.extend(call_path_list)
-        organisation_call_list.sort()
-        organisation_list.sort()
-        self.assertEqual(organisation_call_list, organisation_list)
+      )
+      self.tic()
+      self.assertEqual(150, len(group_method_call_list))
+      organisation_call_list = []
+      for call_path_list in group_method_call_list:
+        self.assertEqual(2, len(call_path_list))
+        organisation_call_list.extend(call_path_list)
+      organisation_call_list.sort()
+      organisation_list.sort()
+      self.assertEqual(organisation_call_list, organisation_list)
     finally:
       del self.portal.portal_activities.__class__.doSomething
 

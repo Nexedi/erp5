@@ -34,13 +34,12 @@ import unittest
 
 # Initialize ERP5Form Product to load monkey patches
 
-from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
 DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
 MultiListField, IntegerField
-from Products.Formulator.MethodField import Method, BoundMethod
+from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
 
 from Products.ERP5Type.Core.Folder import Folder
@@ -61,7 +60,7 @@ class TestRenderViewAPI(ERP5TypeTestCase):
     return "{Field,Widget}.render_view"
 
   def test_signature(self):
-    for field in FieldRegistry.get_field_classes().itervalues():
+    for field in FieldRegistry.get_field_classes().itervalues(): # pylint: disable=no-value-for-parameter
       self.assertEqual(('self', 'value', 'REQUEST', 'render_prefix'),
                         field.render_view.im_func.func_code.co_varnames)
       if field is not ProxyField.ProxyField:
@@ -643,9 +642,9 @@ class TestProxyField(ERP5TypeTestCase):
     _setUpDefaultTraversable()
 
 
-  def addField(self, form, id, title, field_type):
-    form.manage_addField(id, title, field_type)
-    field = getattr(form, id)
+  def addField(self, form, id_, title, field_type):
+    form.manage_addField(id_, title, field_type)
+    field = getattr(form, id_)
     field._p_oid = makeDummyOid()
     return field
 
@@ -692,8 +691,8 @@ class TestProxyField(ERP5TypeTestCase):
   def test_get_value_default(self):
     # If the proxy field is named 'my_id', it will get 'id'
     # property on the context, regardless of the id of the proxified field
-    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
-                                   'my_title', 'Title', 'StringField')
+    self.addField(self.container.Base_viewProxyFieldLibrary,
+                  'my_title', 'Title', 'StringField')
     proxy_field = self.addField(self.container.Base_view,
                                 'my_id', 'ID', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
@@ -789,8 +788,8 @@ class TestProxyField(ERP5TypeTestCase):
   def test_manage_edit_surcharged_xmlrpc(self):
     # manage_edit_surcharged_xmlrpc is a method to edit proxyfields
     # programmatically
-    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
-                                   'my_string', 'String', 'StringField')
+    self.addField(self.container.Base_viewProxyFieldLibrary,
+                  'my_string', 'String', 'StringField')
     proxy_field = self.addField(self.container.Base_view,
                                 'my_String', '', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
@@ -809,8 +808,8 @@ class TestProxyField(ERP5TypeTestCase):
     """
     Test a case that if proxy field id is same as template field id.
     """
-    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
-                                   'my_string', 'String', 'StringField')
+    self.addField(self.container.Base_viewProxyFieldLibrary,
+                  'my_string', 'String', 'StringField')
     # Use different id to the template field.
     proxy_field2 = self.addField(self.container.Base_view,
                                  'my_another_string', '', 'ProxyField')
@@ -842,8 +841,8 @@ class TestProxyField(ERP5TypeTestCase):
     not surcharged.
     """
     # create a field
-    original_field = self.addField(self.container.Base_viewProxyFieldLibrary,
-                                   'my_title', 'OrigTitle', 'StringField')
+    self.addField(self.container.Base_viewProxyFieldLibrary,
+                  'my_title', 'OrigTitle', 'StringField')
     field = self.addField(self.container.Base_view,
                                    'my_dict_test', '', 'ProxyField')
     field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
@@ -961,9 +960,9 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def test_method_field(self):
     field = self.root.form.field
-    value, cacheable = getFieldValue(field, field, 'external_validator')
+    value, _ = getFieldValue(field, field, 'external_validator')
     self.assertEqual(False, value.value is field.values['external_validator'])
-    self.assertEqual(True, type(value.value) is Method)
+    self.assertEqual(True, isinstance(value.value, Method))
 
   def _getCacheSize(self, cache_id):
     count = 0

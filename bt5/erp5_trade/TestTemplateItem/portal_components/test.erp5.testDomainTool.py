@@ -29,7 +29,7 @@
 import unittest
 
 
-from Products.ERP5.tests.testPredicate import TestPredicateMixIn, \
+from erp5.component.test.testPredicate import TestPredicateMixIn, \
     REGION_FRANCE_PATH, REGION_GERMANY_PATH, GROUP_STOREVER_PATH
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import Query

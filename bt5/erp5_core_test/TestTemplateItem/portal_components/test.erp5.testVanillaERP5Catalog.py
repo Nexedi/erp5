@@ -30,7 +30,6 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import LogInterceptor, getExtraSqlConnectionStringList
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE, HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
-from Testing import ZopeTestCase
 from zLOG import LOG
 
 class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):

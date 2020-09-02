@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-import unittest
 import mock
 
 from AccessControl.SecurityManagement import noSecurityManager

@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import unittest
 from Products.Formulator.Validator import ValidationError
 from Products.ERP5Form import HoneypotField
-from Products.Formulator.StandardFields import FloatField
 
 class TestHoneypotField(ERP5TypeTestCase):
   """Tests Honeypot field
@@ -57,10 +56,10 @@ class TestHoneypotField(ERP5TypeTestCase):
     self.assertRaises(ValidationError,
       self.validator.validate, self.field, 'field_test_field',
       self.portal.REQUEST)
-   
+
   def test_ok_when_empty_value_submit(self):
-     self.portal.REQUEST.set('field_test_field', '')
-     self.assertEqual('', self.validator.validate(self.field, 'field_test_field',
+    self.portal.REQUEST.set('field_test_field', '')
+    self.assertEqual('', self.validator.validate(self.field, 'field_test_field',
      self.portal.REQUEST))
 
 def test_suite():

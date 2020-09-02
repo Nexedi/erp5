@@ -53,7 +53,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
   def getTitle(self):
     return "Predicates"
 
-  def login(self) :
+  def login(self, *args, **kw) :
     """sets the security manager"""
     uf = self.getPortal().acl_users
     uf._doAddUser('alex', '', ['Member', 'Assignee', 'Assignor',

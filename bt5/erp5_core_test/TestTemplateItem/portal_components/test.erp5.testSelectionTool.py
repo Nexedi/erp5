@@ -332,6 +332,7 @@ class TestSelectionPersistence(unittest.TestCase):
     self.assertEqual('saved_value',
         portal_selections.getSelectionParamsFor('test_selection').get('key'))
 
+# pylint: disable=abstract-method
 class TestSelectionToolMemcachedStorage(TestSelectionTool):
 
   def getTitle(self):
