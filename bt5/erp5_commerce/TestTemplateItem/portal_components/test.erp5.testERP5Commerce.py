@@ -204,18 +204,18 @@ class TestCommerce(ERP5TypeTestCase):
     """
     self.organisation_module = self.portal.getDefaultModule('Organisation')
     if 'seller' not in self.organisation_module.objectIds():
-        self.nexedi = self.organisation_module.newContent(title="Seller",
+      self.nexedi = self.organisation_module.newContent(title="Seller",
                                                           group='seller',
                                                           role='internal',
                                                           id='seller')
 
   def createTestUser(self, first_name, last_name, reference, group,
-                     destination_project=None, id=None):
+                     destination_project=None):
     """
       Create a user with the given parameters
     """
     self.person_module = self.getPersonModule()
-    if hasattr(self.person_module, id or reference):
+    if hasattr(self.person_module, reference):
       return
     person = self.person_module.newContent(
       first_name=first_name,
@@ -223,7 +223,7 @@ class TestCommerce(ERP5TypeTestCase):
       reference=reference,
       password='secret',
       career_role='internal',
-      id=id or reference,
+      id=reference,
     )
 
     # Set the assignment
@@ -240,7 +240,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager',
                                                            person.Person_getUserId())
 
-  def getDefaultProduct(self, id='1'):
+  def getDefaultProduct(self, id='1'): # pylint: disable=redefined-builtin
     """
       Get default product.
     """
@@ -308,7 +308,7 @@ class TestCommerce(ERP5TypeTestCase):
     ups.publish()
     self.tic()
 
-  def createUser(self, name, role_list):
+  def createUser(self, name, role_list): # pylint: disable=arguments-differ
     user_folder = self.portal.acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
 
@@ -444,7 +444,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.Resource_addToShoppingCart(default_product, 1)
     self.website.Resource_addToShoppingCart(another_product, 1)
 
-    shopping_cart = self.portal.SaleOrder_getShoppingCart()
     self.assertEqual(40.0, \
          float(self.website.SaleOrder_getShoppingCartTotalPrice()))
     # include taxes (by default it's 20%)
@@ -484,7 +483,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.Resource_addToShoppingCart(default_product, quantity=1)
     self.website.Resource_addToShoppingCart(another_product, quantity=1)
 
-    shopping_cart = self.portal.SaleOrder_getShoppingCart()
     shipping_url = shipping.getRelativeUrl()
 
     # increase shopping item number and set shipping
@@ -523,11 +521,10 @@ class TestCommerce(ERP5TypeTestCase):
     """
        Test clear of shopping cart.
     """
-    default_product = self.getDefaultProduct()
     self.createShoppingCartWithProductListAndShipping()
     self.tic()
 
-    shopping_cart = self.website.SaleOrder_getShoppingCart(action='reset')
+    self.website.SaleOrder_getShoppingCart(action='reset')
     self.assertEqual(0, len(self.website.SaleOrder_getShoppingCartItemList()))
 
   def test_07_SessionIDGeneration(self):
@@ -636,7 +633,6 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Test the SaleOrder_getAvailableShippingResourceList script
     """
-    default_product = self.getDefaultProduct()
     product_line = self.portal.portal_categories.product_line
     shipping_url = product_line.shipping.getRelativeUrl()
     self.portal.product_module.newContent(portal_type='Product',
@@ -652,9 +648,9 @@ class TestCommerce(ERP5TypeTestCase):
     """
     sale_order = self.portal.sale_order_module.newContent(
                                                 portal_type="Sale Order")
-    sale_order_line = sale_order.newContent(portal_type="Sale Order Line",
-                                            quantity="2",
-                                            price="10")
+    sale_order.newContent(portal_type="Sale Order Line",
+                          quantity="2",
+                          price="10")
 
     self.assertEqual(
           sale_order.getCreationDate().strftime('%a, %d %b %Y %H:%M %p'),
@@ -811,7 +807,6 @@ class TestCommerce(ERP5TypeTestCase):
     """
     default_product = self.getDefaultProduct(id='1')
     self.website.Resource_addToShoppingCart(default_product, 1)
-    shopping_cart = self.website.SaleOrder_getShoppingCart()
 
     # add shipping
     shipping = self.getDefaultProduct('3')
@@ -886,8 +881,10 @@ class TestCommerce(ERP5TypeTestCase):
       Anonymous user must be able to get product image.
     """
     product = self.getDefaultProduct()
-    file_upload = FileUpload(os.path.join(os.path.dirname(__file__),
-                          'test_data', 'images', 'erp5_logo_small.png'))
+    import Products.ERP5.tests
+    file_upload = FileUpload(
+      os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+                   'test_data', 'images', 'erp5_logo_small.png'))
     product.edit(default_image_file=file_upload)
     self.tic()
 
