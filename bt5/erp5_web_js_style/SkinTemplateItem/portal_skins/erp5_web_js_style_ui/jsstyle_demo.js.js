@@ -4,10 +4,13 @@
   "use strict";
 
   rJS(window)
-    .declareMethod("render", function (main_innerhtml) {
-      var gadget = this;
-      var div = document.createElement('div');
-      div.innerHTML = main_innerhtml;
+    .declareMethod("render", function (parsed_content) {
+      var gadget = this,
+        div = document.createElement('div');
+      console.log(parsed_content);
+      div.innerHTML = parsed_content.html_content;
+
+      document.title = parsed_content.page_title;
       gadget.element.querySelector('main').innerHTML = div.querySelector('div.input').firstChild.innerHTML;
     });
 
