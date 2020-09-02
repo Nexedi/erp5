@@ -1,3 +1,4 @@
+test.erp5.testAmount
 test.erp5.testDeliveryNode
 test.erp5.testDivergenceTester
 test.erp5.testERP5Simulation
@@ -10,6 +11,8 @@ test.erp5.testOrderBuilder
 test.erp5.testPackingList
 test.erp5.testPackingListRoundingPrecision
 test.erp5.testPurchaseOrder
+test.erp5.testResource
 test.erp5.testReturnedOrder
 test.erp5.testReturnedSalePackingList
+test.erp5.testSupply
 test.erp5.testTradeReports
