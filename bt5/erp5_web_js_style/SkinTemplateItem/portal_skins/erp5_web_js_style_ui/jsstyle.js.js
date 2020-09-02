@@ -74,6 +74,54 @@
 
   }
 
+  function parseLanguageElement(language_element) {
+    var language_list = [],
+      li_list = language_element.querySelectorAll('a'),
+      i;
+    for (i = 0; i < li_list.length; i += 1) {
+      language_list.push({
+        href: li_list[i].href,
+        text: li_list[i].hreflang
+      });
+    }
+    return language_list;
+  }
+
+  function parseSitemapElement(sitemap_element) {
+    var a = sitemap_element.querySelector('a'),
+      sitemap = {
+        href: a.href,
+        text: a.textContent,
+        child_list: []
+      },
+      ul = a.nextElementSibling,
+      li_list,
+      i;
+
+    if (ul === null) {
+      li_list = [];
+    } else {
+      li_list = ul.children;
+    }
+    for (i = 0; i < li_list.length; i += 1) {
+      child_list.push(parseSitemapElement(li_list[i]));
+    }
+    return sitemap;
+  }
+
+  function parsePageContent(body_element) {
+    var result = {
+      html_content: body_element.querySelector('main').innerHTML,
+      language_list: parseLanguageElement(
+        body_element.querySelector('nav#language')
+      ),
+      sitemap: parseSitemapElement(
+        body_element.querySelector('nav#sitemap')
+      )
+    };
+    return result;
+  }
+
   function renderPage(gadget, page_url, hash) {
     return new RSVP.Queue(RSVP.hash({
       xhr: ajax(page_url),
@@ -83,11 +131,10 @@
         var dom_parser = (new DOMParser()).parseFromString(
           result_dict.xhr.responseText,
           'text/html'
-        );
-        document.title = dom_parser.title;
-        return result_dict.style_gadget.render(
-          dom_parser.body.querySelector('main').innerHTML
-        );
+        ),
+          parsed_content = parsePageContent(dom_parser.body);
+        parsed_content.page_title = dom_parser.title;
+        return result_dict.style_gadget.render(parsed_content);
       })
       .push(function () {
         return scrollToHash(hash);
@@ -161,11 +208,6 @@
   }
 
   rJS(window)
-    .ready(function () {
-      // Hide the page as fast as possible
-      // this.element.hidden = true;
-      this.main_element = this.element.querySelector('main');
-    })
     .allowPublicAcquisition("reportServiceError", function () {
       this.element.hidden = false;
       throw rJS.AcquisitionError();
@@ -175,13 +217,16 @@
       var gadget = this,
         style_gadget,
         body = gadget.element,
-        style_gadget_url = body.getAttribute("data-nostyle-gadget-url");
+        style_gadget_url = body.getAttribute("data-nostyle-gadget-url"),
+        parsed_content;
 
       if (!style_gadget_url) {
         // No style configured, use backend only rendering
         return rJS.declareCSS("jsstyle.css", document.head);
       }
 
+      parsed_content = parsePageContent(gadget.element);
+      parsed_content.page_title = document.title;
       // Clear the DOM
       while (body.firstChild) {
         body.firstChild.remove();
@@ -189,7 +234,7 @@
       return gadget.declareGadget(style_gadget_url, {scope: 'renderer'})
         .push(function (result) {
           style_gadget = result;
-          return style_gadget.render(gadget.main_element.innerHTML);
+          return style_gadget.render(parsed_content);
         })
         .push(function () {
           // Trigger URL handling
