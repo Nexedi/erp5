@@ -74,6 +74,54 @@
 
   }
 
+  function parseLanguageElement(language_element) {
+    var language_list = [],
+      li_list = language_element.querySelectorAll('a'),
+      i;
+    for (i = 0; i < li_list.length; i += 1) {
+      language_list.push({
+        href: li_list[i].href,
+        text: li_list[i].hreflang
+      });
+    }
+    return language_list;
+  }
+
+  function parseSitemapElement(sitemap_element) {
+    var a = sitemap_element.querySelector('a'),
+      sitemap = {
+        href: a.href,
+        text: a.textContent,
+        child_list: []
+      },
+      ul = a.nextElementSibling,
+      li_list,
+      i;
+
+    if (ul === null) {
+      li_list = [];
+    } else {
+      li_list = ul.children;
+    }
+    for (i = 0; i < li_list.length; i += 1) {
+      sitemap.child_list.push(parseSitemapElement(li_list[i]));
+    }
+    return sitemap;
+  }
+
+  function parsePageContent(body_element) {
+    var result = {
+      html_content: body_element.querySelector('main').innerHTML,
+      language_list: parseLanguageElement(
+        body_element.querySelector('nav#language')
+      ),
+      sitemap: parseSitemapElement(
+        body_element.querySelector('nav#sitemap')
+      )
+    };
+    return result;
+  }
+
   function renderPage(gadget, page_url, hash) {
     return new RSVP.Queue(RSVP.hash({
       xhr: ajax(page_url),
@@ -83,16 +131,38 @@
         var dom_parser = (new DOMParser()).parseFromString(
           result_dict.xhr.responseText,
           'text/html'
-        );
-        document.title = dom_parser.title;
-        return result_dict.style_gadget.render(
-          dom_parser.body.querySelector('main').innerHTML
-        );
+        ),
+          parsed_content = parsePageContent(dom_parser.body);
+        gadget.parsed_content = parsed_content;
+        parsed_content.page_title = dom_parser.title;
+        return result_dict.style_gadget.render(parsed_content);
       })
       .push(function () {
         return scrollToHash(hash);
       });
   }
+
+  function isAnotherSitemapLocation(sitemap, url1, url2) {
+    var is_url1_matching = (url1.indexOf(sitemap.href) === 0),
+      is_child_another_location,
+      i;
+    if (is_url1_matching !== (url2.indexOf(sitemap.href) === 0)) {
+      return true;
+    }
+    if (!is_url1_matching) {
+      // Both url do not match
+      return false;
+    }
+    // If both match, check sub urls
+    for (i = 0; i < sitemap.child_list.length; i += 1) {
+      is_child_another_location = isAnotherSitemapLocation(sitemap.child_list[i], url1, url2);
+      if (is_child_another_location) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   function listenURLChange() {
     var gadget = this;
@@ -109,7 +179,9 @@
     function handleClick(evt) {
       var target_element = evt.target.closest('a'),
         base_uri = document.baseURI,
-        link_url;
+        link_url,
+        matching_language_count = 0,
+        matching_language_base_uri_count = 0;
 
       if (!target_element) {
         // Only handle link
@@ -126,6 +198,29 @@
       link_url = new URL(target_element.href, base_uri);
       if (link_url.href.indexOf(base_uri) !== 0) {
         // Only handle sub path of the base url
+        // Meaning it will also reload when going from a non default language to the default one
+        return;
+      }
+
+      // Check if going from the default language to another one
+      // Check if url is suburl from 2 languages (default + the expected one)
+      gadget.parsed_content.language_list.map(function (language) {
+        if (link_url.href.indexOf(language.href) === 0) {
+          matching_language_count += 1;
+        }
+        // Ensure current url is in the default language
+        if (base_uri.indexOf(language.href) === 0) {
+          matching_language_base_uri_count += 1;
+        }
+      });
+      if ((1 < matching_language_count) && 
+          (matching_language_base_uri_count === 1)) {
+        return;
+      }
+
+      // Check if going from a section to a child one
+      if (isAnotherSitemapLocation(gadget.parsed_content.sitemap,
+                                   link_url.href, base_uri)) {
         return;
       }
 
@@ -161,11 +256,6 @@
   }
 
   rJS(window)
-    .ready(function () {
-      // Hide the page as fast as possible
-      // this.element.hidden = true;
-      this.main_element = this.element.querySelector('main');
-    })
     .allowPublicAcquisition("reportServiceError", function () {
       this.element.hidden = false;
       throw rJS.AcquisitionError();
@@ -175,13 +265,17 @@
       var gadget = this,
         style_gadget,
         body = gadget.element,
-        style_gadget_url = body.getAttribute("data-nostyle-gadget-url");
+        style_gadget_url = body.getAttribute("data-nostyle-gadget-url"),
+        parsed_content;
 
       if (!style_gadget_url) {
         // No style configured, use backend only rendering
         return rJS.declareCSS("jsstyle.css", document.head);
       }
 
+      parsed_content = parsePageContent(gadget.element);
+      gadget.parsed_content = parsed_content;
+      parsed_content.page_title = document.title;
       // Clear the DOM
       while (body.firstChild) {
         body.firstChild.remove();
@@ -189,7 +283,7 @@
       return gadget.declareGadget(style_gadget_url, {scope: 'renderer'})
         .push(function (result) {
           style_gadget = result;
-          return style_gadget.render(gadget.main_element.innerHTML);
+          return style_gadget.render(parsed_content);
         })
         .push(function () {
           // Trigger URL handling
