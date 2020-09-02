@@ -70,7 +70,7 @@ class TestResource(ERP5TypeTestCase):
   def getTitle(self):
     return "Resource"
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
     user = uf.getUserById('rc').__of__(uf)
@@ -122,28 +122,25 @@ class TestResource(ERP5TypeTestCase):
     size_category_list = ['Baby', 'Child', 'Man', 'Woman']
     if len(self.category_tool.size.contentValues()) == 0 :
       for category_id in size_category_list:
-        o = self.category_tool.size.newContent(portal_type='Category',
+        self.category_tool.size.newContent(portal_type='Category',
                                                id=category_id)
-    self.size_category_list = map(lambda x: 'size/%s' % x,
-                                  size_category_list)
+    self.size_category_list = ['size/%s' % x for x in size_category_list]
 
     colour_category_list = ['blue', 'green']
     if len(self.category_tool.colour.contentValues()) == 0 :
       for category_id in colour_category_list:
-        o = self.category_tool.colour.newContent(portal_type='Category',
-                                               id=category_id)
-    self.colour_category_list = map(lambda x: 'colour/%s' % x,
-                                    colour_category_list)
+        self.category_tool.colour.newContent(portal_type='Category',
+                                             id=category_id)
+    self.colour_category_list = ['colour/%s' % x for x in colour_category_list]
 
     ind_phase_category_list = ['phase1', 'phase2']
     if len(self.category_tool.industrial_phase.contentValues()) == 0:
       for category_id in ind_phase_category_list:
-        o = self.category_tool.industrial_phase.newContent(
+        self.category_tool.industrial_phase.newContent(
                                                portal_type='Category',
                                                id=category_id)
-    self.industrial_phase_category_list = map(
-                                    lambda x: 'industrial_phase/%s' % x,
-                                    ind_phase_category_list)
+    self.industrial_phase_category_list = [
+      'industrial_phase/%s' % x for x in ind_phase_category_list]
 
     self.morphology_category_list = []
     self.base_category_content_list = {
@@ -251,7 +248,7 @@ class TestResource(ERP5TypeTestCase):
       Set category variation to current resource
     """
     resource = sequence.get('resource')
-    size_list = map(lambda x: x[len('size/'):], self.size_list)
+    size_list = [x[len('size/'):] for x in self.size_list]
     resource.setSizeList(size_list)
     self.category_list = self.size_list[:]
 
@@ -373,7 +370,7 @@ class TestResource(ERP5TypeTestCase):
     resource = sequence.get('resource')
     vrcl = resource.getVariationRangeCategoryList()
     vrcil = resource.getVariationRangeCategoryItemList()
-    self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
+    self.failIfDifferentSet(vrcl, [x[1] for x in vrcil])
 
   def test_03_getVariationRangeCategoryItemList(self, quiet=quiet,
                                                 run=run_all_test):
@@ -434,7 +431,7 @@ class TestResource(ERP5TypeTestCase):
     resource = sequence.get('resource')
     vcl = resource.getVariationCategoryList()
     vcil = resource.getVariationCategoryItemList()
-    self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
+    self.failIfDifferentSet(vcl, [x[1] for x in vcil])
 
   def test_06_getVariationCategoryItemList(self, quiet=quiet, run=run_all_test):
     """
@@ -452,7 +449,7 @@ class TestResource(ERP5TypeTestCase):
     resource = sequence.get('resource')
     vcl = resource.getVariationCategoryList(omit_individual_variation=0)
     vcil = resource.getVariationCategoryItemList(omit_individual_variation=0)
-    self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
+    self.failIfDifferentSet(vcl, [x[1] for x in vcil])
 
   def test_07_getVariationCategoryItemList(self, quiet=quiet, run=run_all_test):
     """
@@ -581,7 +578,7 @@ class TestResource(ERP5TypeTestCase):
     ]
     return config
 
-  def logMessage(self, msg, tab=0):
+  def logMessage(self, msg, tab=0): # pylint: disable=arguments-differ
     """
     Log a message.
     """
@@ -611,7 +608,7 @@ class TestResource(ERP5TypeTestCase):
       for key, value in config.items():
         if key != 'price':
           if value not in [None, []]:
-            if type(value) != type([]):
+            if not isinstance(value, list):
               value_list = [value]
             else:
               value_list = value
@@ -918,7 +915,6 @@ class TestResource(ERP5TypeTestCase):
     # Initialize variables
     product_module = self.portal.getDefaultModule(self.product_portal_type)
     organisation_module = self.getOrganisationModule()
-    currency_module = self.getCurrencyModule()
     sale_order_module = self.portal.getDefaultModule("Sale Order")
     purchase_order_module = self.portal.getDefaultModule("Purchase Order")
     internal_packing_list_module = self.portal.getDefaultModule("Internal Packing List")

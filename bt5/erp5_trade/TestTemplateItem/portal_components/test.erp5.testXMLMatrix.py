@@ -200,12 +200,12 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
 
     for place in cartesianProduct(cell_range):
-      cell = matrix.newCell(portal_type="Purchase Order Cell",
+      matrix.newCell(portal_type="Purchase Order Cell",
                             *place, **kwd)
     self.tic()
     initial_cell_id_list = list(matrix.objectIds())
-    for id in initial_cell_id_list:
-      self.assertTrue(catalog.hasPath(url + '/' + id))
+    for id_ in initial_cell_id_list:
+      self.assertTrue(catalog.hasPath(url + '/' + id_))
 
     cell_range = [['2', '3', '4'], ['b', 'c', 'd']]
     matrix.setCellRange(*cell_range, **kwd)
@@ -221,24 +221,24 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
                   ['3', 'c']]:
       self.assertNotEqual(None, matrix.getCell(*coord, **kwd))
 
-    removed_id_list = filter(lambda x: x not in next_cell_id_list,initial_cell_id_list)
+    removed_id_list = [x for x in initial_cell_id_list if x not in next_cell_id_list]
     self.tic()
-    for id in next_cell_id_list:
-      self.assertTrue(catalog.hasPath(url + '/' + id))
-    for id in removed_id_list:
-      self.assertFalse(catalog.hasPath(url + '/' + id))
+    for id_ in next_cell_id_list:
+      self.assertTrue(catalog.hasPath(url + '/' + id_))
+    for id_ in removed_id_list:
+      self.assertFalse(catalog.hasPath(url + '/' + id_))
 
     cell_range = [['0', '1'], ['a','b']]
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
     self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
     next2_cell_id_list = list(matrix.objectIds())
-    removed_id_list = filter(lambda x: x not in next2_cell_id_list,next_cell_id_list)
+    removed_id_list = [x for x in next_cell_id_list if x not in next2_cell_id_list]
     self.tic()
-    for id in next2_cell_id_list:
-      self.assertTrue(catalog.hasPath(url + '/' + id))
-    for id in removed_id_list:
-      self.assertFalse(catalog.hasPath(url + '/' + id))
+    for id_ in next2_cell_id_list:
+      self.assertTrue(catalog.hasPath(url + '/' + id_))
+    for id_ in removed_id_list:
+      self.assertFalse(catalog.hasPath(url + '/' + id_))
 
     cell_range = [['0', '1'], ['a','b']]
     kwd = {'base_id' : 'movement'}
@@ -246,8 +246,8 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEqual(map(set, matrix.getCellRange(**kwd)), map(set, cell_range))
     self.tic()
-    for id in next2_cell_id_list:
-      self.assertFalse(catalog.hasPath(url + '/' + id))
+    for id_ in next2_cell_id_list:
+      self.assertFalse(catalog.hasPath(url + '/' + id_))
 
     # create some cells
     cell1 = matrix.newCell(*['0', 'a'], **kwd)
@@ -308,13 +308,13 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     kwd = {'base_id' : 'quantity'}
     matrix.setCellRange(*cell_range, **kwd)
 
-    cell = matrix.newCell(*['1',], **kwd)
+    matrix.newCell(*['1',], **kwd)
     self.tic()
 
     cell_range = [['1', ], ['a', ]]
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(0, len(matrix.getCellValueList(**kwd)))
-    new_cell = matrix.newCell(*['1', 'a'], **kwd)
+    matrix.newCell(*['1', 'a'], **kwd)
     self.tic()
 
   def test_del_dimension(self):

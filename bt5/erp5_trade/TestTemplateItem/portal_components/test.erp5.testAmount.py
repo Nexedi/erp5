@@ -79,7 +79,7 @@ class TestAmount(ERP5TypeTestCase):
     """
     return 1
 
-  def afterSetUp(self, quiet=1, run=run_all_test):
+  def afterSetUp(self, *args, **kw):
     self.login()
 
   def stepCreateResource(self, sequence=None, sequence_list=None, **kw):

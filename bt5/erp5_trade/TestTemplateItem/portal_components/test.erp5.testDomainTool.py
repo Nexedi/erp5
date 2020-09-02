@@ -64,7 +64,11 @@ class TestDomainTool(TestPredicateMixIn):
         operator='AND',
         portal_type=['!=%s' % x for x
           in domain_tool.getPortalRuleTypeList()
-          + ('Base Domain', 'Contribution Predicate')
+          + ('Base Domain', 'Contribution Predicate',
+             'Solver Type', 'Trade Model Path')
+          + domain_tool.getPortalDivergenceTesterTypeList()
+          + domain_tool.getPortalBusinessProcessTypeList()
+          + domain_tool.getPortalBusinessLinkTypeList()
           + domain_tool.getPortalConstraintTypeList()])
     super(TestDomainTool, self).afterSetUp()
 
@@ -120,14 +124,14 @@ class TestDomainTool(TestPredicateMixIn):
     resource.setVariationBaseCategoryList(['variation'])
     if resource.hasContent('default_supply_line'):
       resource.deleteContent('default_supply_line')
-    self.supply_line = supply_line = resource.newContent(id='default_supply_line',portal_type='Supply Line')
+    self.supply_line = resource.newContent(id='default_supply_line',portal_type='Supply Line')
 
     # Then create an order with a particular line
     order_module = self.getSaleOrderModule()
     if order_module.hasContent('1'):
       order_module.deleteContent('1')
     order = order_module.newContent(id='1',portal_type='Sale Order')
-    line = order.newContent(id='1',portal_type='Sale Order Line')
+    order.newContent(id='1',portal_type='Sale Order Line')
 
     # Then create a base category
     portal_categories = self.getCategoryTool()
@@ -138,11 +142,11 @@ class TestDomainTool(TestPredicateMixIn):
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
       if not 'europe' in portal_categories[bc].objectIds():
-        big_region = portal_categories[bc].newContent(id='europe',portal_type='Category')
+        portal_categories[bc].newContent(id='europe',portal_type='Category')
       if not 'africa' in portal_categories[bc].objectIds():
-        big_region = portal_categories[bc].newContent(id='africa',portal_type='Category')
+        portal_categories[bc].newContent(id='africa',portal_type='Category')
       if not 'asia' in portal_categories[bc].objectIds():
-        big_region = portal_categories[bc].newContent(id='asia',portal_type='Category')
+        portal_categories[bc].newContent(id='asia',portal_type='Category')
 
     self.tic()
 
@@ -275,16 +279,16 @@ class TestDomainTool(TestPredicateMixIn):
     self.resource.setPVariationBaseCategoryList(['variation'])
     self.supply_line.updateCellRange(base_id='path')
     cell_range = self.supply_line.SupplyLine_asCellRange()
-    for range in cell_range[0]:
-      cell = self.supply_line.newCell(range,base_id='path',portal_type='Supply Cell')
+    for range_ in cell_range[0]:
+      cell = self.supply_line.newCell(range_,base_id='path',portal_type='Supply Cell')
       cell.setMappedValuePropertyList(['base_price','priced_quantity'])
       cell.setMultimembershipCriterionBaseCategoryList(['resource','variation'])
       cell.setPricedQuantity(1)
-      if range.find('blue')>=0:
-        cell.setMembershipCriterionCategoryList([range])
+      if range_.find('blue')>=0:
+        cell.setMembershipCriterionCategoryList([range_])
         cell.setBasePrice(45)
-      if range.find('red')>=0:
-        cell.setMembershipCriterionCategoryList([range])
+      if range_.find('red')>=0:
+        cell.setMembershipCriterionCategoryList([range_])
         cell.setBasePrice(26)
 
     right_price_list = [45,26]
