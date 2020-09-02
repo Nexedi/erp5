@@ -83,7 +83,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.receivable,
                           source_credit=200)))
 
-    payment3 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               simulation_state='delivered',
               title='Not in range',
@@ -333,7 +333,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         stop_date=DateTime(2014, 1, 31))
     previous_bank_reconciliation.open()
 
-    payment1 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               simulation_state='delivered',
               source_payment_value=self.bank_account,
@@ -345,7 +345,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.receivable,
                           source_credit=100)))
 
-    payment2 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               simulation_state='delivered',
               source_payment_value=self.bank_account,
@@ -412,7 +412,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         stop_date=DateTime(2014, 1, 31))
     bank_reconciliation.open()
 
-    payment1 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               simulation_state='delivered',
               source_payment_value=self.bank_account,
@@ -424,7 +424,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.receivable,
                           source_credit=100)))
 
-    payment2 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               simulation_state='delivered',
               source_payment_value=self.bank_account,
