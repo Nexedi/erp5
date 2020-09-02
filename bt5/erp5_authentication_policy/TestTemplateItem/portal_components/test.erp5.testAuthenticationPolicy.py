@@ -35,7 +35,6 @@ from StringIO import StringIO
 import time
 import httplib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.Formulator.Errors import ValidationError
 from Products.ERP5Type.Document import newTempBase
 
 class TestAuthenticationPolicy(ERP5TypeTestCase):
@@ -125,7 +124,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     """
     if person_kw is None:
       person_kw = {}
-    self.createUser
     person = self.portal.person_module.newContent(
         portal_type='Person', **person_kw)
     login = person.newContent(portal_type='ERP5 Login',
@@ -284,7 +282,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       Test validity of a password.
     """
     portal = self.getPortal()
-    request = self.app.REQUEST
 
     regular_expression_list = ['([a-z]+)', # english lowercase
                                '([A-Z]+)', # english uppercase
@@ -607,7 +604,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       Test automatic system recover password
     """
     portal = self.portal
-    request = self.app.REQUEST
 
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
@@ -635,7 +631,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     )
     # User cannot login
     # fire 5 requests, only 1 credential recovery should be created
-    for i in range(5):
+    for _ in range(5):
       response = publish()
       self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.tic()
@@ -663,7 +659,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       Check HTTP responses
     """
     portal = self.getPortal()
-    request = self.app.REQUEST
 
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
@@ -786,7 +781,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       password='current',
       person_kw={'first_name': 'Alice'})
     person.newContent(portal_type = 'Assignment').open()
-    login = person.objectValues(portal_type='ERP5 Login')[0]
+    self.assertEqual(len(person.objectValues(portal_type='ERP5 Login')), 1)
     preference = self.portal.portal_catalog.getResultValue(
       portal_type='System Preference',
       title='Authentication',)
