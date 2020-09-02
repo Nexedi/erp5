@@ -187,17 +187,3 @@ class TestMilestoneReporting(MilestoneReportingMixin, ERP5ReportTestCase):
 
   def testMilestoneReport(self):
     self.checkMilestoneReport()
-
-class TestOptimisedMilestoneReporting(MilestoneReportingMixin, ERP5ReportTestCase):
-  """Same as above, with additionnal business template adding extra
-     tables in order to do optimisations
-  """
-  def getTitle(self):
-    return "Optimised Milestone Reporting"
-
-  def getBusinessTemplateList(self):
-    """Returns list of BT to be installed."""
-    return self.business_template_list + ('erp5_project_mysql_innodb_catalog',)
-
-  def testMilestoneReport(self):
-    self.checkMilestoneReport(optimised=True)

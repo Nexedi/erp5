@@ -72,14 +72,14 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
 
     # create organisations
     if not self.portal.organisation_module.has_key('Organisation_1'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1')
 
     if not self.portal.organisation_module.has_key('Organisation_2'):
-      org = self.portal.organisation_module.newContent(
+      self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
                               title='Organisation_2',
@@ -87,13 +87,13 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
 
     # create persons
     if not self.portal.person_module.has_key('Person_1'):
-      org = self.portal.person_module.newContent(
+      self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
     if not self.portal.person_module.has_key('Person_2'):
-      org = self.portal.person_module.newContent(
+      self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
                               title='Person_2',
@@ -135,7 +135,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
     # Create resources
     module = self.portal.product_module
     if not module.has_key('development'):
-      product = module.newContent(
+      module.newContent(
           portal_type='Product',
           id='development',
           title='Development',
@@ -143,7 +143,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
           quantity_unit='day'
           )
     if not module.has_key('consulting'):
-      product = module.newContent(
+      module.newContent(
           portal_type='Product',
           id='consulting',
           title='Consulting',
