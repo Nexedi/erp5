@@ -52,15 +52,15 @@ class TestPlanningBox(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     # Use the same framework as the functional testing for convenience.
     # This adds some specific portal types and skins.
-     return ('erp5_ui_test',)
+    return ('erp5_ui_test',)
 
   def getTitle(self):
-     return "PlanningBox"
+    return "PlanningBox"
 
   def afterSetUp(self):
-     self.login()
+    self.login()
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
@@ -125,7 +125,7 @@ class TestPlanningBox(ERP5TypeTestCase):
     self.assertEqual(sec_axis_info['bound_start'], today)
     self.assertEqual(sec_axis_info['bound_stop'], today+1)
 
-    for tree_list, activity_list,stat in basic.report_group_list:
+    for _, activity_list, _ in basic.report_group_list:
       self.assertEqual(len(activity_list), 1)
 
 

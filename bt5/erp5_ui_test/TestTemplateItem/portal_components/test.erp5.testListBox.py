@@ -72,7 +72,7 @@ class TestListBox(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
@@ -296,13 +296,13 @@ class TestListBox(ERP5TypeTestCase):
         ],)
 
     foo_module = portal.foo_module
-    o = foo_module.newContent(title=u'\xe9lisa')
+    foo_module.newContent(title=u'\xe9lisa')
     self.tic()
 
     request = get_request()
     request['here'] = portal.foo_module
     try:
-      rendered = listbox.get_value('default', render_format='list', REQUEST=request)
+      listbox.get_value('default', render_format='list', REQUEST=request)
     except UnicodeError, e:
       self.fail('Rendering failed: %s' % e)
     self.assertIn(u"http://example.com/?\xe9lisa", listbox.render(REQUEST=request))
@@ -330,13 +330,13 @@ class TestListBox(ERP5TypeTestCase):
         ],)
 
     foo_module = portal.foo_module
-    o = foo_module.newContent(title=u'\xe9lisa')
+    foo_module.newContent(title=u'\xe9lisa')
     self.tic()
 
     request = get_request()
     request['here'] = portal.foo_module
     try:
-      rendered = listbox.get_value('default', render_format='list', REQUEST=request)
+      listbox.get_value('default', render_format='list', REQUEST=request)
     except UnicodeError, e:
       self.fail('Rendering failed: %s' % e)
     self.assertIn(u"http://example.com/?\xe9lisa", listbox.render(REQUEST=request))
@@ -481,7 +481,7 @@ class TestListBox(ERP5TypeTestCase):
 
     # Create an new empty object with a list property
     foo_module = portal.foo_module
-    o = foo_module.newContent()
+    foo_module.newContent()
 
     # Reindex
     self.tic()
@@ -566,7 +566,7 @@ class TestListBox(ERP5TypeTestCase):
 
     # Create an new empty object with a list property
     foo_module = portal.foo_module
-    o = foo_module.newContent()
+    foo_module.newContent()
 
     # Reindex
     self.tic()

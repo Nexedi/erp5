@@ -43,9 +43,9 @@ class TestGUISecurity(ERP5TypeTestCase):
   def getTitle(self):
     return "Security Issues in GUI"
 
-  def loginAs(self, id='user'):
+  def loginAs(self, username='user'):
     uf = self.getPortal().acl_users
-    user = uf.getUser(id).__of__(uf)
+    user = uf.getUser(username).__of__(uf)
     newSecurityManager(None, user)
 
   def stepCreateObjects(self, sequence = None, sequence_list = None, **kw):

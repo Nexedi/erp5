@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import unittest
 from time import time
 import gc
 import subprocess
@@ -120,174 +119,185 @@ PROFILER = 'pprofile'
 
 
 class TestPerformanceMixin(ERP5TypeTestCase, LogInterceptor):
-
-    def getBusinessTemplateList(self):
-      """
+  def getBusinessTemplateList(self):
+    """
         Return the list of business templates.
-      """
-      return ('erp5_base',
-              'erp5_ui_test',)
+    """
+    return ('erp5_base',
+            'erp5_ui_test',)
 
-    def afterSetUp(self):
-      """
+  def afterSetUp(self):
+    """
         Executed before each test_*.
-      """
-      # We don't want cpu time to be spent by random external sources:
-      # - Bot should have its SQL database in a tmpfs storage.
-      # - As bot delete all '*.pyc' files before updating the working copy,
-      #   all '*.pyc' files have just been recreated. They should be synced:
-      subprocess.call('sync')
-      # - Prevent GC from happening.
-      # It would increase the "crosstalk" between using more ram and using more cpu.
-      # Another problem is that it makes result even less reproductible on another
-      # machine where memory use does not evolve identicaly (ie. x86_64 arch,
-      # because of 64bits pointers).
-      gc.disable()
-      self.login()
-      self.bar_module = self.getBarModule()
-      self.foo_module = self.portal.foo_module
+    """
+    # We don't want cpu time to be spent by random external sources:
+    # - Bot should have its SQL database in a tmpfs storage.
+    # - As bot delete all '*.pyc' files before updating the working copy,
+    #   all '*.pyc' files have just been recreated. They should be synced:
+    subprocess.call('sync')
+    # - Prevent GC from happening.
+    # It would increase the "crosstalk" between using more ram and using more cpu.
+    # Another problem is that it makes result even less reproductible on another
+    # machine where memory use does not evolve identicaly (ie. x86_64 arch,
+    # because of 64bits pointers).
+    gc.disable()
+    self.login()
+    self.bar_module = self.getBarModule()
+    self.foo_module = self.portal.foo_module
 
-    def getBarModule(self):
-      """
+  def getBarModule(self):
+    """
       Return the bar module
-      """
-      return self.portal['bar_module']
+    """
+    return self.portal['bar_module']
 
-    def profile(self, func, suffix='', args=(), kw=None):
-      """Profile `func(*args, **kw)` with selected profiler,
+  def profile(self, func, suffix='', args=(), kw=None):
+    """Profile `func(*args, **kw)` with selected profiler,
       and dump output in a file called `func.__name__ + suffix`
-      """
-      if not kw:
-        kw = {}
+    """
+    if not kw:
+      kw = {}
 
-      if PROFILER == 'pprofile':
-        import pprofile
-        prof = pprofile.Profile()
-      else:
-        from cProfile import Profile
-        prof = Profile()
+    if PROFILER == 'pprofile':
+      import pprofile
+      prof = pprofile.Profile()
+    else:
+      from cProfile import Profile
+      prof = Profile()
 
-      prof_file = '%s%s' % (func.__name__, suffix)
-      try:
-        os.unlink(prof_file)
-      except OSError:
-        pass
-      prof.runcall(func, *args, **kw)
-      prof.dump_stats(prof_file)
+    prof_file = '%s%s' % (func.__name__, suffix)
+    try:
+      os.unlink(prof_file)
+    except OSError:
+      pass
+    prof.runcall(func, *args, **kw)
+    prof.dump_stats(prof_file)
 
-    def beforeTearDown(self):
-      # Re-enable gc at teardown.
-      gc.enable()
-      self.abort()
-
+  def beforeTearDown(self):
+    # Re-enable gc at teardown.
+    gc.enable()
+    self.abort()
 
 class TestPerformance(TestPerformanceMixin):
+  def getTitle(self):
+    return "Performance"
 
-    def getTitle(self):
-      return "Performance"
+  def beforeTearDown(self):
+    super(TestPerformance, self).beforeTearDown()
+    self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
+    self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
+    gender = self.portal.portal_categories['gender']
+    gender.manage_delObjects(list(gender.objectIds()))
+    gender = self.portal.portal_caches.clearAllCache()
+    self.tic()
 
-    def beforeTearDown(self):
-      super(TestPerformance, self).beforeTearDown()
-      self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
-      self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
-      gender = self.portal.portal_categories['gender']
-      gender.manage_delObjects(list(gender.objectIds()))
-      gender = self.portal.portal_caches.clearAllCache()
-      self.tic()
+  def checkViewBarObject(self, min_, max_, prefix=None):
+    # Some init to display form with some value
+    if prefix is None:
+      prefix = ''
+    gender = self.portal.portal_categories['gender']
+    if 'male' not in gender.objectIds():
+      gender.newContent(id='male', title='Male', portal_type='Category')
+    if 'female' not in gender.objectIds():
+      gender.newContent(id='female', title='Female', portal_type='Category')
 
-    def checkViewBarObject(self, min, max, prefix=None):
-      # Some init to display form with some value
-      if prefix is None:
-        prefix = ''
-      gender = self.portal.portal_categories['gender']
-      if 'male' not in gender.objectIds():
-        gender.newContent(id='male', title='Male', portal_type='Category')
-      if 'female' not in gender.objectIds():
-        gender.newContent(id='female', title='Female', portal_type='Category')
+    bar = self.bar_module.newContent(id='bar',
+                                     portal_type='Bar',
+                                     title='Bar Test',
+                                     quantity=10000,)
+    bar.setReference(bar.getRelativeUrl())
+    self.tic()
+    # Check performance
+    before_view = time()
+    for _ in xrange(100):
+      # XXX: Note that we don't clean TransactionVariable cache and REQUEST
+      #      before each call to 'view' requests. In reality, they would be
+      #      always empty at the beginning of such requests.
+      #      If you work to improve performance of 'view' requests using this
+      #      kind of cache, make sure it is actually useful outside
+      #      testPerformance.
+      bar.Bar_viewPerformance()
+    after_view = time()
+    req_time = (after_view - before_view)/100.
+    print "%s time to view object form %.4f < %.4f < %.4f\n" % \
+            (prefix, min_, req_time, max_)
+    if PROFILE:
+      self.profile(bar.Bar_viewPerformance)
+    if DO_TEST:
+      self.assertTrue(min_ < req_time < max_,
+                      '%.4f < %.4f < %.4f' % (min_, req_time, max_))
 
-      bar = self.bar_module.newContent(id='bar',
-                                       portal_type='Bar',
-                                       title='Bar Test',
-                                       quantity=10000,)
-      bar.setReference(bar.getRelativeUrl())
-      self.tic()
-      # Check performance
-      before_view = time()
-      for x in xrange(100):
-        # XXX: Note that we don't clean TransactionVariable cache and REQUEST
-        #      before each call to 'view' requests. In reality, they would be
-        #      always empty at the beginning of such requests.
-        #      If you work to improve performance of 'view' requests using this
-        #      kind of cache, make sure it is actually useful outside
-        #      testPerformance.
-        bar.Bar_viewPerformance()
-      after_view = time()
-      req_time = (after_view - before_view)/100.
-      print "%s time to view object form %.4f < %.4f < %.4f\n" % \
-              (prefix, min, req_time, max)
+  def test_00_viewBarObject(self, min_=None, max_=None):
+    """
+    Estimate average time to render object view
+    """
+    message = 'Test form to view Bar object'
+    LOG('Testing... ', 0, message)
+    self.checkViewBarObject(MIN_OBJECT_VIEW, MAX_OBJECT_VIEW,
+                            prefix='objective')
+
+  def test_01_viewBarModule(self):
+    """
+    Estimate average time to render module view
+    """
+    message = 'Test form to view Bar module'
+    LOG('Testing... ', 0, message)
+    self.tic()
+    view_result = {}
+    tic_result = {}
+    add_result = {}
+    # call view once to fill caches
+    self.bar_module.BarModule_viewBarList()
+    # add object in bar module
+    for i in xrange(10):
+      def add():
+        for x in xrange(100):
+          self.bar_module.newContent(portal_type='Bar',
+                                         title='Bar Test',
+                                         quantity="%4d" %(x,))
+      before_add = time()
       if PROFILE:
-          self.profile(bar.Bar_viewPerformance)
-      if DO_TEST:
-          self.assertTrue(min < req_time < max,
-                          '%.4f < %.4f < %.4f' % (min, req_time, max))
+        self.profile(add, i)
+      else:
+        add()
+      after_add = time()
+      self.commit()
+      before_tic = time()
+      if PROFILE:
+        self.profile(self.tic, i)
+      else:
+        self.tic()
+      after_tic = time()
+      gc.collect()
+      before_form = time()
+      for _ in xrange(100):
+        self.bar_module.BarModule_viewBarList()
+      after_form = time()
+      # store result
+      key = "%06d" %(100*i+100,)
+      view_result[key] = (after_form - before_form)/100.
+      tic_result[key] = (after_tic - before_tic)/100.
+      add_result[key] = (after_add - before_add)/100.
 
-    def test_00_viewBarObject(self, min=None, max=None):
-      """
-      Estimate average time to render object view
-      """
-      message = 'Test form to view Bar object'
-      LOG('Testing... ', 0, message)
-      self.checkViewBarObject(MIN_OBJECT_VIEW, MAX_OBJECT_VIEW,
-                              prefix='objective')
-
-    def test_01_viewBarModule(self):
-      """
-      Estimate average time to render module view
-      """
-      message = 'Test form to view Bar module'
-      LOG('Testing... ', 0, message)
-      self.tic()
-      view_result = {}
-      tic_result = {}
-      add_result = {}
-      # call view once to fill caches
-      self.bar_module.BarModule_viewBarList()
-      # add object in bar module
-      for i in xrange(10):
-          def add():
-            for x in xrange(100):
-              p = self.bar_module.newContent(portal_type='Bar',
-                                             title='Bar Test',
-                                             quantity="%4d" %(x,))
-          before_add = time()
-          if PROFILE:
-            self.profile(add, i)
-          else:
-            add()
-          after_add = time()
-          self.commit()
-          before_tic = time()
-          if PROFILE:
-              self.profile(self.tic, i)
-          else:
-              self.tic()
-          after_tic = time()
-          gc.collect()
-          before_form = time()
-          for x in xrange(100):
-            self.bar_module.BarModule_viewBarList()
-          after_form = time()
-          # store result
-          key = "%06d" %(100*i+100,)
-          view_result[key] = (after_form - before_form)/100.
-          tic_result[key] = (after_tic - before_tic)/100.
-          add_result[key] = (after_add - before_add)/100.
-
-          if PROFILE:
-              self.profile(self.bar_module.BarModule_viewBarList, i)
-      keys = view_result.keys()
-      keys.sort()
-      # first display results
+      if PROFILE:
+        self.profile(self.bar_module.BarModule_viewBarList, i)
+    keys = view_result.keys()
+    keys.sort()
+    # first display results
+    i = 0
+    for key in keys:
+      module_value = view_result[key]
+      tic_value = tic_result[key]
+      add_value = add_result[key]
+      min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
+      max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
+      print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
+      print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
+      print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
+      print
+      i += 1
+    # then check results
+    if DO_TEST:
       i = 0
       for key in keys:
         module_value = view_result[key]
@@ -295,102 +305,86 @@ class TestPerformance(TestPerformanceMixin):
         add_value = add_result[key]
         min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
         max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
-        print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
-        print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
-        print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
-        print
+        self.assertTrue(min_view < module_value < max_view,
+                        'View: %.4f < %.4f < %.4f' % (
+            min_view, module_value, max_view))
+        self.assertTrue(
+            MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION,
+            'Create: %.4f < %.4f < %.4f' % (
+            MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
+        self.assertTrue(MIN_TIC < tic_value < MAX_TIC,
+                        'Tic: %.4f < %.4f < %.4f' % (
+            MIN_TIC, tic_value, MAX_TIC))
         i += 1
-      # then check results
-      if DO_TEST:
-          i = 0
-          for key in keys:
-            module_value = view_result[key]
-            tic_value = tic_result[key]
-            add_value = add_result[key]
-            min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
-            max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
-            self.assertTrue(min_view < module_value < max_view,
-                            'View: %.4f < %.4f < %.4f' % (
-                min_view, module_value, max_view))
-            self.assertTrue(
-                MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION,
-                'Create: %.4f < %.4f < %.4f' % (
-                MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
-            self.assertTrue(MIN_TIC < tic_value < MAX_TIC,
-                            'Tic: %.4f < %.4f < %.4f' % (
-                MIN_TIC, tic_value, MAX_TIC))
-            i += 1
 
-
-    def test_viewProxyField(self):
-      # render a form with proxy fields: Foo_viewProxyField
-      foo = self.foo_module.newContent(
+  def test_viewProxyField(self):
+    # render a form with proxy fields: Foo_viewProxyField
+    foo = self.foo_module.newContent(
                            portal_type='Foo',
                            title='Bar Test',
                            quantity=10000,
                            price=32,
                            start_date=DateTime(2008,1,1))
-      foo.newContent(portal_type='Foo Line',
-                     title='Line 1')
-      foo.newContent(portal_type='Foo Line',
-                     title='Line 2')
-      self.tic()
-      # Check performance
-      before_view = time()
-      for x in xrange(100):
-        foo.Foo_viewProxyField()
-      after_view = time()
-      req_time = (after_view - before_view)/100.
+    foo.newContent(portal_type='Foo Line',
+                   title='Line 1')
+    foo.newContent(portal_type='Foo Line',
+                   title='Line 2')
+    self.tic()
+    # Check performance
+    before_view = time()
+    for _ in xrange(100):
+      foo.Foo_viewProxyField()
+    after_view = time()
+    req_time = (after_view - before_view)/100.
 
-      print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
+    print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_PROXYFIELD_VIEW,
                 req_time,
                 MAX_OBJECT_PROXYFIELD_VIEW )
-      if PROFILE:
-        self.profile(foo.Foo_viewProxyField)
-      if DO_TEST:
-        self.assertTrue( MIN_OBJECT_PROXYFIELD_VIEW < req_time
+    if PROFILE:
+      self.profile(foo.Foo_viewProxyField)
+    if DO_TEST:
+      self.assertTrue( MIN_OBJECT_PROXYFIELD_VIEW < req_time
                                     < MAX_OBJECT_PROXYFIELD_VIEW,
           '%.4f < %.4f < %.4f' % (
               MIN_OBJECT_PROXYFIELD_VIEW,
               req_time,
               MAX_OBJECT_PROXYFIELD_VIEW))
 
-    def test_02_viewFooObjectWithManyLines(self):
-      """
-      Estimate average time to render object view with many lines
-      """
-      foo = self.foo_module.newContent(portal_type='Foo',
-                                       title='Foo Test')
-      for i in xrange(100):
-          foo.newContent(portal_type='Foo Line',
-                         title='Line %s' % i)
-      self.tic()
-      # Check performance
-      before_view = time()
-      for x in xrange(100):
-        foo.Foo_viewPerformance()
-      after_view = time()
-      req_time = (after_view - before_view)/100.
+  def test_02_viewFooObjectWithManyLines(self):
+    """
+    Estimate average time to render object view with many lines
+    """
+    foo = self.foo_module.newContent(portal_type='Foo',
+                                     title='Foo Test')
+    for i in xrange(100):
+      foo.newContent(portal_type='Foo Line',
+                     title='Line %s' % i)
+    self.tic()
+    # Check performance
+    before_view = time()
+    for _ in xrange(100):
+      foo.Foo_viewPerformance()
+    after_view = time()
+    req_time = (after_view - before_view)/100.
 
-      print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
+    print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_MANY_LINES_VIEW,
                 req_time,
                 MAX_OBJECT_MANY_LINES_VIEW )
-      if PROFILE:
-          self.profile(foo.Foo_viewPerformance)
-      if DO_TEST:
-        self.assertTrue( MIN_OBJECT_MANY_LINES_VIEW < req_time
+    if PROFILE:
+      self.profile(foo.Foo_viewPerformance)
+    if DO_TEST:
+      self.assertTrue( MIN_OBJECT_MANY_LINES_VIEW < req_time
                                     < MAX_OBJECT_MANY_LINES_VIEW,
           '%.4f < %.4f < %.4f' % (
               MIN_OBJECT_MANY_LINES_VIEW,
               req_time,
               MAX_OBJECT_MANY_LINES_VIEW))
 
-
 class TestPropertyPerformance(TestPerformanceMixin):
   def afterSetUp(self):
-    super(TestPerformanceMixin, self).afterSetUp()
+    super(TestPerformanceMixin, self).afterSetUp() # pylint: disable=bad-super-call
     self.foo = self.portal.foo_module.newContent(
         portal_type='Foo',
         title='Foo Test',
@@ -433,27 +427,27 @@ class TestPropertyPerformance(TestPerformanceMixin):
     self.assertRaises(Unauthorized, getProperty, 'protected_property')
 
     @self._benchmark(100000, 0.0001, 1)
-    def getPropertyWithRestrictedPropertyRefused(_):
+    def getPropertyWithRestrictedPropertyRefused(_): # pylint: disable=unused-variable
       getProperty('protected_property', checked_permission='Access contents information')
 
   def test_getProperty_protected_property_allowed(self):
     getProperty = self.foo.getProperty
     self.login()
     @self._benchmark(100000, 0.0001, 1)
-    def getPropertyWithRestrictedPropertyAllowed(_):
+    def getPropertyWithRestrictedPropertyAllowed(_): # pylint: disable=unused-variable
       getProperty('protected_property', checked_permission='Access contents information')
 
   def test_getProperty_simple_property(self):
     getProperty = self.foo.getProperty
     @self._benchmark(100000, 0.0001, 1)
-    def getPropertyWithSimpleProperty(_):
+    def getPropertyWithSimpleProperty(_): # pylint: disable=unused-variable
       getProperty('title', checked_permission='Access contents information')
 
   def test_edit_restricted_properties(self):
     _edit = self.foo.edit
     self.login()
     @self._benchmark(10000, 0.0001, 1)
-    def edit(i):
+    def edit(i): # pylint: disable=unused-variable
       _edit(
           title=str(i),
           protected_property=str(i)
