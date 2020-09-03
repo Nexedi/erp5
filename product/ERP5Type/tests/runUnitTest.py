@@ -713,6 +713,7 @@ def usage(stream, msg=None):
   program = os.path.basename(sys.argv[0])
   print >>stream, __doc__ % {"program": program}
 
+log_directory = None
 def main(argument_list=None):
   if argument_list is None:
     argument_list = []
