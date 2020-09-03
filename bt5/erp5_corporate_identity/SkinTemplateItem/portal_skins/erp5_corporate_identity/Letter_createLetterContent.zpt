@@ -27,7 +27,6 @@ Generates the letter Content
                        letter_destination_postal_code python: options.get('letter_destination_postal_code');
                        letter_destination_city        python: options.get('letter_destination_city');
                        letter_destination_country     python: options.get('letter_destination_country');
-                       letter_display_source_address  python: options.get('letter_display_source_address');
                        letter_display_sender_company_above_recipient python: options.get('letter_display_sender_company_above_recipient');
                        letter_destination_position    python: options.get('letter_destination_position');
                        letter_destination_position_padding_left   python: options.get('letter_destination_position_padding_left');
@@ -79,21 +78,7 @@ Generates the letter Content
 	        <tal:block tal:condition="python: int(letter_display_head)">
           <tr>
             <td></td>
-            <td class="ci-letter-source">
-              <tal:block tal:condition="python: letter_display_source_address is not None">
-                <tal:block tal:condition="python: letter_source_company">
-                  <span tal:content="letter_source_company"></span><span class="ci-letter-separator">-</span>
-                </tal:block>
-                <tal:block tal:condition="python: letter_source_address">
-                  <span tal:content="letter_source_address"></span><span class="ci-letter-separator">-</span>
-                </tal:block>
-                <tal:block tal:condition="python: letter_source_country_code">
-                  <span tal:content="letter_source_country_code"></span><span class="ci-letter-separator">-</span>
-                </tal:block>
-  	            <span tal:content="letter_source_postal_code"></span>&nbsp;
-  	            <span tal:content="letter_source_city"></span>
-  	          </tal:block>
-  	        </td>
+            <td class="ci-letter-source"></td>
 	          <td></td>
           </tr>
           <tr>
