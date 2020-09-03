@@ -1432,6 +1432,34 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     # No count if not in the listbox context currently
     self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listCatalog', '*args, **kwargs', "return []")
+  @changeSkin('Hal')
+  def test_getHateoas_query_param_reject_unknown_column(self, **kw):
+    """Check that listbox line calculation modify the selection
+    """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    selection_tool = self.portal.portal_selections
+    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_tool.setSelectionFor(selection_name, Selection(selection_name))
+
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query='bar:"foo"'
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 400)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_debug'], "Invalid column name: ['bar', 'bar']")
+
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
@@ -2231,7 +2259,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       REQUEST=fake_request,
       mode="search",
       local_roles=["Manager"],
-      query='bar:"foo"',
+      query='id:"foo"',
       list_method='Test_listCatalog',
       select_list=['title', 'uid'],
       selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}),
@@ -2250,7 +2278,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEquals(
       selection.getParams(), {
         'local_roles': ['Manager'],
-        'full_text': 'bar:"foo"',
+        'full_text': 'id:"foo"',
         'ignore_unknown_columns': True,
         'portal_type': ['Foo'],
         'limit': 1000

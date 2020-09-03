@@ -1727,6 +1727,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             byteify(
               json.loads(urlsafe_b64decode(default_param_json)))))
       if query:
+        # Forbid querying unknown catalog column
+        invalid_column_list = []
+        def isValidColumnOrRaise(column_id):
+          is_valid_column = sql_catalog.isValidColumn(column_id)
+          if not is_valid_column:
+            invalid_column_list.append(column_id)
+          return is_valid_column
+        sql_catalog.parseSearchText(query, search_key='FullTextKey', is_valid=isValidColumnOrRaise)
+
+        if invalid_column_list:
+          response.setStatus(400)
+          result_dict["_debug"] = 'Invalid column name: %s' % str(invalid_column_list)
+          return result_dict
         catalog_kw["full_text"] = query
 
       if selection_domain is not None:
