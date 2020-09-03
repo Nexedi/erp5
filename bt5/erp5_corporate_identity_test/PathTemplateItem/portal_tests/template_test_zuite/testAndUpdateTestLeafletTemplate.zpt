@@ -152,19 +152,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
       <td>selectAndWait</td>
       <td>name=select_dialog</td>
-      <td>index=2</td>
+      <td>label=Export as Leaflet</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -414,19 +409,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
       <td>selectAndWait</td>
       <td>name=select_dialog</td>
-      <td>index=2</td>
+      <td>label=Export as Leaflet</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -698,19 +688,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
       <td>selectAndWait</td>
       <td>name=select_dialog</td>
-      <td>index=2</td>
+      <td>label=Export as Leaflet</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -937,19 +922,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
       <td>selectAndWait</td>
       <td>name=select_dialog</td>
-      <td>index=2</td>
+      <td>label=Export as Leaflet</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -1199,19 +1179,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
       <td>selectAndWait</td>
       <td>name=select_dialog</td>
-      <td>index=2</td>
+      <td>label=Export as Leaflet</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -1480,19 +1455,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
       <td>selectAndWait</td>
       <td>name=select_dialog</td>
-      <td>index=2</td>
+      <td>label=Export as Leaflet</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
