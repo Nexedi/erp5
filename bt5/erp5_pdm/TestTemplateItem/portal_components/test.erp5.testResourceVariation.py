@@ -45,7 +45,7 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
   teardown. So users of this test case are encouraged to create new documents
   rather than modifying default documents.
   """
-  def logMessage(self, msg, tab=0):
+  def logMessage(self, msg, tab=0): # pylint: disable=arguments-differ
     """
     Log a message.
     """
@@ -246,7 +246,7 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
     self.assertSameSet([], resource.getVariationCategoryList())
 
     # XXX What happens when we create an individual variation
-    resource_circular = self._makeOneResourceIndividualVariation(
+    self._makeOneResourceIndividualVariation(
               resource,
               id='1',
               title='Circular')
