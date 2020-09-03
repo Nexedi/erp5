@@ -1728,7 +1728,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               json.loads(urlsafe_b64decode(default_param_json)))))
       if query:
         # Forbid querying unknown catalog column
-        sql_catalog = context.getPortalObject().portal_catalog.getSQLCatalog()
         invalid_column_list = []
         def isValidColumnOrRaise(column_id):
           is_valid_column = sql_catalog.isValidColumn(column_id)
