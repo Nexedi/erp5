@@ -28,7 +28,7 @@
 import unittest
 
 from DateTime import DateTime
-from Products.ERP5.tests.testAccounting import AccountingTestCase
+from erp5.component.test.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 
 class CurrencyExchangeTestCase(AccountingTestCase):
@@ -56,7 +56,7 @@ class CurrencyExchangeTestCase(AccountingTestCase):
 
     self.tic()
 
-  def login(self, name=username):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
        'Author','Manager'], [])
@@ -146,7 +146,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.validate()
     self.assertEqual(x_curr_ex_line.getValidationState(),
                            'validated')
-    accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
@@ -195,21 +194,16 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     self.assertEqual(x_curr_ex_line.getValidationState(),
                             'validated')
     yen = self.portal.currency_module.yen
-    yen_line1 = yen.newContent(
-                          portal_type='Currency Exchange Line')
-    yen_line2 = yen.newContent(
-                          portal_type='Currency Exchange Line')
+    yen.newContent(portal_type='Currency Exchange Line')
+    yen.newContent(portal_type='Currency Exchange Line')
 
     usd = self.portal.currency_module.usd
-    usd_line1 = usd.newContent(
-                          portal_type='Currency Exchange Line')
-    usd_line2 = usd.newContent(
-                          portal_type='Currency Exchange Line')
+    usd.newContent(portal_type='Currency Exchange Line')
+    usd.newContent(portal_type='Currency Exchange Line')
 
     euro_line = euro.newContent(
                            portal_type='Currency Exchange Line')
     euro_line.validate()
-    accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
@@ -256,7 +250,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.validate()
     self.assertEqual(x_curr_ex_line.getValidationState(),
                          'validated')
-    accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Sale Invoice Transaction',
                start_date=DateTime('2008/09/08'),
@@ -294,8 +287,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     self.tic()
     self.organisation1.edit(
                 price_currency=new_currency.getRelativeUrl())
-    euro = self.portal.currency_module.euro
-    accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
@@ -345,7 +336,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.validate()
     self.assertEqual(x_curr_ex_line.getValidationState(),
                                'validated')
-    accounting_module = self.portal.accounting_module
     transaction1 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
@@ -413,7 +403,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     self.assertEqual(x_curr_ex_line.getValidationState(),
                           'validated')
 
-    accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
@@ -429,8 +418,7 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     line_list = invoice.contentValues(
            portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-        self.assertEqual(line.getDestinationTotalAssetPrice(),
-                 None)
+      self.assertEqual(line.getDestinationTotalAssetPrice(), None)
 
 
   def test_CreateCELWithNoBasePrice(self):
@@ -476,7 +464,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
 
     self.assertEqual(euro_line2.getValidationState(),
                                  'validated')
-    accounting_module = self.portal.accounting_module
     invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),

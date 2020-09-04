@@ -35,7 +35,7 @@ from DateTime import DateTime
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
-from Products.ERP5.tests.testAccounting import AccountingTestCase
+from erp5.component.test.testAccounting import AccountingTestCase
 
 class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
   """Test Bank Reconciliation

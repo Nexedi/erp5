@@ -40,7 +40,7 @@ from DateTime import DateTime
 from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
 
-from Products.ERP5.tests.testAccounting import AccountingTestCase
+from erp5.component.test.testAccounting import AccountingTestCase
 
 class TestAccounting_l10n_fr(AccountingTestCase):
   """Test Accounting L10N FR
@@ -92,7 +92,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
   def test_FEC(self):
     account_module = self.portal.account_module
-    first = self._makeOne(
+    self._makeOne(
               portal_type='Purchase Invoice Transaction',
               title='Première Écriture',
               simulation_state='delivered',
@@ -106,7 +106,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
                      dict(destination_value=account_module.goods_purchase,
                           destination_credit=110.00)))
 
-    second = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Seconde Écriture',
               simulation_state='delivered',
@@ -130,7 +130,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     fec_xml = ''
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -146,8 +146,9 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       self.fail("Attachment not found")
 
     # validate against official schema
+    import Products.ERP5.tests
     schema = etree.XMLSchema(etree.XML(open(os.path.join(
-        os.path.dirname(__file__), 'test_data',
+        os.path.dirname(Products.ERP5.tests.__file__), 'test_data',
         'formatA47A-I-VII-1.xsd')).read()))
 
     # this raise if invalid
@@ -164,7 +165,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
   def _FECWithLedger(self, ledger_list=None, group_by=None):
     self.setUpLedger()
     account_module = self.portal.account_module
-    first = self._makeOne(
+    self._makeOne(
               portal_type='Purchase Invoice Transaction',
               title='Première Écriture',
               simulation_state='delivered',
@@ -179,7 +180,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
                      dict(destination_value=account_module.goods_purchase,
                           destination_credit=110.00)))
 
-    second = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Seconde Écriture',
               simulation_state='delivered',
@@ -194,7 +195,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=200.00)))
 
-    third = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Troisième Écriture',
               simulation_state='delivered',
@@ -222,7 +223,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     fec_xml = ''
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -238,8 +239,9 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       self.fail("Attachment not found")
 
     # validate against official schema
+    import Products.ERP5.tests
     schema = etree.XMLSchema(etree.XML(open(os.path.join(
-        os.path.dirname(__file__), 'test_data',
+        os.path.dirname(Products.ERP5.tests.__file__), 'test_data',
         'formatA47A-I-VII-1.xsd')).read()))
 
     # this raise if invalid

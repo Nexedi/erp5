@@ -33,7 +33,7 @@ import unittest
 
 from DateTime import DateTime
 
-from Products.ERP5.tests.testAccounting import AccountingTestCase
+from erp5.component.test.testAccounting import AccountingTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
@@ -523,7 +523,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              node_title='7',
                              debit=0,
                              credit=500)
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=500, credit=500)
 
@@ -556,7 +555,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              node_title='7',
                              debit=0,
                              credit=500)
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=500, credit=500)
 
@@ -1100,7 +1098,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.stocks,
                           source_credit=100)))
 
-    first = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Grouped during period',
               simulation_state='delivered',
@@ -1116,7 +1114,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=100.00)))
 
-    second = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Grouped after period',
               simulation_state='delivered',
@@ -1251,7 +1249,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     bank.validate()
     # before
     # this one will not have grouping reference
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               reference='ref1',
@@ -1278,7 +1276,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=200.0)))
 
     # payment related to t2 invoice
-    t3 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               title='Transaction 3',
               reference='ref3',
@@ -1311,7 +1309,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_debit=400.0),
                      dict(source_value=account_module.payable,
                           source_credit=400.0)))
-    t5 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               title='Transaction 5',
               reference='ref5',
@@ -1407,7 +1405,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     bank.validate()
     # before
     # this one will not have grouping reference
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               reference='ref1',
@@ -1436,7 +1434,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=200.0)))
 
     # payment related to t2 invoice
-    t3 = self._makeOne(
+    self._makeOne(
               portal_type='Payment Transaction',
               title='Transaction 3',
               reference='ref3',
@@ -1724,7 +1722,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     self.createAccountStatementDataSetOnTwoPeriods()
 
-    t1b = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Transaction 1b',
               reference='ref1b',
@@ -1789,7 +1787,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     self.createAccountStatementDataSetOnTwoPeriods()
 
-    t1b = self._makeOne(
+    self._makeOne(
               portal_type='Sale Invoice Transaction',
               title='Transaction 1b',
               reference='ref1b',
@@ -1974,7 +1972,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(1, len(data_line_list))
 
-    line = data_line_list[0]
     self.checkLineProperties(data_line_list[0],
         Movement_getSpecificReference='4',
         date=DateTime(2006, 2, 2, 0, 3),
@@ -2025,7 +2022,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
   def testAccountStatementCancellationAmount(self):
     # Account statement with cancellation amount set on lines
     account_module = self.account_module
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               source_reference='1',
@@ -2038,7 +2035,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_debit=-100.0,
                           cancellation_amount=True)))
 
-    t2 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 2',
               source_reference='2',
@@ -2092,7 +2089,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
   def testAccountStatementSameSectionSameNode(self):
     # Account statement with a movement on the same section and the same node
     account_module = self.account_module
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               source_reference='Source Reference',
@@ -2155,7 +2152,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # When there are multiple sections for the same group, an extra column
     # is added for the section
     account_module = self.portal.account_module
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               reference='ref1',
@@ -2168,7 +2165,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.payable,
                           source_credit=100.0)))
 
-    t2 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 2',
               reference='ref2',
@@ -2510,7 +2507,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
   def testTrialBalanceMultipleSection(self):
     account_module = self.portal.account_module
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               source_reference='1',
@@ -2522,7 +2519,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.payable,
                           source_credit=100.0)))
 
-    t2 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 2',
               source_reference='2',
@@ -3602,10 +3599,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['function'] = ''
     request_form['group_analytic'] = ["function"]
     request_form['show_detailed_balance_columns'] = 1
-    report_section_list = self.portal.accounting_module.AccountModule_getTrialBalanceReportSectionList()
-    line_list = self.getListBoxLineList(report_section_list[0])
     # XXX where is the end of this test ?
-
+    #report_section_list = self.portal.accounting_module.AccountModule_getTrialBalanceReportSectionList()
 
   def testTrialBalanceProject(self):
     # trial balance restricted to a project
@@ -4583,7 +4578,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
   def testOtherPartiesReport(self):
     # Other parties report
     account_module = self.portal.account_module
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               source_reference='1',
@@ -4595,7 +4590,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=100.0)))
 
-    t2 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 2',
               source_reference='2',
@@ -4661,7 +4656,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # entities belong to the same ledger
     self.createLedgerCategory()
     account_module = self.portal.account_module
-    t1 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 1',
               source_reference='1',
@@ -4674,7 +4669,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=100.0)))
 
-    t2 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 2',
               source_reference='2',
@@ -4687,7 +4682,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=200.0)))
 
-    t3 = self._makeOne(
+    self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction 3',
               source_reference='3',
@@ -5074,7 +5069,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         portal_type='Organisation',
         title='ZZZ Supplier'
     )
-    purchase2 = self._makeOne(
+    self._makeOne(
         portal_type='Purchase Invoice Transaction',
         title='Purchase invoice 0',
         destination_reference='0',
@@ -5261,7 +5256,6 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              debit=0,
                              credit=700)
 
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
 
@@ -5299,7 +5293,6 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                              node_title='7',
                              debit=0,
                              credit=1500)
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
 
@@ -5345,7 +5338,6 @@ DT, b, P2 - Project 2''',
         credit_price=700,
         running_total_price=-1500)
 
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
 
@@ -5374,7 +5366,6 @@ DT, b, P2 - Project 2''',
                              credit_price=1500,
                              running_total_price=-1500)
 
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
 
@@ -5493,7 +5484,6 @@ DT, b, P2 - Project 2''',
         getTranslatedSimulationStateTitle='Closed')
 
     # There is no stat line in export
-    stat_line = line_list[-1]
     self.assertFalse(line_list[-1].isStatLine())
 
   def testGeneralLedgerAnalyticsShown(self):
@@ -5543,7 +5533,6 @@ DT, b, P2 - Project 2''',
         credit_price=700,
         running_total_price=-1500)
 
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
 
@@ -5583,7 +5572,6 @@ DT, b, P2 - Project 2''',
                              debit_price=1500,
                              credit_price=0,
                              running_total_price=1500)
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=1500, credit_price=0)
     # good sales account
@@ -5594,7 +5582,6 @@ DT, b, P2 - Project 2''',
                              debit_price=0,
                              credit_price=1500,
                              running_total_price=-1500)
-    stat_line = line_list[-1]
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
     # summary
@@ -5763,7 +5750,6 @@ DT, b, P2 - Project 2''',
         grouping_date=None,
         getTranslatedSimulationStateTitle='Closed')
 
-    stat_line = line_list[-1]
     # There is no stat in export mode
     self.assertFalse(line_list[-1].isStatLine())
     # There is not stat section either

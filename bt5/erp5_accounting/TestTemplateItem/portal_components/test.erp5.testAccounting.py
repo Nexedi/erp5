@@ -51,6 +51,7 @@ QUIET = 1
 transaction_to_line_mapping = {
     'Accounting Transaction': 'Accounting Transaction Line',
     'Balance Transaction': 'Balance Transaction Line',
+    'Internal Invoice Transaction': 'Internal Invoice Transaction Line',
     'Purchase Invoice Transaction': 'Purchase Invoice Transaction Line',
     'Sale Invoice Transaction': 'Sale Invoice Transaction Line',
     'Payment Transaction': 'Accounting Transaction Line',
@@ -1083,7 +1084,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Accounting Transaction',
         simulation_state='delivered',
@@ -1092,7 +1093,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.stocks,
                     source_credit=500)))
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Accounting Transaction',
         simulation_state='delivered',
@@ -1173,7 +1174,7 @@ class TestClosingPeriod(AccountingTestCase):
               portal_type='Account',
               account_type='equity')
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         destination_section_value=organisation_module.client_1,
         portal_type='Sale Invoice Transaction',
@@ -1183,7 +1184,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_credit=100)))
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         destination_section_value=organisation_module.client_2,
         portal_type='Sale Invoice Transaction',
@@ -1275,7 +1276,7 @@ class TestClosingPeriod(AccountingTestCase):
                     id='bank2', reference='bank2',
                     portal_type='Bank Account')
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         destination_section_value=organisation_module.client_1,
         source_payment_value=bank1,
@@ -1288,7 +1289,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_credit=100)))
 
     # we are destination on this one
-    transaction2 = self._makeOne(
+    self._makeOne(
         stop_date=DateTime(2006, 1, 2),
         destination_section_value=self.section,
         destination_payment_value=bank2,
@@ -1400,7 +1401,7 @@ class TestClosingPeriod(AccountingTestCase):
           account_type='equity')
 
     # 2 Transactions for clients 1 and 2 on ledger accounting/general
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/general',
@@ -1411,7 +1412,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_credit=100)))
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/general',
@@ -1423,7 +1424,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_credit=200)))
 
     # 2 Transactions for clients 1 and 2 on ledger accounting/detailed
-    transaction3 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/detailed',
@@ -1434,7 +1435,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_credit=400)))
 
-    transaction4 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/detailed',
@@ -1568,7 +1569,7 @@ class TestClosingPeriod(AccountingTestCase):
           account_type='equity')
 
     # 2 Transactions for clients 1 and 2 on ledger accounting/general
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/general',
@@ -1579,7 +1580,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_credit=100)))
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/general',
@@ -1591,7 +1592,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_credit=200)))
 
     # 2 Transactions for clients 1 and 2 on ledger accounting/detailed
-    transaction3 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/detailed',
@@ -1602,7 +1603,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_credit=400)))
 
-    transaction4 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Sale Invoice Transaction',
         ledger='accounting/detailed',
@@ -1732,7 +1733,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         title='Yen',
         resource='currency_module/yen',
@@ -1746,7 +1747,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_asset_credit=1.1,
                     source_credit=100)))
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         title='Dollar',
         resource='currency_module/usd',
@@ -1889,7 +1890,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         title='Yen',
         resource='currency_module/yen',
@@ -1903,7 +1904,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_asset_credit=1.1,
                     source_credit=100)))
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         title='Dollar',
         resource='currency_module/usd',
@@ -2028,7 +2029,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual('started', period.getSimulationState())
 
     # create a simple transaction in the period
-    accounting_transaction = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 6, 30),
         portal_type='Sale Invoice Transaction',
         destination_section_value=self.organisation_module.client_1,
@@ -2082,7 +2083,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStopDate(DateTime(2006, 12, 31))
     period.start()
 
-    transaction_main = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
         destination_section_value=self.main_section,
@@ -2156,7 +2157,7 @@ class TestClosingPeriod(AccountingTestCase):
     period_section.setStopDate(DateTime(2006, 12, 31))
     period_section.start()
 
-    transaction_main = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
         destination_section_value=self.main_section,
@@ -2239,7 +2240,7 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStopDate(DateTime(2006, 12, 31))
     period.start()
 
-    transaction_main = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
         destination_section_value=self.main_section,
@@ -2271,7 +2272,7 @@ class TestClosingPeriod(AccountingTestCase):
     period1.setStopDate(DateTime(2006, 12, 31))
     period1.start()
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Purchase Invoice Transaction',
         source_section_value=self.organisation_module.client_1,
@@ -2301,7 +2302,7 @@ class TestClosingPeriod(AccountingTestCase):
     period2.setStopDate(DateTime(2007, 12, 31))
     period2.start()
 
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2007, 1, 2),
         portal_type='Accounting Transaction',
         simulation_state='delivered',
@@ -2309,7 +2310,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_debit=100),
                dict(source_value=pl_account,
                     source_credit=100)))
-    transaction3 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2007, 1, 3),
         portal_type='Purchase Invoice Transaction',
         source_section_value=self.organisation_module.client_1,
@@ -2371,7 +2372,7 @@ class TestClosingPeriod(AccountingTestCase):
                     title='Profit & Loss')
     pl_account.validate()
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Accounting Transaction',
         simulation_state='delivered',
@@ -2495,7 +2496,7 @@ class TestClosingPeriod(AccountingTestCase):
               portal_type='Account',
               account_type='equity')
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Sale Invoice Transaction',
         destination_section_value=self.organisation_module.client_1,
@@ -2647,7 +2648,7 @@ class TestClosingPeriod(AccountingTestCase):
 
   def test_InventoryIndexingNodeDiffOnNode(self):
     # Balance Transactions are indexed as Inventories.
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Accounting Transaction',
         simulation_state='delivered',
@@ -2735,7 +2736,7 @@ class TestClosingPeriod(AccountingTestCase):
 
   def test_BalanceTransactionLineBrainGetObject(self):
     # Balance Transaction Line can be retrieved using Brain.getObject
-    existing_transaction = self._makeOne(
+    self._makeOne(
                start_date=DateTime(2006, 1, 31),
                portal_type='Sale Invoice Transaction',
                simulation_state='delivered',
@@ -2796,7 +2797,7 @@ class TestClosingPeriod(AccountingTestCase):
   def test_BalanceTransactionLineBrainGetObjectDifferentThirdParties(self):
     # Balance Transaction Line can be retrieved using Brain.getObject, when
     # the balance is for different third parties
-    existing_transaction = self._makeOne(
+    self._makeOne(
                start_date=DateTime(2006, 1, 30),
                portal_type='Sale Invoice Transaction',
                simulation_state='delivered',
@@ -2805,7 +2806,7 @@ class TestClosingPeriod(AccountingTestCase):
                            source_debit=30),
                       dict(source_value=self.account_module.goods_sales,
                            source_credit=30)))
-    another_existing_transaction = self._makeOne(
+    self._makeOne(
                start_date=DateTime(2006, 1, 31),
                portal_type='Sale Invoice Transaction',
                simulation_state='delivered',
@@ -2866,7 +2867,7 @@ class TestClosingPeriod(AccountingTestCase):
     # check that dates are correctly used for Balance Transaction indexing
     organisation_module = self.organisation_module
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 12, 31),
         destination_section_value=organisation_module.client_1,
         portal_type='Sale Invoice Transaction',
@@ -2881,11 +2882,11 @@ class TestClosingPeriod(AccountingTestCase):
                           destination_section_value=self.section,
                           start_date=DateTime(2007, 1, 1),
                           resource_value=self.currency_module.euro,)
-    balance_line = balance.newContent(
+    balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.equity,
                 destination_debit=100,)
-    balance_line = balance.newContent(
+    balance.newContent(
                 portal_type='Balance Transaction Line',
                 source_section_value=organisation_module.client_1,
                 destination_value=self.account_module.receivable,
@@ -2907,7 +2908,7 @@ class TestClosingPeriod(AccountingTestCase):
     # this is a transaction with the same date as the balance transaction, but
     # this transaction should not be taken into account when we reindex the
     # Balance Transaction.
-    transaction2 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2007, 1, 1),
         destination_section_value=organisation_module.client_1,
         portal_type='Sale Invoice Transaction',
@@ -2940,7 +2941,7 @@ class TestClosingPeriod(AccountingTestCase):
                           destination_section_value=self.section,
                           start_date=DateTime(2006, 12, 31),
                           resource_value=self.currency_module.euro,)
-    balance_line = balance.newContent(
+    balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.receivable,
                 destination_debit=100,)
@@ -2977,7 +2978,7 @@ class TestClosingPeriod(AccountingTestCase):
                           destination_section_value=self.section,
                           start_date=DateTime(2006, 12, 31),
                           resource_value=self.currency_module.euro,)
-    balance_line = balance.newContent(
+    balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.receivable,
                 destination_debit=100,)
@@ -3009,7 +3010,7 @@ class TestClosingPeriod(AccountingTestCase):
               portal_type='Account',
               account_type='equity')
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         destination_section_value=organisation_module.client_1,
         portal_type='Sale Invoice Transaction',
@@ -3057,7 +3058,6 @@ class TestClosingPeriod(AccountingTestCase):
 
   def test_ParrallelClosingRefused(self):
     organisation_module = self.organisation_module
-    stool = self.portal.portal_simulation
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
@@ -3071,7 +3071,7 @@ class TestClosingPeriod(AccountingTestCase):
               portal_type='Account',
               account_type='equity')
 
-    transaction1 = self._makeOne(
+    self._makeOne(
         start_date=DateTime(2006, 1, 1),
         destination_section_value=organisation_module.client_1,
         portal_type='Sale Invoice Transaction',
@@ -3097,11 +3097,11 @@ class TestClosingPeriod(AccountingTestCase):
     period.setStopDate(DateTime(2006, 12, 31))
     period.start()
 
-    pl = self.portal.account_module.newContent(
+    self.portal.account_module.newContent(
       portal_type='Account',
       account_type='equity')
 
-    transaction1 = self._makeOne(
+    self._makeOne(
       start_date=DateTime(2006, 1, 1),
       destination_section_value=organisation_module.client_1,
       portal_type='Sale Invoice Transaction',
@@ -3131,7 +3131,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     # This transaction has lines that should block closing for `main_section`,
     # but not for `section` because from `section` side there are no accounting lines.
-    transaction1 = self._makeOne(
+    self._makeOne(
       start_date=DateTime(2006, 1, 1),
       source_section_value=self.main_section,
       source_value=self.main_section,
@@ -3348,7 +3348,7 @@ class TestTransactions(AccountingTestCase):
   def test_Organisation_getMappingRelatedOrganisation(self):
     # the main section needs an accounting period to be treated as mapping
     # related by Organisation_getMappingRelatedOrganisation
-    section_period_2001 = self.main_section.newContent(
+    self.main_section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
                         start_date=DateTime(2001, 1, 1),
@@ -3520,7 +3520,7 @@ class TestTransactions(AccountingTestCase):
                            source_debit=100),
                       dict(source_value=self.account_module.receivable,
                            source_credit=100),))
-    accounting_transaction = self._makeOne(
+    self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                causality_value=invoice,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3607,7 +3607,7 @@ class TestTransactions(AccountingTestCase):
     for portal_type in accounting_module.getVisibleAllowedContentTypeList():
       accounting_transaction = accounting_module.newContent(
                             portal_type=portal_type)
-      line = accounting_transaction.newContent(
+      accounting_transaction.newContent(
                   id = 'line_with_grouping_reference',
                   grouping_reference='A',
                   grouping_date=DateTime(),
@@ -3727,7 +3727,6 @@ class TestTransactions(AccountingTestCase):
                            source_debit=100),
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
-    payment_line = payment.line_with_grouping_reference
     self.tic()
     invoice.cancel()
     invoice.manage_delObjects([line.getId() for line in invoice.contentValues()])
@@ -3799,7 +3798,7 @@ class TestTransactions(AccountingTestCase):
 
     # the main section needs an accounting period to be treated as mapping
     # related by Organisation_getMappingRelatedOrganisation
-    section_period_2001 = self.main_section.newContent(
+    self.main_section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
                         start_date=DateTime(2001, 1, 1),
@@ -4054,7 +4053,6 @@ class TestTransactions(AccountingTestCase):
                 source_debit=100.032345),
            dict(source_value=self.account_module.receivable,
                 source_credit=100.000001)))
-    precision = invoice.getQuantityPrecisionFromResource(invoice.getResource())
     invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
     self.assertRaises(invoice.AccountingTransaction_roundDebitCredit)
 
@@ -4940,10 +4938,10 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         created_by_builder = 0,
     )
 
-    line = invoice.newContent(
+    invoice.newContent(
         portal_type = self.sale_invoice_transaction_line_portal_type,
         quantity = 100, source_value = sequence.get('account_list')[0])
-    line = invoice.newContent(
+    invoice.newContent(
         portal_type = self.sale_invoice_transaction_line_portal_type,
         quantity = -100, source_value = sequence.get('account_list')[1])
     sequence.edit(invoice_list = [invoice])
@@ -5113,7 +5111,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
   def createAccountingTransaction(self,
                         portal_type=accounting_transaction_portal_type,
                         line_portal_type=accounting_transaction_line_portal_type,
-                        quantity=100, reindex=1, check_consistency=1, **kw):
+                        quantity=100, reindex=1, check_consistency=1, **kw): # pylint: disable=redefined-outer-name
     """Creates an accounting transaction.
     By default, this transaction contains 2 lines, income and receivable.
       quantity          - The quantity property on created lines.
@@ -5272,7 +5270,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed as err:
-      self.assert_(0, "Validation failed : %s" % err.msg)
+      raise AssertionError("Validation failed : %s" % err.msg)
 
     # if we do not use any payable / receivable account, then we can
     # validate the transaction without setting the mirror section.
@@ -5294,13 +5292,12 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
         self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed as err:
-        self.assert_(0, "Validation failed : %s" % err.msg)
+        raise AssertionError("Validation failed : %s" % err.msg)
 
   def stepValidateNoCurrency(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to currency.
     """
     accounting_transaction = sequence.get('transaction')
-    old_resource = accounting_transaction.getResource()
     accounting_transaction.setResource(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
@@ -5368,7 +5365,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     # 0 quantity, but a destination asset price => do not delete the
     # line
     accounting_transaction = self.createAccountingTransaction()
-    new_line = accounting_transaction.newContent(
+    accounting_transaction.newContent(
         portal_type = self.accounting_transaction_line_portal_type)
     self.assertEqual(len(accounting_transaction.getMovementList()), 3)
     line_list = accounting_transaction.getMovementList()
@@ -5385,7 +5382,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed as err:
-      self.assert_(0, "Validation failed : %s" % err.msg)
+      raise AssertionError("Validation failed : %s" % err.msg)
 
   def stepValidateNotBalanced(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour when transaction is not balanced.
@@ -5430,7 +5427,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed as err:
-      self.assert_(0, "Validation failed : %s" % err.msg)
+      raise AssertionError("Validation failed : %s" % err.msg)
 
   def stepValidateNoPayment(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to payment & mirror_payment.
@@ -5519,7 +5516,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                       source_section=accounting_transaction.getSourceSection(),
                       destination_section=accounting_transaction.getDestinationSection(),
                       created_by_builder=1)
-    for i in range(3):
+    for _ in range(3):
       another_accounting_transaction.newContent(
             portal_type=self.accounting_transaction_line_portal_type)
     lines_count = len(another_accounting_transaction.getMovementList())

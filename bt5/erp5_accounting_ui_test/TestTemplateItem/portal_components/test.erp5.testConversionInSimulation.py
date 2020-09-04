@@ -31,7 +31,7 @@ import unittest
 from DateTime import DateTime
 from zLOG import LOG
 from Testing import ZopeTestCase
-from Products.ERP5.tests.testAccounting import AccountingTestCase
+from erp5.component.test.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 QUIET = False
 run_all_test = True
@@ -80,11 +80,11 @@ class TestConversionInSimulation(AccountingTestCase):
   def createCategoriesInCategory(self, category, category_id_list):
     for category_id in category_id_list:
       child = category
-      for id in category_id.split('/'):
+      for id_ in category_id.split('/'):
         try:
-          child = child[id]
+          child = child[id_]
         except KeyError:
-          child = child.newContent(id)
+          child = child.newContent(id_)
 
   def createCategories(self):
     """Create the categories for our test. """
@@ -101,16 +101,16 @@ class TestConversionInSimulation(AccountingTestCase):
       ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
     _(category_tool.product_line, ['apparel'])
 
-  def _solveDivergence(self, obj, property, decision, group='line'):
+  def _solveDivergence(self, obj, prop, decision, group='line'):
     """
       Check if simulation movement are disconnected
     """
     kw = {'%s_group_listbox' % group:{}}
     for divergence in obj.getDivergenceList():
-      if divergence.getProperty('tested_property') != property:
+      if divergence.getProperty('tested_property') != prop:
         continue
       sm_url = divergence.getProperty('simulation_movement').getRelativeUrl()
-      kw['line_group_listbox']['%s&%s' % (sm_url, property)] = {
+      kw['line_group_listbox']['%s&%s' % (sm_url, prop)] = {
         'choice':decision}
     self.portal.portal_workflow.doActionFor(
       obj,
@@ -144,7 +144,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.tic()
     super(TestConversionInSimulation, self).beforeTearDown()
 
-  def login(self,name=username, quiet=0, run=run_all_test):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
             'Author'], [])
@@ -247,7 +247,7 @@ class TestConversionInSimulation(AccountingTestCase):
       """
     if not run: return
     if not quiet:
-       printAndLog('test_01_simulation_movement_destination_asset_price')
+      printAndLog('test_01_simulation_movement_destination_asset_price')
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
@@ -291,10 +291,10 @@ class TestConversionInSimulation(AccountingTestCase):
                               price_currency_value=currency,
                               specialise_value=self.business_process,
                               title='Order')
-    order_line = order.newContent(portal_type='Sale Order Line',
-                                  resource_value=resource,
-                                  quantity=1,
-                                  price=2)
+    order.newContent(portal_type='Sale Order Line',
+                     resource_value=resource,
+                     quantity=1,
+                     price=2)
 
     order.confirm()
     self.tic()
@@ -339,7 +339,7 @@ class TestConversionInSimulation(AccountingTestCase):
     """
     if not run: return
     if not quiet:
-       printAndLog('test_01_simulation_movement_source_asset_price')
+      printAndLog('test_01_simulation_movement_source_asset_price')
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
@@ -383,10 +383,10 @@ class TestConversionInSimulation(AccountingTestCase):
                               price_currency_value=currency,
                               specialise_value=self.business_process,
                               title='Order')
-    order_line = order.newContent(portal_type='Sale Order Line',
-                                  resource_value=resource,
-                                  quantity=1,
-                                  price=2)
+    order.newContent(portal_type='Sale Order Line',
+                     resource_value=resource,
+                     quantity=1,
+                     price=2)
 
     order.confirm()
     self.tic()
@@ -421,7 +421,7 @@ class TestConversionInSimulation(AccountingTestCase):
     """
     if not run: return
     if not quiet:
-       printAndLog(
+      printAndLog(
        'test_01_destination_total_asset_price_on_accounting_lines')
 
     resource = self.portal.product_module.newContent(
@@ -467,10 +467,10 @@ class TestConversionInSimulation(AccountingTestCase):
                               price_currency_value=currency,
                               specialise_value=self.business_process,
                               title='Order')
-    order_line = order.newContent(portal_type='Sale Order Line',
-                                  resource_value=resource,
-                                  quantity=1,
-                                  price=2)
+    order.newContent(portal_type='Sale Order Line',
+                     resource_value=resource,
+                     quantity=1,
+                     price=2)
     order.confirm()
     self.tic()
     self.buildPackingLists()
@@ -495,7 +495,7 @@ class TestConversionInSimulation(AccountingTestCase):
       portal_type=self.portal.getPortalAccountingMovementTypeList())
     self.assertNotEquals(line_list, None)
     for line in line_list:
-       self.assertEqual(line.getDestinationTotalAssetPrice(),
+      self.assertEqual(line.getDestinationTotalAssetPrice(),
               round(655.957*delivery_movement.getTotalPrice()))
 
   def test_01_diverged_sale_packing_list_destination_total_asset_price(
@@ -509,7 +509,7 @@ class TestConversionInSimulation(AccountingTestCase):
     """
     if not run: return
     if not quiet:
-     printAndLog(
+      printAndLog(
         'test_01_diverged_sale_packing_list_destination_total_asset_price')
 
     resource = self.portal.product_module.newContent(
@@ -555,10 +555,10 @@ class TestConversionInSimulation(AccountingTestCase):
                               price_currency_value=currency,
                               specialise_value=self.business_process,
                               title='Order')
-    order_line = order.newContent(portal_type='Sale Order Line',
-                                  resource_value=resource,
-                                  quantity=5,
-                                  price=2)
+    order.newContent(portal_type='Sale Order Line',
+                     resource_value=resource,
+                     quantity=5,
+                     price=2)
     order.confirm()
     self.tic()
     self.buildPackingLists()
@@ -608,7 +608,7 @@ class TestConversionInSimulation(AccountingTestCase):
     """
     if not run: return
     if not quiet:
-     printAndLog(
+      printAndLog(
       'test_01_diverged_purchase_packing_list_source_total_asset_price')
 
     resource = self.portal.product_module.newContent(
@@ -654,10 +654,10 @@ class TestConversionInSimulation(AccountingTestCase):
                               price_currency_value=currency,
                               specialise_value=self.business_process,
                               title='Order')
-    order_line = order.newContent(portal_type='Purchase Order Line',
-                                  resource_value=resource,
-                                  quantity=5,
-                                  price=2)
+    order.newContent(portal_type='Purchase Order Line',
+                     resource_value=resource,
+                     quantity=5,
+                     price=2)
     order.confirm()
     self.tic()
     self.buildPackingLists()
@@ -707,7 +707,7 @@ class TestConversionInSimulation(AccountingTestCase):
     """
     if not run: return
     if not quiet:
-     printAndLog(
+      printAndLog(
         'test_01_delivery_mode_on_sale_packing_list_and_invoice')
 
     resource = self.portal.product_module.newContent(
@@ -755,10 +755,10 @@ class TestConversionInSimulation(AccountingTestCase):
                               incoterm=self.cpt_incoterm,
                               specialise_value=self.business_process,
                               title='Order')
-    order_line = order.newContent(portal_type='Sale Order Line',
-                                  resource_value=resource,
-                                  quantity=5,
-                                  price=2)
+    order.newContent(portal_type='Sale Order Line',
+                     resource_value=resource,
+                     quantity=5,
+                     price=2)
     order.confirm()
     self.tic()
     self.buildPackingLists()
@@ -788,7 +788,7 @@ class TestConversionInSimulation(AccountingTestCase):
     """
     if not run: return
     if not quiet:
-     printAndLog(
+      printAndLog(
         'test_01_quantity_unit_on_sale_packing_list')
 
     resource = self.portal.product_module.newContent(
