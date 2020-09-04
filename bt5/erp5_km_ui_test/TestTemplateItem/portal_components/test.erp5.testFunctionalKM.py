@@ -33,39 +33,39 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 class TestZeleniumKM(ERP5TypeFunctionalTestCase):
-    foreground = 0
-    # Run only the Knowledge Management Tests.
-    run_only = "erp5_km_zuite"
+  foreground = 0
+  # Run only the Knowledge Management Tests.
+  run_only = "erp5_km_zuite"
 
-    def getBusinessTemplateList(self):
-        """
-          Return the list of business templates.
-        """
-        # XXX This is a rough list, we should drop as much as we can, and
-        # keep only minimal
-        return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
-                'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test',
-                'erp5_dhtml_style', 'erp5_dhtml_ui_test',
-                'erp5_jquery', 'erp5_jquery_ui',
-                'erp5_knowledge_pad', 'erp5_pdm',
-                'erp5_simulation', 'erp5_trade', 'erp5_ooo_import',
-                'erp5_accounting', 'erp5_invoicing',
-                'erp5_simplified_invoicing', 'erp5_project',
-                'erp5_simulation', 'erp5_simulation_test',
-                'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-                'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
-                'erp5_ui_test_data',
-                'erp5_knowledge_pad_ui_test',
-                'erp5_credential', 'erp5_rss_style', 'erp5_discussion',
-                'erp5_km', 'erp5_km_ui_test_data', 'erp5_km_ui_test',
-                'erp5_l10n_fr', 'erp5_crm',
-                'erp5_forge',
-                'erp5_web_renderjs_ui',
-                'erp5_web_renderjs_ui_test_core',
-                'erp5_web_renderjs_ui_test',
-                )
+  def getBusinessTemplateList(self):
+    """
+    Return the list of business templates.
+    """
+    # XXX This is a rough list, we should drop as much as we can, and
+    # keep only minimal
+    return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
+            'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test',
+            'erp5_dhtml_style', 'erp5_dhtml_ui_test',
+            'erp5_jquery', 'erp5_jquery_ui',
+            'erp5_knowledge_pad', 'erp5_pdm',
+            'erp5_simulation', 'erp5_trade', 'erp5_ooo_import',
+            'erp5_accounting', 'erp5_invoicing',
+            'erp5_simplified_invoicing', 'erp5_project',
+            'erp5_simulation', 'erp5_simulation_test',
+            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
+            'erp5_ui_test_data',
+            'erp5_knowledge_pad_ui_test',
+            'erp5_credential', 'erp5_rss_style', 'erp5_discussion',
+            'erp5_km', 'erp5_km_ui_test_data', 'erp5_km_ui_test',
+            'erp5_l10n_fr', 'erp5_crm',
+            'erp5_forge',
+            'erp5_web_renderjs_ui',
+            'erp5_web_renderjs_ui_test_core',
+            'erp5_web_renderjs_ui_test',
+            )
 
 def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestZeleniumKM))
-    return suite
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestZeleniumKM))
+  return suite
