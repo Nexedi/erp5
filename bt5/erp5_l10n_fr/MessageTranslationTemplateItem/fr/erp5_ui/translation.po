@@ -3835,6 +3835,12 @@ msgstr "Débiteurs"
 msgid "December"
 msgstr "Décembre"
 
+msgid "Declare Reachable"
+msgstr "Déclarer joignable"
+
+msgid "Declare Unreachable"
+msgstr "Déclarer injoignable"
+
 msgid "Declare as Received"
 msgstr "Déclarer reçu"
 
@@ -10174,6 +10180,9 @@ msgstr "Réinstaller le Business Template"
 msgid "Re-install Business Template [transition in business_template_installation_workflow]"
 msgstr "Réinstaller le Business Template"
 
+msgid "Reachable"
+msgstr "Joignable"
+
 msgid "Read more"
 msgstr "Lire la suite"
 
@@ -14226,6 +14235,9 @@ msgstr "Dépublier le document"
 
 msgid "Unpublishes the document"
 msgstr "Permet de dépublier un document. Il sera possible de le publier à nouveau."
+
+msgid "Unreachable"
+msgstr "Injoignable"
 
 msgid "Unsaved Form Warning"
 msgstr "Avertissement en cas de formulaire non enregistré"
