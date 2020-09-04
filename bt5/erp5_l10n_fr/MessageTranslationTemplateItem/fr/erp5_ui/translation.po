@@ -7861,6 +7861,9 @@ msgstr "Confirmation du nouveau mot de passe"
 msgid "New Shipping Date"
 msgstr "Nouvelle date d'expédition"
 
+msgid "New Support Request created."
+msgstr "Nouvelle demande d'assistance créée."
+
 msgid "New User Registration"
 msgstr "Enregistrement d'un nouvel utilisateur"
 
@@ -7881,9 +7884,6 @@ msgstr "Nouvelle page par défaut pour la section ${web_section}."
 
 msgid "New event created."
 msgstr "Nouvel évènement créé."
-
-msgid "New Support Request created."
-msgstr "Nouvelle demande d'assistance créée."
 
 msgid "New post created in background."
 msgstr "Nouveau message créé en arrière-plan."
@@ -14404,9 +14404,6 @@ msgstr "Utile pour les lignes intermédiaires. Par défaut, les ligne de feuille
 msgid "User"
 msgstr "Utilisateur"
 
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
 msgid "User ${user} does not exist."
 msgstr "L'utilisateur ${user} n'existe pas."
 
@@ -14442,6 +14439,9 @@ msgstr "Compte utilisateur"
 
 msgid "User accounts configuration"
 msgstr "Configuration des comptes utilisateur"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
 
 msgid "Using category for section is invalid."
 msgstr "Utiliser des catégories comme sections est invalide."
