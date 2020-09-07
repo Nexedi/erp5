@@ -829,7 +829,38 @@
 
       return getPreferredDevice(gadget)
         .push(function (preferred_device_id) {
-          return selectMediaDevice(camera_list, preferred_device_id, false);
+          return RSVP.all([
+            selectMediaDevice(camera_list, preferred_device_id, false),
+            preferred_device_id
+          ]);
+        })
+        .push(function (result_list) {
+          var device_id = result_list[0],
+            preferred_device_id = result_list[1];
+          if (device_id !== preferred_device_id) {
+            // Previous camera used in the same session was not found
+            // Samsung browser seems to randomize the device ID every time
+            // it is accessed
+            // Duplicate previous crop options
+            return gadget.session_storage_jio.get(CROPPER_DATA_JIO_KEY + preferred_device_id)
+              .push(function (data) {
+                return gadget.session_storage_jio.put(
+                  CROPPER_DATA_JIO_KEY + device_id,
+                  data
+                );
+              }, function (error) {
+                if ((error instanceof jIO.util.jIOError) &&
+                    (error.status_code === 404)) {
+                  // If no previous crop data found, nothing to do
+                  return;
+                }
+                throw error;
+              })
+              .push(function () {
+                return device_id;
+              });
+          }
+          return device_id;
         })
         .push(function (device_id) {
           if (camera_list.indexOf(device_id) === -1) {
