@@ -2,6 +2,7 @@ test.erp5.testAmount
 test.erp5.testDeliveryNode
 test.erp5.testDivergenceTester
 test.erp5.testDomainTool
+test.erp5.testERP5Interfaces
 test.erp5.testERP5Simulation
 test.erp5.testInternalOrder
 test.erp5.testInventory

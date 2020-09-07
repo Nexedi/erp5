@@ -75,14 +75,14 @@ def makeTestMethod(import_tuple, interface):
 
   return testMethod
 
-def addTestMethodDynamically(test_class, implements_tuple_list):
+def addTestMethodDynamically(test_class, tuple_list):
   """Creates test methods on the fly
 
     Uses naming
     test_<ImportPathOfClass>_<ImplementationClass>_implements_<InterfaceClass>
 
     It is possible to use --run_only on those dynamically generated methods"""
-  for import_tuple, interface in implements_tuple_list:
+  for import_tuple, interface in tuple_list:
     method_name = '_'.join(
       ('test',) + import_tuple + ('implements',) + (interface, )
     )

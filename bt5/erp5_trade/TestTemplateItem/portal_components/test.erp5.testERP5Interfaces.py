@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.testERP5TypeInterfaces import addTestMethodDynamically
+from erp5.component.test.testERP5TypeInterfaces import addTestMethodDynamically
 from unittest import expectedFailure
 import unittest
 

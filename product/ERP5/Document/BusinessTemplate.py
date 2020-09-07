@@ -6697,7 +6697,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.tests.testSecurity',
       'Products.ERP5Type.tests.testERP5NamingConvention',
       'Products.ERP5Type.tests.testFunctionalCore',
-      'Products.ERP5.tests.testERP5Interfaces',
       # Custom setUp
       'Products.ERP5.tests.testERP5Site',
       ## Classes which are not actual ERP5 objects and we do not handle that
