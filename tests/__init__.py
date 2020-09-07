@@ -39,13 +39,13 @@ class _ERP5(ERP5TypeTestSuite):
         # glob('%s/product/Formulator/tests/test*.py' % path) +
         # glob('%s/product/ERP5Form/tests/test*.py' % path) +
         # ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
-        glob('%s/product/ERP5/tests/test.*.py' % path) +
+        # glob('%s/product/ERP5/tests/test.*.py' % path) +
         # ['%s/product/ERP5/tests/testXHTML.py' % path] +
         # ['%s/product/ERP5/tests/testERP5Core.py' % path] +
         # ['%s/product/ERP5/tests/testQueryModule.py' % path] +
         # ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
         # ['%s/product/ERP5Security/tests/testERP5Security.py' % path] +
-        ['%s/product/ERP5Type/tests/testUpgradeInstanceWithOldDataFs.py' % path] +
+        # ['%s/product/ERP5Type/tests/testUpgradeInstanceWithOldDataFs.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalKM.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
