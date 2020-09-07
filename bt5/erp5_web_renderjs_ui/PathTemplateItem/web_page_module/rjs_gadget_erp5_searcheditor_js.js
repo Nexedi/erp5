@@ -131,7 +131,8 @@
       return domsugar('option', {
         selected: !!option.selected,
         value: option.value,
-        text: option.text
+        text: option.text,
+        disabled: option.disabled
       });
     }),
       operator_option_list = options.operator_option.map(function (option) {
@@ -182,7 +183,9 @@
     ]);
   }
 
-  function createFilterItemTemplate(gadget, query_dict, translation_dict, column_translation_dict) {
+  function createFilterItemTemplate(gadget, query_dict, translation_dict,
+                                    column_translation_dict,
+                                    duplicated_query_key_dict) {
     var operator_default_list = DEFAULT,
       operator_option_list = [],
       column_option_list = [],
@@ -332,12 +335,17 @@
         text: column_translation_dict[gadget.state.search_column_list[i][1]] ||
               gadget.state.search_column_list[i][1],
         value: gadget.state.search_column_list[i][0],
-        selected: (query_dict.key === gadget.state.search_column_list[i][0])
+        selected: (query_dict.key === gadget.state.search_column_list[i][0]),
+        // Do not allow selecting a domain twice
+        disabled: ((gadget.state.search_column_list[i][0].indexOf(PREFIX_DOMAIN) === 0) &&
+                    duplicated_query_key_dict.hasOwnProperty(gadget.state.search_column_list[i][0]))
       });
     }
     if (!is_selected) {
       throw new Error('SearchEditor: no key found for: ' + query_dict.key);
     }
+
+    duplicated_query_key_dict[query_dict.key] = true;
 
     return generateFilterItemTemplate({
       option: column_option_list,
@@ -675,7 +683,8 @@
         'Search Expression'
       ])
         .push(function (translation_list) {
-          var filter_dom_list =
+          var duplicated_query_key_dict = {},
+            filter_dom_list =
               gadget.state.query_list.map(
                 function (query) {
                   return createFilterItemTemplate(
@@ -693,7 +702,8 @@
                     {
                       'Searchable Text': translation_list[14],
                       'Search Expression': translation_list[15]
-                    }
+                    },
+                    duplicated_query_key_dict
                   );
                 }
               );
