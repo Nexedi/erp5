@@ -17,7 +17,7 @@ except Exception as e: # fails because unauthorized access
 
 data_stream_dict = {}
 for stream in data_set.DataSet_getDataStreamList():
-  if not portal.ERP5Site_checkReferenceInvalidated(stream) and stream.getValidationState() != "draft":
+  if stream and not portal.ERP5Site_checkReferenceInvalidated(stream) and stream.getValidationState() != "draft":
     data_stream_info_dict = { 'id': 'data_stream_module/'+stream.getId(),
                               'size': stream.getSize(),
                               'hash': stream.getVersion() }
