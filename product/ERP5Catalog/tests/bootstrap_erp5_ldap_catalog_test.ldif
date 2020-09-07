@@ -1,4 +1,0 @@
-dn: dc=erp5,dc=org
-dc: erp5
-objectClass: top
-objectClass: domain
