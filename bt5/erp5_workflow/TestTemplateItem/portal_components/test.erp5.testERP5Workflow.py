@@ -112,9 +112,9 @@ class TestERP5Workflow(ERP5TypeTestCase):
                              destination_value=s1)
     s1.setDestinationValue(t1)
 
-    v1 = workflow.newContent(portal_type='Variable',
-                             title='actor',
-                             initial_value='member/getIdOrUserName')
+    workflow.newContent(portal_type='Variable',
+                        title='actor',
+                        initial_value='member/getIdOrUserName')
 
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     workflow.initializeDocument(doc)
@@ -205,7 +205,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.changeToAnonymous()
     self.assertRaises(Unauthorized, workflow_module.view)
     self.assertRaises(Unauthorized, createWorkflowInstance)
-    self.assertRaises(Unauthorized, lambda: workflow_instance.view())
+    self.assertRaises(Unauthorized, workflow_instance.view)
 
 
 def test_suite():
