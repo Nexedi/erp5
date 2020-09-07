@@ -1,0 +1,130 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Let's set up domain property on listbox -->
+<tr><td>open</td>
+    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_root_list=foo_category+%7C+FooCat+%0A+foo_domain+%7C+FooDomain</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="search_query python: 'selection_domain_foo_domain:&#34;a&#34;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
+
+<!-- Open the panel and submit it. Check that the domain is there -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
+<tal:block tal:define="filter_domain_section_configuration python: {'key': 'DOMAIN_selection_domain_foo_domain', 'value': 'a', 'index': 0, 'option_list': [['a', 'a'], ['a/a1', '${nbsp}${nbsp}${nbsp}${nbsp}a1'], ['a/a2', '${nbsp}${nbsp}${nbsp}${nbsp}a2'], ['b', 'b']]}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_filter_domain_section" />
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Add a new filter parameter</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check that the domain is selectable for the first filter</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[4][@value='DOMAIN_selection_domain_foo_domain' and text()='FooDomain']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[4][@value='DOMAIN_selection_domain_foo_domain' and text()='FooDomain' and @disabled]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check that the domain can not be selected</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[1][@value='COLUMN_id' and text()='ID']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[2][@value='COLUMN_title' and text()='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[3][@value='DOMAIN_selection_domain_foo_category' and text()='FooCat']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[4][@value='DOMAIN_selection_domain_foo_domain' and text()='FooDomain' and @disabled]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[5][@value='TEXT' and text()='Searchable Text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[6][@value='RAW' and text()='Search Expression']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]//option[7]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='filter_item_container']/div[2]//select[1]</td>
+  <td>COLUMN_id</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
