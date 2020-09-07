@@ -7,7 +7,8 @@ url_list = [
   "cropper.css",
   "cropper.js",
   "caman.full.min.js",
-  "glfx.js"
+  "glfx.js",
+  "load-image.all.min.js"
 ]
 
 return url_list

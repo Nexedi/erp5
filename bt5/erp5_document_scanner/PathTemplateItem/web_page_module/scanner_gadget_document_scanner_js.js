@@ -1,7 +1,7 @@
 /*jslint indent: 2, unparam: true, bitwise: true */
 /*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
          promiseEventListener, domsugar, createImageBitmap, FormData, Caman,
-         FileReader, DataView, URL, fx*/
+         FileReader, DataView, URL, fx, loadImage */
 (function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
            promiseEventListener, domsugar, createImageBitmap, FormData, caman,
            FileReader, DataView, URL, fx) {
@@ -528,8 +528,7 @@
       .push(function (result) {
         orientation = result;
 
-        var expected_width = settings.maximum_width,
-          bitmap_options;
+        var expected_width = settings.maximum_width;
         // If orientation is correct, return the original blob
         // and size is small
         // and no color correction is expected
@@ -550,13 +549,19 @@
             var canvas,
               webgl_context,
               higher_dimension_key,
-              higher_dimension_value;
+              higher_dimension_value,
+              load_image_options = {
+                meta: false,
+                orientation: true,
+                canvas: true,
+                imageSmoothingQuality: 'high'
+              };
 
             if (bitmap.width < bitmap.height) {
-              higher_dimension_key = 'resizeHeight';
+              higher_dimension_key = 'maxHeight';
               higher_dimension_value = bitmap.height;
             } else {
-              higher_dimension_key = 'resizeWidth';
+              higher_dimension_key = 'maxWidth';
               higher_dimension_value = bitmap.width;
             }
 
@@ -569,64 +574,14 @@
             );
 
             if ((!!expected_width) && (expected_width < higher_dimension_value)) {
-              bitmap_options = {
-                resizeQuality: 'high'
-              };
-              bitmap_options[higher_dimension_key] = expected_width;
-              return createImageBitmap(blob, bitmap_options);
+              load_image_options[higher_dimension_key] = expected_width;
             }
 
-            return bitmap;
+            return loadImage(blob, load_image_options);
 
           })
-          .push(function (bitmap) {
-            var height = bitmap.height,
-              width = bitmap.width,
-              canvas = domsugar('canvas'),
-              ctx;
-
-            // Caman expect the canvas to be in a container
-            // in order to replace it when resizing
-            domsugar('div', [canvas]);
-
-            if ((4 < orientation) && (orientation < 9)) {
-              canvas.width = height;
-              canvas.height = width;
-            } else {
-              canvas.width = width;
-              canvas.height = height;
-            }
-
-            ctx = canvas.getContext('2d');
-
-            // transform context before drawing image
-            switch (orientation) {
-            case 2:
-              ctx.transform(-1, 0, 0, 1, width, 0);
-              break;
-            case 3:
-              ctx.transform(-1, 0, 0, -1, width, height);
-              break;
-            case 4:
-              ctx.transform(1, 0, 0, -1, 0, height);
-              break;
-            case 5:
-              ctx.transform(0, 1, 1, 0, 0, 0);
-              break;
-            case 6:
-              ctx.transform(0, 1, -1, 0, height, 0);
-              break;
-            case 7:
-              ctx.transform(0, -1, -1, 0, height, width);
-              break;
-            case 8:
-              ctx.transform(0, -1, 1, 0, 0, width);
-              break;
-            default:
-              break;
-            }
-            ctx.drawImage(bitmap, 0, 0);
-
+          .push(function (data) {
+            var canvas = data.image;
             if (settings.brightness || settings.contrast || settings.enable_greyscale) {
               return handleGfx(canvas, settings);
               // return handleCaman(canvas, settings);
