@@ -177,6 +177,12 @@
             <value> <string>test_js_style_demo_language</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewJsstylePreference</string> </value>
         </item>
@@ -371,7 +377,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.31154.47069.30310</string> </value>
+                      <value> <string>986.31283.59779.40430</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -389,7 +395,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1599576845.57</float>
+                              <float>1599581999.67</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
