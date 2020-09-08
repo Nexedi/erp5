@@ -1456,8 +1456,11 @@ msgstr "Au moins une section doit être définie."
 msgid "Attach Document"
 msgstr "Attacher un document"
 
+msgid "Attachment"
+msgstr "Pièce jointe"
+
 msgid "Attachments"
-msgstr "Fichiers joints"
+msgstr "Pièces jointes"
 
 msgid "Attachments:"
 msgstr "Pièces jointes:"
@@ -3831,6 +3834,12 @@ msgstr "Débiteurs"
 
 msgid "December"
 msgstr "Décembre"
+
+msgid "Declare Reachable"
+msgstr "Déclarer joignable"
+
+msgid "Declare Unreachable"
+msgstr "Déclarer injoignable"
 
 msgid "Declare as Received"
 msgstr "Déclarer reçu"
@@ -7472,7 +7481,7 @@ msgid "Medium Image Width"
 msgstr "Largeur des images de taille moyenne"
 
 msgid "Meeting"
-msgstr "Rendez-vous"
+msgstr "Réunion"
 
 msgid "Meeting Detailed Report"
 msgstr "Rapport détaillé"
@@ -7849,6 +7858,9 @@ msgstr "Confirmation du nouveau mot de passe"
 msgid "New Shipping Date"
 msgstr "Nouvelle date d'expédition"
 
+msgid "New Support Request created."
+msgstr "Nouvelle demande d'assistance créée."
+
 msgid "New User Registration"
 msgstr "Enregistrement d'un nouvel utilisateur"
 
@@ -7869,9 +7881,6 @@ msgstr "Nouvelle page par défaut pour la section ${web_section}."
 
 msgid "New event created."
 msgstr "Nouvel évènement créé."
-
-msgid "New Support Request created."
-msgstr "Nouvelle demande d'assistance créée."
 
 msgid "New post created in background."
 msgstr "Nouveau message créé en arrière-plan."
@@ -10170,6 +10179,9 @@ msgstr "Réinstaller le Business Template"
 
 msgid "Re-install Business Template [transition in business_template_installation_workflow]"
 msgstr "Réinstaller le Business Template"
+
+msgid "Reachable"
+msgstr "Joignable"
 
 msgid "Read more"
 msgstr "Lire la suite"
@@ -12545,13 +12557,13 @@ msgid "Support Requests"
 msgstr "Demandes d'assistance"
 
 msgid "Support Requests to Close"
-msgstr "Demandes d'assistances à fermer"
+msgstr "Demandes d'assistance à fermer"
 
 msgid "Support Requests to Open"
-msgstr "Demandes d'assistances à ouvrir"
+msgstr "Demandes d'assistance à ouvrir"
 
 msgid "Support Requests to Submit"
-msgstr "Demandes d'assistances à soumettre"
+msgstr "Demandes d'assistance à soumettre"
 
 msgid "Surcharge Ratio"
 msgstr "Ratio de surcharge"
@@ -14224,6 +14236,9 @@ msgstr "Dépublier le document"
 msgid "Unpublishes the document"
 msgstr "Permet de dépublier un document. Il sera possible de le publier à nouveau."
 
+msgid "Unreachable"
+msgstr "Injoignable"
+
 msgid "Unsaved Form Warning"
 msgstr "Avertissement en cas de formulaire non enregistré"
 
@@ -14386,9 +14401,6 @@ msgstr "Utile pour les lignes intermédiaires. Par défaut, les ligne de feuille
 msgid "User"
 msgstr "Utilisateur"
 
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
 msgid "User ${user} does not exist."
 msgstr "L'utilisateur ${user} n'existe pas."
 
@@ -14424,6 +14436,9 @@ msgstr "Compte utilisateur"
 
 msgid "User accounts configuration"
 msgstr "Configuration des comptes utilisateur"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
 
 msgid "Using category for section is invalid."
 msgstr "Utiliser des catégories comme sections est invalide."
@@ -14652,6 +14667,9 @@ msgstr "Différences entre les révisions"
 
 msgid "View Employees"
 msgstr "Salariés"
+
+msgid "View Latest Support Requests"
+msgstr "Voir les dernières demandes d'assistance"
 
 msgid "View Mode Listbox"
 msgstr "Listbox mode vue"
