@@ -150,7 +150,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/100</string>
+                <string>aggregate/web_page_module/test_js_style_frontpage_en</string>
               </tuple>
             </value>
         </item>
@@ -371,7 +371,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.22471.5019.32017</string> </value>
+                      <value> <string>986.31154.47069.30310</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -389,7 +389,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1599574243.09</float>
+                              <float>1599576845.57</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
