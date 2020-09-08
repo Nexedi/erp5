@@ -210,6 +210,7 @@ ContainerAssertions[types.GeneratorType] = 1
 
 from collections import OrderedDict
 ModuleSecurityInfo('collections').declarePublic('OrderedDict')
+ModuleSecurityInfo('collections').declarePublic('OrderedDict')
 
 from collections import defaultdict
 ModuleSecurityInfo('collections').declarePublic('defaultdict')
@@ -394,3 +395,83 @@ del member_id, member
 from random import SystemRandom
 allow_type(SystemRandom)
 ModuleSecurityInfo('os').declarePublic('urandom')
+
+#
+# backport from wendelin
+#
+# we neeed to allow access to numpy's internal types
+import pandas as pd
+from AccessControl import allow_module, allow_type, allow_class
+import numpy as np
+allow_module('numpy')
+allow_module('numpy.lib.recfunctions')
+for dtype in ('int8', 'int16', 'int32', 'int64', \
+              'uint8', 'uint16', 'uint32', 'uint64', \
+              'float16', 'float32', 'float64', \
+              'complex64', 'complex128'):
+  z = np.array([0,], dtype = dtype)
+  allow_type(type(z[0]))
+  allow_type(type(z))
+
+  sz = np.array([(0,)], dtype = [('f0', dtype)])
+  allow_type(type(sz[0]))
+  allow_type(type(sz))
+
+  rz = np.rec.array(np.array([(0,)], dtype = [('f0', dtype)]))
+  allow_type(type(rz[0]))
+  allow_type(type(rz))
+
+allow_type(type(np.dtype('int16')))
+allow_type(type(np.timedelta64(1,'D')))
+allow_type(type(np.c_))
+
+allow_module('pandas')
+# can not use allow_type for the following classes since type(the_class) is 'type'
+pd.Series.__allow_access_to_unprotected_subobjects__ = 1
+pd.Timestamp.__allow_access_to_unprotected_subobjects__ = 1
+pd.DatetimeIndex.__allow_access_to_unprotected_subobjects__ = 1
+pd.MultiIndex.__allow_access_to_unprotected_subobjects__ = 1
+pd.Index.__allow_access_to_unprotected_subobjects__ = 1
+pd.core.groupby.DataFrameGroupBy.__allow_access_to_unprotected_subobjects__ = 1
+pd.core.groupby.SeriesGroupBy.__allow_access_to_unprotected_subobjects__ = 1
+allow_class(pd.DataFrame)
+
+def restrictedMethod(s,name):
+  def dummyMethod(*args, **kw):
+    raise Unauthorized(name)
+  return dummyMethod
+
+series_black_list = ['to_csv', 'to_json', 'to_pickel', 'to_excel', 'to_hdf',
+                     'to_latex', 'to_markdown']
+series_black_list_dict = {m: restrictedMethod for m in series_black_list}
+ContainerAssertions[pd.Series] = _check_access_wrapper(pd.Series,
+                                                       series_black_list_dict)
+
+pandas_black_list = ['read_csv', 'read_json', 'read_picle', 'read_fwf',
+                     'read_excel', 'read_html', 'read_feather', 'read_parquet',
+                     'read_orc', 'read_sas', 'read_spss', 'read_stata']
+ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
+
+dataframe_black_list = ['to_csv', 'to_parque', 'to_pickle', 'to_csv', 'to_hdf',
+                        'to_excel', 'to_json', 'to_html', 'to_feather',
+                        'to_latex', 'to_stata', 'to_gbq']
+dataframe_black_list_dict = {m: restrictedMethod for m in dataframe_black_list}
+ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
+                                      pd.DataFrame, dataframe_black_list_dict)
+
+# Modify 'safetype' dict in full_write_guard function
+# of RestrictedPython (closure) directly To allow
+# write access to ndarray, DataFrame, ZBigArray and RAMArray objects
+from RestrictedPython.Guards import full_write_guard
+full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.DataFrame] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Series] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
+
+
