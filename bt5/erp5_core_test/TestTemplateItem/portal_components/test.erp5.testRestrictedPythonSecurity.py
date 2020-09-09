@@ -35,8 +35,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type.patches.Restricted import allow_class_attribute
+from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_black_list, series_black_list)
 from AccessControl import Unauthorized
-
+from AccessControl.ZopeGuards import Unauthorized as ZopeGuardsUnauthorized
 
 class TestRestrictedPythonSecurity(ERP5TypeTestCase):
   """
@@ -452,6 +453,168 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           '''),
         expected="ok"
     )
+
+  def testNumpy(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import numpy as np
+      return [x for x in (np.dtype('int32').name, np.timedelta64(1, 'D').nbytes)]
+      '''),
+      expected=["int32", 8]
+    )
+
+  def testNdarrayWrite(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import numpy as np
+      z = np.array([[1,2],[3,4]])
+      z[0][0] = 99
+      return z[0][0]
+      '''),
+      expected=99
+    )
+
+  def testPandasSeries(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      return pd.Series([1,2,3]).tolist()
+      '''),
+      expected=[1,2,3]
+    )
+
+  def testPandasTimestamp(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      return pd.Timestamp('2020-01').year
+      '''),
+      expected=2020
+    )
+
+  def testPandasDatetimeIndex(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.DataFrame({'date':['2020-01-01','2020-03-01']})
+      df['date'] = pd.to_datetime(df['date'])
+      df.set_index('date', inplace=True)
+      return str(df.index.name)
+      '''),
+      expected='date'
+    )
+
+  def testPandasMultiIndex(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.DataFrame({'a':[1,2],'b':[3,4],'c':[5,6]})
+      df2 = df.set_index(['a','b'],drop=True)
+      return list(df2.index.names)
+      '''),
+      expected=['a','b']
+    )
+
+  def testPandasIndex(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.DataFrame({'a':[1,2],'b':[3,4]})
+      df2 = df.set_index(['a'],drop=True)
+      return list(df2.index.names)
+      '''),
+      expected=['a']
+    )
+
+  def testPandasGroupBy(self):
+    # test pandas.core.groupby.DataFrameGroupBy,SeriesGroupBy
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      df2 = pd.DataFrame({'id':[1,1,2],'quantity':[3,4,5],'price':[6,7,8]})
+      return list(df2.groupby(['id'])['quantity'].agg('sum'))
+      '''),
+      expected=[7,5]
+    )
+
+  def testPandasLocIndexer(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.DataFrame({'a':[1,2],'b':[3,4]})
+      return df.loc[df['a'] == 1]['b'][0]
+      '''),
+      expected=3
+    )
+
+  def testPandasDataFrameWrite(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.DataFrame({'a':[1,2], 'b':[3,4]})
+      df.iloc[0, 0] = 999
+      return df['a'][0]
+      '''),
+      expected=999
+    )
+
+  def testPandasIORead(self):
+    self.assertRaises(Unauthorized,
+      self.createAndRunScript,
+      textwrap.dedent('''
+      import pandas as pd
+      pd.read_csv('testPandasIORead.csv')
+      '''))
+
+    # Test the black_list configuration validity
+    for read_method in pandas_black_list:
+      self.assertRaises(Unauthorized,
+        self.createAndRunScript,
+        textwrap.dedent('''
+        import pandas as pd
+        read_method = pd.{read_method}
+        read_method('testPandasIORead.data')
+        '''.format(read_method=read_method)))
+
+  def testPandasDataFrameIOWrite(self):
+    self.assertRaises(ZopeGuardsUnauthorized,
+      self.createAndRunScript,
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.DataFrame({'a':[1,2,3]})
+      df.to_csv('testPandasDataFrameIOWrite.csv')
+      '''))
+
+    # Test the black_list configuration validity
+    for write_method in dataframe_black_list:
+      self.assertRaises(ZopeGuardsUnauthorized,
+        self.createAndRunScript,
+        textwrap.dedent('''
+        import pandas as pd
+        df = pd.DataFrame(columns=['a','b'],data=[[1,2]])
+        write_method = df.{write_method}
+        write_method('testPandasDataFrameIOWrite.data')
+        '''.format(write_method=write_method)))
+
+  def testPandasSeriesIOWrite(self):
+    self.assertRaises(ZopeGuardsUnauthorized,
+      self.createAndRunScript,
+      textwrap.dedent('''
+      import pandas as pd
+      df = pd.Series([4,5,6])
+      df.to_csv('testPandasSeriesIOWrite.csv')
+      '''))
+
+    # Test the black_list configuration validity
+    for write_method in series_black_list:
+      self.assertRaises(ZopeGuardsUnauthorized,
+        self.createAndRunScript,
+        textwrap.dedent('''
+        import pandas as pd
+        df = pd.Series([4,5,6])
+        write_method = df.{write_method}
+        write_method('testPandasSeriesIOWrite.data')
+        '''.format(write_method=write_method)))
 
 
 def test_suite():
