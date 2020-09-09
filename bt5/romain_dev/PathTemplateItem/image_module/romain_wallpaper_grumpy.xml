@@ -80,6 +80,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/romain_pub</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value> <string>0902777a614513139cc299ba6f1c4e9c</string> </value>
         </item>
@@ -121,9 +129,7 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Grumpy wallpaper</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -286,7 +292,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>978.16649.15269.28774</string> </value>
+                      <value> <string>984.42594.65315.33826</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -304,7 +310,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1567765047.39</float>
+                              <float>1592482746.8</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
