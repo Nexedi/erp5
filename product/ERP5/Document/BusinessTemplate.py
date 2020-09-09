@@ -6631,7 +6631,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.CachePlugins.DummyCache',
       'Products.ERP5Type.CachePlugins.RamCache',
       'Products.ERP5Type.Tool.CacheTool',
-      # Securities
+      ## Securities: Not ERP5 objects, Zope-specific
       'Products.ERP5Security.ERP5AccessTokenExtractionPlugin',
       'Products.ERP5Security.ERP5BearerExtractionPlugin',
       'Products.ERP5Security.ERP5DumbHTTPExtractionPlugin',
@@ -6643,6 +6643,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Security.ERP5RoleManager',
       'Products.ERP5Security.ERP5UserFactory',
       'Products.ERP5Security.ERP5UserManager',
+      'Products.ERP5Security.tests.testERP5Security',
       ## Upgrader
       'Products.ERP5.mixin.timer_service',
       'Products.ERP5.Tool.AlarmTool',
@@ -6690,15 +6691,24 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.CodingStyle',
       'Products.ERP5Type.tests.CodingStyleTest',
       'Products.ERP5Type.tests.CodingStyleTestCase',
-      # Install all bt5s
+      # Install all/many bt5s
       'Products.ERP5.tests.testSpellChecking',
       'Products.ERP5.tests.testTranslation',
+      'Products.ERP5.tests.utils',
+      'Products.ERP5Type.tests.utils',
       'Products.ERP5.tests.testXHTML',
       'Products.ERP5.tests.testSecurity',
       'Products.ERP5Type.tests.testERP5NamingConvention',
       'Products.ERP5Type.tests.testFunctionalCore',
+      'Products.ERP5.tests.testBusinessTemplateTwoFileExport',
+      'Products.ERP5.tests.testInvalidationBug',
+      # Used here and there but require erp5_stock_cache (however we may not
+      # want Unit Tests to run with this bt5 installed?)
+      'Products.ERP5.tests.testInventoryAPI',
       # Custom setUp
       'Products.ERP5.tests.testERP5Site',
+      # Used by FS tests
+      'Products.ERP5Type.tests.ui_dump_test',
       ## Classes which are not actual ERP5 objects and we do not handle that
       ## in ZODB Components (IOW it should be a Portal Type as class) and
       ## according to jp, this is not needed as everything should be Portal
