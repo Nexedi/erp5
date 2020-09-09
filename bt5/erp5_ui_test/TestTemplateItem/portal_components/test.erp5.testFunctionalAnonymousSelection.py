@@ -35,18 +35,18 @@ from Products.ERP5Form.Tool.SelectionTool import SelectionTool
 SelectionTool.isAnonymous = lambda *args, **kw:True
 
 class TestAnonymousSelection(TestZeleniumCore):
-    foreground = 0
+  foreground = 0
 
-    def getBusinessTemplateList(self):
-        """
-          Return the list of business templates.
-        """
-        return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
-                'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_crm', 'erp5_forge',
-                'erp5_l10n_fa',
-                )
+  def getBusinessTemplateList(self):
+    """
+    Return the list of business templates.
+    """
+    return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
+            'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_crm', 'erp5_forge',
+            'erp5_l10n_fa',
+             )
 
 def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestAnonymousSelection))
-    return suite
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestAnonymousSelection))
+  return suite
