@@ -5,12 +5,18 @@
       function redirect_version() {
         document.location.replace("${latest_version}/" + document.location.hash)
       };
-      window.applicationCache.addEventListener('cached',redirect_version);
-      window.applicationCache.addEventListener('noupdate',redirect_version);
-      window.applicationCache.addEventListener('error',redirect_version);
-      window.applicationCache.addEventListener('updateready', function(){window.location.reload()});
-      // XXX This is a hack for when the network is too slow.
-      window.setTimeout(redirect_version, 10000);
+
+      var timeout_duration = 10000;
+      try {
+        window.applicationCache.addEventListener('cached',redirect_version);
+        window.applicationCache.addEventListener('noupdate',redirect_version);
+        window.applicationCache.addEventListener('error',redirect_version);
+        window.applicationCache.addEventListener('updateready', function(){window.location.reload()});
+      } catch (e) {
+        timeout_duration = 1;
+      }
+      // XXX This is a hack for when the network is too slow, or if appcache is not supported anymore
+      window.setTimeout(redirect_version, timeout_duration);
     </script>
   </body>
 </html>
