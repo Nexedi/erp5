@@ -882,9 +882,17 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         display_step,
-        thumbnail_container;
+        thumbnail_container,
+        result;
       // ALL DOM modifications must be done only in this method
       // this prevent concurrency issue on DOM access
+
+      // Remember the current device id
+      if (modification_dict.hasOwnProperty('device_id')) {
+        result = new RSVP.Queue(putPreferredDevice(gadget, gadget.state.device_id));
+      } else {
+        result = new RSVP.Queue();
+      }
 
       // Only refresh the full gadget content after the first render call
       // or if the display_step is modified
@@ -895,26 +903,45 @@
         display_step = modification_dict.display_step;
       }
       if (display_step === 'display_video' || modification_dict.hasOwnProperty('device_id')) {
-        return renderVideoCapture(gadget);
+        return result
+          .push(function () {
+            return renderVideoCapture(gadget);
+          });
       }
       if (display_step === 'crop_picture') {
-        return captureAndRenderPicture(gadget);
+        return result
+          .push(function () {
+            return captureAndRenderPicture(gadget);
+          });
       }
       if (display_step === 'auto_crop_picture') {
-        return captureAndRenderPicture(gadget, true);
+        return result
+          .push(function () {
+            return captureAndRenderPicture(gadget, true);
+          });
       }
       if (display_step === 'show_picture') {
-        return renderSubmittedPicture(gadget);
+        return result
+          .push(function () {
+            return renderSubmittedPicture(gadget);
+          });
       }
 
       if (display_step) {
         // Ease developper work by raising for not handled cases
-        throw new Error('Unhandled display step: ' + gadget.state.display_step);
+        return result
+          .push(function () {
+            throw new Error('Unhandled display step: ' + gadget.state.display_step);
+          });
+
       }
 
       // Only refresh the thumbnail area
       // if display_step is not modified
-      return buildPreviousThumbnailDom(gadget)
+      return result
+        .push(function () {
+          return buildPreviousThumbnailDom(gadget);
+        })
         .push(function (result) {
           thumbnail_container = gadget.element.querySelector('.thumbnail-list');
           thumbnail_container.parentElement.replaceChild(
@@ -1008,14 +1035,11 @@
             } else {
               camera_list = [device_id];
             }
-            return putPreferredDevice(gadget, device_id)
-              .push(function () {
-                return gadget.changeState({
-                  display_step: 'display_video',
-                  camera_list: camera_list,
-                  device_id: device_id
-                });
-              });
+            return gadget.changeState({
+              display_step: 'display_video',
+              camera_list: camera_list,
+              device_id: device_id
+            });
           });
       }
 
