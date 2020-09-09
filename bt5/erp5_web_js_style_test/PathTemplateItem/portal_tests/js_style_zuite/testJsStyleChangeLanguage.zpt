@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/test_js_style_demo_language/</td>
+  <td>${base_url}/web_site_module/test_js_style_demo_language/TEST-Js.Style.Demo.Frontpage</td>
   <td></td>
 </tr>
 <tr>
