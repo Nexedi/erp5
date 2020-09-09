@@ -1,3 +1,96 @@
+sql_catalog = context.getPortalObject().portal_catalog.getSQLCatalog()
+
+invalid_column_list = []
+def isValidColumnOrRaise(column_id):
+  is_valid_column = sql_catalog.isValidColumn(column_id)
+  if not is_valid_column:
+    invalid_column_list.append(column_id)
+  return is_valid_column
+
+result = sql_catalog.parseSearchText(
+  'couscous AND taboulet AND a:"b" AND title:"couscous" AND lalala',
+  search_key='FullTextKey',
+  # is_valid=lambda x: False)
+  is_valid=isValidColumnOrRaise)
+
+return str(invalid_column_list)
+
+# return context.portal_catalog(search_text='couscous AND taboulet AND a:"b" AND title:"couscous"', src__=1)
+return context.portal_catalog(full_text='couscous AND taboulet AND a:"b" AND title:"couscous"', src__=1)
+
+portal = context.getPortalObject()
+bug_module = portal.task_module
+for i in range(10000):
+  task = bug_module.newContent(
+    portal_type='Task',
+    source_project='project_module/1'
+  )
+  task.newContent(portal_type='Task Line')
+  task.newContent(portal_type='Task Line')
+
+return 'ok'
+
+result = ''# '---<br>'
+i = 0
+for brain in context.getPortalObject().portal_catalog(
+  portal_type='Action Information',
+  sort_on=[['relative_url', 'ASC']]
+):
+  action = brain.getObject()
+  action_type = action.getActionType()
+  """
+  if not action.isVisible():
+    continue
+  if ('Template' in action.getParentTitle()):
+    continue
+  if (action_type in ['object_button']):
+    continue
+  # if (action_type in ['object_report', 'object_exchange']):
+  #   continue
+  if ('web' in action_type) or ('jio' in action_type) or (action_type in ['object_view', 'object_list', 'object_sort', 'object_ui', 'object_search']):
+    continue
+  """
+
+  if 'Base_viewDocumentList' not in (action.getActionText() or ''):
+    continue
+  if 'only' in action.getActionType():
+    continue
+  """
+  action.setActionType('object_onlyxhtml_view')
+  action.getParentValue().newContent(
+    portal_type='Action Information',
+    reference='jump_to_document',
+    title='Documents',
+    action="string:${object_url}/Base_jumpToRelatedDocumentList",
+    action_type='object_onlyjio_jump',
+    visible=True,
+    priority=1,
+    condition="python:portal.Base_checkPermission('document_module', 'View')"
+  )
+  """
+  i += 1
+  result += '%s %s %s %s' % (action.getParentTitle(), '<a href="https://softinst114089.host.vifib.net/erp5/web_site_module/renderjs_runner/#/%s?editable=true">%s</a>' % (action.getRelativeUrl(), action.getTitle()), action.getActionType(), '<br>')
+
+result = '--- %i<br>%s' % (i, result)
+print result
+return printed
+
+#####################################
+
+from DateTime import DateTime
+return DateTime()
+
+
+alarm = context.getPortalObject().portal_alarms.promise_check_upgrade
+# return alarm.getLastActiveProcess().getResultList()
+return context.getPortalObject().portal_activities['2096'].getResultList()[0].detail
+
+from DateTime import DateTime
+return DateTime()
+
+return "OK %s" % str(context.WebSection_getSiteMapTree(depth=99, include_subsection=1, include_document=1))
+
+
 context.edit(preferred_event_resource=None)
 return "ok"
 
