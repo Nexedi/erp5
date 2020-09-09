@@ -21,9 +21,24 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<tal:block tal:define="web_site_name python: 'officejs_web_table_editor'">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
-</tal:block>
+<!-- Initialize and skip app installation -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_web_table_editor/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Skip</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Skip</td>
+  <td></td>
+</tr>
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Storages']</td>
@@ -68,7 +83,7 @@
 </tr>
 <!-- Verify maximize button is present -->
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//button[contains(@class, 'ui-icon-expand ui-btn-icon-notext')]</td>
   <td></td>
 </tr>
@@ -79,7 +94,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//div[contains(@class, 'editor-maximize')]</td>
   <td></td>
 </tr>
@@ -90,31 +105,31 @@
   <td></td>
 </tr>
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//div[contains(@class, 'jexcel_filter')]</td>
   <td></td>
 </tr>
 <!-- Verify toolbar is present -->
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//div[contains(@class, 'jexcel_toolbar')]</td>
   <td></td>
 </tr>
 <!-- Verify body is present, draggable and resizable -->
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//tbody[contains(@class, 'draggable resizable')]</td>
   <td></td>
 </tr>
-<!-- Add sheet -->
+<!-- Add table -->
 <tr>
-  <td>verifyElementPresent</td>
-  <td>//i[@title='Add sheet']</td>
+  <td>waitForElementPresent</td>
+  <td>//i[@title='Add table']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//i[@title='Add sheet']</td>
+  <td>//i[@title='Add table']</td>
   <td></td>
 </tr>
 <tr>
@@ -135,12 +150,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//i[@title='Delete sheet']</td>
+  <td>//i[@title='Delete table']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//i[@title='Delete sheet']</td>
+  <td>//i[@title='Delete table']</td>
   <td></td>
 </tr>
 <tr>
