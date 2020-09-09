@@ -264,7 +264,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     expected = {'folder': [],
                 'global': [],
                 'object': [],
-                'object_action': [{'id': 'diff_object_action', 'title': 'Diff Object'}],
+                'object_action': [],
                 'object_exchange': [{'id': 'csv_export', 'title': 'Export Csv File'}], # erp5_csv_style
                 'object_hidden': [{'id': 'view_historical_comparison',
                                    'title': 'View Historical Comparison'},
@@ -286,7 +286,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     expected = {'folder': [],
                 'global': [],
                 'object': [],
-                'object_action': [{'id': 'diff_object_action', 'title': 'Diff Object'}],
+                'object_action': [],
                 'object_exchange': [{'id': 'csv_export', 'title': 'Export Csv File'}], # erp5_csv_style
                 'object_hidden': [{'id': 'view_historical_comparison',
                                    'title': 'View Historical Comparison'},
