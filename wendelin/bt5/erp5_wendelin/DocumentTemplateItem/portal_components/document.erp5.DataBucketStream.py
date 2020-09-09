@@ -32,7 +32,7 @@ from BTrees.LOBTree import LOBTree
 from AccessControl import ClassSecurityInfo
 from erp5.component.document.Document import Document
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.BTreeData import PersistentString
+from erp5.component.module.BTreeData import PersistentString
 from erp5.component.module.Log import log
 
 class IndexSequence:
