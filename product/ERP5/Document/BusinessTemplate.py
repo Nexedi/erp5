@@ -6709,6 +6709,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.tests.testERP5Site',
       # Used by FS tests
       'Products.ERP5Type.tests.ui_dump_test',
+      # Tests for deprecated aq_{dynamic,reset}
+      'Products.ERP5Type.tests.testERP5Type',
       ## Classes which are not actual ERP5 objects and we do not handle that
       ## in ZODB Components (IOW it should be a Portal Type as class) and
       ## according to jp, this is not needed as everything should be Portal
