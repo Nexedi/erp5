@@ -13,7 +13,8 @@
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"},
     "notebook_editor": {"url": "gadget_notebook.html"},
-    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"}
+    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"},
+    "jexcel" : {"url": "jexcel.gadget.html"}
   };
 
 
