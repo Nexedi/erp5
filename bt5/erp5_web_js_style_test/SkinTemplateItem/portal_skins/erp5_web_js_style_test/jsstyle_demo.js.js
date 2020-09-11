@@ -4,11 +4,19 @@
   "use strict";
 
   rJS(window)
+    .ready(function () {
+      var gadget = this;
+      // Check if the gadget is reloaded when changing the language
+      return gadget.getPath()
+        .push(function (url) {
+          return gadget.changeState({gadget_style_url: url});
+        });
+    })
     .declareMethod("render", function (parsed_content) {
       var state = {
         language_list: JSON.stringify(parsed_content.language_list || []),
         page_title: parsed_content.page_title || "",
-        html_content: parsed_content.html_content || "",
+        html_content: parsed_content.html_content || ""
       };
       return this.changeState(state);
     })
@@ -19,14 +27,17 @@
         child_list,
         i;
 
-      console.log('modif', modification_dict);
-
       if (modification_dict.hasOwnProperty('page_title')) {
         document.title = gadget.state.page_title;
       }
       if (modification_dict.hasOwnProperty('html_content')) {
         domsugar(gadget.element.querySelector('main'), {
           html: domsugar('div', {html: gadget.state.html_content}).querySelector('div.input').firstChild.innerHTML
+        });
+      }
+      if (modification_dict.hasOwnProperty('gadget_style_url')) {
+        domsugar(gadget.element.querySelector('p#gadget_style_url'), {
+          text: gadget.state.gadget_style_url
         });
       }
       if (modification_dict.hasOwnProperty('language_list')) {
