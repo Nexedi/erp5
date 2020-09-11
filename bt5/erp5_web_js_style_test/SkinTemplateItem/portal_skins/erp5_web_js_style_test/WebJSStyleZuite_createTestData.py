@@ -9,8 +9,6 @@ web_site_id = "erp5_web_js_style_test_site"
 web_page_frontend_en_id = "erp5_web_js_style_test_frontpage_en"
 web_page_frontend_fr_id = "erp5_web_js_style_test_frontpage_fr"
 
-
-
 module = portal.getDefaultModule(web_page_portal_type)
 if getattr(module, web_page_frontend_en_id, None) is not None:
   module.manage_delObjects([web_page_frontend_en_id])
@@ -44,6 +42,24 @@ web_page = module.newContent(
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
 
+configuration_dict = {
+  'nostyle': {
+    'title': 'No Style'
+  },
+  'section': {
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'title': "Demo Style",
+  },
+  'language': {
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'available_language_list': ['en', 'fr'],
+    'static_language_selection': True,
+    'language': "en",
+    'aggregate_value': web_page,
+    'title': "Demo Style With Language",
+  }
+}
+
 module = portal.getDefaultModule(web_site_portal_type)
 if getattr(module, web_site_id, None) is not None:
   module.manage_delObjects([web_site_id])
@@ -52,12 +68,7 @@ web_site = module.newContent(
   id=web_site_id,
   skin_selection_name="Jsstyle",
   layout_configuration_form_id="WebSection_viewJsstylePreference",
-  configuration_style_gadget_url="jsstyle_demo.html",
-  available_language_list=['en', 'fr'],
-  static_language_selection=True,
-  language="en",
-  aggregate_value=web_page,
-  title="Demo Style With Language",
+  **configuration_dict[configuration]
 )
 # portal.portal_workflow.doActionFor(web_site, 'publish_action')
 
