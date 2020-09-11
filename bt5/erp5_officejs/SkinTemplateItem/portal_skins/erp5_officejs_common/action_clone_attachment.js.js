@@ -12,6 +12,7 @@
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -40,21 +41,26 @@
         }
       }, gadget = this,
         document = parent_options.doc,
+        portal_type = parent_options.action_options.parent_portal_type,
+        portal_type_dict,
         data,
         blob,
         property;
       delete content_dict.dialog_method;
+      delete content_dict.text_content;
       for (property in content_dict) {
         if (content_dict.hasOwnProperty(property)) {
           document[property] = content_dict[property];
         }
       }
-      return gadget.jio_getAttachment(parent_options.action_options.jio_key, "data")
+      return gadget.getSetting(portal_type.replace(/ /g, '_').toLowerCase() + "_dict")
+        .push(function (result) {
+          portal_type_dict = window.JSON.parse(result);
+          return gadget.jio_getAttachment(parent_options.action_options.jio_key, "data");
+        })
         .push(undefined, function (error) {
           if (error.status_code === 404) {
-            //TODO GET THIS FROM SETTINGS
-            var blob_type = "image/png";
-            return new Blob([''], {type: blob_type});
+            return new Blob([''], {type: portal_type_dict.blob_type});
           }
           throw new Error(error);
         })
