@@ -3,4 +3,5 @@
 """
 data_set = state_change['object']
 for data_stream in data_set.DataSet_getDataStreamList():
-  data_stream.activate().publish()
+  if data_stream and not context.getPortalObject().ERP5Site_checkReferenceInvalidated(data_stream) and data_stream.getValidationState() != 'draft':
+    data_stream.activate().publish()
