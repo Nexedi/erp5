@@ -182,7 +182,7 @@
       // Check if going from the default language to another one
       // XXX check if url is suburl from 2 languages (default + the expected one)
       gadget.parsed_content.language_list.map(function (language) {
-        if (link_url.href.indexOf(language.href) !== 0) {
+        if (link_url.href.indexOf(language.href) === 0) {
           matching_language_count += 1;
         }
       });
