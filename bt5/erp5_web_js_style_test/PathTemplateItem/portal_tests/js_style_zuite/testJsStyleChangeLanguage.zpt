@@ -60,8 +60,13 @@
   <td colspan="3"><b>Change to the not default language</b></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//nav[@id='language']//a[text()='fr']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//header/h1[text()='JS Style Demo']</td>
   <td></td>
 </tr>
 
@@ -88,8 +93,13 @@
   <td colspan="3"><b>Change to the default language</b></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//nav[@id='language']//a[text()='en']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//header/h1[text()='JS Style Demo']</td>
   <td></td>
 </tr>
 
