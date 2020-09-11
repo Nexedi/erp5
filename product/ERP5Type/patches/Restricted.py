@@ -394,3 +394,84 @@ del member_id, member
 from random import SystemRandom
 allow_type(SystemRandom)
 ModuleSecurityInfo('os').declarePublic('urandom')
+
+#
+# backport from wendelin
+#
+# we neeed to allow access to numpy's internal types
+import pandas as pd
+import numpy as np
+allow_module('numpy')
+allow_module('numpy.lib.recfunctions')
+for dtype in ('int8', 'int16', 'int32', 'int64', \
+              'uint8', 'uint16', 'uint32', 'uint64', \
+              'float16', 'float32', 'float64', \
+              'complex64', 'complex128'):
+  z = np.array([0,], dtype = dtype)
+  allow_type(type(z[0]))
+  allow_type(type(z))
+
+  sz = np.array([(0,)], dtype = [('f0', dtype)])
+  allow_type(type(sz[0]))
+  allow_type(type(sz))
+
+  rz = np.rec.array(np.array([(0,)], dtype = [('f0', dtype)]))
+  allow_type(type(rz[0]))
+  allow_type(type(rz))
+
+allow_type(np.timedelta64)
+allow_type(type(np.c_))
+allow_type(type(np.dtype('int16')))
+
+allow_module('pandas')
+
+allow_type(pd.Series)
+allow_type(pd.Timestamp)
+allow_type(pd.DatetimeIndex)
+# XXX: pd.DataFrame has its own security thus disable until we can fully integrate it
+#allow_type(pd.DataFrame)
+allow_type(pd.MultiIndex)
+allow_type(pd.indexes.range.RangeIndex)
+allow_type(pd.indexes.numeric.Int64Index)
+allow_type(pd.core.groupby.DataFrameGroupBy)
+allow_type(pd.core.groupby.SeriesGroupBy)
+allow_class(pd.DataFrame)
+
+def restrictedMethod(s,name):
+  def dummyMethod(*args, **kw):
+    raise Unauthorized(name)
+  return dummyMethod
+
+# Note: These black_list methods are for pandas 0.19.2
+series_black_list = ['to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                     'to_sql', 'to_msgpack']
+series_black_list_dict = {m: restrictedMethod for m in series_black_list}
+ContainerAssertions[pd.Series] = _check_access_wrapper(pd.Series,
+                                                       series_black_list_dict)
+
+pandas_black_list = ['read_csv', 'read_json', 'read_pickle', 'read_hdf', 'read_fwf',
+                     'read_excel', 'read_html', 'read_msgpack',
+                     'read_gbq', 'read_sas', 'read_stata']
+ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
+
+dataframe_black_list = ['to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                        'to_excel', 'to_html', 'to_sql', 'to_msgpack',
+                        'to_latex', 'to_gbq', 'to_stata']
+dataframe_black_list_dict = {m: restrictedMethod for m in dataframe_black_list}
+ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
+                                      pd.DataFrame, dataframe_black_list_dict)
+
+# Modify 'safetype' dict in full_write_guard function
+# of RestrictedPython (closure) directly to allow
+# write access to ndarray and pandas DataFrame.
+from RestrictedPython.Guards import full_write_guard
+full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.DataFrame] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Series] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
