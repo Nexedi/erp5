@@ -201,6 +201,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_hal_json_style',
       'erp5_ingestion',
       'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_jexcel_editor',
       'erp5_jquery',
       'erp5_jquery_plugin_colorpicker',
       'erp5_jquery_plugin_elastic',
