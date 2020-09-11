@@ -133,6 +133,7 @@
           'text/html'
         ),
           parsed_content = parsePageContent(dom_parser.body);
+        gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
         return result_dict.style_gadget.render(parsed_content);
       })
@@ -156,7 +157,8 @@
     function handleClick(evt) {
       var target_element = evt.target.closest('a'),
         base_uri = document.baseURI,
-        link_url;
+        link_url,
+        matching_language_count = 0;
 
       if (!target_element) {
         // Only handle link
@@ -173,6 +175,18 @@
       link_url = new URL(target_element.href, base_uri);
       if (link_url.href.indexOf(base_uri) !== 0) {
         // Only handle sub path of the base url
+        // Meaning it will also reload when going from a non default language to the default one
+        return;
+      }
+
+      // Check if going from the default language to another one
+      // XXX check if url is suburl from 2 languages (default + the expected one)
+      gadget.parsed_content.language_list.map(function (language) {
+        if (link_url.href.indexOf(language.href) !== 0) {
+          matching_language_count += 1;
+        }
+      });
+      if (matching_language_count > 1) {
         return;
       }
 
@@ -226,6 +240,7 @@
       }
 
       parsed_content = parsePageContent(gadget.element);
+      gadget.parsed_content = parsed_content;
       parsed_content.page_title = document.title;
       // Clear the DOM
       while (body.firstChild) {
