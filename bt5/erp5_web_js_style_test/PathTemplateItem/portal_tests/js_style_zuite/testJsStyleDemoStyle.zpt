@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/WebJSStyleZuite_createTestData?configuration=section</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=section</td>
   <td></td>
 </tr>
 <tr>
