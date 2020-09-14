@@ -3,6 +3,24 @@
 (function () {
   "use strict";
 
+  function renderSitemap(sitemap, element) {
+    var child_list = [],
+      i;
+    for (i = 0; i < sitemap.child_list.length; i += 1) {
+      child_list.push(
+        renderSitemap(sitemap.child_list[i], domsugar('li'))
+      );
+    }
+    if (child_list.length !== 0) {
+      child_list = [domsugar('ol', child_list)];
+    }
+    child_list.unshift(domsugar('a', {
+      text: sitemap.text,
+      href: sitemap.href
+    }));
+    return domsugar(element, child_list);
+  }
+
   rJS(window)
     .setState({
       render_count: 0
@@ -18,6 +36,7 @@
     .declareMethod("render", function (parsed_content) {
       var state = {
         language_list: JSON.stringify(parsed_content.language_list || []),
+        sitemap: JSON.stringify(parsed_content.sitemap || {}),
         page_title: parsed_content.page_title || "",
         html_content: parsed_content.html_content || "",
         render_count: this.state.render_count + 1
@@ -58,8 +77,12 @@
             href: language_list[i].href
           })]));
         }
-        domsugar(gadget.element.querySelector('nav#language'), [domsugar('ul', child_list)]);
-
+        domsugar(gadget.element.querySelector('nav#language'),
+                 [domsugar('ul', child_list)]);
+      }
+      if (modification_dict.hasOwnProperty('sitemap')) {
+        renderSitemap(JSON.parse(gadget.state.sitemap),
+                      gadget.element.querySelector('nav#sitemap'));
       }
     });
 

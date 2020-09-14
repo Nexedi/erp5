@@ -150,19 +150,22 @@ web_section = web_site.newContent(
   portal_type=web_section_portal_type,
   id='%s1' % web_section_id_prefix,
   aggregate_value=web_site.getAggregateValue(),
-  title="Demo Section 1"
+  title="Demo Section 1",
+  visible=True
 )
 web_section.newContent(
   portal_type=web_section_portal_type,
   id='%s11' % web_section_id_prefix,
   aggregate_value=web_site.getAggregateValue(),
-  title="Demo Section 11"
+  title="Demo Section 11",
+  visible=True
 )
 web_site.newContent(
   portal_type=web_section_portal_type,
   id='%s2' % web_section_id_prefix,
   aggregate_value=web_site.getAggregateValue(),
-  title="Demo Section 2"
+  title="Demo Section 2",
+  visible=True
 )
 
 return "Web Site created."
