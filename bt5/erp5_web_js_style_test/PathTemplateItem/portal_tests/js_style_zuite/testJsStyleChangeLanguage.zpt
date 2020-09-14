@@ -90,6 +90,39 @@
 </tr>
 
 <tr>
+  <td colspan="3"><b>Change to the second not default language</b></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//nav[@id='language']//a[text()='zh']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//header/h1[text()='JS Style Demo']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the page content uses the third language (zh)</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//main//p[text()="主页内容"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//main//p[text()="主页内容"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/zh/jsstyle_demo.html')]</td>
+  <td></td>
+</tr>
+
+<tr>
   <td colspan="3"><b>Change to the default language</b></td>
 </tr>
 <tr>
