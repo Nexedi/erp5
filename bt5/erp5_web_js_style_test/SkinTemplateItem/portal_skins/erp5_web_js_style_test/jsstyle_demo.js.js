@@ -4,6 +4,9 @@
   "use strict";
 
   rJS(window)
+    .setState({
+      render_count: 0
+    })
     .ready(function () {
       var gadget = this;
       // Check if the gadget is reloaded when changing the language
@@ -16,7 +19,8 @@
       var state = {
         language_list: JSON.stringify(parsed_content.language_list || []),
         page_title: parsed_content.page_title || "",
-        html_content: parsed_content.html_content || ""
+        html_content: parsed_content.html_content || "",
+        render_count: this.state.render_count + 1
       };
       return this.changeState(state);
     })
@@ -38,6 +42,11 @@
       if (modification_dict.hasOwnProperty('gadget_style_url')) {
         domsugar(gadget.element.querySelector('p#gadget_style_url'), {
           text: gadget.state.gadget_style_url
+        });
+      }
+      if (modification_dict.hasOwnProperty('render_count')) {
+        domsugar(gadget.element.querySelector('p#render_count'), {
+          text: 'render count: ' + gadget.state.render_count
         });
       }
       if (modification_dict.hasOwnProperty('language_list')) {
