@@ -104,7 +104,7 @@
       li_list = ul.children;
     }
     for (i = 0; i < li_list.length; i += 1) {
-      child_list.push(parseSitemapElement(li_list[i]));
+      sitemap.child_list.push(parseSitemapElement(li_list[i]));
     }
     return sitemap;
   }
