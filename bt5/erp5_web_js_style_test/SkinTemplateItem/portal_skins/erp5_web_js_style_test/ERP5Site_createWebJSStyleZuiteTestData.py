@@ -148,7 +148,9 @@ web_site = module.newContent(
 )
 web_site.newContent(
   portal_type=web_section_portal_type,
-  id=web_section_id
+  id=web_section_id,
+  aggregate_value=web_site.getAggregateValue(),
+  title="Demo Section"
 )
 
 return "Web Site created."
