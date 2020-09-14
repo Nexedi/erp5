@@ -8,7 +8,7 @@ web_site_portal_type = "Web Site"
 web_section_portal_type = "Web Section"
 
 web_site_id = "erp5_web_js_style_test_site"
-web_section_id = "erp5_web_js_style_test_section"
+web_section_id_prefix = "erp5_web_js_style_test_section_"
 
 web_page_frontend_reference = "erp5_web_js_style_test_frontpage"
 web_page_frontend_en_id = "erp5_web_js_style_test_frontpage_en"
@@ -146,11 +146,23 @@ web_site = module.newContent(
   layout_configuration_form_id="WebSection_viewJsstylePreference",
   **configuration_dict[configuration]
 )
+web_section = web_site.newContent(
+  portal_type=web_section_portal_type,
+  id='%s1' % web_section_id_prefix,
+  aggregate_value=web_site.getAggregateValue(),
+  title="Demo Section 1"
+)
+web_section.newContent(
+  portal_type=web_section_portal_type,
+  id='%s11' % web_section_id_prefix,
+  aggregate_value=web_site.getAggregateValue(),
+  title="Demo Section 11"
+)
 web_site.newContent(
   portal_type=web_section_portal_type,
-  id=web_section_id,
+  id='%s2' % web_section_id_prefix,
   aggregate_value=web_site.getAggregateValue(),
-  title="Demo Section"
+  title="Demo Section 2"
 )
 
 return "Web Site created."
