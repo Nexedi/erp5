@@ -158,7 +158,8 @@
       var target_element = evt.target.closest('a'),
         base_uri = document.baseURI,
         link_url,
-        matching_language_count = 0;
+        matching_language_count = 0,
+        matching_language_base_uri_count = 0;
 
       if (!target_element) {
         // Only handle link
@@ -180,13 +181,18 @@
       }
 
       // Check if going from the default language to another one
-      // XXX check if url is suburl from 2 languages (default + the expected one)
+      // Check if url is suburl from 2 languages (default + the expected one)
       gadget.parsed_content.language_list.map(function (language) {
         if (link_url.href.indexOf(language.href) === 0) {
           matching_language_count += 1;
         }
+        // Ensure current url is in the default language
+        if (base_uri.indexOf(language.href) === 0) {
+          matching_language_base_uri_count += 1;
+        }
       });
-      if (matching_language_count > 1) {
+      if ((1 < matching_language_count) && 
+          (matching_language_base_uri_count === 1)) {
         return;
       }
 
