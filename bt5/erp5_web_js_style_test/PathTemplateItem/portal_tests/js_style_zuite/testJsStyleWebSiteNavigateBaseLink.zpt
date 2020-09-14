@@ -66,12 +66,12 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//main//a[text()='home link']</td>
+  <td>//main//a[text()='base link']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
+  <td>//p[@id='render_count'][contains(text(), '2')]</td>
   <td></td>
 </tr>
 <tr>
@@ -133,12 +133,12 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//main//a[text()='home link']</td>
+  <td>//main//a[text()='base link']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()="Contenu de la page d'accueil"]</td>
+  <td>//p[@id='render_count'][contains(text(), '2')]</td>
   <td></td>
 </tr>
 <tr>

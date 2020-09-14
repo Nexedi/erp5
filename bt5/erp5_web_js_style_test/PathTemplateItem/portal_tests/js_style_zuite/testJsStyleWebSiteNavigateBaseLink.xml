@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testJsStyleWebSiteNavigateAbsoluteLink</string> </value>
+            <value> <string>testJsStyleWebSiteNavigateBaseLink</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
