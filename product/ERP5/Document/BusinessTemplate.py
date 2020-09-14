@@ -7069,7 +7069,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                               'migrateSourceCodeFromFilesystem')
     def migrateSourceCodeFromFilesystem(self,
                                         version,
-                                        **kw):
+                                        list_selection_name=None):
       """
       Migrate the given components from filesystem to ZODB by calling the
       appropriate importFromFilesystem according to the destination Portal
@@ -7078,7 +7078,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       portal = self.getPortalObject()
       component_tool = portal.portal_components
       failed_import_dict = {}
-      list_selection_name = kw.get('list_selection_name')
       migrated_product_module_set = set()
 
       template_module_component_id_set = set(self.getTemplateModuleComponentIdList())
