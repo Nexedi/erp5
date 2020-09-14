@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/WebJSStyleZuite_createTestData?configuration=language</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=language</td>
   <td></td>
 </tr>
 <tr>
