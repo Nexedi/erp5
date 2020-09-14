@@ -130,7 +130,9 @@ url_list = [
   "gadget_erp5_page_ojs_smart_assistant_home.html",
   "gadget_erp5_page_ojs_smart_assistant_home.js",
   "gadget_erp5_page_ojs_smart_assistant_upload_shared_file.html",
-  "gadget_erp5_page_ojs_smart_assistant_upload_shared_file.js"
+  "gadget_erp5_page_ojs_smart_assistant_upload_shared_file.js",
+  "gadget_erp5_page_ojs_smart_assistant_worklist.html",
+  "gadget_erp5_page_ojs_smart_assistant_worklist.js"
 ]
 
 return url_list
