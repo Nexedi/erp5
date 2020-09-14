@@ -28,7 +28,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section/</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/</td>
   <td></td>
 </tr>
 <tr>
@@ -52,7 +52,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
@@ -81,7 +81,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section/</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section_1/</td>
   <td></td>
 </tr>
 <tr>
@@ -119,7 +119,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section_1/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
@@ -148,7 +148,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section_1/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
