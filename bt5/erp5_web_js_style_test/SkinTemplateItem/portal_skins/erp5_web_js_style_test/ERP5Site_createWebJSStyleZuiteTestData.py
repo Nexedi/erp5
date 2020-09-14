@@ -31,6 +31,7 @@ web_page = module.newContent(
 <p>Frontpage content</p>
 
 <p><a href='%s'>%s</a></p>
+<p><a href='/'>home link</a></p>
 """ % (web_page_content_reference, web_page_content_reference)
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
@@ -62,6 +63,7 @@ web_page = module.newContent(
 <p>Contenu de la page d'accueil</p>
 
 <p><a href='%s'>%s</a></p>
+<p><a href='/'>home link</a></p>
 """ % (web_page_content_reference, web_page_content_reference)
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
@@ -93,6 +95,7 @@ web_page = module.newContent(
 <p>主页内容</p>
 
 <p><a href='%s'>%s</a></p>
+<p><a href='/'>home link</a></p>
 """ % (web_page_content_reference, web_page_content_reference)
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
