@@ -196,12 +196,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()='Contenu de la page d'accueil']</td>
+  <td>//main//p[text()="Contenu de la page d'accueil"]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//p[text()='Contenu de la page d'accueil']</td>
+  <td>//main//p[text()="Contenu de la page d'accueil"]</td>
   <td></td>
 </tr>
 <tr>
