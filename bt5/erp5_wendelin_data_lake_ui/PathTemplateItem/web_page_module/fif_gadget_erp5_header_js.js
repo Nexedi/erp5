@@ -360,7 +360,7 @@
       } else {
         promise_list.push(null);
       }
-      if (gadget.state.user) {
+      if (gadget.state.user && gadget.state.user !== "Anonymous User") {
         var logged_in_div = document.querySelector("#logged_in_div"),
           logged_in_user = document.querySelector("#logged_in_user");
         logged_in_div.classList.remove("ui-screen-hidden");
