@@ -51,7 +51,6 @@ class TestTemplateTool(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_mroonga_catalog',
             'erp5_base',
-            'erp5_stock_cache',
             'erp5_csv_style',
             'erp5_crm',
             'erp5_forge')
@@ -353,7 +352,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     try:
       bt.export(root, local=1)
       with open(os.path.join(root, 'bt', 'title')) as f:
-        self.assertTrue('test_core', f.read())
+        self.assertEqual('test_core', f.read())
       # We don't export revision anymore.
       self.assertFalse(os.path.exists(os.path.join(root, 'bt', 'revision')))
       # Computed at download ...
@@ -424,7 +423,7 @@ class TestTemplateTool(ERP5TypeTestCase):
                       'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
     self.assertEqual(getBusinessTemplateUrl(url_list[2:], exist_bt5),
                       'http://www.erp5.org/dists/release/5.4.5/bt5/erp5_base.bt5')
-    INSTANCE_HOME = getConfiguration().instancehome
+    INSTANCE_HOME = getConfiguration().instancehome # pylint: disable=redefined-builtin
     local_bt = None
     if os.path.exists(INSTANCE_HOME + "/bt5/erp5_base"):
       local_bt = 'file://' + INSTANCE_HOME + "/bt5/erp5_base"
@@ -799,11 +798,11 @@ class TestTemplateTool(ERP5TypeTestCase):
     copyTestCoreBt("bt5")
     # create bt1..5 BT inside dummy_repository
     repo_xml = getDOMImplementation().createDocument(None, "repository", None)
-    createBtAndAddToRepository(repository, repo_xml, title='bt1', dependency_list=('bt4',)),
-    createBtAndAddToRepository(repository, repo_xml, title='bt2'),
-    createBtAndAddToRepository(repository, repo_xml, title='bt3'),
-    createBtAndAddToRepository(repository, repo_xml, title='bt4'),
-    createBtAndAddToRepository(repository, repo_xml, title='bt5'),
+    createBtAndAddToRepository(repository, repo_xml, title='bt1', dependency_list=('bt4',))
+    createBtAndAddToRepository(repository, repo_xml, title='bt2')
+    createBtAndAddToRepository(repository, repo_xml, title='bt3')
+    createBtAndAddToRepository(repository, repo_xml, title='bt4')
+    createBtAndAddToRepository(repository, repo_xml, title='bt5')
     with open("%s/bt5list" % repository,"wb") as repo_xml_fd:
       repo_xml.writexml(repo_xml_fd)
       repo_xml_fd.close()
