@@ -75,20 +75,12 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
       var textarea = this.element.querySelector('textarea'),
-        result = textarea.checkValidity();
-      if (result && !error_text) {
-        if (textarea.classList.contains("is-invalid")) {
-          textarea.classList.remove("is-invalid");
-        }
-
+        result = textarea.checkValidity() || this.state.error_text === "";
+      if (result) {
         return this.notifyValid()
           .push(function () {
             return result;
           });
-      } else if (error_text) {
-        if (!textarea.classList.contains("is-invalid")) {
-          textarea.classList.add("is-invalid");
-        }
       }
       return result;
     })
