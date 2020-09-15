@@ -73,7 +73,7 @@
     })
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function checkValidity(error_text) {
+    .declareMethod('checkValidity', function checkValidity() {
       var textarea = this.element.querySelector('textarea'),
         result = textarea.checkValidity();
       if (result && !error_text) {
