@@ -22,6 +22,7 @@
           item_list: JSON.stringify(options.item_list),
           editable: options.editable,
           required: options.required,
+          error_text: options.error_text || "",
           id: options.id,
           name: options.name,
           title: options.title,
@@ -119,19 +120,12 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
       var select = this.element.querySelector('select'),
-        result = select.checkValidity();
-      if (result && error_text === "") {
-        if (select.classList.contains("is-invalid")) {
-          select.classList.remove("is-invalid");
-        }
+        result = select.checkValidity() || this.state.error_text === "";
+      if (result) {
         return this.notifyValid()
           .push(function () {
             return result;
           });
-      } else if (error_text) {
-        if (!select.classList.contains("is-invalid")) {
-          select.classList.add("is-invalid");
-        }
       }
       return result;
     })
