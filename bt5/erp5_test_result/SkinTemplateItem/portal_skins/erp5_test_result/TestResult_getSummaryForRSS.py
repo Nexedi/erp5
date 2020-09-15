@@ -14,7 +14,7 @@ p('Revision: %s' % test_result.getReference() or test_result.getIntIndex())
 p('Launch Date: %s' % test_result.getStartDate())
 comment = test_result.getProperty('comment') 
 if comment: 
-   p(comment) 
+  p(comment)
 p('') 
 p('All tests: %s, Failures: %s, Errors: %s, Skips: %s' % \
               (test_result.getProperty('all_tests'),  

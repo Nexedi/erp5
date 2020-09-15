@@ -1,4 +1,3 @@
-from Products.PythonScripts.standard import Object
 import json
 
 # Get result lines

@@ -33,7 +33,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 import json
 import jinja2
-from erp5.component.tool.TaskDistributionTool import TaskDistributionTool
 
 class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
   security = ClassSecurityInfo()
@@ -270,10 +269,10 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
         if current_container == my_value :
           return True
         elif isinstance(current_container, dict):
-          for k,v in current_container.items():
+          for k, v in current_container.items():
             if str(my_value) in str(k):
               return True
-            if _isInMyDictOrList(current_container[k]) :
+            if _isInMyDictOrList(v) :
               return True
         elif isinstance(current_container, list):
           for sub_container in current_container:
