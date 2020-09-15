@@ -65,11 +65,11 @@
       return {};
     }, {mutex: 'changestate'})
 
-    .declareMethod('checkValidity', function (error_text) {
+    .declareMethod('checkValidity', function () {
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
           .push(function (gadget) {
-            return gadget.checkValidity(error_text);
+            return gadget.checkValidity();
           });
       }
       return true;

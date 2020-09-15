@@ -395,12 +395,12 @@
       return result;
     }, {mutex: 'changestate'})
 
-    .declareMethod('checkValidity', function (error_text) {
+    .declareMethod('checkValidity', function () {
       var gadget = this;
       if (gadget.state.editable) {
         return gadget.getDeclaredGadget('INPUT')
           .push(function (result) {
-            return result.checkValidity(error_text);
+            return result.checkValidity();
           });
       }
       return true;
