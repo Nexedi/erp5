@@ -10,6 +10,9 @@ for i in range(start, start + num):
                     foo_category = category, portal_type=portal_type)
   if set_dates:
     foo.setStartDate(DateTime(i, i, i))
+  if set_datetimes:
+    foo.setStartDate(DateTime(i, i, i, 23, 58))
+
   if create_line:
     for i in range(0, int(create_line)):
       foo.newContent()
