@@ -191,20 +191,16 @@
             .push(function (field_gadget) {
               return field_gadget.render(gadget.state.options);
             })
-            .push(function (field_gadget) {
-              return gadget.checkValidity(modification_dict.error_text);
+            .push(function () {
+              return gadget.checkValidity();
             });
 
         }
       }
-      if (modification_dict.hasOwnProperty('error_text')) {
-        return this.checkValidity(modification_dict.error_text);
-      }
 
     })
 
-    .declareMethod("checkValidity", function checkValidity(err_text) {
-      var error_text = err_text || this.state.error_text;
+    .declareMethod("checkValidity", function checkValidity() {
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
           // XXX Implement checkValidity on all fields
@@ -213,7 +209,7 @@
           }
           return true;
         });
-    }, {mutex: 'checkvalidity'})
+    }, {mutex: 'changestate'})
 
     .declareMethod('getContent', function getContent() {
       var argument_list = arguments;
