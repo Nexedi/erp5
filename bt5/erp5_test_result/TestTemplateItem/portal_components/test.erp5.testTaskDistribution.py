@@ -534,7 +534,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     """
     We will check the method createTestResult of distributor
     """
-    self._createTestNode()
+    test_node, = self._createTestNode()
     self.tic()
     test_result_path, revision = self._createTestResult()
     self.assertEqual("r0=a,r1=a", revision)
@@ -558,7 +558,11 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.assertEqual(2, len(line_list))
     self.assertEqual(set(['testFoo', 'testBar']), set([x.getTitle() for x
                       in line_list]))
-    line_url, _ = self.tool.startUnitTest(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path, node_title=test_node.getTitle())
+    # when node_title is passed to startUnitTest, we have a relation from test result line
+    # to test node
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    self.assertEqual(test_result_line.getSourceValue(), test_node)
     result = self._createTestResult(test_list=['testFoo', 'testBar'])
     self.assertEqual((test_result_path, revision), result)
     self.tool.startUnitTest(test_result_path)
