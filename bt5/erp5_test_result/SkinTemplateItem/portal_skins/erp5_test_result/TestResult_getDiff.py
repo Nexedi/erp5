@@ -18,8 +18,6 @@ if a.getIntIndex() > b.getIntIndex():
 b_title_dict = dict((line.getObject().getTitle(), line.id) for line \
   in b.searchFolder(portal_type='Test Result Line'))
 
-not_in_b = {}
-
 object_list = []
 
 compared_prop_list = ('all_tests', 'errors', 'failures', 'skips')
