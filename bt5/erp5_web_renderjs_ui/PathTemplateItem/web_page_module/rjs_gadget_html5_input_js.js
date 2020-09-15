@@ -184,7 +184,7 @@
     }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function checkValidity(error_text) {
+    .declareMethod('checkValidity', function checkValidity() {
       var input = this.element.querySelector('input'),
         result = input.checkValidity(),
         gadget = this;

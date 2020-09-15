@@ -117,7 +117,7 @@
     })
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function checkValidity(error_text) {
+    .declareMethod('checkValidity', function checkValidity() {
       var select = this.element.querySelector('select'),
         result = select.checkValidity();
       if (result && error_text === "") {
