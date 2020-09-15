@@ -50,15 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start=0, num=10, set_dates=0, set_datetimes=0, portal_type=\'Foo\', create_line=0, big_category_related=False, category_list=None, title_format="Title {index:d}"</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>FooModule_createObjects</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Create Objects</string> </value>
+            <value> <string>FooModule_getLocalTimezone</string> </value>
         </item>
       </dictionary>
     </pickle>
