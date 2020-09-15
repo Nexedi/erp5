@@ -188,7 +188,7 @@
       }
     })
 
-    .declareMethod('checkValidity', function (error_text) {
+    .declareMethod('checkValidity', function () {
       var name = this.state.name;
       if (error_text) {
         return false;
