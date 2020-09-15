@@ -54,10 +54,10 @@
         });
     })
 
-    .declareMethod('checkValidity', function (error_text) {
+    .declareMethod('checkValidity', function () {
       return this.getDeclaredGadget('sub')
         .push(function (subgadget) {
-          return subgadget.checkValidity(error_text);
+          return subgadget.checkValidity();
         });
     }, {mutex: 'changestate'})
 

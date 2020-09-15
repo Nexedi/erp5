@@ -90,7 +90,7 @@
         return gadget.getDeclaredGadget(gadget.state.key)
           .push(function (result) {
             if (result.checkValidity !== undefined) {
-              return result.checkValidity(error_text);
+              return result.checkValidity();
             }
             return true;
           });

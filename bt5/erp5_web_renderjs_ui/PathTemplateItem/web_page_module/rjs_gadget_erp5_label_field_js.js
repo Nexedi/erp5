@@ -209,7 +209,7 @@
         .push(function (gadget) {
           // XXX Implement checkValidity on all fields
           if (gadget.checkValidity !== undefined) {
-            return gadget.checkValidity(error_text);
+            return gadget.checkValidity();
           }
           return true;
         });
