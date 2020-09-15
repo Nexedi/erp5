@@ -412,8 +412,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/cribjs_bootloader_cribjs_bootloader_html</string>
+                <string>caching_policy/one-day-max-modification-date</string>
               </tuple>
             </value>
         </item>
@@ -738,7 +738,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>cedric.le.ninivin</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -752,7 +752,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>984.54293.54528.12236</string> </value>
+                      <value> <string>985.28661.10590.36471</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -770,7 +770,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1595492469.68</float>
+                              <float>1600162288.55</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
