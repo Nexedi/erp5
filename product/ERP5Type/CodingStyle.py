@@ -183,6 +183,9 @@ ignored_skin_id_set = {
   'AdvancedInvoiceTransaction_postTransactionLineGeneration',
   'InvoiceTransaction_jumpToOrder',
   'InvoiceTransaction_jumpToPackingList',
+  'TaskDistributorAlarm_optimize',
+  'TestDocument_optimize',
+  'TestResultAlarm_restartStuckTestResult',
 }
 
 # Generic method to check consistency of a skin item
