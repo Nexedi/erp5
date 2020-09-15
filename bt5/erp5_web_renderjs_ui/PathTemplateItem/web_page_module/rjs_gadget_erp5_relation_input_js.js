@@ -149,6 +149,7 @@
         key: options.key,
         view: options.view,
         search_view: options.search_view,
+        error_text: options.error_text || "",
         url: options.url,
         allow_creation: options.allow_creation,
         portal_types: JSON.stringify(options.portal_types),
@@ -542,12 +543,10 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
+      console.log("checkValidity", this.element);
       var input = this.element.querySelector('input'),
         gadget = this;
-      if (error_text) {
-        if (input && !input.classList.contains("is-invalid")) {
-          input.classList.add("is-invalid");
-        }
+      if (this.state.error_text) {
         return false;
       }
       if ((this.state.value_text) && (
@@ -555,7 +554,7 @@
             (this.state.value_uid === null) &&
             (this.state.value_portal_type === null)
         )) {
-        return gadget.translate(error_text || "No such document was found")
+        return gadget.translate(this.state.error_text || "No such document was found")
           .push(function (error_message) {
             return gadget.notifyInvalid(error_message);
           })

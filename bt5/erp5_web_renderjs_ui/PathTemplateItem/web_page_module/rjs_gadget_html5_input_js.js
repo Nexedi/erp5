@@ -186,12 +186,9 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
       var input = this.element.querySelector('input'),
-        result = input.checkValidity(),
+        result = input.checkValidity() || this.state.error_text === "",
         gadget = this;
-      if (result && error_text === "") {
-        if (input.classList.contains("is-invalid")) {
-          input.classList.remove("is-invalid");
-        }
+      if (result) {
         return this.notifyValid()
           .push(function () {
             var date,
@@ -214,10 +211,6 @@
             }
             return result;
           });
-      } else if (error_text) {
-        if (!input.classList.contains("is-invalid")) {
-          input.classList.add("is-invalid");
-        }
       }
       return result;
     }, {mutex: 'changestate'})
@@ -237,12 +230,12 @@
     }, false, false)
 
     .declareAcquiredMethod("notifyFocus", "notifyFocus")
-    .onEvent('focus', function focus(evt) {
+    .onEvent('focus', function focus() {
       return this.notifyFocus();
     }, true, false)
 
     .declareAcquiredMethod("notifyBlur", "notifyBlur")
-    .onEvent('blur', function blur(evt) {
+    .onEvent('blur', function blur() {
       return this.notifyBlur();
     }, true, false)
 
