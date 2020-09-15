@@ -541,7 +541,7 @@
     }, true, false)
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function (error_text) {
+    .declareMethod('checkValidity', function () {
       var input = this.element.querySelector('input'),
         gadget = this;
       if (error_text) {
