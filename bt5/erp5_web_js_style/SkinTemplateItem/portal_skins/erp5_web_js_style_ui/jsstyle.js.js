@@ -142,6 +142,28 @@
       });
   }
 
+  function isAnotherSitemapLocation(sitemap, url1, url2) {
+    var is_url1_matching = (url1.indexOf(sitemap.href) === 0),
+      is_child_another_location,
+      i;
+    if (is_url1_matching !== (url2.indexOf(sitemap.href) === 0)) {
+      return true;
+    }
+    if (!is_url1_matching) {
+      // Both url do not match
+      return false;
+    }
+    // If both match, check sub urls
+    for (i = 0; i < sitemap.child_list.length; i += 1) {
+      is_child_another_location = isAnotherSitemapLocation(sitemap.child_list[i], url1, url2);
+      if (is_child_another_location) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   function listenURLChange() {
     var gadget = this;
 
@@ -193,6 +215,12 @@
       });
       if ((1 < matching_language_count) && 
           (matching_language_base_uri_count === 1)) {
+        return;
+      }
+
+      // Check if going from a section to a child one
+      if (isAnotherSitemapLocation(gadget.parsed_content.sitemap,
+                                   link_url.href, base_uri)) {
         return;
       }
 
