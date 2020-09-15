@@ -47,7 +47,7 @@ class TestTemplate(ERP5TypeTestCase):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_knowledge_pad', 'erp5_ui_test')
 
-  def createUserAndLogin(self, name=None, additional_role_list=[]):
+  def createUserAndLogin(self, name=None, additional_role_list=()):
     """login with Member, Author and specified roles."""
     uf = self.getPortal().acl_users
     role_list = ['Member', 'Author', 'Auditor']
@@ -335,7 +335,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual('enabled', preference.getPreferenceState())
     self.assertEqual(len(preference.objectIds()), 2)
 
-  def _testTemplateNotIndexable(self, document, additional_role_list=[]):
+  def _testTemplateNotIndexable(self, document, additional_role_list=()):
     # template documents are not indexable
     self.portal.portal_activities.manage_enableActivityTracking()
     self.portal.portal_activities.manage_enableActivityTimingLogging()

@@ -4,3 +4,4 @@ test.erp5.testListBox
 test.erp5.testPerformance
 test.erp5.testPlanningBox
 test.erp5.testRelationField
+test.erp5.testTemplate
