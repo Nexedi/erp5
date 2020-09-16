@@ -121,6 +121,10 @@ configuration_dict = {
   'nostyle': {
     'title': 'No Style'
   },
+  'nostyleform': {
+    'title': "No Style Form",
+    'custom_render_method_id': 'WebSite_viewJSStyleTestForm'
+  },
   'section': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Style",
@@ -132,7 +136,12 @@ configuration_dict = {
     'language': "en",
     'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id),
     'title': "Demo Style With Language",
-  }
+  },
+  'form': {
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'title': "Demo Form",
+    'custom_render_method_id': 'WebSite_viewJSStyleTestForm'
+  },
 }
 
 ### Web site
