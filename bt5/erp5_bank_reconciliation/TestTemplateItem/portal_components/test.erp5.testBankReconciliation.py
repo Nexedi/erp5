@@ -333,7 +333,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         stop_date=DateTime(2014, 1, 31))
     previous_bank_reconciliation.open()
 
-    self._makeOne(
+    reconcilied_payment = self._makeOne(
               portal_type='Payment Transaction',
               simulation_state='delivered',
               source_payment_value=self.bank_account,
@@ -389,6 +389,15 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(
         [str(m.getTranslatedMessage()) for m in bank_reconciliation.checkConsistency()],
         ['Previous bank statement balance does not match reconciled balance at previous bank statement date'])
+
+    # edge case, payments on the day of previous statement date, but after 00:00 are reconciled at the
+    # previous bank statement date.
+    reconcilied_payment.setStartDate(DateTime(2014, 1, 31, 12, 34))
+    bank_reconciliation.setQuantityRangeMin(100)
+    self.tic()
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in bank_reconciliation.checkConsistency()], [])
+    bank_reconciliation.setQuantityRangeMin(10)
 
     # These constraints are only verified when we go from open to close state.
     # (that is why the bank reconciliation have been openned for the
