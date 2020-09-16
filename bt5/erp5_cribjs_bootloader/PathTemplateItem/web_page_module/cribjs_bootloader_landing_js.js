@@ -1,4 +1,4 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 100 */
 /*global window, rJS, RSVP, jIO, fetch, Promise, document, console, Blob
 , JSZip */
 (function (rJS, RSVP, JSZip, jIO) {
@@ -194,10 +194,10 @@
           g.props.element = element;
         })
         .push(function () {
-          return RSVP.all([
-            getStorageGadget(g),
-            g.render({})
-          ]);
+          return getStorageGadget(g);
+        })
+        .push(function () {
+          return g.render({})
         });
     });
 }(rJS, RSVP, JSZip, jIO));
