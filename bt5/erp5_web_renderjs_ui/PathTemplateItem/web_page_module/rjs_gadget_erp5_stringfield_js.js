@@ -16,6 +16,7 @@
           required: field_json.required,
           id: field_json.key,
           name: field_json.key,
+          error_text: field_json.error_text || "",
           title: field_json.title,
           hidden: field_json.hidden,
           trim: true,
