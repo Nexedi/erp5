@@ -110,7 +110,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Fri Dec 13 14:45:53 2019\n
+# generated on Wed Sep 16 14:57:17 2020\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQ=\n
@@ -118,6 +118,8 @@ hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X3ZpZXc
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9UZXh0RG9jdW1lbnRfdmlld0FzSmlvRm9yT29mZmljZVRleHRFZGl0b3I=\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV9kb3dubG9hZF9kb2N1bWVudA==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX2Rvd25sb2FkRGlhbG9nRm9yT29mZmljZUVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV9jbG9uZV9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX2Nsb25lRG9jdW1lbnRGb3JPb2ZmaWNlRWRpdG9y\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdmlldw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JPb2ZmaWNlVGV4dEVkaXRvcg==\n
