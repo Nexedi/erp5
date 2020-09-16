@@ -63,9 +63,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_format</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -93,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_downloadDialogForOofficeEditor</string> </value>
+            <value> <string>Base_cloneDocumentForOofficeEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -101,7 +99,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TextEditor_cloneDocument</string> </value>
+            <value> <string>OnlyOfficeEditor_cloneDocument</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -117,7 +115,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download</string> </value>
+            <value> <string>Clone</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
