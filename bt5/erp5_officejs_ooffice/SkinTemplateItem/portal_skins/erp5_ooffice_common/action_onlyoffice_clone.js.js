@@ -51,6 +51,7 @@
         ojs_cloudooo_gadget,
         property;
       delete content_dict.dialog_method;
+      delete content_dict.text_content;
       for (property in content_dict) {
         if (content_dict.hasOwnProperty(property)) {
           document[property] = content_dict[property];
