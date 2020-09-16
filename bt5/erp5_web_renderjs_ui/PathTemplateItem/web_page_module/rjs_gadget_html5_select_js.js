@@ -42,6 +42,13 @@
       select.id = this.state.id || this.state.name;
       select.setAttribute('name', this.state.name);
 
+      if (modification_dict.error_text &&
+          !select.classList.contains("is-invalid")) {
+        select.classList.add("is-invalid");
+      } else if (select.classList.contains("is-invalid")) {
+        select.classList.remove("is-invalid");
+      }
+
       if (this.state.title) {
         select.setAttribute('title', this.state.title);
       }

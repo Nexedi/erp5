@@ -24,6 +24,13 @@
     .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('textarea');
 
+      if (modification_dict.error_text &&
+          !textarea.classList.contains("is-invalid")) {
+        textarea.classList.add("is-invalid");
+      } else if (textarea.classList.contains("is-invalid")) {
+        textarea.classList.remove("is-invalid");
+      }
+
       if (modification_dict.hasOwnProperty("value")) {
         textarea.value = modification_dict.value;
       }
