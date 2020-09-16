@@ -368,30 +368,41 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
 
     # reconciled balance must match
     bank_reconciliation.setQuantityRangeMax(10)
-    self.assertEqual(1, len(bank_reconciliation.checkConsistency()))
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in bank_reconciliation.checkConsistency()],
+        ["Bank statement balance does not match reconciled balance"])
     bank_reconciliation.setQuantityRangeMax(100)
-    self.assertEqual(0, len(bank_reconciliation.checkConsistency()))
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in bank_reconciliation.checkConsistency()], [])
 
-    self.assertEqual(0, len(previous_bank_reconciliation.checkConsistency()))
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in previous_bank_reconciliation.checkConsistency()], [])
     previous_bank_reconciliation.setQuantityRangeMax(10)
-    self.assertEqual(1, len(previous_bank_reconciliation.checkConsistency()))
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in previous_bank_reconciliation.checkConsistency()],
+        ['Bank statement balance does not match reconciled balance'])
     previous_bank_reconciliation.setQuantityRangeMax(100)
 
     # Previous reconciled balance must match as well
     bank_reconciliation.setStartDate(DateTime(2014, 1, 31))
     bank_reconciliation.setQuantityRangeMin(10)
-    self.assertEqual(1, len(bank_reconciliation.checkConsistency()))
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in bank_reconciliation.checkConsistency()],
+        ['Previous bank statement balance does not match reconciled balance at previous bank statement date'])
 
     # These constraints are only verified when we go from open to close state.
     # (that is why the bank reconciliation have been openned for the
     # assertions above)
-    with self.assertRaises(ValidationFailed):
+    with self.assertRaisesRegexp(
+        ValidationFailed,
+        "Previous bank statement balance does not match reconciled balance at previous bank statement date"):
       self.portal.portal_workflow.doActionFor(
         bank_reconciliation,
         'close_action')
 
     bank_reconciliation.setQuantityRangeMin(100)
-    self.assertEqual(0, len(bank_reconciliation.checkConsistency()))
+    self.assertEqual(
+        [str(m.getTranslatedMessage()) for m in bank_reconciliation.checkConsistency()], [])
     self.portal.portal_workflow.doActionFor(
         bank_reconciliation,
         'close_action')
