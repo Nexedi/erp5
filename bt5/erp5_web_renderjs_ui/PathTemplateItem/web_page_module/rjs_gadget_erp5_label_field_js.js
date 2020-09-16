@@ -190,11 +190,7 @@
           return queue
             .push(function (field_gadget) {
               return field_gadget.render(gadget.state.options);
-            })
-            .push(function () {
-              return gadget.checkValidity();
             });
-
         }
       }
 
