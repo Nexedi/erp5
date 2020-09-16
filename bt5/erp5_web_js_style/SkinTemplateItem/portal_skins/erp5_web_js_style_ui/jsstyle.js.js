@@ -109,6 +109,25 @@
     return sitemap;
   }
 
+  function parseFormElement(form_element) {
+    var result;
+    if (form_element !== null) {
+      return form_element.outerHTML;
+    }
+    return result;
+  }
+
+  function parseStatusMessage(status_element, information_element) {
+    var result = "";
+    if (status_element !== null) {
+      result = status_element.textContent;
+    }
+    if (information_element !== null) {
+      result = information_element.textContent;
+    }
+    return result;
+  }
+
   function parsePageContent(body_element) {
     return {
       html_content: body_element.querySelector('main').innerHTML,
@@ -117,7 +136,14 @@
       ),
       sitemap: parseSitemapElement(
         body_element.querySelector('nav#sitemap')
-      )
+      ),
+      form_html_content: parseFormElement(
+        body_element.querySelector('form#main_form')
+      ),
+      portal_status_message: parseStatusMessage(
+        body_element.querySelector('p#portal_status_message'),
+        body_element.querySelector('p#information_area')
+      ),
     };
   }
 

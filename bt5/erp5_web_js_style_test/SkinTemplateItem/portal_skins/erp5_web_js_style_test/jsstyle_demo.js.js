@@ -38,6 +38,8 @@
         language_list: JSON.stringify(parsed_content.language_list || []),
         sitemap: JSON.stringify(parsed_content.sitemap || {}),
         page_title: parsed_content.page_title || "",
+        portal_status_message: parsed_content.portal_status_message || "",
+        form_html_content: parsed_content.form_html_content,
         html_content: html_content || "",
         render_count: this.state.render_count + 1
       };
@@ -53,11 +55,25 @@
       if (modification_dict.hasOwnProperty('page_title')) {
         document.title = gadget.state.page_title;
       }
-      if (modification_dict.hasOwnProperty('html_content')) {
-        domsugar(gadget.element.querySelector('main'), {
-          html: domsugar('div', {html: gadget.state.html_content})
-                  .querySelector('div.input').firstChild.innerHTML
+      if (modification_dict.hasOwnProperty('portal_status_message')) {
+        domsugar(gadget.element.querySelector('p#portal_status_message'), {
+          text: gadget.state.portal_status_message
         });
+      }
+      if ((modification_dict.hasOwnProperty('form_html_content')) ||
+          (modification_dict.hasOwnProperty('html_content'))) {
+        if (gadget.state.form_html_content) {
+          // In case of form, display it directly
+          domsugar(gadget.element.querySelector('main'), {
+            html: gadget.state.form_html_content
+          });
+        } else {
+          // Try to find the Web Page content only
+          domsugar(gadget.element.querySelector('main'), {
+            html: domsugar('div', {html: gadget.state.html_content})
+                    .querySelector('div.input').firstChild.innerHTML
+          });
+        }
       }
       if (modification_dict.hasOwnProperty('gadget_style_url')) {
         domsugar(gadget.element.querySelector('p#gadget_style_url'), {
