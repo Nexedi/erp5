@@ -15,4 +15,4 @@ test_suite = context.newContent(
                     ) 
 
 if batch_mode:
- return test_suite
+  return test_suite

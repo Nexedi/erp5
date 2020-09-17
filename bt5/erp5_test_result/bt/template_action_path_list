@@ -19,7 +19,6 @@ Test Result Line | jump_previous_test_result_line
 Test Result Line | view
 Test Result Line | view_result_history
 Test Result Module | view
-Test Result Module | view_chart_report
 Test Result Module | view_test_perf_report
 Test Result Module | view_test_result_diff
 Test Result Node | view
