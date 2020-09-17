@@ -63,6 +63,12 @@
   <td></td>
 </tr>
 
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Related Form' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+
 <!-- Check the history link -->
 <tr>
   <td>click</td>
