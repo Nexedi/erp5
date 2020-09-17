@@ -67,16 +67,11 @@
         .push(function (result) {
           blob = result;
           blob.name = parent_options.action_options.jio_key;
-          return jIO.util.readBlobAsDataURL(blob);
-        })
-        .push(function (result) {
-          data = result.target.result;
           return gadget.jio_post(document);
         })
         .push(function (jio_key) {
           return gadget
-            .jio_putAttachment(jio_key, 'data',
-                               jIO.util.dataURItoBlob(data));
+            .jio_putAttachment(jio_key, 'data', blob);
         })
         .push(function (jio_key) {
           return_submit_dict.notify.message = "Clone Document Created";
