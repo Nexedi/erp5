@@ -80,6 +80,7 @@
       error_text: '',
       label: true,  // the label element is already present in the HTML template
       css_class: '',
+      display_error_text: false,
       first_call: false
     })
 
@@ -144,15 +145,29 @@
         }
       }
 
-      /*if (modification_dict.hasOwnProperty('error_text')) {
-        // XXX Hack to play with Datetime field issue
-        // This code will force add error_text in field_json
-        gadget.state.options.field_json.error_text = modification_dict.error_text;
-      }*/
+      if (modification_dict.hasOwnProperty('display_error_text')) {
+        // first remove old errors
+        span = this.props.container_element.lastElementChild;
+        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+          span = null;
+        }
+        // display new error if present
+        if (this.state.error_text && this.state.display_error_text) {
+          if (span === null) {
+            span = document.createElement('span');
+            span.textContent = this.state.error_text;
+            this.props.container_element.appendChild(span);
+          } else {
+            span.textContent = this.state.error_text;
+          }
+        } else {
+          if (span !== null) {
+            this.props.container_element.removeChild(span);
+          }
+        }
+      }
 
-      // XXX Change condition to call render if error_text
-      if (modification_dict.hasOwnProperty('options')/* ||
-          modification_dict.hasOwnProperty('error_text')*/) {
+      if (modification_dict.hasOwnProperty('options')) {
         if (this.state.field_url) {
           if (modification_dict.hasOwnProperty('field_url')) {
             //if (!modification_dict.hasOwnProperty('first_call')) {
@@ -220,29 +235,11 @@
     }, {mutex: 'changestate'})
 
     .allowPublicAcquisition("notifyFocus", function notifyFocus() {
-      var span = this.props.container_element.lastElementChild;
-      if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
-        span = null;
-      }
-      // display new error if present
-      if (this.state.error_text) {
-        if (span === null) {
-          span = document.createElement('span');
-          span.textContent = this.state.error_text;
-          this.props.container_element.appendChild(span);
-        } else {
-          span.textContent = this.state.error_text;
-        }
-      } else if (span !== null) {
-        this.props.container_element.removeChild(span);
-      }
+      return this.changeState({display_error_text: true});
     })
 
     .allowPublicAcquisition("notifyBlur", function notifyBlur() {
-      var span = this.props.container_element.lastElementChild;
-      if ((span !== null) && (span.tagName.toLowerCase() === 'span')) {
-        this.props.container_element.removeChild(span);
-      }
+      return this.changeState({display_error_text: false});
     })
 
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
