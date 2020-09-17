@@ -84,7 +84,7 @@
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod("checkValidity", function (error_text) {
+    .declareMethod("checkValidity", function () {
       var gadget = this;
       if (gadget.state.editable) {
         return gadget.getDeclaredGadget(gadget.state.key)
