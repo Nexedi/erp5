@@ -62,6 +62,7 @@
             result_dict.jio_key = gadget.state.jio_key;
             result_dict.view = result.view;
             result_dict.page = "jump";
+            result_dict.jump_view = gadget.state.view;
           } else {
             command = 'push_history';
             result_dict.jio_key = result.jio_key;
