@@ -65,6 +65,12 @@
   <td></td>
 </tr>
 
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Related Self' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+
 <!-- Check the history link -->
 <tr>
   <td>click</td>
