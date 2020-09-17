@@ -534,7 +534,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     """
     We will check the method createTestResult of distributor
     """
-    test_node, = self._createTestNode()
+    test_node, = self._createTestNode() # pylint:disable=unbalanced-tuple-unpacking
     self.tic()
     test_result_path, revision = self._createTestResult()
     self.assertEqual("r0=a,r1=a", revision)
