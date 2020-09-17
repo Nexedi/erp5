@@ -101,8 +101,8 @@
           for (i = 0; i < action_list.length; i += 1) {
             action_list[i].class_name = action_list[i].href === view ? 'active' : '';
           }
-          for (i = 0; i < action_list.length; i += 1) {
-            action_list[i].class_name = action_list[i].href === view ? 'active' : '';
+          for (i = 0; i < jump_list.length; i += 1) {
+            jump_list[i].class_name = jump_list[i].href === view ? 'active' : '';
           }
         }
         // Prevent has much as possible to modify the DOM panel
