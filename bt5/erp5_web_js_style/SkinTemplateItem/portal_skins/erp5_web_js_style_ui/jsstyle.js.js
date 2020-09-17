@@ -110,7 +110,7 @@
   }
 
   function parsePageContent(body_element) {
-    var result = {
+    return {
       html_content: body_element.querySelector('main').innerHTML,
       language_list: parseLanguageElement(
         body_element.querySelector('nav#language')
@@ -119,7 +119,6 @@
         body_element.querySelector('nav#sitemap')
       )
     };
-    return result;
   }
 
   function renderPage(gadget, page_url, hash) {
@@ -146,7 +145,7 @@
     var is_url1_matching = (url1.indexOf(sitemap.href) === 0),
       is_child_another_location,
       i;
-    if (is_url1_matching !== (url2.indexOf(sitemap.href) === 0)) {
+    if (is_url1_matching && (url2.indexOf(sitemap.href) !== 0)) {
       return true;
     }
     if (!is_url1_matching) {
@@ -155,7 +154,11 @@
     }
     // If both match, check sub urls
     for (i = 0; i < sitemap.child_list.length; i += 1) {
-      is_child_another_location = isAnotherSitemapLocation(sitemap.child_list[i], url1, url2);
+      is_child_another_location = isAnotherSitemapLocation(
+        sitemap.child_list[i],
+        url1,
+        url2
+      );
       if (is_child_another_location) {
         return true;
       }
@@ -198,7 +201,8 @@
       link_url = new URL(target_element.href, base_uri);
       if (link_url.href.indexOf(base_uri) !== 0) {
         // Only handle sub path of the base url
-        // Meaning it will also reload when going from a non default language to the default one
+        // Meaning it will also reload when going from a non default language
+        // to the default one
         return;
       }
 
@@ -213,7 +217,7 @@
           matching_language_base_uri_count += 1;
         }
       });
-      if ((1 < matching_language_count) && 
+      if ((1 < matching_language_count) &&
           (matching_language_base_uri_count === 1)) {
         return;
       }
@@ -240,7 +244,7 @@
           // to ensure popstate listener is correctly working
           // when the user will click on back/forward browser buttons
           history.pushState(null, null, target_element.href);
-        }, function (error) {
+        }, function () {
           // Implement support for managed error
           // (like URL is not an HTML document parsable)
           // and redirect in such case
