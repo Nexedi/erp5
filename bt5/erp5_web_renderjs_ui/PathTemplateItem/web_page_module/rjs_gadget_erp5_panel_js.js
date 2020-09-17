@@ -60,6 +60,7 @@
       var erp5_document = options.erp5_document,
         jio_key = options.jio_key,
         view = options.view,
+        jump_view = options.jump_view,
         visible = options.visible,
         display_workflow_list,
         context = this,
@@ -102,7 +103,7 @@
             action_list[i].class_name = action_list[i].href === view ? 'active' : '';
           }
           for (i = 0; i < jump_list.length; i += 1) {
-            jump_list[i].class_name = jump_list[i].href === view ? 'active' : '';
+            jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
           }
         }
         // Prevent has much as possible to modify the DOM panel
