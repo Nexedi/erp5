@@ -144,7 +144,15 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty('options')) {
+      /*if (modification_dict.hasOwnProperty('error_text')) {
+        // XXX Hack to play with Datetime field issue
+        // This code will force add error_text in field_json
+        gadget.state.options.field_json.error_text = modification_dict.error_text;
+      }*/
+
+      // XXX Change condition to call render if error_text
+      if (modification_dict.hasOwnProperty('options')/* ||
+          modification_dict.hasOwnProperty('error_text')*/) {
         if (this.state.field_url) {
           if (modification_dict.hasOwnProperty('field_url')) {
             //if (!modification_dict.hasOwnProperty('first_call')) {
@@ -165,25 +173,10 @@
                 span
               );
             }
-            if (queue) {
-              queue
-                .push(function () {
-                  return gadget.declareGadget(gadget.state.field_url, {
-                    scope: SCOPE,
-                    element: new_div
-                  });
-                });
-            } else {
-              queue = gadget.declareGadget(gadget.state.field_url, {
-                scope: SCOPE,
-                element: new_div
-              });
-            }
-          } else if (queue) {
-            queue
-              .push(function () {
-                return gadget.getDeclaredGadget(SCOPE);
-              });
+            queue = gadget.declareGadget(gadget.state.field_url, {
+              scope: SCOPE,
+              element: new_div
+            });
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
           }
