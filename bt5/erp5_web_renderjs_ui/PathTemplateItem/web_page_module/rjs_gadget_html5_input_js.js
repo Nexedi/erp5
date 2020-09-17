@@ -118,6 +118,7 @@
         this.element.insertBefore(tmp, textarea);
         tmp = undefined;
       }
+
       if (modification_dict.error_text &&
           !textarea.classList.contains("is-invalid")) {
         textarea.classList.add("is-invalid");
@@ -242,10 +243,6 @@
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
-      var input = this.element.querySelector('input');
-      if (!input.classList.contains("is-invalid")) {
-        input.classList.add("is-invalid");
-      }
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
