@@ -51,6 +51,10 @@ try:
     context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
                                        'immediateReindexObject')
                                        ).ERP5Site_setIdGenerator()
+  # XXX not the right place
+  context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
+                                       'immediateReindexObject')
+                                       ).ERP5Site_createUpdateSimulationScalabilityTestData()
 except Exception as e:
   status_code = 1
   error_message = "Error calling ERP5Site_createTestData script: " + str(e)
