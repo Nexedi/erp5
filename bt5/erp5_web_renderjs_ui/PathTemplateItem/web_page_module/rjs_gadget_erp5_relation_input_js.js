@@ -543,7 +543,6 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
-      console.log("checkValidity", this.element);
       var input = this.element.querySelector('input'),
         gadget = this;
       if (this.state.error_text) {
@@ -609,9 +608,7 @@
         has_focus: true
       })
         .push(function () {
-          return RSVP.all([
-            gadget.notifyChange()
-          ]);
+          return gadget.notifyChange();
         });
     }, true, false);
 
