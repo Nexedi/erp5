@@ -1,6 +1,6 @@
-/*globals window, document, RSVP, rJS, domsugar*/
+/*globals window, document, rJS, domsugar*/
 /*jslint indent: 2, maxlen: 80*/
-(function () {
+(function (window, document, rJS, domsugar) {
   "use strict";
 
   function renderSitemap(sitemap, element) {
@@ -55,7 +55,8 @@
       }
       if (modification_dict.hasOwnProperty('html_content')) {
         domsugar(gadget.element.querySelector('main'), {
-          html: domsugar('div', {html: gadget.state.html_content}).querySelector('div.input').firstChild.innerHTML
+          html: domsugar('div', {html: gadget.state.html_content})
+                  .querySelector('div.input').firstChild.innerHTML
         });
       }
       if (modification_dict.hasOwnProperty('gadget_style_url')) {
@@ -86,4 +87,4 @@
       }
     });
 
-}());
+}(window, document, rJS, domsugar));
