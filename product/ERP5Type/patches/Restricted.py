@@ -393,6 +393,8 @@ del member_id, member
 
 from random import SystemRandom
 allow_type(SystemRandom)
+from random import Random
+allow_type(Random)
 ModuleSecurityInfo('os').declarePublic('urandom')
 
 #

@@ -129,6 +129,10 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=[('q', 's')]
     )
 
+  def testRandom(self):
+    self.createAndRunScript('import random',
+                            'return random.Random().getrandbits(10)')
+
   def testSystemRandom(self):
     self.createAndRunScript('import random',
                             'return random.SystemRandom().getrandbits(10)')
