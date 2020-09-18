@@ -59,6 +59,11 @@
 
 <!-- Check the relation field does not crash when typing a backslash -->
 <tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//input[@name="field_my_foo_category_title"]</td>
   <td>\</td>
@@ -67,6 +72,11 @@
   <td>fireEvent</td>
   <td>//input[@name='field_my_foo_category_title']</td>
   <td>input</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>

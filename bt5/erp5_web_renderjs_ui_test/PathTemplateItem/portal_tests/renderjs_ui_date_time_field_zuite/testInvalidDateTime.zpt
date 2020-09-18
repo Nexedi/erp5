@@ -52,11 +52,20 @@
   <td>//div[@data-gadget-scope='field_my_stop_date']</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
+  <td>focus</td>
+</tr>
 <tr>
   <td>type</td>
   <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
   <td>222222-02-22T22:22</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
+  <td>blur</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />

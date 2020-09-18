@@ -61,11 +61,20 @@
   <td></td>
 </tr>
 <tr>
+  <td>fireEvent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view_editable.html')]//select[@name='field_my_local_title']</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>select</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view_editable.html')]//select[@name='field_my_local_title']</td>
   <td>label=Disabled title</td>
 </tr>
-
+<tr>
+  <td>fireEvent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view_editable.html')]//select[@name='field_my_local_title']</td>
+  <td>blur</td>
+</tr>
 <tr>
   <td colspan="3"><b>Trying to save disabled option</b></td>
 </tr>
