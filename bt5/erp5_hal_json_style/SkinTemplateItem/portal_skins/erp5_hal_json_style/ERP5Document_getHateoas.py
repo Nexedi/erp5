@@ -1474,7 +1474,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
-          if erp5_action_key not in ("view", "object_view", "object_jio_view"):
+          if erp5_action_key not in ("view", "object_view", "object_jio_view", "object_jio_jump"):
             url_template_key = "traverse_generator_action"
           # but when we do not have the last form id we do not pass is of course
           if not (current_action.get('view_id', '') or last_form_id):
