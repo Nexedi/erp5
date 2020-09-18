@@ -35,6 +35,7 @@ Project | jump_to_related_sale_order_lines
 Project | jump_to_related_task
 Project | jump_to_related_task_report
 Project | jump_to_task_and_task_report
+Project | jump_to_transactions
 Project | milestone
 Project | planning
 Project | project_monthly_report
