@@ -84,6 +84,7 @@ Organisation | general_ledger_report
 Organisation | grouping_reference_fast_input
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
+Organisation | jump_to_transactions
 Organisation | transactions
 Payment Simulation Rule | view
 Payment Transaction | add_accounting_transaction_line
@@ -107,6 +108,7 @@ Person | general_ledger_export
 Person | general_ledger_report
 Person | grouping_reference_fast_input
 Person | jump_to_accounting
+Person | jump_to_transactions
 Person | transactions
 Preference | view_accounting
 Purchase Invoice Transaction Line | destination_view
