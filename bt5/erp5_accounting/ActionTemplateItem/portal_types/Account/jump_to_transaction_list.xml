@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_onlyxhtml_view</string>
+                <string>action_type/object_onlyjio_jump</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_onlyxhtml_view</string> </value>
+            <value> <string>object_onlyjio_jump</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transaction_list</string> </value>
+            <value> <string>jump_to_transaction_list</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Account_viewAccountingTransactionList</string> </value>
+            <value> <string>string:${object_url}/Account_viewAccountingTransactionSearchableList</string> </value>
         </item>
       </dictionary>
     </pickle>
