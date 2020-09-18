@@ -186,14 +186,16 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
-      var input = this.element.querySelector('input'),
-        result = input.checkValidity(),
+      var result = this.element.querySelector('input').checkValidity(),
         gadget = this;
       if (result) {
         return this.notifyValid()
           .push(function () {
             var date,
               value;
+            if (!result) {
+              return result;
+            }
             if ((gadget.state.type === 'date') ||
                 (gadget.state.type === 'datetime-local')) {
               value = gadget.element.querySelector('input').value;
