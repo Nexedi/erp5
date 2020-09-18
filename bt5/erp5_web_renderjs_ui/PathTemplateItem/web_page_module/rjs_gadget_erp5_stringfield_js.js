@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, document, rJS */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, document, rJS) {
   "use strict";
 
   rJS(window)
@@ -73,4 +73,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS));
+}(window, document, rJS));
