@@ -187,7 +187,7 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
       var input = this.element.querySelector('input'),
-        result = input.checkValidity() || this.state.error_text === "",
+        result = input.checkValidity(),
         gadget = this;
       if (result) {
         return this.notifyValid()
