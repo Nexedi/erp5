@@ -124,6 +124,8 @@
             jump_list: jump_list,
             global: true,
             jio_key: jio_key,
+            view: view,
+            jump_view: jump_view,
             editable: asBoolean(options.editable) || asBoolean(editable) || false
           });
         });
@@ -240,6 +242,8 @@
 
       if ((this.state.global === true) &&
           (modification_dict.hasOwnProperty("editable") ||
+          modification_dict.hasOwnProperty("view") ||
+          modification_dict.hasOwnProperty("jump_view") ||
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("action_list") ||
           modification_dict.hasOwnProperty("jump_list") ||
