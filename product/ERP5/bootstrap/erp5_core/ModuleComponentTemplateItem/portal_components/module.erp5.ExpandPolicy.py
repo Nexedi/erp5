@@ -52,7 +52,7 @@ TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered'
 
 policy_dict = {} # {None: preferred, 'foo_bar': FooBar}
 
-VERTICAL_EXPAND_TIMEOUT = 5  # XXX: hardcoded for the moment
+VERTICAL_EXPAND_TIMEOUT = .1  # XXX: hardcoded for the moment
 
 class _Policy(object):
   """Base class of policies for RuleMixin.expand and SimulationMovement.expand
