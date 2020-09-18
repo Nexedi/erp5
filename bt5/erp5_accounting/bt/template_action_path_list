@@ -56,6 +56,7 @@ Balance Transaction | add_accounting_transaction_line
 Balance Transaction | destination_asset
 Balance Transaction | view
 Bank Account | jump_active_accounting_pref
+Bank Account | jump_to_transactions
 Bank Account | transactions
 Cash Register | jump_active_accounting_pref
 Cash Register | transactions
