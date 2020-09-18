@@ -190,9 +190,7 @@
 
     .declareMethod('checkValidity', function () {
       var name = this.state.name;
-      if (error_text) {
-        return false;
-      } else if (this.state.editable && this.state.required) {
+      if (this.state.editable && this.state.required) {
         return this.getContent()
           .push(function (result) {
             return result[name].length !== 0;
