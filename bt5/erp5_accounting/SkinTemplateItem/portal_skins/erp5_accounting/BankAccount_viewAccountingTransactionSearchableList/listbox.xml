@@ -1,0 +1,382 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>columns</string>
+                <string>editable_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>stat_columns</string>
+                <string>stat_method</string>
+                <string>title</string>
+                <string>url_columns</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Movement_getSpecificReference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>Movement_getExplanationTitle</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>Movement_getExplanationTranslatedPortalType</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>Movement_getExplanationReference</string>
+                          <string>Invoice Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>Movement_getMirrorSectionTitle</string>
+                          <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>getTranslatedSimulationStateTitle</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>Balance</string>
+                        </tuple>
+                        <tuple>
+                          <string>running_total_quantity</string>
+                          <string>Running Balance</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>function</string>
+                          <string>function</string>
+                        </tuple>
+                        <tuple>
+                          <string>project</string>
+                          <string>project</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>date</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit</string>
+                          <string>debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>total_quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>running_total_quantity</string>
+                          <string>running_total_quantity</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_view_mode_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Accounting Transaction</string>
+                          <string>Accounting Transaction</string>
+                        </tuple>
+                        <tuple>
+                          <string>Purchase Invoice Transaction</string>
+                          <string>Purchase Invoice Transaction</string>
+                        </tuple>
+                        <tuple>
+                          <string>Sale Invoice Transaction</string>
+                          <string>Sale Invoice Transaction</string>
+                        </tuple>
+                        <tuple>
+                          <string>Balance Transaction</string>
+                          <string>Balance Transaction</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>bank_account_transaction_searchable_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>stock.date</string>
+                          <string>ASC</string>
+                        </tuple>
+                        <tuple>
+                          <string>stock.uid</string>
+                          <string>ASC</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>sorting disabled</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>debit</string>
+                          <string>BankAccount_statDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit</string>
+                          <string>BankAccount_statCredit</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_quantity</string>
+                          <string>BankAccount_statBalance</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>stat_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Transactions Related to this Bank Account</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(x, x) for x in here.getPortalAccountingTransactionTypeList()]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x[0], \'Movement_getExplanationUrl\') for x in form.listbox.get_value(\'columns\')]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>BankAccount_getAccountingTransactionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
