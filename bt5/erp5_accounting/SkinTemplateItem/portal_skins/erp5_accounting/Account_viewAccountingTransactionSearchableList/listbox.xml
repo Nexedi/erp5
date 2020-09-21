@@ -266,7 +266,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>account_history_selection</string> </value>
+                    <value> <string>account_history_searchable_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
