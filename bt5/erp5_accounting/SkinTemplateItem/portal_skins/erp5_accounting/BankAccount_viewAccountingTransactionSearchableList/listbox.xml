@@ -254,7 +254,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>bank_account_transaction_selection</string> </value>
+                    <value> <string>bank_account_transaction_searchable_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
