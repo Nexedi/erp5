@@ -130,7 +130,6 @@
           form_options.form_definition = form_gadget.state.form_definition;
           form_options.view = form_gadget.state.view;
           form_options.jio_key = form_gadget.state.jio_key;
-          form_options.editable = true; // dialog is always editable
           return erp5_form.render(form_options);
         })
         .push(function () {
