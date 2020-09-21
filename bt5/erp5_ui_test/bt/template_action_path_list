@@ -1,6 +1,7 @@
 Bar Module | multi_form_dialog
 Bar Module | view
 Bar | jump_to_related_bar
+Bar | jump_to_self
 Bar | list
 Bar | performance
 Bar | view
