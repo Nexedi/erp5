@@ -381,6 +381,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['_debug'], "root")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -454,6 +457,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['traverse']['name'], "Traverse")
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['default_view'], "view")
     self.assertEqual(result_dict['_debug'], "root")
 
@@ -530,6 +536,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['_debug'], "traverse")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -627,6 +636,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['_debug'], "traverse")
 
     # Check embedded form rendering
