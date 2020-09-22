@@ -1279,6 +1279,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # FIXME does not work in case of bulk queries
         "href": traversed_document.Base_getRequestUrl()
       },
+      "traversed_document": {
+        "href": default_document_uri_template % {
+          "relative_url": getRealRelativeUrl(traversed_document)
+        },
+        "name": getRealRelativeUrl(traversed_document),
+        "title": ensureUTF8(traversed_document.getTranslatedTitle())
+      },
       # Always inform about site root
       "site_root": {
         "href": default_document_uri_template % {
