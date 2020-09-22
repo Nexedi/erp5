@@ -24,6 +24,7 @@ Test Result Module | view_test_result_diff
 Test Result Node | view
 Test Result | jump_previous_test_result
 Test Result | jump_test_suite
+Test Result | jump_to_test_suite
 Test Result | jump_viewvc_revision
 Test Result | view
 Test Result | view_graph
@@ -31,5 +32,6 @@ Test Result | view_node_list
 Test Result | view_performance_graph
 Test Suite Module | view
 Test Suite Repository | view
+Test Suite | jump_to_test_result
 Test Suite | periodicity
 Test Suite | view
