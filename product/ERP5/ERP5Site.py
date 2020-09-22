@@ -2361,7 +2361,7 @@ class ERP5Generator(PortalGenerator):
     #   layer when installing new business templates.
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
     skin_folders = ', '.join(('custom', 'external_method'))
-    ps.addSkinSelection( 'View'
+    ps.addSkinSelection( 'ViewJS'
                        , skin_folders
                        , make_default = 1
                        )
@@ -2544,7 +2544,8 @@ class ERP5Generator(PortalGenerator):
     """
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in p.getCoreBusinessTemplateList():
+      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage,
+                 'erp5_renderjs_style'):
         if not bt:
           continue
         url = getBootstrapBusinessTemplateUrl(bt)
