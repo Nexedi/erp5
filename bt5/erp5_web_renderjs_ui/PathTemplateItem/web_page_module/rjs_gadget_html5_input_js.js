@@ -204,7 +204,10 @@
                 if (isNaN(date)) {
                   return gadget.translate("Invalid DateTime")
                     .push(function (error_message) {
-                      return gadget.notifyInvalid(error_message);
+                      return RSVP.all([
+                        gadget.deferErrorText(error_message),
+                        gadget.notifyInvalid(error_message)
+                      ]);
                     })
                     .push(function () {
                       return false;
@@ -217,6 +220,14 @@
       }
       return result;
     }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      var input = this.element.querySelector("input");
+      return this.changeState({
+        value: input.value,
+        error_text: error_text
+      });
+    })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .onEvent('change', function change() {
