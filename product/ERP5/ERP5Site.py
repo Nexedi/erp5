@@ -2218,7 +2218,7 @@ class ERP5Generator(PortalGenerator):
                        , 'external_method'
                        ] + self.CMFDEFAULT_FOLDER_LIST
     skin_folders = ', '.join(skin_folder_list)
-    ps.addSkinSelection( 'View'
+    ps.addSkinSelection( 'ViewJS'
                        , skin_folders
                        , make_default = 1
                        )
