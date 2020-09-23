@@ -137,33 +137,33 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   def stepSetFranceCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
     sequence.edit(configuration_currency_reference='EUR',
-                  configuration_gap = 'gap/fr/pcg',
+                  configuration_gap='gap/fr/pcg',
                   configuration_accounting_plan='fr',
-                  configuration_currency_title = 'Euro',
-                  configuration_lang = 'erp5_l10n_fr',
-                  configuration_price_currency = 'EUR;0.01;Euro',
+                  configuration_currency_title='Euro',
+                  configuration_lang='erp5_l10n_fr',
+                  configuration_price_currency='EUR;0.01;Euro',
                   organisation_default_address_city='LILLE',
                   organisation_default_address_region='europe/western_europe/france')
                   
   def stepSetGermanyCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
     sequence.edit(configuration_currency_reference='EUR',
-                  configuration_gap = 'gap/de/skr04',
+                  configuration_gap='gap/de/skr04',
                   configuration_accounting_plan='de',
-                  configuration_currency_title = 'Euro',
-                  configuration_lang = 'erp5_l10n_de',
-                  configuration_price_currency = 'EUR;0.01;Euro',
+                  configuration_currency_title='Euro',
+                  configuration_lang='erp5_l10n_de',
+                  configuration_price_currency='EUR;0.01;Euro',
                   organisation_default_address_city='Berlin',
                   organisation_default_address_region='europe/western_europe/germany')
 
   def stepSetBrazilCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
     sequence.edit(configuration_currency_reference='BRL',
-                  configuration_gap = 'gap/br/pcg',
+                  configuration_gap='gap/br/pcg',
                   configuration_accounting_plan='br',
-                  configuration_lang = 'erp5_l10n_pt-BR',
-                  configuration_currency_title = 'Brazilian Real',
-                  configuration_price_currency = 'BRL;0.01;Brazilian Real',
+                  configuration_lang='erp5_l10n_pt-BR',
+                  configuration_currency_title='Brazilian Real',
+                  configuration_price_currency='BRL;0.01;Brazilian Real',
                   organisation_default_address_city='CAMPOS',
                   organisation_default_address_region='americas/south_america/brazil')
 
@@ -171,11 +171,11 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """ Check if configuration key was created fine """
 
     sequence.edit(configuration_currency_reference='BYR',
-                  configuration_gap = 'gap/ru/ru2000',
+                  configuration_gap='gap/ru/ru2000',
                   configuration_accounting_plan='ru',
-                  configuration_price_currency = 'BYR;0.01;Belarusian Rouble',
-                  configuration_lang = 'erp5_l10n_ru',
-                  configuration_currency_title = 'Belarusian Rouble',
+                  configuration_price_currency='BYR;0.01;Belarusian Rouble',
+                  configuration_lang='erp5_l10n_ru',
+                  configuration_currency_title='Belarusian Rouble',
                   organisation_default_address_city='MOSCOW',
                   organisation_default_address_region='europe/eastern_europe/russian_federation')
 
