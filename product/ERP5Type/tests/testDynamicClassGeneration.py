@@ -3250,7 +3250,7 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       self.commit()
 
 
-class TestZodbDocumentComponentReload(TestZodbDocumentComponent):
+class TestZodbDocumentComponentReload(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_core',
