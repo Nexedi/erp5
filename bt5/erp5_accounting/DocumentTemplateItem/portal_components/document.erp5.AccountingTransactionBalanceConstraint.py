@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import collections
+
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 
@@ -49,40 +51,38 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
     Check the object's consistency
     """
     error_list = []
-    source_sum = {}
-    destination_sum = {}
+    source_sum = collections.defaultdict(list)
+    destination_sum = collections.defaultdict(list)
     for line in obj.getMovementList(
           portal_type=obj.getPortalAccountingMovementTypeList()):
       if line.getSourceValue(portal_type='Account') is not None:
         section = line.getSourceSectionValue()
-        source_sum[section] = source_sum.get(section, 0) + \
-            (line.getSourceInventoriatedTotalAssetPrice() or 0)
+        source_sum[section].append(line.getSourceInventoriatedTotalAssetPrice() or 0)
       if line.getDestinationValue(portal_type='Account') is not None:
         section = line.getDestinationSectionValue()
-        destination_sum[section] = destination_sum.get(section, 0) + \
-          (line.getDestinationInventoriatedTotalAssetPrice() or 0)
+        destination_sum[section].append(line.getDestinationInventoriatedTotalAssetPrice() or 0)
 
-    for section, total in source_sum.items():
+    for section, amount_list in source_sum.items():
       precision = 2
-      if section is not None and\
+      if amount_list and section is not None and\
           section.getPortalType() == 'Organisation':
         section_currency = section.getPriceCurrencyValue()
         if section_currency is not None:
           precision = section_currency.getQuantityPrecision()
-        if round(total, precision) != 0:
+        if round(sum((round(amount, precision) for amount in amount_list)), precision) != 0:
           error_list.append(self._generateError(obj, self._getMessage(
                 'message_transaction_not_balanced_for_source'),
                 mapping=dict(section_title=section.getTranslatedTitle())))
           break
 
-    for section, total in destination_sum.items():
+    for section, amount_list in destination_sum.items():
       precision = 2
-      if section is not None and\
+      if amount_list and section is not None and\
           section.getPortalType() == 'Organisation':
         section_currency = section.getPriceCurrencyValue()
         if section_currency is not None:
           precision = section_currency.getQuantityPrecision()
-        if round(total, precision) != 0:
+        if round(sum((round(amount, precision) for amount in amount_list)), precision) != 0:
           error_list.append(self._generateError(obj, self._getMessage(
                 'message_transaction_not_balanced_for_destination'),
                 mapping=dict(section_title=section.getTranslatedTitle())))
