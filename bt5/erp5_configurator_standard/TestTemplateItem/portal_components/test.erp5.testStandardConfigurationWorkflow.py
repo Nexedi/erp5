@@ -170,12 +170,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   def stepSetRussiaCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
 
-    sequence.edit(configuration_currency_reference='BYR',
+    sequence.edit(configuration_currency_reference='RUB',
                   configuration_gap='gap/ru/ru2000',
                   configuration_accounting_plan='ru',
-                  configuration_price_currency='BYR;0.01;Belarusian Rouble',
+                  configuration_price_currency='RUB;0.01;Russian Rouble',
                   configuration_lang='erp5_l10n_ru',
-                  configuration_currency_title='Belarusian Rouble',
+                  configuration_currency_title='Russian Rouble',
                   organisation_default_address_city='MOSCOW',
                   organisation_default_address_region='europe/eastern_europe/russian_federation')
 
