@@ -1,3 +1,6 @@
+2020-09-23
+* Round the amounts line by line when validating transactions balances and showing the totals on an accounting transaction.
+
 2015-06-12 arnaud.fontaine
 * Rounding debit/credit only makes sense if there is SIT Line.
 
