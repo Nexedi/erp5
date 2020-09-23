@@ -625,9 +625,12 @@ class TestTemplateTool(ERP5TypeTestCase):
     # turn depends on erp5_workflow
     bt5_name_list = ['erp5_configurator_standard']
     template_tool = self.portal.portal_templates
-    for repos in template_tool.getRepositoryList():
-      if "bootstrap" not in repos:
-        repository = repos
+    repository, = [
+        repo for repo in template_tool.getRepositoryList() if
+        '/bootstrap' not in repo
+        and '/erp5-bin' not in repo
+        and '/erp5-doc' not in repo]
+
     self.tic()
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
