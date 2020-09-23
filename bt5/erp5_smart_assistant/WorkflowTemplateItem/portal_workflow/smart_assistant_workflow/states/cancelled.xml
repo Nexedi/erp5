@@ -56,25 +56,32 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -84,6 +91,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
