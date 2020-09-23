@@ -43,17 +43,12 @@
         document = parent_options.doc,
         all_attachments,
         promise_list = [],
+        parent_jio_key = parent_options.action_options.jio_key,
         jio_key;
-      return gadget.jio_allAttachments(parent_options.action_options.jio_key)
+      return gadget.jio_allAttachments(parent_jio_key)
         .push(function (result) {
           var property;
           all_attachments = result;
-          delete content_dict.dialog_method;
-          for (property in content_dict) {
-            if (content_dict.hasOwnProperty(property)) {
-              document[property] = content_dict[property];
-            }
-          }
           return gadget.jio_post(document);
         })
         .push(function (result_jio_key) {
@@ -61,7 +56,7 @@
           jio_key = result_jio_key;
           for (attachment_id in all_attachments) {
             if (all_attachments.hasOwnProperty(attachment_id)) {
-              promise_list.push(gadget.jio_getAttachment(parent_options.action_options.jio_key, attachment_id));
+              promise_list.push(gadget.jio_getAttachment(parent_jio_key, attachment_id));
             }
           }
           return RSVP.all(promise_list);
