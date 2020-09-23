@@ -11,5 +11,4 @@ catalog_kw = {'creation_date': {'query': (now_minus_6, now_minus_1), 'range': 'm
 sale_order_count = len(portal_catalog(portal_type="Sale Order", **catalog_kw))
 person_per_hour = 60*person_count/5
 sale_order_per_hour = 60*sale_order_count/5
-output_string = """Person: %r doc/hour SaleOrder: %r doc/hour""" % (person_per_hour, sale_order_per_hour)
 return json.dumps({"person_per_hour" : person_per_hour, "sale_order_per_hour": sale_order_per_hour})
