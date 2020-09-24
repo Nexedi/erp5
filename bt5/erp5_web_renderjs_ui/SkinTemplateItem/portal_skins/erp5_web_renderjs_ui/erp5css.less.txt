@@ -29,7 +29,7 @@
 @colorsubheaderbackground: #0E81C2;
 @colorsubheaderlink: #f8fff3;
 
-@colorfocus: #3388cc;
+@colorfocus: #ffff8a;
 @colorblocklinkbackground: #e0e0e0;
 
 @paneldarkerbackgroundcolor: @black;
@@ -526,8 +526,14 @@ input[type=submit], button {
   background:transparent;
   color: @colorforeground;
 
-  &:hover, &:focus {
+  &:hover {
     outline: none;
+  }
+
+  &:focus {
+    // XXX TODO
+    outline-offset: -2px;
+    outline: 2px @border-type @focus-border-color;
   }
 
 /*
