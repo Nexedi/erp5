@@ -393,7 +393,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_officejs_notebook.appcache</string> </value>
+            <value> <string>WebSection_getPrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -710,7 +710,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>973.33482.4166.8669</string> </value>
+                      <value> <string>985.55188.13524.39168</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -728,7 +728,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1549887982.52</float>
+                              <float>1600960361.5</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
