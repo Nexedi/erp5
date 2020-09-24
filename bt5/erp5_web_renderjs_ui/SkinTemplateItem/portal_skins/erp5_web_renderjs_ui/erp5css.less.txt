@@ -529,8 +529,14 @@ input[type=submit], button {
   background:transparent;
   color: @colorforeground;
 
-  &:hover, &:focus {
+  &:hover {
     outline: none;
+  }
+
+  &:focus {
+    // XXX TODO
+    outline-offset: -2px;
+    outline: 2px @border-type @focus-border-color;
   }
 
 /*
