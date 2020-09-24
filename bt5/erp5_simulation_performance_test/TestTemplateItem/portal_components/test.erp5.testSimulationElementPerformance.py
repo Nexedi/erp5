@@ -120,18 +120,18 @@ EXPECTED_MIN_MAX_TIME = {
 
   'Expansion of Converged Changes': (11.12, 17.12),     # (48, 54)
 
-  'Expansion of Diverged Changes': (18.58, 24.58),      # (53, 59)
+  'Expansion of Diverged Changes': (13.58, 19.58),      # (53, 59)
 
-  'Adoption of Previsions':  (26.78, 34.78),            # (105, 114)
+  'Adoption of Previsions':  (20.78, 28.78),            # (105, 114)
 
-  'Acceptance of Decisions': (27.3, 35.3),              # (104, 113)
+  'Acceptance of Decisions': (20.3, 28.3),              # (104, 113)
 
   'Creation of New Applied Rules from Partially Simulated Deliveries': (9.05, 15.05),
     # (38, 44)
 
   'Creation Of New Sale Invoices':  (11.05, 17.05),     # (48, 54)
 
-  'Addition of New Invoices Lines': (29.11, 37.11)      # (116, 125)
+  'Addition of New Invoices Lines': (24.11, 32.11)      # (116, 125)
 }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
