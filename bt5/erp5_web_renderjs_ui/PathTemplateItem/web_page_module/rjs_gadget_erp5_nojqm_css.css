@@ -267,7 +267,7 @@ a:hover {
 }
 a:focus {
   outline-offset: -2px;
-  outline: 2px solid #3388cc;
+  outline: 2px solid #ffff8a;
 }
 @media not screen and (max-width: 85em) {
   a[accesskey]:after {
@@ -418,10 +418,13 @@ button::-moz-focus-inner {
   padding: 0px;
 }
 input[type=submit]:hover,
-button:hover,
+button:hover {
+  outline: none;
+}
 input[type=submit]:focus,
 button:focus {
-  outline: none;
+  outline-offset: -2px;
+  outline: 2px solid #3388cc;
 }
 /**********************************************
 * Media
