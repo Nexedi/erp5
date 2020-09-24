@@ -65,7 +65,7 @@
             // Drop the sort parameter, to speed up the calculation
             display_options['field_listbox_sort_list:json'] = undefined;
             url_for_parameter_list.push(
-              {command: 'display_stored_state', options: display_options}
+              {command: 'push_history_stored_state', options: display_options}
             );
           }
           return RSVP.all([
