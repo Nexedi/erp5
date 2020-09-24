@@ -87,7 +87,7 @@
           // Calculate all module's urls
           for (i = 0; i < len; i += 1) {
             url_dict_list.push({
-              command: 'display_stored_state',
+              command: 'push_history_stored_state',
               options: {jio_key: document_list[i].id}
             });
           }
