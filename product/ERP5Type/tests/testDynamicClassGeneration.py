@@ -377,6 +377,25 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       validate_date_list)
     self.assertEqual(person.getValidateTransitionDate(), validate_date_list[-1])
 
+  def testNoPortalTypeAccessorGeneratedOnPartiallyGeneratedPortalTypeClass(self):
+    """
+    Test for `is_partially_generated` ({lazy_class,portal_type_class}.py):
+    Portal Type accessors must not be generated on a partially loaded Portal
+    Type class (eg "inner" class)
+    """
+    from Products.ERP5Type.dynamic.lazy_class import PortalTypeMetaClass
+    PortalTypeMetaClass_generatePortalTypeAccessors = PortalTypeMetaClass.generatePortalTypeAccessors
+    def generatePortalTypeAccessors(cls, *args, **kw):
+      assert len(cls.__bases__) > 2
+      return PortalTypeMetaClass_generatePortalTypeAccessors(cls, *args, **kw)
+    try:
+      PortalTypeMetaClass.generatePortalTypeAccessors = generatePortalTypeAccessors
+      self.portal.portal_types.resetDynamicDocuments()
+      import erp5.portal_type
+      getattr(erp5.portal_type, 'Document Component').loadClass()
+    finally:
+      PortalTypeMetaClass.generatePortalTypeAccessors = PortalTypeMetaClass_generatePortalTypeAccessors
+
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
   XXX: WORK IN PROGRESS
