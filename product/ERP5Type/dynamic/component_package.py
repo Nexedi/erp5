@@ -149,7 +149,10 @@ class ComponentDynamicPackage(ModuleType):
               if component.getPortalType() == 'Document Component':
                 filesystem_import_dict[('Products.ERP5Type.Document.' +
                                         component.getReference())] = component_module_name
-        except Exception:
+        except Exception as e:
+          print ("oops", e)
+          raise
+          import pdb; pdb.set_trace()
           # * Old site: just use FS Documents.
           # * Site not ready: initial installation or setSite() not done yet.
           return None
