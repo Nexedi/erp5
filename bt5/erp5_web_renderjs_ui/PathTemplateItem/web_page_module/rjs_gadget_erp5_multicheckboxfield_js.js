@@ -184,11 +184,15 @@
     }, {mutex: 'changestate'})
 
     .allowPublicAcquisition("notifyFocus", function notifyFocus() {
-      return this.changeState({display_error_text: true});
+      if (this.state.error_text) {
+        return this.changeState({display_error_text: true});
+      }
     })
 
     .allowPublicAcquisition("notifyBlur", function notifyBlur() {
-      return this.changeState({display_error_text: false});
+      if (this.state.error_text) {
+        return this.changeState({display_error_text: false});
+      }
     })
 
     .declareMethod('checkValidity', function () {
