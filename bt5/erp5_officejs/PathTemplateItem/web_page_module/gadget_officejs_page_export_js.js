@@ -26,7 +26,8 @@
       },
       "Notebook": {
         "url": "officejs_notebook/",
-        "cache": "gadget_officejs_notebook.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Illustration Editor": {
         "url": "officejs_svg_editor/",
