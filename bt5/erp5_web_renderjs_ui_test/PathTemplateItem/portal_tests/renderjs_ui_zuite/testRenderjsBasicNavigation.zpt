@@ -34,7 +34,7 @@
 
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
