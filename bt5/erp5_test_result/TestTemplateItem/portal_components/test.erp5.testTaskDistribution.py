@@ -409,7 +409,6 @@ class TestTaskDistribution(TaskDistributionTestCase):
       config_list = json.loads(self.distributor.startTestSuite(
                              title=title))
       return ["%s" % x["test_suite_title"] for x in config_list]
-    now = DateTime()
     def affectTestSuite(node_title, test_suite_list):
       test_node, = self.test_node_module.searchFolder(title=node_title)
       test_node = test_node.getObject()
@@ -430,6 +429,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       affectTestSuite("COMP9-Node1", [test_suite_3])
       # process some test to have old test result in database
       self.processTest("test suite 1", "r0=a", node_title="COMP0-Node1")
+      now = DateTime()
       self.pinDateTime(now + 1.0/86400)
       self.processTest("test suite 2", "r0=a", node_title="COMP1-Node1")
       self.pinDateTime(now + 2.0/86400)
