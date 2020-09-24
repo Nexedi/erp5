@@ -234,6 +234,15 @@
       }
 
       input = gadget.element.querySelector("input");
+
+      if (modification_dict.error_text &&
+          !input.classList.contains("is-invalid")) {
+        input.classList.add("is-invalid");
+      } else if (!modification_dict.error_text &&
+                 input.classList.contains("is-invalid")) {
+        input.classList.remove("is-invalid");
+      }
+
       if (modification_dict.hasOwnProperty("value_text")) {
         input.value = gadget.state.value_text;
       }
@@ -545,30 +554,35 @@
     .declareMethod('checkValidity', function () {
       var input = this.element.querySelector('input'),
         gadget = this;
-      if (this.state.error_text) {
-        return false;
-      }
       if ((this.state.value_text) && (
           (this.state.value_relative_url === null) &&
             (this.state.value_uid === null) &&
             (this.state.value_portal_type === null)
         )) {
-        return gadget.translate(this.state.error_text || "No such document was found")
+        return gadget.translate("No such document was found")
           .push(function (error_message) {
-            return gadget.notifyInvalid(error_message);
+            return RSVP.all([
+              gadget.deferErrorText(error_message),
+              gadget.notifyInvalid(error_message)
+            ]);
           })
           .push(function () {
             return false;
           });
-      }
-      if (input && input.classList.contains("is-invalid")) {
-        input.classList.remove("is-invalid");
       }
       return gadget.notifyValid()
         .push(function () {
           return true;
         });
     }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      var input = this.element.querySelector("input");
+      return this.changeState({
+        value: input.value,
+        error_text: error_text
+      });
+    })
 
     .declareAcquiredMethod("notifyFocus", "notifyFocus")
     .onEvent('focus', function focus() {
