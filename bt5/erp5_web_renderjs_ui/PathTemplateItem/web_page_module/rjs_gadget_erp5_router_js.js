@@ -287,7 +287,7 @@
     var hash = getDisplayUrlFor(jio_key, options),
       queue;
     /*jslint regexp: true*/
-    if (jio_key && /^[^\/]+_module\/[^\/]+$/.test(jio_key)) {
+    if (jio_key && (/^[^\/]+_module\/[^\/]+$/.test(jio_key) || /^portal_[^\/]+\/[^\/]+$/.test(jio_key))) {
       /*jslint regexp: false*/
       // This only work for remote access to ERP5...
       queue = gadget.props.jio_navigation_gadget.put(jio_key, {
