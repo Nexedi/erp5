@@ -118,7 +118,7 @@
           label_element: gadget.element.querySelector('label')
         };
       }
-      if (gadget.state.hidden && !modification_dict.error_text) {
+      if (gadget.state.hidden && !gadget.state.error_text) {
         this.element.hidden = true;
       } else {
         this.element.hidden = false;
