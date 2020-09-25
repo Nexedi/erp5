@@ -22,6 +22,7 @@ web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
+web_page_module/officejs_notebook_*
 web_page_module/officejs_todomvc_*
 web_page_module/ojs_*
 web_page_module/wallsearch_privacy_policy_html
