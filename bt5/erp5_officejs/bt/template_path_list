@@ -6,6 +6,11 @@ image_module/officejs_audioplayer_*
 image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
+portal_types/Notebook Module/notebook_editor_view
+portal_types/Notebook Module/notebook_upload
+portal_types/Notebook/notebook_download
+portal_types/Notebook/notebook_editor_clone
+portal_types/Notebook/notebook_editor_view
 portal_types/PDF/pdf_viewer_clone
 portal_types/PDF/pdf_viewer_view
 portal_types/Test Page Module/slideshow_editor_view
@@ -26,6 +31,7 @@ web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
+web_page_module/officejs_notebook_*
 web_page_module/officejs_todomvc_*
 web_page_module/ojs_*
 web_page_module/wallsearch_privacy_policy_html
