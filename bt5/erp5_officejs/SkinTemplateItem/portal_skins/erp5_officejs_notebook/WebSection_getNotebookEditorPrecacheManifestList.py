@@ -2,14 +2,6 @@ url_list = [
   "gadget_officejs_notebook.json",
   "nexedi_logo_officejs_iodide.svg",
   "gadget_officejs_notebook_router.html",
-  "gadget_officejs_jio_notebook_view.html",
-  "gadget_officejs_jio_notebook_view.js",
-  "gadget_erp5_page_ojs_upload.js",
-  "gadget_erp5_page_ojs_upload.html",
-  "gadget_erp5_page_ojs_download.js",
-  "gadget_erp5_page_ojs_download.html",
-  "gadget_erp5_page_ojs_notebook_list.js",
-  "gadget_erp5_page_ojs_notebook_list.html",
   "gadget_jsmd_viewer.css",
   "gadget_jsmd_viewer.html",
   "gadget_jsmd_viewer.js",
@@ -41,12 +33,10 @@ url_list = [
   "pytz.js",
   "xlrd.data",
   "xlrd.js",
-  "gadget_erp5_page_ojs_controller.html",
-  "gadget_erp5_page_ojs_controller.js",
-  "gadget_erp5_page_ojs_add_document.html",
-  "gadget_erp5_page_ojs_add_document.js",
-  "gadget_erp5_page_ojs_document_list.html",
-  "gadget_erp5_page_ojs_document_list.js"
+  "notebook_download_action.html",
+  "notebook_download_action.js",
+  "notebook_upload_action.html",
+  "notebook_upload_action.js"
 ]
 
 return url_list
