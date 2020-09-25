@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,15 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -78,19 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>creators</string> </key>
             <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_notebook_router.html</string> </value>
+            <value> <string>notebook_upload_action.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -100,54 +85,25 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_notebook_router.html</string> </value>
+            <value> <string>officejs_notebook_upload_action_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+            <value> <string>Notebook Upload Action JS</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Notebook router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>OfficeJS Notebook Upload Action JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -235,7 +191,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1524555037.27</float>
+                              <float>1601055273.03</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -284,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.55916.60780.2082</string> </value>
+                      <value> <string>986.60301.64820.24098</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -302,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1601070525.42</float>
+                              <float>1601323804.27</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -329,7 +285,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -345,7 +303,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -363,7 +321,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1524555002.7</float>
+                              <float>1601055043.44</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
