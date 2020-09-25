@@ -90,6 +90,21 @@
   <td>Invalid DateTime</td>
   <td></td>
 </tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_stop_date" and @class="is-invalid"]</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Invalid DateTime</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
+  <td>222222-02-22T22:22</td>
+</tr>
 
 <tr>
   <td>pause</td>
