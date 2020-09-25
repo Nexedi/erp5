@@ -104,7 +104,7 @@
 <!-- Generate links to module -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='2 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F2')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='2 (Foo)' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=foo_module%2F2')]</td>
   <td></td>
 </tr>
 <tr>
