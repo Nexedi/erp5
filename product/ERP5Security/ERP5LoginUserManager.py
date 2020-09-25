@@ -201,7 +201,7 @@ class ERP5LoginUserManager(BasePlugin):
       # Short-cut "System Processes" as not being searchable by user_id.
       # This improves performance in proxy-role'd execution by avoiding an
       # sql query expected to find no user.
-      id = [x for x in id if x != SYSTEM_USER_USER_NAME]
+      id = [x for x in id or () if x != SYSTEM_USER_USER_NAME]
       if id:
         if exact_match:
           requested = set(id).__contains__
