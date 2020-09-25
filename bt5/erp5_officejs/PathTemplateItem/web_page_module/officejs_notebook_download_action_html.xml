@@ -62,15 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -81,16 +72,8 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_notebook_router.html</string> </value>
+            <value> <string>notebook_download_action.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -100,29 +83,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_notebook_router.html</string> </value>
+            <value> <string>officejs_notebook_download_action_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
+              <none/>
             </value>
         </item>
         <item>
@@ -131,23 +97,11 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+            <value> <string>Notebook Download Action</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Notebook router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>OfficeJS Notebook Download Action</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -235,7 +189,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1524555037.27</float>
+                              <float>1601064966.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -284,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.55916.60780.2082</string> </value>
+                      <value> <string>986.56006.12947.1757</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -302,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1601070525.42</float>
+                              <float>1601065459.31</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -363,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1524555002.7</float>
+                              <float>1601064847.05</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
