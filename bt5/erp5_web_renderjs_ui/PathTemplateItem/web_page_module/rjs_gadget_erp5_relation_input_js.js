@@ -234,11 +234,10 @@
       }
 
       input = gadget.element.querySelector("input");
-
-      if (modification_dict.error_text &&
+      if (gadget.state.error_text &&
           !input.classList.contains("is-invalid")) {
         input.classList.add("is-invalid");
-      } else if (!modification_dict.error_text &&
+      } else if (!gadget.state.error_text &&
                  input.classList.contains("is-invalid")) {
         input.classList.remove("is-invalid");
       }
@@ -525,6 +524,7 @@
       }
     }, false, false)
 
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
     .onEvent('blur', function (evt) {
       var gadget = this;
       if (evt.target.tagName.toLowerCase() === 'input') {
@@ -537,23 +537,27 @@
             return gadget.changeState({
               has_focus: false
             });
+          })
+          .push(function () {
+            return gadget.notifyBlur();
           });
       }
     }, true, false)
 
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
     .onEvent('focus', function (evt) {
       var gadget = this;
       if (evt.target.tagName.toLowerCase() === 'input') {
-        return gadget.changeState({
-          has_focus: true
-        });
+        return RSVP.all([
+          gadget.notifyFocus(),
+          gadget.changeState({has_focus: true})
+        ]);
       }
     }, true, false)
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
-      var input = this.element.querySelector('input'),
-        gadget = this;
+      var gadget = this;
       if ((this.state.value_text) && (
           (this.state.value_relative_url === null) &&
             (this.state.value_uid === null) &&
@@ -577,22 +581,10 @@
     }, {mutex: 'changestate'})
 
     .declareJob('deferErrorText', function deferErrorText(error_text) {
-      var input = this.element.querySelector("input");
       return this.changeState({
-        value: input.value,
         error_text: error_text
       });
     })
-
-    .declareAcquiredMethod("notifyFocus", "notifyFocus")
-    .onEvent('focus', function focus() {
-      return this.notifyFocus();
-    }, true, false)
-
-    .declareAcquiredMethod("notifyBlur", "notifyBlur")
-    .onEvent('blur', function blur() {
-      return this.notifyBlur();
-    }, true, false)
 
     // XXX Use html5 input
     .onEvent('invalid', function (evt) {
@@ -613,16 +605,19 @@
       if (!this.state.editable) {
         return;
       }
-
       return this.changeState({
         value_text: event.target.value,
         value_relative_url: null,
         value_uid: null,
         value_portal_type: null,
-        has_focus: true
+        has_focus: true,
+        error_text: ""
       })
         .push(function () {
-          return gadget.notifyChange();
+          return RSVP.all([
+            gadget.notifyValid(),
+            gadget.notifyChange()
+          ]);
         });
     }, true, false);
 
