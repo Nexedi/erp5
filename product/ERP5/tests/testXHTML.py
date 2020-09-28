@@ -432,10 +432,12 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_budget',
       'erp5_public_accounting_budget',
 
+      'erp5_project',
+
       'erp5_consulting',
 
-      'erp5_ingestion',
       'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_ingestion',
       'erp5_crm',
       'erp5_interface_post',
 
@@ -459,8 +461,6 @@ class TestXHTML(TestXHTMLMixin):
 
       'erp5_open_trade',
       'erp5_payroll',
-
-      'erp5_project',
 
       'erp5_calendar',
 
