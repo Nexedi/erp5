@@ -8,7 +8,7 @@
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
-    .declareAcquiredMethod("jio_get", "jio_get")
+
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getSettingList", "getSettingList")
@@ -29,19 +29,8 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      //must return a dict with:
-      //notify: options_dict for notifySubmitted
-      //redirect: options_dict for redirect
-      var return_submit_dict = {
-        notify: {
-          message: "",
-          status: ""
-        },
-        redirect: {
-          command: 'display',
-          options: {}
-        }
-      }, gadget = this,
+      var gadget = this,
+        return_submit_dict = {},
         document = parent_options.doc,
         all_attachments,
         promise_list = [],
@@ -92,17 +81,20 @@
                   });
                 })
                 .push(function (jio_key) {
-                  return_submit_dict.notify.message = "File uploaded";
-                  return_submit_dict.notify.status = "success";
-                  return_submit_dict.redirect.options = {
-                    jio_key: jio_key,
-                    editable: true
+                  return_submit_dict.redirect = {
+                    command: 'display',
+                    options: {
+                      jio_key: jio_key,
+                      editable: true
+                    }
                   };
                   return return_submit_dict;
                 }, function (error) {
                   if (error instanceof jIO.util.jIOError) {
-                    return_submit_dict.notify.message = "Failure uploading document";
-                    return_submit_dict.notify.status = "error";
+                    return_submit_dict.notify = {
+                      message: "Failure uploading document",
+                      status: "error"
+                    };
                     return return_submit_dict;
                   }
                   throw error;
