@@ -107,8 +107,6 @@
               status: 'fail'
             });
           }
-          delete form_definition.fields_raw_properties
-            .gadget_field_action_js_script;
           state_options = {
             doc: {},
             action_options: options,
@@ -120,6 +118,8 @@
             action_gadget_url: form_definition.fields_raw_properties
               .gadget_field_action_js_script.values.gadget_url
           };
+          delete form_definition.fields_raw_properties
+            .gadget_field_action_js_script;
           return declareActionGadget(gadget, state_options);
         })
         .push(function (result) {
