@@ -232,13 +232,15 @@
         // First display of the input
         buildEditableInputHTML(gadget);
       }
-
       input = gadget.element.querySelector("input");
       if (gadget.state.error_text &&
           !input.classList.contains("is-invalid")) {
         input.classList.add("is-invalid");
-      } else if (!gadget.state.error_text &&
-                 input.classList.contains("is-invalid")) {
+      } else if (
+        // value_portal_type not empty means that user
+        // wants to create a Document
+        (!gadget.state.error_text || gadget.state.value_portal_type) &&
+          input.classList.contains("is-invalid")) {
         input.classList.remove("is-invalid");
       }
 
@@ -428,6 +430,14 @@
                   "Invalid Search Criteria"
                 ])
                   .push(function (translation_list) {
+                    if (gadget.state.error_text !== translation_list[0]) {
+                      // Avoid call deferErrorText if error_text is already set
+                      // Otherwise, onStateChange will run forever
+                      return RSVP.all([
+                        gadget.deferErrorText(translation_list[0]),
+                        gadget.notifyInvalid(translation_list[0])
+                      ]);
+                    }
                     return gadget.notifyInvalid(translation_list[0]);
                   });
               }
@@ -440,9 +450,25 @@
                 ])
                   .push(function (translation_list) {
                     if (error.target.status === 0) {
+                      if (gadget.state.error_text !== translation_list[0]) {
+                        // Avoid call deferErrorText if error_text is already
+                        // set. Otherwise, onStateChange will run forever
+                        return RSVP.all([
+                          gadget.deferErrorText(translation_list[0]),
+                          gadget.notifyInvalid(translation_list[0])
+                        ]);
+                      }
                       return gadget.notifyInvalid(translation_list[0]);
                     }
                     if (error.target.status >= 500) {
+                      if (gadget.state.error_text !== translation_list[0]) {
+                        // Avoid call deferErrorText if error_text is already
+                        // set. Otherwise, onStateChange will run forever
+                        return RSVP.all([
+                          gadget.deferErrorText(translation_list[1]),
+                          gadget.notifyInvalid(translation_list[1])
+                        ]);
+                      }
                       return gadget.notifyInvalid(translation_list[1]);
                     }
                     throw error;
@@ -589,7 +615,10 @@
     // XXX Use html5 input
     .onEvent('invalid', function (evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false)
 
     .onEvent('change', function () {

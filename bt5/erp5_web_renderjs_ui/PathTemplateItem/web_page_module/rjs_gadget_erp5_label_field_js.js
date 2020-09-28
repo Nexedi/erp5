@@ -145,7 +145,7 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty('display_error_text')) {
+      if (modification_dict.hasOwnProperty('display_error_text') || modification_dict.hasOwnProperty('error_text')) {
         // first remove old errors
         span = this.props.container_element.lastElementChild;
         if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
