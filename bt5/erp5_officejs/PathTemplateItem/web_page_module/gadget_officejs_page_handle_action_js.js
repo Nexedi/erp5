@@ -1,8 +1,45 @@
-/*global window, document, rJS, RSVP */
+/*global window, document, rJS, RSVP, console */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 
-(function (window, document, rJS, RSVP) {
+(function (window, document, rJS, RSVP, console) {
   "use strict";
+
+  function declareActionGadget(gadget, state_options) {
+    var fragment = document.createElement('div');
+    gadget.element.appendChild(fragment);
+    return gadget.declareGadget(state_options.action_gadget_url, {
+      scope: "action_field",
+      element: fragment
+    });
+  }
+
+  function submitAction(gadget, action_gadget, state_options, content_dict) {
+    var submit_dict;
+    //handleSubmit() may return dictionary entries with
+    //notification messages or redirect options
+    state_options.gadget = gadget;
+    return action_gadget.handleSubmit(content_dict, state_options)
+      .push(function (result) {
+        submit_dict = result;
+        if (submit_dict.notify) {
+          return gadget.notifySubmitted(submit_dict.notify);
+        }
+      })
+      .push(function () {
+        if (submit_dict.redirect) {
+          return gadget.redirect(submit_dict.redirect);
+        }
+      }, function (error) {
+        if (!(error instanceof RSVP.CancellationError)) {
+          console.log("Action error:", error);
+          return gadget.notifySubmitted({
+            message: "Action Failed",
+            status: "error"
+          });
+        }
+        throw error;
+      });
+  }
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -34,7 +71,11 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, action_reference;
+      var gadget = this,
+        action_reference,
+        form_definition,
+        state_options,
+        action_gadget;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -44,62 +85,56 @@
           ]);
         })
         .push(function (result) {
-          if (result[0] !== undefined) { options.portal_type = result[0]; }
+          if (result[0] !== undefined) {
+            options.portal_type = result[0];
+          }
           if (result[1] !== undefined) {
             options.parent_relative_url = result[1];
           }
           action_reference = result[2];
           return gadget.getActionFormDefinition(action_reference);
         })
-        .push(function (form_definition) {
-          var fragment = document.createElement('div'),
-            action_gadget_url,
-            form_type = form_definition.form_type,
+        .push(function (result) {
+          form_definition = result;
+          var form_type = form_definition.form_type,
             child_gadget_url = form_definition.child_gadget_url,
-            //an action form must have a GadgetField called
-            //"gadget_field_new_action_js_script"
-            //this gadget will point the custom action gadget
+            //action validity determined by gadget_field_action_js_script field
             valid_action = form_definition.action_type ===
               "object_jio_js_script" && form_definition.fields_raw_properties
-              .hasOwnProperty("gadget_field_action_js_script"),
-            state_options = {
-              doc: {},
-              action_options: options,
-              child_gadget_url: child_gadget_url,
-              form_type: form_type,
-              form_definition: form_definition,
-              view: action_reference,
-              valid_action: valid_action
-            };
-          if (valid_action) {
-            action_gadget_url = form_definition.fields_raw_properties
-              .gadget_field_action_js_script.values.gadget_url;
-            // as custom gadget render is being done here
-            // avoid to child gadget to render it
-            delete form_definition.fields_raw_properties
-              .gadget_field_action_js_script;
-            gadget.element.appendChild(fragment);
-            return gadget.declareGadget(action_gadget_url, {
-              scope: "action_field",
-              element: fragment
-            })
-              .push(function (action_gadget) {
-                options.form_definition = form_definition;
-                return action_gadget.preRenderDocument(options);
-              })
-              .push(function (doc) {
-                state_options.doc = doc;
-                state_options.action_gadget_url = action_gadget_url;
-                return gadget.changeState(state_options);
-              }, function (error) {
-                if (error.status === 404) {
-                  return gadget.notifySubmitted({
-                    message: "Error in action",
-                    status: "error"
-                  });
-                }
-                throw error;
-              });
+              .hasOwnProperty("gadget_field_action_js_script");
+          if (!valid_action) {
+            return gadget.notifySubmitted({
+              message: 'Could not perform this action: configuration error',
+              status: 'fail'
+            });
+          }
+          state_options = {
+            doc: {},
+            action_options: options,
+            child_gadget_url: child_gadget_url,
+            form_type: form_type,
+            form_definition: form_definition,
+            view: action_reference,
+            valid_action: valid_action,
+            action_gadget_url: form_definition.fields_raw_properties
+              .gadget_field_action_js_script.values.gadget_url
+          };
+          delete form_definition.fields_raw_properties
+            .gadget_field_action_js_script;
+          return declareActionGadget(gadget, state_options);
+        })
+        .push(function (result) {
+          action_gadget = result;
+          options.form_definition = form_definition;
+          //preRenderDocument() may return a document dict with fields to be
+          //rendered in the action form, or configurations like skip_action_form
+          return action_gadget.preRenderDocument(options);
+        })
+        .push(function (doc) {
+          state_options.doc = doc;
+          if (doc.skip_action_form) {
+            delete state_options.doc.skip_action_form;
+            return submitAction(gadget, action_gadget, state_options, {});
           }
           return gadget.changeState(state_options);
         });
@@ -128,40 +163,15 @@
 
     .allowPublicAcquisition('submitContent', function (options) {
       var gadget = this,
-        //target_url = options[1],
-        content_dict = options[2],
-        fragment = document.createElement('div'),
-        submit_dict;
+        content_dict = options[2];
       if (gadget.state.valid_action) {
         return gadget.notifySubmitting()
           .push(function () {
-            gadget.element.appendChild(fragment);
-            return gadget.declareGadget(gadget.state.action_gadget_url, {
-              scope: "action_field",
-              element: fragment
-            });
+            return declareActionGadget(gadget, gadget.state);
           })
           .push(function (action_gadget) {
-            return action_gadget.handleSubmit(content_dict, gadget.state);
-          })
-          .push(function (submit_result) {
-            submit_dict = submit_result;
-            //submit_dict must contain:
-            //notify: options_dict for notifySubmitted
-            //redirect: options_dict for redirect
-            return gadget.notifySubmitted(submit_dict.notify);
-          })
-          .push(function () {
-            return gadget.redirect(submit_dict.redirect);
-          }, function (error) {
-            if (!(error instanceof RSVP.CancellationError)) {
-              console.log("Action error:", error);
-              return gadget.notifySubmitted({
-                message: "Action Failed",
-                status: "error"
-              });
-            }
-            throw error;
+            return submitAction(gadget, action_gadget,
+                                gadget.state, content_dict);
           });
       }
       return gadget.notifySubmitted(
@@ -169,4 +179,4 @@
          status: 'fail'});
     });
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS, RSVP, console));
