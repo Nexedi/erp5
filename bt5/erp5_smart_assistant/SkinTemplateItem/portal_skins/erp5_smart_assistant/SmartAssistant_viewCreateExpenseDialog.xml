@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SmartAssistant_createExpense</string> </value>
+            <value> <string>Query_createExpenseRecord</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
