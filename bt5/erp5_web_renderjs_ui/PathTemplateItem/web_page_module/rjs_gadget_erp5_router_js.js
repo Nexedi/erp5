@@ -394,6 +394,29 @@
     );
   }
 
+  function execPushHistoryCommand(gadget, previous_options, next_options, drop_options, use_stored_state) {
+    var jio_key = next_options.jio_key,
+      history_options;
+    if (previous_options.hasOwnProperty('cancel')) {
+      history_options = JSON.parse(previous_options.cancel);
+      history_options.selection = previous_options.selection;
+      history_options.history = previous_options.history;
+      history_options.selection_index = previous_options.selection_index;
+      copyStickyParameterDict(previous_options, history_options);
+    } else {
+      history_options = previous_options;
+    }
+    return addHistory(gadget, history_options)
+      .push(function (id) {
+        next_options.history = id;
+        if (use_stored_state === true) {
+          return execDisplayStoredStateCommand(gadget, next_options, drop_options);
+        }
+        delete next_options.jio_key;
+        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
+      });
+  }
+
   function execDisplayERP5ActionCommand(gadget, previous_options, next_options, keep_history) {
     return gadget.jio_getAttachment(next_options.jio_key, 'links')
       .push(function (document_view) {
@@ -488,31 +511,8 @@
       });
   }
 
-  function execPushHistoryCommand(gadget, previous_options, next_options, use_stored_state) {
-    var jio_key = next_options.jio_key,
-      history_options;
-    if (previous_options.hasOwnProperty('cancel')) {
-      history_options = JSON.parse(previous_options.cancel);
-      history_options.selection = previous_options.selection;
-      history_options.history = previous_options.history;
-      history_options.selection_index = previous_options.selection_index;
-      copyStickyParameterDict(previous_options, history_options);
-    } else {
-      history_options = previous_options;
-    }
-    return addHistory(gadget, history_options)
-      .push(function (id) {
-        next_options.history = id;
-        if (use_stored_state === true) {
-          return execDisplayStoredStateCommand(gadget, next_options, {});
-        }
-        delete next_options.jio_key;
-        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
-      });
-  }
-
-  function execPushHistoryStoredStateCommand(gadget, previous_options, next_options) {
-    return execPushHistoryCommand(gadget, previous_options, next_options, true);
+  function execPushHistoryStoredStateCommand(gadget, previous_options, next_options, drop_options) {
+    return execPushHistoryCommand(gadget, previous_options, next_options, drop_options, true);
   }
 
   function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options, create_cancel_url) {
@@ -936,7 +936,7 @@
       return execPushHistoryCommand(gadget, previous_options, next_options);
     }
     if (command_options.path === COMMAND_PUSH_HISTORY_STORED_STATE) {
-      return execPushHistoryStoredStateCommand(gadget, previous_options, next_options);
+      return execPushHistoryStoredStateCommand(gadget, previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_LOGIN) {
       return execLoginCommand(gadget, previous_options, next_options);
