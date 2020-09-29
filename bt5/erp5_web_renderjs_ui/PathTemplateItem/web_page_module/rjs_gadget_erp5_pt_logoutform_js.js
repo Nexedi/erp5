@@ -20,18 +20,15 @@
     .declareMethod("render", function () {
       var gadget = this;
 
-      return gadget.getUrlForList([
+      return gadget.getUrlFor([
         // Back url
-        {command: 'display'},
-        // Change language
-        {command: 'display', options: {page: 'language'}}
+        {command: 'display'}
       ])
-        .push(function (url_list) {
+        .push(function (url) {
           return gadget.updateHeader({
             page_title: 'Logout',
             page_icon: 'power-off',
-            front_url: url_list[0],
-            language_url: url_list[1]
+            front_url: url
           });
         })
         .push(function () {
