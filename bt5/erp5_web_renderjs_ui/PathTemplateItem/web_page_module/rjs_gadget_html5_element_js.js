@@ -98,12 +98,12 @@
     })
 
     .declareAcquiredMethod("notifyFocus", "notifyFocus")
-    .onEvent('focus', function focus(evt) {
+    .onEvent('focus', function focus() {
       return this.notifyFocus();
     }, true, false)
 
     .declareAcquiredMethod("notifyBlur", "notifyBlur")
-    .onEvent('blur', function blur(evt) {
+    .onEvent('blur', function blur() {
       return this.notifyBlur();
     }, true, false)
 

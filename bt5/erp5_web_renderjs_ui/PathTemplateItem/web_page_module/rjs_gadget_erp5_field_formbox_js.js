@@ -20,8 +20,7 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('render', function (options) {
-      var element = this.element,
-        gadget = this,
+      var gadget = this,
         field_json = options.field_json || {},
         new_state = {
           value: field_json.value || field_json['default'] || "",
@@ -44,7 +43,7 @@
       return gadget.changeState(new_state);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this,
         erp5_document_uri = new URI(gadget.state.erp5_embedded_document._view._links.traversed_document.href),
         form_options = {
