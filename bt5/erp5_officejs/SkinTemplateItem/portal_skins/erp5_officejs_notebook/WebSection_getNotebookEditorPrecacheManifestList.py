@@ -38,7 +38,10 @@ url_list = [
   "notebook_upload_action.html",
   "notebook_upload_action.js",
   "notebook_preview_view.html",
-  "notebook_preview_view.js"
+  "notebook_preview_view.js",
+  "notebook_export_action.html",
+  "notebook_export_action.js",
+  "html2pdf.bundle.min.js"
 ]
 
 return url_list
