@@ -17,6 +17,7 @@
     var submit_dict;
     //handleSubmit() may return dictionary entries with
     //notification messages or redirect options
+    state_options.gadget = gadget;
     return action_gadget.handleSubmit(content_dict, state_options)
       .push(function (result) {
         submit_dict = result;
