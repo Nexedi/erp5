@@ -1,6 +1,6 @@
 portal = context.getPortalObject()
 event_module = portal.getDefaultModule(event_type)
-event = event_module.newContent(
+event_module.newContent(
   start_date=start_date,
   text_content=text_content,
   title=title,
