@@ -12,6 +12,7 @@ portal_types/Notebook/notebook_download
 portal_types/Notebook/notebook_editor_clone
 portal_types/Notebook/notebook_editor_view
 portal_types/Notebook/notebook_preview
+portal_types/Notebook/notebook_export
 portal_types/PDF/pdf_viewer_clone
 portal_types/PDF/pdf_viewer_view
 portal_types/Test Page Module/slideshow_editor_view
