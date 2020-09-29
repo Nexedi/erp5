@@ -12,7 +12,7 @@ if not organisations:
 else:
   organisation = organisations.getObject()
 
-person = person_module.newContent(
+person_module.newContent(
   first_name=first_name, last_name=last_name,
   default_telephone_text=telephone,
   default_email_text=email,
