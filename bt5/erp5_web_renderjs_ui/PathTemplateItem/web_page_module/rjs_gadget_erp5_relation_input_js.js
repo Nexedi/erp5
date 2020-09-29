@@ -425,8 +425,6 @@
                   error.hash.expected &&
                   error.hash.expected.length === 1 &&
                   error.hash.expected[0] === "'QUOTE'") {
-                gadget.element.querySelector("a").className =
-                  JUMP_UNKNOWN_CLASS_STR;
                 return gadget.getTranslationList([
                   "Invalid Search Criteria"
                 ])
