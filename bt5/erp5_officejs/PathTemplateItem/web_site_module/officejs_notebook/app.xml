@@ -377,6 +377,7 @@
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
             <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
+WebSection_getCodeMirrorPrecacheManifestList\n
 WebSection_getNotebookEditorPrecacheManifestList</string> </value>
         </item>
         <item>
@@ -674,7 +675,7 @@ WebSection_getNotebookEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.55683.65285.59511</string> </value>
+                      <value> <string>987.46563.1005.57053</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -692,7 +693,7 @@ WebSection_getNotebookEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1601046027.86</float>
+                              <float>1604344587.21</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
