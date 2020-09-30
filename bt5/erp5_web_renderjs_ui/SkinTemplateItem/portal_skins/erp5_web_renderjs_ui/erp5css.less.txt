@@ -412,7 +412,7 @@ label {
 }
 
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]), textarea, select {
-  width: 99%;
+  width: 100%;
 
   padding: @half-margin-size;
 
