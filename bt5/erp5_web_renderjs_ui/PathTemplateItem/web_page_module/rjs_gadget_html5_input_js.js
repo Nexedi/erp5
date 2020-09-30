@@ -119,10 +119,10 @@
         tmp = undefined;
       }
 
-      if (modification_dict.error_text &&
+      if (this.state.error_text &&
           !textarea.classList.contains("is-invalid")) {
         textarea.classList.add("is-invalid");
-      } else if (!modification_dict.error_text &&
+      } else if (!this.state.error_text &&
                  textarea.classList.contains("is-invalid")) {
         textarea.classList.remove("is-invalid");
       }
@@ -236,6 +236,7 @@
         this.notifyChange("change")
       ]);
     }, false, false)
+
     .onEvent('input', function input() {
       return RSVP.all([
         this.checkValidity(),
@@ -256,7 +257,10 @@
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false);
 
 }(window, document, rJS, RSVP, jIO, getFirstNonEmpty));
