@@ -27,17 +27,6 @@
   <td>${base_url}/web_site_module/officejs_text_editor/</td>
   <td></td>
 </tr>
-<!-- HACK to speed up test writting
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Skip</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Skip</td>
-  <td></td>
-</tr> -->
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Storages</td>
@@ -48,17 +37,6 @@
   <td>link=Storages</td>
   <td></td>
 </tr>
-<!-- HACK TO SPEED UP TEST WRITING
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Local is Enough</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Local is Enough</td>
-  <td></td>
-</tr> -->
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Erp5</td>
@@ -221,10 +199,6 @@
   <td>identifier=title</td>
   <td></td>
 </tr>
-  
-  
-  
-  
 <!-- Clone document -->
 <tr>
   <td>click</td>
@@ -399,7 +373,6 @@
   <td>name=search</td>
   <td></td>
 </tr>
-  
 <tr>
   <td>type</td>
   <td>name=search</td>
