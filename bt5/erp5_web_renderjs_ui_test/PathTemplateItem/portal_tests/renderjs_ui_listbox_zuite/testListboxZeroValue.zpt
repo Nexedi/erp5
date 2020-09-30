@@ -1,0 +1,50 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ListBox propetry resolution before getter</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Zero value should be rendered in Listbox cell</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=10&amp;create_line:int=0</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_method=FooModule_listAsContext&amp;field_columns=id%7CID%0Aquantity%7CQuantity&amp;field_lines=10</td>
+    <td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<!-- Check that for the 10th created object, for which the quantity is zero,
+    we have '0' displayed
+-->
+<tr><td>assertElementPresent</td>
+    <td>//a[contains(@href, "jio_key=foo_module%2F10") and text()="0"]</td>
+    <td></td></tr>
+
+</tbody></table>
+</body>
+</html>
