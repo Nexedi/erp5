@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/
+* http://meyerweb.com/eric/tools/css/reset/ 
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -302,21 +302,15 @@ hr {
 label {
   display: block;
 }
-
-input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):not([class="is-invalid"]),
-textarea:not([class="is-invalid"]),
-select:not([class="is-invalid"]) {
-  border: 1px solid rgba(0, 0, 0, 0.3);
-}
-
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]),
 textarea,
 select {
   width: 100%;
   padding: 3pt;
-  border-radius: 0.325em;
-  color: #1F1F1F;
   background-color: #FFFFFF;
+  color: #1F1F1F;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.325em;
   transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):active,
@@ -336,12 +330,17 @@ select:focus {
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid,
 textarea:invalid,
 select:invalid,
-.is-invalid {
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid,
+textarea.is-invalid,
+select.is-invalid {
   border: 1px solid #FF6600;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid:focus,
 textarea:invalid:focus,
-select:invalid:focus {
+select:invalid:focus,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid:focus,
+textarea.is-invalid:focus,
+select.is-invalid:focus {
   box-shadow: 0 0 12pt #FF6600;
 }
 input[type="search"] {
