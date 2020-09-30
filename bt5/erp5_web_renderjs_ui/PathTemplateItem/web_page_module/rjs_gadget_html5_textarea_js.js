@@ -24,10 +24,11 @@
     .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('textarea');
 
-      if (modification_dict.error_text &&
+      if (this.state.error_text &&
           !textarea.classList.contains("is-invalid")) {
         textarea.classList.add("is-invalid");
-      } else if (textarea.classList.contains("is-invalid")) {
+      } else if (!this.state.error_text &&
+                 textarea.classList.contains("is-invalid")) {
         textarea.classList.remove("is-invalid");
       }
 
@@ -82,7 +83,7 @@
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
       var textarea = this.element.querySelector('textarea'),
-        result = textarea.checkValidity() || this.state.error_text === "";
+        result = textarea.checkValidity();
       if (result) {
         return this.notifyValid()
           .push(function () {
