@@ -121,6 +121,10 @@ configuration_dict = {
   'nostyle': {
     'title': 'No Style'
   },
+  'nostyleform': {
+    'title': "No Style Form",
+    'custom_render_method_id': 'WebSite_viewJSStyleTestForm'
+  },
   'section': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Style",
