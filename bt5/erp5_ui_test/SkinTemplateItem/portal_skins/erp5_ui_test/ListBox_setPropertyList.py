@@ -10,7 +10,7 @@ d = dict(
   field_css_class = '',
   field_alternate_name = '',
   field_hidden = '',
-  field_lines = '3',
+  field_lines = kw.get('field_lines', '3'),
   field_columns = '\n'.join((
     'id | ID',
     'title | Title',
