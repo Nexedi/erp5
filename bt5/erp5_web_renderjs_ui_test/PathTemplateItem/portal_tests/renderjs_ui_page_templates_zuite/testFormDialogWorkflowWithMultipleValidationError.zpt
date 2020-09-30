@@ -369,6 +369,11 @@
   <td>//select[@name="field_your_second_failure" and @class="is-invalid"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//textarea[@name="field_your_fifth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
 </tbody>
 </table>
 </body>
