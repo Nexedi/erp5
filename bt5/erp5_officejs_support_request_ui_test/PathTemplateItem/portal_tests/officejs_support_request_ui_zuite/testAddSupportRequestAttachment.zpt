@@ -127,7 +127,8 @@
         <tal:block tal:repeat="filename python: ['test_support_request_presentation.pptx',
                                                  'test_support_request_spreadsheet.xlsx',
                                                  'test_support_request_docx.docx',
-                                                 'test_support_request_txt.txt']">
+                                                 'test_support_request_txt.txt',
+                                                 'test_support_request_png.png']">
           <tr>
             <td>setFile</td>
             <td>attachment</td>
@@ -196,7 +197,8 @@
                                                  'test_support_request_presentation.pptx',
                                                  'test_support_request_spreadsheet.xlsx',
                                                  'test_support_request_docx.docx',
-                                                 'test_support_request_txt.txt']">
+                                                 'test_support_request_txt.txt',
+                                                 'test_support_request_png.png']">
           <tr>
             <td>waitForElementPresent</td>
             <td tal:content="string: //a[contains(text(), '${filename}')]"></td>
@@ -207,9 +209,15 @@
             <td tal:content="string: //a[contains(text(), '${filename}')]"></td>
             <td></td>
           </tr>
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
           <tr tal:define="title python: filename.split('.')[0]">
             <td>waitForElementPresent</td>
             <td tal:content="python: '//div[@class=\'ui-header\']/h1/a[contains(text(), \'{}\')]'.format(title)"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertTextNotPresent</td>
+            <td>undefined</td>
             <td></td>
           </tr>
           <tr tal:define="title python: filename.split('.')[0]">
