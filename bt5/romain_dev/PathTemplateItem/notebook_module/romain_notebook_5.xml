@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_5</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% md\n
+# Pyodide 🐍\n
+\n
+Pyodide brings the Python runtime to the browser via WebAssembly, along with NumPy, Pandas, Matplotlib, parts of SciPy, and NetworkX.\n
+\n
+press `shift+enter` to step through this notebook.\n
+\n
+%% raw\n
+\n
+As you can see, some basic parts of Python work as you might expect. To use Python, just use the `%% py` delimiter in your editor, and hit `shift+enter` to evaluate. Your browser will then go off to grab Python & initialize it.\n
+\n
+%% py\n
+# python\n
+import sys\n
+sys.version\n
+\n
+%% raw\n
+\n
+It also does the parts you might be surprised by! Try evaluating the chunk below (`shift+enter`).\n
+\n
+%% py\n
+import antigravity\n
+\n
+%% raw\n
+\n
+Pyodide performs quick translation of data types into javascript, so there is one clear interface for accessing data and representing it.\n
+\n
+%% py\n
+[0, 1, 32.0, \'foo\', {\'a\': 10, \'b\': \'20\'}]\n
+\n
+%% raw\n
+## Using Javascript from Python\n
+\n
+We\'ve built ways of importing anything from javascript land into python. Here, we\'ll import `document`, which should be familiar to javascript web developers everywhere, and use its APIs to manipulate a DOM element.\n
+\n
+Note that Markdown allows embedding of inline HTML, so we\'ll add target element in a Markdown block.\n
+\n
+%% md\n
+#### Here\'s a DOM element to manipulate:\n
+<div id="targetElement">Change me!</div>\n
+\n
+%% py\n
+from js import document\n
+elt = document.getElementById("targetElement")\n
+elt.innerText = "I am changed!"\n
+elt.style.backgroundColor = \'#ffcccc\'\n
+\n
+%% py\n
+# let\'s switch it back\n
+elt.style.backgroundColor = \'#ffffff\'\n
+\n
+%% raw\n
+\n
+Because we _have_ direct access to the DOM, we can do fun things like make UI widgets.\n
+\n
+Run the code chunk below (`shift+enter`) and then click on the "Report Preview" tab on the top right. This report preview should render everything you see in these `%% md` chunks, as well as a button. The code you just ran below generated that button. Take a look at what the code does, and then click the button.\n
+\n
+Don\'t forget to switch back to the "Console" view when you\'re finished here - we have more to show you.\n
+\n
+%% py\n
+from js import iodide\n
+button = iodide.output.element(\'button\')\n
+button.textContent = "Click me!"\n
+count = 0\n
+def onclick(evt):\n
+    global count\n
+    if elt.style.backgroundColor == \'rgb(255, 255, 255)\':\n
+        elt.style.backgroundColor = \'#ffcccc\'\n
+        elt.innerText = "I\'ve been changed " + str(count) + " times!"\n
+    else:\n
+        elt.style.backgroundColor = \'#ffffff\'\n
+        elt.innerText = "I\'ve been changed " + str(count) + " times!"\n
+    count += 1\n
+button.addEventListener(\'click\', onclick)\n
+\n
+%% raw\n
+Or really make use of event callbacks to build a simple painting canvas...\n
+\n
+%% css\n
+canvas {\n
+  border: 2px solid #ddd;\n
+}\n
+\n
+%% py\n
+from js import document, iodide\n
+\n
+canvas = iodide.output.element(\'canvas\')\n
+canvas.setAttribute(\'width\', 450)\n
+canvas.setAttribute(\'height\', 300)\n
+context = canvas.getContext("2d")\n
+context.strokeStyle = "#df4b26"\n
+context.lineJoin = "round"\n
+context.lineWidth = 8\n
+pen = False\n
+lastPoint = (0, 0)\n
+\n
+def onmousemove(e):\n
+  global lastPoint\n
+  if pen:\n
+    newPoint = (e.offsetX, e.offsetY)\n
+    context.beginPath()\n
+    context.moveTo(lastPoint[0], lastPoint[1])\n
+    context.lineTo(newPoint[0], newPoint[1])\n
+    context.closePath()\n
+    context.stroke()\n
+    lastPoint = newPoint\n
+    \n
+def onmousedown(e):\n
+  global pen, lastPoint\n
+  pen = True\n
+  lastPoint = (e.offsetX, e.offsetY)\n
+  \n
+def onmouseup(e):\n
+  global pen\n
+  pen = False\n
+\n
+canvas.addEventListener(\'mousemove\', onmousemove)\n
+canvas.addEventListener(\'mousedown\', onmousedown)\n
+canvas.addEventListener(\'mouseup\', onmouseup)\n
+\n
+%% raw\n
+Using Python from Javascript\n
+\n
+So far so good, but wouldn\'t it be great to use Python from within Javascript as well? When you load Pyodide, you\'ll get `pyodide` in the JS namespace, which lets you import anything on the Py side.\n
+\n
+%% py\n
+# python\n
+class Foo:\n
+\tdef __init__(self, val):\n
+\t\tself.val = val\n
+foo = Foo(42)\n
+foo\n
+%% js\n
+// javascript\n
+var foo = pyodide.pyimport("foo")\n
+foo.val\n
+\n
+%% raw\n
+## The Scientific libraries\n
+\n
+The real power of Pyodide comes from its scientific computing libraries. So far we\'ve compiled numpy, pandas, matplotlib, parts of scipy, and networkx. At the top of any py chunk, simply write something like `import numpy as np` and run the chunk, and it\'ll begin the process of grabbing numpy.\n
+\n
+\n
+%% py\n
+import numpy as np\n
+x = np.linspace(0, 2.0 * np.pi, 100)\n
+y = np.sin(x)\n
+y\n
+\n
+%% raw\n
+\n
+Matplotlib defaults to printing into the report preview, so you can run the code chunk below and see the plot. It\'s easy to drag around the plot, zoom in, and zoom out, all pretty effortlessly.\n
+\n
+%% py\n
+from matplotlib import pyplot as plt\n
+plt.figure()\n
+plt.plot(x, y)\n
+plt.show()\n
+\n
+%% raw\n
+\n
+It should be clear by now that Pyodide makes it so you don\'t have to choose only one library, nor do you have to choose one language to do your data science. Let\'s download Plotly and create the same graph, but send Plotly over to Python and plot it from within python itself.\n
+\n
+Switch back to the console, and run the `%% fetch` chunk below (which fetches Plotly from a cdn), then run the `%% py` chunk below that, and switch back to the report view.\n
+\n
+%% fetch\n
+js: https://cdn.plot.ly/plotly-latest.min.js\n
+\n
+\n
+%% py\n
+from js import Plotly\n
+from js import iodide\n
+Plotly.plot(\n
+    iodide.output.element(\'div\'),\n
+    [{ \'y\': y, \'x\': x }],\n
+)
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>A Brief Tour through Pyodide</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
