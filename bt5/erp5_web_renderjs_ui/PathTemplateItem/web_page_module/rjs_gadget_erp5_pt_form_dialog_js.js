@@ -191,7 +191,7 @@
             update_action_title: options.form_definition.update_action_title,
             // pass extended_search from previous view in case any gadget is curious
             extended_search: extended_search,
-            redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
+            redirect_to_parent: options.erp5_document._embedded._view.your_redirect_to_parent !== undefined
           });
         });
     })
