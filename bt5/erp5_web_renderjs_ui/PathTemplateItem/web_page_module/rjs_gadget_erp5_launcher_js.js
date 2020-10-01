@@ -249,24 +249,22 @@
     }
     hideDesktopPanel(gadget, maximize);
     if (maximize) {
-      return route(gadget, 'header', 'setButtonTitle', [{
+      gadget.deferSetButtonTitle({
         icon: "compress",
         action: "maximize"
-      }])
-        .push(function () {
-          gadget.props.deferred_minimize = new RSVP.Promise(
-            function () {return; },
-            function () {
-              // Wait for cancellation
-              // return triggerMaximize(gadget, false);
-              hideDesktopPanel(gadget, false);
-              return route(gadget, 'header', 'setButtonTitle', [{}]);
-            }
-          );
-          return gadget.props.deferred_minimize;
-        });
+      });
+      gadget.props.deferred_minimize = new RSVP.Promise(
+        function () {return; },
+        function () {
+          // Wait for cancellation
+          // return triggerMaximize(gadget, false);
+          hideDesktopPanel(gadget, false);
+          gadget.deferSetButtonTitle({});
+        }
+      );
+      return gadget.props.deferred_minimize;
     }
-    return route(gadget, 'header', 'setButtonTitle', [{}]);
+    gadget.deferSetButtonTitle({});
   }
 
   //////////////////////////////////////////
@@ -338,6 +336,9 @@
   }
 
   rJS(window)
+    .declareJob('deferSetButtonTitle', function (options) {
+      return route(this, 'header', 'setButtonTitle', [options]);
+    })
 
     // Add mutex protected defered gadget loader.
     // Multiple mutex are needed, to not prevent concurrent loading on
