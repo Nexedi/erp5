@@ -155,6 +155,7 @@
             return gadget.redirect(submit_dict.redirect);
           }, function (error) {
             if (!(error instanceof RSVP.CancellationError)) {
+              console.log("Action error:", error);
               return gadget.notifySubmitted({
                 message: "Action Failed",
                 status: "error"
