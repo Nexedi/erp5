@@ -158,7 +158,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Type</string>
+                          <string>Support Request Type</string>
                         </tuple>
                         <tuple>
                           <string>source_trade_title</string>
@@ -233,7 +233,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Type</string>
+                          <string>Support Request Type</string>
                         </tuple>
                         <tuple>
                           <string>destination_decision_title</string>
