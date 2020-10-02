@@ -1,2 +1,3 @@
+web_page_module/oauth_test_client_*
 web_site_module/oauth_test_client
 web_site_module/oauth_test_client/**
