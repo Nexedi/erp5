@@ -49,6 +49,7 @@
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -99,13 +100,17 @@
           var form_type = form_definition.form_type,
             child_gadget_url = form_definition.child_gadget_url,
             //action validity determined by gadget_field_action_js_script field
-            valid_action = form_definition.action_type ===
-              "object_jio_js_script" && form_definition.fields_raw_properties
+            valid_action = form_definition.fields_raw_properties
               .hasOwnProperty("gadget_field_action_js_script");
           if (!valid_action) {
             return gadget.notifySubmitted({
               message: 'Could not perform this action: configuration error',
               status: 'fail'
+            })
+            .push(function (result) {
+              return gadget.redirect({
+                'command': 'display'
+              });
             });
           }
           state_options = {
@@ -131,6 +136,10 @@
           return action_gadget.preRenderDocument(options);
         })
         .push(function (doc) {
+          if (doc.header_dict) {
+            state_options.header_dict = doc.header_dict;
+            delete doc.header_dict;
+          }
           state_options.doc = doc;
           if (doc.skip_action_form) {
             delete state_options.doc.skip_action_form;
@@ -151,6 +160,11 @@
                                   {element: fragment, scope: 'fg'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
+        })
+        .push(function () {
+          if (gadget.state.header_dict) {
+            return gadget.updateHeader(gadget.state.header_dict);
+          }
         });
     })
 
