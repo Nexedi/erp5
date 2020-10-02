@@ -120,7 +120,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Support Type</string> </value>
+                    <value> <string>Support Request Type</string> </value>
                 </item>
               </dictionary>
             </value>
