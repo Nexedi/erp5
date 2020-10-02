@@ -3,7 +3,7 @@ getResultValue = context.portal_catalog.getResultValue
 from Products.ERP5Type.Utils import Email_parseAddressHeader
 
 result = []
-for name, recipient in Email_parseAddressHeader(text):
+for _, recipient in Email_parseAddressHeader(text):
   if recipient:
     email = getResultValue(url_string={'query':recipient, 'key':'ExactMatch'}, portal_type='Email', parent_portal_type='Person')
     if email is None:

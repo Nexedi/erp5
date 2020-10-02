@@ -56,7 +56,7 @@ class TestCRMNotificationTool(TestNotificationTool):
                                   message='Message')
     self.tic()
     last_message, = self.portal.MailHost._message_list
-    mfrom, mto, messageText = last_message
+    mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
 

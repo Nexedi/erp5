@@ -1,8 +1,5 @@
 from Products.ERP5Form.Report import ReportSection
-result=[]
-request = context.REQUEST
-params = {}
-
+result = []
 selection_columns = [('simulation_state', 'State')]
 #Add dynamicaly ticket type columns to the form
 #The name of column must be without spaces
