@@ -679,6 +679,9 @@ msgstr "l'état d'une affectation toujours valide."
 msgid "Action that will trigger the confirmed state of a workflow, for example for an accounting transaction or a sale packing list."
 msgstr "Action qui permet de confirmer un document dans ERP5"
 
+msgid "Action to be triggered on the Response Event"
+msgstr "Action à effectuer sur l'événement de réponse"
+
 msgid "Action which will disable the preference"
 msgstr "Cette action permet de désactiver une préférence."
 
@@ -3394,6 +3397,9 @@ msgstr "Créer l'écriture de trésorerie correspondante"
 msgid "Create Related Payments"
 msgstr "Créer les écritures de trésorerie correspondantes"
 
+msgid "Create Response and Close Ticket"
+msgstr "Répondre et Clôturer le Ticket"
+
 msgid "Create Reversal Transaction"
 msgstr "Contrepasser l'écriture"
 
@@ -3835,11 +3841,20 @@ msgstr "Débiteurs"
 msgid "December"
 msgstr "Décembre"
 
+msgid "Decision"
+msgstr "Décision"
+
+msgid "Decisions"
+msgstr "Décisions"
+
 msgid "Declare Reachable"
 msgstr "Déclarer joignable"
 
 msgid "Declare Unreachable"
 msgstr "Déclarer injoignable"
+
+msgid "Declare as Delivered"
+msgstr "Déclarer livré"
 
 msgid "Declare as Received"
 msgstr "Déclarer reçu"
@@ -4989,6 +5004,9 @@ msgstr "Éditer"
 
 msgid "Edit [transition in processing_status_workflow]"
 msgstr "Éditer"
+
+msgid "Edit it as a draft"
+msgstr "Éditer comme un brouillon"
 
 msgid "Editable"
 msgstr "Éditable"
@@ -9151,6 +9169,9 @@ msgstr "Planifier l'écriture"
 msgid "Plan [transition in bug_event_workflow]"
 msgstr "Planifier"
 
+msgid "Plan it at the given date"
+msgstr "Planifier à la date donnée"
+
 msgid "Plan will set the document State as planned in ERP5"
 msgstr "Cette action permet de planifier une action. Cette dernière sera exécutée par la suite."
 
@@ -11494,6 +11515,9 @@ msgstr "Envoyer Requête Aux Experts"
 msgid "Send by Email"
 msgstr "Envoyer par email"
 
+msgid "Send it immediately"
+msgstr "Envoyer immédiatement"
+
 msgid "Sender"
 msgstr "Expéditeur"
 
@@ -12549,6 +12573,9 @@ msgstr "État"
 
 msgid "Support Request Type"
 msgstr "Type de la demande d'assistance"
+
+msgid "Support Request Type Reference"
+msgstr "Reference du type de la demande d'assistance"
 
 msgid "Support Request Types"
 msgstr "Types des demandes d'assistance"
