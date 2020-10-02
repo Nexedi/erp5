@@ -105,7 +105,7 @@
                           <string>Location</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource__translated__title</string>
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
@@ -180,7 +180,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource__translated__title</string>
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
