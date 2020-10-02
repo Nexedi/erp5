@@ -36,7 +36,9 @@ url_list = [
   "notebook_download_action.html",
   "notebook_download_action.js",
   "notebook_upload_action.html",
-  "notebook_upload_action.js"
+  "notebook_upload_action.js",
+  "notebook_preview_view.html",
+  "notebook_preview_view.js"
 ]
 
 return url_list
