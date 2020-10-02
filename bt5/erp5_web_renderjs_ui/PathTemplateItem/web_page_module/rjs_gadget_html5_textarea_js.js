@@ -101,7 +101,7 @@
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
-    }, true, true)
+    }, true, false)
 
     .declareAcquiredMethod("notifyFocus", "notifyFocus")
     .onEvent('focus', function focus() {
