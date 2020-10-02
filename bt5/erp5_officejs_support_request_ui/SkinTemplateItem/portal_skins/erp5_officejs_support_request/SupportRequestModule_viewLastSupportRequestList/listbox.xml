@@ -157,7 +157,7 @@
                           <string>Location</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
@@ -232,7 +232,7 @@
                           <string>Visa File Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
