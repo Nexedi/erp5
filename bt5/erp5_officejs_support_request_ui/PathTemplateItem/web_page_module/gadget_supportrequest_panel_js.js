@@ -191,10 +191,14 @@
                   href: result_list[i + workflow_list.length]
                 });
               }
-              gadget.element.querySelector("dl").innerHTML = panel_template_body_desktop({
-                workflow_list: result_workflow_list,
-                view_list: result_view_list
-              });
+              return gadget.translateHtml(
+                panel_template_body_desktop({
+                  workflow_list: result_workflow_list,
+                  view_list: result_view_list
+                })
+              ).push(function (my_translated_or_plain_html) {
+                gadget.element.querySelector("dl").innerHTML = my_translated_or_plain_html;
+              })
             });
         }
       }
