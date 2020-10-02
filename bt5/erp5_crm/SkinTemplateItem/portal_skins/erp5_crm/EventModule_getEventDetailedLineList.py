@@ -31,14 +31,14 @@ unassigned_dic['ticket_type']=portal.Base_translateString("Unassigned")
 #column_list.append(new_dic)
 
 #Return index of uid into the list and append if not exists
-def createReturnLine(uid,list):
-  for i in xrange(len(list)):
+def createReturnLine(uid, list_):
+  for i in xrange(len(list_)):
     if list[i]['uid']==uid:
       return i
   new_dic=default_dic.copy()
   new_dic['uid']=uid
-  list.append(new_dic)
-  return len(list)-1
+  list_.append(new_dic)
+  return len(list_)-1
   
 # Prepare the parameters to filter
 query_dict = {}

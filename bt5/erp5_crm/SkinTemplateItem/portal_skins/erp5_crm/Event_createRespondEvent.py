@@ -4,7 +4,6 @@
 """
 
 # this script allows to create a new follow up ticket for a given event
-event_object = context
 event_module = context.getPortalObject().getDefaultModule(respond_event_portal_type)
 # Create the outgoing
 respond_event = event_module.newContent(
