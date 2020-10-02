@@ -6,6 +6,7 @@ included in business template.
 display statistics about recent support requests (like "less than 2 days from now"),
 we need to generate support requests at a date relative from now.
 """
+import time
 from DateTime import DateTime
 from datetime import timedelta
 
@@ -25,30 +26,38 @@ portal.support_request_module.newContent(
   portal_type='Support Request',
   title="Two Weeks ago - PlaneMaking - Submitted",
   start_date=DateTime(now - timedelta(days=15)),
+  resource_value=portal.service_module.erp5_officejs_support_request_ui_test_service_001,
   source_project_value=portal.project_module.erp5_officejs_support_request_ui_test_project_001,
 ).submit()
 portal.support_request_module.newContent(
   portal_type='Support Request',
   title="Last Week 2 - RobotMaking - Open",
   start_date=DateTime(now - timedelta(days=5)),
+  resource_value=portal.service_module.erp5_officejs_support_request_ui_test_service_001,
   source_project_value=portal.project_module.erp5_officejs_support_request_ui_test_project_001,
 ).validate()
 portal.support_request_module.newContent(
   portal_type='Support Request',
   title="Last Week - RobotMaking - Open",
   start_date=DateTime(now - timedelta(days=4)),
+  resource_value=portal.service_module.erp5_officejs_support_request_ui_test_service_001,
   source_project_value=portal.project_module.erp5_officejs_support_request_ui_test_project_001,
 ).validate()
 portal.support_request_module.newContent(
   portal_type='Support Request',
   title="Yesterday - RobotMaking - Submitted",
   start_date=DateTime(now - timedelta(days=1)),
+  resource_value=portal.service_module.erp5_officejs_support_request_ui_test_service_001,
   source_project_value=portal.project_module.erp5_officejs_support_request_ui_test_project_001,
 ).submit()
+# sleep a bit to make sure "Yesterday - PlaneMaking - Open" is the most recent, some tests asserts
+# the listbox sorted by modification date
+time.sleep(1)
 portal.support_request_module.newContent(
   portal_type='Support Request',
   title="Yesterday - PlaneMaking - Open",
   start_date=DateTime(now - timedelta(days=1)),
+  resource_value=portal.service_module.erp5_officejs_support_request_ui_test_service_001,
   source_project_value=portal.project_module.erp5_officejs_support_request_ui_test_project_001,
 ).validate()
 
