@@ -109,6 +109,10 @@
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
+                          <string>resource_reference</string>
+                          <string>Support Request Type Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>source_trade_title</string>
                           <string>Operator</string>
                         </tuple>

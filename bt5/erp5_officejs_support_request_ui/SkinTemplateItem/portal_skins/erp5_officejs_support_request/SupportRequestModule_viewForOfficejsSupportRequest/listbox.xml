@@ -133,6 +133,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>resource_reference</string>
+                          <string>Support Request Type Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
                           <string>End Date</string>
                         </tuple>
