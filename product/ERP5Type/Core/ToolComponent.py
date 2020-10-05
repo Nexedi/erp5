@@ -56,7 +56,7 @@ class ToolComponent(DocumentComponent):
     For FS Tools, this is done during Product initialize() by
     Products.CMFCore.utils.ToolInit.
     """
-    tool_class = getattr(module_obj, self.getReference())
+    tool_class = getattr(module_obj, self.getReference(validated_only=True))
 
     # Should we really use ERP5 Product and not ERP5Type considering that ERP5
     # may be gone at some point? Or the other way around? For now, all tools
