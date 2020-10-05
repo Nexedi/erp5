@@ -24,7 +24,7 @@
           return gadget.getUrlFor({command: 'history_previous'})
         })
         .push(function (url) {
-          document.header_dict = { "page_title": "super preview VIEW header",
+          document.header_dict = { "page_title": document.title,
                                    "selection_url": url
                                  };
           return document;
