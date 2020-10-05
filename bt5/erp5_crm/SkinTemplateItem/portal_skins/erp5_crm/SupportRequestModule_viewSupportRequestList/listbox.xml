@@ -257,8 +257,8 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
+                          <string>causality_reference</string>
+                          <string>Visa File Reference</string>
                         </tuple>
                         <tuple>
                           <string>causality_translated_portal_type</string>
@@ -360,8 +360,8 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
+                          <string>causality_reference</string>
+                          <string>Visa File Reference</string>
                         </tuple>
                         <tuple>
                           <string>causality_translated_portal_type</string>
