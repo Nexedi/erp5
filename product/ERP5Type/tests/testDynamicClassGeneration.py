@@ -1429,18 +1429,18 @@ def assertResetCalled(*args, **kwargs):
 
   return reset_performed
 
-import abc
-
 from Products.ERP5Type.mixin.component import ComponentMixin
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from App.config import getConfiguration
+from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
 
-class _TestZodbComponent(SecurityTestCase):
+class TestZodbModuleComponent(SecurityTestCase):
   """
-  Abstract class which defined convenient methods used by any Component Test
-  and tests ran for all Component Test classes
+  Tests for ZODB Module Component (base class of all other Component
+  classes)
   """
-  __metaclass__ = abc.ABCMeta
+  _portal_type = 'Module Component'
+  _document_class = ModuleComponent
 
   def getBusinessTemplateList(self):
     return ('erp5_base',)
@@ -1455,8 +1455,10 @@ class _TestZodbComponent(SecurityTestCase):
   def _generateReference(self, base_name):
     return base_name
 
-  def _getValidSourceCode(self, class_name):
-    raise NotImplementedError
+  def _getValidSourceCode(self, *_):
+    return '''def foobar(*args, **kwargs):
+  return 'Anything'
+'''
 
   def _newComponent(self, reference, text_content=None, version='erp5', id_=None):
     """
@@ -2553,18 +2555,13 @@ return 'OK'
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
-class TestZodbExtensionComponent(_TestZodbComponent):
+class TestZodbExtensionComponent(TestZodbModuleComponent):
   """
   Tests specific to ZODB Extension Component (previously defined in bt5 and
   installed on the filesystem in $INSTANCE_HOME/Extensions)
   """
   _portal_type = 'Extension Component'
   _document_class = ExtensionComponent
-
-  def _getValidSourceCode(self, *_):
-    return '''def foobar(*args, **kwargs):
-  return 'Anything'
-'''
 
   def testExternalMethod(self):
     """
@@ -2655,7 +2652,7 @@ def foobar(self, a, b="portal_type"):
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
-class _TestZodbDocumentComponentMixin(_TestZodbComponent):
+class _TestZodbDocumentComponentMixin(TestZodbModuleComponent):
   """
   Common to all Component class inheriting from Document Component (so
   Interface, Tool and Mixin)
@@ -3070,7 +3067,7 @@ InitializeClass(%(class_name)s)
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
-class TestZodbTestComponent(_TestZodbComponent):
+class TestZodbTestComponent(TestZodbModuleComponent):
   """
   Tests specific to ZODB Test Component (known as Live Tests, and previously
   defined in bt5 and installed in $INSTANCE_HOME/test)
@@ -3473,6 +3470,7 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
+  suite.addTest(unittest.makeSuite(TestZodbModuleComponent))
   suite.addTest(unittest.makeSuite(TestZodbExtensionComponent))
   suite.addTest(unittest.makeSuite(TestZodbDocumentComponent))
   suite.addTest(unittest.makeSuite(TestZodbToolComponent))
