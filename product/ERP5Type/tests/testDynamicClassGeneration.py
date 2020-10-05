@@ -2681,109 +2681,6 @@ class DifferentFromReference(Person):
     self.assertEqual(component.getTextContentErrorMessageList(), [])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
 
-  def testAssignToPortalTypeClass(self):
-    """
-    Create a new Document Component inheriting from Person Document and try to
-    assign it to Person Portal Type, then create a new Person and check
-    whether it has been successfully added to its Portal Type class bases and
-    that the newly-defined function on ZODB Component can be called as well as
-    methods from Person Document
-    """
-    ## Create an Interface assigned to the test ZODB Component to check that
-    ## only resetting Portal Type classes do not have any side-effect on
-    ## Interfaces defined on ZODB Components
-    from zope.interface import Interface
-    class ITestPortalType(Interface):
-      """Anything"""
-      def foo():
-        """Anything"""
-    from types import ModuleType
-    interface_module = ModuleType('ITestPortalType')
-    interface_module.ITestPortalType = ITestPortalType
-    sys.modules['ITestPortalType'] = interface_module
-
-    self.failIfModuleImportable('TestPortalType')
-
-    # Create a new Document Component inheriting from Person Document which
-    # defines only one additional method (meaningful to make sure that the
-    # class (and not the module) has been added to the class when the
-    # TypeClass is changed)
-    test_component = self._newComponent(
-      'TestPortalType',
-      """
-from erp5.component.document.Person import Person
-
-from ITestPortalType import ITestPortalType
-import zope.interface
-
-class TestPortalType(Person):
-  def test42(self):
-    return 42
-
-  zope.interface.implements(ITestPortalType)
-  def foo(self):
-    pass
-""")
-    test_component.validate()
-    self.tic()
-
-    # As TestPortalType Document Component has been validated, it should now
-    # be available
-    self.assertModuleImportable('TestPortalType', reset=False)
-    self.assertTrue(ITestPortalType.implementedBy(self._module.TestPortalType.TestPortalType))
-
-    self._component_tool.reset(force=True,
-                               reset_portal_type_at_transaction_boundary=True)
-
-    person_type = self.portal.portal_types.Person
-    person_type_class = person_type.getTypeClass()
-    self.assertEqual(person_type_class, 'Person')
-
-    # Create a new Person
-    person_module = self.portal.person_module
-    person = person_module.newContent(id='Foo Bar', portal_type='Person')
-    from erp5.component.document.Person import Person as PersonDocument
-    self.assertTrue(PersonDocument in person.__class__.mro())
-
-    # There is no reason that TestPortalType Document Component has been
-    # assigned to a Person
-    self.failIfHasAttribute(person, 'test42')
-    self.failIfHasAttribute(self._module, 'TestPortalType')
-    self.assertFalse(ITestPortalType.providedBy(person))
-    self.assertFalse(ITestPortalType.implementedBy(person.__class__))
-    for klass in person.__class__.mro():
-      self.assertNotEqual(klass.__name__, 'TestPortalType')
-
-    def _check():
-      self.assertHasAttribute(person, 'test42')
-      self.assertEqual(person.test42(), 42)
-
-      # The Portal Type class should not be in ghost state by now as we tried
-      # to access test42() defined in TestPortalType Document Component
-      self.assertHasAttribute(self._module, 'TestPortalType')
-      self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
-      from erp5.component.document.Person import Person as PersonDocument
-      self.assertTrue(PersonDocument in person.__class__.mro())
-      self.assertTrue(ITestPortalType.providedBy(person))
-      self.assertTrue(ITestPortalType.implementedBy(person.__class__))
-
-    # Reset Portal Type classes to ghost to make sure that everything is reset
-    self._component_tool.reset(force=True,
-                               reset_portal_type_at_transaction_boundary=False)
-    # TestPortalType must be available in type class list
-    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
-    try:
-      person_type.setTypeClass('TestPortalType')
-      self.commit()
-      _check()
-
-      self.portal.portal_types.resetDynamicDocuments()
-      _check()
-
-    finally:
-      person_type.setTypeClass('Person')
-      self.commit()
-
   def testImportFromAnotherComponent(self):
     """
     Create two new Components and check whether one can import the other one
@@ -2925,6 +2822,109 @@ class %sAnything:
 class %s(Person):
   pass
 ''' % (class_name, class_name)
+
+  def testAssignToPortalTypeClass(self):
+    """
+    Create a new Document Component inheriting from Person Document and try to
+    assign it to Person Portal Type, then create a new Person and check
+    whether it has been successfully added to its Portal Type class bases and
+    that the newly-defined function on ZODB Component can be called as well as
+    methods from Person Document
+    """
+    ## Create an Interface assigned to the test ZODB Component to check that
+    ## only resetting Portal Type classes do not have any side-effect on
+    ## Interfaces defined on ZODB Components
+    from zope.interface import Interface
+    class ITestPortalType(Interface):
+      """Anything"""
+      def foo():
+        """Anything"""
+    from types import ModuleType
+    interface_module = ModuleType('ITestPortalType')
+    interface_module.ITestPortalType = ITestPortalType
+    sys.modules['ITestPortalType'] = interface_module
+
+    self.failIfModuleImportable('TestPortalType')
+
+    # Create a new Document Component inheriting from Person Document which
+    # defines only one additional method (meaningful to make sure that the
+    # class (and not the module) has been added to the class when the
+    # TypeClass is changed)
+    test_component = self._newComponent(
+      'TestPortalType',
+      """
+from erp5.component.document.Person import Person
+
+from ITestPortalType import ITestPortalType
+import zope.interface
+
+class TestPortalType(Person):
+  def test42(self):
+    return 42
+
+  zope.interface.implements(ITestPortalType)
+  def foo(self):
+    pass
+""")
+    test_component.validate()
+    self.tic()
+
+    # As TestPortalType Document Component has been validated, it should now
+    # be available
+    self.assertModuleImportable('TestPortalType', reset=False)
+    self.assertTrue(ITestPortalType.implementedBy(self._module.TestPortalType.TestPortalType))
+
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
+
+    person_type = self.portal.portal_types.Person
+    person_type_class = person_type.getTypeClass()
+    self.assertEqual(person_type_class, 'Person')
+
+    # Create a new Person
+    person_module = self.portal.person_module
+    person = person_module.newContent(id='Foo Bar', portal_type='Person')
+    from erp5.component.document.Person import Person as PersonDocument
+    self.assertTrue(PersonDocument in person.__class__.mro())
+
+    # There is no reason that TestPortalType Document Component has been
+    # assigned to a Person
+    self.failIfHasAttribute(person, 'test42')
+    self.failIfHasAttribute(self._module, 'TestPortalType')
+    self.assertFalse(ITestPortalType.providedBy(person))
+    self.assertFalse(ITestPortalType.implementedBy(person.__class__))
+    for klass in person.__class__.mro():
+      self.assertNotEqual(klass.__name__, 'TestPortalType')
+
+    def _check():
+      self.assertHasAttribute(person, 'test42')
+      self.assertEqual(person.test42(), 42)
+
+      # The Portal Type class should not be in ghost state by now as we tried
+      # to access test42() defined in TestPortalType Document Component
+      self.assertHasAttribute(self._module, 'TestPortalType')
+      self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
+      from erp5.component.document.Person import Person as PersonDocument
+      self.assertTrue(PersonDocument in person.__class__.mro())
+      self.assertTrue(ITestPortalType.providedBy(person))
+      self.assertTrue(ITestPortalType.implementedBy(person.__class__))
+
+    # Reset Portal Type classes to ghost to make sure that everything is reset
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=False)
+    # TestPortalType must be available in type class list
+    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
+    try:
+      person_type.setTypeClass('TestPortalType')
+      self.commit()
+      _check()
+
+      self.portal.portal_types.resetDynamicDocuments()
+      _check()
+
+    finally:
+      person_type.setTypeClass('Person')
+      self.commit()
 
   def testProductsERP5DocumentCompatibility(self):
     """Check that document class also exist in its original namespace (source_reference)
