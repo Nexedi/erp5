@@ -2658,7 +2658,7 @@ from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 class _TestZodbDocumentComponentMixin(_TestZodbComponent):
   """
   Common to all Component class inheriting from Document Component (so
-  Interface and Mixin)
+  Interface, Tool and Mixin)
   """
   def testAtLeastOneClassNamedAfterReference(self):
     component = self._newComponent(
@@ -3024,6 +3024,49 @@ class TestProductsERP5TypeDocumentCompatibility(Base):
     self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
     from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
     self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 2)
+
+from Products.ERP5Type.Core.ToolComponent import ToolComponent
+
+class TestZodbToolComponent(_TestZodbDocumentComponentMixin):
+  """
+  Tests specific to ZODB Tool Component
+  """
+  _portal_type = 'Tool Component'
+  _document_class = ToolComponent
+
+  def _getValidSourceCode(self, class_name):
+    return '''from Products.ERP5Type.Tool.BaseTool import BaseTool
+class %(class_name)s(BaseTool):
+  id = 'portal_%(class_name)s'
+  portal_type = 'Delivery Tool'
+  meta_type = 'ERP5 %(meta_type)s'
+
+from Products.ERP5Type.Globals import InitializeClass
+InitializeClass(%(class_name)s)
+''' % dict(class_name=class_name,
+           meta_type=''.join([(c if c.islower() else ' ' + c)
+                              for c in class_name]).strip())
+
+  def testHookAfterLoad(self):
+    component = self._newComponent('TestHookAfterLoadTool')
+    self.tic()
+    response = self.publish(
+      '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
+      'ERP5TypeTestCase:')
+    self.assertEqual(response.getStatus(), 200)
+    self.assertFalse('ERP5 Test Hook After Load Tool' in response.getBody())
+
+    component.validate()
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    response = self.publish(
+      '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
+      'ERP5TypeTestCase:')
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue('ERP5 Test Hook After Load Tool' in response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -3432,6 +3475,7 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
   suite.addTest(unittest.makeSuite(TestZodbExtensionComponent))
   suite.addTest(unittest.makeSuite(TestZodbDocumentComponent))
+  suite.addTest(unittest.makeSuite(TestZodbToolComponent))
   suite.addTest(unittest.makeSuite(TestZodbTestComponent))
   suite.addTest(unittest.makeSuite(TestZodbInterfaceComponent))
   suite.addTest(unittest.makeSuite(TestZodbMixinComponent))
