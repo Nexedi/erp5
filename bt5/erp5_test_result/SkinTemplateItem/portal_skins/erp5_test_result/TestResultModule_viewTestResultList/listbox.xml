@@ -117,10 +117,6 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>buildslave_name</string>
-                          <string>Build Slave Name</string>
-                        </tuple>
-                        <tuple>
                           <string>source_project_title</string>
                           <string>Project</string>
                         </tuple>
