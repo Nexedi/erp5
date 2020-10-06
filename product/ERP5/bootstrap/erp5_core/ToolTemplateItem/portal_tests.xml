@@ -5,7 +5,24 @@
       <global name="Test Tool" module="erp5.portal_type"/>
     </pickle>
     <pickle>
-      <dictionary/>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Test Tool</string> </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>
