@@ -51,6 +51,7 @@ class InotifyTool(TimerServiceMixin, BaseTool):
   id = 'portal_inotify'
   meta_type = 'ERP5 Inotify Tool'
   portal_type = 'Inotify Tool'
+  title = 'Inotifies'
 
   def resetCache(self):
     self._p_changed = 1

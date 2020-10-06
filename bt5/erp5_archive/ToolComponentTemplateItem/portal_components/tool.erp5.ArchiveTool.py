@@ -37,7 +37,7 @@ class ArchiveTool(BaseTool):
   Archive Tool stores archives object which are predicate that tells in
   which catalog an object must go.
   """
-  title = 'Archive Tool'
+  title = 'Archives'
   id = 'portal_archives'
   meta_type = 'ERP5 Archive Tool'
   portal_type = 'Archive Tool'

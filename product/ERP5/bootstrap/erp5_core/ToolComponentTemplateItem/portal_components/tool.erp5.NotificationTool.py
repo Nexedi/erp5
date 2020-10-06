@@ -203,6 +203,7 @@ class NotificationTool(BaseTool):
   id = 'portal_notifications'
   meta_type = 'ERP5 Notification Tool'
   portal_type = 'Notification Tool'
+  title = 'Notifications'
 
   # Declarative Security
   security = ClassSecurityInfo()

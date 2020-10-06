@@ -115,6 +115,7 @@ class SynchronizationTool(BaseTool):
   """
   meta_type = 'ERP5 Synchronizations'
   portal_type = 'Synchronization Tool'
+  title = 'Synchronizations'
 
   id = "portal_synchronizations"
 
