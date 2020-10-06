@@ -80,6 +80,7 @@ class SimulationTool(BaseTool):
   id = 'portal_simulation'
   meta_type = 'ERP5 Simulation Tool'
   portal_type = 'Simulation Tool'
+  title = 'Simulations'
   allowed_types = ( 'ERP5 Applied Rule', )
 
   # Declarative Security

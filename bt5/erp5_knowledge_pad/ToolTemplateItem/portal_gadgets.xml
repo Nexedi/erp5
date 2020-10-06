@@ -1451,10 +1451,6 @@
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_gadgets</string> </value>
         </item>
@@ -1473,10 +1469,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Gadgets</string> </value>
         </item>
       </dictionary>
     </pickle>
