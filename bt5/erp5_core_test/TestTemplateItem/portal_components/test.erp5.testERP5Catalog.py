@@ -830,7 +830,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
               ('catalog.title,catalog.id', '`catalog`.`title`ASC,`catalog`.`id`ASC', 'catalog.titleASC,catalog.idASC'))
 
   def test_29_SortOnRelatedKey(self):
-    """Sort-on parameter and related key. (Assumes that region_title is a \
+    """Sort-on parameter and related key. (Assumes that region_reference is a
     valid related key)"""
     self.assertTrue(
               self.getCatalogTool().buildSQLQuery(region_reference='foo',
