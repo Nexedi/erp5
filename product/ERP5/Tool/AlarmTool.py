@@ -58,6 +58,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
   id = 'portal_alarms'
   meta_type = 'ERP5 Alarm Tool'
   portal_type = 'Alarm Tool'
+  title = 'Alarms'
 
   # Declarative Security
   security = ClassSecurityInfo()
