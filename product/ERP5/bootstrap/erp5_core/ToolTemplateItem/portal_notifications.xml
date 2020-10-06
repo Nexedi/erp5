@@ -7,8 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_notifications</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Notification Tool</string> </value>
         </item>
       </dictionary>
     </pickle>
