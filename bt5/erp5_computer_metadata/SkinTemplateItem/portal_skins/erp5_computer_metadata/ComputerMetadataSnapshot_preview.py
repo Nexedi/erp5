@@ -1,16 +1,15 @@
 import json
 
-return json.dumps(json.loads(context.getData()), sort_keys=True, indent=4)
+def traverse(d, depth):
+  res = ""
 
-
-def traverse(name, cur_dict, depth):
-  raise NotImplementedError(cur_dict)
-  for key, value in cur_dict['childs']:
+  for name, value in d.iteritems():
     for i in range(depth):
-      print "  ",
-    print name
-    traverse(key, value['childs'], depth+1)
+      res += "\t"
+    res += name + "\n"
+    if len(value['childs']) > 0:
+      res += traverse(value['childs'], depth+1)
 
-traverse("", json.loads(context.getData())['fs_tree'], 0)
+  return res
 
-return printed
+return traverse(json.loads(context.getData())['fs_tree']['childs'], 0)
