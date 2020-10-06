@@ -28,10 +28,6 @@
             <key> <string>id</string> </key>
             <value> <string>portal_solvers</string> </value>
         </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Solvers</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
