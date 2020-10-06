@@ -50,6 +50,7 @@ class IdTool(BaseTool):
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'
+  title = 'Id Generators'
 
   # Declarative Security
   security = ClassSecurityInfo()
