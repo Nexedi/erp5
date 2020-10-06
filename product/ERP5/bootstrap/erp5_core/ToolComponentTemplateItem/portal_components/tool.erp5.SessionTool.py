@@ -186,6 +186,7 @@ class SessionTool(BaseTool):
   id = 'portal_sessions'
   meta_type = 'ERP5 Session Tool'
   portal_type = 'Session Tool'
+  title = 'Sessions'
   allowed_types = ()
   security = ClassSecurityInfo()
 
