@@ -88,10 +88,11 @@ elif test_result.getPortalType() == 'Test Result Line':
                    errors=errors,
                    failures=failures,
                    skips=skips,
+                   test_result_retry_count=(test_result.getProperty('test_result_retry_count') or 0),
                    html_test_result=html_test_result)
   if status == 'FAILED' and shouldRetry(test_result):
     test_result.edit(
-        test_result_retry_count=1 + (test_result.getProperty('test_result_retry_count') or 0),
+        test_result_retry_count=test_result.getProperty('test_result_retry_count') + 1,
         string_index='RETRYING',
     )
     test_result.redraft(comment="Retried after a first failure")

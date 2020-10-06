@@ -1505,6 +1505,44 @@ class TestRetryFailedTest(TaskDistributionTestCase):
     self.assertEqual(test_result.getSimulationState(), 'stopped')
     self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
 
+  def test_retried_retry_count_acquisition(self):
+    # non regression test, test_result_retry_count should not be acquired
+    # from test result on test result lines that were not retried.
+    self.test_suite.setRetryTestPattern('test.*')
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', 'testBar' ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    retried_test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(retried_test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(retried_test_result_line.getSimulationState(), 'draft')
+    status_dict['error_count'] = 0
+    status_dict['failure_count'] = 0
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(retried_test_result_line.getStringIndex(), 'PASSED')
+    self.assertEqual(retried_test_result_line.getSimulationState(), 'stopped')
+
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    not_retried_test_result_line = self.portal.restrictedTraverse(line_url)
+    self.assertNotEqual(retried_test_result_line, not_retried_test_result_line)
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(not_retried_test_result_line.getStringIndex(), 'PASSED')
+    self.assertEqual(not_retried_test_result_line.getSimulationState(), 'stopped')
+
+    self.assertEqual(test_result.getStringIndex(), 'PASS')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
+    self.assertEqual(retried_test_result_line.getProperty('test_result_retry_count'), 1)
+    self.assertEqual(not_retried_test_result_line.getProperty('test_result_retry_count'), 0)
+
 
 class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
   """Tests for Gitlab commits annotations.
