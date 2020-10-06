@@ -65,6 +65,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     id              = 'portal_selections'
     meta_type       = 'ERP5 Selections'
     portal_type     = 'Selection Tool'
+    title           = 'Selections'
     security = ClassSecurityInfo()
 
     #
