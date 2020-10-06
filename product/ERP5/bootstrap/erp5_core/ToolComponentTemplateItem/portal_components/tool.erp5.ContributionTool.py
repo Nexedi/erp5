@@ -74,7 +74,7 @@ class ContributionTool(BaseTool):
         some text rewriting is necessary.
 
   """
-  title = 'Contribution Tool'
+  title = 'Contributions'
   id = 'portal_contributions'
   meta_type = 'ERP5 Contribution Tool'
   portal_type = 'Contribution Tool'
