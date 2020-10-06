@@ -53,7 +53,7 @@ class PasswordTool(BaseTool):
   """
     PasswordTool is used to allow a user to change its password
   """
-  title = 'Password Tool'
+  title = 'Passwords'
   id = 'portal_password'
   meta_type = 'ERP5 Password Tool'
   portal_type = 'Password Tool'

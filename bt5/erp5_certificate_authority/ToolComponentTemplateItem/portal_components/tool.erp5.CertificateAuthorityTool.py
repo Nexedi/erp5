@@ -75,6 +75,7 @@ class CertificateAuthorityTool(BaseTool):
   id = 'portal_certificate_authority'
   meta_type = 'ERP5 Certificate Authority Tool'
   portal_type = 'Certificate Authority Tool'
+  title = 'Certificate Authorities'
   security = ClassSecurityInfo()
   allowed_types = ()
   isIndexable = 1
