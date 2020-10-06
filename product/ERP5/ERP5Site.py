@@ -149,7 +149,7 @@ def addERP5Tool(portal, id, portal_type):
   import erp5.portal_type
   klass = getattr(erp5.portal_type, portal_type)
   obj = klass()
-  obj.setTitle(portal_type)
+  obj._setTitle(portal_type)
   portal._setObject(id, obj)
 
 class ReferCheckerBeforeTraverseHook:
