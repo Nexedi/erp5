@@ -47,6 +47,7 @@ class CacheTool(BaseTool):
   id = "portal_caches"
   meta_type = "ERP5 Cache Tool"
   portal_type = "Cache Tool"
+  title = "Caches"
 
   security = ClassSecurityInfo()
   manage_options = ({'label': 'Configure',
