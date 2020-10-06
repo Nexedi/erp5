@@ -81,7 +81,7 @@ class ConfiguratorTool(BaseTool):
   """
 
   id = 'portal_configurator'
-  title = 'Configurator Tool'
+  title = 'Configurators'
   meta_type = 'ERP5 Configurator Tool'
   portal_type = 'Configurator Tool'
 
