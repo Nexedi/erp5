@@ -38,6 +38,7 @@ class _MemcacheTool(BaseTool):
   id = "portal_memcached"
   meta_type = "ERP5 Memcached Tool"
   portal_type = "Memcached Tool"
+  title = "Memcached Plugins"
   manage_options = (
     {
       'label': 'Configure',
