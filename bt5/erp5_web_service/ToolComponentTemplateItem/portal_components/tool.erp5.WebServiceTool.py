@@ -77,7 +77,7 @@ class WebServiceTool(BaseTool):
   """
 
   id = 'portal_web_services'
-  title = 'Web Service Tool'
+  title = 'Web Services'
   meta_type = 'ERP5 Web Service Tool'
   portal_type = 'Web Service Tool'
   allowed_content_types = ()

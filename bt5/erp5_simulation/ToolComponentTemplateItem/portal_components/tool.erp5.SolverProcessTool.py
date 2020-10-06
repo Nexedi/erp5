@@ -43,6 +43,7 @@ class SolverProcessTool(BaseTool):
   id = 'portal_solver_processes'
   meta_type = 'ERP5 Solver Process Tool'
   portal_type = 'Solver Process Tool'
+  title = 'Solver Processes'
   allowed_types = ( 'ERP5 Solver Process', )
 
   # Declarative Security
