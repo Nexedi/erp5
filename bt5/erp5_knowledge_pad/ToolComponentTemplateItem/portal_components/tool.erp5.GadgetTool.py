@@ -38,6 +38,7 @@ class GadgetTool(BaseTool):
   id = 'portal_gadgets'
   meta_type = 'ERP5 Gadget Tool'
   portal_type = 'Gadget Tool'
+  title = 'Gadgets'
 
   # Declarative Security
   security = ClassSecurityInfo()
