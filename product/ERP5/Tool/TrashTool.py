@@ -43,10 +43,10 @@ class TrashTool(BaseTool):
   """
     TrashTool contains objects removed/replaced during installation of business templates.
   """
-  title = 'Trash Tool'
   id = 'portal_trash'
   meta_type = 'ERP5 Trash Tool'
   portal_type = 'Trash Tool'
+  title = 'Trash Bins'
   allowed_types = ('ERP5 Trash Bin',)
 
   # Declarative Security

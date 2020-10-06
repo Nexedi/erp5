@@ -42,6 +42,7 @@ class TaskDistributionTool(BaseTool):
   id = 'portal_task_distribution'
   meta_type = 'ERP5 Task Distribution Tool'
   portal_type = 'Task Distribution Tool'
+  title = 'Task Distributions'
   allowed_types = ()
 
   security = ClassSecurityInfo()
