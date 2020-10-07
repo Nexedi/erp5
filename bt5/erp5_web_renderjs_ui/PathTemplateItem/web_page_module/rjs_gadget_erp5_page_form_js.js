@@ -48,8 +48,8 @@ and handling data send&receive.
       'gadget_html5_select.html'
     ],
     erp5_module_regexp = /^[^\/]+_module$/,
-    erp5_portal_regexp = /^portal_[^\/]+/,
-    erp5_portal_document_regexp = /^portal_.*\/.+$/,
+    erp5_portal_regexp = /^portal_[^\/]+$/,
+    erp5_portal_document_regexp = /^portal_.+\/.+$/,
     erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
   /*jslint regexp: false*/
 
