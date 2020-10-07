@@ -7,7 +7,7 @@ import sys
 HERE = os.path.dirname(__file__)
 
 class _ERP5(ERP5TypeTestSuite):
-  # _saved_test_id = "erp5_web_renderjs_ui_test:testFunctionalRJSInterfaceValidator"
+  _saved_test_id = "erp5_web_renderjs_ui_test:testFunctionalRJSInterfaceValidator"
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5Form',
