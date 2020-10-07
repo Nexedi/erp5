@@ -122,7 +122,18 @@ class WechatService(XMLObject):
     if self.getWechatMode() == "SANDBOX":
       key = self.getSandboxKey()
     elif self.getWechatMode() == "UNITTEST":
-      return {"result_code": 'SUCCESS', "code_url": 'weixin://wxpay/bizpayurl?pr=AAAAA'}
+      # this function will get call twice
+      # one for submit the payment request to wechat
+      # one for query the payment status to wechat
+      # trade_state is returned by quering
+      # and put it in the returned value from payment request has no harm
+      return {
+        "result_code": 'SUCCESS',
+        "code_url": 'weixin://wxpay/bizpayurl?pr=AAAAA',
+        "trade_state": 'SUCCESS',
+        "total_fee": '18800',
+        "fee_type": 'CNY',
+      }
     else:
       key = self.getServiceApiKey()
     nonce_str = self.generateRandomStr()
@@ -254,7 +265,11 @@ class WechatService(XMLObject):
           'In Navigate', error=False)
 
     portal = self.getPortalObject()
-    base_url = wechat_dict.pop('base_url', '%s/#wechat_payment' % portal.absolute_url())
+
+    if self.getWechatMode() == "UNITTEST":
+      base_url = wechat_dict.pop('base_url', '%s/#wechat_payment_test' % portal.absolute_url())
+    else:
+      base_url = wechat_dict.pop('base_url', '%s/#wechat_payment' % portal.absolute_url())
 
     return self.REQUEST.RESPONSE.redirect(
       "%s?trade_no=%s&price=%s&payment_url=%s" % (
