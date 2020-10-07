@@ -686,8 +686,45 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Try to get the organisation with the group title Nexedi
     organisation_list = [x.getObject() for x in
+                         module.searchFolder(group__title='Nexedi')]
+    self.assertEqual(organisation_list,[organisation])
+    self.assertEqual(organisation_list,[organisation])
+    # Try to get the organisation with the group id
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(group__id='storever')]
+    self.assertEqual(organisation_list,[organisation2])
+    # Try to get the organisation with the group reference 'a'
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(group__reference='a')]
+    self.assertEqual(organisation_list,[organisation])
+    # Try to get the organisation with the group reference 'c'
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(group__reference='c')]
+    self.assertEqual(organisation_list,[])
+    self.assertEqual(organisation_list,[])
+    # Try to get the organisation with group relative_url
+    group_relative_url = group_nexedi_category.getRelativeUrl()
+    organisation_list = [x.getObject() for x in
+                 module.searchFolder(group__relative_url=group_relative_url)]
+    self.assertEqual(organisation_list, [organisation])
+    # Try to get the organisation with group uid
+    organisation_list = [x.getObject() for x in
+                 module.searchFolder(group__uid=group_nexedi_category.getUid())]
+    self.assertEqual(organisation_list, [organisation])
+    # Try to get the organisation with the group id AND title of the document
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(group__id='storever',
+                                             title='Organisation 2')]
+    self.assertEqual(organisation_list,[organisation2])
+
+    ## BBB legacy related key syntax (we now use __ before column id)
+    # Try to get the organisation with the group title Nexedi
+    organisation_list = [x.getObject() for x in
                          module.searchFolder(group_title='Nexedi')]
     self.assertEqual(organisation_list,[organisation])
+    # legacy syntax supported a `default_` prefix, mostly as a workaround
+    # for ambigous syntax, this never supported the "default" catagory
+    # as CMFCategory defines it.
     organisation_list = [x.getObject() for x in
                          module.searchFolder(default_group_title='Nexedi')]
     self.assertEqual(organisation_list,[organisation])
@@ -742,6 +779,24 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Flush message queue
     self.tic()
 
+    # Try to get the organisation with the group title Nexedi
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(strict_group__title='Nexedi')]
+    self.assertEqual(organisation_list,[])
+    # Try to get the organisation with the group title ERP5
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(strict_group__title='ERP5')]
+    self.assertEqual(organisation_list,[organisation])
+    # Try to get the organisation with the group reference a
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(strict_group__reference='a')]
+    self.assertEqual(organisation_list,[])
+    # Try to get the organisation with the group reference b
+    organisation_list = [x.getObject() for x in
+                         module.searchFolder(strict_group__reference='b')]
+    self.assertEqual(organisation_list,[organisation])
+
+    ## BBB legacy related key syntax (we now use __ before column id)
     # Try to get the organisation with the group title Nexedi
     organisation_list = [x.getObject() for x in
                          module.searchFolder(strict_group_title='Nexedi')]
@@ -834,6 +889,24 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     valid related key)"""
     self.assertTrue(
               self.getCatalogTool().buildSQLQuery(region_reference='foo',
+              sort_on=(('region__reference', 'ascending'),))['order_by_expression'].endswith('.`reference` ASC'))
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(region_reference='foo',
+              sort_on=(('region__reference', 'descending'),))['order_by_expression'].endswith('.`reference` DESC'))
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(
+              sort_on=(('region__reference', 'ascending'),))['order_by_expression'].endswith('.`reference` ASC'),
+              'sort_on parameter must be taken into account even if related key '
+              'is not a parameter of the current query')
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(
+              sort_on=(('region__reference', 'descending'),))['order_by_expression'].endswith('.`reference` DESC'),
+              'sort_on parameter must be taken into account even if related key '
+              'is not a parameter of the current query')
+
+    # BBB legacy related keys syntax (we now have __ before column id)
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(region_reference='foo',
               sort_on=(('region_reference', 'ascending'),))['order_by_expression'].endswith('.`reference` ASC'))
     self.assertTrue(
               self.getCatalogTool().buildSQLQuery(region_reference='foo',
@@ -863,7 +936,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                  career_subordination_value=organisation)
     self.tic()
     self.assertEqual(len(person_module.searchFolder()),
-                     len(person_module.searchFolder(sort_on=[('subordination_title', 'ascending')])))
+                     len(person_module.searchFolder(sort_on=[('subordination__title', 'ascending')])))
 
   def test_sortOnRelatedKeyWithoutLeftJoinSupport(self):
     """Check that sorting on a related key that does not support left join.
@@ -920,7 +993,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = self._makeOrganisation()
     self.assertEqual([organisation.getPath()],
         [x.path for x in self.getCatalogTool()(
-                group_title={'query': 'Nexedi Group'},
+                group__title={'query': 'Nexedi Group'},
                 # have to filter on portal type, because the group category is
                 # also member of itself
                 portal_type=organisation.getPortalTypeName())])
@@ -3372,28 +3445,28 @@ VALUES
     self.tic()
     # Single join
     check(reference_object_list,
-          'site_reference="foo"',
-          Query(site_reference='foo'))
+          'site__reference="foo"',
+          Query(site__reference='foo'))
     check(description_object_list,
-          'site_description="bar"',
+          'site__description="bar"',
           Query(site_description='bar'))
     # Double join on different relations
     check(both_object_list,
-          'site_reference="foo" AND function_description="bar"',
+          'site_reference="foo" AND function__description="bar"',
           ComplexQuery(Query(site_reference='foo'),
-                       Query(function_description='bar'),
+                       Query(function__description='bar'),
                        logical_operator='AND'))
     # Double join on same relation
     check(both_object_list,
-          'site_reference="foo" AND site_description="bar"',
-          ComplexQuery(Query(site_reference='foo'),
-                       Query(site_description='bar'),
+          'site__reference="foo" AND site__description="bar"',
+          ComplexQuery(Query(site__reference='foo'),
+                       Query(site__description='bar'),
                        logical_operator='AND'))
     # Double join on same related key
     check(title_object_list,
-          'site_title="foo1" AND site_title="foo2"',
-          ComplexQuery(Query(site_title='=foo1'),
-                       Query(site_title='=foo2'),
+          'site__title="foo1" AND site__title="foo2"',
+          ComplexQuery(Query(site__title='=foo1'),
+                       Query(site__title='=foo2'),
                        logical_operator='AND'))
 
   def test_SearchFolderWithRelatedDynamicRelatedKey(self):
@@ -3426,6 +3499,50 @@ VALUES
     base_category = portal_category.group
     # Try to get the category with the group related organisation title Nexedi
     # Orga
+
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(
+                           group_related__title='Nexedi Orga')]
+    self.assertEqual(category_list, [group_nexedi_category])
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(
+                           default_group_related__title='Nexedi Orga')]
+    self.assertEqual(category_list, [group_nexedi_category])
+    # Try to get the category with the group related organisation id
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(group_related__id='storever')]
+    self.assertEqual(category_list,[group_nexedi_category2])
+    # Try to get the category with the group related organisation reference 'd'
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(group_related__reference='d')]
+    self.assertEqual(category_list,[group_nexedi_category2])
+    # Try to get the category with the group related organisation reference
+    # 'e'
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(group_related__reference='e')]
+    self.assertEqual(category_list,[])
+    # Try to get the category with the default group related organisation reference
+    # 'e'
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(default_group_related__reference='e')]
+    self.assertEqual(category_list,[])
+    # Try to get the category with the group related organisation relative_url
+    organisation_relative_url = organisation.getRelativeUrl()
+    category_list = [x.getObject() for x in
+                 base_category.searchFolder(group_related__relative_url=organisation_relative_url)]
+    self.assertEqual(category_list, [group_nexedi_category])
+    # Try to get the category with the group related organisation uid
+    category_list = [x.getObject() for x in
+                 base_category.searchFolder(group_related__uid=organisation.getUid())]
+    self.assertEqual(category_list, [group_nexedi_category])
+    # Try to get the category with the group related organisation id and title
+    # of the category
+    category_list = [x.getObject() for x in
+                         base_category.searchFolder(group_related__id=organisation2.getId(),
+                                             title='Storever')]
+    self.assertEqual(category_list,[group_nexedi_category2])
+
+    # BBB legacy syntax ( we now use __ before column id)
     category_list = [x.getObject() for x in
                          base_category.searchFolder(
                            group_related_title='Nexedi Orga')]
@@ -3497,6 +3614,28 @@ VALUES
 
     # Try to get the category with the group related organisation title Nexedi
     # Orga
+    category_list = [x.getObject() for x in
+                         base_category.portal_catalog(
+                             strict_group_related__title='Nexedi Orga')]
+    self.assertEqual(category_list,[group_nexedi_category])
+    # Try to get the category with the group related organisation title ERP5
+    # Orga
+    category_list = [x.getObject() for x in
+                         base_category.portal_catalog(
+                           strict_group_related__title='ERP5 Orga')]
+    self.assertEqual(category_list,[sub_group_nexedi])
+    # Try to get the category with the group related organisation reference d
+    category_list = [x.getObject() for x in
+                         base_category.portal_catalog(
+                           strict_group_related__reference='d')]
+    self.assertEqual(category_list,[group_nexedi_category])
+    # Try to get the category with the group related organisation reference c
+    category_list = [x.getObject() for x in
+                         base_category.portal_catalog(
+                           strict_group_related__reference='c')]
+    self.assertEqual(category_list,[sub_group_nexedi])
+
+    # BBB legacy syntax (we now use __ before column id)
     category_list = [x.getObject() for x in
                          base_category.portal_catalog(
                              strict_group_related_title='Nexedi Orga')]
@@ -3790,16 +3929,28 @@ VALUES
     # Try to get the organisations with the group title Nexedi to make sure
     # searching works correctly
     organisation_list = [x.getObject() for x in
-                         module.searchFolder(strict_group_title='Nexedi',
+                         module.searchFolder(strict_group__title='Nexedi',
                                              **search_kw)]
     self.assertEqual(organisation_list, [org2, org4])
     # Now lets fetch the titles of groups of the above orgs using select_dict.
-    search_kw.update(select_dict=dict(strict_group_title=None))
+    search_kw.update(select_dict=dict(strict_group__title=None))
     records = module.searchFolder(**search_kw)
     # By default the catalog returns all items, and the selected
-    # strict_group_title is set to None for documents without groups
+    # strict_group__title is set to None for documents without groups
     # Besides, some entries will appear many times, according to the number of
     # relationships each catalog entry has in that related key.
+    results = [(rec.title, rec.strict_group__title)
+               for rec in records]
+    self.assertEqual(sorted(results),
+                      [('org1', None),
+                       ('org2', 'Nexedi'),
+                       ('org3', 'TIOLive'),
+                       ('org4', 'Nexedi'),
+                       ('org4', 'TIOLive')])
+
+    # This also works for legacy syntax (we now have __ before column id)
+    search_kw.update(select_dict=dict(strict_group_title=None))
+    records = module.searchFolder(**search_kw)
     results = [(rec.title, rec.strict_group_title)
                for rec in records]
     self.assertEqual(sorted(results),
@@ -3808,11 +3959,12 @@ VALUES
                        ('org3', 'TIOLive'),
                        ('org4', 'Nexedi'),
                        ('org4', 'TIOLive')])
+
     # This also works if we force a left join on the column.
     # They'll still be repeated according to their relationships, though.
-    search_kw.update(left_join_list=('strict_group_title',))
+    search_kw.update(left_join_list=('strict_group__title',))
     records = module.searchFolder(**search_kw)
-    results = [(rec.title, rec.strict_group_title)
+    results = [(rec.title, rec.strict_group__title)
                for rec in records]
     self.assertEqual(sorted(results),
                       [('org1', None),
