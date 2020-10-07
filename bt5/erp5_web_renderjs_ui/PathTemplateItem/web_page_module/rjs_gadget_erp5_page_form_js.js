@@ -48,6 +48,7 @@ and handling data send&receive.
       'gadget_html5_select.html'
     ],
     erp5_module_regexp = /^[^\/]+_module$/,
+    erp5_portal_regexp = /^portal_[^\/]+/,
     erp5_portal_document_regexp = /^portal_.*\/.+$/,
     erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
   /*jslint regexp: false*/
@@ -272,6 +273,7 @@ and handling data send&receive.
         options = gadget.state.options,
         page_template_gadget,
         is_module = erp5_module_regexp.test(gadget.state.options.jio_key),
+        is_portal = erp5_portal_regexp.test(gadget.state.options.jio_key),
         is_module_document = erp5_module_document_regexp.test(gadget.state.options.jio_key),
         is_portal_document = erp5_portal_document_regexp.test(gadget.state.options.jio_key),
         erp5_document = JSON.parse(gadget.state.erp5_document),
@@ -318,13 +320,13 @@ and handling data send&receive.
           }
         })
         .push(function () {
-          if (is_module) {
+          if (is_module || is_portal) {
             return gadget.getTranslationList(["List"]);
           }
         })
         .push(function (translation_list) {
           var display_workflow_list = true;
-          if (is_module) {
+          if (is_module || is_portal) {
             if (erp5_document._links) {
               // hardcode "VIEWS: List" to hide "consistency", "history" and "metadata"
               erp5_document._links.action_object_view =
