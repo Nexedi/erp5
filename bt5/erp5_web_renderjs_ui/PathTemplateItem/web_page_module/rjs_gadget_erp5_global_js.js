@@ -11,7 +11,7 @@
   function calculateSynchronousPageTitle(gadget, erp5_document) {
     var title = erp5_document.title,
       portal_type = erp5_document._links.type.name,
-      is_module = / Module$/.test(erp5_document._links.type.href),
+      is_module = / (Module|Tool)$/.test(erp5_document._links.type.href),
       traversed_document_jio_key;
 
     if (erp5_document._links.hasOwnProperty('traversed_document')) {
