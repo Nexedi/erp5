@@ -21,7 +21,7 @@
       return gadget.jio_get(parent_options.jio_key)
         .push(function (doc) {
           document = doc;
-          return gadget.getUrlFor({command: 'history_previous'})
+          return gadget.getUrlFor({command: 'history_previous'});
         })
         .push(function (url) {
           document.header_dict = { "page_title": document.title,
