@@ -3,7 +3,7 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  function appendCheckboxField(gadget, item) {
+  function appendCheckboxField(gadget, item, error_text) {
     var input_gadget;
     return gadget.declareGadget('gadget_html5_input.html', {scope: item[1], element: 'span'})
       .push(function (result) {
@@ -13,6 +13,7 @@
           name: gadget.state.name,
           value: item[1],
           editable: true,
+          error_text: error_text,
           hidden: gadget.state.hidden
         };
         if (item[1] === gadget.state.value) {
@@ -24,6 +25,11 @@
         var label = document.createElement("label");
         label.textContent = item[0];
         label.insertBefore(input_gadget.element, label.firstChild);
+        if (error_text && !label.classList.contains("is-invalid")) {
+          label.classList.add("is-invalid");
+        } else if (!error_text && label.classList.contains("is-invalid")) {
+          label.classList.remove("is-invalid");
+        }
         gadget.element.appendChild(label);
       });
   }
@@ -39,6 +45,7 @@
           select_first_item: field_json.select_first_item,
           required: field_json.required,
           editable: field_json.editable,
+          error_text: field_json.error_text,
           name: field_json.key,
           title: field_json.title,
           item_list: field_json.items,
@@ -82,7 +89,7 @@
         queue = new RSVP.Queue();
 
         for (i = 0; i < item_list.length; i += 1) {
-          enQueue(gadget, item_list[i]);
+          enQueue(gadget, item_list[i], this.state.error_text);
         }
 
       } else {
