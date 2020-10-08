@@ -186,8 +186,12 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('input').checkValidity(),
+      var input = this.element.querySelector('input'),
+        result = input.checkValidity(),
         gadget = this;
+      if (input.type === "radio") {
+        result = result && !this.state.error_text;
+      }
       if (result) {
         return this.notifyValid()
           .push(function () {
@@ -218,7 +222,10 @@
             return result;
           });
       }
-      return result;
+      return gadget.notifyInvalid(this.state.error_text)
+        .push(function () {
+          return result;
+        });
     }, {mutex: 'changestate'})
 
     .declareJob('deferErrorText', function deferErrorText(error_text) {
