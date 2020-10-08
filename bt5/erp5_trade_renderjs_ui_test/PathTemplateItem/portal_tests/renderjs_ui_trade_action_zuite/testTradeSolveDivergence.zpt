@@ -25,7 +25,22 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_dialog_updated"]</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>assertTextPresent</td>
+  <td>Dialog is not updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_dialog_updated"]</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
   <td>Dialog is not updated.</td>
   <td></td>
 </tr>
@@ -68,12 +83,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>Input is required but no input given.</td>
-  <td></td>
-</tr>
-
-<tr>
   <td colspan="3"><b>Resolve the divergency</b></td>
 </tr>
 <tr>
@@ -81,6 +90,17 @@
   <td>//input[@value="FIFO Delivery Solver"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Input is required but no input given.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Input is required but no input given.</td>
+  <td></td>
+</tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
