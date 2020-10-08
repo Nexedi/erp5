@@ -156,7 +156,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'preferred_image_settings_data\', context.Base_getPreferredImageSettingsFromPreference()), ("store_new_image_cropped_method", \'Base_storeNewImageCropped\')]</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: [(\'get_tree_url\', \'%s/tree.xml?bt_id=erp5&do_extract:int=1\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>

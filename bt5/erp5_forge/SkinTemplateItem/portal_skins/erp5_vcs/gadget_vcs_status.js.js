@@ -60,7 +60,6 @@
       finished = (current_node === null);
       if (!finished) {
 
-        console.log('node name', current_node.nodeName);
         if (current_node.nodeName === 'item') {
           next_node = domsugar('li', [
             domsugar('label', [
@@ -109,9 +108,11 @@
 
   rJS(window)
     .declareMethod('render', function (options) {
-      console.log(options);
-      options.diff_url = 'https://softinst136575.host.vifib.net/erp5/portal_templates/210/tree.xml?bt_id=erp5&do_extract:int=1';
-      return this.changeState(options);
+      return this.changeState({
+        get_tree_url: options.get_tree_url,
+        remote_comment: options.remote_comment,
+        remote_url: options.remote_url
+      });
     })
 
     .onStateChange(function () {
@@ -121,7 +122,7 @@
           return jIO.util.ajax(
             {
               "type": "GET",
-              "url": gadget.state.diff_url,
+              "url": gadget.state.get_tree_url,
               "xhrFields": {
                 withCredentials: true
               },
@@ -130,14 +131,11 @@
           );
         })
         .push(function (evt) {
-          console.log(evt.target.response);
-          console.log(evt.target.response.body);
-          console.log(evt.target.response.querySelector('tree'));
           domsugar(gadget.element, [
             domsugar('p', [
               'Repository: ',
-              domsugar('a', {text: 'ici'}),
-              ' (wip)'
+              domsugar('a', {text: gadget.state.remote_url, href: gadget.state.remote_url}),
+              ' (' + gadget.state.remote_comment + ')'
             ]),
             renderTreeXml(evt.target.response.querySelector('tree')),
             domsugar('button', {type: 'button', text: 'Show unmodified files'}),
@@ -147,10 +145,6 @@
 
           ]);
 
-        })
-        .push(undefined, function (error) {
-          console.warn(error);
-          throw error;
         });
 
     });
