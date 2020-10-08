@@ -63,7 +63,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_vcs_status_gadget</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -75,9 +77,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_vcs_status_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

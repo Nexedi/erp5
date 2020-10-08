@@ -3,105 +3,156 @@
 (function (rJS, jIO, domsugar, RSVP, window) {
   "use strict";
 
-  function putMessageType(data, messagetype, string, array) {
-    var i;
-    if (data[string] && data[string].line_list) {
-      for (i = 0; i < data[string].line_list.length; i += 1) {
-        array.push(domsugar('tr', [
-          domsugar('td', {text: messagetype}),
-          domsugar('td', {text: data[string].line_list[i].count}),
-          domsugar('td', {text: data[string].line_list[i].method_id}),
-          domsugar('td', {text: data[string].line_list[i].node}),
-          domsugar('td', {text: data[string].line_list[i].min_pri}),
-          domsugar('td', {text: data[string].line_list[i].max_pri})
-        ]));
-      }
+  var whitelist = {
+    node_list: {
+      P: true,
+      UL: true,
+      LI: true,
+      INPUT: true,
+      LABEL: true
+    },
+    attribute_list: {
+      type: true
     }
+  };
+
+  function keepOnlyChildren(current_node) {
+    var fragment = document.createDocumentFragment();
+
+    while (current_node.firstChild) {
+      fragment.appendChild(current_node.firstChild);
+    }
+    current_node.parentNode.replaceChild(
+      fragment,
+      current_node
+    );
   }
 
-  function putMessageType2(data, messagetype, string, array) {
-    var i;
-    if (data[string] && data[string].line_list) {
-      for (i = 0; i < data[string].line_list.length; i += 1) {
-        array.push(domsugar('tr', [
-          domsugar('td', {text: messagetype}),
-          domsugar('td', {text: data[string].line_list[i].pri}),
-          domsugar('td', {text: data[string].line_list[i].min}),
-          domsugar('td', {text: data[string].line_list[i].avg}),
-          domsugar('td', {text: data[string].line_list[i].max})
-        ]));
+  function renderTreeXml(tree_xml_element) {
+    var iterator,
+      current_node,
+      next_node,
+      ul_node,
+      attribute,
+      attribute_list,
+      len,
+      link_len,
+      already_dropped,
+      finished = false;
+
+    // Replace the tree element by a fragment
+    next_node = domsugar('ul');
+    while (tree_xml_element.firstChild) {
+      next_node.appendChild(tree_xml_element.firstChild);
+    }
+    tree_xml_element = next_node;
+
+    iterator = document.createNodeIterator(
+      tree_xml_element,
+      NodeFilter.SHOW_ELEMENT,
+      function () {
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    );
+
+    while (!finished) {
+      current_node = iterator.nextNode();
+      finished = (current_node === null);
+      if (!finished) {
+
+        console.log('node name', current_node.nodeName);
+        if (current_node.nodeName === 'item') {
+          next_node = domsugar('li', [
+            domsugar('label', [
+              domsugar('input', {type: 'checkbox'}),
+              '+/-'
+            ]),
+            domsugar('label', [
+              domsugar('input', {type: 'checkbox'}),
+              current_node.getAttribute('text')
+            ])
+          ]);
+          if (current_node.firstChild) {
+            ul_node = domsugar('ul');
+            next_node.appendChild(ul_node);
+          }
+          while (current_node.firstChild) {
+            ul_node.appendChild(current_node.firstChild);
+          }
+          current_node.parentNode.replaceChild(
+            next_node,
+            current_node
+          );
+        } else if (!whitelist.node_list[current_node.nodeName]) {
+          keepOnlyChildren(current_node);
+        } else {
+          // Cleanup attributes
+          attribute_list = current_node.attributes;
+          len = attribute_list.length;
+          while (len !== 0) {
+            len = len - 1;
+            attribute = attribute_list[len].name;
+            if (!whitelist.attribute_list[attribute]) {
+              current_node.removeAttribute(attribute);
+            }
+          }
+
+        }
+
       }
     }
+
+    return tree_xml_element;
   }
+
+
 
   rJS(window)
     .declareMethod('render', function (options) {
       console.log(options);
+      options.diff_url = 'https://softinst136575.host.vifib.net/erp5/portal_templates/210/tree.xml?bt_id=erp5&do_extract:int=1';
       return this.changeState(options);
     })
 
-    .onLoop(function () {
-      var form_gadget = this;
-      if (!form_gadget.state.read_activity_list_url) {
-        // renderjs has not yet been called
-        // gadget doesn't know which URL to call
-        return undefined;
-      }
+    .onStateChange(function () {
+      var gadget = this;
       return new RSVP.Queue()
         .push(function () {
           return jIO.util.ajax(
             {
               "type": "GET",
-              "url": form_gadget.state.read_activity_list_url,
+              "url": gadget.state.diff_url,
               "xhrFields": {
                 withCredentials: true
-              }
+              },
+              "dataType": "document"
             }
           );
         })
         .push(function (evt) {
-          var data = JSON.parse(evt.target.response),
-            tbody1_content_list = [],
-            tbody2_content_list = [];
-          putMessageType(data, 'dict', 'SQLDict', tbody1_content_list);
-          putMessageType(data, 'queue', 'SQLQueue', tbody1_content_list);
-          putMessageType2(data, 'dict', 'SQLDict2', tbody2_content_list);
-          putMessageType2(data, 'queue', 'SQLQueue2', tbody2_content_list);
-          domsugar(form_gadget.element.querySelector(".activity_watcher_gadget"), [
-            'Date : ',
-            new Date().toTimeString(),
-
-            domsugar('table', [
-              domsugar('thead', [domsugar('tr', [
-                domsugar('th', {text: 'Type'}),
-                domsugar('th', {text: 'Count'}),
-                domsugar('th', {text: 'Method Id'}),
-                domsugar('th', {text: 'Processing Node'}),
-                domsugar('th', {text: 'Min pri'}),
-                domsugar('th', {text: 'Max pri'})
-              ])]),
-              domsugar('tbody', tbody1_content_list)
+          console.log(evt.target.response);
+          console.log(evt.target.response.body);
+          console.log(evt.target.response.querySelector('tree'));
+          domsugar(gadget.element, [
+            domsugar('p', [
+              'Repository: ',
+              domsugar('a', {text: 'ici'}),
+              ' (wip)'
             ]),
+            renderTreeXml(evt.target.response.querySelector('tree')),
+            domsugar('button', {type: 'button', text: 'Show unmodified files'}),
+            domsugar('button', {type: 'button', text: 'Expand'}),
+            domsugar('button', {type: 'button', text: 'View Diff'}),
+            domsugar('button', {type: 'button', text: 'Commit Changes'})
 
-            domsugar('table', [
-              domsugar('thead', [domsugar('tr', [
-                domsugar('th', {text: 'Type'}),
-                domsugar('th', {text: 'Priority'}),
-                domsugar('th', {text: 'Min'}),
-                domsugar('th', {text: 'Avg'}),
-                domsugar('th', {text: 'Max'})
-              ])]),
-              domsugar('tbody', tbody2_content_list)
-            ])
           ]);
 
-        }, function (error) {
-          //Exception is raised if network is lost for some reasons,
-          //in this case, try patiently until network is back.
-          console.warn("Unable to fetch activities from ERP5", error);
-          form_gadget.element.querySelector(".activity_watcher_gadget")
-                     .textContent = "Unable to fetch activities from ERP5";
+        })
+        .push(undefined, function (error) {
+          console.warn(error);
+          throw error;
         });
 
-    }, 1000);
+    });
+
 }(rJS, jIO, domsugar, RSVP, window));
