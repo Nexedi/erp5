@@ -107,6 +107,10 @@
 
 
   rJS(window)
+    .setState({
+      display_step: 'display_tree'
+    })
+
     .declareMethod('render', function (options) {
       return this.changeState({
         get_tree_url: options.get_tree_url,
@@ -117,35 +121,46 @@
 
     .onStateChange(function () {
       var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return jIO.util.ajax(
-            {
-              "type": "GET",
-              "url": gadget.state.get_tree_url,
-              "xhrFields": {
-                withCredentials: true
-              },
-              "dataType": "document"
-            }
-          );
-        })
-        .push(function (evt) {
-          domsugar(gadget.element, [
-            domsugar('p', [
-              'Repository: ',
-              domsugar('a', {text: gadget.state.remote_url, href: gadget.state.remote_url}),
-              ' (' + gadget.state.remote_comment + ')'
-            ]),
-            renderTreeXml(evt.target.response.querySelector('tree')),
-            domsugar('button', {type: 'button', text: 'Show unmodified files'}),
-            domsugar('button', {type: 'button', text: 'Expand'}),
-            domsugar('button', {type: 'button', text: 'View Diff'}),
-            domsugar('button', {type: 'button', text: 'Commit Changes'})
 
-          ]);
+      if (gadget.state.display_step === 'display_tree') {
+        return new RSVP.Queue()
+          .push(function () {
+            domsugar(gadget.element, [
+              domsugar('p', [
+                'Repository: ',
+                domsugar('a', {
+                  text: gadget.state.remote_url,
+                  href: gadget.state.remote_url
+                }),
+                ' (' + gadget.state.remote_comment + ')'
+              ]),
+              domsugar('button', {type: 'button', text: 'Show unmodified files'}),
+              domsugar('button', {type: 'button', text: 'Expand'}),
+              domsugar('button', {type: 'button', text: 'View Diff'}),
+              domsugar('button', {type: 'button', text: 'Commit Changes'}),
+              domsugar('div')
+            ]);
 
-        });
+            return jIO.util.ajax(
+              {
+                "type": "GET",
+                "url": gadget.state.get_tree_url,
+                "xhrFields": {
+                  withCredentials: true
+                },
+                "dataType": "document"
+              }
+            );
+          })
+          .push(function (evt) {
+            domsugar(gadget.element.querySelector('div'), [
+              renderTreeXml(evt.target.response.querySelector('tree')),
+            ]);
+          });
+
+      }
+
+      throw new Error('Unhandled display step: ' + gadget.state.display_step);
 
     });
 
