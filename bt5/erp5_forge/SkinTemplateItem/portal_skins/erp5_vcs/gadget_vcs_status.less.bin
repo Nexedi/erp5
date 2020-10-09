@@ -4,21 +4,28 @@ div[data-gadget-url$="gadget_vcs_status.html"] {
     li {
       padding-left: 1em;
     }
+
+    input.showhide {
+      display: none;
+      &:checked ~ label.show {
+        display: none;
+      }
+      &:checked ~ ul {
+        display: none;
+      }
+      &:not(:checked) ~ label.hide {
+        display: none;
+      }
+    }
+
     label {
+      &.showhide {
+        width: 1em;
+      }
       display: inline-block;
 
       input {
-        padding: 0 6pt;
-      }
-
-      &:first-child:not(:last-child) {
-        // Hide open/close checkboxes
-        input {
-          display: none;
-        }
-      }
-      &:last-child:before {
-        content: "* ";
+        margin: 0 3pt;
       }
     }
   }
