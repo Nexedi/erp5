@@ -94,7 +94,18 @@
 <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
+<tal:block tal:define="search_query python: 'delivery.start_date:&#34;2001/01/01&#34;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
+<tal:block tal:define="parsed_query python: 'delivery.start_date: &nbsp;&#34;2001/01/01&#34;';
+                       search_query python: ''">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
 
