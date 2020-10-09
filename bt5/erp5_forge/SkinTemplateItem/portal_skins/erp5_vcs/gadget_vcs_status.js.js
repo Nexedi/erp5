@@ -227,7 +227,7 @@
           is_indeterminate = false;
           for (i = 0; i < element_list.length; i += 1) {
             is_checked = is_checked && element_list[i].querySelector('input.vcs_to_commit').checked;
-            is_indeterminate = is_indeterminate || element_list[i].querySelector('input.vcs_to_commit').checked;
+            is_indeterminate = is_indeterminate || element_list[i].querySelector('input.vcs_to_commit').checked || element_list[i].querySelector('input.vcs_to_commit').indeterminate;
           }
           parent_checkbox.checked = is_checked;
           parent_checkbox.indeterminate = (!is_checked) && is_indeterminate;
