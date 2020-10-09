@@ -12,7 +12,8 @@
       LABEL: true
     },
     attribute_list: {
-      type: true
+      type: true,
+      class: true
     }
   };
 
@@ -35,6 +36,7 @@
       ul_node,
       attribute,
       attribute_list,
+      child_list,
       len,
       link_len,
       already_dropped,
@@ -61,27 +63,36 @@
       if (!finished) {
 
         if (current_node.nodeName === 'item') {
-          next_node = domsugar('li', [
-            domsugar('label', [
+          child_list = []
+
+          // Open/hide element
+          if (current_node.firstChild) {
+            child_list.push(domsugar('label', [
               domsugar('input', {type: 'checkbox'}),
               '+/-'
-            ]),
-            domsugar('label', [
-              domsugar('input', {type: 'checkbox'}),
-              current_node.getAttribute('text')
-            ])
-          ]);
+            ]));
+          }
+
+          // Select element
+          child_list.push(domsugar('label', [
+            domsugar('input', {type: 'checkbox', class: 'vcs_to_commit'}),
+            current_node.getAttribute('text')
+          ]));
+
+          // Child items
           if (current_node.firstChild) {
             ul_node = domsugar('ul');
-            next_node.appendChild(ul_node);
+            while (current_node.firstChild) {
+              ul_node.appendChild(current_node.firstChild);
+            }
+            child_list.push(ul_node);
           }
-          while (current_node.firstChild) {
-            ul_node.appendChild(current_node.firstChild);
-          }
+
           current_node.parentNode.replaceChild(
-            next_node,
+            domsugar('li', child_list),
             current_node
           );
+
         } else if (!whitelist.node_list[current_node.nodeName]) {
           keepOnlyChildren(current_node);
         } else {
@@ -95,7 +106,6 @@
               current_node.removeAttribute(attribute);
             }
           }
-
         }
 
       }
@@ -138,7 +148,7 @@
               domsugar('button', {type: 'button', text: 'Expand'}),
               domsugar('button', {type: 'button', text: 'View Diff'}),
               domsugar('button', {type: 'button', text: 'Commit Changes'}),
-              domsugar('div')
+              domsugar('div', {text: 'Checking for changes.'})
             ]);
 
             return jIO.util.ajax(
@@ -162,6 +172,89 @@
 
       throw new Error('Unhandled display step: ' + gadget.state.display_step);
 
-    });
+    })
+
+    .onEvent("change", function (evt) {
+      var gadget = this,
+        tag_name = evt.target.tagName,
+        i,
+        element_list,
+        checkbox,
+        parent_checkbox,
+        parent_ul,
+        state_dict,
+        is_checked,
+        is_indeterminate;
+
+      // Only handle vcs_to_commit checkbox
+      if ((tag_name !== 'INPUT') || (evt.target.className !== 'vcs_to_commit')) {
+        return;
+      }
+
+      // https://css-tricks.com/indeterminate-checkboxes/
+
+      // Check/uncheck all children checkboxes
+      element_list = evt.target.parentElement
+                               .parentElement.querySelectorAll('input.vcs_to_commit');
+      for (i = 0; i < element_list.length; i += 1) {
+        element_list[i].checked = evt.target.checked;
+        element_list[i].indeterminate = false;
+      }
+
+      // Check/uncheck/undefine all parent checkboxes
+      checkbox = evt.target;
+      while (checkbox !== null) {
+        parent_checkbox = checkbox.closest('ul')
+                                  .parentNode
+                                  .querySelector('input.vcs_to_commit');
+
+        if (parent_checkbox === checkbox) {
+          // Top checkbox
+          checkbox = null;
+        } else {
+          // check the state of all child chexbox
+          element_list = parent_checkbox.closest('li').querySelector('ul').children;
+          is_checked = true;
+          is_indeterminate = false;
+          for (i = 0; i < element_list.length; i += 1) {
+            is_checked = is_checked && element_list[i].querySelector('input.vcs_to_commit').checked;
+            is_indeterminate = is_indeterminate || element_list[i].querySelector('input.vcs_to_commit').checked;
+          }
+          parent_checkbox.checked = is_checked;
+          parent_checkbox.indeterminate = (!is_checked) && is_indeterminate;
+
+          checkbox = parent_checkbox;
+        }
+    }
+      
+    }, false, false)
+
+    .onEvent("click", function (evt) {
+      // Only handle click on BUTTON and IMG element
+      var gadget = this,
+        tag_name = evt.target.tagName,
+        state_dict;
+
+      if (tag_name !== 'BUTTON') {
+        return;
+      }
+
+      // Disable any button. It must be managed by this gadget
+      evt.preventDefault();
+
+      throw new Error('Unhandled button: ' + evt.target.textContent);
+      // return;
+    }, false, false)
+
+    //////////////////////////////////////////////////
+    // Used when submitting the form
+    //////////////////////////////////////////////////
+    .declareMethod('getContent', function () {
+      throw new Error('getContent not implemented');
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      throw new Error('checkValidity not implemented');
+    }, {mutex: 'changestate'})
 
 }(rJS, jIO, domsugar, RSVP, window));
