@@ -154,7 +154,7 @@
                 ' (' + gadget.state.remote_comment + ')'
               ]),
               domsugar('button', {type: 'button', text: 'Show unmodified files'}),
-              domsugar('button', {type: 'button', text: 'Expand'}),
+              domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'}),
               domsugar('button', {type: 'button', text: 'View Diff'}),
               domsugar('button', {type: 'button', text: 'Commit Changes'}),
               domsugar('div', {text: 'Checking for changes.'})
@@ -242,7 +242,10 @@
       // Only handle click on BUTTON and IMG element
       var gadget = this,
         tag_name = evt.target.tagName,
-        state_dict;
+        state_dict,
+        is_checked,
+        element_list,
+        i;
 
       if (tag_name !== 'BUTTON') {
         return;
@@ -250,6 +253,17 @@
 
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
+
+      if (evt.target.className.indexOf("expand-tree-btn") !== -1) {
+        element_list = gadget.element.querySelectorAll('input.showhide');
+        is_checked = !element_list[0].checked;
+        for (i = 0; i < element_list.length; i += 1) {
+          element_list[0].checked = is_checked;
+        }
+        return;
+      }
+
+
 
       throw new Error('Unhandled button: ' + evt.target.textContent);
       // return;
