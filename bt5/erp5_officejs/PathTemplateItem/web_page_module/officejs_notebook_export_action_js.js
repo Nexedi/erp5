@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Blob */
+/*global window, rJS, RSVP, jIO, Blob */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Blob) {
+(function (window, rJS, RSVP, jIO, Blob) {
   "use strict";
 
   rJS(window)
@@ -10,7 +10,6 @@
     /////////////////////////////////////////////////////////////////
 
     .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -21,14 +20,10 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var gadget = this, data,
-        jio_key = parent_options.action_options.jio_key,
+      var gadget = this, html_data,
         parent_gadget = parent_options.gadget,
         return_submit_dict = {};
-      return gadget.jio_get(jio_key)
-        .push(function (document) {
-          return parent_gadget.getDeclaredGadget("fg");
-        })
+      return parent_gadget.getDeclaredGadget("fg")
         .push(function (subgadget) {
           return subgadget.getDeclaredGadget("erp5_pt_gadget");
         })
@@ -39,54 +34,22 @@
           return erp5_form_gadget.getDeclaredGadget("text_content");
         })
         .push(function (result) {
-          data = result.element
+          var html_data = result.element
             .querySelector('[data-gadget-scope="editor"]').firstChild
             .contentDocument.body.firstChild.contentDocument.firstChild;
-          return gadget.getDeclaredGadget("ojs_cloudooo");
-        })
-        .push(function (cloudooo_gadget) {
-          return RSVP.all([
-            cloudooo_gadget.putCloudoooConvertOperation({
-              "status": "converted",
-              "from": "txt",
-              "to": "html",
-              "id": jio_key,
-              "name": "data"
-            }),
-            cloudooo_gadget.putCloudoooConvertOperation({
-              "status": "convert",
-              "from": "html",
-              "to": "pdf",
-              "id": jio_key,
-              "name": "html",
-              "to_name": "pdf",
-              "conversion_kw": {
-                "encoding": ["utf8", "string"],
-                "page_size": ["A4", "string"],
-                "zoom" : [1, "double"],
-                "dpi" : ["300", "string"],
-                "header_center" : ["document Title", "string"]
-              }
-            })
-          ]);
-        })
-        .push(function () {
-          return gadget.jio_putAttachment(
-            jio_key,
-            'html',
-            new Blob([data], {type: 'text/html'})
-          );
+          return html2pdf(html_data);
         })
         .push(function () {
           return_submit_dict.redirect = {
             command: 'display',
             options: {
-              jio_key: jio_key,
-              page: 'ojs_download_convert'
+              jio_key: parent_options.jio_key,
+              editable: true
             }
           };
           return return_submit_dict;
         }, function (error) {
+          console.log("ERROR:", error);
           return_submit_dict.notify = {
             message: "Failure exporting document",
             status: "error"
@@ -94,7 +57,7 @@
           return_submit_dict.redirect = {
             command: 'display',
             options: {
-              jio_key: jio_key,
+              jio_key: parent_options.jio_key,
               editable: true
             }
           };
@@ -102,4 +65,4 @@
         });
     });
 
-}(window, rJS, RSVP, Blob));
+}(window, rJS, RSVP, jIO, Blob));
