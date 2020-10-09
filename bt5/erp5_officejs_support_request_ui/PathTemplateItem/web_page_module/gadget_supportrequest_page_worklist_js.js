@@ -78,8 +78,12 @@
               count: result_list[i][2]
             });
           }
-          gadget.element.querySelector('.document_list').innerHTML = table_template({
-            document_list: line_list
+          return gadget.translateHtml(
+            table_template({
+              document_list: line_list
+            })
+          ).push(function (html) {
+            gadget.element.querySelector('.document_list').innerHTML = html;
           });
         });
     });
