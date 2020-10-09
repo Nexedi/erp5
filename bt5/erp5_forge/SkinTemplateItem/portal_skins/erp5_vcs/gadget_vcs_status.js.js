@@ -13,7 +13,9 @@
     },
     attribute_list: {
       type: true,
-      class: true
+      class: true,
+      id: true,
+      for: true
     }
   };
 
@@ -40,7 +42,8 @@
       len,
       link_len,
       already_dropped,
-      finished = false;
+      finished = false,
+      id = -1;
 
     // Replace the tree element by a fragment
     next_node = domsugar('ul');
@@ -67,10 +70,16 @@
 
           // Open/hide element
           if (current_node.firstChild) {
-            child_list.push(domsugar('label', [
-              domsugar('input', {type: 'checkbox'}),
-              '+/-'
-            ]));
+            id += 1;
+            child_list.push(
+              domsugar('input', {type: 'checkbox', id: 'showhide' + id, class: 'showhide'}),
+              domsugar('label', {for: 'showhide' + id, class: 'showhide show', text: '-'}),
+              domsugar('label', {for: 'showhide' + id, class: 'showhide hide', text: '+'}),
+            );
+          } else {
+            child_list.push(
+              domsugar('label', {class: 'showhide', text: ' '}),
+            );
           }
 
           // Select element
