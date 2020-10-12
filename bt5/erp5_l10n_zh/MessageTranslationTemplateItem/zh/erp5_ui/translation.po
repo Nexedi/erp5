@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-07-09 14:03+UTC\n"
-"PO-Revision-Date: 2020-07-09 14:03+UTC\n"
+"POT-Creation-Date: 2020-10-12 14:03+UTC\n"
+"PO-Revision-Date: 2020-10-12 14:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -9051,3 +9051,57 @@ msgstr "${portal_type}已创建。"
 
 msgid "Credential Request"
 msgstr "凭证请求"
+
+msgid "Install The OS"
+msgstr "安装操作系统"
+
+msgid "Change The Keyboard"
+msgstr "更改键盘"
+
+msgid "Restart My VM"
+msgstr "重启虚拟机"
+
+msgid "Remote Access to My VM"
+msgstr "远程访问虚拟机"
+
+msgid "Payment Options"
+msgstr "支付方式"
+
+msgid "Order A Second Machine"
+msgstr "订购新机器"
+
+msgid "Get Free Services"
+msgstr "免费服务"
+
+msgid "Purchase Other Services"
+msgstr "购买其他服务"
+
+msgid "Know More Services"
+msgstr "了解更多服务"
+
+msgid "Request A Test Account"
+msgstr "申请测试账户"
+
+msgid "Associate With More VMs"
+msgstr "关联更多虚拟机"
+
+msgid "User Handbook"
+msgstr "用户手册"
+
+msgid "Help"
+msgstr "帮助"
+
+msgid "Advanced SlapOS UI"
+msgstr "高级SlapOS界面"
+
+msgid "FAQ"
+msgstr "常见问题"
+
+msgid "Get Re6st Token!"
+msgstr "获取Re6st令牌"
+
+msgid "Get Free CDN!"
+msgstr "免费获取CDN"
+
+msgid "Get Free Chinese CDN!"
+msgstr "免费获取中国CDN"
