@@ -159,10 +159,18 @@
       return final_result;
     }, {mutex: 'changestate'})
 
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      var input = this.element.querySelector("input");
+      return this.changeState({
+        error_text: error_text
+      });
+    })
+
     .declareMethod('checkValidity', function () {
       var name = this.state.name,
         gadget = this,
         empty;
+
       if (this.state.editable && this.state.required) {
         return new RSVP.Queue()
           .push(function () {
@@ -176,7 +184,10 @@
               error_message = all_result[1];
             empty = !content[name];
             if (empty) {
-              return gadget.notifyInvalid(error_message);
+              return RSVP.all([
+                gadget.deferErrorText(error_message),
+                gadget.notifyInvalid(error_message)
+              ]);
             }
             return gadget.notifyValid();
           })
@@ -186,4 +197,5 @@
       }
       return true;
     });
+
 }(window, rJS, RSVP));

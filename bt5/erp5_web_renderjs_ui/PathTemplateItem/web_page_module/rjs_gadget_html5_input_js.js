@@ -222,10 +222,13 @@
             return result;
           });
       }
-      return gadget.notifyInvalid(this.state.error_text)
-        .push(function () {
-          return result;
-        });
+      if (this.state.error_text) {
+        return gadget.notifyInvalid(this.state.error_text)
+          .push(function () {
+            return result;
+          });
+      }
+      return result;
     }, {mutex: 'changestate'})
 
     .declareJob('deferErrorText', function deferErrorText(error_text) {
