@@ -1301,7 +1301,7 @@ div[data-gadget-scope='header'] .ui-header {
       border-bottom-style: none;
       box-shadow: 0 1px 3px rgba(0,0,0,.15);
       background-color: @colorbackground;
-  
+
       &:not(.ui-li-has-count) {
         a {
           &:after {
@@ -1367,7 +1367,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   //Label
   .ui-field-contain {
-    & > label {
+    & > label:not(:is-invalid) {
       color: @colorlabel;
 
     }
