@@ -79,6 +79,11 @@
   <td>ABCD</td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][1]</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][1]</td>
   <td></td>
