@@ -82,6 +82,8 @@
                         <string>your_fourth_failure</string>
                         <string>your_fifth_failure</string>
                         <string>your_sixth_failure</string>
+                        <string>your_seventh_failure</string>
+                        <string>your_eighth_failure</string>
                       </list>
                     </value>
                 </item>
