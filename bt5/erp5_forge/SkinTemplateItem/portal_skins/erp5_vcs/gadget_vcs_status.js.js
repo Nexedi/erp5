@@ -15,7 +15,9 @@
       type: true,
       class: true,
       id: true,
-      for: true
+      for: true,
+      name: true,
+      value: true
     }
   };
 
@@ -35,6 +37,8 @@
     var iterator,
       current_node,
       next_node,
+      parent_node,
+      value,
       ul_node,
       attribute,
       attribute_list,
@@ -83,8 +87,31 @@
           }
 
           // Select element
+          parent_node = current_node.closest('ul');
+          if (parent_node !== null) {
+            parent_node = parent_node.parentNode;
+          }
+          if (parent_node !== null) {
+            parent_node = parent_node.querySelector('input.vcs_to_commit');
+          }
+
+          value = current_node.getAttribute('text');
+
+          if ((parent_node !== null) && (parent_node !== current_node)) {
+            value = parent_node.value + '/' + value;
+          }
+
           child_list.push(domsugar('label', [
-            domsugar('input', {type: 'checkbox', class: 'vcs_to_commit'}),
+            domsugar('input', {
+              type: 'checkbox',
+              class: 'vcs_to_commit',
+              value: value,
+              name: {
+                'green': 'added',
+                'orange': 'modified',
+                'red': 'deleted'
+              }[current_node.getAttribute('aCol')]
+            }),
             current_node.getAttribute('text')
           ]));
 
@@ -155,8 +182,8 @@
               ]),
               domsugar('button', {type: 'button', text: 'Show unmodified files'}),
               domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'}),
-              domsugar('button', {type: 'button', text: 'View Diff'}),
-              domsugar('button', {type: 'button', text: 'Commit Changes'}),
+              domsugar('button', {type: 'button', text: 'View Diff', class: 'diff-tree-btn ui-btn-icon-left ui-icon-search-plus'}),
+              domsugar('button', {type: 'button', text: 'Commit Changes', class: 'commit-tree-btn ui-btn-icon-left ui-icon-git'}),
               domsugar('div', {text: 'Checking for changes.'})
             ]);
 
@@ -263,7 +290,9 @@
         return;
       }
 
-
+      if (evt.target.className.indexOf("diff-tree-btn") !== -1) {
+        return gadget.getContent();
+      }
 
       throw new Error('Unhandled button: ' + evt.target.textContent);
       // return;
@@ -273,7 +302,23 @@
     // Used when submitting the form
     //////////////////////////////////////////////////
     .declareMethod('getContent', function () {
-      throw new Error('getContent not implemented');
+      var result = {
+        added: [],
+        modified: [],
+        deleted: []
+      },
+        checkbox_list = this.element.querySelectorAll('input.vcs_to_commit'),
+        i,
+        name,
+        list_to_change;
+      for (i = 0; i < checkbox_list.length; i += 1) {
+        name = checkbox_list[i].name;
+        if (name && checkbox_list[i].checked) {
+          result[name].push(checkbox_list[i].value);
+        }
+      }
+      console.warn(result);
+      // throw new Error('getContent not implemented');
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
