@@ -1183,7 +1183,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
-.gadget-content .ui-field-contain > label {
+.gadget-content .ui-field-contain > label:not(:is-invalid) {
   color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {
