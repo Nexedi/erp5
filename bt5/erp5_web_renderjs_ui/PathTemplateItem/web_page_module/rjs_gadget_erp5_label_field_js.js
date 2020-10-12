@@ -145,6 +145,14 @@
         }
       }
 
+      if (this.state.error_text && this.props.label_element &&
+          !this.props.label_element.classList.contains("is-invalid")) {
+        this.props.label_element.classList.add("is-invalid");
+      } else if (!this.state.error_text &&
+                 this.props.label_element.classList.contains("is-invalid")) {
+        this.props.label_element.classList.remove("is-invalid");
+      }
+
       if (modification_dict.hasOwnProperty('display_error_text') || modification_dict.hasOwnProperty('error_text')) {
         // first remove old errors
         span = this.props.container_element.lastElementChild;
