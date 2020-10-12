@@ -32,6 +32,7 @@ INTERVAL=$2
 }
 
 node_priority_cols="processing_node AS node, MIN(priority) AS min_pri, MAX(priority) AS max_pri"
+count='(SELECT count AS "InnoDB history list length" FROM information_schema.innodb_metrics WHERE name="trx_rseg_history_len") as i'
 for t in message:dict message_queue:queue message_job:joblib; do
   table=${t%:*}
   t=${t#*:}
@@ -58,15 +59,11 @@ for t in message:dict message_queue:queue message_job:joblib; do
     TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MAX(max_date)), \"%T\") AS min,
     TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MIN(min_date)), \"%T\") AS max
     FROM _$t GROUP BY priority ORDER BY priority;"
-  [ "$count" ] && {
-    not_processing=$not_processing" UNION ALL "
-    count=$count,
-  }
-  not_processing=$not_processing"
+  not_processing=${not_processing:+$not_processing UNION ALL }"
   SELECT IFNULL(SUM(n),0) AS count, $node_priority_cols,
       MIN(min_date) AS min_date, MAX(max_date) AS max_date
     FROM _$t WHERE processing_node<=0 GROUP BY processing_node"
-  count=$count"(SELECT IFNULL(SUM(n),0) AS $t FROM _$t) as $t"
+  count=$count",(SELECT IFNULL(SUM(n),0) AS $t FROM _$t) as $t"
   total=$total+$t
 done
 exec watch -n ${INTERVAL:-5} "${MYSQL:-mysql} $MYSQL_OPT --disable-pager -t -e '

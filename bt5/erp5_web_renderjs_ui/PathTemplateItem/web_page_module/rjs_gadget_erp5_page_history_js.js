@@ -56,7 +56,7 @@
           row_list = result.data.rows;
           for (i = 0; i < row_list.length; i += 1) {
             url_for_parameter_list.push({
-              command: 'display',
+              command: 'push_history',
               options: {jio_key: row_list[i].id}
             });
           }

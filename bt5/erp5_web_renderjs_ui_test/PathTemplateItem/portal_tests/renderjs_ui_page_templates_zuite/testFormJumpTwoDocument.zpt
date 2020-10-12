@@ -50,6 +50,13 @@
   <td>//div[@data-gadget-scope='panel']//a[text()='Metadata' and not(contains(@class, 'active'))]</td>
   <td></td>
 </tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Related Bar' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='header']//button[text()='Filter']</td>

@@ -1,12 +1,22 @@
+Query | viewSA
 Smart Assistant File Module | view
-Smart Assistant File | jio_view
+Smart Assistant File | download
+Smart Assistant File | new_event
+Smart Assistant File | new_expense
+Smart Assistant File | new_person
 Smart Assistant File | view
 Smart Assistant Image Module | view
-Smart Assistant Image | jio_view
+Smart Assistant Image | new_event
+Smart Assistant Image | new_expense
+Smart Assistant Image | new_person
 Smart Assistant Image | view
 Smart Assistant Sound Module | view
-Smart Assistant Sound | jio_view
+Smart Assistant Sound | new_event
+Smart Assistant Sound | new_expense
+Smart Assistant Sound | new_person
 Smart Assistant Sound | view
 Smart Assistant Text Module | view
-Smart Assistant Text | jio_view
+Smart Assistant Text | new_event
+Smart Assistant Text | new_expense
+Smart Assistant Text | new_person
 Smart Assistant Text | view

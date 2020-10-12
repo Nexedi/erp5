@@ -143,6 +143,10 @@ def generatePortalTypeClass(site, portal_type_name):
                         _categories=[],
                         constraints=[])
 
+  # When only the inner portal type class is loaded (ERP5Site initial
+  # installation, recursive loads, bootstrap)
+  is_partially_generated = False
+
   if portal_type_name in core_portal_type_class_dict:
     if not core_portal_type_class_dict[portal_type_name]['generating']:
       # Loading the (full) outer portal type class
@@ -158,7 +162,8 @@ def generatePortalTypeClass(site, portal_type_name):
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
-      return ((klass,), [], [], attribute_dict)
+      is_partially_generated = True
+      return is_partially_generated, ((klass,), [], [], attribute_dict)
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
@@ -198,13 +203,11 @@ def generatePortalTypeClass(site, portal_type_name):
       # Only happen when portal_types is empty (e.g. when creating a
       # new ERP5Site)
       type_class = core_portal_type_class_dict[portal_type_name]['type_class']
+      is_partially_generated = True
     else:
-      # Try to figure out a coresponding document class from the
-      # document side.  This can happen when calling newTempAmount for
-      # instance:
-      #  Amount has no corresponding Base Type and will never have one
-      #  But the semantic of newTempXXX requires us to create an
-      #  object using the Amount Document, so we promptly do it:
+      # Missing Portal Type. This should not happen (all ERP5 object *must*
+      # have a Portal Type and newTempXXX being deprecated) but try anyway to
+      # figure out a coresponding Document class.
       type_class = portal_type_name.replace(' ', '')
 
     mixin_list = []
@@ -277,6 +280,8 @@ def generatePortalTypeClass(site, portal_type_name):
       attribute_dict['_categories'] = list(base_category_set)
     finally:
       property_sheet_generating_portal_type_set.remove(portal_type_name)
+  else:
+    is_partially_generated = True
 
   # LOG("ERP5Type.dynamic", INFO,
   #     "Filled accessor holder list for portal_type %s (%s)" % \
@@ -344,10 +349,10 @@ def generatePortalTypeClass(site, portal_type_name):
   #    "Portal type %s loaded with bases %s" \
   #        % (portal_type_name, repr(base_class_list)))
 
-  return (tuple(base_class_list),
-          portal_type_category_list,
-          interface_class_list,
-          attribute_dict)
+  return is_partially_generated, (tuple(base_class_list),
+                                  portal_type_category_list,
+                                  interface_class_list,
+                                  attribute_dict)
 
 def loadTempPortalTypeClass(portal_type_name):
   """

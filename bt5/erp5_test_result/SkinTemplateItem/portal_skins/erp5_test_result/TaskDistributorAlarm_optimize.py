@@ -1,4 +1,3 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
 from DateTime import DateTime
 now = DateTime()
 #Clean-up invalidated Test Nodes and
@@ -24,7 +23,7 @@ for test_node in list_node:
       if ping_date <= old_date:
         test_node.invalidate()
   elif validation_state == 'invalidated':
-    __traceback_info__ = test_node
+    __traceback_info__ = test_node # pylint:disable=unused-variable
     if test_node.getSpecialise():
       test_node.getSpecialiseValue().cleanupInvalidatedTestNode(test_node)
 

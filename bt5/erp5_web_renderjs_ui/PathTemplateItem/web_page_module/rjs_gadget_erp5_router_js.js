@@ -54,6 +54,8 @@
     COMMAND_HISTORY_PREVIOUS = "history_previous",
     // Store the current document in history and display the next one
     COMMAND_PUSH_HISTORY = "push_history",
+    // Store the current document in history and display the next one latest state stored
+    COMMAND_PUSH_HISTORY_STORED_STATE = "push_history_stored_state",
     // Change UI language
     COMMAND_CHANGE_LANGUAGE = "change_language",
     VALID_URL_COMMAND_DICT = {},
@@ -78,6 +80,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;
   VALID_URL_COMMAND_DICT[COMMAND_HISTORY_PREVIOUS] = null;
   VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_LOGIN] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RAW] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RELOAD] = null;
@@ -485,10 +488,9 @@
       });
   }
 
-  function execPushHistoryCommand(gadget, previous_options, next_options) {
+  function execPushHistoryCommand(gadget, previous_options, next_options, drop_options, use_stored_state) {
     var jio_key = next_options.jio_key,
       history_options;
-    delete next_options.jio_key;
     if (previous_options.hasOwnProperty('cancel')) {
       history_options = JSON.parse(previous_options.cancel);
       history_options.selection = previous_options.selection;
@@ -501,8 +503,16 @@
     return addHistory(gadget, history_options)
       .push(function (id) {
         next_options.history = id;
+        if (use_stored_state === true) {
+          return execDisplayStoredStateCommand(gadget, next_options, drop_options);
+        }
+        delete next_options.jio_key;
         return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
       });
+  }
+
+  function execPushHistoryStoredStateCommand(gadget, previous_options, next_options, drop_options) {
+    return execPushHistoryCommand(gadget, previous_options, next_options, drop_options, true);
   }
 
   function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options, create_cancel_url) {
@@ -924,6 +934,9 @@
     }
     if (command_options.path === COMMAND_PUSH_HISTORY) {
       return execPushHistoryCommand(gadget, previous_options, next_options);
+    }
+    if (command_options.path === COMMAND_PUSH_HISTORY_STORED_STATE) {
+      return execPushHistoryStoredStateCommand(gadget, previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_LOGIN) {
       return execLoginCommand(gadget, previous_options, next_options);

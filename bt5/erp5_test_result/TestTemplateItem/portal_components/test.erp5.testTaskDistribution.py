@@ -409,7 +409,6 @@ class TestTaskDistribution(TaskDistributionTestCase):
       config_list = json.loads(self.distributor.startTestSuite(
                              title=title))
       return ["%s" % x["test_suite_title"] for x in config_list]
-    now = DateTime()
     def affectTestSuite(node_title, test_suite_list):
       test_node, = self.test_node_module.searchFolder(title=node_title)
       test_node = test_node.getObject()
@@ -430,6 +429,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       affectTestSuite("COMP9-Node1", [test_suite_3])
       # process some test to have old test result in database
       self.processTest("test suite 1", "r0=a", node_title="COMP0-Node1")
+      now = DateTime()
       self.pinDateTime(now + 1.0/86400)
       self.processTest("test suite 2", "r0=a", node_title="COMP1-Node1")
       self.pinDateTime(now + 2.0/86400)
@@ -534,7 +534,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     """
     We will check the method createTestResult of distributor
     """
-    self._createTestNode()
+    test_node, = self._createTestNode() # pylint:disable=unbalanced-tuple-unpacking
     self.tic()
     test_result_path, revision = self._createTestResult()
     self.assertEqual("r0=a,r1=a", revision)
@@ -558,7 +558,11 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.assertEqual(2, len(line_list))
     self.assertEqual(set(['testFoo', 'testBar']), set([x.getTitle() for x
                       in line_list]))
-    line_url, _ = self.tool.startUnitTest(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path, node_title=test_node.getTitle())
+    # when node_title is passed to startUnitTest, we have a relation from test result line
+    # to test node
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    self.assertEqual(test_result_line.getSourceValue(), test_node)
     result = self._createTestResult(test_list=['testFoo', 'testBar'])
     self.assertEqual((test_result_path, revision), result)
     self.tool.startUnitTest(test_result_path)

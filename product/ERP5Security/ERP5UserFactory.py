@@ -23,8 +23,6 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IUserFactoryPlugin
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
-from Products.PluggableAuthService.PropertiedUser import \
-                                            _what_not_even_god_should_do
 from Products import ERP5Security
 
 manage_addERP5UserFactoryForm = PageTemplateFile(

@@ -443,6 +443,10 @@ fieldset.bottom > .field > label {
   padding-bottom: 3px;
 }
 
+.content .field textarea {
+  padding: revert;
+}
+
 .content .field label {
   width: 30%;
 }

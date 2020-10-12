@@ -30,7 +30,7 @@
 import unittest
 from unittest import expectedFailure
 
-from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
+from erp5.component.test.testERP5Type import PropertySheetTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 

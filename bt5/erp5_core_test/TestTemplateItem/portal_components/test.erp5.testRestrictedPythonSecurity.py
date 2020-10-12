@@ -51,14 +51,13 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     func = getattr(self.portal, name)
     return func(**kwargs)
 
-  def createAndRunScript(self, *args, **kwargs):
+  def createAndRunScript(self, code, **kwargs):
     # we do not care the script name for security test thus use uuid1
     name = str(uuid.uuid1())
-    code = '\n'.join(args)
     expected = kwargs.get('expected', None)
     script_container = self.portal.portal_skins.custom
     try:
-      createZODBPythonScript(script_container, name, '**kw', code)
+      createZODBPythonScript(script_container, name, '**kw', textwrap.dedent(code))
       if expected:
         self.assertEqual(self.runScript(script_container, name, kwargs.get('kwargs', {})), expected)
       else:
@@ -72,13 +71,30 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
       and running the Script.
     """
     self.createAndRunScript('import datetime')
-    self.createAndRunScript('import datetime', 'return datetime.datetime.now()')
-    self.createAndRunScript('import datetime', 'return datetime.time.max')
-    self.createAndRunScript('import datetime', 'return datetime.date.today()')
-    self.createAndRunScript('import datetime', 'return datetime.timedelta.min')
-    self.createAndRunScript('import datetime', 'return datetime.tzinfo')
-    self.createAndRunScript('import datetime',
-                            "return datetime.datetime.strptime('', '')")
+    self.createAndRunScript('''
+        import datetime
+        return datetime.datetime.now()
+        ''')
+    self.createAndRunScript('''
+        import datetime
+        return datetime.time.max
+        ''')
+    self.createAndRunScript('''
+        import datetime
+        return datetime.date.today()
+        ''')
+    self.createAndRunScript('''
+        import datetime
+        return datetime.timedelta.min
+        ''')
+    self.createAndRunScript('''
+        import datetime
+        return datetime.tzinfo
+        ''')
+    self.createAndRunScript('''
+        import datetime
+        return datetime.datetime.strptime('', '')
+        ''')
 
   def testDictClassMethod(self):
     # This is intended to be allowed from the beggining
@@ -86,172 +102,193 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
 
   def testDecimalClassMethod(self):
     # Now it is not allowed
-    self.assertRaises(Unauthorized,
-      self.createAndRunScript, 'import decimal',
-                               'return decimal.Decimal.from_float(3.3)')
+    self.assertRaises(
+        Unauthorized,
+        self.createAndRunScript,
+        '''
+        import decimal
+        return decimal.Decimal.from_float(3.3)
+        ''')
+
     # allow it only in this test class to check
     import decimal
     allow_class_attribute(decimal.Decimal, {"from_float":1})
     # make sure now we can run without raising Unauthorized
-    self.createAndRunScript('import decimal',
-                            'return decimal.Decimal.from_float(3.3)')
+    self.createAndRunScript('''
+        import decimal
+        return decimal.Decimal.from_float(3.3)
+        ''')
 
   def test_urlparse(self):
-    self.createAndRunScript(
-        'import urlparse',
-        'return urlparse.urlparse("http://example.com/pa/th/?q=s").path',
+    self.createAndRunScript('''
+        import urlparse
+        return urlparse.urlparse("http://example.com/pa/th/?q=s").path
+        ''',
         expected='/pa/th/'
     )
     # access computed attributes (property) is also OK
-    self.createAndRunScript(
-        'import urlparse',
-        'return urlparse.urlparse("http://example.com/pa/th/?q=s").hostname',
+    self.createAndRunScript('''
+        import urlparse
+        return urlparse.urlparse("http://example.com/pa/th/?q=s").hostname
+        ''',
         expected='example.com'
     )
-    self.createAndRunScript(
-        'import urlparse',
-        'return urlparse.urlsplit("http://example.com/pa/th/?q=s").path',
+    self.createAndRunScript('''
+        import urlparse
+        return urlparse.urlsplit("http://example.com/pa/th/?q=s").path
+        ''',
         expected='/pa/th/'
     )
-    self.createAndRunScript(
-        'import urlparse',
-        'return urlparse.urldefrag("http://example.com/#frag")[1]',
+    self.createAndRunScript('''
+        import urlparse
+        return urlparse.urldefrag("http://example.com/#frag")[1]
+        ''',
         expected='frag'
     )
-    self.createAndRunScript(
-        'import urlparse',
-        'return urlparse.parse_qs("q=s")',
+    self.createAndRunScript('''
+        import urlparse
+        return urlparse.parse_qs("q=s")
+        ''',
         expected={'q': ['s']}
     )
-    self.createAndRunScript(
-        'import urlparse',
-        'return urlparse.parse_qsl("q=s")',
+    self.createAndRunScript('''
+        import urlparse
+        return urlparse.parse_qsl("q=s")
+        ''',
         expected=[('q', 's')]
     )
 
+  def testRandom(self):
+    self.createAndRunScript('''
+        import random
+        return random.Random().getrandbits(10)
+        ''')
+
   def testSystemRandom(self):
-    self.createAndRunScript('import random',
-                            'return random.SystemRandom().getrandbits(10)')
+    self.createAndRunScript('''
+        import random
+        return random.SystemRandom().getrandbits(10)
+        ''')
 
   def test_os_urandom(self):
-    self.createAndRunScript('import os',
-                            'return os.urandom(10)')
+    self.createAndRunScript('''
+        import os
+        return os.urandom(10)
+        ''')
     # other "unsafe" os members are not exposed
-    self.assertRaises(Unauthorized,
-      self.createAndRunScript, 'import os',
-                               'return os.path.exists("/")')
-    self.assertRaises(Unauthorized,
-      self.createAndRunScript, 'import os',
-                               'return os.system')
+    self.assertRaises(
+        Unauthorized,
+        self.createAndRunScript,
+        '''
+        import os
+        return os.path.exists("/")
+        ''')
+    self.assertRaises(
+        Unauthorized,
+        self.createAndRunScript,
+        '''
+        import os
+        return os.system
+        ''')
     self.assertRaises(Unauthorized,
       self.createAndRunScript, 'from os import system')
 
   def test_set(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          s = set()
-          s.add(1)
-          s.clear()
-          s.copy()
-          s = set([1, 2])
-          s.difference([1])
-          s.difference_update([1])
-          s.discard(1)
-          s.intersection([1])
-          s.intersection_update([1])
-          s.isdisjoint([1])
-          s.issubset([1])
-          s.issuperset([1])
-          s.add(1)
-          s.pop()
-          s.add(1)
-          s.remove(1)
-          s.symmetric_difference([1])
-          s.symmetric_difference_update([1])
-          s.union([1])
-          s.update()
-        '''),
-    )
+    self.createAndRunScript('''
+        s = set()
+        s.add(1)
+        s.clear()
+        s.copy()
+        s = set([1, 2])
+        s.difference([1])
+        s.difference_update([1])
+        s.discard(1)
+        s.intersection([1])
+        s.intersection_update([1])
+        s.isdisjoint([1])
+        s.issubset([1])
+        s.issuperset([1])
+        s.add(1)
+        s.pop()
+        s.add(1)
+        s.remove(1)
+        s.symmetric_difference([1])
+        s.symmetric_difference_update([1])
+        s.union([1])
+        s.update()
+        ''')
 
   def test_frozenset(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          s = frozenset([1, 2])
-          s.copy()
-          s.difference([1])
-          s.intersection([1])
-          s.isdisjoint([1])
-          s.issubset([1])
-          s.issuperset([1])
-          s.symmetric_difference([1])
-          s.union([1])
-        '''),
-    )
+    self.createAndRunScript('''
+        s = frozenset([1, 2])
+        s.copy()
+        s.difference([1])
+        s.intersection([1])
+        s.isdisjoint([1])
+        s.issubset([1])
+        s.issuperset([1])
+        s.symmetric_difference([1])
+        s.union([1])
+        ''')
 
   def test_sorted(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          returned = []
-          for i in sorted([2, 3, 1]):
-            returned.append(i)
-          return returned
-        '''),
+    self.createAndRunScript('''
+        returned = []
+        for i in sorted([2, 3, 1]):
+          returned.append(i)
+        return returned
+        ''',
         expected=[1, 2, 3],
     )
 
   def test_reversed(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          returned = []
-          for i in reversed(('3', '2', '1')):
-            returned.append(i)
-          return returned
-        '''),
+    self.createAndRunScript('''
+        returned = []
+        for i in reversed(('3', '2', '1')):
+          returned.append(i)
+        return returned
+        ''',
         expected=['1', '2', '3'],
     )
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          returned = []
-          for i in reversed([3, 2, 1]):
-            returned.append(i)
-          return returned
-        '''),
+    self.createAndRunScript('''
+        returned = []
+        for i in reversed([3, 2, 1]):
+          returned.append(i)
+        return returned
+        ''',
         expected=[1, 2, 3],
     )
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          returned = []
-          for i in reversed('321'):
-            returned.append(i)
-          return returned
-        '''),
+    self.createAndRunScript('''
+        returned = []
+        for i in reversed('321'):
+          returned.append(i)
+        return returned
+        ''',
         expected=['1', '2', '3'],
     )
 
   def test_enumerate(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          returned = []
-          for i in enumerate(["zero", "one", "two",]):
-            returned.append(i)
-          return returned
-        '''),
+    self.createAndRunScript('''
+        returned = []
+        for i in enumerate(["zero", "one", "two",]):
+          returned.append(i)
+        return returned
+        ''',
         expected=[(0, "zero"), (1, "one"), (2, "two"), ],
     )
     # with start= argument
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          returned = []
-          for i in enumerate(["one", "two", "three"], start=1):
-            returned.append(i)
-          return returned
-        '''),
+    self.createAndRunScript('''
+        returned = []
+        for i in enumerate(["one", "two", "three"], start=1):
+          returned.append(i)
+        return returned
+        ''',
         expected=[(1, "one"), (2, "two"), (3, "three")],
     )
 
   def test_generator_iteration(self):
     generator_iteration_script = textwrap.dedent(
-        '''\
+        '''
         result = []
         for elem in kw['generator']:
           result.append(elem)
@@ -294,327 +331,309 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         kwargs={'generator': generator_with_not_allowed_objects()},
     )
 
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          result = []
-          i = iter(kw['generator'])
-          for _ in range(100): # prevent infinite loop
-            try:
-              result.append(next(i))
-            except StopIteration:
-              break
-            except Exception as e:
-              result.append(repr(e))
-          return result
-        '''),
+    self.createAndRunScript('''
+        result = []
+        i = iter(kw['generator'])
+        for _ in range(100): # prevent infinite loop
+          try:
+            result.append(next(i))
+          except StopIteration:
+            break
+          except Exception as e:
+            result.append(repr(e))
+        return result
+        ''',
         kwargs={'generator': generator_with_not_allowed_objects()},
         expected=["one", "Unauthorized()", 2],
     )
 
   def test_json(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          import json
-          return json.loads(json.dumps({"ok": [True]}))
-          '''),
+    self.createAndRunScript('''
+        import json
+        return json.loads(json.dumps({"ok": [True]}))
+        ''',
         expected={"ok": [True]}
     )
 
   def test_calendar(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          import calendar
-          calendar.IllegalMonthError
-          calendar.IllegalWeekdayError
-          calendar.calendar(2020)
-          calendar.firstweekday()
-          calendar.isleap(2020)
-          calendar.leapdays(200, 2020)
-          calendar.month(2020, 1)
-          calendar.monthcalendar(2020, 1)
-          calendar.monthrange(2020, 1)
-          calendar.setfirstweekday(1)
-          calendar.timegm((2020, 1, 1, 0, 0, 0))
-          calendar.weekday(2020, 1, 1)
-          calendar.Calendar().getfirstweekday()
-          calendar.HTMLCalendar().getfirstweekday()
-          '''),
-    )
+    self.createAndRunScript('''
+        import calendar
+        calendar.IllegalMonthError
+        calendar.IllegalWeekdayError
+        calendar.calendar(2020)
+        calendar.firstweekday()
+        calendar.isleap(2020)
+        calendar.leapdays(200, 2020)
+        calendar.month(2020, 1)
+        calendar.monthcalendar(2020, 1)
+        calendar.monthrange(2020, 1)
+        calendar.setfirstweekday(1)
+        calendar.timegm((2020, 1, 1, 0, 0, 0))
+        calendar.weekday(2020, 1, 1)
+        calendar.Calendar().getfirstweekday()
+        calendar.HTMLCalendar().getfirstweekday()
+        ''')
 
   def test_collections_Counter(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          from collections import Counter
-          c = Counter(["a", "b"])
-          c["a"] = c["a"] + 1
-          del c["b"]
-          c.update({"a": 1})
-          return c.most_common(1)
-        '''),
+    self.createAndRunScript('''
+        from collections import Counter
+        c = Counter(["a", "b"])
+        c["a"] = c["a"] + 1
+        del c["b"]
+        c.update({"a": 1})
+        return c.most_common(1)
+        ''',
         expected=[('a', 3)]
     )
 
   def test_collections_defaultdict(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          from collections import defaultdict
-          d = defaultdict(list)
-          d["x"].append(1)
-          d["y"] = 2
-          del d["y"]
-          return d
-          '''),
+    self.createAndRunScript('''
+        from collections import defaultdict
+        d = defaultdict(list)
+        d["x"].append(1)
+        d["y"] = 2
+        del d["y"]
+        return d
+        ''',
         expected={"x": [1]}
     )
 
   def test_collections_namedtuple(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          from collections import namedtuple
-          Object = namedtuple("Object", ["a", "b", "c"])
-          return Object(a=1, b=2, c=3).a
-          '''),
+    self.createAndRunScript('''
+        from collections import namedtuple
+        Object = namedtuple("Object", ["a", "b", "c"])
+        return Object(a=1, b=2, c=3).a
+        ''',
         expected=1
     )
     # also make sure we can iterate on nametuples
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          from collections import namedtuple
-          Object = namedtuple("Object", ["a", "b", "c"])
-          returned = []
-          for x in Object(a=1, b=2, c=3):
-            returned.append(x)
-          return returned
-          '''),
+    self.createAndRunScript('''
+        from collections import namedtuple
+        Object = namedtuple("Object", ["a", "b", "c"])
+        returned = []
+        for x in Object(a=1, b=2, c=3):
+          returned.append(x)
+        return returned
+        ''',
         expected=[1, 2, 3]
     )
 
   def test_collections_OrderedDict(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          from collections import OrderedDict
-          d = OrderedDict()
-          d["a"] = 1
-          d["b"] = 2
-          d["c"] = 3
-          del d["c"]
-          return list(d.items())
-          '''),
+    self.createAndRunScript('''
+        from collections import OrderedDict
+        d = OrderedDict()
+        d["a"] = 1
+        d["b"] = 2
+        d["c"] = 3
+        del d["c"]
+        return list(d.items())
+        ''',
         expected=[("a", 1), ("b", 2)]
     )
 
   def test_lax_name(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          def _function():
-            pass
-          class SimpleObject:
-            def __init__(self):
-              self.attribute = 1
-            def _method(self):
-              _variable = 1
-          return SimpleObject().attribute
-          '''),
+    self.createAndRunScript('''
+        def _function():
+          pass
+        class SimpleObject:
+          def __init__(self):
+            self.attribute = 1
+          def _method(self):
+            _variable = 1
+        return SimpleObject().attribute
+        ''',
         expected=1
     )
 
   def test_StringIO(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          import StringIO
-          s = StringIO.StringIO()
-          s.write("ok")
-          return s.getvalue()
-          '''),
+    self.createAndRunScript('''
+        import StringIO
+        s = StringIO.StringIO()
+        s.write("ok")
+        return s.getvalue()
+        ''',
         expected="ok"
     )
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          import StringIO
-          return StringIO.StringIO("ok").getvalue()
-          '''),
+    self.createAndRunScript('''
+        import StringIO
+        return StringIO.StringIO("ok").getvalue()
+        ''',
         expected="ok"
     )
 
   def test_cStringIO(self):
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          import cStringIO
-          s = cStringIO.StringIO()
-          s.write("ok")
-          return s.getvalue()
-          '''),
+    self.createAndRunScript('''
+        import cStringIO
+        s = cStringIO.StringIO()
+        s.write("ok")
+        return s.getvalue()
+        ''',
         expected="ok"
     )
-    self.createAndRunScript(
-        textwrap.dedent('''\
-          import cStringIO
-          return cStringIO.StringIO("ok").getvalue()
-          '''),
+    self.createAndRunScript('''
+        import cStringIO
+        return cStringIO.StringIO("ok").getvalue()
+        ''',
         expected="ok"
     )
 
   def testNumpy(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import numpy as np
-      return [x for x in (np.dtype('int32').name, np.timedelta64(1, 'D').nbytes)]
-      '''),
-      expected=["int32", 8]
+    self.createAndRunScript('''
+        import numpy as np
+        return [x for x in (np.dtype('int32').name, np.timedelta64(1, 'D').nbytes)]
+        ''',
+        expected=["int32", 8]
     )
 
   def testNdarrayWrite(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import numpy as np
-      z = np.array([[1,2],[3,4]])
-      z[0][0] = 99
-      return z[0][0]
-      '''),
-      expected=99
+    self.createAndRunScript('''
+        import numpy as np
+        z = np.array([[1,2],[3,4]])
+        z[0][0] = 99
+        return z[0][0]
+        ''',
+        expected=99
     )
 
   def testPandasSeries(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      return pd.Series([1,2,3]).tolist()
-      '''),
-      expected=[1,2,3]
+    self.createAndRunScript('''
+        import pandas as pd
+        return pd.Series([1,2,3]).tolist()
+        ''',
+        expected=[1,2,3]
     )
 
   def testPandasTimestamp(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      return pd.Timestamp('2020-01').year
-      '''),
-      expected=2020
+    self.createAndRunScript('''
+        import pandas as pd
+        return pd.Timestamp('2020-01').year
+        ''',
+        expected=2020
     )
 
   def testPandasDatetimeIndex(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.DataFrame({'date':['2020-01-01','2020-03-01']})
-      df['date'] = pd.to_datetime(df['date'])
-      df.set_index('date', inplace=True)
-      return str(df.index.name)
-      '''),
-      expected='date'
+    self.createAndRunScript('''
+        import pandas as pd
+        df = pd.DataFrame({'date':['2020-01-01','2020-03-01']})
+        df['date'] = pd.to_datetime(df['date'])
+        df.set_index('date', inplace=True)
+        return str(df.index.name)
+        ''',
+        expected='date'
     )
 
   def testPandasMultiIndex(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.DataFrame({'a':[1,2],'b':[3,4],'c':[5,6]})
-      df2 = df.set_index(['a','b'],drop=True)
-      return list(df2.index.names)
-      '''),
-      expected=['a','b']
+    self.createAndRunScript('''
+        import pandas as pd
+        df = pd.DataFrame({'a':[1,2],'b':[3,4],'c':[5,6]})
+        df2 = df.set_index(['a','b'],drop=True)
+        return list(df2.index.names)
+        ''',
+        expected=['a','b']
     )
 
   def testPandasIndex(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.DataFrame({'a':[1,2],'b':[3,4]})
-      df2 = df.set_index(['a'],drop=True)
-      return list(df2.index.names)
-      '''),
-      expected=['a']
+    self.createAndRunScript('''
+        import pandas as pd
+        df = pd.DataFrame({'a':[1,2],'b':[3,4]})
+        df2 = df.set_index(['a'],drop=True)
+        return list(df2.index.names)
+        ''',
+        expected=['a']
     )
 
   def testPandasGroupBy(self):
     # test pandas.core.groupby.DataFrameGroupBy,SeriesGroupBy
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      df2 = pd.DataFrame({'id':[1,1,2],'quantity':[3,4,5],'price':[6,7,8]})
-      return list(df2.groupby(['id'])['quantity'].agg('sum'))
-      '''),
-      expected=[7,5]
+    self.createAndRunScript('''
+        import pandas as pd
+        df2 = pd.DataFrame({'id':[1,1,2],'quantity':[3,4,5],'price':[6,7,8]})
+        return list(df2.groupby(['id'])['quantity'].agg('sum'))
+        ''',
+        expected=[7,5]
     )
 
   def testPandasLocIndexer(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.DataFrame({'a':[1,2],'b':[3,4]})
-      return df.loc[df['a'] == 1]['b'][0]
-      '''),
-      expected=3
+    self.createAndRunScript('''
+        import pandas as pd
+        df = pd.DataFrame({'a':[1,2],'b':[3,4]})
+        return df.loc[df['a'] == 1]['b'][0]
+        ''',
+        expected=3
     )
 
   def testPandasDataFrameWrite(self):
-    self.createAndRunScript(
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.DataFrame({'a':[1,2], 'b':[3,4]})
-      df.iloc[0, 0] = 999
-      return df['a'][0]
-      '''),
-      expected=999
+    self.createAndRunScript('''
+        import pandas as pd
+        df = pd.DataFrame({'a':[1,2], 'b':[3,4]})
+        df.iloc[0, 0] = 999
+        return df['a'][0]
+        ''',
+        expected=999
     )
 
   def testPandasIORead(self):
-    self.assertRaises(Unauthorized,
-      self.createAndRunScript,
-      textwrap.dedent('''
-      import pandas as pd
-      pd.read_csv('testPandasIORead.csv')
-      '''))
+    self.assertRaises(
+        Unauthorized,
+        self.createAndRunScript,
+        '''
+        import pandas as pd
+        pd.read_csv('testPandasIORead.csv')
+        ''')
 
     # Test the black_list configuration validity
     for read_method in pandas_black_list:
-      self.assertRaises(Unauthorized,
-        self.createAndRunScript,
-        textwrap.dedent('''
-        import pandas as pd
-        read_method = pd.{read_method}
-        read_method('testPandasIORead.data')
-        '''.format(read_method=read_method)))
+      self.assertRaises(
+          Unauthorized,
+          self.createAndRunScript,
+          '''
+          import pandas as pd
+          read_method = pd.{read_method}
+          read_method('testPandasIORead.data')
+          '''.format(read_method=read_method))
 
   def testPandasDataFrameIOWrite(self):
-    self.assertRaises(ZopeGuardsUnauthorized,
-      self.createAndRunScript,
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.DataFrame({'a':[1,2,3]})
-      df.to_csv('testPandasDataFrameIOWrite.csv')
-      '''))
+    self.assertRaises(
+        ZopeGuardsUnauthorized,
+        self.createAndRunScript,
+        '''
+        import pandas as pd
+        df = pd.DataFrame({'a':[1,2,3]})
+        df.to_csv('testPandasDataFrameIOWrite.csv')
+        ''')
 
     # Test the black_list configuration validity
     for write_method in dataframe_black_list:
-      self.assertRaises(ZopeGuardsUnauthorized,
-        self.createAndRunScript,
-        textwrap.dedent('''
-        import pandas as pd
-        df = pd.DataFrame(columns=['a','b'],data=[[1,2]])
-        write_method = df.{write_method}
-        write_method('testPandasDataFrameIOWrite.data')
-        '''.format(write_method=write_method)))
+      self.assertRaises(
+          ZopeGuardsUnauthorized,
+          self.createAndRunScript,
+          '''
+          import pandas as pd
+          df = pd.DataFrame(columns=['a','b'],data=[[1,2]])
+          write_method = df.{write_method}
+          write_method('testPandasDataFrameIOWrite.data')
+          '''.format(write_method=write_method))
 
   def testPandasSeriesIOWrite(self):
-    self.assertRaises(ZopeGuardsUnauthorized,
-      self.createAndRunScript,
-      textwrap.dedent('''
-      import pandas as pd
-      df = pd.Series([4,5,6])
-      df.to_csv('testPandasSeriesIOWrite.csv')
-      '''))
+    self.assertRaises(
+        ZopeGuardsUnauthorized,
+        self.createAndRunScript,
+        '''
+        import pandas as pd
+        df = pd.Series([4,5,6])
+        df.to_csv('testPandasSeriesIOWrite.csv')
+        ''')
 
     # Test the black_list configuration validity
     for write_method in series_black_list:
-      self.assertRaises(ZopeGuardsUnauthorized,
-        self.createAndRunScript,
-        textwrap.dedent('''
-        import pandas as pd
-        df = pd.Series([4,5,6])
-        write_method = df.{write_method}
-        write_method('testPandasSeriesIOWrite.data')
-        '''.format(write_method=write_method)))
+      self.assertRaises(
+          ZopeGuardsUnauthorized,
+          self.createAndRunScript,
+          '''
+          import pandas as pd
+          df = pd.Series([4,5,6])
+          write_method = df.{write_method}
+          write_method('testPandasSeriesIOWrite.data')
+          '''.format(write_method=write_method))
 
 
 def test_suite():

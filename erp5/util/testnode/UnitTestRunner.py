@@ -143,6 +143,7 @@ class UnitTestRunner(object):
     invocation_list += (run_test_suite_path,
       '--master_url', portal_url,
       '--revision', node_test_suite.revision,
+      '--test_node_title', config['test_node_title'],
       '--test_suite', node_test_suite.test_suite,
       '--test_suite_title', node_test_suite.test_suite_title)
     soft = config['slapos_directory'] + '/soft/'

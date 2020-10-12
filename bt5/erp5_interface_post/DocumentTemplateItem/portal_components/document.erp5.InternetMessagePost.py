@@ -52,7 +52,7 @@ class InternetMessagePost(Item, MailMessageMixin):
     order to permit the dot-atom-text form. Thus those "<" and ">" should
     be stripped when working with message-ids
     """
-    if message_id is not None:
+    if message_id:
       if message_id[0] == '<':
         message_id = message_id[1:]
       if message_id[-1] == '>':

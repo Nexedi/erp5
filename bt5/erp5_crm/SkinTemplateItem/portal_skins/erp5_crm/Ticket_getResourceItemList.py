@@ -75,7 +75,7 @@ def getResourceItemList():
       getCategoryTitle = getCategoryTitle_
     else:
       getCategoryTitle = lambda category, depth: None
-      def getResourceTitle(resource, category, depth):
+      def getResourceTitle(resource, category, depth): # pylint:disable=function-redefined
         resource_title = getattr(resource, accessor_id)()
         # depth - 1 because we are at category's child level
         category_path = getCategoryTitle_(category, depth - 1)

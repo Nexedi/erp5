@@ -46,9 +46,9 @@
               gadget.updatePanel({
                 display_workflow_list: true,
                 erp5_document: erp5_document,
-                editable: true,
                 jio_key: options.jio_key,
-                view: options.view
+                view: options.view,
+                jump_view: options.jump_view
               })
             ]);
           })

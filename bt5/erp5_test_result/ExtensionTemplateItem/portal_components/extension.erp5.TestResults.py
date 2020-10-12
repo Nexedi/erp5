@@ -2,8 +2,6 @@ import difflib
 import zipfile
 import os
 import re
-import sys
-from cStringIO import StringIO
 from zExceptions import Unauthorized
 
 separator1 = '=' * 70
@@ -107,7 +105,7 @@ def parseTestSuiteResults(file_handler):
     if is_zelenium_test_suite:
       # if this was a zelenium functional test, the output is completly
       # different
-      junk, title, summary, detail = stdout.split('-' * 79)
+      _, title, summary, detail = stdout.split('-' * 79)
       test_result_detail['stdout'] = summary
       html_test_result = detail
       search = FTEST_PASS_FAIL_RE.search(title)
@@ -187,7 +185,6 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
     failed_test_case_list = []
     with_skips_test_case_list = []
     unknown_status_test_case_list = []
-    only_func_test = 1
     for tcr in test_result.contentValues(portal_type='Test Result Line',
                                          sort_on='title'):
       if (tcr.getProperty('errors', 0) + tcr.getProperty('failures', 0)):
@@ -197,12 +194,6 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
         unknown_status_test_case_list.append(tcr)
       if tcr.getProperty('skips'):
         with_skips_test_case_list.append(tcr)
-      if not tcr.getProperty('html_test_result'):
-        only_func_test = 0
-
-    # Don't send mail if we only run functional tests
-    #if only_func_test:
-    #  return
 
     p('Test Suite: %s' % test_result.getTitle())
     p('Revision: %s' % test_result.getReference() or test_result.getIntIndex())
@@ -262,8 +253,8 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
       for tcr in with_skips_test_case_list:
         p('\n  %-50s (%s skips)' % (tcr.getTitle(), tcr.getProperty('skips')))
         for line in tcr.getProperty('stderr', '').splitlines():
-            if 'skipped ' in line:
-                p('   %s' % line)
+          if 'skipped ' in line:
+            p('   %s' % line)
     p('')
 
     return ('\n'.join(mail_body),
@@ -323,50 +314,3 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
               subject=subject,
               extra_headers={'ERP5-Tests': self.getTitle()},
               attachment_list=attachment_list)
-
-
-def TestResultModule_viewTestResultChart(self, REQUEST,
-                    title='', min_rev='', max_rev=''):
-  """Render a chart of test runs per svn revision, using matplotlib.
-
-  This is experimental use of matplotlib, not integrated with a field.
-  """
-  return 'disabled'
-  ## XXX matplotlib cannot be imported it $HOME is not writable
-  #os.environ['HOME'] = '/tmp'
-
-  ## use a backend that doesn't need a $DISPLAY
-  #import matplotlib
-  #matplotlib.use('Cairo')
-  #import pylab
-
-  #revision_list = []
-  #all_test_list = []
-  #success_list = []
-
-  #for test in self.searchFolder(
-  #                  title=title,
-  #                  int_index=dict(range='minmax',
-  #                                 query=(min_rev or 0,
-  #                                        max_rev or sys.maxint))):
-  #  test = test.getObject()
-  #  if not test.getIntIndex():
-  #    continue
-  #  revision_list.append(test.getIntIndex())
-  #  all_tests = int(test.getProperty('all_tests', 0))
-  #  all_test_list.append(all_tests)
-  #  failures = (int(test.getProperty('errors', 0)) +
-  #              int(test.getProperty('failures', 0)))
-  #  success_list.append(all_tests - failures)
-
-  #pylab.plot(revision_list, all_test_list)
-  #pylab.plot(revision_list, success_list)
-  #pylab.xlabel('svn revision')
-  #pylab.legend(['all tests', 'success'])
-
-  ## returns the image
-  #out = StringIO()
-  #pylab.savefig(out, format='png')
-  #REQUEST.RESPONSE.setHeader('Content-type', 'image/png')
-  #pylab.close()
-  #return out.getvalue()

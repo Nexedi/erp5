@@ -45,12 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:265,  0: Bad indentation. Found 12 spaces, expected 10 (bad-indentation)</string>
-                <string>W:266,  0: Bad indentation. Found 16 spaces, expected 12 (bad-indentation)</string>
-                <string>W:110,  6: Unused variable \'junk\' (unused-variable)</string>
-                <string>W:190,  4: Unused variable \'only_func_test\' (unused-variable)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

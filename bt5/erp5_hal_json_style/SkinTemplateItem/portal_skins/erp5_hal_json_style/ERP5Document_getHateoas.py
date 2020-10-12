@@ -1328,6 +1328,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     last_form_id = None  # will point to the previous form so we can obtain previous selection
 
     result_dict['title'] = ensureUTF8(traversed_document.getTranslatedTitle())
+    result_dict['_links']["traversed_document"] = {
+      "href": default_document_uri_template % {
+        "relative_url": getRealRelativeUrl(traversed_document)
+      },
+      "name": getRealRelativeUrl(traversed_document),
+      "title": result_dict['title']
+    }
 
     # extra_param_json should be base64 encoded JSON at this point
     # only for mode == 'form' it is already a dictionary
@@ -1474,7 +1481,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
-          if erp5_action_key not in ("view", "object_view", "object_jio_view"):
+          if erp5_action_key not in ("view", "object_view", "object_jio_view", "object_jio_jump"):
             url_template_key = "traverse_generator_action"
           # but when we do not have the last form id we do not pass is of course
           if not (current_action.get('view_id', '') or last_form_id):

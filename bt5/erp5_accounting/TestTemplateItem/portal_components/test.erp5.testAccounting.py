@@ -901,6 +901,62 @@ class TestTransactionValidation(AccountingTestCase):
     # but if there are no accounts defined it's not a problem
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
+  def test_NonBalancedSourceAccountingTransactionRounding(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               destination_value=self.organisation_module.client_1,
+               resource='currency_module/euro',
+               lines=(dict(source_value=self.account_module.payable,
+                           source_debit=1),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=1/3.0),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=1/3.0),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=1/3.0),))
+    self.assertRaisesRegexp(
+        ValidationFailed,
+        'Transaction is not balanced for',
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+    )
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statSourceDebit(), 1)
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statSourceAssetDebit(), 1)
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statSourceCredit(), 0.99)
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statSourceAssetCredit(), 0.99)
+
+  def test_NonBalancedDestinationAccountingTransactionRounding(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.section,
+               destination_value=self.section,
+               source_section_value=self.organisation_module.client_1,
+               source_value=self.organisation_module.client_1,
+               resource='currency_module/euro',
+               lines=(dict(destination_value=self.account_module.payable,
+                           destination_debit=1),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=1/3.0),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=1/3.0),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=1/3.0),))
+    self.assertRaisesRegexp(
+        ValidationFailed,
+        'Transaction is not balanced for',
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+    )
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statSourceCredit(), 1)
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statDestinationAssetDebit(), 1)
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statSourceDebit(), 0.99)
+    self.assertEqual(accounting_transaction.AccountingTransactionLine_statDestinationAssetCredit(), 0.99)
+
   def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems

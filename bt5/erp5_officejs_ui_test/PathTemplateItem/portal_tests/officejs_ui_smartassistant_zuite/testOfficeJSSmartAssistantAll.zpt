@@ -1,0 +1,471 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for='upload']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for='image']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@id='audio']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="We can't access to your microphone"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_text')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@id='text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="text_content python: 'This is a test too simple'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()='Data created']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'This_is_a_test'">Title</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tal:block tal:define="text_content python: '<p>This is a test too simple</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block>
+
+<!-- Syc -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Storages</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Storages</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=erp5_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=erp5_url</td>
+  <td>${base_url}/web_site_module/</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<!-- Create two documents : audio, text -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@id='audio']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="We can't access to your microphone"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_text')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@id='text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="text_content python: 'This is a test too simple'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()='Data created']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@id='audio']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5 -->
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Synchronize']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'This_is_a_test'">Title</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/smart_assistant_text_module/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//pre[contains(text(), "This is a test too simple")]</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: Query -->
+  <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+  </tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'Post a Query']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'Post a Query']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for='field_your_description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@title='Description']</td>
+  <td>This is a reply test</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for='field_my_title']</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: New Person -->
+  <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+  </tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'New Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'New Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="Action succeeded."]</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: New Expense -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'New Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'New Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="Action succeeded."]</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: New Event-->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'New Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'New Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_your_text_content']//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="Action succeeded."]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=erp5_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=erp5_url</td>
+  <td>${base_url}/web_site_module/</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//pre[contains(text(), "This is a reply test")]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
