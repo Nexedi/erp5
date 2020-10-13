@@ -35,32 +35,39 @@
         })
         .push(function (result) {
           var print_preview_window,
-              pagedjs_style = document.createElement('link'),
-              pagedjs_script = document.createElement('script'),
-              html_data = result.element
+            pagedjs_style = document.createElement('link'),
+            pagedjs_script = document.createElement('script'),
+            html_data = result.element
             .querySelector('[data-gadget-scope="editor"]').firstChild
             .contentDocument.body.firstChild.contentDocument.firstChild;
-          pagedjs_style.setAttribute('type', 'text/css');
-          pagedjs_style.setAttribute('href', 'interface.css');
-          pagedjs_script.setAttribute('src', 'paged.polyfill.js');
-          pagedjs_script.setAttribute('id', 'paged-js-source');
-          print_preview_window = window.open('', '', 'height=400,width=800');
-          print_preview_window.document.write(html_data.innerHTML);
-          print_preview_window.document.head.appendChild(pagedjs_style);
-          print_preview_window.document.head.appendChild(pagedjs_script);
-          print_preview_window.document.close();
-          print_preview_window.print();
-        })
-        .push(function () {
-          return_submit_dict.redirect = {
-            command: 'display',
-            options: {
-              jio_key: parent_options.jio_key,
-              editable: true
-            }
-          };
+          var notebook_execution_done = html_data.querySelector('[id="jsmd_eval_done"]');
+          if (!notebook_execution_done) {
+            return_submit_dict.notify = {
+              message: "Wait until the notebook is fully executed",
+              status: "error"
+            };
+          } else {
+            pagedjs_style.setAttribute('type', 'text/css');
+            pagedjs_style.setAttribute('href', 'interface.css');
+            pagedjs_script.setAttribute('src', 'paged.polyfill.js');
+            pagedjs_script.setAttribute('id', 'paged-js-source');
+            print_preview_window = window.open('', '', 'height=400,width=800');
+            print_preview_window.document.write(html_data.innerHTML);
+            print_preview_window.document.head.appendChild(pagedjs_style);
+            print_preview_window.document.head.appendChild(pagedjs_script);
+            print_preview_window.document.close();
+            print_preview_window.print();
+            return_submit_dict.redirect = {
+              command: 'display',
+              options: {
+                jio_key: parent_options.jio_key,
+                editable: true
+              }
+            };
+          }
           return return_submit_dict;
-        }, function (error) {
+        })
+        .push(undefined, function (error) {
           console.log("ERROR:", error);
           return_submit_dict.notify = {
             message: "Failure exporting document",
