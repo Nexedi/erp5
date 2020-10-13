@@ -98,9 +98,9 @@ class OOoBuilder(Implicit):
     Creates a new file if filename was not already there.
     """
     try:
-      zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED)
+      zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED, allowZip64=True)
     except RuntimeError:
-      zf = ZipFile(self._document, mode='a')
+      zf = ZipFile(self._document, mode='a', allowZip64=True)
     try:
       # remove the file first if it exists
       fi = zf.getinfo(filename)
