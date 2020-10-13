@@ -75,7 +75,9 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -230,7 +232,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>georgios.dagkakis</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -244,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>980.28021.30830.63778</string> </value>
+                      <value> <string>988.2056.8848.16469</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,8 +264,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1602657030.85</float>
-                              <string>GMT+2</string>
+                              <float>1605606512.05</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
