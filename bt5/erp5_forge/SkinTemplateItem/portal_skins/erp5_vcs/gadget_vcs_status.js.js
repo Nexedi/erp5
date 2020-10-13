@@ -19,7 +19,10 @@
       name: true,
       value: true
     }
-  };
+  },
+    DISPLAY_TREE = 'display_tree',
+    DISPLAY_DIFF = 'display_diff',
+    DISPLAY_CHANGELOG = 'display_changelog';
 
   function keepOnlyChildren(current_node) {
     var fragment = document.createDocumentFragment();
@@ -33,7 +36,7 @@
     );
   }
 
-  function renderTreeXml(tree_xml_element) {
+  function renderTreeXml(gadget, tree_xml_element) {
     var iterator,
       current_node,
       next_node,
@@ -47,7 +50,9 @@
       link_len,
       already_dropped,
       finished = false,
-      id = -1;
+      id = -1,
+      name,
+      state_value = JSON.parse(gadget.state.value);
 
     // Replace the tree element by a fragment
     next_node = domsugar('ul');
@@ -98,19 +103,25 @@
           value = current_node.getAttribute('text');
 
           if ((parent_node !== null) && (parent_node !== current_node)) {
-            value = parent_node.value + '/' + value;
+            if (parent_node.value) {
+              value = parent_node.value + '/' + value;
+            }
+          } else {
+            value = '';
           }
 
+          name = {
+            'green': 'added',
+            'orange': 'modified',
+            'red': 'deleted'
+          }[current_node.getAttribute('aCol')];
           child_list.push(domsugar('label', [
             domsugar('input', {
               type: 'checkbox',
               class: 'vcs_to_commit',
               value: value,
-              name: {
-                'green': 'added',
-                'orange': 'modified',
-                'red': 'deleted'
-              }[current_node.getAttribute('aCol')]
+              name: name,
+              checked: ((state_value[name] === undefined) || state_value[name].indexOf(value) === -1) ? '' : 'checked'
             }),
             current_node.getAttribute('text')
           ]));
@@ -150,60 +161,175 @@
     return tree_xml_element;
   }
 
+  function renderTreeView(gadget) {
+    return new RSVP.Queue()
+      .push(function () {
+        domsugar(gadget.element, [
+          domsugar('p', [
+            'Repository: ',
+            domsugar('a', {
+              text: gadget.state.remote_url,
+              href: gadget.state.remote_url
+            }),
+            ' (' + gadget.state.remote_comment + ')'
+          ]),
+          // domsugar('button', {type: 'button', text: 'Show unmodified files'}),
+          domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'}),
+          domsugar('button', {type: 'button', text: 'View Diff', class: 'diff-tree-btn ui-btn-icon-left ui-icon-search-plus'}),
+          domsugar('button', {type: 'button', text: 'Commit Changes', class: 'commit-tree-btn ui-btn-icon-left ui-icon-git'}),
+          domsugar('div', {text: 'Checking for changes.'})
+        ]);
 
+        var form_data = new FormData()
+        form_data.append('show_unmodified:int', 0);
+        form_data.append('bt_id', 'erp5');
+        form_data.append('do_extract:int', 0);
+
+        return jIO.util.ajax({
+          "type": "POST",
+          "url": gadget.state.get_tree_url,
+          "xhrFields": {
+            withCredentials: true
+          },
+          "dataType": "document",
+          "data": form_data
+        });
+      })
+      .push(function (evt) {
+        domsugar(gadget.element.querySelector('div'), [
+          renderTreeXml(gadget, evt.target.response.querySelector('tree')),
+        ]);
+      });
+  }
+
+  function getContentFromTreeView(gadget) {
+    var result = JSON.parse(gadget.state.value),
+      checkbox_list = gadget.element.querySelectorAll('input.vcs_to_commit'),
+      i,
+      name,
+      list_to_change;
+    result.added = [];
+    result.modified = [];
+    result.deleted = [];
+    for (i = 0; i < checkbox_list.length; i += 1) {
+      name = checkbox_list[i].name;
+      if (name && checkbox_list[i].checked) {
+        result[name].push(checkbox_list[i].value);
+      }
+    }
+    gadget.state.value = JSON.stringify(result);
+  }
+
+  function expandTreeView(gadget) {
+    var element_list = gadget.element.querySelectorAll('input.showhide'),
+      is_checked = !element_list[0].checked,
+      i;
+    for (i = 0; i < element_list.length; i += 1) {
+      element_list[0].checked = is_checked;
+    }
+  }
+
+  function declareAndRenderDiff(gadget, diff) {
+    return gadget.declareGadget('gadget_erp5_side_by_side_diff.html')
+      .push(function (diff_gadget) {
+        return RSVP.all([
+          diff_gadget.element,
+          diff_gadget.render({value: diff})
+        ]);
+      });
+  }
+
+  function renderDiffView(gadget) {
+    var result = JSON.parse(gadget.state.value),
+      ajax_result,
+      diff_count = result.modified.length;
+    return new RSVP.Queue()
+      .push(function () {
+        domsugar(gadget.element, [
+          domsugar('p', [
+            'Repository: ',
+            domsugar('a', {
+              text: gadget.state.remote_url,
+              href: gadget.state.remote_url
+            }),
+            ' (' + gadget.state.remote_comment + ')'
+          ]),
+          domsugar('button', {type: 'button', text: 'View Tree', class: 'display-tree-btn ui-btn-icon-left ui-icon-check-square'}),
+          domsugar('button', {type: 'button', text: 'Commit Changes', class: 'commit-tree-btn ui-btn-icon-left ui-icon-git'}),
+          domsugar('div', {text: 'Checking for changes.'})
+        ]);
+
+        var form_data = new FormData(),
+          key = 'modified',
+          i;
+        for (i = 0; i < result[key].length; i += 1) {
+          form_data.append(key + ':list', result[key][i]);
+        }
+        return jIO.util.ajax({
+          "type": "POST",
+          "url": gadget.state.diff_url,
+          "xhrFields": {
+            withCredentials: true
+          },
+          "dataType": "json",
+          "data": form_data
+        });
+      })
+      .push(function (evt) {
+        ajax_result = evt.target.response;
+        var promise_list = [],
+          i;
+        for (i = 0; i < diff_count; i += 1) {
+          promise_list.push(
+            declareAndRenderDiff(gadget, ajax_result.modified_list[i].diff)
+          );
+        }
+        return RSVP.all(promise_list);
+      })
+      .push(function (result_list) {
+        var i,
+          element_list = [];
+        for (i = 0; i < result_list.length; i += 1) {
+          element_list.push(result_list[i][0]);
+        }
+        domsugar(gadget.element.querySelector('div'), element_list);
+      });
+  }
+
+  function getContentFromDiffView(gadget) {
+  }
 
   rJS(window)
-    .setState({
-      display_step: 'display_tree'
-    })
 
     .declareMethod('render', function (options) {
       return this.changeState({
+        display_step: DISPLAY_TREE,
+        diff_url: options.diff_url,
         get_tree_url: options.get_tree_url,
         remote_comment: options.remote_comment,
-        remote_url: options.remote_url
+        remote_url: options.remote_url,
+        // key: options.key,
+        // value: options.value || "",
+        value: JSON.stringify({added: [], modified: [], deleted: [], changelog: ''}),
+        editable: options.editable === undefined ? true : options.editable
       });
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var gadget = this;
 
-      if (gadget.state.display_step === 'display_tree') {
-        return new RSVP.Queue()
-          .push(function () {
-            domsugar(gadget.element, [
-              domsugar('p', [
-                'Repository: ',
-                domsugar('a', {
-                  text: gadget.state.remote_url,
-                  href: gadget.state.remote_url
-                }),
-                ' (' + gadget.state.remote_comment + ')'
-              ]),
-              domsugar('button', {type: 'button', text: 'Show unmodified files'}),
-              domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'}),
-              domsugar('button', {type: 'button', text: 'View Diff', class: 'diff-tree-btn ui-btn-icon-left ui-icon-search-plus'}),
-              domsugar('button', {type: 'button', text: 'Commit Changes', class: 'commit-tree-btn ui-btn-icon-left ui-icon-git'}),
-              domsugar('div', {text: 'Checking for changes.'})
-            ]);
+      if (gadget.state.display_step === DISPLAY_TREE) {
+        console.log(modification_dict);
+        if (modification_dict.hasOwnProperty('display_step')) {
+          return renderTreeView(gadget);
+        }
+        if (modification_dict.hasOwnProperty('expand_tree')) {
+          return expandTreeView(gadget);
+        }
+      }
 
-            return jIO.util.ajax(
-              {
-                "type": "GET",
-                "url": gadget.state.get_tree_url,
-                "xhrFields": {
-                  withCredentials: true
-                },
-                "dataType": "document"
-              }
-            );
-          })
-          .push(function (evt) {
-            domsugar(gadget.element.querySelector('div'), [
-              renderTreeXml(evt.target.response.querySelector('tree')),
-            ]);
-          });
-
+      if (modification_dict.display_step === DISPLAY_DIFF) {
+        return renderDiffView(gadget);
       }
 
       throw new Error('Unhandled display step: ' + gadget.state.display_step);
@@ -272,7 +398,8 @@
         state_dict,
         is_checked,
         element_list,
-        i;
+        i,
+        queue;
 
       if (tag_name !== 'BUTTON') {
         return;
@@ -281,47 +408,70 @@
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
 
+      // Always get content to ensure the possible displayed form
+      // is checked and content propagated to the gadget state value
+      queue = gadget.getContent();
+
       if (evt.target.className.indexOf("expand-tree-btn") !== -1) {
-        element_list = gadget.element.querySelectorAll('input.showhide');
-        is_checked = !element_list[0].checked;
-        for (i = 0; i < element_list.length; i += 1) {
-          element_list[0].checked = is_checked;
-        }
-        return;
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_TREE,
+              expand_tree: new Date()
+            });
+          });
       }
 
+      if (evt.target.className.indexOf("display-tree-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_TREE
+            });
+          });
+      }
+  
       if (evt.target.className.indexOf("diff-tree-btn") !== -1) {
-        return gadget.getContent();
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_DIFF
+            });
+          });
       }
 
       throw new Error('Unhandled button: ' + evt.target.textContent);
-      // return;
     }, false, false)
 
     //////////////////////////////////////////////////
     // Used when submitting the form
     //////////////////////////////////////////////////
     .declareMethod('getContent', function () {
-      var result = {
-        added: [],
-        modified: [],
-        deleted: []
-      },
-        checkbox_list = this.element.querySelectorAll('input.vcs_to_commit'),
-        i,
-        name,
-        list_to_change;
-      for (i = 0; i < checkbox_list.length; i += 1) {
-        name = checkbox_list[i].name;
-        if (name && checkbox_list[i].checked) {
-          result[name].push(checkbox_list[i].value);
-        }
+      var gadget = this,
+        display_step = gadget.state.display_step,
+        queue;
+
+      if (gadget.state.display_step === DISPLAY_TREE) {
+        queue = new RSVP.Queue(getContentFromTreeView(gadget));
+      } else if (gadget.state.display_step === DISPLAY_DIFF) {
+        queue = new RSVP.Queue(getContentFromDiffView(gadget));
+      } else {
+        throw new Error('get Content form not handled: ' + display_step);
       }
-      console.warn(result);
-      // throw new Error('getContent not implemented');
+
+      return queue
+        .push(function () {
+          var result = {};
+          if (gadget.state.editable) {
+            result[gadget.state.key] = gadget.state.value;
+          }
+          return result;
+        });
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
+      // value: JSON.stringify({added: [], modified: [], deleted: [], changelog: ''}),
+
       throw new Error('checkValidity not implemented');
     }, {mutex: 'changestate'})
 
