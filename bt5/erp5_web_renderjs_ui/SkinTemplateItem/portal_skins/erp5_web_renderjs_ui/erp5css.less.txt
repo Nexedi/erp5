@@ -1243,7 +1243,7 @@ div[data-gadget-scope='header'] .ui-header {
   .field_container > div > div > div.ui-field-contain {
     padding: @half-margin-size 0;
 
-    div {
+    & > div {
       width: 100%;
     }
   }

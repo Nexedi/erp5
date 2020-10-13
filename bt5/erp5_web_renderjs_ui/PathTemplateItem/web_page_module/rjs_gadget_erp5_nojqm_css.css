@@ -1080,7 +1080,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .field_container > div > div > div.ui-field-contain {
   padding: 3pt 0;
 }
-.gadget-content .field_container > div > div > div.ui-field-contain div {
+.gadget-content .field_container > div > div > div.ui-field-contain > div {
   width: 100%;
 }
 .gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain {
