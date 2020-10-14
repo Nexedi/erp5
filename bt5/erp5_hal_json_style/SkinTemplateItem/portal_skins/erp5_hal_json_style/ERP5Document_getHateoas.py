@@ -337,7 +337,19 @@ url_template_dict = {
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
-Base_translateString = context.getPortalObject().Base_translateString
+portal = context.getPortalObject()
+preference_tool = portal.portal_preferences
+Base_translateString = portal.Base_translateString
+
+preferred_html_style_developper_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
+preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
+preferred_html_style_contextual_help = preference_tool.getPreferredHtmlStyleContextualHelp()
+preferred_html_style_acknowledgeable_message = preference_tool.getPreferredHtmlStyleAcknowledgeableMessage()
+
+developper_shortcut_render = (
+  (preferred_html_style_developper_mode or preferred_html_style_translator_mode)
+  and
+  preferred_html_style_developper_mode)
 
 
 def getRealRelativeUrl(document):
@@ -445,6 +457,14 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
   }
+
+  if developper_shortcut_render:
+    developper_shortcut_render_href = list(traversed_document.getPhysicalPath())
+    developper_mode_href += [r for r in field.getPhysicalPath()
+                             if r not in developper_shortcut_render_href]
+    result["developper_shortcut_render_href"] = '%s/manage_main' % (
+      '/'.join(developper_shortcut_render_href)
+    )
 
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
