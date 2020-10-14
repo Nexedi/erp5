@@ -218,6 +218,52 @@
     domsugar(gadget.element.querySelector('div.vcsheader'), element_list);
   }
 
+  function updateFullTreeCheckbox(checkbox) {
+    var i,
+      element_list,
+      checkbox,
+      parent_checkbox,
+      parent_ul,
+      state_dict,
+      is_checked,
+      is_indeterminate;
+    // https://css-tricks.com/indeterminate-checkboxes/
+
+    // Check/uncheck all children checkboxes
+    element_list = checkbox.parentElement
+                           .parentElement.querySelectorAll('input.vcs_to_commit');
+    for (i = 0; i < element_list.length; i += 1) {
+      element_list[i].checked = checkbox.checked;
+      element_list[i].indeterminate = false;
+    }
+
+    // Check/uncheck/undefine all parent checkboxes
+    while (checkbox !== null) {
+      parent_checkbox = checkbox.closest('ul')
+                                .parentNode
+                                .querySelector('input.vcs_to_commit');
+
+      if (parent_checkbox === checkbox) {
+        // Top checkbox
+        checkbox = null;
+      } else {
+        // check the state of all child chexbox
+        element_list = parent_checkbox.closest('li').querySelector('ul').children;
+        is_checked = true;
+        is_indeterminate = false;
+        for (i = 0; i < element_list.length; i += 1) {
+          is_checked = is_checked && element_list[i].querySelector('input.vcs_to_commit').checked;
+          is_indeterminate = is_indeterminate || element_list[i].querySelector('input.vcs_to_commit').checked || element_list[i].querySelector('input.vcs_to_commit').indeterminate;
+        }
+        parent_checkbox.checked = is_checked;
+        parent_checkbox.indeterminate = (!is_checked) && is_indeterminate;
+
+        checkbox = parent_checkbox;
+      }
+    }
+  }
+
+
   function renderTreeView(gadget, extract) {
     return new RSVP.Queue()
       .push(function () {
@@ -244,6 +290,16 @@
         domsugar(gadget.element.querySelector('div.vcsbody'), [
           renderTreeXml(gadget, evt.target.response.querySelector('tree')),
         ]);
+
+        // Update the tree parent
+        var element_list = gadget.element.querySelectorAll('input.vcs_to_commit'),
+          i;
+        for (i = 0; i < element_list.length; i += 1) {
+          if (element_list[i].checked) {
+            updateFullTreeCheckbox(element_list[i]);
+          }
+        }
+
       });
   }
 
@@ -275,11 +331,12 @@
     }
   }
 
-  function declareAndRenderDiff(gadget, diff) {
+  function declareAndRenderDiff(gadget, path, diff) {
     return gadget.declareGadget('gadget_erp5_side_by_side_diff.html')
       .push(function (diff_gadget) {
         return RSVP.all([
           diff_gadget.element,
+          path,
           diff_gadget.render({value: diff})
         ]);
       });
@@ -294,10 +351,15 @@
         renderGadgetHeader(gadget, true);
 
         var form_data = new FormData(),
-          key = 'modified',
-          i;
-        for (i = 0; i < result[key].length; i += 1) {
-          form_data.append(key + ':list', result[key][i]);
+          key_list = ['modified', 'added', 'deleted'],
+          key,
+          i,
+          j;
+        for (i = 0; i < key_list.length; i += 1) {
+          key = key_list[i];
+          for (j = 0; j < result[key].length; j += 1) {
+            form_data.append(key + ':list', result[key][j]);
+          }
         }
         return jIO.util.ajax({
           "type": "POST",
@@ -315,7 +377,11 @@
           i;
         for (i = 0; i < diff_count; i += 1) {
           promise_list.push(
-            declareAndRenderDiff(gadget, ajax_result.modified_list[i].diff)
+            declareAndRenderDiff(
+              gadget,
+              ajax_result.modified_list[i].path,
+              ajax_result.modified_list[i].diff
+            )
           );
         }
         return RSVP.all(promise_list);
@@ -324,8 +390,51 @@
         var i,
           element_list = [];
         for (i = 0; i < result_list.length; i += 1) {
-          element_list.push(result_list[i][0]);
+          element_list.push(
+            domsugar('label', [
+              domsugar('input', {
+                type: 'checkbox',
+                class: 'vcs_to_commit',
+                value: result_list[i][1],
+                name: 'modified',
+                checked: 'checked'
+              }),
+              result_list[i][1]
+            ]),
+            result_list[i][0]
+          );
         }
+
+        for (i = 0; i < ajax_result.added_list.length; i += 1) {
+          element_list.push(
+            domsugar('label', [
+              domsugar('input', {
+                type: 'checkbox',
+                class: 'vcs_to_commit',
+                value: ajax_result.added_list[i].path,
+                name: 'added',
+                checked: 'checked'
+              }),
+              ajax_result.added_list[i].path
+            ])
+          );
+        }
+
+        for (i = 0; i < ajax_result.deleted_list.length; i += 1) {
+          element_list.push(
+            domsugar('label', [
+              domsugar('input', {
+                type: 'checkbox',
+                class: 'vcs_to_commit',
+                value: ajax_result.deleted_list[i].path,
+                name: 'deleted',
+                checked: 'checked'
+              }),
+              ajax_result.deleted_list[i].path
+            ])
+          );
+        }
+
         renderGadgetHeader(gadget, false);
         domsugar(gadget.element.querySelector('div.vcsbody'), element_list);
       });
@@ -359,6 +468,8 @@
     .declareMethod('render', function (options) {
       return this.changeState({
         display_step: DISPLAY_TREE,
+        // Only build the bt5 during the first query
+        extract: 1,
         diff_url: options.diff_url,
         get_tree_url: options.get_tree_url,
         remote_comment: options.remote_comment,
@@ -367,7 +478,6 @@
         // value: options.value || "",
         value: JSON.stringify({added: [], modified: [], deleted: [], changelog: ''}),
         editable: options.editable === undefined ? true : options.editable,
-        extract: 1
       });
     })
 
@@ -413,41 +523,11 @@
         return;
       }
 
-      // https://css-tricks.com/indeterminate-checkboxes/
-
-      // Check/uncheck all children checkboxes
-      element_list = evt.target.parentElement
-                               .parentElement.querySelectorAll('input.vcs_to_commit');
-      for (i = 0; i < element_list.length; i += 1) {
-        element_list[i].checked = evt.target.checked;
-        element_list[i].indeterminate = false;
+      if (gadget.state.display_step !== DISPLAY_TREE) {
+        return;
       }
 
-      // Check/uncheck/undefine all parent checkboxes
-      checkbox = evt.target;
-      while (checkbox !== null) {
-        parent_checkbox = checkbox.closest('ul')
-                                  .parentNode
-                                  .querySelector('input.vcs_to_commit');
-
-        if (parent_checkbox === checkbox) {
-          // Top checkbox
-          checkbox = null;
-        } else {
-          // check the state of all child chexbox
-          element_list = parent_checkbox.closest('li').querySelector('ul').children;
-          is_checked = true;
-          is_indeterminate = false;
-          for (i = 0; i < element_list.length; i += 1) {
-            is_checked = is_checked && element_list[i].querySelector('input.vcs_to_commit').checked;
-            is_indeterminate = is_indeterminate || element_list[i].querySelector('input.vcs_to_commit').checked || element_list[i].querySelector('input.vcs_to_commit').indeterminate;
-          }
-          parent_checkbox.checked = is_checked;
-          parent_checkbox.indeterminate = (!is_checked) && is_indeterminate;
-
-          checkbox = parent_checkbox;
-        }
-    }
+      updateFullTreeCheckbox(evt.target);
       
     }, false, false)
 
@@ -523,7 +603,7 @@
       if (gadget.state.display_step === DISPLAY_TREE) {
         queue = new RSVP.Queue(getContentFromTreeView(gadget));
       } else if (gadget.state.display_step === DISPLAY_DIFF) {
-        queue = new RSVP.Queue(getContentFromDiffView(gadget));
+        queue = new RSVP.Queue(getContentFromTreeView(gadget));
       } else if (gadget.state.display_step === DISPLAY_CHANGELOG) {
         queue = new RSVP.Queue(getContentFromChangelogView(gadget));
       } else {
