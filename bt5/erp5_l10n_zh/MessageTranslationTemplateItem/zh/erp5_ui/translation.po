@@ -9087,3 +9087,21 @@ msgstr "关联更多虚拟机"
 
 msgid "User Handbook"
 msgstr "用户手册"
+
+msgid "Help"
+msgstr "帮助"
+
+msgid "Advanced SlapOS UI"
+msgstr "高级SlapOS界面"
+
+msgid "FAQ"
+msgstr "常见问题"
+
+msgid "Get Re6st Token!"
+msgstr "获取Re6st令牌"
+
+msgid "Get Free CDN!"
+msgstr "免费获取CDN"
+
+msgid "Get Free Chinese CDN!"
+msgstr "免费获取中国CDN"
