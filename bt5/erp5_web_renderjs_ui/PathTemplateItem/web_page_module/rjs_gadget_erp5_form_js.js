@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, document, rJS, RSVP*/
+/*global window, document, rJS, RSVP, domsugar*/
 
 /** Form is one of a complicated gadget!
  *
@@ -8,7 +8,7 @@
  *               changed in FormBox gadget which renders form as a subgadget
 **/
 
-(function (window, document, rJS, RSVP) {
+(function (window, document, rJS, RSVP, domsugar) {
   "use strict";
 
   /**
@@ -110,6 +110,15 @@
         });
         return fieldset_element;
       });
+  }
+
+  function addDeveloperAction(class_name,
+      title_href, title) {
+    return domsugar("a", {
+      "class": class_name,
+      href: title_href,
+      title: title
+    });
   }
 
 
@@ -216,11 +225,14 @@
           }));
         })
         .push(function (result_list) {
+          var dom_element = form_gadget.element.querySelector(".field_container"),
+            parent_element,
+            field_href,
+            current_field,
+            j;
+
           if (modification_dict.hasOwnProperty('hash')) {
-            var dom_element = form_gadget.element
-              .querySelector(".field_container"),
-              j,
-              parent_element = document.createDocumentFragment();
+            parent_element = document.createDocumentFragment();
             // Add all fieldset into the fragment
             for (j = 0; j < result_list.length; j += 1) {
               parent_element.appendChild(result_list[j]);
@@ -230,6 +242,35 @@
             }
             dom_element.appendChild(parent_element);
           }
+
+          current_field = form_gadget.element.querySelector(".edit-form");
+          if (form_definition.hasOwnProperty("edit_form_href") &&
+              !current_field) {
+            field_href = addDeveloperAction(
+              "edit-form ui-icon-edit ui-btn-icon-left",
+              form_definition.edit_form_href,
+              "Edit this form"
+            );
+            form_gadget.element.insertBefore(field_href, dom_element);
+          } else if (!form_definition.hasOwnProperty("edit_form_href") &&
+                     current_field) {
+            form_gadget.element.removeChild(current_field);
+          }
+
+          current_field = form_gadget.element.querySelector(".edit-form-action");
+          if (form_definition.hasOwnProperty("edit_form_action_href") &&
+              !current_field) {
+            field_href = addDeveloperAction(
+              "edit-form-action ui-icon-external-link ui-btn-icon-left",
+              form_definition.edit_form_action_href,
+              "Edit this form's action"
+            );
+            form_gadget.element.insertBefore(field_href, dom_element);
+          } else if (!form_definition.hasOwnProperty("edit_form_action_href") &&
+                     current_field) {
+            form_gadget.element.removeChild(current_field);
+          }
+
         });
     })
 
@@ -308,4 +349,4 @@
 
     }, {mutex: 'changestate'});
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS, RSVP, domsugar));
