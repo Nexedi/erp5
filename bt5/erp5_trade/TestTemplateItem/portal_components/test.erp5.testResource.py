@@ -166,6 +166,15 @@ class TestResource(ERP5TypeTestCase):
       self.quantity_unit_kilo = quantity_unit_weight.newContent(
                                       portal_type='Category',
                                       id='kilo')
+    quantity_unit_volume = self.portal.portal_categories.quantity_unit._getOb(
+        'volume', None)
+    if quantity_unit_volume is None:
+      quantity_unit_volume = self.portal.portal_categories.quantity_unit.newContent(
+        id='volume', portal_type='Category')
+    self.quantity_unit_liter = quantity_unit_volume._getOb('liter', None)
+    if self.quantity_unit_liter is None:
+      self.quantity_unit_liter = quantity_unit_volume.newContent(
+        portal_type='Category', id='liter')
 
     unit_conversion_module = self.portal.quantity_unit_conversion_module
     weight_group = unit_conversion_module._getOb('weight', None)
@@ -1302,36 +1311,14 @@ class TestResource(ERP5TypeTestCase):
        In this test, always use Base.edit method. Because Base.edit is
        used when real user edit document through edit form.
     """
-    # Set up quantity unit categories
-    # weight
-    quantity_unit_category_value = self.portal.portal_categories.quantity_unit
-    quantity_unit_weight = quantity_unit_category_value._getOb('weight', None)
-    if quantity_unit_weight is None:
-      quantity_unit_weight = quantity_unit_category_value.newContent(
-        id='weight', portal_type='Category')
-    quantity_unit_gram = quantity_unit_weight._getOb('gram', None)
-    if quantity_unit_gram is None:
-      quantity_unit_gram = quantity_unit_weight.newContent(
-        portal_type='Category', id='gram')
-    # volume
-    quantity_unit_volume = quantity_unit_category_value._getOb('volume', None)
-    if quantity_unit_volume is None:
-      quantity_unit_volume = quantity_unit_category_value.newContent(
-        id='volume', portal_type='Category')
-    quantity_unit_liter = quantity_unit_volume._getOb('liter', None)
-    if quantity_unit_liter is None:
-      quantity_unit_liter = quantity_unit_volume.newContent(
-        portal_type='Category', id='liter')
-    self.commit()
-
     # Create resource
     resource_value = self.portal.getDefaultModule(
       self.product_portal_type).newContent(portal_type=self.product_portal_type)
     resource_value.edit(quantity_unit_value_list=[
-        quantity_unit_gram, quantity_unit_liter])
+        self.quantity_unit_gram, self.quantity_unit_liter])
     self.commit()
     self.assertEqual(resource_value.getDefaultQuantityUnitValue(),
-                     quantity_unit_gram)
+                     self.quantity_unit_gram)
 
     # Create sale order line
     sale_order = self.portal.getDefaultModule('Sale Order').newContent(
@@ -1344,35 +1331,35 @@ class TestResource(ERP5TypeTestCase):
     sale_order_line.edit(resource_value=resource_value)
     self.commit()
     self.assertEqual(sale_order_line.getQuantityUnitValue(),
-                     quantity_unit_gram)
+                     self.quantity_unit_gram)
 
     # Select different quantity unit
-    sale_order_line.edit(quantity_unit_value=quantity_unit_liter)
+    sale_order_line.edit(quantity_unit_value=self.quantity_unit_liter)
     self.commit()
     self.assertEqual(sale_order_line.getQuantityUnitValue(),
-                     quantity_unit_liter)
+                     self.quantity_unit_liter)
 
     # Select empty(no quantity unit)
     sale_order_line.edit(quantity_unit_value=None)
     self.commit()
 
     # Select default quantity unit again
-    sale_order_line.edit(quantity_unit_value=quantity_unit_gram)
+    sale_order_line.edit(quantity_unit_value=self.quantity_unit_gram)
     self.commit()
     self.assertEqual(sale_order_line.getQuantityUnitValue(),
-                     quantity_unit_gram)
+                     self.quantity_unit_gram)
 
     # Change default quantity unit on resource
     # Now liter is default quantity unit.
     resource_value.edit(quantity_unit_value_list=[
-        quantity_unit_liter, quantity_unit_gram])
+        self.quantity_unit_liter, self.quantity_unit_gram])
     self.commit()
 
     # Check existing movement again and make sure that quantity
     # unit is not changed.
     expectedFailure(self.assertEqual)(
       sale_order_line.getQuantityUnitValue(),
-      quantity_unit_gram)
+      self.quantity_unit_gram)
 
 def test_suite():
   suite = unittest.TestSuite()
