@@ -1858,6 +1858,20 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li li {
   padding: 3pt 6pt;
 }
 /**********************************************
+* Developer mode actions
+**********************************************/
+.edit-form,
+.edit-form-action,
+.edit-field,
+.translate-title,
+.translate-description {
+  margin-left: 3pt;
+  color: #1F1F1F;
+}
+.translate-description {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+/**********************************************
 * Icons
 **********************************************/
 .ui-btn-icon-top::before,
