@@ -334,11 +334,17 @@
   }
 
   function renderChangelogView(gadget) {
+    var result = JSON.parse(gadget.state.value);
     renderGadgetHeader(gadget, false);
-    domsugar(gadget.element.querySelector('div.vcsbody'), ['changelog']);
+    domsugar(gadget.element.querySelector('div.vcsbody'), [
+      domsugar('textarea', {value: result.changelog})
+    ]);
   }
 
   function getContentFromChangelogView(gadget) {
+    var result = JSON.parse(gadget.state.value);
+    result.changelog = gadget.element.querySelector('textarea').value;
+    gadget.state.value = JSON.stringify(result);
   }
 
   rJS(window)
