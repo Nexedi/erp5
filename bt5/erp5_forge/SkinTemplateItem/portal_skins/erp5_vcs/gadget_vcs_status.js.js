@@ -1,6 +1,7 @@
-/*global window, rJS, RSVP, domsugar, jIO, console */
+/*global window, rJS, RSVP, domsugar, jIO, console, document, NodeFilter,
+         FormData */
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (rJS, jIO, domsugar, RSVP, window) {
+(function (window, rJS, RSVP, domsugar, jIO, console, document, NodeFilter) {
   "use strict";
 
   var whitelist = {
@@ -47,8 +48,6 @@
       attribute_list,
       child_list,
       len,
-      link_len,
-      already_dropped,
       finished = false,
       id = -1,
       name,
@@ -75,19 +74,22 @@
       if (!finished) {
 
         if (current_node.nodeName === 'item') {
-          child_list = []
+          child_list = [];
 
           // Open/hide element
           if (current_node.firstChild) {
             id += 1;
             child_list.push(
-              domsugar('input', {type: 'checkbox', id: 'showhide' + id, class: 'showhide'}),
-              domsugar('label', {for: 'showhide' + id, class: 'showhide show', text: '-'}),
-              domsugar('label', {for: 'showhide' + id, class: 'showhide hide', text: '+'}),
+              domsugar('input', {type: 'checkbox', id: 'showhide' + id,
+                                 class: 'showhide'}),
+              domsugar('label', {for: 'showhide' + id, class: 'showhide show',
+                                 text: '-'}),
+              domsugar('label', {for: 'showhide' + id, class: 'showhide hide',
+                                 text: '+'})
             );
           } else {
             child_list.push(
-              domsugar('label', {class: 'showhide', text: ' '}),
+              domsugar('label', {class: 'showhide', text: ' '})
             );
           }
 
@@ -121,7 +123,9 @@
               class: 'vcs_to_commit',
               value: value,
               name: name,
-              checked: ((state_value[name] === undefined) || state_value[name].indexOf(value) === -1) ? '' : 'checked'
+              checked: ((state_value[name] === undefined) ||
+                        (state_value[name].indexOf(value) === -1)) ? '' :
+                                                                     'checked'
             }),
             current_node.getAttribute('text')
           ]));
@@ -170,7 +174,7 @@
           href: gadget.state.remote_url
         }),
         ' (' + gadget.state.remote_comment + ')'
-      ]),
+      ])
     ],
       tree_icon = 'ui-icon-check-square',
       diff_icon = 'ui-icon-search-plus',
@@ -178,13 +182,14 @@
 
     if (loading) {
       if (gadget.state.display_step === DISPLAY_TREE) {
-      tree_icon = 'ui-icon-spinner';
+        tree_icon = 'ui-icon-spinner';
       } else if (gadget.state.display_step === DISPLAY_DIFF) {
         diff_icon = 'ui-icon-spinner';
       } else if (gadget.state.display_step === DISPLAY_CHANGELOG) {
         changelog_icon = 'ui-icon-spinner';
       } else {
-        throw new Error("Can't render header state " + gadget.state.display_step);
+        throw new Error("Can't render header state " +
+                        gadget.state.display_step);
       }
     }
 
@@ -211,7 +216,11 @@
 
     if ((!loading) && (gadget.state.display_step === DISPLAY_TREE)) {
       element_list.push(
-        domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'})
+        domsugar('button', {
+          type: 'button',
+          text: 'Expand',
+          class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'
+        })
       );
     }
 
@@ -221,17 +230,15 @@
   function updateFullTreeCheckbox(checkbox) {
     var i,
       element_list,
-      checkbox,
       parent_checkbox,
-      parent_ul,
-      state_dict,
       is_checked,
       is_indeterminate;
     // https://css-tricks.com/indeterminate-checkboxes/
 
     // Check/uncheck all children checkboxes
     element_list = checkbox.parentElement
-                           .parentElement.querySelectorAll('input.vcs_to_commit');
+                           .parentElement
+                           .querySelectorAll('input.vcs_to_commit');
     for (i = 0; i < element_list.length; i += 1) {
       element_list[i].checked = checkbox.checked;
       element_list[i].indeterminate = false;
@@ -248,12 +255,21 @@
         checkbox = null;
       } else {
         // check the state of all child chexbox
-        element_list = parent_checkbox.closest('li').querySelector('ul').children;
+        element_list = parent_checkbox.closest('li')
+                                      .querySelector('ul')
+                                      .children;
         is_checked = true;
         is_indeterminate = false;
         for (i = 0; i < element_list.length; i += 1) {
-          is_checked = is_checked && element_list[i].querySelector('input.vcs_to_commit').checked;
-          is_indeterminate = is_indeterminate || element_list[i].querySelector('input.vcs_to_commit').checked || element_list[i].querySelector('input.vcs_to_commit').indeterminate;
+          is_checked = is_checked &&
+                       element_list[i].querySelector('input.vcs_to_commit')
+                                      .checked;
+          is_indeterminate =
+            is_indeterminate ||
+            element_list[i].querySelector('input.vcs_to_commit')
+                           .checked ||
+            element_list[i].querySelector('input.vcs_to_commit')
+                           .indeterminate;
         }
         parent_checkbox.checked = is_checked;
         parent_checkbox.indeterminate = (!is_checked) && is_indeterminate;
@@ -269,9 +285,9 @@
       .push(function () {
         renderGadgetHeader(gadget, true);
 
-        var form_data = new FormData()
+        var form_data = new FormData();
         form_data.append('show_unmodified:int', 0);
-        form_data.append('bt_id', 'erp5');
+        // form_data.append('bt_id', 'erp5');
         form_data.append('do_extract:int', extract ? 1 : 0);
 
         return jIO.util.ajax({
@@ -288,11 +304,12 @@
         renderGadgetHeader(gadget, false);
 
         domsugar(gadget.element.querySelector('div.vcsbody'), [
-          renderTreeXml(gadget, evt.target.response.querySelector('tree')),
+          renderTreeXml(gadget, evt.target.response.querySelector('tree'))
         ]);
 
         // Update the tree parent
-        var element_list = gadget.element.querySelectorAll('input.vcs_to_commit'),
+        var element_list = gadget.element
+                                 .querySelectorAll('input.vcs_to_commit'),
           i;
         for (i = 0; i < element_list.length; i += 1) {
           if (element_list[i].checked) {
@@ -307,8 +324,7 @@
     var result = JSON.parse(gadget.state.value),
       checkbox_list = gadget.element.querySelectorAll('input.vcs_to_commit'),
       i,
-      name,
-      list_to_change;
+      name;
     result.added = [];
     result.modified = [];
     result.deleted = [];
@@ -440,9 +456,6 @@
       });
   }
 
-  function getContentFromDiffView(gadget) {
-  }
-
   function renderChangelogView(gadget) {
     var result = JSON.parse(gadget.state.value);
     renderGadgetHeader(gadget, false);
@@ -453,7 +466,7 @@
       domsugar('h3', {text: 'Modified Files'}),
       domsugar('pre', {text: result.modified.join('\n')}),
       domsugar('h3', {text: 'Deleted Files'}),
-      domsugar('pre', {text: result.deleted.join('\n')}),
+      domsugar('pre', {text: result.deleted.join('\n')})
     ]);
   }
 
@@ -476,8 +489,9 @@
         remote_url: options.remote_url,
         // key: options.key,
         // value: options.value || "",
-        value: JSON.stringify({added: [], modified: [], deleted: [], changelog: ''}),
-        editable: options.editable === undefined ? true : options.editable,
+        value: JSON.stringify({added: [], modified: [], deleted: [],
+                               changelog: ''}),
+        editable: (options.editable === undefined) ? true : options.editable
       });
     })
 
@@ -487,7 +501,8 @@
       if (gadget.state.display_step === DISPLAY_TREE) {
         console.log(modification_dict);
         if (modification_dict.hasOwnProperty('display_step')) {
-          return renderTreeView(gadget, modification_dict.hasOwnProperty('extract'));
+          return renderTreeView(gadget,
+                                modification_dict.hasOwnProperty('extract'));
         }
         if (modification_dict.hasOwnProperty('expand_tree')) {
           return expandTreeView(gadget);
@@ -508,18 +523,11 @@
 
     .onEvent("change", function (evt) {
       var gadget = this,
-        tag_name = evt.target.tagName,
-        i,
-        element_list,
-        checkbox,
-        parent_checkbox,
-        parent_ul,
-        state_dict,
-        is_checked,
-        is_indeterminate;
+        tag_name = evt.target.tagName;
 
       // Only handle vcs_to_commit checkbox
-      if ((tag_name !== 'INPUT') || (evt.target.className !== 'vcs_to_commit')) {
+      if ((tag_name !== 'INPUT') ||
+          (evt.target.className !== 'vcs_to_commit')) {
         return;
       }
 
@@ -528,17 +536,12 @@
       }
 
       updateFullTreeCheckbox(evt.target);
-      
     }, false, false)
 
     .onEvent("click", function (evt) {
       // Only handle click on BUTTON and IMG element
       var gadget = this,
         tag_name = evt.target.tagName,
-        state_dict,
-        is_checked,
-        element_list,
-        i,
         queue;
 
       if (tag_name !== 'BUTTON') {
@@ -570,7 +573,7 @@
             });
           });
       }
-  
+
       if (evt.target.className.indexOf("diff-tree-btn") !== -1) {
         return queue
           .push(function () {
@@ -621,9 +624,7 @@
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
-      // value: JSON.stringify({added: [], modified: [], deleted: [], changelog: ''}),
-
       throw new Error('checkValidity not implemented');
-    }, {mutex: 'changestate'})
+    }, {mutex: 'changestate'});
 
-}(rJS, jIO, domsugar, RSVP, window));
+}(window, rJS, RSVP, domsugar, jIO, console, document, NodeFilter));
