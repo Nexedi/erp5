@@ -218,7 +218,7 @@
     domsugar(gadget.element.querySelector('div.vcsheader'), element_list);
   }
 
-  function renderTreeView(gadget) {
+  function renderTreeView(gadget, extract) {
     return new RSVP.Queue()
       .push(function () {
         renderGadgetHeader(gadget, true);
@@ -226,7 +226,7 @@
         var form_data = new FormData()
         form_data.append('show_unmodified:int', 0);
         form_data.append('bt_id', 'erp5');
-        form_data.append('do_extract:int', 0);
+        form_data.append('do_extract:int', extract ? 1 : 0);
 
         return jIO.util.ajax({
           "type": "POST",
@@ -366,7 +366,8 @@
         // key: options.key,
         // value: options.value || "",
         value: JSON.stringify({added: [], modified: [], deleted: [], changelog: ''}),
-        editable: options.editable === undefined ? true : options.editable
+        editable: options.editable === undefined ? true : options.editable,
+        extract: 1
       });
     })
 
@@ -376,7 +377,7 @@
       if (gadget.state.display_step === DISPLAY_TREE) {
         console.log(modification_dict);
         if (modification_dict.hasOwnProperty('display_step')) {
-          return renderTreeView(gadget);
+          return renderTreeView(gadget, modification_dict.hasOwnProperty('extract'));
         }
         if (modification_dict.hasOwnProperty('expand_tree')) {
           return expandTreeView(gadget);
