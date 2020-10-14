@@ -161,24 +161,67 @@
     return tree_xml_element;
   }
 
+  function renderGadgetHeader(gadget, loading) {
+    var element_list = [
+      domsugar('p', [
+        'Repository: ',
+        domsugar('a', {
+          text: gadget.state.remote_url,
+          href: gadget.state.remote_url
+        }),
+        ' (' + gadget.state.remote_comment + ')'
+      ]),
+    ],
+      tree_icon = 'ui-icon-check-square',
+      diff_icon = 'ui-icon-search-plus',
+      changelog_icon = 'ui-icon-git';
+
+    if (loading) {
+      if (gadget.state.display_step === DISPLAY_TREE) {
+      tree_icon = 'ui-icon-spinner';
+      } else if (gadget.state.display_step === DISPLAY_DIFF) {
+        diff_icon = 'ui-icon-spinner';
+      } else if (gadget.state.display_step === DISPLAY_CHANGELOG) {
+        changelog_icon = 'ui-icon-spinner';
+      } else {
+        throw new Error("Can't render header state " + gadget.state.display_step);
+      }
+    }
+
+    element_list.push(
+      domsugar('button', {
+        type: 'button',
+        text: 'Tree',
+        disabled: (gadget.state.display_step === DISPLAY_TREE),
+        class: 'display-tree-btn ui-btn-icon-left ' + tree_icon
+      }),
+      domsugar('button', {
+        type: 'button',
+        text: 'Diff',
+        disabled: (gadget.state.display_step === DISPLAY_DIFF),
+        class: 'diff-tree-btn ui-btn-icon-left ' + diff_icon
+      }),
+      domsugar('button', {
+        type: 'button',
+        text: 'Changelog',
+        disabled: (gadget.state.display_step === DISPLAY_CHANGELOG),
+        class: 'changelog-btn ui-btn-icon-left ' + changelog_icon
+      })
+    );
+
+    if ((!loading) && (gadget.state.display_step === DISPLAY_TREE)) {
+      element_list.push(
+        domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'})
+      );
+    }
+
+    domsugar(gadget.element.querySelector('div.vcsheader'), element_list);
+  }
+
   function renderTreeView(gadget) {
     return new RSVP.Queue()
       .push(function () {
-        domsugar(gadget.element, [
-          domsugar('p', [
-            'Repository: ',
-            domsugar('a', {
-              text: gadget.state.remote_url,
-              href: gadget.state.remote_url
-            }),
-            ' (' + gadget.state.remote_comment + ')'
-          ]),
-          // domsugar('button', {type: 'button', text: 'Show unmodified files'}),
-          domsugar('button', {type: 'button', text: 'Expand', class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'}),
-          domsugar('button', {type: 'button', text: 'View Diff', class: 'diff-tree-btn ui-btn-icon-left ui-icon-search-plus'}),
-          domsugar('button', {type: 'button', text: 'Commit Changes', class: 'commit-tree-btn ui-btn-icon-left ui-icon-git'}),
-          domsugar('div', {text: 'Checking for changes.'})
-        ]);
+        renderGadgetHeader(gadget, true);
 
         var form_data = new FormData()
         form_data.append('show_unmodified:int', 0);
@@ -196,7 +239,9 @@
         });
       })
       .push(function (evt) {
-        domsugar(gadget.element.querySelector('div'), [
+        renderGadgetHeader(gadget, false);
+
+        domsugar(gadget.element.querySelector('div.vcsbody'), [
           renderTreeXml(gadget, evt.target.response.querySelector('tree')),
         ]);
       });
@@ -255,7 +300,7 @@
             ' (' + gadget.state.remote_comment + ')'
           ]),
           domsugar('button', {type: 'button', text: 'View Tree', class: 'display-tree-btn ui-btn-icon-left ui-icon-check-square'}),
-          domsugar('button', {type: 'button', text: 'Commit Changes', class: 'commit-tree-btn ui-btn-icon-left ui-icon-git'}),
+          domsugar('button', {type: 'button', text: 'Changelog', class: 'changelog-btn ui-btn-icon-left ui-icon-git'}),
           domsugar('div', {text: 'Checking for changes.'})
         ]);
 
@@ -299,6 +344,13 @@
   function getContentFromDiffView(gadget) {
   }
 
+  function renderChangelogView(gadget) {
+    gadget.element.querySelector('div', {'text': 'changelog...'});
+  }
+
+  function getContentFromChangelogView(gadget) {
+  }
+
   rJS(window)
 
     .declareMethod('render', function (options) {
@@ -330,6 +382,10 @@
 
       if (modification_dict.display_step === DISPLAY_DIFF) {
         return renderDiffView(gadget);
+      }
+
+      if (modification_dict.display_step === DISPLAY_CHANGELOG) {
+        return renderChangelogView(gadget);
       }
 
       throw new Error('Unhandled display step: ' + gadget.state.display_step);
@@ -440,6 +496,15 @@
           });
       }
 
+      if (evt.target.className.indexOf("changelog-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_CHANGELOG
+            });
+          });
+      }
+
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false)
 
@@ -455,8 +520,10 @@
         queue = new RSVP.Queue(getContentFromTreeView(gadget));
       } else if (gadget.state.display_step === DISPLAY_DIFF) {
         queue = new RSVP.Queue(getContentFromDiffView(gadget));
+      } else if (gadget.state.display_step === DISPLAY_CHANGELOG) {
+        queue = new RSVP.Queue(getContentFromChangelogView(gadget));
       } else {
-        throw new Error('get Content form not handled: ' + display_step);
+        throw new Error('getContent form not handled: ' + display_step);
       }
 
       return queue
