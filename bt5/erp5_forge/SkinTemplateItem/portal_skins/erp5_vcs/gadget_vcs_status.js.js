@@ -290,19 +290,7 @@
       diff_count = result.modified.length;
     return new RSVP.Queue()
       .push(function () {
-        domsugar(gadget.element, [
-          domsugar('p', [
-            'Repository: ',
-            domsugar('a', {
-              text: gadget.state.remote_url,
-              href: gadget.state.remote_url
-            }),
-            ' (' + gadget.state.remote_comment + ')'
-          ]),
-          domsugar('button', {type: 'button', text: 'View Tree', class: 'display-tree-btn ui-btn-icon-left ui-icon-check-square'}),
-          domsugar('button', {type: 'button', text: 'Changelog', class: 'changelog-btn ui-btn-icon-left ui-icon-git'}),
-          domsugar('div', {text: 'Checking for changes.'})
-        ]);
+        renderGadgetHeader(gadget, true);
 
         var form_data = new FormData(),
           key = 'modified',
@@ -337,7 +325,8 @@
         for (i = 0; i < result_list.length; i += 1) {
           element_list.push(result_list[i][0]);
         }
-        domsugar(gadget.element.querySelector('div'), element_list);
+        renderGadgetHeader(gadget, false);
+        domsugar(gadget.element.querySelector('div.vcsbody'), element_list);
       });
   }
 
@@ -345,7 +334,8 @@
   }
 
   function renderChangelogView(gadget) {
-    gadget.element.querySelector('div', {'text': 'changelog...'});
+    renderGadgetHeader(gadget, false);
+    domsugar(gadget.element.querySelector('div.vcsbody'), ['changelog']);
   }
 
   function getContentFromChangelogView(gadget) {
