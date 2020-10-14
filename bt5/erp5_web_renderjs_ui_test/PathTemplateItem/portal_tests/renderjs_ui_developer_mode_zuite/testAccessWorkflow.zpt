@@ -1,0 +1,52 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Access Workflow</td></tr>
+</thead><tbody>
+<tal:block tal:define="is_listbox python: False;
+                       website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
+</tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Actions"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Actions"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Developer Mode</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//ul[@class="document-listview"]/li/a[text()="Edit Workflow"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//ul[@class="document-listview"]/li/a[text()="Edit Workflow"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>edit_workflow</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@value="Edit Workflow"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
