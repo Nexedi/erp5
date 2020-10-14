@@ -1043,6 +1043,24 @@ class TestResource(ERP5TypeTestCase):
     self.assertEqual(1, sale_order_line.getPrice())
     self.assertEqual(5000, sale_order_line.getTotalPrice())
 
+  def testGetPriceWithPricedQuantity(self):
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    supply_line = resource.newContent(
+                    portal_type=self.sale_supply_line_portal_type)
+    supply_line.setBasePrice(3000)
+    supply_line.setPricedQuantity(3)
+    self.tic()
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order',)
+    sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource,
+                          quantity=5)
+    # price for 3 is 3000, so price for 1 is 1000
+    self.assertEqual(sale_order_line.getPrice(), 1000)
+    self.assertEqual(sale_order_line.getTotalPrice(), 5000)
+
   def testGetPriceWithPriceCurrency(self):
     currency_module = self.portal.getDefaultModule("Currency")
     currency = currency_module.newContent(
