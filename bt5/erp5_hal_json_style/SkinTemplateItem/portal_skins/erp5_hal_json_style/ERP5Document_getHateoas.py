@@ -337,8 +337,13 @@ url_template_dict = {
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
-Base_translateString = context.getPortalObject().Base_translateString
+portal = context.getPortalObject()
+portal_absolute_url = portal.absolute_url()
+preference_tool = portal.portal_preferences
+Base_translateString = portal.Base_translateString
 
+preferred_html_style_developer_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
+preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
 def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
@@ -445,6 +450,29 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
   }
+
+  if preferred_html_style_developer_mode or meta_type == "ListBox":
+    form_relative_url = getFormRelativeUrl(form)
+
+  if preferred_html_style_developer_mode:
+    result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
+
+  if preferred_html_style_translator_mode:
+    erp5_ui = portal.Localizer.erp5_ui
+    selected_language = erp5_ui.get_selected_language()
+    result["translate_title_href"] = '%s/manage_messages?regex=^%s$&lang=%s' % (
+      '/'.join(erp5_ui.getPhysicalPath()),
+      field.title(),
+      selected_language
+    )
+
+    field_description = field.Field_getDescription()
+    if field_description:
+      result["translate_description_href"] = '%s/manage_messages?regex=^%s$&lang=%s' % (
+        '/'.join(erp5_ui.getPhysicalPath()),
+        field_description,
+        selected_language
+      )
 
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
@@ -737,7 +765,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
-        "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
+        "form_relative_url": "%s/%s" % (form_relative_url, field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable(list_method_query_dict))),
@@ -1207,6 +1235,15 @@ def renderFormDefinition(form, response_dict):
   response_dict["update_action"] = form.update_action
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
+  if preferred_html_style_developer_mode:
+    form_relative_url = getFormRelativeUrl(form)
+    response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
+    response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
+      form_relative_url,
+      form.action
+    )
+
+
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
   if isinstance(level, (str, unicode)):
@@ -1291,7 +1328,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # Always inform about portal
       "portal": {
         "href": default_document_uri_template % {
-          "root_url": portal.absolute_url(),
+          "root_url": portal_absolute_url,
           # XXX the portal has an empty getRelativeUrl. Make it still compatible
           # with restrictedTraverse
           "relative_url": portal.getId(),
@@ -1461,6 +1498,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
     # Extract & modify action URLs
+    if preferred_html_style_developer_mode and 'object_jio_raw' not in erp5_action_dict:
+      erp5_action_dict["object_jio_raw"] = []
+
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
@@ -1491,7 +1531,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           extra_param_json['form_id'] = current_action['view_id'] \
             if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
             else last_form_id
-
           erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
                 "root_url": site_root.absolute_url(),
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
@@ -1499,6 +1538,33 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "view": erp5_action_list[-1]['name'],
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
+
+      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_jump":
+        erp5_action_list.append({
+          "href": url_template_dict["traverse_generator"] % {
+          "root_url": site_root.absolute_url(),
+          "script_id": script.id,
+          "view": "Base_redirectToPortalTypeDocument",
+          "relative_url": getRealRelativeUrl(traversed_document)
+        },
+          'name': "jump_to_portal_type",
+          'icon': None,
+          'title': Base_translateString(
+            "Edit Portal Type ${portal_type_name}",
+            mapping={
+              "portal_type_name": traversed_document.getTranslatedPortalType()
+            }),
+        })
+
+      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_raw":
+        if portal.portal_workflow.Base_getSourceVisibility():
+          for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
+            erp5_action_list.append({
+              'href': "%s/manage_properties" % workflow.absolute_url_path(),
+              'name': "jump_to_%s" % workflow.id,
+              'icon': None,
+              'title': workflow.title
+            })
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
