@@ -4,7 +4,7 @@ def traverse(d, depth):
   res = ""
 
   for name, value in d.iteritems():
-    for i in range(depth):
+    for _ in range(depth):
       res += "\t"
     res += name + "\n"
     if len(value['childs']) > 0:
