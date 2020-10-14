@@ -111,7 +111,8 @@
         css_class,
         i,
         queue,
-        new_div;
+        new_div,
+        field_href;
 
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
@@ -130,6 +131,36 @@
         this.props.label_element.textContent = this.state.label_text;
       }
       this.props.label_element.setAttribute('for', gadget.state.scope);
+
+      if (field_json) {
+        if (field_json.hasOwnProperty('edit_field_href')) {
+          field_href = document.createElement("a");
+          field_href.href = field_json.edit_field_href;
+          field_href.title = "Edit this field";
+          field_href.appendChild(document.createElement("img"));
+          field_href.firstElementChild.src = field_json.edit_field_icon;
+          this.props.label_element.appendChild(field_href);
+        }
+
+        if (field_json.hasOwnProperty('translate_title_href')) {
+          field_href = document.createElement("a");
+          field_href.href = field_json.translate_title_href;
+          field_href.title = "Translate this field title";
+          field_href.appendChild(document.createElement("img"));
+          field_href.firstElementChild.src = field_json.translate_title_icon;
+          this.props.label_element.appendChild(field_href);
+        }
+
+        if (field_json.hasOwnProperty('translate_description_href')) {
+          field_href = document.createElement("a");
+          field_href.href = field_json.translate_description_href;
+          field_href.title = "Translate this field description";
+          field_href.appendChild(document.createElement("img"));
+          field_href.firstElementChild.src = field_json.translate_description_icon;
+          this.props.label_element.appendChild(field_href);
+        }
+
+      }
 
       if (modification_dict.hasOwnProperty('css_class') && this.state.css_class) {
         css_class = this.state.css_class.split(' ');
