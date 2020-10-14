@@ -1193,12 +1193,12 @@ div[data-gadget-scope='header'] .ui-header {
     animation: fadein @transition-timing;
   }
 
-  // Dialog page template main submit button 
+  // Dialog page template main submit button
   input[type='submit'] {
     .renderPageSubmitButton(@coloraccent);
     text-shadow: @foreground-text-shadow;
   }
-  // Dialog page template update button 
+  // Dialog page template update button
   button[name='action_update'] {
     .renderPageSubmitButton(@grey);
   }
@@ -1365,7 +1365,6 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-field-contain {
     & > label:not(:is-invalid) {
       color: @colorlabel;
-
     }
   }
   //Label styling in required and "invisible" field
@@ -2118,6 +2117,12 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] {
   }
 }
 
+/**********************************************
+* Developer mode actions
+**********************************************/
+.edit-form, .edit-form-action, .edit-field, .translate-title, .translate-description {
+  margin-left: @half-margin-size;
+}
 /**********************************************
 * Icons
 **********************************************/

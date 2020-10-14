@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/
+* http://meyerweb.com/eric/tools/css/reset/ 
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -1856,6 +1856,16 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li h2 {
 }
 div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li li {
   padding: 3pt 6pt;
+}
+/**********************************************
+* Developer mode actions
+**********************************************/
+.edit-form,
+.edit-form-action,
+.edit-field,
+.translate-title,
+.translate-description {
+  margin-left: 3pt;
 }
 /**********************************************
 * Icons
