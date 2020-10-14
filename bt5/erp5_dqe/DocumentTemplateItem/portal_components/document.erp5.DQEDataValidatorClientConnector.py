@@ -15,9 +15,6 @@ class DQEDataValidatorClientConnector(XMLObject):
     params=None,
     archive_kw=None,
   ):
-    TIMEOUT = -1
-    FAILURE = -2
-
     if params is None:
       params = {}
     params['Licence'] = self.getLicenseNumber()
@@ -28,7 +25,7 @@ class DQEDataValidatorClientConnector(XMLObject):
       response = requests.get(base_url, params=params, timeout=self.getTimeout())
     except (Timeout, timeout, ConnectionError):
       raw_response = 'TIMEOUT'
-      result_dict = {'1': {self.getPortalObject().Base_getDQEServiceToErrorKeyDict().get(service): TIMEOUT}}
+      result_dict = {}
     else:
       if response.ok:
         raw_response = response.content
@@ -39,7 +36,7 @@ class DQEDataValidatorClientConnector(XMLObject):
           'DQEDataValidatorClientConnector returns Non-ok response : %s' % response.text
         )
         raw_response = response.text
-        result_dict = {'1': {self.getPortalObject().Base_getDQEServiceToErrorKeyDict().get(service): FAILURE}}
+        result_dict = {}
     finally:
       archiveExchange = self._getTypeBasedMethod('archiveExchange')
       if archiveExchange is not None:
