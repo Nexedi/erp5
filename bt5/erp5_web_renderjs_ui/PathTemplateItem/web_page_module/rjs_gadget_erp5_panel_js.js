@@ -113,6 +113,7 @@
         action_list = JSON.stringify(action_list);
         jump_list = JSON.stringify(jump_list);
       }
+
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
@@ -324,7 +325,6 @@
                        jump_list, result_list[0],
                        view_list.length + workflow_list.length +
                        action_list.length);
-
               dl_element = gadget.element.querySelector("dl");
               while (dl_element.firstChild) {
                 dl_element.removeChild(dl_element.firstChild);

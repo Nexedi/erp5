@@ -1764,5 +1764,76 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="disable_developer_mode">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/renderjs_runner/</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()="Preferences"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[text()="Preferences"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_disableDeveloperMode</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/renderjs_runner/</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()="Preferences"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[text()="Preferences"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()="User Interface"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[text()="User Interface"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@id='field_my_preferred_html_style_developper_mode']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>check</td>
+      <td>//input[@id='field_my_preferred_html_style_developper_mode']</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+  </tal:block>
 
 </tal:block>
