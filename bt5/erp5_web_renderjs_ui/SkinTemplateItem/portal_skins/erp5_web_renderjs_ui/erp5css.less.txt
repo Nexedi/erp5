@@ -1681,10 +1681,16 @@ div[data-gadget-scope='erp5_searchfield'] {
         text-decoration: underline;
       }
 
-      // XXX Same than cells
-      tr { th {
-        padding: @margin-size @half-margin-size;
-      }}
+      tr {
+        th {
+          // XXX Same than cells
+          padding: @margin-size @half-margin-size;
+
+          &.ui-icon::before {
+            margin-right: @margin-size;
+          }
+        }
+      }
 
       // text-align: center;
 
