@@ -138,7 +138,8 @@
 
         .push(function (result_dict) {
           var i,
-            j = 0;
+            j = 0,
+            sub_element_list;
 
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
@@ -154,12 +155,12 @@
             });
             j += 1;
           }
-
-          domsugar(gadget.element, [
+          sub_element_list = [
             generateSection(result_dict.translation_list[0], 'eye', tab_list),
             generateSection(result_dict.translation_list[1], 'plane', jump_action_list),
             generateSection(result_dict.translation_list[2], 'ellipsis-v', breadcrumb_action_list)
-          ]);
+          ];
+          domsugar(gadget.element, sub_element_list);
 
           return gadget.updateHeader({
             back_url: result_dict.url_list[j],

@@ -1190,12 +1190,18 @@ div[data-gadget-scope='header'] .ui-header {
     animation: fadein @transition-timing;
   }
 
-  // Dialog page template main submit button 
+  div[data-gadget-scope='erp5_form'] {
+    & > a {
+      margin-left: @half-margin-size;
+    }
+  }
+
+  // Dialog page template main submit button
   input[type='submit'] {
     .renderPageSubmitButton(@coloraccent);
     text-shadow: @foreground-text-shadow;
   }
-  // Dialog page template update button 
+  // Dialog page template update button
   button[name='action_update'] {
     .renderPageSubmitButton(@grey);
   }
@@ -1265,6 +1271,9 @@ div[data-gadget-scope='header'] .ui-header {
 
   .ui-content-header-plain {
     font-size: 150%;
+    & > h3 > a {
+      margin-left: @half-margin-size;
+    }
   }
   .worklist-empty {
     max-width: 442px; /* original size of the embedded image */
@@ -1362,7 +1371,10 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-field-contain {
     & > label {
       color: @colorlabel;
-
+      & > a {
+        // links inside label when dev mode is enable
+        margin-left: @half-margin-size;
+      }
     }
   }
   //Label styling in required and "invisible" field
@@ -1631,6 +1643,9 @@ div[data-gadget-scope='erp5_searchfield'] {
             display: initial;
           }
         }
+      }
+      & > a {
+        margin-left: @half-margin-size;
       }
     }
 
