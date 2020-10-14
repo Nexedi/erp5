@@ -474,7 +474,6 @@
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
           }
-
           return gadget.changeState({
             key: field_json.key,
             title: field_json.title,
@@ -527,7 +526,7 @@
             has_error: false,
             show_line_selector: false,
             show_select_action: false,
-            show_clipboard_action: false
+            show_clipboard_action: false,
           });
         });
       return queue;
@@ -547,7 +546,6 @@
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
         button;
-
 /*
       if (modification_dict.hasOwnProperty('error_text') && this.state.error_text !== undefined) {
         // XXX TODO
@@ -714,6 +712,7 @@
               span_element = document.createElement('span'),
               tr_element,
               th_element,
+              field_href,
               a_element;
 
             div_element.setAttribute('class', 'ui-table-header ui-header');
