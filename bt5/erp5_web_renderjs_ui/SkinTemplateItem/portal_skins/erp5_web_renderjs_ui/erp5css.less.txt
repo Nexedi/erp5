@@ -1362,7 +1362,10 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-field-contain {
     & > label {
       color: @colorlabel;
-
+      & > a {
+        // links inside label when dev mode is enable
+        padding-left: 3pt;
+      }
     }
   }
   //Label styling in required and "invisible" field
