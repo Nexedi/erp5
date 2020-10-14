@@ -1438,6 +1438,10 @@ div.invisible_header .document_table .ui-table-header {
 .document_table table tfoot tr th {
   padding: 6pt 3pt;
 }
+.document_table table thead tr th.ui-icon::before,
+.document_table table tfoot tr th.ui-icon::before {
+  margin-right: 6pt;
+}
 @media not screen and (min-width: 45em) {
   .document_table table thead,
   .document_table table tfoot {
