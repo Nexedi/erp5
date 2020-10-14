@@ -59,13 +59,15 @@
     .onStateChange(function () {
       var gadget = this,
         erp5_document,
-        group_list;
+        group_list,
+        raw_list;
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
       return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
           erp5_document = jio_attachment;
+          raw_list = ensureArray(erp5_document._links.action_object_jio_raw);
 
           var i,
             j,
@@ -89,12 +91,20 @@
               }});
             }
           }
+          for (i = 0; i < raw_list.length; i += 1) {
+            url_for_kw_list.push({
+              command: 'raw',
+              options: {
+                url: raw_list[i].href
+              }
+            });
+          }
 
           url_for_kw_list.push({command: 'cancel_dialog_with_history'});
 
           return RSVP.hash({
             url_list: gadget.getUrlForList(url_for_kw_list),
-            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete']),
+            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete', 'Developer mode']),
             page_title: calculatePageTitle(gadget, erp5_document)
           });
         })
@@ -104,6 +114,7 @@
             j,
             k = 0,
             dom_list = [],
+            raw_action_list = [],
             link_list;
 
           for (i = 0; i < group_list.length; i += 3) {
@@ -119,6 +130,17 @@
               generateSection(result_dict.translation_list[i / 3], group_list[i + 2], link_list)
             );
 
+          }
+          for (i = 0; i < raw_list.length; i += 1) {
+            raw_action_list.push({
+              title: raw_list[i].title,
+              link: result_dict.url_list[k]
+            });
+            k += 1;
+          }
+
+          if (raw_action_list.length > 0) {
+            dom_list.push(generateSection(result_dict.translation_list[4], 'plane', raw_action_list));
           }
 
           domsugar(gadget.element, dom_list);
