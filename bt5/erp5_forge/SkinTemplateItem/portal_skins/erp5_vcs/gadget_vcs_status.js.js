@@ -267,7 +267,8 @@
 
   function expandTreeView(gadget) {
     var element_list = gadget.element.querySelectorAll('input.showhide'),
-      is_checked = !element_list[0].checked,
+      // Do not crash if no checkbox is displayed
+      is_checked = (element_list.length !== 0) && (!element_list[0].checked),
       i;
     for (i = 0; i < element_list.length; i += 1) {
       element_list[0].checked = is_checked;
@@ -337,7 +338,13 @@
     var result = JSON.parse(gadget.state.value);
     renderGadgetHeader(gadget, false);
     domsugar(gadget.element.querySelector('div.vcsbody'), [
-      domsugar('textarea', {value: result.changelog})
+      domsugar('textarea', {value: result.changelog}),
+      domsugar('h3', {text: 'Added Files'}),
+      domsugar('pre', {text: result.added.join('\n')}),
+      domsugar('h3', {text: 'Modified Files'}),
+      domsugar('pre', {text: result.modified.join('\n')}),
+      domsugar('h3', {text: 'Deleted Files'}),
+      domsugar('pre', {text: result.deleted.join('\n')}),
     ]);
   }
 
