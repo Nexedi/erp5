@@ -337,8 +337,12 @@ url_template_dict = {
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
-Base_translateString = context.getPortalObject().Base_translateString
+portal = context.getPortalObject()
+preference_tool = portal.portal_preferences
+Base_translateString = portal.Base_translateString
 
+preferred_html_style_developper_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
+preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
 def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
@@ -446,6 +450,27 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "description": field.get_value("description"),
   }
 
+  if preferred_html_style_developper_mode or meta_type == "ListBox":
+    form_relative_url = getFormRelativeUrl(form)
+
+  if preferred_html_style_developper_mode:
+    result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
+
+  if preferred_html_style_translator_mode:
+    erp5_ui = portal.Localizer.erp5_ui
+    selected_language = erp5_ui.get_selected_language()
+    result["translate_title_href"] = '%s/manage_messages?regex=^%s&lang=%s' % (
+      '/'.join(erp5_ui.getPhysicalPath()),
+      field.title(),
+      selected_language
+    )
+    field_description = field.Field_getDescription()
+    if field_description:
+      result["translate_description_href"] = '%s/manage_messages?regex=^%s&lang=%s' % (
+        '/'.join(erp5_ui.getPhysicalPath()),
+        field_description,
+        selected_language
+      )
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
     result["required"] = field.get_value("required") if field.has_value("required") else None
@@ -737,7 +762,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
-        "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
+        "form_relative_url": "%s/%s" % (form_relative_url, field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable(list_method_query_dict))),
