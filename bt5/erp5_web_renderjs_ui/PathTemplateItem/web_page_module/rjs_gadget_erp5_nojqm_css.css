@@ -1013,6 +1013,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content div[data-gadget-scope='m'] {
   animation: fadein 0.2s ease-out;
 }
+.gadget-content div[data-gadget-scope='erp5_form'] > a {
+  margin-left: 3pt;
+}
 .gadget-content input[type='submit'] {
   padding: 6pt;
   margin-top: 30pt;
@@ -1101,6 +1104,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .ui-content-header-plain {
   font-size: 150%;
 }
+.gadget-content .ui-content-header-plain > h3 > a {
+  margin-left: 3pt;
+}
 .gadget-content .worklist-empty {
   max-width: 442px;
   /* original size of the embedded image */
@@ -1185,6 +1191,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content .ui-field-contain > label:not(:is-invalid) {
   color: hsl(0, 0%, 42%);
+}
+.gadget-content .ui-field-contain > label > a {
+  margin-left: 3pt;
 }
 .gadget-content .required > .ui-field-contain > label {
   font-weight: bold;
@@ -1394,6 +1403,9 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   .document_table .ui-table-header h1 span.listboxloader.ui-icon-spinner {
     display: initial;
   }
+}
+.document_table .ui-table-header h1 > a {
+  margin-left: 3pt;
 }
 .document_table .ui-table-header button {
   padding: 3pt;
