@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, rJS, RSVP, jIO, Blob */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, jIO, Blob) {
   "use strict";
 
   rJS(window)
@@ -74,7 +74,7 @@
               ojs_cloudooo_gadget = ojs_cloudooo;
               return ojs_cloudooo.getConvertedBlob({
                 jio_key: parent_options.action_options.jio_key,
-                format: file_extension, //state_dict.mime_type,
+                format: file_extension,
                 filename: filename
               });
             });
@@ -94,13 +94,12 @@
           clone_jio_key = jio_key;
           return gadget
             .jio_putAttachment(jio_key, 'data',
-                               //jIO.util.dataURItoBlob(data))
                                base_blob)
             .push(function () {
               if (ojs_cloudooo_gadget) {
                 return ojs_cloudooo_gadget
                   .putAllCloudoooConvertionOperation({
-                    format: extension, //mime_type,
+                    format: extension,
                     jio_key: jio_key
                   });
               }
@@ -124,4 +123,4 @@
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, jIO, Blob));
