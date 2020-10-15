@@ -3,7 +3,7 @@
 (function (window, rJS, RSVP, document) {
   'use strict';
 
-  function appendCheckboxField(gadget, item, checked) {
+  function appendCheckboxField(gadget, item, checked, error_text) {
     var input_gadget,
       label_gadget;
     if (!gadget.state.editable) {
@@ -47,17 +47,16 @@
         label.appendChild(input_gadget.element);
         label.appendChild(text_node);
         div.appendChild(label);
+        if (error_text && !label.classList.contains("is-invalid")) {
+          label.classList.add("is-invalid");
+        } else if (!error_text && label.classList.contains("is-invalid")) {
+          label.classList.remove("is-invalid");
+        }
         gadget.element.appendChild(div);
       });
   }
 
   rJS(window)
-    .setState({
-      display_error_text: false
-    })
-    .ready(function ready() {
-      this.props = {};
-    })
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
@@ -83,14 +82,9 @@
         item_list = this.state.item_list,
         i,
         span,
-        queue;
+        queue,
+        container_element;
 
-      if (!gadget.props.container_element) {
-        gadget.props = {
-          container_element: gadget.element.querySelector('div'),
-          label_element: gadget.element.querySelector('label')
-        };
-      }
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
         element.removeChild(element.firstChild);
@@ -100,28 +94,6 @@
         value_dict[value_list[i]] = null;
       }
 
-      if (modification_dict.hasOwnProperty('display_error_text')) {
-        // first remove old errors
-        span = this.props.container_element.lastElementChild;
-        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
-          span = null;
-        }
-        // display new error if present
-        if (this.state.error_text && this.state.display_error_text) {
-          if (span === null) {
-            span = document.createElement('span');
-            span.textContent = this.state.error_text;
-            this.props.container_element.appendChild(span);
-          } else {
-            span.textContent = this.state.error_text;
-          }
-        } else {
-          if (span !== null) {
-            this.props.container_element.removeChild(span);
-          }
-        }
-      }
-
       function enQueue() {
         var argument_list = arguments;
         queue
@@ -129,11 +101,13 @@
             return appendCheckboxField.apply(this, argument_list);
           });
       }
-
       queue = new RSVP.Queue();
 
       for (i = 0; i < item_list.length; i += 1) {
-        enQueue(gadget, item_list[i], value_dict.hasOwnProperty(item_list[i][1]));
+        enQueue(gadget,
+                item_list[i],
+                value_dict.hasOwnProperty(item_list[i][1]),
+                this.state.error_text);
       }
 
       return queue;
@@ -182,18 +156,6 @@
       }
       return final_result;
     }, {mutex: 'changestate'})
-
-    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
-      if (this.state.error_text) {
-        return this.changeState({display_error_text: true});
-      }
-    })
-
-    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
-      if (this.state.error_text) {
-        return this.changeState({display_error_text: false});
-      }
-    })
 
     .declareMethod('checkValidity', function () {
       var name = this.state.name;
