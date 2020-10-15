@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO, Blob */
+/*global window, rJS, jIO, Blob */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO, Blob) {
+(function (window, rJS, jIO, Blob) {
   "use strict";
 
   rJS(window)
@@ -21,9 +21,9 @@
     .declareMethod("preRenderDocument", function (parent_options) {
       var gadget = this;
       return gadget.jio_get(parent_options.jio_key)
-      .push(function (parent_document) {
-        return parent_document;
-      });
+        .push(function (parent_document) {
+          return parent_document;
+        });
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
@@ -44,9 +44,7 @@
         content_editable,
         filename,
         extension,
-        blob_type,
         base_blob,
-        data,
         clone_jio_key,
         ojs_cloudooo_gadget,
         property;
@@ -67,7 +65,10 @@
           content_editable = document.content_type === undefined ||
             document.content_type.indexOf("application/x-asc") === 0;
           if (!content_editable) {
-            return gadget.jio_getAttachment(parent_options.action_options.jio_key, "data");
+            return gadget.jio_getAttachment(
+              parent_options.action_options.jio_key,
+              "data"
+            );
           }
           return gadget.declareGadget("gadget_ojs_cloudooo.html")
             .push(function (ojs_cloudooo) {
@@ -123,4 +124,4 @@
         });
     });
 
-}(window, rJS, RSVP, jIO, Blob));
+}(window, rJS, jIO, Blob));
