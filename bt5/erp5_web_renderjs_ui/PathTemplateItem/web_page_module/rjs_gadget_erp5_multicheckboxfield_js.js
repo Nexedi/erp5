@@ -157,12 +157,35 @@
       return final_result;
     }, {mutex: 'changestate'})
 
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      if (this.state.error_text) {
+        return this.changeState({display_error_text: true});
+      }
+    })
+
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      if (this.state.error_text) {
+        return this.changeState({display_error_text: false});
+      }
+    })
+
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .declareMethod('checkValidity', function () {
-      var name = this.state.name;
+      var gadget = this,
+        name = this.state.name;
       if (this.state.editable && this.state.required) {
         return this.getContent()
           .push(function (result) {
             return result[name].length !== 0;
+          });
+      }
+      if (this.state.error_text) {
+        return RSVP.Queue()
+          .push(function () {
+            return gadget.notifyInvalid(gadget.state.error_text);
+          })
+          .push(function () {
+            return false;
           });
       }
       return true;
