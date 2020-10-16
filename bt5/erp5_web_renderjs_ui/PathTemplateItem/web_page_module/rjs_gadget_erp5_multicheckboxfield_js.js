@@ -76,16 +76,14 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var element = this.element,
         gadget = this,
         value_list = this.state.value_list,
         value_dict = {},
         item_list = this.state.item_list,
         i,
-        span,
-        queue,
-        container_element;
+        queue;
 
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
@@ -161,18 +159,11 @@
 
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .declareMethod('checkValidity', function () {
-      var gadget = this,
-        name = this.state.name;
-      if (this.state.editable && this.state.required) {
-        return this.getContent()
-          .push(function (result) {
-            return result[name].length !== 0;
-          });
-      }
-      if (this.state.error_text) {
+      var gadget = this;
+      if (gadget.state.error_text) {
         return RSVP.Queue()
           .push(function () {
-            return gadget.notifyInvalid(this.state.error_text);
+            return gadget.notifyInvalid(gadget.state.error_text);
           })
           .push(function () {
             return false;

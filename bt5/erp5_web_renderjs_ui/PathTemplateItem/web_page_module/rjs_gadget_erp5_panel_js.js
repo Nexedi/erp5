@@ -347,8 +347,12 @@
       }
     }, false, false)
 
-    .allowPublicAcquisition("notifyFocus", function notifyFocus() {})
-    .allowPublicAcquisition("notifyBlur", function notifyBlur() {})
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      return;
+    })
+    .allowPublicAcquisition("notifyBlur", function notifyFocus() {
+      return;
+    })
 
     .allowPublicAcquisition('notifyChange', function notifyChange(
       argument_list,
