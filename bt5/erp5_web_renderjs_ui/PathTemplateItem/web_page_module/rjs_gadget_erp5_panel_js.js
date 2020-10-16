@@ -347,6 +347,9 @@
       }
     }, false, false)
 
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {})
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {})
+
     .allowPublicAcquisition('notifyChange', function notifyChange(
       argument_list,
       scope
