@@ -63,7 +63,7 @@ elif test_result.getPortalType() == 'Test Result Line':
   errors = kw.get('error_count', 0)
   failures = kw.get('failure_count', 0)
   skips = kw.get('skip_count', 0)
-  if all_tests is None:
+  if (all_tests is None) or (all_tests == 0):
     status = 'UNKNOWN'
     all_tests = 0
   elif errors or failures and unexpected(test_result.getParentValue()):

@@ -1421,6 +1421,45 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self._createTestResult(test_title='Periodicity Disabled Test Suite')
     self.assertEqual(None, test_suite.getAlarmDate())
 
+class TestRetryUnknownTest(TaskDistributionTestCase):
+  """Test how failed tests can be automatically retried.
+  """
+
+  def afterSetUp(self):
+    super(TestRetryUnknownTest, self).afterSetUp()
+    self.test_suite, = self.test_suite_module.objectValues()
+    self._createTestNode()
+    self.tic()
+
+  def test_unknown_test_with_zero_test_not_retried_by_default(self):
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 0,
+        'error_count': 0,
+        'failure_count': 0,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(test_result_line.getStringIndex(), 'UNKNOWN')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+
+  def test_unknown_test_without_status_not_retried_by_default(self):
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {}
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(test_result_line.getStringIndex(), 'UNKNOWN')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
 
 class TestRetryFailedTest(TaskDistributionTestCase):
   """Test how failed tests can be automatically retried.
