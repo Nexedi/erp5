@@ -13,7 +13,8 @@
             label_gadget = result;
             return result.render({
               tag: 'p',
-              text_content: item[0]
+              text_content: item[0],
+              error_text: error_text
             });
           })
           .push(function () {
@@ -35,6 +36,7 @@
           value: item[1],
           checked: checked,
           editable: true,
+          error_text: error_text,
           hidden: gadget.state.hidden
         };
 
@@ -157,18 +159,6 @@
       return final_result;
     }, {mutex: 'changestate'})
 
-    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
-      if (this.state.error_text) {
-        return this.changeState({display_error_text: true});
-      }
-    })
-
-    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
-      if (this.state.error_text) {
-        return this.changeState({display_error_text: false});
-      }
-    })
-
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .declareMethod('checkValidity', function () {
       var gadget = this,
@@ -182,7 +172,7 @@
       if (this.state.error_text) {
         return RSVP.Queue()
           .push(function () {
-            return gadget.notifyInvalid(gadget.state.error_text);
+            return gadget.notifyInvalid(this.state.error_text);
           })
           .push(function () {
             return false;
