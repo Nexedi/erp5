@@ -35,9 +35,10 @@ if context.getParentValue().getParentValue().getPortalType() in (
 
 #backwards compatibility
 mapped_value_property_list = context.getMappedValuePropertyList()
-if not 'priced_quantity' in mapped_value_property_list:
-  mapped_value_property_list.append('priced_quantity')
-  context.setMappedValuePropertyList(mapped_value_property_list)
+for mapped_property in ('priced_quantity', 'quantity_unit'):
+  if not mapped_property in mapped_value_property_list:
+    mapped_value_property_list.append(mapped_property)
+    context.setMappedValuePropertyList(mapped_value_property_list)
 
 # XXX: An hack that the context cell may not have the start_date_range_min/max properties.
 # But they don't acquire it parent the properties.

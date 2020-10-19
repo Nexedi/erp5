@@ -166,6 +166,22 @@ class TestResource(ERP5TypeTestCase):
       self.quantity_unit_kilo = quantity_unit_weight.newContent(
                                       portal_type='Category',
                                       id='kilo')
+    quantity_unit_volume = self.portal.portal_categories.quantity_unit._getOb(
+        'volume', None)
+    if quantity_unit_volume is None:
+      quantity_unit_volume = self.portal.portal_categories.quantity_unit.newContent(
+        id='volume', portal_type='Category')
+    self.quantity_unit_liter = quantity_unit_volume._getOb('liter', None)
+    if self.quantity_unit_liter is None:
+      self.quantity_unit_liter = quantity_unit_volume.newContent(
+        portal_type='Category', id='liter')
+
+    self.metric_type_volume = self.portal.portal_categories.metric_type._getOb(
+        'volume', None)
+    if self.metric_type_volume is None:
+      self.metric_type_volume = self.portal.portal_categories.metric_type.newContent(
+          id='volume',
+          portal_type='Category')
 
     unit_conversion_module = self.portal.quantity_unit_conversion_module
     weight_group = unit_conversion_module._getOb('weight', None)
@@ -182,6 +198,22 @@ class TestResource(ERP5TypeTestCase):
                               quantity_unit='weight/gram',
                               quantity=0.001)
       gram_definition.validate()
+
+    volume_group = unit_conversion_module._getOb('volume', None)
+    if volume_group is None:
+      volume_group = unit_conversion_module.newContent(
+          id='volume',
+          portal_type='Quantity Unit Conversion Group',
+          quantity_unit_value=self.quantity_unit_liter)
+      volume_group.validate()
+    liter_definition = volume_group._getOb('liter', None)
+    if liter_definition is None:
+      liter_definition = volume_group.newContent(
+          id='liter',
+          portal_type='Quantity Unit Conversion Definition',
+          quantity_unit_value=self.quantity_unit_liter,
+          quantity=1)
+      liter_definition.validate()
 
     # create some product line categories
     product_line = self.portal.portal_categories.product_line
@@ -1034,6 +1066,80 @@ class TestResource(ERP5TypeTestCase):
     self.assertEqual(1, sale_order_line.getPrice())
     self.assertEqual(5000, sale_order_line.getTotalPrice())
 
+  def testGetPriceDefinedInDifferentQuantityUnit(self):
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource.setDefaultQuantityUnitValue(self.quantity_unit_kilo)
+    supply_line = resource.newContent(
+                    portal_type=self.sale_supply_line_portal_type)
+    supply_line.setDefaultQuantityUnitValue(self.quantity_unit_gram)
+    supply_line.setBasePrice(5)
+    # price for 1 gram is 5, so price for 1 kg is 5000
+    self.tic()
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order',)
+    sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource,
+                          quantity=5)
+    self.assertEqual(sale_order_line.getPrice(), 5000)
+
+    # price for 250g is 100
+    supply_line.setPricedQuantity(250)
+    supply_line.setBasePrice(100)
+    self.tic()
+    # so for 1kg it is 400
+    sale_order_line.setPrice(None)
+    self.assertEqual(sale_order_line.getPrice(), 400)
+
+  def testGetPriceDefinedForDifferentMetric(self):
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource.setQuantityUnitValueList([
+        self.quantity_unit_kilo,
+        self.quantity_unit_liter
+    ])
+    # this resource exists in kg or liter, one Kg is 0.75 liter.
+    measure  = resource.newContent(
+        portal_type='Measure'
+    )
+    measure.setMetricTypeValue(self.metric_type_volume)
+    measure.setQuantityUnitValue(self.quantity_unit_liter)
+    measure.setQuantity(0.75)
+
+    supply_line = resource.newContent(
+                    portal_type=self.sale_supply_line_portal_type)
+    supply_line.setDefaultQuantityUnitValue(self.quantity_unit_liter)
+    supply_line.setBasePrice(4)
+
+    # price for 1l is 4, so price for 1kg is 3
+    self.tic()
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order',)
+    sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource,
+                          quantity=1)
+    self.assertEqual(sale_order_line.getPrice(), 3)
+
+  def testGetPriceWithPricedQuantity(self):
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    supply_line = resource.newContent(
+                    portal_type=self.sale_supply_line_portal_type)
+    supply_line.setBasePrice(3000)
+    supply_line.setPricedQuantity(3)
+    self.tic()
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order',)
+    sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource,
+                          quantity=5)
+    # price for 3 is 3000, so price for 1 is 1000
+    self.assertEqual(sale_order_line.getPrice(), 1000)
+    self.assertEqual(sale_order_line.getTotalPrice(), 5000)
+
   def testGetPriceWithPriceCurrency(self):
     currency_module = self.portal.getDefaultModule("Currency")
     currency = currency_module.newContent(
@@ -1302,36 +1408,14 @@ class TestResource(ERP5TypeTestCase):
        In this test, always use Base.edit method. Because Base.edit is
        used when real user edit document through edit form.
     """
-    # Set up quantity unit categories
-    # weight
-    quantity_unit_category_value = self.portal.portal_categories.quantity_unit
-    quantity_unit_weight = quantity_unit_category_value._getOb('weight', None)
-    if quantity_unit_weight is None:
-      quantity_unit_weight = quantity_unit_category_value.newContent(
-        id='weight', portal_type='Category')
-    quantity_unit_gram = quantity_unit_weight._getOb('gram', None)
-    if quantity_unit_gram is None:
-      quantity_unit_gram = quantity_unit_weight.newContent(
-        portal_type='Category', id='gram')
-    # volume
-    quantity_unit_volume = quantity_unit_category_value._getOb('volume', None)
-    if quantity_unit_volume is None:
-      quantity_unit_volume = quantity_unit_category_value.newContent(
-        id='volume', portal_type='Category')
-    quantity_unit_liter = quantity_unit_volume._getOb('liter', None)
-    if quantity_unit_liter is None:
-      quantity_unit_liter = quantity_unit_volume.newContent(
-        portal_type='Category', id='liter')
-    self.commit()
-
     # Create resource
     resource_value = self.portal.getDefaultModule(
       self.product_portal_type).newContent(portal_type=self.product_portal_type)
     resource_value.edit(quantity_unit_value_list=[
-        quantity_unit_gram, quantity_unit_liter])
+        self.quantity_unit_gram, self.quantity_unit_liter])
     self.commit()
     self.assertEqual(resource_value.getDefaultQuantityUnitValue(),
-                     quantity_unit_gram)
+                     self.quantity_unit_gram)
 
     # Create sale order line
     sale_order = self.portal.getDefaultModule('Sale Order').newContent(
@@ -1344,35 +1428,35 @@ class TestResource(ERP5TypeTestCase):
     sale_order_line.edit(resource_value=resource_value)
     self.commit()
     self.assertEqual(sale_order_line.getQuantityUnitValue(),
-                     quantity_unit_gram)
+                     self.quantity_unit_gram)
 
     # Select different quantity unit
-    sale_order_line.edit(quantity_unit_value=quantity_unit_liter)
+    sale_order_line.edit(quantity_unit_value=self.quantity_unit_liter)
     self.commit()
     self.assertEqual(sale_order_line.getQuantityUnitValue(),
-                     quantity_unit_liter)
+                     self.quantity_unit_liter)
 
     # Select empty(no quantity unit)
     sale_order_line.edit(quantity_unit_value=None)
     self.commit()
 
     # Select default quantity unit again
-    sale_order_line.edit(quantity_unit_value=quantity_unit_gram)
+    sale_order_line.edit(quantity_unit_value=self.quantity_unit_gram)
     self.commit()
     self.assertEqual(sale_order_line.getQuantityUnitValue(),
-                     quantity_unit_gram)
+                     self.quantity_unit_gram)
 
     # Change default quantity unit on resource
     # Now liter is default quantity unit.
     resource_value.edit(quantity_unit_value_list=[
-        quantity_unit_liter, quantity_unit_gram])
+        self.quantity_unit_liter, self.quantity_unit_gram])
     self.commit()
 
     # Check existing movement again and make sure that quantity
     # unit is not changed.
     expectedFailure(self.assertEqual)(
       sale_order_line.getQuantityUnitValue(),
-      quantity_unit_gram)
+      self.quantity_unit_gram)
 
 def test_suite():
   suite = unittest.TestSuite()

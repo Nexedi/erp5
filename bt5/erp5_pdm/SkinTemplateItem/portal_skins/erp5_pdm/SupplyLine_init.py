@@ -9,4 +9,5 @@ context.setMappedValuePropertyList([
                     'surcharge_ratio', 'variable_additional_price',
                     'non_discountable_additional_price',
                     'priced_quantity', 'base_unit_price',
+                    'quantity_unit',
 ])
