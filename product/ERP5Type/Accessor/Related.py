@@ -60,7 +60,7 @@ class DefaultGetter(BaseGetter):
                            self._key, 'relative_url',
                            spec=kw.get('spec',()),
                            filter=kw.get('filter', None),
-                           portal_type=kw.get('portal_type',()),
+                           portal_type=kw.get('portal_type', None),
                            checked_permission=kw.get('checked_permission', None))
 
   psyco.bind(__call__)
@@ -95,7 +95,7 @@ class ListGetter(BaseGetter):
                           self._key, 'relative_url',
                           spec=kw.get('spec',()),
                           filter=kw.get('filter', None),
-                          portal_type=kw.get('portal_type',()),
+                          portal_type=kw.get('portal_type', None),
                           checked_permission=kw.get('checked_permission', None))
 
   psyco.bind(__call__)

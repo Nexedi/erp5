@@ -64,7 +64,7 @@ class DefaultGetter(BaseGetter):
                             self._key,
                             spec=kw.get('spec',()),
                             filter=kw.get('filter', None),
-                            portal_type=kw.get('portal_type',()),
+                            portal_type=kw.get('portal_type', None),
                             strict_membership=kw.get('strict_membership',
                                                      # 'strict' is deprecated
                                                      kw.get('strict', None)),
@@ -142,7 +142,7 @@ class DefaultPropertyGetter(BaseGetter):
                          self._key, key,
                          spec=kw.get('spec',()),
                          filter=kw.get('filter', None),
-                         portal_type=kw.get('portal_type',()),
+                         portal_type=kw.get('portal_type', None),
                          strict_membership=kw.get('strict_membership',
                                                   # 'strict' is deprecated
                                                   kw.get('strict', None)),
@@ -179,7 +179,7 @@ class PropertyListGetter(BaseGetter):
                            self._key, key,
                            spec=kw.get('spec',()),
                            filter=kw.get('filter', None),
-                           portal_type=kw.get('portal_type',()),
+                           portal_type=kw.get('portal_type', None),
                            strict_membership=kw.get('strict_membership',
                                                     # 'strict' is deprecated
                                                     kw.get('strict', None)),
