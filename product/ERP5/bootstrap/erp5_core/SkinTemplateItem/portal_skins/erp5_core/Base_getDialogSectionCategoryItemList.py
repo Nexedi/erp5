@@ -11,7 +11,11 @@ group_title_item_list = portal.Base_getPreferredCategoryChildItemList(
     base=True,
 )
 
-user = portal.portal_membership.getAuthenticatedMember().getUserValue()
+zope_user = portal.portal_membership.getAuthenticatedMember()
+if 'Manager' in zope_user.getRolesInContext(context):
+  return group_title_item_list
+
+user = zope_user.getUserValue()
 if getattr(user, 'getPortalType', lambda: None)() != 'Person':
   return group_title_item_list
 
