@@ -1902,3 +1902,21 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
             ],
             ['Another Top Level Group', 'group/main_group_2'],
         ])
+
+  def test_person_user_with_manager_role_added_by_zodb_roles(self):
+    self.person.newContent(portal_type='Assignment').open()
+    self.tic()
+    self.portal.acl_users.zodb_roles.doAssignRoleToPrincipal(self.user_id, 'Manager')
+    self.login(self.user_id)
+
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group', 'group/main_group'],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+            [
+                'Main Group/Another Sub Group',
+                'group/main_group/another_sub_group'
+            ],
+            ['Another Top Level Group', 'group/main_group_2'],
+        ])
