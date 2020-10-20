@@ -282,6 +282,7 @@ class TestCrmReports(CrmTestCase):
   def getTitle(self):
     return "Crm Reports"
 
+  @unittest.expectedFailure
   def testCampaignStatus(self):
     # Campaign Status report.
 
@@ -428,6 +429,7 @@ class TestCrmReports(CrmTestCase):
                    progression = 100.00/100,
                    efficiency = 50.00/100)
 
+  @unittest.expectedFailure
   def testCampaignDetailedReport(self):
     # Campaign Detailed report.
 
@@ -591,6 +593,7 @@ class TestCrmReports(CrmTestCase):
                    source = event.getSourceTitle(),
                    validation_state = event.getTranslatedSimulationStateTitle())
 
+  @unittest.expectedFailure
   def testMeetingStatus(self):
     # Meeting Status report.
 
@@ -736,6 +739,7 @@ class TestCrmReports(CrmTestCase):
                    outgoing = 2,
                    incoming = 1)
 
+  @unittest.expectedFailure
   def testMeetingDetailedReport(self):
     # Meeting Detailed report.
 
@@ -899,6 +903,7 @@ class TestCrmReports(CrmTestCase):
                    source = event.getSourceTitle(),
                    validation_state = event.getTranslatedSimulationStateTitle())
 
+  @unittest.expectedFailure
   def testSupportRequestStatus(self):
     # Support Request Status report.
 
@@ -1044,6 +1049,7 @@ class TestCrmReports(CrmTestCase):
                    outgoing = 1,
                    incoming = 2)
 
+  @unittest.expectedFailure
   def testSupportRequestDetailedReport(self):
     # Support Request Detailed report.
 
@@ -1207,6 +1213,7 @@ class TestCrmReports(CrmTestCase):
                    source = event.getSourceTitle(),
                    validation_state = event.getTranslatedSimulationStateTitle())
 
+  @unittest.expectedFailure
   def testSaleOpportunityStatus(self):
     # Sale Opportunity Status report.
 
@@ -1352,6 +1359,7 @@ class TestCrmReports(CrmTestCase):
                    outgoing = 2,
                    incoming = 1)
 
+  @unittest.expectedFailure
   def testSaleOpportunityDetailedReport(self):
     # Sale Opportunity Detailed report.
 
@@ -1515,6 +1523,7 @@ class TestCrmReports(CrmTestCase):
                    source = event.getSourceTitle(),
                    validation_state = event.getTranslatedSimulationStateTitle())
 
+  @unittest.expectedFailure
   def testEventActivity(self):
     # Event Activity report.
 
@@ -2176,10 +2185,3 @@ class TestCrmReports(CrmTestCase):
     self.assertEqual(1, stat_line.getColumnProperty('expired'))
     self.assertEqual(2, stat_line.getColumnProperty('responded'))
     self.assertEqual(17, stat_line.getColumnProperty('total'))
-
-def test_suite():
-  suite = unittest.TestSuite()
-  # disable temporarily
-  # suite.addTest(unittest.makeSuite(TestCrmReports))
-  return suite
-
