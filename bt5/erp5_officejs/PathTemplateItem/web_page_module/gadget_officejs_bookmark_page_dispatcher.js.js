@@ -147,6 +147,18 @@
           });
         });
     })
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when focus
+      // is triggered. This is usefull to display error text.
+      // But, in the case of this gadget, we don't need to handle anything.
+      return;
+    })
+    .allowPublicAcquisition("notifyBlur", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when blur
+      // is triggered now. This is usefull to display error text.
+      // But, in the case of this gadget, we don't need to handle anything.
+      return;
+    })
     .allowPublicAcquisition("notifyValid", function () {
       return true;
     })
