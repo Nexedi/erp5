@@ -189,16 +189,21 @@
       var input = this.element.querySelector('input'),
         result = input.checkValidity(),
         gadget = this;
-      if (input.type === "radio") {
-        result = result && !this.state.error_text;
+
+      if (gadget.state.type === "radio") {
+        result = result && !gadget.state.error_text;
       }
+
       if (result) {
-        return this.notifyValid()
+        return gadget.notifyValid()
           .push(function () {
             var date,
               value;
-            if (!result) {
-              return result;
+            if ((gadget.state.type === 'checkbox') && gadget.state.error_text) {
+              return gadget.notifyInvalid(gadget.state.error_text)
+                .push(function () {
+                  return result;
+                });
             }
             if ((gadget.state.type === 'date') ||
                 (gadget.state.type === 'datetime-local')) {
@@ -222,12 +227,13 @@
             return result;
           });
       }
-      if (this.state.error_text) {
-        return gadget.notifyInvalid(this.state.error_text)
+      if (gadget.state.error_text) {
+        return gadget.notifyInvalid(gadget.state.error_text)
           .push(function () {
             return result;
           });
       }
+
       return result;
     }, {mutex: 'changestate'})
 
