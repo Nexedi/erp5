@@ -147,6 +147,12 @@
           });
         });
     })
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      return;
+    })
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      return;
+    })
     .allowPublicAcquisition("notifyValid", function () {
       return true;
     })
