@@ -15,7 +15,7 @@
   Portal class
 """
 
-import threading
+import thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals
@@ -33,6 +33,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -408,6 +409,20 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
           synchronizeDynamicModules(self)
 
     return self
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  def skinSuper(self, skin, id):
+    if id[:1] != '_' and id[:3] != 'aq_':
+      skin_info = SKINDATA.get(thread.get_ident())
+      if skin_info is not None:
+        _, skin_selection_name, _, _ = skin_info
+        skin_value = skinResolve(self, (skin_selection_name, skin), id)
+        if skin_value is not None:
+          # Wrap at the portal to set the owner of the executing script.
+          # This mimics the usual way to get an object from skin folders,
+          # and it's required when 'skin_value' is a script with proxy roles.
+          return skin_value.__of__(self)
+    raise AttributeError(id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isDeletable')

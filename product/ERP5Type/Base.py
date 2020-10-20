@@ -61,7 +61,6 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import interfaces
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
@@ -3086,18 +3085,7 @@ class Base(
 
   security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
   def skinSuper(self, skin, id):
-    if id[:1] != '_' and id[:3] != 'aq_':
-      skin_info = SKINDATA.get(thread.get_ident())
-      if skin_info is not None:
-        portal = self.getPortalObject()
-        _, skin_selection_name, _, _ = skin_info
-        object = skinResolve(portal, (skin_selection_name, skin), id)
-        if object is not None:
-          # First wrap at the portal to set the owner of the executing script.
-          # This mimics the usual way to get an object from skin folders,
-          # and it's required when 'object' is an script with proxy roles.
-          return object.__of__(portal).__of__(self)
-    raise AttributeError(id)
+    return self.getPortalObject().skinSuper(skin, id).__of__(self)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'get_local_permissions')
