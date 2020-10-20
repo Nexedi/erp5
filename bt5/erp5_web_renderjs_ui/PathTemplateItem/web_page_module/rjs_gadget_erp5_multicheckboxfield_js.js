@@ -155,21 +155,6 @@
           });
       }
       return final_result;
-    }, {mutex: 'changestate'})
-
-    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .declareMethod('checkValidity', function () {
-      var gadget = this;
-      if (gadget.state.error_text) {
-        return RSVP.Queue()
-          .push(function () {
-            return gadget.notifyInvalid(gadget.state.error_text);
-          })
-          .push(function () {
-            return false;
-          });
-      }
-      return true;
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS, RSVP, document));
