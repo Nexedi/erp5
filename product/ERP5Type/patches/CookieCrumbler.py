@@ -86,6 +86,7 @@ def balancer_cookie_hook(ob, req, resp):
        complicate code with automatic upgrade, this one is implemented by
        pluging into CookieCrumbler, although what they are quite unrelated.
   """
+  # Balancer gives us the name of the cookie it wants to use.
   balancer_cookie = req.get('HTTP_X_BALANCER_CURRENT_COOKIE')
   if balancer_cookie:
     try:
@@ -96,11 +97,10 @@ def balancer_cookie_hook(ob, req, resp):
       if balancer_cookie in req.cookies:
         resp.expireCookie(balancer_cookie, path=path)
     else:
-      from product.CMFActivity.ActivityTool import getCurrentNode
-      server_id = getCurrentNode()
-      # The format of server_id must be exactly the same for any balancer in front
-      if server_id != req.cookies.get(balancer_cookie):
-        resp.setCookie(balancer_cookie, server_id, path=path);
+      if balancer_cookie not in req.cookies:
+        # Balancer is expected to rewrite this cookie's value to whatever
+        # our identifier (from its point of view) is.
+        resp.setCookie(balancer_cookie, 'anything', path=path);
 
 def modifyRequest(self, req, resp):
   """Copies cookie-supplied credentials to the basic auth fields.
