@@ -155,6 +155,10 @@
           });
       }
       return final_result;
-    }, {mutex: 'changestate'});
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      return true;
+    });
 
 }(window, rJS, RSVP, document));
