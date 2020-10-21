@@ -923,6 +923,13 @@ class TestERP5Base(ERP5TypeTestCase):
       return thumbnail.getSize()
     self.assertTrue(convert() < convert(quality=100))
 
+  def test_ConvertLargeSVG(self):
+    image = self.portal.newContent(portal_type='Image', id='test_large_svg')
+    image.edit(file=self.makeImageFileUpload('erp5_test_large_svg.svg'))
+    self.assertEqual('image/svg+xml', image.getContentType())
+    image_type, image_data = image.convert('png', display='medium')
+    self.assertEqual('image/png', image_type)
+
   def test_ConvertImagePdata(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
     image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
