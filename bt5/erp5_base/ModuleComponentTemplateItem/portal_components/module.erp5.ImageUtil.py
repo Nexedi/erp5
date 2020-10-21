@@ -44,7 +44,7 @@ def transformUrlToDataURI(content):
   if content is None or len(content) == 0:
     return content
 
-  root = etree.fromstring(content)
+  root = etree.fromstring(content, parser=etree.XMLParser(huge_tree=True))
 
   # Prevent namespace contains "None" included into svg by mistake
   # and fix svg definition as in some images the namespace is not
