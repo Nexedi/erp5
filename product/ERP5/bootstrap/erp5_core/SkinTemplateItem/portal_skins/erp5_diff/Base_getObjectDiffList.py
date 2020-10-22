@@ -98,7 +98,7 @@ if ((first_path is None and second_path is None) and
   # In case the list_selection_name is there, it can be the case of selection
   # from the module, hence we get the paths from the selection and use them to
   # create diff.
-  if list_selection_name is not None:
+  if list_selection_name:
     selected_object_list = portal.portal_selections.getSelectionCheckedValueList(
       selection_name=list_selection_name)
     first_object = selected_object_list[0]
