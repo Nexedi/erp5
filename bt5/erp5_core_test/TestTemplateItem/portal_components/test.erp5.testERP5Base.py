@@ -36,6 +36,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript, FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
+from base64 import b64encode
 
 class TestERP5Base(ERP5TypeTestCase):
   """ERP5 Base tests.
@@ -922,6 +923,31 @@ class TestERP5Base(ERP5TypeTestCase):
                                     thumbnail.getHeight()))
       return thumbnail.getSize()
     self.assertTrue(convert() < convert(quality=100))
+
+  def test_ConvertLargeSVG(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    dataurl = b64encode(image.convert(format="jpg", display="medium")[1])
+    svg_image = self.portal.newContent(portal_type='Image', id='test_large_svg')
+    svg_content ='''
+<svg width="580" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g>
+  <title>background</title>
+  <rect fill="#fff" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+  <g display="none" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" id="svg_2"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+'''
+    for _ in range(1000):
+      svg_content +='<image stroke="null" x="0" y="0" width="359.00006" height="768"  xlink:href="data:image/png;;base64,%s" />' % dataurl
+    svg_content += '</g></svg>'
+    svg_image.edit(data=svg_content)
+    self.assertEqual('image/svg+xml', svg_image.getContentType())
+    image_type, _ = svg_image.convert('png', display='medium')
+    self.assertEqual('image/png', image_type)
 
   def test_ConvertImagePdata(self):
     image = self.portal.newContent(portal_type='Image', id='test_image')
