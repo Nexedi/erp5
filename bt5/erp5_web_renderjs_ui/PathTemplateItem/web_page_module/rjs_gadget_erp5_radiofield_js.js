@@ -160,7 +160,6 @@
     }, {mutex: 'changestate'})
 
     .declareJob('deferErrorText', function deferErrorText(error_text) {
-      var input = this.element.querySelector("input");
       return this.changeState({
         error_text: error_text
       });

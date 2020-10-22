@@ -397,7 +397,7 @@
   function execDisplayERP5ActionCommand(gadget, previous_options, next_options, keep_history) {
     return gadget.jio_getAttachment(next_options.jio_key, 'links')
       .push(function (document_view) {
-        var queue, action, action_data, action_url, i, j, new_options;
+        var action, action_data, i, j, new_options;
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
           if (document_view._links.hasOwnProperty(action)) {
