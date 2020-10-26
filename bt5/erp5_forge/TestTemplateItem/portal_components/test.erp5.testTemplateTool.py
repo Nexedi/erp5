@@ -837,6 +837,18 @@ class TestTemplateTool(ERP5TypeTestCase):
     erp5_test = self.portal.portal_skins['erp5_test']
     self.assertTrue(erp5_test.hasObject('test_file'))
 
+  def test_ownerhsip(self):
+    self.assertEqual(
+      self.portal.portal_skins.erp5_core.getOwnerTuple(),
+      (['erp5', 'acl_users'], 'System Processes'),
+    )
+    bt = self.templates_tool.getInstalledBusinessTemplate("erp5_forge")
+    bt.reinstall(force=True)
+    self.commit()
+    self.assertEqual(
+      self.portal.portal_skins.erp5_forge.getOwnerTuple(),
+      (['erp5', 'acl_users'], 'System Processes'),
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
