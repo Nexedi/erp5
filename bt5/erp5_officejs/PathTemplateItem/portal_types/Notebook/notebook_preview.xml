@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Preview</string> </value>
+            <value> <string>Run Notebook</string> </value>
         </item>
       </dictionary>
     </pickle>
