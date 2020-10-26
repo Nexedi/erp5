@@ -406,6 +406,18 @@ class TestTemplate(ERP5TypeTestCase):
     # 'invisible' state.
     self._testTemplateNotIndexable(document, additional_role_list=['Manager'])
 
+  def test_ownerhsip(self):
+    self.assertEqual(str(
+      self.portal.portal_skins.erp5_core.getOwnerTuple()),
+      (['erp5', 'acl_users'], 'System Processes'),
+    )
+    bt = self.templates_tool.getInstalledBusinessTemplate("erp5_forge")
+    bt.reinstall(force=True)
+    self.commit()
+    self.assertEqual(str(
+      self.portal.portal_skins.erp5_forge.getOwnerTuple()),
+      (['erp5', 'acl_users'], 'System Processes'),
+    )
 
 def test_suite():
   suite = unittest.TestSuite()

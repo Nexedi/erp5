@@ -33,14 +33,18 @@ from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
-from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager, \
+  newSecurityManager, setSecurityManager
+from AccessControl.User import nobody
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ZSQLMethods.SQL import SQL
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
                                     importLocalDocument, \
@@ -5539,10 +5543,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
       site.portal_caches.clearAllCache()
 
     security.declareProtected(Permissions.ManagePortal, 'install')
-    install = _install
+    def install(self, *args, **kw):
+      # switch to nobody temporarily so that unrestricted _install
+      # is always invoked by system user.
+      sm = getSecurityManager()
+      newSecurityManager(None, nobody)
+      try:
+        with super_user():
+          return self._install(*args, **kw)
+      finally:
+        # Restore the original user.
+        setSecurityManager(sm)
 
     security.declareProtected(Permissions.ManagePortal, 'reinstall')
-    reinstall = _install
+    reinstall = install
 
     security.declareProtected(Permissions.ManagePortal, 'trash')
     def trash(self, new_bt, **kw):
