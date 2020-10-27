@@ -1,6 +1,16 @@
 Changes
 =======
 
+0.4.69 (2020-10-29)
+-------------------
+
+  * erp5.util.testnode:
+
+    - propagate test_node_title to runTestSuite
+    - pass arguments as environment variables
+    - advertise log URL with log_frontend_url
+
+
 0.4.68 (2020-05-22)
 -------------------
 
