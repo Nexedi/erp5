@@ -1,3 +1,6 @@
+"""
+XXX: Backported from master to use geckodriver/marionette and latest Firefox
+"""
 ##############################################################################
 #
 # Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,28 +31,96 @@
 ##############################################################################
 
 import os
+import signal
 import sys
 import time
 import re
 import subprocess
 import shutil
 import transaction
+import logging
 from ZPublisher.HTTPResponse import HTTPResponse
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
-                                               _getConversionServerDict
+from zExceptions.ExceptionFormatter import format_exception
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+## XXX: Copy/paste from master
+#from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
+import threading
+def stopProcess(process, graceful=5):
+    if process.pid and process.returncode is None:
+        if graceful:
+            process.terminate()
+            t = threading.Timer(graceful, process.kill)
+            t.start()
+            # PY3: use waitid(WNOWAIT) and call process.poll() after t.cancel()
+            r = process.wait()
+            t.cancel()
+            return r
+        process.kill()
+        return process.wait()
+import os
+from ctypes import CDLL, util as ctypes_util, get_errno, c_int, c_long
+libc = CDLL(ctypes_util.find_library('c'), use_errno=True)
+class Prctl(object):
+    def __init__(self, option, nargs=1):
+        self.option = option
+        self.args0 = (0,) * (4 - nargs)
+    def __call__(self, *args):
+        try:
+            prctl = self._prctl
+        except AttributeError:
+            prctl = self._prctl = libc.prctl
+            prctl.argtypes = c_int, c_long, c_long, c_long, c_long
+        r = prctl(self.option, *(args + self.args0))
+        if r == -1:
+            e = get_errno()
+            raise OSError(e, os.strerror(e))
+        return r
+PR_SET_PDEATHSIG = Prctl(1)
 
-# REGEX FOR ZELENIUM TESTS
-TEST_PASS_RE = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
-TEST_FAILURE_RE = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
-IMAGE_RE = re.compile('<img[^>]*?>')
-TEST_ERROR_TITLE_RE = re.compile('(?:error.gif.*?>|title status_failed"><td[^>]*>)([^>]*?)</td></tr>', re.S)
-TEST_RESULT_RE = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
-                          '<img.*?</div>\s.*?</div>\s*', re.S)
+from lxml import etree
+from lxml.html import builder as E
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-TEST_ERROR_RESULT_RE = re.compile('.*(?:error.gif|title status_failed).*', re.S)
-EXPECTED_FAILURE_RE = re.compile('.*expected failure.*', re.I)
+logger = logging.getLogger(__name__)
 
-ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
+# selenium workaround for localhost / 127.0.0.1 resolution
+# ------
+# Selenium connects starts a service on localhost, but when ERP5
+# is running under userhosts wrapper, because we don't have entry for
+# localhost in our pseudo /etc/hosts file, localhost resolution is delegated
+# to local DNS, which might not resolve localhost - for example 8.8.8.8
+# does not.
+# We work around this by monkey-patching the places in selenium where
+# localhost resolution is required and returning 127.0.0.1 directly.
+# This is not really correct, it would be better to use SlapOS partition IP,
+# but we need a quick fix to have test results again.
+
+# Service.start polls utils.is_connectable(port) - without host argument, assuming the default
+# localhost.
+# https://github.com/SeleniumHQ/selenium/blob/selenium-3.14.0/py/selenium/webdriver/common/service.py#L99
+import selenium.webdriver.common.utils
+original_is_connectable = selenium.webdriver.common.utils.is_connectable
+def is_connectable(port, host="localhost"):
+  if host == "localhost":
+    host = "127.0.0.1"
+  return original_is_connectable(port, host)
+selenium.webdriver.common.utils.is_connectable = is_connectable
+
+# Service.get_service_url hardcodes 127.0.0.1
+# https://github.com/SeleniumHQ/selenium/blob/selenium-3.14.0/py/selenium/webdriver/common/service.py#L56
+original_join_host_port  = selenium.webdriver.common.utils.join_host_port
+def join_host_port(host, port):
+  if host == "localhost":
+    host = "127.0.0.1"
+  return original_join_host_port(host, port)
+selenium.webdriver.common.utils.join_host_port = join_host_port
+# /selenium workaround
+
+
+ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults"
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -67,7 +138,20 @@ bt5_dir_list = ','.join([
 class TimeoutError(Exception):
   pass
 
-class Xvfb:
+class Process(object):
+
+  def preexec_fn(self):
+    PR_SET_PDEATHSIG(signal.SIGTERM)
+
+  def _exec(self, *args, **kw):
+    self.process = subprocess.Popen(preexec_fn=self.preexec_fn, *args, **kw)
+
+  def quit(self):
+    if hasattr(self, 'process'):
+      stopProcess(self.process)
+      del self.process
+
+class Xvfb(Process):
   def __init__(self, fbdir):
     self.display_list = [":%s" % i for i in range(123, 144)]
     self.display = None
@@ -76,7 +160,7 @@ class Xvfb:
   def _runCommand(self, display):
     xvfb_bin = os.environ.get("xvfb_bin", "Xvfb")
     with open(os.devnull, 'w') as null:
-      self.process = subprocess.Popen(
+      self._exec(
         (xvfb_bin, '-fbdir' , self.fbdir, display,
         '-screen', '0', '1280x1024x24'),
         stdout=null, stderr=null, close_fds=True)
@@ -97,180 +181,23 @@ class Xvfb:
 
   def run(self):
     for display_try in self.display_list:
-      lock_filepath = '/tmp/.X%s-lock' % display_try.replace(":", "")
-      if not os.path.exists(lock_filepath):
-        self._runCommand(display_try)
+      self._runCommand(display_try)
+      if self.process.poll() is None:
         self.display = display_try
+        os.environ['DISPLAY'] = self.display
         break
     else:
       raise EnvironmentError("All displays locked : %r" % (self.display_list,))
 
-    print 'Xvfb : %d' % self.process.pid
-    print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
-
-  def quit(self):
-    if hasattr(self, 'process'):
-      self.process.terminate()
-
-class Browser:
-
-  def __init__(self, profile_dir, host, port):
-    self.profile_dir = profile_dir
-    self.host = host
-    self.port = port
-
-  def quit(self):
-    if getattr(self, "process", None) is not None:
-      self.process.kill()
-
-  def _run(self, url, display):
-    """ This method should be implemented on a subclass """
-    raise NotImplementedError
-
-  def _setEnviron(self):
-    pass
-
-  def run(self, url, display):
-    self.clean()
-    self.environ = os.environ.copy()
-    self._setEnviron()
-    self._setDisplay(display)
-    self._run(url)
-    print "Browser %s running on pid: %s" % (self.__class__.__name__,
-                                             self.process.pid)
-
-  def clean(self):
-    """ Clean up removing profile dir and recreating it"""
-    shutil.rmtree(self.profile_dir, ignore_errors=True)
-    os.mkdir(self.profile_dir)
-
-  def _createFile(self, filename, content):
-    file_path = os.path.join(self.profile_dir, filename)
-    with open(file_path, 'w') as f:
-      f.write(content)
-    return file_path
-
-  def _setDisplay(self, display):
-    if display:
-      self.environ["DISPLAY"] = display
-    else:
-      xauth = os.path.expanduser('~/.Xauthority')
-      if os.path.exists(xauth):
-        self.environ["XAUTHORITY"] = xauth
-
-  def _runCommand(self, *args):
-    print " ".join(args)
-    self.process = subprocess.Popen(args, close_fds=True, env=self.environ)
-
-class Firefox(Browser):
-  """ Use firefox to open run all the tests"""
-
-  def _setEnviron(self):
-    self.environ['MOZ_NO_REMOTE'] = '1'
-    self.environ['HOME'] = self.profile_dir
-    self.environ['LC_ALL'] = 'C'
-    self.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
-    self.environ["NO_EM_RESTART"] = "1"
-
-    # This disables unwanted SCIM as it fails with Xvfb, at least on Mandriva
-    # 2010.0, because Firefox tries to start scim-bridge which SIGSEGV and
-    # thus Firefox is stucked on register_imcontext()
-    for remove_environment_variable in ('GTK_IM_MODULE',
-                                        'XIM_PROGRAM',
-                                        'XMODIFIERS',
-                                        'QT_IM_MODULE'):
-      self.environ.pop(remove_environment_variable, None)
-
-  def _run(self, url):
-    # Prepare to run
-    self._createFile('prefs.js', self.getPrefJs())
-    firefox_bin = os.environ.get("firefox_bin", "firefox")
-    self._runCommand(firefox_bin, "-no-remote",
-                     "-profile", self.profile_dir, url)
-
-  def getPrefJs(self):
-    from App.config import getConfiguration
-    return """
-// Don't ask if we want to switch default browsers
-user_pref("browser.shell.checkDefaultBrowser", false);
-
-// Disable pop-up blocking
-user_pref("browser.allowpopups", true);
-user_pref("dom.disable_open_during_load", false);
-
-// Configure us as the local proxy
-//user_pref("network.proxy.type", 2);
-
-// Disable security warnings
-user_pref("security.warn_submit_insecure", false);
-user_pref("security.warn_submit_insecure.show_once", false);
-user_pref("security.warn_entering_secure", false);
-user_pref("security.warn_entering_secure.show_once", false);
-user_pref("security.warn_entering_weak", false);
-user_pref("security.warn_entering_weak.show_once", false);
-user_pref("security.warn_leaving_secure", false);
-user_pref("security.warn_leaving_secure.show_once", false);
-user_pref("security.warn_viewing_mixed", false);
-user_pref("security.warn_viewing_mixed.show_once", false);
-
-// Disable "do you want to remember this password?"
-user_pref("signon.rememberSignons", false);
-
-// increase the timeout before warning of unresponsive script
-user_pref("dom.max_script_run_time", 120);
-
-// this is required to upload files
-user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
-user_pref("signed.applets.codebase_principal_support", true);
-user_pref("capability.principal.codebase.p1.id", "http://%s:%s");
-user_pref("capability.principal.codebase.p1.subjectName", "");
-
-// For debugging, do not waste space on screen
-user_pref("browser.tabs.autoHide", true);
-
-// This is required to download reports without requiring user interaction
-// (See ERP5UpgradeUtils for corresponding Extensions)
-user_pref("browser.download.folderList", 2);
-user_pref("browser.download.manager.showWhenStarting", false);
-user_pref("browser.download.dir", "%s");
-user_pref("browser.helperApps.neverAsk.saveToDisk", "application/pdf");
-// Otherwise clear previously defined PDF-related extensions
-// => browser/extensions/pdfjs/content/PdfJs.jsm:_migrate()
-user_pref("pdfjs.disabled", true);
-// Not really necessary (just FTR)
-user_pref("pdfjs.migrationVersion", 42);
-""" % (self.host, self.port,
-       os.path.join(getConfiguration().instancehome, 'var'))
-
-class PhantomJS(Browser):
-  def _createRunJS(self):
-    run_js = """
-var page = new WebPage(),
-    address;
-
-address = phantom.args[0];
-page.open(address, function (status) {
-  if (status !== 'success') {
-    console.log('FAIL to load the address');
-  } else {
-    console.log('SUCCESS load the address');
-  }
-  phantom.exit();
-});
-"""
-    return self._createFile('run.js', run_js)
-
-  def _run(self, url):
-    self._runCommand("phantomjs", self._createRunJS(), url)
+    logger.debug('Xvfb : %d', self.process.pid)
+    logger.debug('Take screenshots using xwud -in %s/Xvfb_screen0', self.fbdir)
 
 class FunctionalTestRunner:
-
-  remote_code_url_list = None
 
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
-  def __init__(self, host, port, portal, run_only='', use_phanthom=False):
+  def __init__(self, host, port, portal, run_only=''):
     self.instance_home = os.environ['INSTANCE_HOME']
 
     # Such information should be automatically loaded
@@ -279,79 +206,129 @@ class FunctionalTestRunner:
     self.run_only = run_only
     profile_dir = os.path.join(self.instance_home, 'profile')
     self.portal = portal
-    if use_phanthom:
-      self.browser = PhantomJS(profile_dir, host, int(port))
-    else:
-      self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
     transaction.begin()
-    if self.remote_code_url_list is not None:
-      # Zuite Results are posted at the root of the portal in this case
-      return self.portal.portal_tests.TestTool_getResults()
-    else:
-      return self.portal.portal_tests.TestTool_getResults(self.run_only)
+    return self.portal.portal_tests.TestTool_getResults(self.run_only)
+
+  def _getTestBaseURL(self):
+    # Access the https proxy in front of runUnitTest's zserver
+    base_url = os.getenv('zserver_frontend_url')
+    if base_url:
+      return '%s%s' % (base_url, self.portal.getId())
+    return self.portal.portal_url()
 
   def _getTestURL(self):
-    if self.remote_code_url_list is not None:
-      remote_code_url = "&".join(["url_list:list=%s" % url for url in self.remote_code_url_list])
-      if self.run_only != "":
-        remote_code_url += "&zuite_id=%s" % self.run_only
-      return '%s/portal_tests/Zuite_runSeleniumTest?%s&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s' \
-                 % (self.portal.portal_url(), remote_code_url, self.user, self.password)
-
-    return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
-                       self.user, self.password)
+    return ZELENIUM_BASE_URL % (
+        self._getTestBaseURL(),
+        self.run_only,
+    )
 
   def test(self, debug=0):
+    xvfb = Xvfb(self.instance_home)
     try:
-      xvfb = Xvfb(self.instance_home)
-      start = time.time()
-      if not debug:
-        print("\nSet 'erp5_debug_mode' environment variable to 1"
-              " to use your existing display instead of Xvfb.")
+      if not (debug and os.getenv('DISPLAY')):
+        logger.debug("You can set 'erp5_debug_mode' environment variable to 1 to use your existing display instead of Xvfb.")
         xvfb.run()
-      self.browser.run(self._getTestURL() , xvfb.display)
-      while True:
-        status = self.getStatus()
-        if status is not None and not '>ONGOING<' in status:
-          break
-        time.sleep(10)
-        if (time.time() - start) > float(self.timeout):
-          # TODO: here we could take a screenshot and display it in the report
-          # (maybe using data: scheme inside a <img>)
-          raise TimeoutError("Test took more than %s seconds" % self.timeout)
-        if self.browser.process.poll():
-          raise RuntimeError('Test browser is no longer running.')
-    except:
-      print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),))
-      raise
+      capabilities = webdriver.common.desired_capabilities \
+        .DesiredCapabilities.FIREFOX.copy()
+      capabilities['marionette'] = True
+      # Zope is accessed through apache with a certificate not trusted by firefox
+      capabilities['acceptInsecureCerts'] = True
+      # Service workers are disabled on Firefox 52 ESR:
+      # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
+      options = webdriver.FirefoxOptions()
+      options.set_preference('dom.serviceWorkers.enabled', True)
+      kw = dict(capabilities=capabilities, options=options)
+      firefox_bin = os.environ.get('firefox_bin')
+      if firefox_bin:
+        geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
+        kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
+      browser = webdriver.Firefox(**kw)
+      start_time = time.time()
+      logger.info("Running with browser: %s", browser)
+      logger.info("Reported user agent: %s", browser.execute_script("return navigator.userAgent"))
+      logger.info(
+          "Reported screen information: %s",
+          browser.execute_script(
+              '''
+              return JSON.stringify({
+                  'screen.width': window.screen.width,
+                  'screen.height': window.screen.height,
+                  'screen.pixelDepth': window.screen.pixelDepth,
+                  'innerWidth': window.innerWidth,
+                  'innerHeight': window.innerHeight
+                })'''))
+
+      browser.get(self._getTestBaseURL() + '/login_form')
+      login_field = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.NAME, '__ac_name')),
+      )
+      login_field.clear()
+      login_field.send_keys(self.user)
+      password_field = browser.find_element_by_name('__ac_password')
+      password_field.clear()
+      password_field.send_keys(self.password)
+      login_form_url = browser.current_url
+      password_field.submit()
+      WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
+      WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+      browser.get(self._getTestURL())
+
+      WebDriverWait(browser, 10).until(EC.presence_of_element_located((
+        By.XPATH, '//iframe[@id="testSuiteFrame"]'
+      )))
+      # XXX No idea how to wait for the iframe content to be loaded
+      time.sleep(5)
+      # Count number of test to be executed
+      test_count = browser.execute_script(
+        "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
+      ) - 1
+      WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
+        By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
+      )))
+      self.execution_duration = round(time.time() - start_time, 2)
+      html_parser = etree.HTMLParser(recover=True)
+      iframe = etree.fromstring(
+      browser.execute_script(
+        "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"
+      ).encode('UTF-8'),
+        html_parser
+      )
+      browser.quit()
     finally:
       xvfb.quit()
-      if getattr(self, "browser", None) is not None:
-        self.browser.quit()
+    return iframe
 
-  def processResult(self):
-    file_content = self.getStatus().encode("utf-8", "replace")
-    sucess_amount = int(TEST_PASS_RE.search(file_content).group(1))
-    failure_amount = int(TEST_FAILURE_RE.search(file_content).group(1))
-    error_title_list = [re.compile('\s+').sub(' ', x).strip()
-                    for x in TEST_ERROR_TITLE_RE.findall(file_content)]
-
-    is_expected_failure = lambda x: EXPECTED_FAILURE_RE.match(x)
-    expected_failure_amount = len(filter(is_expected_failure, error_title_list))
-    # Remove expected failures from list
-    error_title_list = filter(lambda x: not is_expected_failure(x), error_title_list)
-    failure_amount -= expected_failure_amount
-
-    detail = ''
-    for test_result in TEST_RESULT_RE.findall(file_content):
-      if TEST_ERROR_RESULT_RE.match(test_result):
-        detail += test_result
-
-    detail = IMAGE_RE.sub('', detail)
+  def processResult(self, iframe):
+    tbody = iframe.xpath('.//body/table/tbody')[0]
+    tr_count = failure_amount = expected_failure_amount = 0
+    error_title_list = []
+    detail = ""
+    for tr in tbody:
+      if tr_count:
+        # First td is the main title
+        test_name = tr[0][0].text
+        error = False
+        if len(tr) == 1:
+          # Test was not executed
+          detail += 'Test ' + test_name + ' not executed'
+          error_title_list.append(test_name)
+        else:
+          test_table = tr[1].xpath('.//table')[0]
+          status = tr.attrib.get('class')
+          if 'status_failed' in status:
+            if etree.tostring(test_table).find("expected failure") != -1:
+              expected_failure_amount += 1
+            else:
+              failure_amount += 1
+              error_title_list.append(test_name)
+            detail_element = E.DIV()
+            detail_element.append(E.DIV(E.P(test_name), E.BR, test_table))
+            detail += etree.tostring(detail_element)
+      tr_count += 1
+    sucess_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
-      detail = IMAGE_RE.sub('', detail)
       detail = '''<html>
 <head>
  <style type="text/css">tr.status_failed { background-color:red };</style>
@@ -366,7 +343,6 @@ class FunctionalTestRunner:
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
   foreground = 0
-  use_phanthom = False
   remote_code_url_list = None
 
   def getTitle(self):
@@ -374,26 +350,27 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(ERP5TypeFunctionalTestCase, self).afterSetUp()
+    self.setTimeZoneToUTC()
     # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
     self.commit()
     self.setSystemPreference()
-    self.portal.portal_tests.TestTool_cleanUpTestResults()
+    # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
+    self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()
     self.runner = FunctionalTestRunner(host, port,
-                                self.portal, self.run_only, self.use_phanthom)
+                                self.portal, self.run_only)
 
   def setSystemPreference(self):
+    from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
     conversion_dict = _getConversionServerDict()
     self.portal.Zuite_setPreference(
        working_copy_list=bt5_dir_list,
        conversion_server_hostname=conversion_dict['hostname'],
        conversion_server_port=conversion_dict['port']
       )
-    # XXX Memcached is missing
-    # XXX Persistent cache setup is missing
 
   def _verboseErrorLog(self, size=10):
     for entry in self.portal.error_log.getLogEntries()[:size]:
@@ -402,38 +379,49 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       print "TRACEBACK :"
       print entry["tb_text"]
 
-  def _hasActivityFailure(self):
-    """ Return True if the portal has any Activity Failure
-    """
-    for m in self.portal.portal_activities.getMessageList():
-      if m.processing_node < -1:
-        return True
-    return False
-
   def testFunctionalTestRunner(self):
-    # first of all, abort to get rid of the mysql participation inn this
-    # transaction
+    # Check the zuite page templates can be rendered, because selenium test
+    # runner does not report error in case there are errors in the page
+    # template.
+    tests_tool = self.portal.portal_tests
+
+    if self.remote_code_url_list:
+      # This does not really run tests. It initializes a zuite
+      # and redirect to a url to would actually run them.
+      tests_tool.Zuite_runSeleniumTest(self.remote_code_url_list, self.run_only)
+      self.commit()
+
+    for page_template_path, page_template in tests_tool.ZopeFind(
+        tests_tool[self.run_only] if self.run_only else tests_tool,
+        obj_metatypes=('Page Template',), search_sub=1):
+      try:
+        page_template.pt_render()
+      except Exception:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        self.fail('Rendering of %s failed with error:\n%s' % (
+          page_template_path,
+          ''.join(format_exception(
+            exc_type,
+            exc_value,
+            exc_traceback,
+            as_html=False))))
+
+    # abort to get rid of the mysql participation in this transaction
     self.portal._p_jar.sync()
 
-    if self.remote_code_url_list is not None:
-      self.runner.remote_code_url_list = self.remote_code_url_list
-
     debug = self.foreground or os.environ.get("erp5_debug_mode")
-    error = None
+    error = []
     try:
-      self.runner.test(debug=debug)
+      iframe = self.runner.test(debug=debug)
     except TimeoutError, e:
-      error = repr(e)
-      self._verboseErrorLog(20)
-    else:
-      # In case of failure, verbose the error_log entries in order to collect
-      # appropriated information to debug the system.
-      if self._hasActivityFailure():
-        error = 'Failed activities exist.'
-        self._verboseErrorLog(20)
+      error.append(repr(e))
+    try:
+      self.tic()
+    except RuntimeError as e:
+      error.append(str(e))
 
     detail, success, failure, \
-        expected_failure, error_title_list = self.runner.processResult()
+        expected_failure, error_title_list = self.runner.processResult(iframe)
 
     self.logMessage("-" * 79)
     total = success + failure + expected_failure
@@ -447,8 +435,11 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage("-" * 79)
     self.logMessage(detail)
     self.logMessage("-" * 79)
-    self.assertEqual([], error_title_list, '\n'.join(error_title_list))
-    self.assertEqual(None, error, error)
+    if failure or error:
+      self._verboseErrorLog(20)
+    error += error_title_list
+    if error:
+      self.fail('\n'.join(error))
 
 # monkey patch HTTPResponse._unauthorized so that we will not have HTTP
 # authentication dialog in case of Unauthorized exception to prevent
