@@ -20,10 +20,12 @@ for line in line_list:
                       start_date=line.getStartDate()))
   # redirect to previous page without doing the conversion
   if exchange_rate is None:
-    return context.Base_redirect(form_id,
-                                  keep_items=dict(
-                portal_status_message=context.Base_translateString('No exchange ratio found.')))
-
+    return context.Base_redirect(
+        form_id,
+        keep_items=dict(
+            portal_status_message=context.Base_translateString('No exchange ratio found.'),
+            portal_status_level='error',
+        ))
 
   # update the corresponding price and round it according to the precision of
   # the converted currency

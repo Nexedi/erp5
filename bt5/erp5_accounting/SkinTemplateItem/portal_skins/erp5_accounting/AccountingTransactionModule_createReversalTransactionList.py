@@ -13,9 +13,10 @@ else:
 # XXX prevent to call this on the whole module:
 if len(object_list) >= 1000:
   return context.Base_redirect(form_id,
-    keep_items=dict(portal_status_message=
-        translateString(
-         'Refusing to process more than 1000 objects, check your selection.')))
+    keep_items=dict(
+        portal_status_message=translateString('Refusing to process more than 1000 objects, check your selection.'),
+        portal_status_level='error',
+    ))
 
 tag = 'reversal_creation_%s' % random.randint(0, 1000)
 activated = 0
@@ -36,9 +37,12 @@ for obj in object_list:
   activated += 1
 
 if not activated:
-  return context.Base_redirect(form_id,
-     keep_items=dict(portal_status_message=
-          translateString('No valid transaction in your selection.')))
+  return context.Base_redirect(
+      form_id,
+      keep_items=dict(
+          portal_status_message=translateString('No valid transaction in your selection.'),
+          portal_status_level='error',
+      ))
 
 # activate something on the folder
 context.activate(after_tag=tag).getTitle()
