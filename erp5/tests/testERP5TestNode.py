@@ -620,6 +620,7 @@ shared = true
 
   def test_distributor_url_obfuscated_in_logs(self):
     test_node = self.getTestNode()
+    del test_node.suiteLog
 
     runner = test_type_registry['UnitTest'](test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
@@ -635,7 +636,8 @@ shared = true
         """.format(temp_file.name))
       os.chmod(path, 0o700)
 
-      with mock.patch.object(logger, '_log') as http_logger,\
+      with test_node.suiteLog(node_test_suite),\
+          mock.patch.object(logger, '_log') as http_logger,\
           mock.patch.object(logging.getLogger(), '_log') as root_logger,\
           mock.patch.object(logging.getLogger(), 'isEnabledFor', return_value=True):
         runner.runTestSuite(node_test_suite, "https://user:secret@example.com/portal_distributions")
@@ -676,7 +678,8 @@ shared = true
       call_parameter_list.append(args)
 
     test_node = self.getTestNode()
-    with mock.patch.object(test_node.process_manager, 'spawn', side_effect=spawn):
+    del test_node.suiteLog
+    with mock.patch.object(test_node.process_manager, 'spawn', side_effect=spawn) as spawn_mock:
       runner = test_type_registry[my_test_type](test_node)
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
@@ -695,9 +698,16 @@ shared = true
         '--test_suite_title', 'Foo-Test',
       ]
       def checkRunTestSuiteParameters():
-        runner.runTestSuite(node_test_suite, "http://foo.bar")
+        with test_node.suiteLog(node_test_suite) as suite_log:
+          runner.runTestSuite(node_test_suite, "http://foo.bar")
         self.assertEqual(list(call_parameter_list.pop()), expected_parameter_list)
         self.assertFalse(call_parameter_list)
+        self.assertEqual(
+            spawn_mock.call_args[-1]['SLAPOS_TEST_SHARED_PART_LIST'],
+            "/not/exists:/not/exists_either:%s/shared" % node_test_suite.working_directory)
+        self.assertEqual(
+            spawn_mock.call_args[-1]['SLAPOS_TEST_LOG_DIRECTORY'],
+            os.path.join(test_node.config['log_directory'], suite_log))
 
       checkRunTestSuiteParameters()
 
