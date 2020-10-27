@@ -95,6 +95,7 @@ class ERP5TestNode(TestCase):
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
     config["frontend_url"] = "http://frontend/"
+    config["log_frontend_url"] = "http://log-frontend/"
     config["software_list"] = ["foo", "bar"]
     config["partition_reference"] = "part"
     config["ipv4_address"] = "1.2.3.4"
@@ -1015,7 +1016,7 @@ shared = true
                 logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self,*argv, **kw):
       return {'status_code': 0}
-    def checkTestSuite(test_node):
+    def checkTestSuite(test_node, reportTaskStatus_mock):
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEqual(2, len(test_node.node_test_suite_dict))
@@ -1025,6 +1026,14 @@ shared = true
                          "Incorrect suite log path : %r" % suite.suite_log_path)
         m = re.search('-(.*)/suite.log$', suite.suite_log_path)
         rand_part = m.groups()[0]
+        reportTaskStatus_mock.assert_has_calls(
+            [mock.call(
+                mock.ANY,
+                {'command': 'LOG url',
+                'stdout': "http://log-frontend/{}-{}".format(suite.reference, rand_part),
+                'stderr': ''},
+                "Foo-Test-Node")])
+
         self.assertEqual(len(rand_part), 10)
         self.assertNotIn(rand_part, rand_part_set)
         rand_part_set.add(rand_part)
@@ -1081,9 +1090,11 @@ shared = true
       return {'status_code': 0}
     RunnerClass._prepareSlapOS = patch_prepareSlapOS
     SlapOSControler.initializeSlapOSControler = doNothing
-    test_node.run()
+    with mock.patch('erp5.util.taskdistribution.DummyTaskDistributor.reportTaskStatus') as reportTaskStatus:
+      test_node.run()
+
     self.assertEqual(counter, 3)
-    checkTestSuite(test_node)
+    checkTestSuite(test_node, reportTaskStatus)
     time.sleep = original_sleep
     # Restore old class methods
     if my_test_type == "ScalabilityTest":
