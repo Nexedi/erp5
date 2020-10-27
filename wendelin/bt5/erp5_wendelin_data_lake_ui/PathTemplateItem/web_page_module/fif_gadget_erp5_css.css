@@ -8,36 +8,6 @@ padding-top: 10pt;
 
 /*
    =========================================================================
-   ============================ download-page  =============================
-   =========================================================================
-*/
-
-div.download {
-    max-width: 650px;
-}
-
-.download td input {
-    margin-top:5px;
-}
-
-.download div.document_table.first {
-    margin-bottom:50px;
-}
-
-.download div.document_table {
-    margin-bottom:30px;
-}
-
-.download th {
-    font-size: 1.15em;
-}
-
-.download td {
-    font-size: 1.15em;
-}
-
-/*
-   =========================================================================
    =========================== download-access  ============================
    =========================================================================
 */
@@ -234,4 +204,95 @@ div.contact {
 
 .contact h2.top {
     margin-top: 1.75em;
+}
+
+/*
+   =========================================================================
+   ============================ download-page  =============================
+   =========================================================================
+*/
+
+div.download {
+    max-width: 800px;
+}
+
+/*.download td input {
+    margin-top:5px;
+}
+
+.download div.document_table.first {
+    margin-bottom:50px;
+}
+
+.download div.document_table {
+    margin-bottom:30px;
+}
+
+.download th {
+    font-size: 1.15em;
+}
+
+.download td {
+    font-size: 1.15em;
+}*/
+
+.download p {
+    font-size: 1.25em;
+    line-height: 1.58em;
+    letter-spacing: -.003em;
+}
+
+.download h1 {
+    color: #116D82;
+    font-weight: bold;
+    font-family: "Roboto", Arial, sans-serif;
+    margin-top: 1.0em;
+    margin-bottom: 0.5em;
+    font-size: 1.75em;
+}
+
+.download h2 {
+    color: #116D82;
+    font-weight: bold;
+    font-family: "Roboto", Arial, sans-serif;
+    margin-top: 0.7em;
+    margin-bottom: 0.3em;
+    font-size: 1.45em;
+}
+
+.download .header p {
+    font-size: 1.5em;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.download div.header {
+    text-align: center;
+    margin-bottom: 1.0em;
+}
+
+.download div.code {
+  margin-bottom: 15px;
+  margin-top: 10px;
+  line-height: 1.6em;
+  overflow-x: auto;
+  color: #2e2e2e;
+  font-family: "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
+  display: block;
+  padding: 8px 12px;
+  font-size: 13px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 2px;
+}
+
+.download code {
+  padding: 2px 4px;
+  color: #116D82;
+  background-color: #e6f2ff;
+  border-radius: 4px;
 }
