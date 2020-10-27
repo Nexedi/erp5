@@ -34,6 +34,7 @@ import mock
 import itertools
 import transaction
 import unittest
+import urlparse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -584,7 +585,13 @@ class TestPreferences(UserManagementTestCase):
       current_password='bad' + password,
       new_password=new_password,
     )
-    self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences/PreferenceTool_viewChangePasswordDialog?portal_status_message=Current%20password%20is%20wrong.')
+    parsed_url = urlparse.urlparse(result)
+    self.assertEqual(
+        parsed_url.path.split('/')[-2:],
+        ['portal_preferences', 'PreferenceTool_viewChangePasswordDialog'])
+    self.assertEqual(
+        urlparse.parse_qs(parsed_url.query),
+        {'portal_status_message': ['Current password is wrong.'], 'portal_status_level': ['error']})
 
     self.login()
     self._assertUserExists(login, password)
