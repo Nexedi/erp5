@@ -38,10 +38,12 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
 
     def afterSetUp(self):
         # change ownership of the preference
-        self.portal.portal_preferences.accounting_zuite_preference.changeOwnership(
-            getSecurityManager().getUser(),
-            True,
+        pref = self.portal.portal_preferences._getOb(
+            'accounting_zuite_preference',
+            None,
         )
+        if pref is not None:
+            pref.changeOwnership(getSecurityManager().getUser(), True)
         super(TestZeleniumCore, self).afterSetUp()
 
     def getBusinessTemplateList(self):
