@@ -840,14 +840,14 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_ownerhsip(self):
     self.assertEqual(
       self.portal.portal_skins.erp5_core.getOwnerTuple(),
-      (['erp5', 'acl_users'], 'System Processes'),
+      ([self.portal.getId(), 'acl_users'], 'System Processes'),
     )
     bt = self.templates_tool.getInstalledBusinessTemplate("erp5_forge")
     bt.reinstall(force=True)
     self.commit()
     self.assertEqual(
       self.portal.portal_skins.erp5_forge.getOwnerTuple(),
-      (['erp5', 'acl_users'], 'System Processes'),
+      ([self.portal.getId(), 'acl_users'], 'System Processes'),
     )
 
 def test_suite():
