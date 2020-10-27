@@ -260,19 +260,6 @@ class FunctionalTestRunner:
                   'innerHeight': window.innerHeight
                 })'''))
 
-      browser.get(self._getTestBaseURL() + '/login_form')
-      login_field = WebDriverWait(browser, 10).until(
-        EC.presence_of_element_located((By.NAME, '__ac_name')),
-      )
-      login_field.clear()
-      login_field.send_keys(self.user)
-      password_field = browser.find_element_by_name('__ac_password')
-      password_field.clear()
-      password_field.send_keys(self.password)
-      login_form_url = browser.current_url
-      password_field.submit()
-      WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
-      WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
       browser.get(self._getTestURL())
 
       WebDriverWait(browser, 10).until(EC.presence_of_element_located((
