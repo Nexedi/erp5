@@ -5,9 +5,6 @@ if current:
 else:
   method = portal.portal_simulation.getTrackingList
 
-# tracking list is much more readable if locations are sorted by dates.
-kw.setdefault('sort_on', (('date', 'ascending',),))
-
 history_list = []
 for brain in method(aggregate_uid=context.getUid(), **kw):
   explanation = brain.getExplanationValue()
