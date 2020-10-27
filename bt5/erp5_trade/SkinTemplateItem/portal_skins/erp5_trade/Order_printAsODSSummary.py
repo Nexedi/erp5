@@ -120,7 +120,10 @@ if error is None:
 if error is not None:
   previous_skin_selection = container.REQUEST.get('previous_skin_selection', None)
   context.getPortalObject().changeSkin(previous_skin_selection)
-  return context.Base_redirect('view', keep_items={'portal_status_message': context.Base_translateString(error, mapping=error_kw)})
+  return context.Base_redirect('view', keep_items={
+      'portal_status_message': context.Base_translateString(error, mapping=error_kw),
+      'portal_status_level': 'error',
+  })
 
 # Add a line for unit titles
 for source_trade in source_trade_dict:

@@ -28,16 +28,22 @@ elif line_portal_type in portal.getPortalInternalTypeList() + portal.getPortalIn
 else:
   from Products.ERP5Type.Message import translateString
   return context.Base_redirect('view', keep_items=dict(
-    portal_status_message=translateString('Type of document not known to retrieve section.')))
+    portal_status_message=translateString('Type of document not known to retrieve section.'),
+    portal_status_level='error',
+  ))
 
 if len(use_list) == 0:
   from Products.ERP5Type.Message import translateString
   return context.Base_redirect('view', keep_items=dict(
-    portal_status_message=translateString('Use preference must be defined.')))
+    portal_status_message=translateString('Use preference must be defined.'),
+    portal_status_level='error',
+  ))
   
 if section_uid is None:
   from Products.ERP5Type.Message import translateString
   return context.Base_redirect('view', keep_items=dict(
-    portal_status_message=translateString('Section must be defined.')))
+    portal_status_message=translateString('Section must be defined.'),
+    portal_status_level='error',
+  ))
 
 return context.Base_renderForm('Delivery_viewDeliveryFastInputDialog', *args, **kw)
