@@ -150,6 +150,12 @@ class UnitTestRunner(object):
     software_list = [soft + md5digest(x) for x in config['software_list']]
     PATH = os.getenv('PATH', '')
     PATH = ':'.join(x + '/bin' for x in software_list) + (PATH and ':' + PATH)
+    SLAPOS_TEST_SHARED_PART_LIST = os.pathsep.join(
+        self._getSlapOSControler(
+            node_test_suite.working_directory,
+            True
+        ).shared_part_list)
+    SLAPOS_TEST_LOG_DIRECTORY = node_test_suite.log_folder_path
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
     def path(name, compat): # BBB
@@ -163,12 +169,8 @@ class UnitTestRunner(object):
         ('--node_quantity', lambda: config['node_quantity']),
         ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
         ('--project_title', lambda: node_test_suite.project_title),
-        ('--shared_part_list', lambda: os.pathsep.join(
-            self._getSlapOSControler(
-                node_test_suite.working_directory,
-                True
-            ).shared_part_list)),
-        ('--log_directory', lambda: node_test_suite.log_folder_path),
+        ('--shared_part_list', lambda: SLAPOS_TEST_SHARED_PART_LIST),
+        ('--log_directory', lambda: SLAPOS_TEST_LOG_DIRECTORY),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
@@ -195,6 +197,8 @@ class UnitTestRunner(object):
       return s.replace(portal_url.encode('utf-8'), b'$DISTRIBUTOR_URL')
 
     self.testnode.process_manager.spawn(*invocation_list, PATH=PATH,
+                          SLAPOS_TEST_SHARED_PART_LIST=SLAPOS_TEST_SHARED_PART_LIST,
+                          SLAPOS_TEST_LOG_DIRECTORY=SLAPOS_TEST_LOG_DIRECTORY,
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite',
                           output_replacers=(hide_distributor_url,),
