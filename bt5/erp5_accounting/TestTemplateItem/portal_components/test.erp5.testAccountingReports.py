@@ -31,6 +31,7 @@
 
 import unittest
 
+from AccessControl import getSecurityManager
 from DateTime import DateTime
 
 from erp5.component.test.testAccounting import AccountingTestCase
@@ -5119,6 +5120,13 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
   def afterSetUp(self):
     AccountingTestCase.afterSetUp(self)
     self.login()
+
+    # change ownership of the preference
+    self.portal.portal_preferences.accounting_zuite_preference.changeOwnership(
+      getSecurityManager().getUser(),
+      True,
+    )
+
     # create some functions
     function = self.portal.portal_categories.function
     if function._getOb('a', None) is None:

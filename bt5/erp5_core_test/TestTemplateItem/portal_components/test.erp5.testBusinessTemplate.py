@@ -31,7 +31,6 @@ import unittest
 import logging
 from unittest import expectedFailure, skip
 
-from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from App.config import getConfiguration
@@ -2335,7 +2334,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # will be reset:
     expected_local_roles = {
       'ac': ['Manager'],
-      getSecurityManager().getUser().getId(): ['Owner'],
+      'System Processes': ['Owner'],
       'group_function': ['Auditor']
     }
     p = self.getPortal()
