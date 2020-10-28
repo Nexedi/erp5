@@ -19,136 +19,52 @@
   </head>
   <body>
     <div class="download">
-      <div class="document_table first">
-        <table class="ui-responsive ui-body-c ui-table-inset">
-            <thead class="ui-bar-inherit thead">
-                 <tr>
-                      <th class="">EBULK TOOL</th>
-                 </tr>
-            </thead>
-            <tbody>
-                  <tr>
-                      <td>
-                            Ebulk tool makes easy to exchange or archive very large data sets. It performs data set ingestions or downloads from different protocols, to Wendelin-IA platform. It also allows to perform local changes in data sets and to upload added and modified files. One key feature of Ebulk is to be able to resume and recover from errors happening with interrupted transfers. <b><a href="#/?page=ebulk_doc" style="color:#116D82">See documentation</a></b>.
-                      </td>
-                 </tr>
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
+      <div class="header">
+          <img src="telecom-nexedi-logos?display=svg" alt="BigData Home">
+        <p>Ebulk tool</p>
       </div>
-    </div>
-    <div class="download">
-      <div class="document_table">
-        <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
-          <h1 class="ui-title ui-override-theme">Linux</h1>
-        </div>
-        <table class="ui-responsive ui-body-c ui-table-inset">
-            <thead class="ui-bar-inherit thead">
-                 <tr>
-                   <th class="">
-                        <p>Linux PPA repository</p>
-                        <p>(make sure software-properties-common is installed in order to run all apt commands)</p>
-                   </th>
-                 </tr>
-            </thead>
-            <tbody>
-                 <tr>
-                      <td>
-                            sudo apt-get install software-properties-common
-                      </td>
-                 </tr>
-                  <tr>
-                      <td>
-                            sudo add-apt-repository ppa:rporchetto/ebulk-ppa
-                      </td>
-                 </tr>
-                  <tr>
-                      <td>
-                            sudo apt-get update
-                      </td>
-                 </tr>
-                  <tr>
-                      <td>
-                            sudo apt-get install ebulk
-                      </td>
-                 </tr>
+      <h1>Tool description</h1>
+      <p><a target="_blank" href="https://lab.nexedi.com/nexedi/ebulk">Ebulk</a> makes easy to exchange or archive very large data sets. It performs data set ingestions or downloads from different protocols, to Wendelin-IA platform. It also allows to perform local changes in data sets and to upload added and modified files. One key feature of Ebulk is to be able to resume and recover from errors happening with interrupted transfers. <b><a href="#/?page=ebulk_doc" style="color:#116D82">See documentation</a></b></p>
 
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
-        <!-- rpm
-        <table class="ui-responsive ui-body-c ui-table-inset">
-            <thead class="ui-bar-inherit thead">
-                 <tr>
-                      <th class="">Linux (rpm)</th>
-                 </tr>
-            </thead>
-            <tbody>
-                  <tr>
-                      <td>
-                            wget http://www.wendelin.io//document_module/1/Base_download -O ebulk-1.1.2-1.rpm
-                      </td>
-                 </tr>
-                  <tr>
-                      <td>
-                           rpm -Uhv ebulk-1.1.2-1.rpm
-                      </td>
-                 </tr>
+      <h1>Requirements</h1>
+      <p>Ebulk tool relies on <b>Embulk</b> Java application (see <a target="_blank" href="https://www.embulk.org/">docs</a>). Please make sure that <a target="_blank" href="https://www.oracle.com/java/technologies/javase-downloads.html">Java 8</a> is installed.
+</p>
 
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table> -->
+      <h1>Install</h1>
+      <p>Please use the package installation for your operative system and follow the installation instructions.</p>
 
-
-
-
+      <h2>Linux</h2>
+      <p>Ebulk package available in ubuntu-ppa repository allows to easily install the tool using apt commands.</p>
+      <p>Make sure <code>software-properties-common</code> is installed in order to run all apt commands:</p>
+      <div class="code"><p>sudo apt-get install software-properties-common</p></div>
+      <p>Add the ppa repository:</p>
+      <div class="code"><p>sudo add-apt-repository ppa:rporchetto/ebulk-ppa</p></div>
+      <p>Update your local sources and install ebulk:</p>
+      <div class="code">
+        <p>sudo apt-get update</p>
+        <p>sudo apt-get install ebulk</p>
       </div>
-      <div class="document_table">
-        <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
-          <h1 class="ui-title ui-override-theme">Mac OS X</h1>
-        </div>
-        <table class="ui-responsive ui-body-c ui-table-inset">
-            <thead class="ui-bar-inherit thead">
-                 <tr>
-                      <th class="">Mac OS X</th>
-                 </tr>
-            </thead>
-            <tbody>
-                  <tr>
-                      <td>
-                            brew install https://github.com/roquegit/homebrew-ebulk/raw/master/ebulk.rb
-                      </td>
-                 </tr>
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
+
+      <h2>Debian considerations</h2>
+      <p>For any OS version/series inconvenient during apt installation, it is recommended to install ebulk from the <code>.deb</code> package directly.</p>
+      <p>Please download the latest <code>.deb</code> ebulk package and install it by running:</p>
+      <div class="code"><p>dpkg -i ebulk_package.deb</p></div>
+
+      <h2>Mac OS X</h2>
+      <p>Installation on Mac OS can be done via homebrew packages by running:</p>
+      <div class="code"><p>brew install https://github.com/roquegit/homebrew-ebulk/raw/master/ebulk.rb</p></div>
+
+      <h2>Potential installation issues</h2>
+      <p>During the package intallation, or during first ebulk execution, the bash script will try to install Embulk automatically (if it is not installed).
+If your OS needs special permission, it maybe will be necessary to install Embulk v 0.9.7 manually:</p>
+      <div class="code">
+        <p>curl --create-dirs -o ~/.embulk/bin/embulk -L "https://dl.bintray.com/embulk/maven/embulk-0.9.7.jar"</p>
+        <p>chmod +x ~/.embulk/bin/embulk</p>
+        <p>echo 'export PATH="$HOME/.embulk/bin:$PATH"' >> ~/.bashrc</p>
+        <p>source ~/.bashrc</p>
       </div>
-     
-      <div class="document_table">
-        <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
-          <h1 class="ui-title ui-override-theme">Linux Source</h1>
-        </div>
-        <table class="ui-responsive ui-body-c ui-table-inset">
-            <thead class="ui-bar-inherit thead">
-                 <tr>
-                      <th class="">Linux Source</th>
-                 </tr>
-            </thead>
-            <tbody>
-                  <tr>
-                      <td>
-                          <a href="https://lab.nexedi.com/nexedi/ebulk"> Git project repository</a>
-                      </td>
-                 </tr>
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
-      </div>
+      <h2>Linux Source</h2>
+      <p><a href="https://lab.nexedi.com/nexedi/ebulk"> Git project repository</a></p>
     </div>
   </body>
 </html>
