@@ -239,6 +239,20 @@ class FunctionalTestRunner:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
       options = webdriver.FirefoxOptions()
       options.set_preference('dom.serviceWorkers.enabled', True)
+
+      ## This is required to download reports without requiring user interaction
+      ## (See ERP5UpgradeUtils for corresponding Extensions)
+      options.set_preference("browser.download.folderList", 2);
+      options.set_preference("browser.download.manager.showWhenStarting", False);
+      from App.config import getConfiguration
+      options.set_preference("browser.download.dir", os.path.join(getConfiguration().instancehome, 'var'))
+      options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf")
+      # Otherwise clear previously defined PDF-related extensions
+      # => browser/extensions/pdfjs/content/PdfJs.jsm:_migrate()
+      options.set_preference("pdfjs.disabled", True);
+      # Not really necessary (just FTR)
+      options.set_preference("pdfjs.migrationVersion", 42);
+
       kw = dict(capabilities=capabilities, options=options)
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
