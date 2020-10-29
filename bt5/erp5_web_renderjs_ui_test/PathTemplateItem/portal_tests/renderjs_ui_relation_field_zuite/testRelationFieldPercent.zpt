@@ -75,8 +75,19 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//li[@data-relative-url='portal_categories/divergence_scope/quantity']</td>
+  <td>assertEval</td>
+  <td>var e = new Event('change', {"bubbles": true});
+    selenium.browserbot.getDocument().querySelector("input[name='field_my_foo_category_title']").dispatchEvent(e)</td>
+  <td>true</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_foo_category_title' and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>No such document was found</td>
   <td></td>
 </tr>
 <tr>
@@ -85,10 +96,24 @@
   <td>blur</td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>var e = new Event('change', {"bubbles": true});
-    selenium.browserbot.getDocument().querySelector("input[name='field_my_foo_category_title']").dispatchEvent(e)</td>
-  <td>true</td>
+  <td>waitForElementNotPresent</td>
+  <td>//li[@data-relative-url='portal_categories/divergence_scope/quantity']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-relative-url='portal_categories/divergence_scope/quantity']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li[@data-relative-url='portal_categories/divergence_scope/quantity']</td>
+  <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
