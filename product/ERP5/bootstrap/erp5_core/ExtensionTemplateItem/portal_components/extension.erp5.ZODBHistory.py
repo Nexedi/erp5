@@ -136,7 +136,7 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   history.extend(_getWorkflowHistory(document, initial_datetime))
   history.extend(_getRecordedPropertyHistory(document, size))
   history.extend(_getAttributeHistory(document, size, attribute_name))
-  history.sort(key=lambda x:x['datetime'])
+  history.sort(key=lambda x:x['datetime'], reverse=True)
 
   return history
 
