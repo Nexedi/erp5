@@ -624,7 +624,10 @@
       // Don't trigger checkValidity() here because this will introduce
       // issues when we search with % and we are not able
       // to reproduce it in tests
-      return this.notifyChange();
+      return RSVP.all([
+        this.checkValidity(),
+        this.notifyChange()
+      ]);
     }, false, false)
 
 
