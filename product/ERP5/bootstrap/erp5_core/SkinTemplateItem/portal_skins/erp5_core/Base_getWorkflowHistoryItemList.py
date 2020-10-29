@@ -92,4 +92,6 @@ for workflow_item in workflow_item_list:
   previous_obj = o
   result.append(o)
 
+if reverse:
+  result.reverse()
 return result
