@@ -138,7 +138,7 @@
           field_href.href = field_json.edit_field_href;
           field_href.title = "Edit this field";
           field_href.appendChild(document.createElement("img"));
-          field_href.firstElementChild.src = "/erp5/images/editfield.png";
+          field_href.firstElementChild.src = field_json.edit_field_icon;
           this.props.label_element.appendChild(field_href);
         }
 
@@ -147,7 +147,7 @@
           field_href.href = field_json.translate_title_href;
           field_href.title = "Translate this field title";
           field_href.appendChild(document.createElement("img"));
-          field_href.firstElementChild.src = "/erp5/images/translate.png";
+          field_href.firstElementChild.src = field_json.translate_title_icon;
           this.props.label_element.appendChild(field_href);
         }
 
@@ -156,7 +156,7 @@
           field_href.href = field_json.translate_description_href;
           field_href.title = "Translate this field description";
           field_href.appendChild(document.createElement("img"));
-          field_href.firstElementChild.src = "/erp5/images/translate_tooltip.png";
+          field_href.firstElementChild.src = field_json.translate_description_icon;
           this.props.label_element.appendChild(field_href);
         }
 
