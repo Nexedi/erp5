@@ -95,6 +95,7 @@ class ERP5TestNode(TestCase):
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
     config["frontend_url"] = "http://frontend/"
+    config["log_frontend_url"] = "http://log-frontend/"
     config["software_list"] = ["foo", "bar"]
     config["partition_reference"] = "part"
     config["ipv4_address"] = "1.2.3.4"
@@ -620,6 +621,7 @@ shared = true
 
   def test_distributor_url_obfuscated_in_logs(self):
     test_node = self.getTestNode()
+    del test_node.suiteLog
 
     runner = test_type_registry['UnitTest'](test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
@@ -635,7 +637,8 @@ shared = true
         """.format(temp_file.name))
       os.chmod(path, 0o700)
 
-      with mock.patch.object(logger, '_log') as http_logger,\
+      with test_node.suiteLog(node_test_suite),\
+          mock.patch.object(logger, '_log') as http_logger,\
           mock.patch.object(logging.getLogger(), '_log') as root_logger,\
           mock.patch.object(logging.getLogger(), 'isEnabledFor', return_value=True):
         runner.runTestSuite(node_test_suite, "https://user:secret@example.com/portal_distributions")
@@ -676,7 +679,8 @@ shared = true
       call_parameter_list.append(args)
 
     test_node = self.getTestNode()
-    with mock.patch.object(test_node.process_manager, 'spawn', side_effect=spawn):
+    del test_node.suiteLog
+    with mock.patch.object(test_node.process_manager, 'spawn', side_effect=spawn) as spawn_mock:
       runner = test_type_registry[my_test_type](test_node)
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
@@ -695,9 +699,16 @@ shared = true
         '--test_suite_title', 'Foo-Test',
       ]
       def checkRunTestSuiteParameters():
-        runner.runTestSuite(node_test_suite, "http://foo.bar")
+        with test_node.suiteLog(node_test_suite) as suite_log:
+          runner.runTestSuite(node_test_suite, "http://foo.bar")
         self.assertEqual(list(call_parameter_list.pop()), expected_parameter_list)
         self.assertFalse(call_parameter_list)
+        self.assertEqual(
+            spawn_mock.call_args[-1]['SLAPOS_TEST_SHARED_PART_LIST'],
+            "/not/exists:/not/exists_either:%s/shared" % node_test_suite.working_directory)
+        self.assertEqual(
+            spawn_mock.call_args[-1]['SLAPOS_TEST_LOG_DIRECTORY'],
+            os.path.join(test_node.config['log_directory'], suite_log))
 
       checkRunTestSuiteParameters()
 
@@ -1005,7 +1016,7 @@ shared = true
                 logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self,*argv, **kw):
       return {'status_code': 0}
-    def checkTestSuite(test_node):
+    def checkTestSuite(test_node, reportTaskStatus_mock):
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEqual(2, len(test_node.node_test_suite_dict))
@@ -1015,6 +1026,14 @@ shared = true
                          "Incorrect suite log path : %r" % suite.suite_log_path)
         m = re.search('-(.*)/suite.log$', suite.suite_log_path)
         rand_part = m.groups()[0]
+        reportTaskStatus_mock.assert_has_calls(
+            [mock.call(
+                mock.ANY,
+                {'command': 'LOG url',
+                'stdout': "http://log-frontend/{}-{}".format(suite.reference, rand_part),
+                'stderr': ''},
+                "Foo-Test-Node")])
+
         self.assertEqual(len(rand_part), 10)
         self.assertNotIn(rand_part, rand_part_set)
         rand_part_set.add(rand_part)
@@ -1071,9 +1090,11 @@ shared = true
       return {'status_code': 0}
     RunnerClass._prepareSlapOS = patch_prepareSlapOS
     SlapOSControler.initializeSlapOSControler = doNothing
-    test_node.run()
+    with mock.patch('erp5.util.taskdistribution.DummyTaskDistributor.reportTaskStatus') as reportTaskStatus:
+      test_node.run()
+
     self.assertEqual(counter, 3)
-    checkTestSuite(test_node)
+    checkTestSuite(test_node, reportTaskStatus)
     time.sleep = original_sleep
     # Restore old class methods
     if my_test_type == "ScalabilityTest":
