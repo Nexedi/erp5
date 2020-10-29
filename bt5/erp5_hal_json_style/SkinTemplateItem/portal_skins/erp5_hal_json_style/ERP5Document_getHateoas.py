@@ -338,6 +338,7 @@ url_template_dict = {
 
 default_document_uri_template = url_template_dict["jio_get_template"]
 portal = context.getPortalObject()
+portal_absolute_url = portal.absolute_url()
 preference_tool = portal.portal_preferences
 Base_translateString = portal.Base_translateString
 
@@ -455,6 +456,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
   if preferred_html_style_developper_mode:
     result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
+    result["edit_field_icon"] = "%s/images/editfield.png" % portal_absolute_url
 
   if preferred_html_style_translator_mode:
     erp5_ui = portal.Localizer.erp5_ui
@@ -464,6 +466,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       field.title(),
       selected_language
     )
+    result["translate_title_icon"] = "%s/images/translate.png" % portal_absolute_url
+
     field_description = field.Field_getDescription()
     if field_description:
       result["translate_description_href"] = '%s/manage_messages?regex=^%s&lang=%s' % (
@@ -471,6 +475,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         field_description,
         selected_language
       )
+      result["translate_description_icon"] = "%s/images/translate_tooltip.png" % portal_absolute_url
+
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
     result["required"] = field.get_value("required") if field.has_value("required") else None
@@ -1316,7 +1322,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # Always inform about portal
       "portal": {
         "href": default_document_uri_template % {
-          "root_url": portal.absolute_url(),
+          "root_url": portal_absolute_url,
           # XXX the portal has an empty getRelativeUrl. Make it still compatible
           # with restrictedTraverse
           "relative_url": portal.getId(),
