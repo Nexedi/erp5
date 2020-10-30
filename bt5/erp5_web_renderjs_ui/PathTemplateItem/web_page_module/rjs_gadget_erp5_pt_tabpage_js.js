@@ -96,9 +96,11 @@
         view_list = [],
         tab_list = [],
         jump_action_list = [],
+        raw_action_list = [],
         breadcrumb_action_list = [],
         erp5_document,
-        jump_list;
+        jump_list,
+        raw_list;
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
 
@@ -108,6 +110,7 @@
           erp5_document = result;
           view_list = ensureArray(erp5_document._links.view);
           jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
+          raw_list = ensureArray(erp5_document._links.action_object_jio_raw);
 
           for (i = 0; i < view_list.length; i += 1) {
             url_for_kw_list.push({command: 'display_with_history', options: {
@@ -123,6 +126,14 @@
               view: jump_list[i].href
             }});
           }
+          for (i = 0; i < raw_list.length; i += 1) {
+            url_for_kw_list.push({
+              command: 'raw',
+              options: {
+                url: raw_list[i].href
+              }
+            });
+          }
 
           url_for_kw_list.push({command: 'cancel_dialog_with_history'});
 
@@ -131,14 +142,15 @@
             _: modifyBreadcrumbList(gadget,
                                     erp5_document._links.parent || "#",
                                     breadcrumb_action_list),
-            translation_list: gadget.getTranslationList(['Views', 'Jumps', 'Breadcrumb']),
+            translation_list: gadget.getTranslationList(['Views', 'Jumps', 'Breadcrumb', 'Developer mode']),
             page_title: calculatePageTitle(gadget, erp5_document)
           });
         })
 
         .push(function (result_dict) {
           var i,
-            j = 0;
+            j = 0,
+            sub_element_list;
 
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
@@ -154,12 +166,22 @@
             });
             j += 1;
           }
-
-          domsugar(gadget.element, [
+          for (i = 0; i < raw_list.length; i += 1) {
+            raw_action_list.push({
+              title: raw_list[i].title,
+              link: result_dict.url_list[j]
+            });
+            j += 1;
+          }
+          sub_element_list = [
             generateSection(result_dict.translation_list[0], 'eye', tab_list),
             generateSection(result_dict.translation_list[1], 'plane', jump_action_list),
             generateSection(result_dict.translation_list[2], 'ellipsis-v', breadcrumb_action_list)
-          ]);
+          ];
+          if (raw_action_list.length > 0) {
+            sub_element_list.push(generateSection(result_dict.translation_list[3], 'plane', raw_action_list))
+          }
+          domsugar(gadget.element, sub_element_list);
 
           return gadget.updateHeader({
             back_url: result_dict.url_list[j],
