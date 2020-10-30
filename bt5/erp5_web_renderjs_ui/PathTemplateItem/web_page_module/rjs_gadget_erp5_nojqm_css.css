@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/
+* http://meyerweb.com/eric/tools/css/reset/ 
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -1100,6 +1100,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content .ui-content-header-plain {
   font-size: 150%;
+}
+.gadget-content .ui-content-header-plain > h3 > a {
+  padding-left: 3pt;
 }
 .gadget-content .worklist-empty {
   max-width: 442px;
