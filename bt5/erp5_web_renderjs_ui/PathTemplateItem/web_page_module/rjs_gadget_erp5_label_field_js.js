@@ -1,4 +1,4 @@
-/*global window, document, rJS */
+/*global window, document, rJS, domsugar */
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS) {
+(function (window, document, rJS, domsugar) {
   "use strict";
 
   var SCOPE = 'field';
@@ -105,6 +105,8 @@
 
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
+        options = modification_dict.options || {},
+        field_json = options.field_json,
         span,
         css_class,
         i,
@@ -131,29 +133,32 @@
       this.props.label_element.setAttribute('for', gadget.state.scope);
 
       if (field_json) {
-        if (field_json.hasOwnProperty('edit_field_href')) {
-          field_href = document.createElement("a");
+        if (field_json.hasOwnProperty('edit_field_href') &&
+            !this.props.label_element.querySelector(".edit-field")) {
+          field_href = domsugar("a", {"class": "edit-field"});
           field_href.href = field_json.edit_field_href;
           field_href.title = "Edit this field";
-          field_href.appendChild(document.createElement("img"));
+          field_href.appendChild(domsugar("img"));
           field_href.firstElementChild.src = field_json.edit_field_icon;
           this.props.label_element.appendChild(field_href);
         }
 
-        if (field_json.hasOwnProperty('translate_title_href')) {
-          field_href = document.createElement("a");
+        if (field_json.hasOwnProperty('translate_title_href') &&
+            !this.props.label_element.querySelector(".translate-title")) {
+          field_href = domsugar("a", {"class": "translate-title"});
           field_href.href = field_json.translate_title_href;
           field_href.title = "Translate this field title";
-          field_href.appendChild(document.createElement("img"));
+          field_href.appendChild(domsugar("img"));
           field_href.firstElementChild.src = field_json.translate_title_icon;
           this.props.label_element.appendChild(field_href);
         }
 
-        if (field_json.hasOwnProperty('translate_description_href')) {
-          field_href = document.createElement("a");
+        if (field_json.hasOwnProperty('translate_description_href') &&
+            !this.props.label_element.querySelector(".translate-description")) {
+          field_href = domsugar("a", {"class": "translate-description"});
           field_href.href = field_json.translate_description_href;
           field_href.title = "Translate this field description";
-          field_href.appendChild(document.createElement("img"));
+          field_href.appendChild(domsugar("img"));
           field_href.firstElementChild.src = field_json.translate_description_icon;
           this.props.label_element.appendChild(field_href);
         }
@@ -278,4 +283,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS));
+}(window, document, rJS, domsugar));
