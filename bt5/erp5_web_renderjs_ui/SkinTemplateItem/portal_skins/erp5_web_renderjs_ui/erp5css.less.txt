@@ -1263,6 +1263,9 @@ div[data-gadget-scope='header'] .ui-header {
 
   .ui-content-header-plain {
     font-size: 150%;
+    & > h3 > a {
+      padding-left: 3pt;
+    }
   }
   .worklist-empty {
     max-width: 442px; /* original size of the embedded image */
