@@ -105,6 +105,8 @@
 
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
+        options = modification_dict.options || {},
+        field_json = options.field_json,
         span,
         css_class,
         i,
