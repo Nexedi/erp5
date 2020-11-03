@@ -53,7 +53,6 @@ class CategoryTool(CMFCategoryTool, BaseTool):
     id              = 'portal_categories'
     meta_type       = 'ERP5 Categories'
     portal_type     = 'Category Tool'
-    title           = 'Categories'
     allowed_types   = ( 'ERP5 Base Category',)
     _folder_handler = OFS_HANDLER
 
