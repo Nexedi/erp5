@@ -33,12 +33,12 @@
           return gadget.changeState({gadget_style_url: url});
         });
     })
-    .declareMethod("render", function (parsed_content) {
+    .declareMethod("render", function (html_content, parsed_content) {
       var state = {
         language_list: JSON.stringify(parsed_content.language_list || []),
         sitemap: JSON.stringify(parsed_content.sitemap || {}),
         page_title: parsed_content.page_title || "",
-        html_content: parsed_content.html_content || "",
+        html_content: html_content || "",
         render_count: this.state.render_count + 1
       };
       return this.changeState(state);
