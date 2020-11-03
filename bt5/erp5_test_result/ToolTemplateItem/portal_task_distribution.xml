@@ -250,12 +250,6 @@
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_task_distribution</string> </value>
         </item>
@@ -264,10 +258,6 @@
             <value>
               <dictionary/>
             </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Task Distribution Tool</string> </value>
         </item>
       </dictionary>
     </pickle>
