@@ -134,7 +134,8 @@
           parsed_content = parsePageContent(dom_parser.body);
         gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
-        return result_dict.style_gadget.render(parsed_content);
+        return result_dict.style_gadget.render(parsed_content.html_content,
+                                               parsed_content);
       })
       .push(function () {
         return scrollToHash(hash);
@@ -287,7 +288,8 @@
       return gadget.declareGadget(style_gadget_url, {scope: 'renderer'})
         .push(function (result) {
           style_gadget = result;
-          return style_gadget.render(parsed_content);
+          return style_gadget.render(parsed_content.html_content,
+                                     parsed_content);
         })
         .push(function () {
           // Trigger URL handling
