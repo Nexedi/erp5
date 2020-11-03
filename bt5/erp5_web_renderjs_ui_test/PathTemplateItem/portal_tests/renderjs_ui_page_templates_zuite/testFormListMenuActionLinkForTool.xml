@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFormListMenuViewLink</string> </value>
+            <value> <string>testFormListMenuActionLinkForTool</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
