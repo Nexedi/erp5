@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Export</string> </value>
+            <value> <string>Print</string> </value>
         </item>
       </dictionary>
     </pickle>
