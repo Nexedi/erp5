@@ -59,7 +59,6 @@ class ComponentTool(BaseTool):
   id = "portal_components"
   meta_type = "ERP5 Component Tool"
   portal_type = "Component Tool"
-  title = "Components"
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
