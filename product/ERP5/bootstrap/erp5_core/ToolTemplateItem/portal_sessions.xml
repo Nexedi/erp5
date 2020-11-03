@@ -7,18 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_sessions</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Session Tool</string> </value>
         </item>
       </dictionary>
     </pickle>
