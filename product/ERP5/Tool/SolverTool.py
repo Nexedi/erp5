@@ -45,6 +45,7 @@ class SolverTool(TypeProvider):
   id = 'portal_solvers'
   meta_type = 'ERP5 Solver Tool'
   portal_type = 'Solver Tool'
+  title = 'Solvers'
   allowed_types = ( 'ERP5 Solver Type', )
 
   # Declarative Security

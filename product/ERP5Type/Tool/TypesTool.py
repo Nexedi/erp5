@@ -89,6 +89,7 @@ class TypesTool(TypeProvider):
   id = 'portal_types'
   meta_type = 'ERP5 Types Tool'
   portal_type = 'Types Tool'
+  title = 'Portal Types'
   allowed_types = ()
 
   zope.interface.implements(ITypesTool)
