@@ -77,7 +77,7 @@ class ContributionTool(BaseTool):
   title = 'Contribution Tool'
   id = 'portal_contributions'
   meta_type = 'ERP5 Contribution Tool'
-  portal_type = 'Contribution Tool'
+  portal_type = 'Contributions'
 
 
 
