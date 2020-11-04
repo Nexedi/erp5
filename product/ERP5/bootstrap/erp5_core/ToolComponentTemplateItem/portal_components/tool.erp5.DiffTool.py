@@ -59,6 +59,7 @@ class DiffTool(BaseTool):
   title = 'Diff Tool'
   meta_type = 'ERP5 Diff Tool'
   portal_type = 'Diff Tool'
+  title = 'Differences'
   allowed_types = ()
 
   # Declarative Security
