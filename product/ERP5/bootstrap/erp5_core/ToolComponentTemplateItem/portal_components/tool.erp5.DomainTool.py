@@ -44,6 +44,7 @@ class DomainTool(BaseTool):
   id = 'portal_domains'
   meta_type = 'ERP5 Domain Tool'
   portal_type     = 'Domain Tool'
+  title = 'Domains'
   allowed_types   = ('ERP5 Domain', )
 
   # Declarative Security
