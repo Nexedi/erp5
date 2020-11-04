@@ -51,6 +51,7 @@ class PropertySheetTool(BaseTool):
   id = 'portal_property_sheets'
   meta_type = 'ERP5 Property Sheet Tool'
   portal_type = 'Property Sheet Tool'
+  title = 'Property Sheets'
 
   # Declarative security
   security = ClassSecurityInfo()

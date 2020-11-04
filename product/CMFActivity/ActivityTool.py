@@ -635,6 +635,7 @@ class ActivityTool (BaseTool):
     id = 'portal_activities'
     meta_type = 'CMF Activity Tool'
     portal_type = 'Activity Tool'
+    title = 'Activities'
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
 
