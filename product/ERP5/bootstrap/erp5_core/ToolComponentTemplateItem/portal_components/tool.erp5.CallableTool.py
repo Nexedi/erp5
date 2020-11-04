@@ -38,6 +38,7 @@ class CallableTool(UniqueObject, Folder):
   id = 'portal_callables'
   meta_type = 'ERP5 Callable Tool'
   portal_type = 'Callable Tool'
+  title = 'Callables'
 
   def _setOb(self, object_id, obj):
     """
