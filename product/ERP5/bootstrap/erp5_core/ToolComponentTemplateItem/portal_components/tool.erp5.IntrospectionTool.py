@@ -112,7 +112,7 @@ class IntrospectionTool(LogMixin, BaseTool):
   """
 
   id = 'portal_introspections'
-  title = 'Introspection Tool'
+  title = 'Introspections'
   meta_type = 'ERP5 Introspection Tool'
   portal_type = 'Introspection Tool'
 
