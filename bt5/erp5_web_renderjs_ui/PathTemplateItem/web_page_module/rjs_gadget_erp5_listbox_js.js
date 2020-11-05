@@ -474,7 +474,6 @@
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
           }
-
           return gadget.changeState({
             key: field_json.key,
             title: field_json.title,
@@ -527,7 +526,13 @@
             has_error: false,
             show_line_selector: false,
             show_select_action: false,
-            show_clipboard_action: false
+            show_clipboard_action: false,
+
+            // development mode
+            edit_field_href: field_json.edit_field_href,
+            edit_field_icon: field_json.edit_field_icon,
+            translate_title_href: field_json.translate_title_href,
+            translate_title_icon: field_json.translate_title_icon
           });
         });
       return queue;
@@ -547,7 +552,6 @@
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
         button;
-
 /*
       if (modification_dict.hasOwnProperty('error_text') && this.state.error_text !== undefined) {
         // XXX TODO
@@ -714,6 +718,7 @@
               span_element = document.createElement('span'),
               tr_element,
               th_element,
+              field_href,
               a_element;
 
             div_element.setAttribute('class', 'ui-table-header ui-header');
@@ -724,6 +729,24 @@
             span_element.setAttribute('class', 'listboxloader ui-icon-spinner ui-btn-icon-left');
             h1_element.appendChild(span_element);
             div_element.appendChild(h1_element);
+
+            if (modification_dict.hasOwnProperty("edit_field_href")) {
+              field_href = document.createElement("a");
+              field_href.href = modification_dict.edit_field_href;
+              field_href.title = "Edit this form";
+              field_href.appendChild(document.createElement("img"));
+              field_href.firstElementChild.src = modification_dict.edit_field_icon;
+              h1_element.appendChild(field_href);
+            }
+            console.log(modification_dict);
+            if (modification_dict.hasOwnProperty("translate_title_href")) {
+              field_href = document.createElement("a");
+              field_href.href = modification_dict.translate_title_href;
+              field_href.title = "Edit this form's action";
+              field_href.appendChild(document.createElement("img"));
+              field_href.firstElementChild.src = modification_dict.translate_title_icon;
+              h1_element.appendChild(field_href);
+            }
 
             if (gadget.state.show_select_action) {
               for (k = 0; k < select_option_list.length; k += 1) {
