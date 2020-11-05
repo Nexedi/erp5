@@ -48,9 +48,16 @@
           }
           return new RSVP.Queue()
             .push(function () {
-              //converts the html content to a pdf file
-              //and opens a file download window
-              return html2pdf(html_data.innerHTML);
+              //remove pagination script as it may cause style issues
+              html_data.querySelector('[id="paged-js-source"]').remove();
+              var print_preview_window = window.open('', '', 'height=400,width=800');
+              print_preview_window.document.write(html_data.innerHTML);
+              print_preview_window.document.title = parent_options.doc.title;
+              print_preview_window.onafterprint = function () {
+                print_preview_window.close();
+              };
+              print_preview_window.document.close();
+              print_preview_window.print();
             })
             .push(function () {
               return_submit_dict.redirect = {

@@ -41,10 +41,8 @@ url_list = [
   "notebook_preview_view.js",
   "notebook_export_action.html",
   "notebook_export_action.js",
-  "html2pdf.bundle.min.js",
-  "html2canvas.js",
   "interface.css",
-  "standard_styles.css",
+  "notebook.css",
   "paged.polyfill.js"
 ]
 
