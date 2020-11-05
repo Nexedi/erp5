@@ -102,6 +102,14 @@ class TestTradeReports(ERP5ReportTestCase):
                                   title=group_id,
                                   reference=group_id,
                                   id=group_id)
+    # currencies
+    if not self.portal.currency_module.has_key('EUR'):
+      self.portal.currency_module.newContent(
+        portal_type='Currency',
+        id='EUR',
+        base_unit_quantity=0.01,
+      ).validate()
+
     # create organisations (with no organisation member of g3)
     if not self.organisation_module.has_key('Organisation_1'):
       self.portal.organisation_module.newContent(
@@ -111,6 +119,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_1',
                               group='g1',
                               site='demo_site_A',
+                              price_currency_value=self.portal.currency_module.EUR,
                               default_email_coordinate_text='organisation1@example.com',
                               default_telephone_coordinate_text='11111',
                               default_address_street_address='1 Organisation Street',
@@ -133,41 +142,59 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_3',)
 
     # create unit categories
+    if not self.portal_categories.quantity_unit.has_key('mass'):
+      self.portal_categories.quantity_unit.newContent(
+          portal_type='Category',
+          id='mass')
     for unit_id in ('kg', 'g',):
-      if not self.portal_categories['quantity_unit'].has_key(unit_id):
-        self.portal_categories.quantity_unit.newContent(
+      if not self.portal_categories.quantity_unit.mass.has_key(unit_id):
+        self.portal_categories.quantity_unit.mass.newContent(
                                   portal_type='Category',
                                   title=unit_id.title(),
                                   reference=unit_id,
                                   id=unit_id)
 
+    # and corresponding unit conversion group
+    if not self.portal.quantity_unit_conversion_module.has_key('mass_conversion_group'):
+      self.portal.quantity_unit_conversion_module.newContent(
+          portal_type='Quantity Unit Conversion Group',
+          id='mass_conversion_group',
+          quantity_unit_value=self.portal_categories.quantity_unit.mass.g,
+      ).validate()
+      self.portal.quantity_unit_conversion_module.mass_conversion_group.newContent(
+          portal_type='Quantity Unit Conversion Definition',
+          id='ton',
+          quantity_unit_value=self.portal_categories.quantity_unit.mass.kg,
+          quantity=1000,
+      ).validate()
+      self.tic()
+
     # Create resources
-    module = self.portal.product_module
-    if not module.has_key('product_B'):
-      module.newContent(
-          portal_type='Product',
-          id='product_B',
-          title='product_B',
-          reference='ref 1',
-          quantity_unit='kg'
-          )
-    if not module.has_key('product_A'):
-      module.newContent(
-          portal_type='Product',
-          id='product_A',
-          title='product_A',
-          reference='ref 2',
-          quantity_unit='g'
-          )
-    if not module.has_key('product_C'):
-      module.newContent(
-          portal_type='Product',
-          id='product_C',
-          title='variated product',
-          reference='ref 3',
-          variation_base_category_list=['colour'],
-          colour_list=['colour1', 'colour2'],
-          )
+    self.portal.product_module.newContent(
+        portal_type='Product',
+        id='product_A',
+        title='product_A',
+        reference='ref 2',
+        quantity_unit_list=('mass/g', 'mass/kg'),
+        default_purchase_supply_line_base_price=3,
+        default_internal_supply_line_base_price=5,
+        default_sale_supply_line_base_price=7,
+    )
+    self.portal.product_module.newContent(
+        portal_type='Product',
+        id='product_B',
+        title='product_B',
+        reference='ref 1',
+        quantity_unit='mass/kg'
+    )
+    self.portal.product_module.newContent(
+        portal_type='Product',
+        id='product_C',
+        title='variated product',
+        reference='ref 3',
+        variation_base_category_list=['colour'],
+        colour_list=['colour1', 'colour2'],
+    )
     if not self.portal.service_module.has_key('service_a'):
       self.portal.service_module.newContent(
           portal_type='Service',
@@ -938,7 +965,7 @@ class TestTradeReports(ERP5ReportTestCase):
     self.tic()
 
 
-  def _createConfirmedSalePackingListForStockReportTest(self):
+  def _createConfirmedSalePackingListForStockReportTest(self, quantity=1, quantity_unit_value=None):
     confirmed_sale_packing_list = self.portal.sale_packing_list_module.newContent(
         portal_type='Sale Packing List',
         title='%s 1' % self.id(),
@@ -954,8 +981,9 @@ class TestTradeReports(ERP5ReportTestCase):
     confirmed_sale_packing_list.newContent(
         portal_type='Sale Packing List Line',
         resource_value=self.portal.product_module.product_A,
-        quantity=1,
+        quantity=quantity,
         price=10,
+        quantity_unit_value=quantity_unit_value,
     )
 
     confirmed_sale_packing_list.confirm()
@@ -1092,6 +1120,31 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
+
+  def testStockReport_unit_conversion(self):
+    self._createConfirmedSalePackingListForStockReportTest(
+        quantity=0.5,
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.mass.kg,
+    )
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_A',
+                   resource_reference='ref 2',
+                   variation_category_item_list=[],
+                   inventory=500,
+                   quantity_unit='G')
 
   def _createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest(self):
     # Create inventories
@@ -1399,6 +1452,169 @@ class TestTradeReports(ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
 
     self.assertEqual(0, len(data_line_list))
+
+  def testStockReport_valuation_method_default_default_purchase_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_purchase_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=3,
+    )
+    # listbox_total_price is an editable field using this for precision
+    self.assertEqual(self.portal.REQUEST.get('precision'), 2)
+
+  def testStockReport_valuation_method_default_default_internal_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_internal_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=5,
+    )
+
+  def testStockReport_valuation_method_default_default_sales_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_sale_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=7,
+    )
+
+  def testStockReport_valuation_and_quantity_unit_conversion(self):
+    self._createConfirmedSalePackingListForStockReportTest(
+        quantity=0.5,
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.mass.kg,
+    )
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_purchase_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=500,
+        quantity_unit='G',
+        # price for 1g is 3, we have 0.5Kg=500g
+        total_price=1500,
+    )
+    # listbox_total_price is an editable field using this for precision
+    self.assertEqual(self.portal.REQUEST.get('precision'), 2)
+
+  def testStockReport_valuation_and_quantity_price_in_different_unit(self):
+    # edit the product to set a default purchase price of 3300 per Kg, price
+    # for one gram will be 3.3
+    purchase_supply_line = self.portal.product_module.product_A.getDefaultPurchaseSupplyLineValue()
+    purchase_supply_line.edit(
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.mass.kg,
+        base_price=3300
+    )
+    self._createConfirmedSalePackingListForStockReportTest()
+
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_purchase_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=3.3,
+    )
+    # listbox_total_price is an editable field using this for precision
+    self.assertEqual(self.portal.REQUEST.get('precision'), 2)
 
 
   def test_Folder_generateWorkflowReport(self):
