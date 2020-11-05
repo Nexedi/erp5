@@ -113,7 +113,7 @@ class TestContentTranslation(ERP5TypeTestCase):
     # Low level columns test. This behaviour is not guaranteed. I'm not sure
     # content_translation must be a search table - jerome
     result5 = portal.portal_catalog(property_name='title')
-    self.assertEqual(len(result5), 2)
+    self.assertGreaterEqual(len(result5), 2)
     result6 = portal.portal_catalog(content_language='nob-read')
     self.assertEqual(len(result6), 2)
     result7 = portal.portal_catalog(translated_text='XXX YYY')
