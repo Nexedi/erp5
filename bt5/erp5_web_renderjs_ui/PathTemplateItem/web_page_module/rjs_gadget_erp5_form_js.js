@@ -216,11 +216,13 @@
           }));
         })
         .push(function (result_list) {
+          var dom_element = form_gadget.element.querySelector(".field_container"),
+            parent_element,
+            field_href,
+            j;
+
           if (modification_dict.hasOwnProperty('hash')) {
-            var dom_element = form_gadget.element
-              .querySelector(".field_container"),
-              j,
-              parent_element = document.createDocumentFragment();
+            parent_element = document.createDocumentFragment();
             // Add all fieldset into the fragment
             for (j = 0; j < result_list.length; j += 1) {
               parent_element.appendChild(result_list[j]);
@@ -229,6 +231,24 @@
               dom_element.removeChild(dom_element.firstChild);
             }
             dom_element.appendChild(parent_element);
+          }
+          if (form_definition.hasOwnProperty("edit_form_href")) {
+            field_href = document.createElement("a");
+            field_href.href = form_definition.edit_form_href;
+            field_href.title = "Edit this form";
+            field_href.appendChild(document.createElement("img"));
+            field_href.firstElementChild.src = form_definition.edit_form_icon;
+            dom_element.insertBefore(field_href, dom_element.firstChild);
+          }
+
+          if (form_definition.hasOwnProperty("edit_form_action_href")) {
+            field_href = document.createElement("a");
+            field_href.href = form_definition.edit_form_action_href;
+            field_href.title = "Edit this form's action";
+            field_href.appendChild(document.createElement("img"));
+            field_href.firstElementChild.src = form_definition.edit_form_action_icon;
+            dom_element.firstElementChild.insertAdjacentElement(
+              "afterend", field_href);
           }
         });
     })
