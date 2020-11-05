@@ -1635,6 +1635,9 @@ div[data-gadget-scope='erp5_searchfield'] {
           }
         }
       }
+      & > a {
+        padding-left: 3pt;
+      }
     }
 
     button {
