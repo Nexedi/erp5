@@ -1190,12 +1190,18 @@ div[data-gadget-scope='header'] .ui-header {
     animation: fadein @transition-timing;
   }
 
-  // Dialog page template main submit button 
+  div[data-gadget-scope='erp5_form'] {
+    & > a {
+      padding-left: 3pt;
+    }
+  }
+
+  // Dialog page template main submit button
   input[type='submit'] {
     .renderPageSubmitButton(@coloraccent);
     text-shadow: @foreground-text-shadow;
   }
-  // Dialog page template update button 
+  // Dialog page template update button
   button[name='action_update'] {
     .renderPageSubmitButton(@grey);
   }
