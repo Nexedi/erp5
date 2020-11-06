@@ -29,6 +29,7 @@ web_site_module/officejs_cribjs/**
 web_site_module/officejs_drive_app
 web_site_module/officejs_drive_app/**
 web_site_module/officejs_export
+portal_types/Notebook/notebook_download_html
 web_site_module/officejs_notebook
 web_site_module/officejs_notebook/**
 web_site_module/officejs_pdf_viewer
