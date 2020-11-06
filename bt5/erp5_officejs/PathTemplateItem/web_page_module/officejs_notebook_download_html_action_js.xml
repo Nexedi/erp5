@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -65,8 +68,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_notebook_editor.configuration</string> </value>
+            <value> <string>notebook_download_html_action.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -76,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_notebook_editor_configuration</string> </value>
+            <value> <string>officejs_notebook_download_html_action_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -86,35 +95,19 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CONFIGURATION MANIFEST\n
-# generated on Thu Nov  5 19:40:05 2020\n
-CACHE:\n
-\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rIE1vZHVsZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rIE1vZHVsZS9ub3RlYm9va19lZGl0b3Jfdmlldw==\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svTm90ZWJvb2tNb2R1bGVfdmlld05vdGVib29rTGlzdEFzSmlvRm9yTm90ZWJvb2tFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rIE1vZHVsZS9ub3RlYm9va191cGxvYWQ=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svQmFzZV91cGxvYWREaWFsb2dGb3JOb3RlYm9va0VkaXRvcg==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29r\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rL25vdGVib29rX2VkaXRvcl92aWV3\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svTm90ZWJvb2tfdmlld0FzSmlvRm9yTm90ZWJvb2tFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rL25vdGVib29rX3ByZXZpZXc=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svTm90ZWJvb2tfcHJldmlld1ZpZXdGb3JOb3RlYm9va0VkaXRvcg==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rL25vdGVib29rX2VkaXRvcl9jbG9uZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svQmFzZV9jbG9uZU5vdGVib29rRm9yTm90ZWJvb2tFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rL25vdGVib29rX2Rvd25sb2Fk\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svQmFzZV9kb3dubG9hZERpYWxvZ0Zvck5vdGVib29rRWRpdG9y\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rL25vdGVib29rX2V4cG9ydA==\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svQmFzZV9leHBvcnREaWFsb2dGb3JOb3RlYm9va0VkaXRvcg==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL05vdGVib29rL25vdGVib29rX2Rvd25sb2FkX2h0bWw=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfbm90ZWJvb2svQmFzZV9kb3dubG9hZEh0bWxEaWFsb2dGb3JOb3RlYm9va0VkaXRvcg==\n
-\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>short_title</string> </key>
+            <value> <string>Notebook Download Html Action JS</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS Notebook Download Html Action JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -172,7 +165,7 @@ NETWORK:\n
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -198,7 +191,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1601047861.13</float>
+                              <float>1604604970.05</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -207,7 +200,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -247,7 +240,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>987.36558.152.21964</string> </value>
+                      <value> <string>987.57794.10090.1792</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -265,7 +258,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1603909601.08</float>
+                              <float>1605018444.38</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -292,9 +285,7 @@ NETWORK:\n
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>detect_converted_file</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -310,7 +301,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>empty</string> </value>
+                      <value> <string>converted</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -328,7 +319,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1601047861.11</float>
+                              <float>1604603983.03</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
