@@ -1238,6 +1238,17 @@ def renderFormDefinition(form, response_dict):
   response_dict["update_action"] = form.update_action
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
+  if preferred_html_style_developper_mode:
+    form_relative_url = getFormRelativeUrl(form)
+    response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
+    response_dict["edit_form_icon"] = "%s/images/editform.png" % portal_absolute_url
+    response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
+      form_relative_url,
+      form.action
+    )
+    response_dict["edit_form_action_icon"] = "%s/images/editformaction.png" % portal_absolute_url
+
+
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
   if isinstance(level, (str, unicode)):
