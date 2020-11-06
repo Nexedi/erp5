@@ -74,8 +74,16 @@ def checkComponent(component_instance):
         message=consistency_message.getMessage().translate(),
         edit_url=component_relative_url,
         jio_key=component_relative_url,),)
-  for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
-        {'code': unicode(component_instance.getTextContent(), 'utf8')}))['annotations']:
+  data = {'code': unicode(component_instance.getTextContent(), 'utf8')}
+  try:
+    check_result_json = portal.ERP5Site_checkPythonSourceCodeAsJSON(data)
+  except Exception:
+    # pylint sometimes raises on the first attempt at importing modules, but
+    # may succeed on the second try (probably because of incomplete cleanup
+    # of partially imported moduled). We are not interested in pylint issues,
+    # we are interested in our code's issues, so give it one more try.
+    check_result_json = portal.ERP5Site_checkPythonSourceCodeAsJSON(data)
+  for annotation in json.loads(check_result_json)['annotations']:
     annotation['component_path'] = component_relative_url
     line_list.append(
       Message(
