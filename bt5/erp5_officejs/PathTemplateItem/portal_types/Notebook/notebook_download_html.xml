@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>notebook_download</string> </value>
+            <value> <string>notebook_download_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>reference</string> </key>
-            <value> <string>notebook_download</string> </value>
+            <value> <string>notebook_download_html</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Notebook</string> </value>
+            <value> <string>Download HTML</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -67,7 +67,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_downloadDialogForNotebookEditor</string> </value>
+            <value> <string>string:${object_url}/Base_downloadHtmlDialogForNotebookEditor</string> </value>
         </item>
       </dictionary>
     </pickle>
