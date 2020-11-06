@@ -461,7 +461,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   if preferred_html_style_translator_mode:
     erp5_ui = portal.Localizer.erp5_ui
     selected_language = erp5_ui.get_selected_language()
-    result["translate_title_href"] = '%s/manage_messages?regex=^%s&lang=%s' % (
+    result["translate_title_href"] = '%s/manage_messages?regex=^%s$&lang=%s' % (
       '/'.join(erp5_ui.getPhysicalPath()),
       field.title(),
       selected_language
@@ -470,7 +470,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     field_description = field.Field_getDescription()
     if field_description:
-      result["translate_description_href"] = '%s/manage_messages?regex=^%s&lang=%s' % (
+      result["translate_description_href"] = '%s/manage_messages?regex=^%s$&lang=%s' % (
         '/'.join(erp5_ui.getPhysicalPath()),
         field_description,
         selected_language
