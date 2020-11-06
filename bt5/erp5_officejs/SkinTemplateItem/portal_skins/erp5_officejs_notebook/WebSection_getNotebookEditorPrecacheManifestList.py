@@ -41,6 +41,8 @@ url_list = [
   "notebook_preview_view.js",
   "notebook_export_action.html",
   "notebook_export_action.js",
+  "notebook_download_html_action.html",
+  "notebook_download_html_action.js",
   "interface.css",
   "notebook.css",
   "paged.polyfill.js"
