@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/ 
+* http://meyerweb.com/eric/tools/css/reset/
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -1004,6 +1004,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content div[data-gadget-scope='m'] {
   animation: fadein 0.2s ease-out;
 }
+.gadget-content div[data-gadget-scope='erp5_form'] > a {
+  padding-left: 3pt;
+}
 .gadget-content input[type='submit'] {
   padding: 6pt;
   margin-top: 30pt;
@@ -1074,9 +1077,6 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-top: 6em;
   }
 }
-.gadget-content .field_container > a {
-  padding-left: 3pt;
-}
 .gadget-content .field_container > div > div > div.ui-field-contain {
   padding: 3pt 0;
 }
@@ -1094,6 +1094,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content .ui-content-header-plain {
   font-size: 150%;
+}
+.gadget-content .ui-content-header-plain > h3 > a {
+  padding-left: 3pt;
 }
 .gadget-content .worklist-empty {
   max-width: 442px;
@@ -1180,7 +1183,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .ui-field-contain > label {
   color: hsl(0, 0%, 42%);
 }
-.gadget-content .ui-field-contain > a {
+.gadget-content .ui-field-contain > label > a {
   padding-left: 3pt;
 }
 .gadget-content .required > .ui-field-contain > label {
