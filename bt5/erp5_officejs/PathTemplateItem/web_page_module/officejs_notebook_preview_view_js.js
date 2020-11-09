@@ -32,8 +32,7 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var return_submit_dict = {};
-      return return_submit_dict;
+      return {};
     });
 
 }(window, rJS, RSVP, Blob, jIO));
