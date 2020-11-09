@@ -62,6 +62,8 @@
           }
           return new RSVP.Queue()
             .push(function () {
+              //remove notebook source as it may cause style issues
+              html_data.querySelector('[id="jsmd-source"]').remove();
               return downloadHTML(gadget, html_data.innerHTML, parent_options.doc.title);
             })
             .push(function () {
