@@ -23,6 +23,13 @@
       var gadget = this, html_data,
         parent_gadget = parent_options.gadget,
         return_submit_dict = {};
+      return_submit_dict.redirect = {
+        command: 'display',
+        options: {
+          jio_key: parent_options.action_options.jio_key,
+          editable: true
+        }
+      };
       return parent_gadget.getDeclaredGadget("fg")
         .push(function (subgadget) {
           return subgadget.getDeclaredGadget("erp5_pt_gadget");
@@ -60,13 +67,6 @@
               print_preview_window.print();
             })
             .push(function () {
-              return_submit_dict.redirect = {
-                command: 'display',
-                options: {
-                  jio_key: parent_options.jio_key,
-                  editable: true
-                }
-              };
               return return_submit_dict;
             })
             .push(undefined, function (error) {
@@ -74,13 +74,6 @@
               return_submit_dict.notify = {
                 message: "Failure exporting document",
                 status: "error"
-              };
-              return_submit_dict.redirect = {
-                command: 'display',
-                options: {
-                  jio_key: parent_options.jio_key,
-                  editable: true
-                }
               };
               return return_submit_dict;
             });
