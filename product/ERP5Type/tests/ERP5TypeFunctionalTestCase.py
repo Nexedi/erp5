@@ -127,8 +127,10 @@ class Xvfb(Process):
         (xvfb_bin, '-fbdir' , self.fbdir, display,
         '-screen', '0', '1280x1024x24'),
         stdout=null, stderr=null, close_fds=True)
-      # try to check if X screen is available
-      time.sleep(5)
+      # XXX We don't have any easy way to wait for Xvfb server to be available
+      # for now we wait for a few seconds and if Xvfb process is still running,
+      # we assume it's OK.
+      time.sleep(20)
       return
       # XXX xdpyinfo is not installed yet. Is this checking really needed ?
       # If it is required, we have to make xdpyinfo available as part of
