@@ -63,8 +63,10 @@
               print_preview_window.onafterprint = function () {
                 print_preview_window.close();
               };
-              print_preview_window.document.close();
-              print_preview_window.print();
+              setTimeout(() => {
+                print_preview_window.document.close();
+                print_preview_window.print();
+              }, 3000);
             })
             .push(function () {
               return return_submit_dict;
