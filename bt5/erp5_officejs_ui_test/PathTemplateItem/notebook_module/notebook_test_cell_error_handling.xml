@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>notebook_test_cell_error_handling</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>\n
+%% md\n
+# Notebook JSMD Viewer Error Handling Test\n
+\n
+%% plugin\n
+{\n
+  "languageId": "py",\n
+  "displayName": "python",\n
+  "codeMirrorMode": "python",\n
+  "keybinding": "p",\n
+  "url": "https://iodide.io/pyodide-demo/pyodide.js",\n
+  "module": "pyodide",\n
+  "evaluator": "runPython",\n
+  "pluginType": "language"\n
+}\n
+\n
+%% js\n
+pyodide.loadPackage(\'matplotlib\')\n
+\n
+%% md\n
+#### cell 1\n
+\n
+%% code {"language":"py"}\n
+import math\n
+x = math.cos(2 * math.pi)\n
+"cell 1 OK"\n
+\n
+%% md\n
+#### cell 2\n
+\n
+%% code {"language":"py"}\n
+"cell 2 OK"\n
+x = 2 + cell2\n
+x\n
+\n
+%% md\n
+#### cell 3\n
+\n
+%% code {"language":"py"}\n
+x = 2 + 2\n
+"cell 3 OK"\n
+\n
+%% md\n
+#### cell 4\n
+\n
+%% code {"language":"py"}\n
+x = 2 + 2\n
+"cell 4 succed"</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Notebook JSMD Viewer Error Handling Test</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
