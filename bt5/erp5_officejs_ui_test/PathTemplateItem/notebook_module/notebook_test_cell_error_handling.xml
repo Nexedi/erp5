@@ -67,7 +67,9 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>notebook_test_cell_error_handling</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -148,7 +150,7 @@ x = 2 + 2\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Notebook test cell error handling</string> </value>
+            <value> <string>Notebook JSMD Viewer Error Handling Test</string> </value>
         </item>
       </dictionary>
     </pickle>
