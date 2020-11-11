@@ -5984,6 +5984,52 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
           for line in payment.getMovementList(
               portal_type='Internal Invoice Transaction Line')])
 
+  def test_InternalInvoiceTransaction_statInternalTransactionLineList(self):
+    internal_invoice = self.portal.accounting_module.newContent(
+        portal_type='Internal Invoice Transaction',
+        source_section_value=self.section,
+        destination_section_value=self.main_section,
+        start_date=DateTime(2015, 1, 1),
+        created_by_builder=True,
+    )
+    # line1 counts for both source and destination
+    internal_invoice.newContent(
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.receivable,
+      source_debit=1, # destination_credit=1
+      source_asset_debit=0.1111111,
+      destination_asset_credit=0.222222,
+    )
+    # line2 does not count for source, it's another section
+    internal_invoice.newContent(
+      source_section_value=self.portal.organisation_module.client_1,
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.receivable,
+      destination_debit=3,
+      destination_asset_debit=0.44444,
+      source_asset_debit=10000,
+    )
+    # line3 does not count for destination, it's another section
+    internal_invoice.newContent(
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.receivable,
+      destination_section_value=self.portal.organisation_module.client_1,
+      source_credit=5,
+      source_asset_credit=0.555555,
+      destination_asset_debit=1000,
+    )
+
+    stat_internal_transaction, = internal_invoice.InternalInvoiceTransaction_statInternalTransactionLineList()
+    self.assertEqual(stat_internal_transaction.source_debit, 1) # line1
+    self.assertEqual(stat_internal_transaction.source_asset_debit, 0.11) # line1
+    self.assertEqual(stat_internal_transaction.source_credit, 5) # line3
+    self.assertEqual(stat_internal_transaction.source_asset_credit, 0.56) # line3
+
+    self.assertEqual(stat_internal_transaction.destination_debit, 3) # line2
+    self.assertEqual(stat_internal_transaction.destination_asset_debit, 0.44) # line2
+    self.assertEqual(stat_internal_transaction.destination_credit, 1) # line1
+    self.assertEqual(stat_internal_transaction.destination_asset_credit, 0.22) # line1
+
 
 class TestAccountingAlarms(AccountingTestCase):
   def test_check_payable_receivable_account_grouped(self):
