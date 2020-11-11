@@ -49,17 +49,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//code[contains(text(),'cell 1 succed')]</td>
+  <td>//code[contains(text(),'cell 1 OK')]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//code[contains(text(),'cell 3 succed')]</td>
+  <td>//code[contains(text(),'cell 3 OK')]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//code[contains(text(),'cell 4 succed')]</td>
+  <td>//code[contains(text(),'cell 4 OK')]</td>
   <td></td>
 </tr>
 <tr>

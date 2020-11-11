@@ -124,13 +124,13 @@ pyodide.loadPackage(\'matplotlib\')\n
 %% code {"language":"py"}\n
 import math\n
 x = math.cos(2 * math.pi)\n
-"cell 1 succed"\n
+"cell 1 OK"\n
 \n
 %% md\n
 #### cell 2\n
 \n
 %% code {"language":"py"}\n
-"cell 2 succed"\n
+"cell 2 OK"\n
 x = 2 + cell2\n
 x\n
 \n
@@ -139,7 +139,7 @@ x\n
 \n
 %% code {"language":"py"}\n
 x = 2 + 2\n
-"cell 3 succed"\n
+"cell 3 OK"\n
 \n
 %% md\n
 #### cell 4\n
