@@ -51,6 +51,7 @@
               message: "Wait until the notebook is fully executed",
               status: "error"
             };
+            delete return_submit_dict.redirect;
             return return_submit_dict;
           }
           return new RSVP.Queue()
