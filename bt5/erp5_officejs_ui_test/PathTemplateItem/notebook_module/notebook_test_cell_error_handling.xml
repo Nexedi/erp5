@@ -146,7 +146,7 @@ x = 2 + 2\n
 \n
 %% code {"language":"py"}\n
 x = 2 + 2\n
-"cell 4 succed"</string> </value>
+"cell 4 OK"</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
