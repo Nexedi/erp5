@@ -691,7 +691,11 @@ class BaseTemplateItem(Implicit, Persistent):
         key = stack.pop()
         try:
           value = container[key]
-        except KeyError:
+        # AttributeError if the container changed type and is not a container
+        # anymore (no __getitem__ attribute).
+        # KeyError if the container is still a container but somehow lost the
+        # subobject we are trying to backup.
+        except (AttributeError, KeyError):
           LOG('BusinessTemplate', WARNING,
               'Could not access object %s' % (path,))
           if default is _MARKER:
