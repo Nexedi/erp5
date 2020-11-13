@@ -3465,6 +3465,44 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
         component_original_text_content
       )
 
+  def testCachingMethod(self):
+    component = self.portal.portal_components.newContent(
+      portal_type='Module Component',
+      id='module.erp5.TestCachingMethod',
+      version='erp5',
+      reference='TestCachingMethod',
+      text_content="""
+GLOBAL_VARIABLE = {'foo': 'bar'}
+class CachedObject:
+  def foo(self):
+    assert GLOBAL_VARIABLE == {'foo': 'bar'}
+
+from Products.ERP5Type.Cache import CachingMethod
+class ObjectWithCachingMethod:
+  def foo(self):
+    def cached_foo():
+      return CachedObject()
+    cached_foo = CachingMethod(cached_foo,
+                               id='TestCachingMethodDocument_foo',
+                               cache_factory='erp5_ui_long')
+    return cached_foo()
+""")
+    component.validate()
+    self.tic()
+
+    # Function to avoid incrementing ObjectWithCachingMethod refcount
+    def _check():
+      from erp5.component.module.TestCachingMethod import ObjectWithCachingMethod
+      obj = ObjectWithCachingMethod()
+      obj.foo()
+      return obj
+
+    abc = _check()
+    self.portal.portal_components.reset(force=True,
+                                        reset_portal_type_at_transaction_boundary=False)
+    import pdb; pdb.set_trace()
+
+    _check()
 
 def test_suite():
   suite = unittest.TestSuite()
