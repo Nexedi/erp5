@@ -16,7 +16,14 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod('preRenderDocument', function (parent_options) {
-      return this.jio_get(parent_options.jio_key);
+      return this.jio_get(parent_options.jio_key)
+        .push(function (doc) {
+          //add pagination cells at the end of the notebook
+          doc.text_content += '\n%% resource\n' +
+            'paged.polyfill.js\n' +
+            'interface.css';
+          return doc;
+        });
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
@@ -56,8 +63,6 @@
           }
           return new RSVP.Queue()
             .push(function () {
-              //remove pagination script as it may cause style issues
-              html_data.querySelector('[id="paged-js-source"]').remove();
               var print_preview_window = window.open('', '', 'height=400,width=800');
               print_preview_window.document.write(html_data.innerHTML);
               print_preview_window.document.title = parent_options.doc.title;
