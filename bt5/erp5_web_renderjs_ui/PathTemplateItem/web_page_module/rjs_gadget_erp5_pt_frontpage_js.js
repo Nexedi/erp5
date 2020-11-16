@@ -38,7 +38,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -97,13 +97,14 @@
           url_dict_list.push({command: 'display', options: {page: 'language'}});
           return RSVP.all([
             document_list,
-            gadget.translate('Others'),
+            gadget.getTranslationList(['Others', 'Tools']),
             gadget.getUrlForList(url_dict_list)
           ]);
         })
         .push(function (result_list) {
           var document_list = result_list[0],
-            translated_other_title = result_list[1],
+            translated_other_title = result_list[1][0],
+            translated_tool_title = result_list[1][1],
             url_list = result_list[2],
             len = document_list.length,
             i,
@@ -155,7 +156,7 @@
           }
           if (tool_list.length) {
             card_list.push({
-              business_application_translated_title: 'XXX Tools to translate',
+              business_application_translated_title: translated_tool_title,
               module_list: tool_list
             });
           }
