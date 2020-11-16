@@ -224,8 +224,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>{"editor": "jsmd_editor", "maximize": true, "pagination": false}</string>
-                          <string>{"editor": "jsmd_editor", "maximize": true, "pagination": false}</string>
+                          <string>{"editor": "jsmd_editor", "maximize": true}</string>
+                          <string>{"editor": "jsmd_editor", "maximize": true}</string>
                         </tuple>
                       </list>
                     </value>
