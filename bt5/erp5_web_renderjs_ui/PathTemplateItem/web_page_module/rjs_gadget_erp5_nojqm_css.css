@@ -1284,6 +1284,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .relation-input div {
   position: relative;
+  width: 100%;
 }
 .relation-input ul {
   position: absolute;
