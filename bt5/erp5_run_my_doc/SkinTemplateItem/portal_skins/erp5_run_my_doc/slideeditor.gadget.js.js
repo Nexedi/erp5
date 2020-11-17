@@ -439,7 +439,9 @@
       section_list = getSlideElementList(gadget.state.value),
       draggable_element_list = [],
       i,
-      content;
+      content,
+      edit_element,
+      delete_element;
 
     // Clone listbox header structure to reuse the css
     header_element = domsugar('div', {'class': 'document_table'}, [
@@ -450,12 +452,23 @@
     ]);
 
     for (i = 0; i < section_list.length; i += 1) {
+      edit_element = domsugar('button', {
+        type: 'button',
+        text: translation_dict.Edit,
+        'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
+        'data-slide-index': i
+      });
+      delete_element = domsugar('button', {
+        type: 'button',
+        text: translation_dict.Delete,
+        'class': 'delete-slide ui-icon-trash-o ui-btn-icon-left',
+        'data-slide-index': i
+      });
       // If slide type is sreenshot/illustration, show image instead of title
       if (getSlideDictFromSlideElement(section_list[i]).image_url) {
         content = [
-          domsugar('button', {type: 'button', text: translation_dict.Edit,
-                   'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
-                   'data-slide-index': i}),
+          edit_element,
+          delete_element,
           domsugar('img', {
             src: getSlideDictFromSlideElement(section_list[i]).image_url,
             draggable: false
@@ -463,9 +476,8 @@
         ];
       } else {
         content = [
-          domsugar('button', {type: 'button', text: translation_dict.Edit,
-                   'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
-                   'data-slide-index': i}),
+          edit_element,
+          delete_element,
           domsugar('h1', {
             html: getSlideDictFromSlideElement(section_list[i]).title_html
           })
@@ -742,6 +754,23 @@
               ),
               slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE
             });
+          });
+      }
+
+      if (evt.target.className.indexOf("delete-slide") !== -1) {
+        return queue
+          .push(function () {
+            var slide_list = getSlideElementList(gadget.state.value);
+            slide_list.splice(parseInt(
+                evt.target.getAttribute('data-slide-index'),
+                10
+              ), 1);
+            return RSVP.all([
+              gadget.changeState({
+                value: slideListAsHTML(slide_list)
+              }),
+              gadget.notifyChange()
+            ]);
           });
       }
 
