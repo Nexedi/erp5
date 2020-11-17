@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, document, rJS, RSVP*/
+/*global window, document, rJS, RSVP, domsugar*/
 
 /** Form is one of a complicated gadget!
  *
@@ -8,7 +8,7 @@
  *               changed in FormBox gadget which renders form as a subgadget
 **/
 
-(function (window, document, rJS, RSVP) {
+(function (window, document, rJS, RSVP, domsugar) {
   "use strict";
 
   /**
@@ -234,19 +234,19 @@
           }
 
           if (form_definition.hasOwnProperty("edit_form_href")) {
-            field_href = document.createElement("a");
+            field_href = domsugar("a");
             field_href.href = form_definition.edit_form_href;
             field_href.title = "Edit this form";
-            field_href.appendChild(document.createElement("img"));
+            field_href.appendChild(domsugar("img"));
             field_href.firstElementChild.src = form_definition.edit_form_icon;
             form_gadget.element.insertBefore(field_href, dom_element);
           }
 
           if (form_definition.hasOwnProperty("edit_form_action_href")) {
-            field_href = document.createElement("a");
+            field_href = domsugar("a");
             field_href.href = form_definition.edit_form_action_href;
             field_href.title = "Edit this form's action";
-            field_href.appendChild(document.createElement("img"));
+            field_href.appendChild(domsugar("img"));
             field_href.firstElementChild.src = form_definition.edit_form_action_icon;
             form_gadget.element.insertBefore(field_href, dom_element);
           }
@@ -328,4 +328,4 @@
 
     }, {mutex: 'changestate'});
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS, RSVP, domsugar));

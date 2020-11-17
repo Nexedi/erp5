@@ -295,19 +295,19 @@
           selector.textContent = "\u00A0" + translated_title_list[0];
           selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
           if (form_definition.hasOwnProperty("edit_form_href")) {
-            field_href = document.createElement("a");
+            field_href = domsugar("a");
             field_href.href = form_definition.edit_form_href;
             field_href.title = "Edit this form";
-            field_href.appendChild(document.createElement("img"));
+            field_href.appendChild(domsugar("img"));
             field_href.firstElementChild.src = form_definition.edit_form_icon;
             selector.appendChild(field_href);
           }
 
           if (form_definition.hasOwnProperty("edit_form_action_href")) {
-            field_href = document.createElement("a");
+            field_href = domsugar("a");
             field_href.href = form_definition.edit_form_action_href;
             field_href.title = "Edit this form's action";
-            field_href.appendChild(document.createElement("img"));
+            field_href.appendChild(domsugar("img"));
             field_href.firstElementChild.src = form_definition.edit_form_action_icon;
             selector.appendChild(field_href);
           }
