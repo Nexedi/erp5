@@ -1192,7 +1192,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   div[data-gadget-scope='erp5_form'] {
     & > a {
-      padding-left: 3pt;
+      margin-left: @half-margin-size;
     }
   }
 
@@ -1272,7 +1272,7 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-content-header-plain {
     font-size: 150%;
     & > h3 > a {
-      padding-left: 3pt;
+      margin-left: @half-margin-size;
     }
   }
   .worklist-empty {
@@ -1373,7 +1373,7 @@ div[data-gadget-scope='header'] .ui-header {
       color: @colorlabel;
       & > a {
         // links inside label when dev mode is enable
-        padding-left: 3pt;
+        margin-left: @half-margin-size;
       }
     }
   }
@@ -1645,7 +1645,7 @@ div[data-gadget-scope='erp5_searchfield'] {
         }
       }
       & > a {
-        padding-left: 3pt;
+        margin-left: @half-margin-size;
       }
     }
 
