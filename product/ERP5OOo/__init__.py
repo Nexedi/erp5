@@ -30,6 +30,7 @@
     ERP5OOo is a product containing general purpose tools to parse
     and handle OpenOffice documents.
 """
+from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
@@ -44,8 +45,8 @@ ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('OOoParser',)
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('newOOoParser',)
 
 # Define object classes and tools
-from OOoTemplate import OOoTemplate
-from FormPrintout import FormPrintout
+from .OOoTemplate import OOoTemplate
+from .FormPrintout import FormPrintout
 object_classes = (OOoTemplate, FormPrintout)
 portal_tools = ()
 content_classes = ()
@@ -53,7 +54,7 @@ content_constructors = ()
 
 # Finish installation
 def initialize( context ):
-  import Document
+  from . import Document
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
                          document_classes = document_classes,

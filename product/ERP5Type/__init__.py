@@ -30,8 +30,9 @@
     ERP5Type is provides a RAD environment for Zope / CMF
     All ERP5 classes derive from ERP5Type
 """
+from __future__ import absolute_import
 from App.config import getConfiguration
-from patches import python, pylint, globalrequest
+from .patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
@@ -60,7 +61,7 @@ mixin_class_registry = {}
 # old class definitions will still work with properties such as
 #    property_sheets = (ERP5Type.PropertySheet.YYY, ... )
 # after transforming 'YYY' into a ZODB property sheet
-from dynamic.dynamic_module import registerDynamicModule
+from .dynamic.dynamic_module import registerDynamicModule
 PropertySheet = registerDynamicModule('Products.ERP5Type.PropertySheet',
                                       lambda name: name)
 
@@ -78,8 +79,8 @@ document_classes = updateGlobals( this_module,
                                   permissions_module=Permissions,
                                   is_erp5_type=1 )
 
-import ZopePatch
-import interfaces
+from . import ZopePatch
+from . import interfaces
 
 import Products.Localizer # So that we make sure Globals.get_request is available
 
@@ -88,14 +89,14 @@ import Products.ERP5Type.Workflow
 
 def initialize( context ):
   # Import Product Components
-  from Tool import (CacheTool, MemcachedTool,
+  from .Tool import (CacheTool, MemcachedTool,
                     TypesTool, PropertySheetTool,
                     ComponentTool)
-  import Document
-  from Base import Base
-  import XMLObject
-  from ERP5Type import ERP5TypeInformation
-  import CodingStyle
+  from . import Document
+  from .Base import Base
+  from . import XMLObject
+  from .ERP5Type import ERP5TypeInformation
+  from . import CodingStyle
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()

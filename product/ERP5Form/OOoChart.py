@@ -27,12 +27,14 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
+from future.utils import raise_
 from ZTUtils import make_query
 from Products.Formulator import Widget
 from Products.Formulator import Widget, Validator
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Field import ZMIField
-from Selection import Selection
+from .Selection import Selection
 from Products.ERP5Type.Globals import get_request
 
 from zLOG import LOG
@@ -495,7 +497,7 @@ class OOoChartWidget(Widget.Widget):
           </div>''' % (url,
                        UrlIconPdf)
       else:
-        raise NotImplementedError, 'Format: %s not handled' % format
+        raise_(NotImplementedError, 'Format: %s not handled' % format)
 
     extra_context = self.getArgumentDict(field, REQUEST)
 

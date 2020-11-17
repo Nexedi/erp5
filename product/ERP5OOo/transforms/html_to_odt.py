@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
-from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
-from oood_commandtransform import includeMetaContentType
+from .oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
+from .oood_commandtransform import includeMetaContentType
 from zLOG import LOG
 from lxml import etree, html
 from lxml.etree import Element, SubElement

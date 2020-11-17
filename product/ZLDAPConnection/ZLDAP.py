@@ -6,7 +6,9 @@
 
    Now by Jeffrey P Shell <jeffrey@Digicool.com>.
 """
+from __future__ import absolute_import
 
+from future.utils import raise_
 __version__ = "$Revision: 1.11 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
@@ -16,8 +18,8 @@ from App.Dialogs import MessageDialog
 from Persistence import Persistent
 import ldap, urllib
 
-import LDCAccessors
-from Entry import ZopeEntry, GenericEntry, TransactionalEntry
+from . import LDCAccessors
+from .Entry import ZopeEntry, GenericEntry, TransactionalEntry
 ConnectionError='ZLDAP Connection Error'
 
 manage_addZLDAPConnectionForm = HTMLFile('add', globals())
@@ -136,8 +138,7 @@ class ZLDAPConnection(
     def tpc_begin(self,*ignored):
         #make sure we're open!
         if not self.__ping():      #we're not open
-            raise (ConnectionError,
-                   'LDAP Connection is not open for commiting')
+            raise ConnectionError
         self._v_okobjects=[]
 
     def commit(self, o, *ignored):
@@ -210,7 +211,7 @@ class ZLDAPConnection(
     ### getting entries and attributes
 
     def hasEntry(self, dn):
-        if getattr(self, '_v_add',{}).has_key(dn):
+        if dn in getattr(self, '_v_add',{}):
             #object is marked for adding
             return 1
         elif dn in getattr(self,'_v_delete',()):
@@ -227,10 +228,10 @@ class ZLDAPConnection(
 
     def getRawEntry(self, dn):
         " return raw entry from LDAP module "
-        if getattr(self, '_v_add',{}).has_key(dn):
+        if dn in getattr(self, '_v_add',{}):
             return (dn, self._v_add[dn]._data)
         elif dn in getattr(self,'_v_delete',()):
-            raise ldap.NO_SUCH_OBJECT, "Entry '%s' has been deleted" % dn
+            raise_(ldap.NO_SUCH_OBJECT, "Entry '%s' has been deleted" % dn)
 
         try:
             e=self._connection().search_s(
@@ -238,14 +239,14 @@ class ZLDAPConnection(
                 )
             if e: return e[0]
         except:
-            raise ldap.NO_SUCH_OBJECT, "Cannot retrieve entry '%s'" % dn
+            raise_(ldap.NO_SUCH_OBJECT, "Cannot retrieve entry '%s'" % dn)
 
 
     def getEntry(self, dn, o=None):
         " return **unwrapped** Entry object, unless o is specified "
         Entry = self._EntryFactory()
 
-        if getattr(self, '_v_add',{}).has_key(dn):
+        if dn in getattr(self, '_v_add',{}):
             e=self._v_add[dn]
         else:
             e=self.getRawEntry(dn)
@@ -297,7 +298,7 @@ class ZLDAPConnection(
     ### modifying entries
     def _modifyEntry(self, dn, modlist):
         if not getattr(self,'_isCommitting',0):
-            raise AccessError, 'Cannot modify unless in a commit'
+            raise AccessError('Cannot modify unless in a commit')
             #someone's trying to be sneaky and modify an object
             #outside of a commit.  We're not going to allow that!
         c=self._connection()
@@ -321,14 +322,14 @@ class ZLDAPConnection(
 
     def _deleteEntry(self, dn):
         if not getattr(self, '_isCommitting',0):
-            raise AccessError, 'Cannot delete unless in a commit'
+            raise AccessError('Cannot delete unless in a commit')
         c=self._connection()
         c.delete_s(dn)
 
     ### adding entries
     def _registerAdd(self, o):
         a=getattr(self, '_v_add',{})
-        if not a.has_key(o.dn):
+        if o.dn not in a:
             a[o.dn]=o
         self._v_add=a
 
@@ -336,13 +337,13 @@ class ZLDAPConnection(
         a=getattr(self, '_v_add',{})
         if o and o in a.values():
             del a[o.dn]
-        elif dn and a.has_key(dn):
+        elif dn and dn in a:
             del a[dn]
         self._v_add=a
 
     def _addEntry(self, dn, attrs):
         if not getattr(self, '_isCommitting',0):
-            raise AccessError, 'Cannot add unless in a commit'
+            raise AccessError('Cannot add unless in a commit')
         c=self._connection()
         c.add_s(dn, attrs)
 
@@ -364,7 +365,7 @@ class ZLDAPConnection(
             if not self.isOpen(): self._open()
             return self._v_conn
         else:
-            raise ConnectionError, 'Connection Closed'
+            raise ConnectionError('Connection Closed')
 
     GetConnection=_connection
 
@@ -373,7 +374,7 @@ class ZLDAPConnection(
             self._open()
             return self._v_conn
         else:
-            raise ConnectionError, 'Connection Closed'
+            raise ConnectionError('Connection Closed')
 
     def isOpen(self):
         " quickly checks to see if the connection's open "

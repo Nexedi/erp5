@@ -56,7 +56,7 @@ class ComposedObjectIds(object):
 
   def __contains__(self, item):
     for container in self._container_list:
-      if container.has_key(item):
+      if item in container:
         return True
     return False
 
@@ -100,7 +100,7 @@ class TypesTool(TypeProvider):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _isBootstrapRequired(self):
-    if not self.has_key('Standard Property'):
+    if 'Standard Property' not in self:
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 import string
-from DummyField import fields
+from .DummyField import fields
 from DocumentTemplate.DT_Util import html_quote
 from DateTime import DateTime, Timezones
 from cgi import escape
@@ -431,7 +432,7 @@ class TextWidget(Widget):
     """
     if value is None:
       return ''
-    if isinstance(value, types.ListType) or isinstance(value, types.TupleType):
+    if isinstance(value, list) or isinstance(value, tuple):
       old_value = value
     else:
       old_value = [str(value)]
@@ -455,7 +456,7 @@ class TextWidget(Widget):
                       render_prefix, attr_dict, local_name):
     if value is None:
       value = ['']
-    elif not isinstance(value, (types.ListType, types.TupleType)):
+    elif not isinstance(value, (list, tuple)):
       value = [str(value)]
     return Widget.render_odt_view(
       self, field, '\n'.join(value), as_string, ooo_builder, REQUEST,
@@ -576,7 +577,7 @@ class CheckBoxWidget(Widget):
     current_state_attribute_name = '{%s}current-state'% FORM_URI
     if value:
       attr_dict.update({current_state_attribute_name: 'checked'})
-    elif attr_dict.has_key(current_state_attribute_name):
+    elif current_state_attribute_name in attr_dict:
       del attr_dict[current_state_attribute_name]
     form_node.attrib.update(attr_dict)
     if as_string:
@@ -1506,7 +1507,7 @@ class DateTimeWidget(Widget):
     # because REQUEST always has a form property
     if (value in (None, '')) and (field.get_value('default_now')) and \
         ((REQUEST is None) or (not hasattr(REQUEST, 'form')) or \
-        (not REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')))):
+        ('subfield_%s_%s' % (key, 'year') not in REQUEST.form)):
       value = DateTime()
     year   = None
     month  = None
@@ -1721,13 +1722,13 @@ def render_tag(tag, **kw):
   attr_list = []
 
   # special case handling for css_class
-  if kw.has_key('css_class'):
+  if 'css_class' in kw:
     if kw['css_class'] != "":
       attr_list.append('class="%s"' % kw['css_class'])
     del kw['css_class']
 
   # special case handling for extra 'raw' code
-  if kw.has_key('extra'):
+  if 'extra' in kw:
     extra = kw['extra'] # could be empty string but we don't care
     del kw['extra']
   else:
@@ -1749,11 +1750,11 @@ def render_element(tag, **kw):
   # https://www.w3.org/TR/html5/syntax.html#start-tags
   # End tags are forbidden on void HTML elements
   if tag in VOID_ELEMENT_LIST:
-    if kw.has_key('contents'):
+    if 'contents' in kw:
       raise ValueError('Void element %s does not accept content' % tag)
-    return apply(render_tag, (tag, ), kw) + " />"
+    return render_tag(*(tag, ), **kw) + " />"
   else:
-    if kw.has_key('contents'):
+    if 'contents' in kw:
       contents = kw['contents']
       del kw['contents']
       if tag == 'textarea':
@@ -1762,7 +1763,7 @@ def render_element(tag, **kw):
         contents = '\n%s' % contents
     else:
       contents = ''
-    return "%s>%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
+    return "%s>%s</%s>" % (render_tag(*(tag, ), **kw), contents, tag)
 
 
 ##############################################################################

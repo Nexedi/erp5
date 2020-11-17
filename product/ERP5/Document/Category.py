@@ -129,9 +129,9 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
       cache_key = 'web_site_aq_cache'
       request = self.REQUEST
       # Prevent infinite recursion
-      if not request.has_key(cache_key):
+      if cache_key not in request:
         request[cache_key] = {}
-      elif request[cache_key].has_key(name):
+      elif name in request[cache_key]:
         return request[cache_key][name]
       try:
         result_list = self.portal_catalog(portal_type="Person", id = name)
@@ -139,7 +139,7 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
           return result_list[0].getObject()
       except:
         # Cleanup non recursion dict in case of exception
-        if request[cache_key].has_key(name):
+        if name in request[cache_key]:
           del request[cache_key][name]
         raise
       return None

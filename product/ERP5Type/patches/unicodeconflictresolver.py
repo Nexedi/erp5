@@ -32,7 +32,7 @@ def PreferredCharsetResolver_resolve(context, text, expression):
     # requests that do not contain Accept-Charset header.
     try:
       result = unicode(text, 'utf-8')
-    except UnicodeDecodeError, e:
+    except UnicodeDecodeError as e:
       tb_info = ''.join(traceback.format_stack())
       logger.warn('UnicodeDecodeError(%s: %s): %s\ntext: %r\nat:\n%s' %
                   (e.start, e.end, e.reason, repr(text), tb_info))

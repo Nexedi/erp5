@@ -99,7 +99,7 @@ class Workflow(XMLObject):
 
     # Add an entry for the workflow in the history
     workflow_key = self._generateHistoryKey()
-    if not document.workflow_history.has_key(workflow_key):
+    if workflow_key not in document.workflow_history:
       document.workflow_history[workflow_key] = ()
 
     # Update history

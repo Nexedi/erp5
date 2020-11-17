@@ -13,6 +13,7 @@
 ##############################################################################
 
 # Properties
+from future.utils import raise_
 from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
 from Products.ERP5Type.Globals import DTMLFile
@@ -37,11 +38,11 @@ def PropertyManager_updateProperty(self, id, value, local_properties=False):
     self._wrapperCheck(value)
     if not hasattr(self, 'isRADContent'):
       if not self.hasProperty(id):
-          raise BadRequest, 'The property %s does not exist' % escape(id)
+          raise_(BadRequest, 'The property %s does not exist' % escape(id))
     if isinstance(value, str):
         proptype=self.getPropertyType(id, local_properties=local_properties) \
            or 'string'
-        if type_converters.has_key(proptype):
+        if proptype in type_converters:
             value=type_converters[proptype](value)
     self._setPropValue(id, value)
 
@@ -106,11 +107,11 @@ def PropertyManager_setProperty(self, id, value, type=None):
 
     self._wrapperCheck(value)
     if not self.valid_property_id(id):
-        raise BadRequest, 'Invalid or duplicate property id: %s' % id
+        raise_(BadRequest, 'Invalid or duplicate property id: %s' % id)
 
     if type in ('selection', 'multiple selection'):
         if not hasattr(self, value):
-            raise BadRequest, 'No select variable %s' % value
+            raise_(BadRequest, 'No select variable %s' % value)
         self._local_properties=getattr(self, '_local_properties', ()) + (
             {'id':id, 'type':type, 'select_variable':value},)
         if type=='selection':
@@ -130,13 +131,13 @@ def PropertyManager_valid_property_id(self, id):
     from Products.ERP5Type.Base import Base
     if not id or id[:1]=='_' or (id[:3]=='aq_') \
        or (' ' in id) or (hasattr(aq_base(self), id) and \
-       not (Base.__dict__.has_key(id) and Base.__dict__[id] is None)) or escape(id) != id:
+       not (id in Base.__dict__ and Base.__dict__[id] is None)) or escape(id) != id:
         return 0
     return 1
 
 def PropertyManager_delProperty(self, id):
     if not self.hasProperty(id):
-        raise ValueError, 'The property %s does not exist' % escape(id)
+        raise_(ValueError, 'The property %s does not exist' % escape(id))
     self._delPropValue(id)
     self._local_properties=tuple(filter(lambda i, n=id: i['id'] != n,
                                   getattr(self, '_local_properties', ())))
@@ -161,10 +162,10 @@ def PropertyManager_propertyMap(self, local_properties=False):
     for p in property_map:
       property_dict[p['id']] = None
       # base_id is defined for properties which are associated to multiple accessors
-      if p.has_key('base_id'): property_dict[p['base_id']] = None
+      if 'base_id' in p: property_dict[p['base_id']] = None
     # Only add those local properties which are not global
     for p in getattr(self, '_local_properties', ()):
-      if not property_dict.has_key(p['id']):
+      if p['id'] not in property_dict:
         property_map.append(p)
     return tuple(property_map)
 
@@ -177,7 +178,7 @@ def PropertyManager_propdict(self):
 def PropertyManager_manage_addProperty(self, id, value, type, REQUEST=None):
     """Add a new property via the web. Sets a new property with
     the given id, type, and value."""
-    if type_converters.has_key(type):
+    if type in type_converters:
         value=type_converters[type](value)
     #LOG('manage_addProperty', 0, 'id = %r, value = %r, type = %r, REQUEST = %r' % (id, value, type, REQUEST))
     self._setProperty(id.strip(), value, type)

@@ -8,8 +8,9 @@ When the field classes have been defined, get_field()
 can be used on FieldProperty objects to get an
 actual field object.
 """
+from __future__ import absolute_import
 
-from FieldRegistry import FieldRegistry
+from .FieldRegistry import FieldRegistry
 
 class DummyFieldFactory:
     def __getattr__(self, name):
@@ -32,7 +33,6 @@ class DummyField:
     def get_real_field(self):
         """Get an actual field for this property.
         """
-        return apply(FieldRegistry.get_field_class(self.desired_meta_class),
-                     (self.id,), self.kw)
+        return FieldRegistry.get_field_class(self.desired_meta_class)(*(self.id,), **self.kw)
 
 

@@ -62,7 +62,7 @@ try:
     if k != 'None':
       columns += [(k ,  columns_dict[k])]
   context.portal_selections.setSelectionColumns(selection_name, columns, REQUEST=request)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)

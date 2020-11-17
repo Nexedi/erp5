@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,8 +29,8 @@
 
 
 from ZPublisher.HTTPRequest import FileUpload
-from TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
-from Accessor import Accessor as Method
+from .TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
+from .Accessor import Accessor as Method
 from Acquisition import aq_base
 from zLOG import LOG
 

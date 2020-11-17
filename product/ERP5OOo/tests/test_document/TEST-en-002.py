@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -27,5 +28,5 @@
 ##############################################################################
 
 def say_hello():
-  print 'hello'
+  print('hello')
 

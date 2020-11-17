@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from ply import lex, yacc
 import sys
 from cStringIO import StringIO
@@ -34,7 +36,7 @@ try:
   from zLOG import LOG
 except ImportError:
   def LOG(channel, level, message):
-    print >>sys.stderr, message
+    print(message, file=sys.stderr)
 
 class ParserOrLexerError(Exception):
   pass
@@ -61,10 +63,10 @@ class lexer(object):
         LOG('lexer', 0, line)
 
   def t_error(self, t):
-    raise LexerError, 'ERROR: Invalid character %r' % (t.value[0], )
+    raise_(LexerError, 'ERROR: Invalid character %r' % (t.value[0], ))
 
   def p_error(self, p):
-    raise ParserError, 'Syntax error in input: %r' % (p, )
+    raise_(ParserError, 'Syntax error in input: %r' % (p, ))
 
   def input(self, string):
     self.lexer.input(string)
@@ -146,5 +148,5 @@ def update_docstrings(klass):
         destination = getattr(klass, property)
         assert callable(destination)
         if destination.__doc__ is None:
-          destination.im_func.__doc__ = source.__doc__
+          destination.__func__.__doc__ = source.__doc__
 

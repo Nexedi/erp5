@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -39,7 +40,7 @@ from Products.CMFActivity.ActivityTool import (
   Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, SkippedMessage)
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment)
-from Queue import Queue, VALIDATION_ERROR_DELAY
+from .Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ERP5Type import Timeout
 from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline
@@ -209,7 +210,8 @@ CREATE TABLE %s (
           db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (self.sql_table, values))
-        except MySQLdb.IntegrityError, (code, _):
+        except MySQLdb.IntegrityError as xxx_todo_changeme:
+          (code, _) = xxx_todo_changeme.args
           if code != DUP_ENTRY:
             raise
           reset_uid = True

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -96,7 +97,7 @@ class RamSession(Session):
         # returned it wrapped in aquisition context
         value = value.__of__(self._aq_context)
       return value
-    raise KeyError, key
+    raise_(KeyError, key)
 
   def __setitem__(self, key, item):
     # save value without its acquisition context

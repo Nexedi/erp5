@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from App.class_init import default__class_init__ as InitializeClass
 import Acquisition
 from Persistence import Persistent
@@ -6,7 +7,7 @@ from App.special_dtml import DTMLFile
 from AccessControl import ClassSecurityInfo
 import OFS
 from Shared.DC.Scripts.Bindings import Bindings
-from Errors import ValidationError
+from .Errors import ValidationError
 from Products.Formulator.Widget import MultiItemsWidget
 from zLOG import LOG
 from lxml import etree
@@ -80,7 +81,7 @@ class Field:
     def has_value(self, id):
         """Return true if the field defines such a value.
         """
-        if self.values.has_key(id) or self.form.has_field(id):
+        if id in self.values or self.form.has_field(id):
             return 1
         else:
             return 0
@@ -89,7 +90,7 @@ class Field:
     def get_orig_value(self, id):
         """Get value for id; don't do any override calculation.
         """
-        if self.values.has_key(id):
+        if id in self.values:
             return self.values[id]
         else:
             return self.form.get_field(id).get_value('default')
@@ -109,9 +110,9 @@ class Field:
             # don't seem to have this problem.
 
             # add 'here' if not in kw
-            if not kw.has_key('here'):
+            if 'here' not in kw:
                 kw['here'] = self.aq_parent
-            if not kw.has_key('request'):
+            if 'request' not in kw:
                 kw['request'] = self.REQUEST
             value = tales_expr.__of__(self)(
                 field=self,
@@ -505,7 +506,7 @@ class ZMIField(
         try:
             # validate the form and get results
             result = self.form.validate(REQUEST)
-        except ValidationError, err:
+        except ValidationError as err:
             if REQUEST:
                 message = "Error: %s - %s" % (err.field.get_value('title'),
                                               err.error_text)
@@ -545,7 +546,7 @@ class ZMIField(
         changed = []
         for key, value in result.items():
             # store keys for which we want to notify change
-            if not values.has_key(key) or values[key] != value:
+            if key not in values or values[key] != value:
                 changed.append(key)
 
         # now do actual update of values
@@ -587,7 +588,7 @@ class ZMIField(
         try:
             # validate the form and get results
             result = self.override_form.validate(REQUEST)
-        except ValidationError, err:
+        except ValidationError as err:
             if REQUEST:
                 message = "Error: %s - %s" % (err.field.get_value('title'),
                                               err.error_text)
@@ -620,7 +621,7 @@ class ZMIField(
         try:
             # validate the form and get results
             result = self.tales_form.validate(REQUEST)
-        except ValidationError, err:
+        except ValidationError as err:
             if REQUEST:
                 message = "Error: %s - %s" % (err.field.get_value('title'),
                                               err.error_text)
@@ -648,7 +649,7 @@ class ZMIField(
         """Change TALES expressions through XMLRPC.
         """
         # BEWARE: there is no validation on the values passed through the map
-        from TALESField import TALESMethod
+        from .TALESField import TALESMethod
         result = {}
         for key, value in map.items():
             if value:

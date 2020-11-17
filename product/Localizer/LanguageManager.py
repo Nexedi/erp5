@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from __future__ import absolute_import
 from urlparse import urlparse
 
 # Import from itools
@@ -26,8 +27,8 @@ from App.Management import Tabs
 from AccessControl import ClassSecurityInfo
 
 # Import from Localizer
-from LocalFiles import LocalDTMLFile
-from utils import lang_negotiator, _
+from .LocalFiles import LocalDTMLFile
+from .utils import lang_negotiator, _
 
 
 class LanguageManager(Tabs):
@@ -151,7 +152,7 @@ class LanguageManager(Tabs):
         Accepts keyword arguments which will be passed to
         'get_available_languages'.
         """
-        available_languages = apply(self.get_available_languages, (), kw)
+        available_languages = self.get_available_languages(*(), **kw)
 
         return lang_negotiator(available_languages) \
                or self.get_default_language()

@@ -1,3 +1,4 @@
+from future.utils import raise_
 from Products.ERP5Type.Globals import get_request
 from Acquisition import aq_base
 from Products.ERP5Type.Base import Base
@@ -42,7 +43,7 @@ def recodeDocumentRecursively(document, dry_run=0):
           message += 'Recoding %s of %s\n' % (id, document.getRelativeUrl())
           if not dry_run: setattr(base, id, tuple(value_list))
       else:
-        raise RuntimeError, 'unknown type of value %r' % value
+        raise_(RuntimeError, 'unknown type of value %r' % value)
 
   # Call itself recursively.
   for object in document.objectValues():

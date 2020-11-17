@@ -69,16 +69,16 @@ class uno:
     def newPropertyValue (self, propertyValue={} ):
         property = self.newIdlStruct  ( 'com.sun.star.beans.PropertyValue' )
 
-        if propertyValue.has_key('Name'):
+        if 'Name' in propertyValue:
             property.Name = propertyValue['Name']
 
-        if propertyValue.has_key('Value'):
+        if 'Value' in propertyValue:
             property.Value = propertyValue['Value']
 
-        if propertyValue.has_key('State'):
+        if 'State' in propertyValue:
             property.State = propertyValue['State']
 
-        if propertyValue.has_key('Handle'):
+        if 'Handle' in propertyValue:
             property.Handle = propertyValue['Handle']
 
         return property

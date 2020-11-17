@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2010-2012 Nexedi SARL and Contributors. All Rights Reserved.
@@ -205,7 +206,7 @@ def initializeDynamicModules():
   erp5.document = ModuleType("erp5.document")
 
   # Portal types as classes
-  from accessor_holder import AccessorHolderType, AccessorHolderModuleType
+  from .accessor_holder import AccessorHolderType, AccessorHolderModuleType
 
   erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
   erp5.accessor_holder.__path__ = []
@@ -217,18 +218,18 @@ def initializeDynamicModules():
     'erp5.accessor_holder.portal_type',
     AccessorHolderModuleType)
 
-  from lazy_class import generateLazyPortalTypeClass
+  from .lazy_class import generateLazyPortalTypeClass
   erp5.portal_type = registerDynamicModule('erp5.portal_type',
                                            generateLazyPortalTypeClass)
 
-  from portal_type_class import loadTempPortalTypeClass
+  from .portal_type_class import loadTempPortalTypeClass
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
   # ZODB Components
   erp5.component = ComponentPackageType("erp5.component")
 
-  from component_package import (ComponentDynamicPackage,
+  from .component_package import (ComponentDynamicPackage,
                                  ToolComponentDynamicPackage)
 
   # Prevent other threads to create erp5.* packages and modules or seeing them

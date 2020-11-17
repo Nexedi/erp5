@@ -21,6 +21,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from functools import partial
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
@@ -43,7 +44,7 @@ from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList,
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
-from TranslationProviderBase import TranslationProviderBase
+from .TranslationProviderBase import TranslationProviderBase
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TRANSLATION
 from zLOG import LOG, ERROR

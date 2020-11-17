@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Acquisition import aq_base
 from webdav.NullResource import NullResource
 
@@ -52,6 +53,6 @@ class ExtensibleTraversableMixin:
     try:
       request.RESPONSE.notFoundError("%s\n%s" % (name, method))
     except AttributeError:
-      raise KeyError, name
+      raise_(KeyError, name)
 
 ExtensibleTraversableMixIn = ExtensibleTraversableMixin # Backward compatibility

@@ -11,7 +11,7 @@ old_request = dict(saved_form_data)
 
 field = getattr(context, form_id).get_field(field_id)
 field_key = field.generate_field_key()
-if old_request.has_key('sub_index'):
+if 'sub_index' in old_request:
   if len(uids) > 0:
     # XXX Hardcoded
     sub_field_key = field.generate_subfield_key("%s_%s" % (SUB_FIELD_ID, old_request['sub_index']), key=field_key)

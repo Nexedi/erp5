@@ -22,13 +22,13 @@ class TestField:
         return "utf-8"
 
     def has_value(self, id):
-        return self.kw.has_key(id)
+        return id in self.kw
 
 class ValidatorTestCase(unittest.TestCase):
     def assertValidatorRaises(self, exception, error_key, f, *args, **kw):
         try:
-            apply(f, args, kw)
-        except exception, e:
+            f(*args, **kw)
+        except exception as e:
             if hasattr(e, 'error_key') and e.error_key != error_key:
                 self.fail('Got wrong error. Expected %s received %s' %
                           (error_key, e))

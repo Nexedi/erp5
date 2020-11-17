@@ -189,7 +189,7 @@ for table_name in spreadsheet_list.keys():
       # we should try to use other line data to get a safe id.
       if cell_id == '' and property_id.startswith('path_'):
         for alt_id_source in ['id', 'title']:
-          if line_data.has_key(alt_id_source):
+          if alt_id_source in line_data:
             cell_id = getIDFromString(line_data[alt_id_source])
             if cell_id not in ('', None):
               break

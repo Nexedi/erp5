@@ -12,6 +12,7 @@
 # user: user1    password: user1
 # user: user2    password: user2
 
+from __future__ import print_function
 from threading import Thread
 from time import sleep
 from urllib import addinfourl
@@ -53,7 +54,7 @@ def main():
       threads[len(threads)-1].start()
       request_number += 1
       i+=1
-      print "thread: %i request: %i url: %s" % (i,request_number,url)
+      print("thread: %i request: %i url: %s" % (i,request_number,url))
     else:
       for t in range(0,max_thread):
         if threads[t].isAlive() == 0:
@@ -63,7 +64,7 @@ def main():
           threads[t].start()
           i+=1
           request_number += 1
-          print "thread: %i request: %i url: %s" % (i,request_number,url)
+          print("thread: %i request: %i url: %s" % (i,request_number,url))
           break
 
 
@@ -98,7 +99,7 @@ class URLOpener(FancyURLopener):
                 if user_passwd:
                     selector = "%s://%s%s" % (urltype, realhost, rest)
             #print "proxy via http:", host, selector
-        if not host: raise IOError, ('http error', 'no host given')
+        if not host: raise IOError('http error', 'no host given')
         if user_passwd:
             import base64
             auth = string.strip(base64.encodestring(user_passwd))
@@ -116,12 +117,12 @@ class URLOpener(FancyURLopener):
 
         if auth: h.putheader('Authorization', 'Basic %s' % auth)
         if realhost: h.putheader('Host', realhost)
-        for args in self.addheaders: apply(h.putheader, args)
+        for args in self.addheaders: h.putheader(*args)
         h.endheaders()
         if data is not None:
             h.send(data + '\r\n')
         errcode, errmsg, headers = h.getreply()
-        if headers and headers.has_key('set-cookie'):
+        if headers and 'set-cookie' in headers:
             cookies = headers.getallmatchingheaders('set-cookie')
             for cookie in cookies: self.cookies.load(cookie)
 
@@ -146,15 +147,17 @@ class Checker(URLOpener):
       thread.start()
       while thread.isAlive():
         sleep(0.5)
-      print "Connection to %s went fine" % url
-    except IOError, (errno, strerror):
-      print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
+      print("Connection to %s went fine" % url)
+    except IOError as xxx_todo_changeme:
+      (errno, strerror) = xxx_todo_changeme.args
+      print("Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror))
 
   def SearchUrl(self, url=None):
     try:
       conn = self.open_http(url)
-    except IOError, (errno, strerror):
-      print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
+    except IOError as xxx_todo_changeme1:
+      (errno, strerror) = xxx_todo_changeme1.args
+      print("Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror))
 
 
   def raise_error(self, error_key, field):

@@ -74,7 +74,7 @@ class DynamicCategoryProperty(CategoryProperty):
         self.applyDefinitionOnAccessorHolder(accessor_holder,
                                              category_id,
                                              portal)
-      except ValueError, e:
+      except ValueError as e:
         # If one of the category defined is invalid, don't give up as
         # the other ones may be fine
         LOG("ERP5Type.Core.DynamicCategoryProperty", INFO,

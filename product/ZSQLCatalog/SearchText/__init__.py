@@ -1,4 +1,5 @@
-from SearchTextParser import parse, isAdvancedSearchText
+from __future__ import absolute_import
+from .SearchTextParser import parse, isAdvancedSearchText
 
 def dequote(value):
   if isinstance(value, basestring) and len(value) >= 2 and \

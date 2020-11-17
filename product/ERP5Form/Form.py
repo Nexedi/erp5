@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from future.utils import raise_
 import hashlib
 
 from copy import deepcopy
@@ -127,7 +128,7 @@ def getFieldDict(field, value_type):
         elif value_type=='tales':
             get_method = getattr(field, 'get_recursive_tales')
         else:
-            raise ValueError, 'value_type must be values or tales'
+            raise ValueError('value_type must be values or tales')
         template_field = field.getRecursiveTemplateField()
         for ui_field_id in template_field.form.fields.keys():
             result[ui_field_id] = get_method(ui_field_id)
@@ -137,7 +138,7 @@ def getFieldDict(field, value_type):
         elif value_type=='tales':
             get_method = getattr(field, 'get_tales')
         else:
-            raise ValueError, 'value_type must be values or tales'
+            raise ValueError('value_type must be values or tales')
         for ui_field_id in field.form.fields.keys():
             result[ui_field_id] = get_method(ui_field_id)
     return result
@@ -766,12 +767,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                     alternate_name = field.get_value('alternate_name')
                     if alternate_name:
                         result[alternate_name] = value
-                except FormValidationError, e: # XXX JPS Patch for listbox
+                except FormValidationError as e: # XXX JPS Patch for listbox
                     errors.extend(e.errors)
                     result.update(e.result)
-                except ValidationError, err:
+                except ValidationError as err:
                     errors.append(err)
-                except KeyError, err:
+                except KeyError as err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
 
         if len(errors) > 0:
@@ -795,7 +796,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         self.dav__init(REQUEST, RESPONSE)
         self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-            raise Forbidden, 'REQUEST_METHOD should be PUT.'
+            raise Forbidden('REQUEST_METHOD should be PUT.')
         body=REQUEST.get('BODY', '')
         # Empty the form (XMLToForm is unable to empty things before reopening)
         for k in self.get_field_ids():
@@ -1049,7 +1050,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
               if field.meta_type == 'ProxyField':
                 key = "%s.%s" % (field.get_value('form_id'),
                                  field.get_value('field_id'))
-                if proxy_dict.has_key(key):
+                if key in proxy_dict:
                   proxy_dict[key]['related_proxy_list'].append(
                       {'short_path': "%s.%s" % \
                       (field.aq_parent.id, field.id),
@@ -1319,9 +1320,9 @@ def get_field_meta_type_and_proxy_flag(field):
         try:
             return field.getRecursiveTemplateField().meta_type, True
         except AttributeError:
-            raise AttributeError, 'The proxy target of %s.%s field does not '\
+            raise_(AttributeError, 'The proxy target of %s.%s field does not '\
                   'exists. Please check the field setting.' % \
-                  (field.aq_parent.id, field.getId())
+                  (field.aq_parent.id, field.getId()))
     else:
         return field.meta_type, False
 

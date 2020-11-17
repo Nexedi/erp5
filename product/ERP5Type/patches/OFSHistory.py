@@ -41,5 +41,5 @@ def patched_historicalRevision(self, serial):
 # PATCH ADDITION END
     return rev
 
-historicalRevision.func_code = patched_historicalRevision.func_code
+historicalRevision.__code__ = patched_historicalRevision.__code__
 

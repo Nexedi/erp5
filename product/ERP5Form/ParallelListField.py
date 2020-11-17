@@ -263,7 +263,7 @@ def generateSubForm(self, value, REQUEST):
 def paralellListFieldGetValue(field, id, REQUEST=None, **kw):
   result = MARKER
   key = KEYWORD % id
-  if REQUEST is not None and REQUEST.has_key(key):
+  if REQUEST is not None and key in REQUEST:
     result = REQUEST.get(key)
   if result is MARKER:
     result = ZMIField.get_value(field, id, REQUEST=REQUEST, **kw)

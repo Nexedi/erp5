@@ -101,7 +101,7 @@ class ActiveProcess(Base):
           # use a random id in order to store result in a way with
           # fewer conflict errors
           random_id = randrange(0, 10000 * (self.result_len.value + 1))
-          while result_list.has_key(random_id):
+          while random_id in result_list:
             random_id += 1
           result_list[random_id] = result
           self.result_len.change(1)

@@ -1,7 +1,8 @@
+from __future__ import absolute_import
 import string
-from DummyField import fields
-import Widget, Validator
-from Field import ZMIField
+from .DummyField import fields
+from . import Widget, Validator
+from .Field import ZMIField
 
 class ListTextAreaWidget(Widget.TextAreaWidget):
     default = fields.ListTextAreaField('default',

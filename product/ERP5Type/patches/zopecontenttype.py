@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Monkey Patch the zope.contenttype to be able to detect svg image format.
 try:
   import zope.contenttype
@@ -17,4 +18,4 @@ try:
   zope.contenttype.text_type = svg_fix_text_type
 
 except ImportError:
-  print "Skip to patch zope.contenttype, because it is not present."
+  print("Skip to patch zope.contenttype, because it is not present.")

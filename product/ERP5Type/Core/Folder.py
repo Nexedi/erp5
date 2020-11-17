@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import transaction
 from collections import deque
 from functools import wraps
@@ -273,9 +274,9 @@ class FolderMixIn(ExtensionClass.Base):
         if isinstance(my_id, str):
           self._delObject(my_id)
         else:
-          raise TypeError, error_message + str(type(my_id))
+          raise_(TypeError, error_message + str(type(my_id)))
     else:
-      raise TypeError, error_message + str(type(id))
+      raise_(TypeError, error_message + str(type(id)))
 
   def _generatePerDayId(self):
     """
@@ -426,21 +427,21 @@ class FolderMixIn(ExtensionClass.Base):
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
-    if kw.has_key('selection_domain'):
+    if 'selection_domain' in kw:
       if not isinstance(kw['selection_domain'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_domain'] = kw['selection_domain'].asDomainDict()
-      if kw['selection_domain'].has_key('parent'):
+      if 'parent' in kw['selection_domain']:
         delete_parent_uid = 1
-    if kw.has_key('selection_report'):
+    if 'selection_report' in kw:
       if not isinstance(kw['selection_report'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'):
+      if 'parent' in kw['selection_report']:
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -458,21 +459,21 @@ class FolderMixIn(ExtensionClass.Base):
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
-    if kw.has_key('selection_domain'):
+    if 'selection_domain' in kw:
       if not isinstance(kw['selection_domain'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_domain'] = kw['selection_domain'].asDomainDict()
-      if kw['selection_domain'].has_key('parent'):
+      if 'parent' in kw['selection_domain']:
         delete_parent_uid = 1
-    if kw.has_key('selection_report'):
+    if 'selection_report' in kw:
       if not isinstance(kw['selection_report'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'):
+      if 'parent' in kw['selection_report']:
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -543,7 +544,7 @@ class FolderMixIn(ExtensionClass.Base):
       kw['_recurse_stack'] = recurse_stack
       # We are called by user (and not in a subsequent activity).
       # Complete activate_kw, without mutating received value.
-      activate_kw = self.getDefaultActivateParameterDict.im_func(None)
+      activate_kw = self.getDefaultActivateParameterDict.__func__(None)
       activate_kw.update(kw.get('activate_kw', ()))
       activate_kw.setdefault('active_process', None)
       activate_kw.setdefault('activity', 'SQLQueue')
@@ -1018,7 +1019,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       if self._htree is None:
         return []
       assert spec is None
-      if kw.has_key("base_id"):
+      if "base_id" in kw:
         return CMFHBTreeFolder.objectIds(self, base_id=kw["base_id"])
       return CMFHBTreeFolder.objectIds(self)
     property_id, _, folder = self._getFolderHandlerData()
@@ -1031,7 +1032,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       if  self._htree is None:
         return []
       assert spec is None
-      if kw.has_key("base_id"):
+      if "base_id" in kw:
         return CMFHBTreeFolder.objectItems(self, base_id=kw["base_id"])
       return CMFHBTreeFolder.objectItems(self)
     property_id, _, folder = self._getFolderHandlerData()
@@ -1653,12 +1654,12 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       add_permission = getattr(aq_base(subobject_type), 'permission', '')
       if add_permission:
         if not sm.checkPermission(add_permission, self):
-          raise AccessControl_Unauthorized, add_permission
+          raise_(AccessControl_Unauthorized, add_permission)
 
       # handle validate_src
       if validate_src:
         if not sm.validate(None, parent, None, object):
-          raise AccessControl_Unauthorized, object.getId()
+          raise_(AccessControl_Unauthorized, object.getId())
       if validate_src > 1:
         if not sm.checkPermission(Permissions.DeleteObjects, parent):
           raise AccessControl_Unauthorized
@@ -1697,7 +1698,7 @@ class NotImplementedClass(object):
     self.__name__ = method_id
 
   def __call__(self, *args, **kw):
-    raise NotImplementedError, str(self.__name__)
+    raise_(NotImplementedError, str(self.__name__))
 
 for source_klass, destination_klass in \
         (

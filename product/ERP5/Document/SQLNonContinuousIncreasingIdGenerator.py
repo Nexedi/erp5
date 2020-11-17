@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -69,7 +70,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
     # Check the arguments
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
+      raise_(ValueError, '%s is not a valid group Id.' % (repr(id_group), ))
     if default is None:
       default = 0
 
@@ -96,7 +97,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         portal.IdTool_zSetLastId(id_group, None)
       # Commit the changement of new_id
       portal.IdTool_zCommit()
-    except ProgrammingError, error:
+    except ProgrammingError as error:
       if error[0] != NO_SUCH_TABLE:
         raise
 
@@ -132,7 +133,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     for line in self._getValueListFromTable():
       id_group = line['id_group']
       last_id = line['last_id']
-      if self.last_max_id_dict.has_key(id_group) and \
+      if id_group in self.last_max_id_dict and \
         self.last_max_id_dict[id_group].value > last_id:
         set_last_id_method(id_group=id_group,
             last_id=self.last_max_id_dict[id_group].value)
@@ -177,7 +178,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     portal = self.getPortalObject()
     try:
       portal.IdTool_zGetValueList()
-    except ProgrammingError, error:
+    except ProgrammingError as error:
       if error[0] != NO_SUCH_TABLE:
         raise
       portal.IdTool_zDropTable()
@@ -255,7 +256,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     portal = self.getPortalObject()
     set_last_id_method = portal.IdTool_zSetLastId
     if not isinstance(id_dict, dict):
-      raise TypeError, 'the argument given is not a dictionary'
+      raise TypeError('the argument given is not a dictionary')
     new_id_dict = {}
     for key, value in id_dict.items():
       if isinstance(value, int):
@@ -263,7 +264,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         # The id must be a ScalarMaxConflictResolver object for the persistent dict
         new_id_dict[key] = ScalarMaxConflictResolver(value)
       else:
-        raise TypeError, 'the value in the dictionary given is not a integer'
+        raise TypeError('the value in the dictionary given is not a integer')
     # Update persistent dict
     if self.getStoredInZodb():
       if self.last_max_id_dict is None:

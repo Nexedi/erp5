@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
 
@@ -69,7 +70,7 @@ def skinResolve(self, selection, name):
   try:
     portal_skins = aq_base(self.portal_skins)
   except AttributeError:
-    raise AttributeError, name
+    raise_(AttributeError, name)
   try:
     portal_callables = aq_base(self.portal_callables)
   except AttributeError:
@@ -163,7 +164,7 @@ def CMFCoreSkinnableSkinnableObjectManager_getSkin(self, name=None):
     calls.
     FIXME: Which exception should be raised here ?
   """
-  raise Exception, 'This method must not be called when new caching system is applied.'
+  raise Exception('This method must not be called when new caching system is applied.')
 
 Skinnable.SkinnableObjectManager.__getattr__ = CMFCoreSkinnableSkinnableObjectManager___getattr__
 Skinnable.SkinnableObjectManager.changeSkin = CMFCoreSkinnableSkinnableObjectManager_changeSkin

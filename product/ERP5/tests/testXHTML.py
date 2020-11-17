@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from __future__ import print_function
+from future.utils import raise_
 import unittest
 import os
 import requests
@@ -125,7 +127,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
               yield field
           except Exception:
             yield field
-    except AttributeError, e:
+    except AttributeError as e:
       ZopeTestCase._print("%s is broken: %s" % (form_path, e))
 
   def test_deadProxyFields(self):
@@ -242,8 +244,8 @@ class TestXHTMLMixin(ERP5TypeTestCase):
       try:
         stdout, stderr = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                                close_fds=True).communicate(body)
-      except OSError, e:
-        raise OSError, '%r\n%r' % (os.environ, e)
+      except OSError as e:
+        raise_(OSError, '%r\n%r' % (os.environ, e))
       if stdout:
         error_list.append((check_path, stdout))
     if error_list:
@@ -785,7 +787,7 @@ if validator_to_use == 'tidy':
   warning = False
   validator_path = '/usr/bin/tidy'
   if not os.path.exists(validator_path):
-    print 'tidy is not installed at %s' % validator_path
+    print('tidy is not installed at %s' % validator_path)
   else:
     validator = TidyValidator(validator_path, show_warnings)
 

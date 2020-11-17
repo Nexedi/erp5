@@ -1,9 +1,10 @@
+from __future__ import absolute_import
 import string
-from DummyField import fields
-import Widget, Validator
+from .DummyField import fields
+from . import Widget, Validator
 from Persistence import Persistent
 import Acquisition
-from Field import ZMIField
+from .Field import ZMIField
 from AccessControl import getSecurityManager, ClassSecurityInfo
 
 class MethodWidget(Widget.TextWidget):
@@ -43,7 +44,7 @@ class Method(Persistent, Acquisition.Implicit):
         # (raises error if not)
         getSecurityManager().checkPermission('View', method)
         # okay, execute it with supplied arguments
-        return apply(method, arg, kw)
+        return method(*arg, **kw)
 
 class BoundMethod(Method):
     """A bound method calls a method on a particular object.
@@ -55,7 +56,7 @@ class BoundMethod(Method):
 
     def __call__(self, *arg, **kw):
         method = getattr(self.object, self.method_name)
-        return apply(method, arg, kw)
+        return method(*arg, **kw)
 
 class MethodValidator(Validator.StringBaseValidator):
 

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from future.utils import raise_
 import AccessControl
 import OFS
 from App.class_init import default__class_init__ as InitializeClass
@@ -15,12 +17,12 @@ import os
 import string
 from StringIO import StringIO
 
-from Errors import ValidationError, FormValidationError, FieldDisabledError
-from FieldRegistry import FieldRegistry
-from Widget import render_tag
-from DummyField import fields
-from FormToXML import formToXML
-from XMLToForm import XMLToForm
+from .Errors import ValidationError, FormValidationError, FieldDisabledError
+from .FieldRegistry import FieldRegistry
+from .Widget import render_tag
+from .DummyField import fields
+from .FormToXML import formToXML
+from .XMLToForm import XMLToForm
 
 from ComputedAttribute import ComputedAttribute
 
@@ -130,7 +132,7 @@ class Form:
         """Add a new group.
         """
         groups = self.groups
-        if groups.has_key(group):
+        if group in groups:
             return False # group already exists (NOTE: should we raise instead?)
         groups[group] = []
         # add the group to the bottom of the list of groups
@@ -147,7 +149,7 @@ class Form:
         groups = self.groups
         if group == self.group_list[0]:
             return False # can't remove first group
-        if not groups.has_key(group):
+        if group not in groups:
             return False # group does not exist (NOTE: should we raise instead?)
         # move whatever is in the group now to the end of the first group
         groups[self.group_list[0]].extend(groups[group])
@@ -166,9 +168,9 @@ class Form:
         """
         group_list = self.group_list
         groups = self.groups
-        if not groups.has_key(group):
+        if group not in groups:
             return False # can't rename unexisting group
-        if groups.has_key(name):
+        if name in groups:
             return False # can't rename into existing name
         i = group_list.index(group)
         group_list[i] = name
@@ -295,7 +297,7 @@ class Form:
             w('<h2>%s</h2>\n' % group)
             w('<table border="0" cellspacing="0" cellpadding="2">\n')
             for field in self.get_fields_in_group(group):
-                if dict.has_key(field.id):
+                if field.id in dict:
                     value = dict[field.id]
                 else:
                     value = None
@@ -322,7 +324,7 @@ class Form:
             w('<h2>%s</h2>\n' % group)
             w('<table border="0" cellspacing="0" cellpadding="2">\n')
             for field in self.get_fields_in_group(group):
-                if dict.has_key(field.id):
+                if field.id in dict:
                     value = dict[field.id]
                 else:
                     value = None
@@ -381,7 +383,7 @@ class Form:
                 alternate_name = field.get_value('alternate_name')
                 if alternate_name:
                     result[alternate_name] = value
-            except ValidationError, err:
+            except ValidationError as err:
                 errors.append(err)
         if len(errors) > 0:
             raise FormValidationError(errors, result)
@@ -394,7 +396,7 @@ class Form:
         """
         try:
             result = self.validate_all(REQUEST, key_prefix=key_prefix)
-        except FormValidationError, e:
+        except FormValidationError as e:
             # put whatever result we have in REQUEST
             for key, value in e.result.items():
                 REQUEST.set(key, value)
@@ -681,19 +683,19 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         FIXME: hack that could be removed once Zope 2.4.x
         goes back to a useful semantics..."""
         try: self._checkId(new_id)
-        except: raise CopyError, MessageDialog(
+        except:raise_(CopyError, MessageDialog(
                       title='Invalid Id',
                       message=sys.exc_info()[1],
-                      action ='manage_main')
+                      action ='manage_main'))
         ob=self._getOb(id)
         if not ob.cb_isMoveable():
-            raise CopyError, eNotSupported % id
+            raise_(CopyError, eNotSupported % id)
         self._verifyObjectPaste(ob)
         try:    ob._notifyOfCopyTo(self, op=1)
-        except: raise CopyError, MessageDialog(
+        except:raise_(CopyError, MessageDialog(
                       title='Rename Error',
                       message=sys.exc_info()[1],
-                      action ='manage_main')
+                      action ='manage_main'))
         self._delObject(id)
         ob = aq_base(ob)
         ob._setId(new_id)
@@ -728,7 +730,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         field = self._getOb(id, None)
         if field is None or not hasattr(aq_base(field), 'is_field'):
-            raise AttributeError, "No field %s" % id
+            raise_(AttributeError, "No field %s" % id)
         if include_disabled or field.get_value('enabled'):
             return field
         raise FieldDisabledError("Field %s disabled" % id, field)
@@ -783,7 +785,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         try:
             result = self.settings_form.validate_all(REQUEST)
-        except FormValidationError, e:
+        except FormValidationError as e:
             message = "Validation error(s).<br />" + string.join(
                 map(lambda error: "%s: %s" % (error.field.get_value('title'),
                                               error.error_text), e.errors), "<br />")
@@ -833,7 +835,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         field_ids = []
         for field in self.get_fields_in_group(group, include_disabled=True):
-            if REQUEST.form.has_key(field.id):
+            if field.id in REQUEST.form:
                 field_ids.append(field.id)
         return field_ids
 
@@ -944,7 +946,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
     def manage_rename_group(self, group, REQUEST):
         """Renames group.
         """
-        if REQUEST.has_key('new_name'):
+        if 'new_name' in REQUEST:
             new_name = string.strip(REQUEST['new_name'])
             if self.rename_group(group, new_name):
                 message = "Group %s renamed to %s." % (group, new_name)

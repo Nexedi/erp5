@@ -20,6 +20,7 @@
 This module provides the MessageCatalog base class, which
 provides message catalogs for the web.
 """
+from __future__ import absolute_import
 
 # Import from the Standard Library
 from base64 import encodestring, decodestring
@@ -49,10 +50,10 @@ from zLOG import LOG, INFO
 from zExceptions import Forbidden
 
 # Import from Localizer
-from interfaces import IMessageCatalog
-from LanguageManager import LanguageManager
-from LocalFiles import LocalDTMLFile
-from utils import charsets, lang_negotiator, _
+from .interfaces import IMessageCatalog
+from .LanguageManager import LanguageManager
+from .LocalFiles import LocalDTMLFile
+from .utils import charsets, lang_negotiator, _
 
 
 
@@ -291,13 +292,13 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         # Add it if it's not in the dictionary
         if add is None:
             add = getattr(self, 'policy', self.POLICY_ADD_TRUE)
-        if add != self.POLICY_ADD_FALSE and not self._messages.has_key(message) and message:
+        if add != self.POLICY_ADD_FALSE and message not in self._messages and message:
             if add == self.POLICY_ADD_LOG:
                 LOG('New entry added to message catalog %s :' % self.id,  INFO, '%s\n%s' % (message, ''.join(format_list(extract_stack()[:-1]))))
             self._messages[message] = PersistentMapping()
 
         # Get the string
-        if self._messages.has_key(message):
+        if message in self._messages:
             m = self._messages[message]
 
             if lang is None:
@@ -739,7 +740,7 @@ class POFile(SimpleItem):
     def PUT(self, REQUEST, RESPONSE):
         """ """
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-            raise Forbidden, 'REQUEST_METHOD should be PUT.'
+            raise Forbidden('REQUEST_METHOD should be PUT.')
         body = REQUEST['BODY']
         self.po_import(self.id, body)
         RESPONSE.setStatus(204)

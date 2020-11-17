@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from PropertyExistence import PropertyExistence
+from .PropertyExistence import PropertyExistence
 
 class AttributeEquality(PropertyExistence):
   """

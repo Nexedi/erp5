@@ -71,8 +71,8 @@ class InteractorMethod(Method):
     self.after_action_list = []
     self.before_action_list = []
     self.method = method
-    self.func_code = method.func_code
-    self.func_defaults = method.func_defaults
+    self.__code__ = method.__code__
+    self.__defaults__ = method.__defaults__
     self.__name__ = method.__name__
 
   def registerBeforeAction(self, action, args, kw):
@@ -104,7 +104,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.im_class
+      im_class = self.method.__self__.__class__
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -116,7 +116,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.im_class
+      im_class = self.method.__self__.__class__
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)

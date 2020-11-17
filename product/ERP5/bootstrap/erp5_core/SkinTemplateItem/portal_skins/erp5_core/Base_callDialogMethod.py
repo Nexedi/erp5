@@ -90,7 +90,7 @@ try:
   request.set('editable_mode', 1)
   form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
@@ -159,7 +159,7 @@ listbox_uid = kw.get('listbox_uid', None)
 # In some cases, the listbox exists, is editable, but the selection name
 # has no meaning, for example fast input dialogs.
 # In such cases, we must not try to update a non-existing selection.
-if listbox_uid is not None and kw.has_key('list_selection_name'):
+if listbox_uid is not None and 'list_selection_name' in kw:
   uids = kw.get('uids')
   context.portal_selections.updateSelectionCheckedUidList(
     kw['list_selection_name'],

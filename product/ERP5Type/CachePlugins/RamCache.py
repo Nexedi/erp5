@@ -30,9 +30,11 @@
 """
 Local RAM based cache plugin.
 """
+from __future__ import absolute_import
 
+from future.utils import raise_
 import time
-from BaseCache import BaseCache, CacheEntry
+from .BaseCache import BaseCache, CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
 
@@ -81,7 +83,7 @@ class RamCache(BaseCache):
         #Delete expired CacheEntry
         self.delete(cache_id, scope)
     if default is _MARKER:
-      raise KeyError, 'CacheEntry for key %s not Found' % ((scope, cache_id),)
+      raise_(KeyError, 'CacheEntry for key %s not Found' % ((scope, cache_id),))
     return default
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):

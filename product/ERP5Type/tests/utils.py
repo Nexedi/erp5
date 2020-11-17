@@ -28,6 +28,7 @@
 
 """Utility functions and classes for unit testing
 """
+from future.utils import raise_
 import errno
 import os
 import logging
@@ -157,7 +158,7 @@ class DummyLocalizer:
   def __getitem__(self, key):
     if hasattr(self, key):
       return getattr(self, key)
-    raise KeyError, key
+    raise_(KeyError, key)
 
   def get_default_language(self):
     return self._default_language
@@ -274,7 +275,7 @@ class getMySQLArguments(object):
     self = object.__new__(cls)
     self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
     self.conv = None
-    DB._parse_connection_string.im_func(self)
+    DB._parse_connection_string.__func__(self)
     return ''.join('-%s%s ' % (self.args_dict[k], v)
                    for k, v in self._kw_args.iteritems()
                    if k in self.args_dict
@@ -343,7 +344,7 @@ def createZServer(log=os.devnull, zserver_type='http'):
       hs.__init__(ip, port, resolver=None, logger_object=lg)
       hs.install_handler(zhandler_class(module='Zope2', uri_base=''))
       return hs
-    except socket.error, e:
+    except socket.error as e:
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()
@@ -426,7 +427,7 @@ class LogInterceptor:
 
     def _catch_log_errors(self, ignored_level=zLOG.WARNING, subsystem=''):
         if subsystem in self.installed:
-            raise ValueError, 'Already installed filter!'
+            raise ValueError('Already installed filter!')
 
         root_logger = logging.getLogger(subsystem)
         self.installed += (subsystem,)
@@ -583,7 +584,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       elif isinstance(table[0][0], (tuple, list)):
         dimension = 3
       else:
-        raise RuntimeError, "Unsupported table structure!"
+        raise RuntimeError("Unsupported table structure!")
 
       if dimension==1:
         for table_line in table:

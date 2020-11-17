@@ -1,3 +1,4 @@
+from __future__ import print_function
 from rigging import transformer
 
 import os
@@ -16,10 +17,10 @@ class curry:
         self.fixed_args = fixed_args
 
     def __call__(self, *variable_args):
-        return apply(self.func, self.fixed_args +
+        return self.func(*self.fixed_args +
           variable_args)
 
 data = open("/tmp/word.doc", "r").read()
 
 data = transformer.convert("WordToHtml", data, filename="word.doc")
-print data.getData()
+print(data.getData())

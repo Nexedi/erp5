@@ -22,6 +22,7 @@ locale attribute. Currently it only defines the classes LocalDTMLFile and
 LocalPageTemplateFile, which should be used instead of DTMLFile and
 PageTemplateFile.
 """
+from __future__ import absolute_import
 
 # Import from the Standard Library
 import os
@@ -30,7 +31,7 @@ import os
 from App.special_dtml import DTMLFile
 
 # Import from Localizer
-from utils import DomainAware
+from .utils import DomainAware
 
 
 
@@ -45,5 +46,4 @@ class LocalDTMLFile(DomainAware, DTMLFile):
     def _exec(self, bound_data, args, kw):
         # Add our gettext first
         bound_data['gettext'] = self.gettext
-        return apply(LocalDTMLFile.inheritedAttribute('_exec'),
-                     (self, bound_data, args, kw))
+        return LocalDTMLFile.inheritedAttribute('_exec')(*(self, bound_data, args, kw))

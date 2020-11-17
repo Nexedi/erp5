@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from types import StringType
 from mimetypes import guess_extension
 from OFS.Image import File
@@ -40,7 +41,7 @@ from urllib import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from OOoUtils import OOoBuilder
+from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 import re
@@ -205,10 +206,10 @@ class OOoTemplate(ZopePageTemplate):
   def pt_upload(self, REQUEST, file=''):
     """Replace the document with the text in file."""
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
-      raise ResourceLockedError, "File is locked via WebDAV"
+      raise ResourceLockedError("File is locked via WebDAV")
 
     if type(file) is not StringType:
-      if not file: raise ValueError, 'File not specified'
+      if not file: raise ValueError('File not specified')
       file = file.read()
 
     if file.startswith("PK") : # FIXME: this condition is probably not enough
@@ -257,7 +258,7 @@ class OOoTemplate(ZopePageTemplate):
       Change title, xml_file_id and ooo_stylesheet.
     """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
-      raise ResourceLockedError, "File is locked via WebDAV"
+      raise ResourceLockedError("File is locked via WebDAV")
     self.ooo_stylesheet = ooo_stylesheet
     self.ooo_script_name = script_name
     self.ooo_xml_file_id = xml_file_id
@@ -298,7 +299,7 @@ class OOoTemplate(ZopePageTemplate):
       document_type = document.content_type
 
       # Prepare a subdirectory to store embedded objects
-      actual_idx = self.document_counter.next()
+      actual_idx = next(self.document_counter)
       dir_name = '%s%d'%(self._OLE_directory_prefix, actual_idx)
 
       if sub_document: # sub-document means sub-directory
@@ -393,7 +394,7 @@ class OOoTemplate(ZopePageTemplate):
         h = maxheight
         w = h * aspect_ratio
 
-      actual_idx = self.document_counter.next()
+      actual_idx = next(self.document_counter)
       pic_name = 'Pictures/picture%d%s' \
                  % (actual_idx, guess_extension(picture_type) or '')
 
@@ -451,7 +452,7 @@ class OOoTemplate(ZopePageTemplate):
     here = getattr(self, 'aq_parent', None)
     if here is None:
       # This is a system error
-      raise ValueError, 'Can not render a template without a parent acquisition context'
+      raise ValueError('Can not render a template without a parent acquisition context')
     # Retrieve master document
     ooo_document = None
     # If script is setting, call it
@@ -497,7 +498,7 @@ class OOoTemplate(ZopePageTemplate):
         ooo_builder.addFileEntry(full_path=dir_name + '/content.xml',
                                  media_type='text/xml', content=document_dict['document'])
         styles_text = default_styles_text
-        if document_dict.has_key('stylesheet') and document_dict['stylesheet']:
+        if 'stylesheet' in document_dict and document_dict['stylesheet']:
           styles_text = document_dict['stylesheet']
         if styles_text:
           ooo_builder.addFileEntry(full_path=dir_name + '/styles.xml',

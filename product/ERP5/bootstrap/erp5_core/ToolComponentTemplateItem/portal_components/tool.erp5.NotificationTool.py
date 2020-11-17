@@ -70,7 +70,7 @@ def buildAttachmentDictList(document_list, document_type_list=()):
       if getattr(attachment, 'getContentType', None) is not None:
         mime_type = attachment.getContentType()
       else:
-        raise ValueError, "Cannot find mimetype of the document."
+        raise ValueError("Cannot find mimetype of the document.")
 
       if mime_type is not None:
         try:
@@ -147,7 +147,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
     attachment_name = attachment.get('name', '')
 
     # try to guess the mime type
-    if not attachment.has_key('mime_type'):
+    if 'mime_type' not in attachment:
       mime_type, _ = guess_type( attachment_name )
       if mime_type is not None:
         attachment['mime_type'] = mime_type
@@ -214,7 +214,7 @@ class NotificationTool(BaseTool):
     portal = self.getPortalObject()
     mailhost = getattr(portal, 'MailHost', None)
     if mailhost is None:
-      raise ValueError, "Can't find MailHost."
+      raise ValueError("Can't find MailHost.")
     message = buildEmailMessage(from_url, to_url, msg=body, subject=subject,
                                 attachment_list=attachment_list, extra_headers=extra_headers,
                                 additional_headers=additional_headers)

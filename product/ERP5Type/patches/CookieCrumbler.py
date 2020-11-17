@@ -126,7 +126,7 @@ def modifyRequest(self, req, resp):
         # An auth header was provided and no cookie crumbler
         # created it.  The user must be using basic auth.
         enabled = False
-      elif req.has_key(self.pw_cookie) and req.has_key(self.name_cookie):
+      elif self.pw_cookie in req and self.name_cookie in req:
         # Attempt to log in and set cookies.
         attempt = ATTEMPT_LOGIN
         name = req[self.name_cookie]
@@ -146,7 +146,7 @@ def modifyRequest(self, req, resp):
         method = self.getCookieMethod( 'setAuthCookie'
                                        , self.defaultSetAuthCookie )
         method( resp, self.auth_cookie, quote( ac ) )
-      elif req.has_key(self.auth_cookie):
+      elif self.auth_cookie in req:
         # Attempt to resume a session if the cookie is valid.
         # Copy __ac to the auth header.
         ac = unquote(req[self.auth_cookie])

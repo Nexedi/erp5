@@ -93,7 +93,7 @@ class IdGenerator(Base):
     """
     # For compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
-      raise TypeError, 'id_group is not a string'
+      raise TypeError('id_group is not a string')
     return self._getLatestSpecialiseValue().generateNewIdList(id_group=id_group,
                                                               id_count=id_count,
                                                               default=default,

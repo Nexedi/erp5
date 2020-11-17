@@ -10,6 +10,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+from future.utils import raise_
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
@@ -29,15 +30,15 @@ if 1: # For easy diff with original
             else:
                 v=expr(md)
         except (KeyError, NameError):
-            if args.has_key('optional') and args['optional']:
+            if 'optional' in args and args['optional']:
                 return ''
-            raise ValueError, 'Missing input variable, <em>%s</em>' % name
+            raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
 
         # PATCH: use isinstance instead of type comparison, to allow
         # subclassing.
         if isinstance(v, list_type_list):
             if len(v) > 1 and not self.multiple:
-                raise ValueError, (
+                raise ValueError(
                     'multiple values are not allowed for <em>%s</em>'
                     % name)
         else: v=[v]
@@ -53,7 +54,7 @@ if 1: # For easy diff with original
                         atoi(v)
                     else: v=str(int(v))
                 except ValueError:
-                    raise ValueError, (
+                    raise ValueError(
                         'Invalid integer value for <em>%s</em>' % name)
             elif t=='float':
                 if not v and type(v) is StringType: continue
@@ -61,7 +62,7 @@ if 1: # For easy diff with original
                     if type(v) is StringType: atof(v)
                     else: v=str(float(v))
                 except ValueError:
-                    raise ValueError, (
+                    raise ValueError(
                         'Invalid floating-point value for <em>%s</em>' % name)
             elif t.startswith('datetime'):
                 # For subsecond precision, use 'datetime(N)' MySQL type,
@@ -80,16 +81,16 @@ if 1: # For easy diff with original
             vs.append(v)
 
         if not vs and t=='nb':
-            if args.has_key('optional') and args['optional']:
+            if 'optional' in args and args['optional']:
                 return ''
             else:
                 err = 'Invalid empty string value for <em>%s</em>' % name
-                raise ValueError, err
+raise_(ValueError, err)
 
 
         if not vs:
             if self.optional: return ''
-            raise ValueError, (
+            raise ValueError(
                 'No input was provided for <em>%s</em>' % name)
 
         if len(vs) > 1:

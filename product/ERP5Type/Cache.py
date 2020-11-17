@@ -27,13 +27,15 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
+from future.utils import raise_
 import string
 from contextlib import contextmanager
 from time import time
 from AccessControl import allow_class, ClassSecurityInfo
 from Acquisition import aq_base
 from BTrees.Length import Length
-from CachePlugins.BaseCache import CachedMethodError
+from .CachePlugins.BaseCache import CachedMethodError
 from persistent import Persistent
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions
@@ -242,10 +244,10 @@ class CachingMethod:
     cache_factory is the id of the cache_factory to use.
     """
     if not callable(callable_object):
-      raise CachedMethodError, "callable_object %s is not callable" % str(
-                                                                callable_object)
+      raise_(CachedMethodError, "callable_object %s is not callable" % str(
+                                                                callable_object))
     if not id:
-      raise CachedMethodError, "id must be specified"
+      raise CachedMethodError("id must be specified")
     self.id = id
     self.callable_object = callable_object
     self.cache_duration = cache_duration
@@ -323,7 +325,7 @@ def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
        stacklevel=2)
   cache_storage = CachingMethod.factories
   for cf_key in cache_factory_list:
-    if cache_storage.has_key(cf_key):
+    if cf_key in cache_storage:
       for cp in cache_storage[cf_key].getCachePluginList():
         cp.clearCache()
 

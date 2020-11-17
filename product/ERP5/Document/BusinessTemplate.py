@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
@@ -229,7 +230,7 @@ def getChainByType(context):
     title = t.Title()
     if title == id:
       title = None
-    if cbt is not None and cbt.has_key(id):
+    if cbt is not None and id in cbt:
       chain = ', '.join(cbt[id])
     else:
       chain = '(Default)'
@@ -527,7 +528,7 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     modified_object_list = {}
     for path in self._objects:
-      if installed_item._objects.has_key(path):
+      if path in installed_item._objects:
         # compare objects to see it there are changes
         new_obj_xml = self.generateXml(path=path)
         old_obj_xml = installed_item.generateXml(path=path)
@@ -564,7 +565,7 @@ class BaseTemplateItem(Implicit, Persistent):
     # even if you choose backup or keep for subobjects
     # it is same behaviour for backup_and_remove, all we be save
     for path in keys:
-      if remove_dict.has_key(path):
+      if path in remove_dict:
         action = remove_dict[path]
         if action == 'save_and_remove':
           # like trash
@@ -574,7 +575,7 @@ class BaseTemplateItem(Implicit, Persistent):
         else:
           # As the list of available actions is not strictly defined,
           # prevent mistake if an action is not handled
-          raise ValueError, 'Unknown action "%s"' % action
+          raise_(ValueError, 'Unknown action "%s"' % action)
 
 
   def trash(self, context, new_item, **kw):
@@ -991,11 +992,11 @@ class ObjectTemplateItem(BaseTemplateItem):
       try:
         obj = p.unrestrictedTraverse(relative_url)
       except ValueError:
-        raise ValueError, "Can not access to %s" % relative_url
+        raise_(ValueError, "Can not access to %s" % relative_url)
       try:
         obj = obj._getCopy(context)
       except AttributeError:
-        raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
+        raise_(AttributeError, "Could not find object '%s' during business template processing." % relative_url)
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj, 1,
                                   self.isKeepWorkflowObject(relative_url),
@@ -1086,7 +1087,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     upgrade_list = []
     type_name = self.__class__.__name__.split('TemplateItem')[-2]
     for path, obj in self._objects.iteritems():
-      if installed_item._objects.has_key(path):
+      if path in installed_item._objects:
         upgrade_list.append((path, installed_item._objects[path]))
       else: # new object
         modified_object_list[path] = 'New', type_name
@@ -1103,7 +1104,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       try:
         OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
         old_obj_xml = old_io.getvalue()
-      except (ImportError, UnicodeDecodeError), e: # module is already
+      except (ImportError, UnicodeDecodeError) as e: # module is already
                                                    # removed etc.
         old_obj_xml = '(%s: %s)' % (e.__class__.__name__, e)
       new_io.close()
@@ -1146,7 +1147,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       # As the list of available actions is not strictly defined,
       # prevent mistake if an action is not handled
-      raise NotImplementedError, 'Unknown action "%s"' % action
+      raise_(NotImplementedError, 'Unknown action "%s"' % action)
     return p.portal_trash.backupObject(trashbin, container_path, object_id,
                                        save=save, **kw)
 
@@ -1323,7 +1324,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       if update_dict.get(path) == 'migrate':
         continue
 
-      if update_dict.has_key(path) or force:
+      if path in update_dict or force:
         # get action for the oject
         action = 'backup'
         if not force:
@@ -1562,7 +1563,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     # we remove object not added in forms
     # we put old objects we have kept
     for path, new_groups_dict in groups.iteritems():
-      if not old_groups.has_key(path):
+      if path not in old_groups:
         # installation of a new form
         obj = portal.unrestrictedTraverse(path)
         obj.groups = new_groups_dict
@@ -1575,7 +1576,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         widget_id_list = obj.objectIds()
         for widget_id in widget_id_list:
           widget_path = path+'/'+widget_id
-          if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
+          if widget_path in update_dict and update_dict[widget_path] in ('remove', 'save_and_remove'):
             continue
           widget_in_form = 0
           for group_value_list in new_groups_dict.values():
@@ -1590,11 +1591,11 @@ class ObjectTemplateItem(BaseTemplateItem):
               if widget_id in old_group_values:
                 previous_group_id = old_group_id
             # if we find same group in new one, add widget to it
-            if previous_group_id is not None and new_groups_dict.has_key(previous_group_id):
+            if previous_group_id is not None and previous_group_id in new_groups_dict:
               new_groups_dict[previous_group_id].append(widget_id)
             # otherwise use a specific group
             else:
-              if new_groups_dict.has_key('not_assigned'):
+              if 'not_assigned' in new_groups_dict:
                 new_groups_dict['not_assigned'].append(widget_id)
               else:
                 new_groups_dict['not_assigned'] = [widget_id,]
@@ -1738,7 +1739,7 @@ class PathTemplateItem(ObjectTemplateItem):
       # If the id has no meta character, do not have to check all objects.
       obj = folder._getOb(id, None)
       if obj is None:
-        raise AttributeError, "Could not resolve '%s' during business template processing." % id
+        raise_(AttributeError, "Could not resolve '%s' during business template processing." % id)
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
@@ -1902,7 +1903,7 @@ class ToolTemplateItem(PathTemplateItem):
     remove_dict = kw.get('remove_object_dict', {})
     keys = self._objects.keys()
     for tool_id in keys:
-      if remove_dict.has_key(tool_id):
+      if tool_id in remove_dict:
         action = remove_dict[tool_id]
         if 'remove' in action:
           types_tool.type_provider_list = tuple([ \
@@ -1982,7 +1983,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
         if self.is_bt_for_diff:
           continue
         else:
-          raise ValueError, "%s not found" % relative_url
+          raise_(ValueError, "%s not found" % relative_url)
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj, 1,
                                   self.isKeepWorkflowObject(relative_url),
@@ -2044,7 +2045,7 @@ class SkinTemplateItem(ObjectTemplateItem):
         for upd_obj_path in modified_object_list.keys():
           if upd_obj_path.startswith(bt_obj_path):
             # a child of the ERP5 Form must be updated, so the form too
-            if not modified_object_list.has_key(bt_obj_path):
+            if bt_obj_path not in modified_object_list:
               modified_object_list[bt_obj_path] = 'Modified', self.__class__.__name__[:-12]
     return modified_object_list
 
@@ -2091,8 +2092,8 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       if skin_selection_id in selection_list:
         self._objects.setdefault(skin_folder_id, []).append(skin_selection_id)
       else:
-        raise NotFound, 'No skin selection %s found for skin folder %s.' \
-                          % (skin_selection_id, skin_folder_id)
+        raise_(NotFound, 'No skin selection %s found for skin folder %s.' \
+                          % (skin_selection_id, skin_folder_id))
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2125,7 +2126,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
 
     for skin_folder_id in self._objects.keys():
 
-      if update_dict.has_key(skin_folder_id) or force:
+      if skin_folder_id in update_dict or force:
         if not force:
           action = update_dict[skin_folder_id]
           if action == 'nothing':
@@ -2192,7 +2193,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     for path in self._objects:
-      if installed_item._objects.has_key(path):
+      if path in installed_item._objects:
         # compare object to see it there is changes
         new_object = self._objects[path]
         old_object = installed_item._objects[path]
@@ -2407,7 +2408,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
         except KeyError:
           # parent object can be set to nothing, in this case just go on
           container_url = '/'.join(container_path)
-          if update_dict.has_key(container_url):
+          if container_url in update_dict:
             if update_dict[container_url] == 'nothing':
               continue
           raise
@@ -2511,13 +2512,13 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # not very usefull
     default_chain = ''
     for path, obj in self._objects.iteritems():
-      if update_dict.has_key(path) or force:
+      if path in update_dict or force:
         if not force:
           action = update_dict[path]
           if action == 'nothing':
             continue
         portal_type = obj.id
-        if self._workflow_chain_archive.has_key(portal_type):
+        if portal_type in self._workflow_chain_archive:
           chain_dict['chain_%s' % portal_type] = \
               self._workflow_chain_archive[portal_type]
     context.portal_workflow.manage_changeWorkflows(default_chain,
@@ -2572,9 +2573,9 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                        'in chain for portal_type %s' % (workflow_name, portal_type))
         self._objects.setdefault(portal_type, []).append(workflow)
       elif not self.is_bt_for_diff:
-        raise NotFound, 'No workflow chain found for portal type %s. This '\
+        raise_(NotFound, 'No workflow chain found for portal type %s. This '\
                         'is probably a sign of a missing dependency.'\
-                                                    % portal_type
+                                                    % portal_type)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2689,8 +2690,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             # improve the error message
             for wf_id in self._objects[path]:
               if wf_id.startswith('-'):
-                raise ValueError, '"%s" is not a workflow ID for %s' % \
-                                  (wf_id, portal_type)
+                raise_(ValueError, '"%s" is not a workflow ID for %s' % \
+                                  (wf_id, portal_type))
             chain_dict[chain_key] = self._objects[path]
         else:
           if context.portal_types.getTypeInfo(portal_type) is None:
@@ -2806,7 +2807,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       ob = types_tool.getTypeInfo(portal_type)
       # check properties corresponds to what is defined in site
       if ob is None:
-        raise ValueError, "Portal Type %r not found in site" %(portal_type,)
+        raise_(ValueError, "Portal Type %r not found in site" %(portal_type,))
       prop_value = getattr(ob, self.class_property, ())
       if allowed_type in prop_value:
         if self.class_property not in portal_type:
@@ -2815,9 +2816,9 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           key = portal_type
         self._objects.setdefault(key, []).append(allowed_type)
       elif not self.is_bt_for_diff:
-        raise ValueError, "%s %s not found in portal type %s" % (
+        raise_(ValueError, "%s %s not found in portal type %s" % (
                              getattr(self, 'name', self.__class__.__name__),
-                             allowed_type, portal_type)
+                             allowed_type, portal_type))
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2910,8 +2911,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         if type_information is None:
           if not property_list:
             continue
-          raise AttributeError, "Portal type '%s' not found while " \
-              "installing %s" % (portal_id, self.getTitle())
+          raise_(AttributeError, "Portal type '%s' not found while " \
+              "installing %s" % (portal_id, self.getTitle()))
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(type_information, self.class_property, ())
         # merge differences between portal types properties
@@ -3054,7 +3055,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     obj = self._objects[path]
     method_id = obj.id
     xml_data = '<catalog_method>'
-    if self._method_properties.has_key(method_id):
+    if method_id in self._method_properties:
       for method_property, value in self._method_properties[method_id].items():
         xml_data += '\n <item key="%s" type="int">' %(method_property,)
         xml_data += '\n  <value>%s</value>' %(value,)
@@ -3122,7 +3123,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       values = self._objects.values()
     else: # get only selected object
       for key, value in self._objects.iteritems():
-        if update_dict.has_key(key) or force:
+        if key in update_dict or force:
           if not force:
             action = update_dict[key]
             if action == 'nothing':
@@ -3377,7 +3378,7 @@ class ActionTemplateItem(ObjectTemplateItem):
     portal_type_dict = {}
     p = context.getPortalObject()
     for id in self._objects.keys():
-      if update_dict.has_key(id) or force:
+      if id in update_dict or force:
         if not force:
           action = update_dict[id]
           if action == 'nothing':
@@ -3592,7 +3593,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     p = context.getPortalObject()
     for roles_path in self._objects.keys():
-      if update_dict.has_key(roles_path) or force:
+      if roles_path in update_dict or force:
         if not force:
           action = update_dict[roles_path]
           if action == 'nothing':
@@ -3638,7 +3639,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       else:
         obj = None
       if obj is None and not self.is_bt_for_diff:
-        raise NotFound, 'the property %s is not found' % id
+        raise_(NotFound, 'the property %s is not found' % id)
       self._objects[id] = (prop_type, obj)
 
   def _importFile(self, file_name, file):
@@ -3662,7 +3663,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     p = context.getPortalObject()
     for path in self._objects.keys():
-      if update_dict.has_key(path) or force:
+      if path in update_dict or force:
         if not force:
           action = update_dict[path]
           if action == 'nothing':
@@ -3795,7 +3796,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     valid_permissions = dict.fromkeys([x[0] for x in
                                        context.ac_inherited_permissions(all=1)])
     for path, mapping in self._objects.iteritems():
-      if update_dict.has_key(path) or force:
+      if path in update_dict or force:
         if not force:
           action = update_dict[path]
           if action == 'nothing':
@@ -3910,7 +3911,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
         installed_item._objects[new_key] = installed_item._objects[key]
         del installed_item._objects[key]
     for path in self._objects:
-      if installed_item._objects.has_key(path):
+      if path in installed_item._objects:
         # compare object to see if there is changes
         new_obj_code = self._objects[path]
         old_obj_code = installed_item._objects[path]
@@ -3937,7 +3938,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
       # differ from upgrade parameteres, so here the check have to be
       # care of both cases
       upgraded_key = self._getKey(key)
-      if update_dict.has_key(key) or update_dict.has_key(upgraded_key) \
+      if key in update_dict or upgraded_key in update_dict \
           or force:
         if not force:
           action = update_dict.get(key, update_dict.get(upgraded_key))
@@ -3947,7 +3948,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
         path, name = posixpath.split(key)
         try:
           self.local_file_writer_name(name, text, create=0)
-        except IOError, error:
+        except IOError as error:
           LOG(self.__class__.__name__, WARNING,
               "Cannot install class %r on file system" % name)
           if error.errno:
@@ -4519,7 +4520,7 @@ class RoleTemplateItem(BaseTemplateItem):
         installed_item._objects[role] = 1
       del installed_item._objects[obsolete_key]
     for role in self._objects:
-      if installed_item._objects.has_key(role):
+      if role in installed_item._objects:
         continue
       else: # only show new roles
         modified_object_list[role] = 'New', 'Role'
@@ -4611,7 +4612,7 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       if key in catalog_key_list:
         key_list.append(key)
       elif not self.is_bt_for_diff:
-        raise NotFound, '%s %r not found in catalog' %(self.key_title, key)
+        raise_(NotFound, '%s %r not found in catalog' %(self.key_title, key))
     if len(key_list) > 0:
       self._objects[self.key_list_title] = key_list
 
@@ -4808,7 +4809,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     for path in self._objects:
-      if installed_item._objects.has_key(path):
+      if path in installed_item._objects:
         # compare object to see if there is changes
         new_obj_code = self._objects[path]
         old_obj_code = installed_item._objects[path]
@@ -4853,7 +4854,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update', {})
     force = kw.get('force')
     for key in sorted(self._objects.keys()):
-      if update_dict.has_key(key) or force:
+      if key in update_dict or force:
         if not force:
           action = update_dict[key]
           if action == 'nothing':
@@ -5035,7 +5036,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     p = context.getPortalObject()
     for roles_path in self._objects.keys():
-      if update_dict.has_key(roles_path) or force:
+      if roles_path in update_dict or force:
         if not force:
           action = update_dict[roles_path]
           if action == 'nothing':
@@ -5478,7 +5479,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       trash_tool = getToolByName(site, 'portal_trash', None)
       if trash_tool is None:
-        raise AttributeError, 'Trash Tool is not installed'
+        raise AttributeError('Trash Tool is not installed')
 
       if not force and check_dependencies:
         self.checkDependencies()
@@ -5913,8 +5914,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Export this Business Template
       """
       if self.getBuildingState() != 'built':
-        raise TemplateConditionError, \
-              'Business Template must be built before export'
+        raise TemplateConditionError('Business Template must be built before export')
       return self._export(path, local, bta)
 
     def _export(self, path=None, local=0, bta=None):
@@ -6044,9 +6044,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       missing_dep_list = self.getMissingDependencyList()
       if len(missing_dep_list) != 0:
-        raise BusinessTemplateMissingDependency, \
+        raise_(BusinessTemplateMissingDependency, \
           'Impossible to install %s, please install the following dependencies before: %s' \
-          %(self.getTitle(), repr(missing_dep_list))
+          %(self.getTitle(), repr(missing_dep_list)))
 
     security.declareProtected(Permissions.ManagePortal, 'getMissingDependencyList')
     def getMissingDependencyList(self):
@@ -6383,7 +6383,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       bt_module_id_list = list(self.getTemplateModuleIdList())
       if len(bt_module_id_list) == 0:
-        raise TemplateConditionError, 'No module defined in business template'
+        raise TemplateConditionError('No module defined in business template')
 
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
 
@@ -6977,12 +6977,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 klass = getattr(
                   __import__(source_reference, {}, {}, [source_reference]),
                   subsubmodule_name)
-              except ImportError, e:
+              except ImportError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot be imported (%s)" % (filepath, e),
                     error=True)
                 continue
-              except AttributeError, e:
+              except AttributeError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot get class %s (%s)" %
                     (filepath, subsubmodule_name, e))
@@ -7007,7 +7007,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               # 'sql_foo.py' => 'ISQLFoo'), get the Interface class __name__
               try:
                 interface_module = __import__(source_reference, {}, {}, source_reference)
-              except ImportError, e:
+              except ImportError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot be imported (%s)" % (filepath, e),
                     error=True)
@@ -7036,7 +7036,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             elif component_portal_type == 'Mixin Component':
               try:
                 mixin_module = __import__(source_reference, {}, {}, source_reference)
-              except ImportError, e:
+              except ImportError as e:
                 LOG("BusinessTemplate", WARNING,
                     "Skipping %s: Cannot be imported (%s)" % (filepath, e),
                     error=True)
@@ -7150,7 +7150,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                               version,
                                               source_reference,
                                               filesystem_zodb_module_mapping_set)
-        except Exception, e:
+        except Exception as e:
           LOG("BusinessTemplate", WARNING,
               "Could not import component '%s' ('%s') from the filesystem" %
               (temp_obj.getReference(),

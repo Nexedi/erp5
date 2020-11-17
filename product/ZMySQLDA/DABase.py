@@ -82,6 +82,7 @@
 # attributions are listed in the accompanying credits file.
 #
 ##############################################################################
+from future.utils import raise_
 __doc__='''Database Connection
 
 $Id: DABase.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
@@ -135,7 +136,7 @@ class Connection(Shared.DC.ZRDB.Connection.Connection):
         if name=='tableNamed':
             if not hasattr(self, '_v_tables'): self.tpValues()
             return self._v_tables.__of__(self)
-        raise KeyError, name
+        raise_(KeyError, name)
 
     def manage_wizard(self, tables):
         " "
@@ -155,7 +156,7 @@ class TableBrowserCollection(Acquisition.Implicit):
 class Browser(Base):
     def __getattr__(self, name):
         try: return self._d[name]
-        except KeyError: raise AttributeError, name
+        except KeyError:raise_(AttributeError, name)
 
 class values:
 
@@ -225,7 +226,7 @@ class TableBrowser(Browser, Acquisition.Implicit):
                 elif d:
                     values.append(str(d))
                 else:
-                    raise ValueError, (
+                    raise ValueError(
                         'no default was given for <em>%s</em>' % n)
 
 

@@ -190,7 +190,7 @@ class MovementGroupNode:
     """
     movement_list = self.getMovementList()
     if len(movement_list) != 1:
-      raise ValueError, "Can separate only 2 movements"
+      raise ValueError("Can separate only 2 movements")
     else:
       old_movement = self.getMovementList()[0]
 
@@ -296,7 +296,7 @@ class FakeMovement:
       self.append(movement)
     # This object must not be use when there is not 2 or more movements
     if len(movement_list) < 2:
-      raise ValueError, "FakeMovement used where it should not."
+      raise ValueError("FakeMovement used where it should not.")
     # All movements must share the same getVariationCategoryList
     # So, verify and raise a error if not
     # But, if DeliveryBuilder is well configured, this can never append ;)
@@ -307,7 +307,7 @@ class FakeMovement:
       variation_category_list = movement.getVariationCategoryList()
       variation_category_list.sort()
       if variation_category_list != reference_variation_category_list:
-        raise ValueError, "FakeMovement not well used."
+        raise ValueError("FakeMovement not well used.")
 
   def append(self, movement):
     """

@@ -45,25 +45,25 @@ def _cleanup(self):
     try:
         check(self._tree)
         for key in self._tree.keys():
-            if not self._tree.has_key(key):
+            if key not in self._tree:
                 raise AssertionError(
                     "Missing value for key: %s" % repr(key))
         check(self._mt_index)
         for key, object in self._tree.items():
             meta_type = getattr(object, 'meta_type', None)
             if meta_type is not None:
-              if not self._mt_index.has_key(meta_type):
+              if meta_type not in self._mt_index:
                   raise AssertionError(
                       "Missing meta_type index for key: %s" % repr(key))
         for key, value in self._mt_index.items():
-            if (not self._mt_index.has_key(key)
+            if (key not in self._mt_index
                 or self._mt_index[key] is not value):
                 raise AssertionError(
                     "Missing or incorrect meta_type index: %s"
                     % repr(key))
             check(value)
             for k in value.keys():
-                if not value.has_key(k) or not self._tree.has_key(k):
+                if k not in value or k not in self._tree:
                     raise AssertionError(
                         "Missing values for meta_type index: %s"
                         % repr(key))

@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implements
@@ -45,13 +46,13 @@ class Query(object):
     """
       To enable SQL rendering, overload this method in a subclass.
     """
-    raise TypeError, 'A %s cannot be rendered as an SQL expression.' % (self.__class__.__name__, )
+raise_(TypeError, 'A %s cannot be rendered as an SQL expression.' % (self.__class__.__name__, ))
 
   def _asSearchTextExpression(self, sql_catalog, column=None):
     """
       To enable Search Text rendering, overload this method in a subclass.
     """
-    raise TypeError, 'A %s cannot be rendered as a SearchText expression.' % (self.__class__.__name__, )
+raise_(TypeError, 'A %s cannot be rendered as a SearchText expression.' % (self.__class__.__name__, ))
 
   def asSearchTextExpression(self, sql_catalog, column=None):
     return self._asSearchTextExpression(sql_catalog, column=column)[1]
@@ -60,7 +61,7 @@ class Query(object):
     """
       This method must always be overloaded by subclasses.
     """
-    raise NotImplementedError, '%s is incompletely implemented.' % (self.__class__.__name__, )
+raise_(NotImplementedError, '%s is incompletely implemented.' % (self.__class__.__name__, ))
 
 verifyClass(IQuery, Query)
 

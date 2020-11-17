@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2005,2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -38,6 +39,7 @@
     # fit the constraints.
 
 # Class monitoring access security control
+from future.utils import raise_
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Globals import InitializeClass
 
@@ -46,8 +48,8 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from Tool.SelectionTool import makeTreeList
-from Selection import Selection
+from .Tool.SelectionTool import makeTreeList
+from .Selection import Selection
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 
@@ -283,7 +285,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       if activity_object.name in warning_activity_list:
         # activity contains a block that has not been validated
         # The validation update process is canceled, and the error is reported
-        err = ValidationError(StandardError,activity_object)
+        err = ValidationError(Exception,activity_object)
         errors_list.append(err)
         pass
       else:
@@ -1094,11 +1096,11 @@ class BasicStructure:
     if getattr(self.list_method, 'method_name', None) is not None:
       # building a complex query so we should not pass too many variables
       kw={}
-      if self.REQUEST.has_key('portal_type'):
+      if 'portal_type' in self.REQUEST:
         kw['portal_type'] = self.REQUEST['portal_type']
       elif self.getPortalTypeList() is not None:
         kw['portal_type'] = self.getPortalTypeList()
-      elif kw.has_key('portal_type'):
+      elif 'portal_type' in kw:
         if kw['portal_type'] in ['', []]:
           del kw['portal_type']
       # remove useless matter
@@ -1777,14 +1779,14 @@ class BasicGroup:
         try:
           block_begin = obj.getProperty(object_property_begin, _marker)
           if block_begin is _marker:
-            raise AttributeError, object_property_begin
+            raise_(AttributeError, object_property_begin)
         except AttributeError:
           block_begin = getattr(obj, object_property_begin, None)
 
         try:
           block_end = obj.getProperty(object_property_end, _marker)
           if block_end is _marker:
-            raise AttributeError, object_property_end
+            raise_(AttributeError, object_property_end)
         except AttributeError:
           block_end = getattr(obj, object_property_end, None)
 
@@ -1913,8 +1915,8 @@ class BasicGroup:
       else:
         block_end = None
 
-      if lane_axis_info.has_key('bound_start') and \
-               lane_axis_info.has_key('bound_stop'):
+      if 'bound_start' in lane_axis_info and \
+               'bound_stop' in lane_axis_info:
         # testing if activity is visible according to the current zoom selection
         # over the lane_axis
         if (block_begin is None):
@@ -2642,7 +2644,7 @@ class Bloc:
         self.buildInfo(info_dict=info_dict, area='info_botleft'),
         self.buildInfo(info_dict=info_dict, area='info_botright'),
       ]
-      if info_dict.has_key('info_tooltip'):
+      if 'info_tooltip' in info_dict:
         self.title = info_dict['info_tooltip']
       else:
         self.title = " | ".join(title_list)

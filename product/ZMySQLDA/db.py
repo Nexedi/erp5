@@ -84,6 +84,7 @@
 ##############################################################################
 
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
+from future.utils import raise_
 __version__='$Revision: 1.20 $'[11:-2]
 
 import os
@@ -98,9 +99,9 @@ MySQLdb_version_required = (0,9,2)
 
 _v = getattr(_mysql, 'version_info', (0,0,0))
 if _v < MySQLdb_version_required:
-    raise NotSupportedError, \
+    raise_(NotSupportedError, \
         "ZMySQLDA requires at least MySQLdb %s, %s found" % \
-        (MySQLdb_version_required, _v)
+        (MySQLdb_version_required, _v))
 
 from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
@@ -231,7 +232,7 @@ class DB(TM):
         if self._try_transactions == '-':
             transactional = 0
         elif not transactional and self._try_transactions == '+':
-            raise NotSupportedError, "transactions not supported by this server"
+            raise NotSupportedError("transactions not supported by this server")
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
 
@@ -385,7 +386,7 @@ class DB(TM):
         """
         try:
             self.db.query(query)
-        except OperationalError, m:
+        except OperationalError as m:
             if m[0] in query_syntax_error:
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
@@ -404,7 +405,7 @@ class DB(TM):
           raise
         try:
           return self.db.store_result()
-        except OperationalError, m:
+        except OperationalError as m:
           if m[0] in query_timeout_error:
             raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
           else:
@@ -502,7 +503,7 @@ class DB(TM):
                 self._query("ROLLBACK")
             else:
                 LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
-        except OperationalError, m:
+        except OperationalError as m:
             LOG('ZMySQLDA', ERROR, "exception during _abort",
                 error=True)
             if m[0] not in hosed_connection:
@@ -556,7 +557,7 @@ class DB(TM):
         with (nested if src__ else self.lock)():
             try:
                 old_list, old_set, old_default = self._getTableSchema("`%s`" % name)
-            except ProgrammingError, e:
+            except ProgrammingError as e:
                 if e[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
                     raise
                 if not src__:

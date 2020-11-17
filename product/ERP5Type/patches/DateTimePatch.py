@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from DateTime import DateTime as DateTimeKlass
 import math
 from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS,\
@@ -127,21 +129,21 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       i=i+len(s)
       if i < l and st[i]=='.': i=i+1
       # Check for month name:
-      if MonthNumbers.has_key(s):
+      if s in MonthNumbers:
         v=MonthNumbers[s]
         if month is None: month=v
-        else: raise SyntaxError, st
+        else:raise_(SyntaxError, st)
         continue
       # Check for time modifier:
       if s in TimeModifiers:
         if tm is None: tm=s
-        else: raise SyntaxError, st
+        else:raise_(SyntaxError, st)
         continue
       # Check for and skip day of week:
-      if DayOfWeekNames.has_key(s):
+      if s in DayOfWeekNames:
         continue
 
-    raise SyntaxError, st
+    raise_(SyntaxError, st)
 
   day=None
   if ints[-1] > 60 and d not in ['.',':','/'] and len(ints) > 2:
@@ -210,29 +212,29 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   leap = year%4==0 and (year%100!=0 or year%400==0)
   try:
     if not day or day > self._month_len[leap][month]:
-      raise DateError, st
+      raise_(DateError, st)
   except IndexError:
-    raise DateError, st
+    raise_(DateError, st)
   tod=0
   if ints:
     i=ints[0]
     # Modify hour to reflect am/pm
     if tm and (tm=='pm') and i<12:  i=i+12
     if tm and (tm=='am') and i==12: i=0
-    if i > 24: raise TimeError, st
+    if i > 24:raise_(TimeError, st)
     tod = tod + int(i) * 3600
     del ints[0]
     if ints:
       i=ints[0]
-      if i > 60: raise TimeError, st
+      if i > 60:raise_(TimeError, st)
       tod = tod + int(i) * 60
       del ints[0]
       if ints:
         i=ints[0]
-        if i > 60: raise TimeError, st
+        if i > 60:raise_(TimeError, st)
         tod = tod + i
         del ints[0]
-        if ints: raise SyntaxError,st
+        if ints:raise_(SyntaxError,st)
 
 
   tod_int = int(math.floor(tod))
@@ -259,7 +261,7 @@ if __name__ == '__main__':
     a = DateTimeKlass(i)
     b = DateTimeKlass()
     b.__setstate__(a.__getstate__())
-    print a, a.__dict__ == b.__dict__
+    print(a, a.__dict__ == b.__dict__)
     for i in a.__dict__.keys():
       if a.__dict__[i] != b.__dict__[i]:
-        print i, a.__dict__[i], b.__dict__[i]
+        print(i, a.__dict__[i], b.__dict__[i])

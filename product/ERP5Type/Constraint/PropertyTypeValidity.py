@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2012 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from Constraint import Constraint
+from .Constraint import Constraint
 from DateTime import DateTime
 
 boolean_type_list = (int, bool)
@@ -122,7 +123,7 @@ class PropertyTypeValidity(Constraint):
           if wrong_type:
             try:
               value = self._type_dict[property_type][0](value)
-            except (KeyError, ValueError), error:
+            except (KeyError, ValueError) as error:
               error_message = 'message_incorrect_type_fix_failed'
               mapping['type_cast_error'] = str(error)
 

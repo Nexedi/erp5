@@ -792,7 +792,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         elif len(p) == 2:
             [env['PATH_INFO'], env['QUERY_STRING']] = p
         else:
-            raise TypeError, ''
+            raise TypeError('')
 
         if basic:
           assert not user, (basic, user)
@@ -1277,7 +1277,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         try:
           portal_activities = self.portal.portal_activities
           message_list = portal_activities.getMessageList()
-        except StandardError: # AttributeError, TransactionFailedError ...
+        except Exception: # AttributeError, TransactionFailedError ...
           pass
         else:
           for m in message_list:
@@ -1442,7 +1442,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
@@ -1505,8 +1505,8 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   # Python Scripts are exported without those 2 attributes:
-  PythonScript.func_code = lazy_func_prop('func_code', None)
-  PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
+  PythonScript.__code__ = lazy_func_prop('func_code', None)
+  PythonScript.__defaults__ = lazy_func_prop('func_defaults', None)
 
   def _compile(self):
     if immediate_compilation:
@@ -1517,7 +1517,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent

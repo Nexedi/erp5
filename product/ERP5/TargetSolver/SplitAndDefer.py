@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Globals import PersistentMapping
-from CopyToTarget import CopyToTarget
+from .CopyToTarget import CopyToTarget
 from Acquisition import aq_base
 
 class SplitAndDefer(CopyToTarget):

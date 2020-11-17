@@ -2006,7 +2006,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def testTryNotificationSavedOnEventLogWhenNotifyUserRaises(self, activity):
     obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
-    original_notifyUser = Message.notifyUser.im_func
+    original_notifyUser = Message.notifyUser.__func__
     def failSendingEmail(self, *args, **kw):
       raise MailHostError('Mail is not sent')
     activity_unit_test_error = Exception()
@@ -2036,7 +2036,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def testNotificationFailureIsNotSavedOnEventLogWhenMailNotificationIsDisabled(self, activity):
     obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
-    original_notifyUser = Message.notifyUser.im_func
+    original_notifyUser = Message.notifyUser.__func__
     def failSendingEmail(self, *args, **kw):
       raise MailHostError('Mail is not sent')
     activity_unit_test_error = Exception()
@@ -2104,7 +2104,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self):
       raise activity_unit_test_error
     from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
-    original_raising = SiteErrorLog.raising.im_func
+    original_raising = SiteErrorLog.raising.__func__
 
     # Monkey patch Site Error to induce conflict errors artificially.
     def raising(self, info):

@@ -165,7 +165,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
                   # worklists and they are not merged
-                  if not dict.has_key('portal_type'):
+                  if 'portal_type' not in dict:
                     dict['portal_type'] = portal_type_list
                   # Patch for ERP5 by JP Smets in order
                   # to implement worklists and search of local roles
@@ -204,7 +204,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                               'category': qdef.actbox_category}))
               fmt_data._pop()
       res.sort()
-      return map((lambda (id, val): val), res)
+      return map((lambda id_val: id_val[1]), res)
 
     # Return Cache
     _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_factory = 'erp5_ui_short')
@@ -415,11 +415,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         try:
             #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
             script(sci)  # May throw an exception.
-        except ValidationFailed, validation_exc:
+        except ValidationFailed as validation_exc:
             before_script_success = 0
             before_script_error_message = deepcopy(validation_exc.msg)
-            validation_exc_traceback = sys.exc_traceback
-        except ObjectMoved, moved_exc:
+            validation_exc_traceback = sys.exc_info()[2]
+        except ObjectMoved as moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
 
@@ -434,11 +434,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         if not vdef.for_status:
             continue
         expr = None
-        if state_values.has_key(id):
+        if id in state_values:
             value = state_values[id]
-        elif tdef_exprs.has_key(id):
+        elif id in tdef_exprs:
             expr = tdef_exprs[id]
-        elif not vdef.update_always and former_status.has_key(id):
+        elif not vdef.update_always and id in former_status:
             # Preserve former value
             value = former_status[id]
         else:
@@ -475,7 +475,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         sci.setWorkflowVariable(error_message=before_script_error_message)
         if validation_exc :
             # reraise validation failed exception
-            raise validation_exc, None, validation_exc_traceback
+            raise validation_exc.with_traceback(validation_exc_traceback)
         return new_sdef
 
     # Update state.
@@ -533,7 +533,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
   new_sdef = self.states.get(new_state_id, None)
   if new_sdef is None:
-    raise WorkflowException, ('Destination state undefined: ' + new_state_id)
+    raise WorkflowException('Destination state undefined: ' + new_state_id)
 
   # Update variables.
   state_values = new_sdef.var_values
@@ -546,11 +546,11 @@ def _executeMetaTransition(self, ob, new_state_id):
     if not vdef.for_status:
       continue
     expr = None
-    if state_values.has_key(id):
+    if id in state_values:
       value = state_values[id]
-    elif tdef_exprs.has_key(id):
+    elif id in tdef_exprs:
       expr = tdef_exprs[id]
-    elif not vdef.update_always and former_status.has_key(id):
+    elif not vdef.update_always and id in former_status:
       # Preserve former value
       value = former_status[id]
     else:
@@ -587,12 +587,12 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
     '''
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
-        raise WorkflowException, 'Object is in an undefined state'
+        raise WorkflowException('Object is in an undefined state')
     if method_id not in sdef.transitions:
         raise Unauthorized(method_id)
     tdef = self.transitions.get(method_id, None)
     if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
-        raise WorkflowException, (
+        raise WorkflowException(
             'Transition %s is not triggered by a workflow method'
             % method_id)
     if not self._checkTransitionGuard(tdef, ob):
@@ -603,7 +603,7 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
     except ObjectDeleted:
         # Re-raise with a different result.
         raise ObjectDeleted(res)
-    except ObjectMoved, ex:
+    except ObjectMoved as ex:
         # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), res)
     return res
@@ -685,7 +685,7 @@ def updateRoleMappings(self, REQUEST=None):
     include_default = 0
   for type_info in type_info_list:
     tid = type_info.getId()
-    if chain_by_type.has_key(tid):
+    if tid in chain_by_type:
       if wf_id in chain_by_type[tid]:
         portal_type_list.append(tid)
     elif include_default == 1:

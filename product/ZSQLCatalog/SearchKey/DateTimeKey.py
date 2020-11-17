@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,8 @@
 #
 ##############################################################################
 
-from SearchKey import SearchKey
+from future.utils import raise_
+from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
@@ -89,7 +91,7 @@ def castDate(value, change_timezone=True):
       else:
         raise
   else:
-    raise TypeError, 'Unknown date type: %r' % (value)
+    raise_(TypeError, 'Unknown date type: %r' % (value))
   if change_timezone:
     return value.toZone('UTC')
   else:
@@ -138,9 +140,9 @@ def getPeriodBoundaries(value):
   if isinstance(value, basestring):
     delimiter_count = countDelimiters(value)
   elif isinstance(value, DateTime):
-    raise TypeError, 'Impossible to guess a precision from a DateTime type.'
+    raise TypeError('Impossible to guess a precision from a DateTime type.')
   else:
-    raise TypeError, 'Unknown date type: %r' % (value)
+    raise_(TypeError, 'Unknown date type: %r' % (value))
   delta = delta_list[delimiter_count]
   if callable(delta):
     delta = delta(first_date)

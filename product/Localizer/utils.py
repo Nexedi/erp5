@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from __future__ import absolute_import
 from .itools.utils import get_abspath
 from .itools.i18n import AcceptLanguageType, init_language_selector
 
@@ -22,7 +23,7 @@ from .itools.i18n import AcceptLanguageType, init_language_selector
 from App.Common import package_home
 
 # Import from Localizer
-from patches import get_request
+from .patches import get_request
 
 
 # Package home

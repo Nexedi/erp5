@@ -1,3 +1,4 @@
+from __future__ import print_function
 input_file = open('big_file.log', 'r')
 
 import httplib
@@ -22,7 +23,7 @@ result = connection.getresponse()
 path = result.getheader("X-Document-Location")
 result.close()
 path = '/%s' % '/'.join(path.split('/')[3:])
-print path
+print(path)
 
 ######################################
 # Upload chunks

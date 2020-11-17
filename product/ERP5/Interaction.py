@@ -206,7 +206,7 @@ class InteractionDefinition (SimpleItem):
                 return wf_vars
         ret = []
         for vid in wf_vars:
-            if not self.var_exprs.has_key(vid):
+            if vid not in self.var_exprs:
                 ret.append(vid)
         return ret
 
@@ -230,7 +230,7 @@ class InteractionDefinition (SimpleItem):
         '''
         ve = self.var_exprs
         for id in ids:
-            if ve.has_key(id):
+            if id in ve:
                 del ve[id]
 
         if REQUEST is not None:

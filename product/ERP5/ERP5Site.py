@@ -14,7 +14,9 @@
 """
   Portal class
 """
+from __future__ import absolute_import
 
+from future.utils import raise_
 import thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
@@ -35,7 +37,7 @@ from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.CMFActivity.Errors import ActivityPendingError
-import ERP5Defaults
+from . import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
@@ -461,8 +463,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
         pass
       else:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise ActivityPendingError, 'Sorry, pending activities prevent ' \
-                         +  'changing id at this current stage'
+          raise_(ActivityPendingError, 'Sorry, pending activities prevent ' \
+                         +  'changing id at this current stage')
 
       # Search for categories that have to be updated in sub objects.
       ob._recursiveSetActivityAfterTag(ob)
@@ -650,7 +652,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
       Search the content of a folder by calling
       the portal_catalog.
     """
-    if not kw.has_key('parent_uid'):
+    if 'parent_uid' not in kw:
       kw['parent_uid'] = self.uid
     return self.portal_catalog.searchResults(**kw)
 
@@ -660,7 +662,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
       Count the content of a folder by calling
       the portal_catalog.
     """
-    if not kw.has_key('parent_uid'):
+    if 'parent_uid' not in kw:
       kw['parent_uid'] = self.uid
     return self.portal_catalog.countResults(**kw)
 
@@ -683,7 +685,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
       action['disabled'] = 0
       workflow_title = action.get('workflow_title', None)
       if workflow_title is not None:
-        if not sorted_workflow_actions.has_key(workflow_title):
+        if workflow_title not in sorted_workflow_actions:
           sorted_workflow_actions[workflow_title] = [
             {'title':workflow_title,
              'disabled':1,

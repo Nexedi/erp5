@@ -1,6 +1,7 @@
 """LDAP Server Connection Package """
+from __future__ import absolute_import
 
-import ZLDAP, Entry
+from . import ZLDAP, Entry
 __version__ = ZLDAP.__version__
 
 

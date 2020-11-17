@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -36,7 +37,7 @@ CompilerError = Products.PageTemplates.Expressions.getEngine().getCompilerError(
 
 from zLOG import LOG, PROBLEM
 
-from Constraint import Constraint
+from .Constraint import Constraint
 
 class TALESConstraint(Constraint):
   """This constraint uses an arbitrary TALES expression on the context of the
@@ -76,7 +77,7 @@ class TALESConstraint(Constraint):
                   self._getMessage('message_expression_false')))
     except (ConflictError, CompilerError):
       raise
-    except Exception, e:
+    except Exception as e:
       LOG('ERP5Type', PROBLEM, 'TALESConstraint error on "%s" on %s' %
          (self.constraint_definition['expression'], obj), error=True)
       error_list.append(self._generateError(obj,

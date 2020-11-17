@@ -4,9 +4,10 @@ This product uses the Selenium javascript to run browser-driven tests.
 
 $Id$
 """
+from __future__ import absolute_import
 
-import zuite
-import permissions
+from . import zuite
+from . import permissions
 
 zelenium_globals = globals()
 

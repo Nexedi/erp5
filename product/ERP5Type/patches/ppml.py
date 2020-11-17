@@ -383,7 +383,7 @@ class IdentityMapping:
       return self.immutable[k]
 
     def hasImmutable(self, k):
-      return self.immutable.has_key(k)
+      return k in self.immutable
 
 
 ppml.IdentityMapping = IdentityMapping
@@ -408,7 +408,7 @@ class MinimalMapping(IdentityMapping):
         sub_id = None
       else:
         raise
-      if not self.mapped_id.has_key(core_id):
+      if core_id not in self.mapped_id:
         if sub_id is not None:
           # Use existing id
           self.mapped_id[core_id] = {}
@@ -422,7 +422,7 @@ class MinimalMapping(IdentityMapping):
           self.last_id = self.last_id + 1
       if sub_id is None:
         return self.mapped_core_id[core_id]
-      if not self.mapped_id[core_id].has_key(sub_id):
+      if sub_id not in self.mapped_id[core_id]:
         # Create new sub_id if not defined
         self.mapped_id[core_id][sub_id] = self.last_sub_id[core_id]
         self.last_sub_id[core_id] = self.last_sub_id[core_id] + 1
@@ -623,12 +623,12 @@ class ToXMLUnpickler(Unpickler):
 
     def load_binget(self):
         i = mloads('i' + self.read(1) + '\000\000\000')
-        self.append(Get(self.idprefix+`i`, self.id_mapping))
+        self.append(Get(self.idprefix+repr(i), self.id_mapping))
     dispatch[BINGET] = load_binget
 
     def load_long_binget(self):
         i = mloads('i' + self.read(4))
-        self.append(Get(self.idprefix+`i`, self.id_mapping))
+        self.append(Get(self.idprefix+repr(i), self.id_mapping))
     dispatch[LONG_BINGET] = load_long_binget
 
     def load_put(self):
@@ -638,12 +638,12 @@ class ToXMLUnpickler(Unpickler):
     def load_binput(self):
         i = mloads('i' + self.read(1) + '\000\000\000')
         #LOG('load_binput', 0, 'self.stack = %r, self.idprefix+`i` = %r' % (self.stack, self.idprefix+`i`))
-        self.stack[-1].id=self.idprefix+`i`
+        self.stack[-1].id=self.idprefix+repr(i)
     dispatch[BINPUT] = load_binput
 
     def load_long_binput(self):
         i = mloads('i' + self.read(4))
-        self.stack[-1].id=self.idprefix+`i`
+        self.stack[-1].id=self.idprefix+repr(i)
     dispatch[LONG_BINPUT] = load_long_binput
 
     class LogCall:

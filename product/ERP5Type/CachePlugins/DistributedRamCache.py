@@ -30,10 +30,11 @@
 """
 Memcached based cache plugin.
 """
+from __future__ import absolute_import
 from threading import local
 from zLOG import LOG, WARNING
-from BaseCache import BaseCache
-from BaseCache import CacheEntry
+from .BaseCache import BaseCache
+from .BaseCache import CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
 from base64 import encodestring

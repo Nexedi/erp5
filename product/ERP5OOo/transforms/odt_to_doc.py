@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
-from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
+from .oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 from zLOG import LOG
 
 

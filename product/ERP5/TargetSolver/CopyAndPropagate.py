@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -24,7 +25,7 @@
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 ##############################################################################
 
-from TargetSolver import TargetSolver
+from .TargetSolver import TargetSolver
 
 class CopyAndPropagate(TargetSolver):
   """

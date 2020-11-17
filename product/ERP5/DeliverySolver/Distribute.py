@@ -28,7 +28,8 @@
 ##############################################################################
 
 
-from DeliverySolver import DeliverySolver
+from __future__ import absolute_import
+from .DeliverySolver import DeliverySolver
 
 class Distribute(DeliverySolver):
   """

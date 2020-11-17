@@ -71,7 +71,7 @@ def _importFilesystemClass(classpath):
     InitializeClass(klass)
 
     return klass
-  except StandardError:
+  except Exception:
     raise ImportError('Could not import document class ' + classpath)
 
 def _importComponentClass(component_package, name):

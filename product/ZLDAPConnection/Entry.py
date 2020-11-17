@@ -3,6 +3,7 @@ LDAP Entry Objects
 """
 
 
+from future.utils import raise_
 __version__ = "$Revision: 1.13 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
@@ -84,7 +85,7 @@ class GenericEntry(Acquisition.Implicit):
 
     def _connection(self):
         if self.__connection is None:
-            raise ConnectionError, 'No connection object for this entry'
+            raise ConnectionError('No connection object for this entry')
         else:
             return self.__connection
 
@@ -93,27 +94,27 @@ class GenericEntry(Acquisition.Implicit):
         """getitem is used to get sub-entries, not attributes"""
         if self.__subentries:
             se=self._subentries()
-            if se.has_key(key):
+            if key in se:
                 return se[key]
         key = '%s, %s' % (urllib.unquote(key), self.dn)
         conn= self._connection()
         if conn.hasEntry(key):
             return conn.getEntry(key, self)
         else:
-            raise IndexError, key
+            raise_(IndexError, key)
 
     def __getattr__(self, attr):
-        if self._data.has_key(attr):
+        if attr in self._data:
             return AttrWrap(self._data[attr])
         else:
-            raise AttributeError, attr
+            raise_(AttributeError, attr)
 
     #### Direct access for setting/getting/unsetting attributes
     def get(self, attr):
-        if self._data.has_key(attr):
+        if attr in self._data:
             return self._data[attr]
         else:
-            raise AttributeError, attr
+            raise_(AttributeError, attr)
 
     def set(self, key, value):
         """ Sets individual items """
@@ -146,7 +147,7 @@ class GenericEntry(Acquisition.Implicit):
         data = self._data
         mod_d = self._mod_delete
         for item in attr:
-            if data.has_key(item):
+            if item in data:
                 del data[attr]
                 mod_d.append(attr)
 
@@ -170,7 +171,7 @@ class GenericEntry(Acquisition.Implicit):
     #### Get the ZLDAPConnection object.
     def _connection(self):
         if self.__connection is None:
-            raise ConnectionError, 'Cannot Get Connection'
+            raise ConnectionError('Cannot Get Connection')
         else:
             return self.__connection
 
@@ -198,7 +199,7 @@ class GenericEntry(Acquisition.Implicit):
 
     def _delSubentry(self, entryid):
         subs = self.__subentries
-        if subs.has_key(entryid): del self.__subentries[entryid]
+        if entryid in subs: del self.__subentries[entryid]
 
     ### Deleting Subentries
     def _beforeDelete(self, **ignored):
@@ -234,7 +235,7 @@ class GenericEntry(Acquisition.Implicit):
         # and verify that it doesn't already exist
         dn = "%s,%s" % (string.strip(rdn), self.dn)
         if conn.hasEntry(dn):           # Check the LDAP server directly
-            raise KeyError, "DN '%s' already exists" % dn
+            raise_(KeyError, "DN '%s' already exists" % dn)
 
         # Now split out the first attr based on the RDN (ie 'cn=bob') and
         # turn it into one of our attributes (ie attr[cn] = 'bob')
@@ -242,7 +243,7 @@ class GenericEntry(Acquisition.Implicit):
         attrs[key] = value
 
         # If the objectclass is not already set in the attrs, set it now
-        if not attrs.has_key('objectclass'):
+        if 'objectclass' not in attrs:
             attrs['objectclass'] = ['top']
 
         # Instantiate the instance based on the connections EntryFactory
@@ -340,7 +341,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         data = self._data
         mod_d = self._mod_delete
         for item in attr:
-            if data.has_key(item):
+            if item in data:
                 del data[item]
                 mod_d.append(item)
 
@@ -396,7 +397,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         #create the new full DN for new subentry and check its existance
         dn='%s,%s' % (string.strip(rdn), self.dn)
         if c.hasEntry(dn):
-            raise KeyError, "DN '%s' already exists" % dn
+            raise_(KeyError, "DN '%s' already exists" % dn)
 
         # now split out the first attr based on the rdn (ie 'cn=bob', turns
         # into attr['cn'] = 'bob'
@@ -404,7 +405,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         attrs[key] = value
 
         #if objectclass is not set in the attrs, set it now
-        if not attrs.has_key('objectclass'):
+        if 'objectclass' not in attrs:
             attrs['objectclass']=['top']
 
         #instantiate the instance based on current instances class

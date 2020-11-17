@@ -204,7 +204,7 @@ def xmlString(results, resourceType, foldersOnly):
             try:
                xmlFolders.append('\r            <Folder name="%s" title="%s" linkbyuid="%s" uid="%s" type="%s" metatype="%s" />'%(ConvertToXmlAttribute(result.id),ConvertToXmlAttribute(titre), tagLinkbyuid, uid, resourceType, ConvertToXmlAttribute(result.meta_type)))
 
-            except Exception , e:
+            except Exception as e:
                pass
 
         else :
@@ -221,12 +221,12 @@ def xmlString(results, resourceType, foldersOnly):
                  unit = " KB"
                else:
                  unit = " Bytes"
-            except Exception,e:
+            except Exception as e:
                pass
             try:
                xmlFiles.append('\r            <File name="%s" size="%s%s" title="%s" photo="%s" linkbyuid="%s" uid="%s" type="%s" isPA3img="no" isattach="no" attachid="" />'%(ConvertToXmlAttribute(result.getId()),size,unit,ConvertToXmlAttribute(titre), tagPhoto, tagLinkbyuid, uid, resourceType))
 
-            except Exception,e:
+            except Exception as e:
                pass
 
     xmlFiles.append('\r        </Files>')
@@ -267,7 +267,7 @@ def GetFoldersAndFiles( resourceType, currentFolder ):
     if currentFolder != "/" :
       try:
         obj = context.restrictedTraverse(currentFolder.lstrip('/'))
-      except Exception,e:
+      except Exception as e:
 
         obj = context.portal_url.getPortalObject()
     else :
@@ -333,7 +333,7 @@ def GetFolders( resourceType, currentFolder ):
             results.append(object)
           elif user.has_role(rolesSeeUnpublishedContent,object) :
             results.append(object)
-      except Exception,e:
+      except Exception as e:
           pass
     results = [ s for s in results if user.has_permission('View', s) ]
 
@@ -436,7 +436,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
                 new_image = obj.newContent(portal_type=typeToAdd, id=idObj, title=titre_data, file=data)
                 new_image.reindexObject()
 
-            except Exception , e :
+            except Exception as e :
                 error = "103"
 
         d= '''
@@ -463,13 +463,13 @@ portal_path = portal_url.replace(server_url,'')
 
 if ConfigUserFilesPath != "" :
    sUserFilesPath = ConfigUserFilesPath
-elif dicoRequest.has_key('ServerPath'):
+elif 'ServerPath' in dicoRequest:
    sUserFilesPath = dicoRequest ['ServerPath']
 else :
    sUserFilesPath = "/"
 
 
-if dicoRequest.has_key('CurrentFolder'):
+if 'CurrentFolder' in dicoRequest:
    sCurrentFolder = dicoRequest ['CurrentFolder']
    if sUserFilesPath!='/' and sUserFilesPath.rstrip('/') not in sCurrentFolder:
         sCurrentFolder = sUserFilesPath
@@ -478,23 +478,23 @@ else :
 
 
 
-if dicoRequest.has_key('Command'):
+if 'Command' in dicoRequest:
     sCommand = dicoRequest ['Command']
 else :
     message_error="No Command in request"
 
-if dicoRequest.has_key('Type'):
+if 'Type' in dicoRequest:
     sResourceType = dicoRequest ['Type']
 else :
     message_error="No Type in request"
 
 
-if dicoRequest.has_key('NewFolderName'):
+if 'NewFolderName' in dicoRequest:
     sFolderName = dicoRequest ['NewFolderName']
 
 
 # interception File Upload
-if sCommand=='FileUpload' and dicoRequest.has_key('NewFile'):
+if sCommand=='FileUpload' and 'NewFile' in dicoRequest:
     sData = dicoRequest ['NewFile']
     sTitle = utf8Decode(dicoRequest ['Title'])
     chaineHtmlUpload = UploadFile(sResourceType, sCurrentFolder, sData, sTitle)

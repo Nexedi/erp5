@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -11,8 +12,8 @@ from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension
 from Products.CMFCore.DirectoryView import registerMetaType
 
-from BaseMailTemplate import BaseMailTemplate
-from MailTemplate import MailTemplate
+from .BaseMailTemplate import BaseMailTemplate
+from .MailTemplate import MailTemplate
 
 class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
     "Wrapper for Mail Template"
@@ -61,7 +62,7 @@ class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
         # Read file first to get a correct content_type default value.
         self._updateFromFS()
 
-        if not kw.has_key('args'):
+        if 'args' not in kw:
             kw['args'] = args
         bound_names['options'] = kw
 

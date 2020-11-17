@@ -28,6 +28,8 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
+from __future__ import absolute_import
+from future.utils import raise_
 import os
 import re
 import string
@@ -114,8 +116,8 @@ from Products.ERP5Type.Globals import get_request
 # Compatibility - XXX - BAD
 #####################################################
 
-from Accessor.TypeDefinition import type_definition
-from Accessor.TypeDefinition import list_types
+from .Accessor.TypeDefinition import type_definition
+from .Accessor.TypeDefinition import list_types
 
 #####################################################
 # Generic sort method
@@ -229,7 +231,7 @@ def deprecated(message=''):
   @simple_decorator
   def _deprecated(wrapped):
     m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
-      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+      wrapped.__name__, wrapped.__module__, wrapped.__code__.co_firstlineno)
     def deprecated(*args, **kw):
       warnings.warn(m, DeprecationWarning, 2)
       return wrapped(*args, **kw)
@@ -253,7 +255,7 @@ def convertToUpperCase(key):
     return _cached_convertToUpperCase[key]
   except KeyError:
     if not isinstance(key, basestring):
-      raise TypeError, '%s is not a string' % (key,)
+      raise_(TypeError, '%s is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
 
@@ -278,7 +280,7 @@ def convertToMixedCase(key):
     a method name according to the ERP5 naming conventions
   """
   if not isinstance(key, basestring):
-    raise TypeError, '%s is not a string' % (key,)
+    raise_(TypeError, '%s is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
     parts[1] = convertToUpperCase(parts[1])
@@ -441,11 +443,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   try:
     from pylint.lint import Run
     from pylint.reporters.text import TextReporter
-  except ImportError, error:
+  except ImportError as error:
     try:
       compile(source_code_str, '<string>', 'exec')
       return []
-    except Exception, error:
+    except Exception as error:
       if isinstance(error, SyntaxError):
         message = {'type': 'F',
                    'row': error.lineno,
@@ -551,7 +553,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 # Globals initialization
 #####################################################
 
-from InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
+from .InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
 
 # List Regexp
 python_file_expr = re.compile("py$")
@@ -641,7 +643,7 @@ import imp
 from App.config import getConfiguration
 
 from Products.ERP5Type.Globals import InitializeClass
-from Accessor.Base import func_code
+from .Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
 
@@ -685,7 +687,7 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise_(IOError, 'the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
@@ -850,7 +852,7 @@ def writeLocalExtension(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise_(IOError, 'the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
 
@@ -864,7 +866,7 @@ def writeLocalTest(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise_(IOError, 'the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
 
@@ -878,7 +880,7 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise_(IOError, 'the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
@@ -937,7 +939,7 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise_(IOError, 'the file %s is already present' % path)
   # check there is no syntax error (that's the most we can do at this time)
   compile(text, path, 'exec')
   with open(path, 'w') as f:
@@ -1062,7 +1064,7 @@ def initializeLocalRegistry(directory_name, import_local_method):
           LOG('ERP5Type', BLATHER,
               'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
-        except Exception, e:
+        except Exception as e:
           if DevelopmentMode:
             raise
           LOG('E5RP5Type', PROBLEM,
@@ -1336,7 +1338,7 @@ def evaluateExpressionFromString(expression_context, expression_string):
   # An AttributeError is raised when instanciating an Expression
   # class, and CompilerError and ValueError are raised in case of
   # error when evaluation the expression
-  except (AttributeError, CompilerError, ValueError), e:
+  except (AttributeError, CompilerError, ValueError) as e:
     raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
                                                               str(e)))
 
@@ -1351,7 +1353,7 @@ def isValidTALESExpression(value):
   """
   try:
     ExpressionEngine.compile(value)
-  except CompilerError, message:
+  except CompilerError as message:
     return False, message
   else:
     return True, None
@@ -1381,7 +1383,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
           portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
-      except (KeyError, AttributeError), err:
+      except (KeyError, AttributeError) as err:
         LOG('ERP5Type', PROBLEM, "assertAttributePortalType failed on %s" % o,
             error=True)
 
@@ -1749,7 +1751,7 @@ def guessEncodingFromText(data, content_type='text/html'):
     else:
       message = 'No suitable encoding detector found.'\
                 ' You must install python-magic'
-    raise NotImplementedError, message
+    raise_(NotImplementedError, message)
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe

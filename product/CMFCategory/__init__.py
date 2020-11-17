@@ -29,6 +29,7 @@
     CMFCategory provides a way to implement categories and relations
     in the CMF. It is based on the ERP5Type RAD
 """
+from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
@@ -37,7 +38,7 @@ this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-import Category, CategoryTool
+from . import Category, CategoryTool
 object_classes = ()
 portal_tools = ( CategoryTool.CategoryTool, )
 content_classes = ()
@@ -45,7 +46,7 @@ content_constructors = ()
 
 # Finish installation
 def initialize( context ):
-  import Document
+  from . import Document
   initializeProduct(context, this_module, globals(),
                     document_module = Document,
                     document_classes = document_classes,

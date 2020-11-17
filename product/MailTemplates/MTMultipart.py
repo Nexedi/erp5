@@ -67,7 +67,7 @@ class MTMultipart(MIMEMultipart):
             data=theFile.read()
             headers=theFile.headers
             if content_type is None:
-                if headers.has_key('content-type'):
+                if 'content-type' in headers:
                     content_type=headers['content-type']
                 else:
                     content_type, enc=guess_content_type(filename, data)

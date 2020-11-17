@@ -126,7 +126,7 @@ type_definition = {
                            },
     'long'               : { 'cast'    : asLong,
                              'null'    : ('', 'None', None,),
-                             'default' : 0L,
+                             'default' : 0,
                              'isList'  : 0,
                            },
     'date'               : { 'cast'    : asDate,

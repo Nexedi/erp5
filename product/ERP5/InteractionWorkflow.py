@@ -17,6 +17,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 import transaction
 from Products.ERP5Type import Globals
 import App
@@ -106,7 +107,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
   def __init__(self, id):
     self.id = id
-    from Interaction import Interaction
+    from .Interaction import Interaction
     self._addObject(Interaction('interactions'))
     from Products.DCWorkflow.Variables import Variables
     self._addObject(Variables('variables'))
@@ -161,7 +162,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       getSecurityManager(), self, ob):
       return default
     status = self._getStatusOf(ob)
-    if status is not None and status.has_key(name):
+    if status is not None and name in status:
       value = status[name]
     # Not set yet.  Use a default.
     elif vdef.default_expr is not None:
@@ -261,9 +262,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         if not vdef.for_status:
           continue
         expr = None
-        if tdef_exprs.has_key(id):
+        if id in tdef_exprs:
           expr = tdef_exprs[id]
-        elif not vdef.update_always and former_status.has_key(id):
+        elif not vdef.update_always and id in former_status:
           # Preserve former value
           value = former_status[id]
         else:

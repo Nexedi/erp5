@@ -145,7 +145,7 @@ class TimerResponse(BaseResponse):
                                               r')(?:(?:\s*;)|\Z)',
                                               re.IGNORECASE)):
         # Encode the Unicode data as requested
-        if self.headers.has_key('content-type'):
+        if 'content-type' in self.headers:
             match = charset_re.match(self.headers['content-type'])
             if match:
                 encoding = match.group(1)

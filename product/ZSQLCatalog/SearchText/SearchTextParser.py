@@ -28,10 +28,13 @@
 #
 ##############################################################################
 
+from __future__ import print_function
+from __future__ import absolute_import
+from future.utils import raise_
 import threading
-from AdvancedSearchTextDetector import AdvancedSearchTextDetector
-from AdvancedSearchTextParser import AdvancedSearchTextParser
-from lexer import ParserOrLexerError
+from .AdvancedSearchTextDetector import AdvancedSearchTextDetector
+from .AdvancedSearchTextParser import AdvancedSearchTextParser
+from .lexer import ParserOrLexerError
 
 if __name__ == '__main__':
   DEBUG = 1
@@ -51,7 +54,7 @@ class ParserPool(object):
     parser_registry = self.parser_registry
     name = '.'.join((parser.__module__, parser.__name__))
     if name in parser_registry:
-      raise ValueError, 'Duplicate parser for name %r' % (name, )
+      raise_(ValueError, 'Duplicate parser for name %r' % (name, ))
     parser_registry[name] = parser
     return name
 
@@ -306,35 +309,35 @@ if __name__ == '__main__':
   for input, expected in check_list:
     try:
       result = parse(input)
-    except ParserOrLexerError, message:
-      print "ERROR when checking %r" % (input, )
-      print " crashed with: %s" % (message, )
-      print " instead of producing %r" % (expected, )
+    except ParserOrLexerError as message:
+      print("ERROR when checking %r" % (input, ))
+      print(" crashed with: %s" % (message, ))
+      print(" instead of producing %r" % (expected, ))
     else:
       if result != expected:
-        print "ERROR when checking %r:" % (input, )
-        print " produced   %r" % (result, )
-        print " instead of %r" % (expected, )
+        print("ERROR when checking %r:" % (input, ))
+        print(" produced   %r" % (result, ))
+        print(" instead of %r" % (expected, ))
       else:
         success_count += 1
-  print '%i/%i checks succeeded.' % (success_count, len(check_list))
+  print('%i/%i checks succeeded.' % (success_count, len(check_list)))
   while 1:
     try:
       input = raw_input('catalog> ')
     except (EOFError, KeyboardInterrupt):
       break
-    print repr(input)
+    print(repr(input))
     try:
       try:
         detector_result = parser_pool.get(DETECTOR_ID)(input,
           isColumn)
-      except ParserOrLexerError, message:
-        print '  Detector raise: %r' % (message, )
+      except ParserOrLexerError as message:
+        print('  Detector raise: %r' % (message, ))
         detector_result = False
       else:
-        print '  Detector: %r' % (detector_result, )
+        print('  Detector: %r' % (detector_result, ))
       if detector_result:
-        print '  LEX:'
+        print('  LEX:')
         advanced_parser = parser_pool.get(PARSER_ID)
         lexer = advanced_parser.lexer
         advanced_parser.isColumn = isColumn
@@ -342,13 +345,13 @@ if __name__ == '__main__':
         while 1:
           tok = lexer.token()
           if not tok: break      # No more input
-          print '    %s' % (tok, )
+          print('    %s' % (tok, ))
         advanced_parser.isColumn = None
-        print '  YACC:'
-        print '    %r' % (parse(input, debug=2), )
+        print('  YACC:')
+        print('    %r' % (parse(input, debug=2), ))
       else:
-        print '    %r' % (input, )
-    except ParserOrLexerError, message:
-      print message
-  print
+        print('    %r' % (input, ))
+    except ParserOrLexerError as message:
+      print(message)
+  print()
 

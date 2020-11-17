@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from __future__ import absolute_import
+from future.utils import raise_
 import os.path
 
 # Import from Zope
@@ -22,10 +24,10 @@ from App.ImageFile import ImageFile
 from DocumentTemplate.DT_String import String
 
 # Import from Localizer
-from patches import get_request
-import Localizer, MessageCatalog
-from LocalFiles import LocalDTMLFile
-from GettextTag import GettextTag
+from .patches import get_request
+from . import Localizer, MessageCatalog
+from .LocalFiles import LocalDTMLFile
+from .GettextTag import GettextTag
 
 
 
@@ -44,7 +46,7 @@ def initialize(context):
         message = (
             "The Localizer product must be installed within the 'Products'"
             " folder with the name 'Localizer' (not '%s').") % filename
-        raise RuntimeError, message
+raise_(RuntimeError, message)
 
     # XXX This code has been written by Cornel Nitu, it may be a solution to
     # upgrade instances.

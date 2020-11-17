@@ -29,6 +29,7 @@
     ERP5Catalog provides an extended catalog based on ZSQLCatalog
     and extended local roles management
 """
+from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
@@ -40,7 +41,7 @@ document_classes = updateGlobals(this_module, globals(),
 # Finish installation
 def initialize( context ):
   # Define object classes and tools
-  import ActivityTool, ActiveProcess, ActivityConnection
+  from . import ActivityTool, ActiveProcess, ActivityConnection
   from .joblib import CMFActivityParallelBackend
   object_classes = (ActiveProcess.ActiveProcess,
                     #ActivityConnection.ActivityConnection

@@ -68,7 +68,7 @@ def dump_threads():
           from Products.ZMySQLDA.db import DB
           while f is not None:
             code = f.f_code
-            if code is DB._query.func_code:
+            if code is DB._query.__code__:
               mysql_info = "\nMySQL query:\n%s\n" % f.f_locals['query']
               break
             f = f.f_back

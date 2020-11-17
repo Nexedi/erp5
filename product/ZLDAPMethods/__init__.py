@@ -1,6 +1,7 @@
 """LDAP Filter Methods Package """
+from __future__ import absolute_import
 
-import LM
+from . import LM
 
 def initialize(context):
 

@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from functools import partial
 from OFS import Moniker
 from zExceptions import BadRequest
@@ -72,7 +73,7 @@ class CopyContainer:
       if uids is None and REQUEST is not None:
           return eNoItemsSpecified
       elif uids is None:
-          raise ValueError, 'uids must be specified'
+          raise ValueError('uids must be specified')
 
       if isinstance(uids, (str, int)):
           ids=[uids]
@@ -80,7 +81,7 @@ class CopyContainer:
       for uid in uids:
           ob=self.getPortalObject().portal_catalog.getObject(uid)
           if not ob.cb_isCopyable():
-              raise CopyError, eNotSupported % uid
+              raise_(CopyError, eNotSupported % uid)
           m=Moniker.Moniker(ob)
           oblist.append(m.dump())
       cp=(0, oblist)
@@ -163,8 +164,8 @@ class CopyContainer:
         pass # There is no activity tool
       else:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise ActivityPendingError, 'Sorry, pending activities prevent ' \
-                         +  'changing id at this current stage'
+          raise_(ActivityPendingError, 'Sorry, pending activities prevent ' \
+                         +  'changing id at this current stage')
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)
@@ -187,7 +188,7 @@ class CopyContainer:
       if uids is None and REQUEST is not None:
           return eNoItemsSpecified
       elif uids is None:
-          raise ValueError, 'uids must be specified'
+          raise ValueError('uids must be specified')
 
       if isinstance(uids, (str, int)):
           ids=[uids]
@@ -195,7 +196,7 @@ class CopyContainer:
       for uid in uids:
           ob=self.getPortalObject().portal_catalog.getObject(uid)
           if not ob.cb_isMoveable():
-              raise CopyError, eNotSupported % id
+              raise_(CopyError, eNotSupported % id)
           m=Moniker.Moniker(ob)
           oblist.append(m.dump())
       cp=(1, oblist) # 0->1 This is the difference with manage_copyObject
@@ -591,7 +592,7 @@ class CopyContainer:
     cp = None
     if cb_copy_data is not None:
       cp = cb_copy_data
-    elif REQUEST is not None and REQUEST.has_key('__cp'):
+    elif REQUEST is not None and '__cp' in REQUEST:
       cp = REQUEST['__cp']
     if cp is None:
       raise CopyError(eNoData)

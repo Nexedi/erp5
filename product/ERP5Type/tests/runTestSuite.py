@@ -1,13 +1,15 @@
 #!/usr/bin/env python2.7
+from __future__ import print_function
+from __future__ import absolute_import
 import argparse, sys, os, textwrap
 from erp5.util import taskdistribution
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
 # Even if it's not used in this file. Yuck.
-import ERP5TypeTestSuite
+from . import ERP5TypeTestSuite
 
 def _parsingErrorHandler(data, _):
-  print >> sys.stderr, 'Error parsing data:', repr(data)
+  print('Error parsing data:', repr(data), file=sys.stderr)
 taskdistribution.patchRPCParser(_parsingErrorHandler)
 
 def makeSuite(
@@ -118,8 +120,8 @@ def main():
       args.zserver_frontend_url_list.split(',') if args.zserver_frontend_url_list else ())
 
   if args.zserver_address_list and len(args.zserver_address_list) < args.node_quantity:
-    print >> sys.stderr, 'Not enough zserver address/frontends for node quantity %s (%r)' % (
-        args.node_quantity, args.zserver_address_list)
+    print('Not enough zserver address/frontends for node quantity %s (%r)' % (
+        args.node_quantity, args.zserver_address_list), file=sys.stderr)
     sys.exit(1)
 
   # sanity check

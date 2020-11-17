@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,8 @@
 #
 ##############################################################################
 
-from Query import Query
+from future.utils import raise_
+from .Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
@@ -45,7 +47,7 @@ class SQLQuery(Query):
         Raw SQL text.
     """
     if not isinstance(payload, basestring):
-      raise TypeError, 'Payload must be a string, got a %r: %r' % (type(payload), payload)
+      raise_(TypeError, 'Payload must be a string, got a %r: %r' % (type(payload), payload))
     assert len(payload)
     self.payload = '(' + payload + ')'
 

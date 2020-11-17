@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -35,7 +36,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
 from Products.Formulator.TALESField import TALESField
-import CaptchasDotNet
+from . import CaptchasDotNet
 import string
 import random
 from hashlib import md5
@@ -164,14 +165,14 @@ class CaptchaWidget(Widget.TextWidget):
 
   def add_captcha(self, portal_sessions, key, value):
     session = portal_sessions[key]
-    if session.has_key(key):
+    if key in session:
       return False
     session[key] = value
     return True
 
   def validate_answer(self, portal_sessions, key, value):
     session = portal_sessions[key]
-    if not(session.has_key(key)):
+    if not(key in session):
       return False
     result = (session[key] == value)
     # Forbid several use of the same captcha.
@@ -262,7 +263,7 @@ class CaptchaField(ZMIField):
       try:
         # validate the form and get results
         result[field.get_real_field().id] = field.get_real_field().validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -278,7 +279,7 @@ class CaptchaField(ZMIField):
     try:
       # validate the form and get results
       result.update(self.form.validate(REQUEST))
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -328,7 +329,7 @@ class CaptchaField(ZMIField):
       try:
         # validate the form and get results
         result[field.id] = field.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -341,7 +342,7 @@ class CaptchaField(ZMIField):
     try:
       # validate the form and get results
       result.update(self.tales_form.validate(REQUEST))
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)

@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Acquisition import aq_base
 
 from zExceptions import MethodNotAllowed
@@ -27,15 +28,15 @@ def MKCOL(self, REQUEST, RESPONSE):
     """Create a new collection resource."""
     self.dav__init(REQUEST, RESPONSE)
     if REQUEST.get('BODY', ''):
-        raise UnsupportedMediaType, 'Unknown request body.'
+        raise UnsupportedMediaType('Unknown request body.')
 
     name=self.__name__
     parent = self.__parent__
 
     if hasattr(aq_base(parent), name):
-        raise MethodNotAllowed, 'The name %s is in use.' % name
+        raise_(MethodNotAllowed, 'The name %s is in use.' % name)
     if not isDavCollection(parent):
-        raise Forbidden, 'Cannot create collection at this location.'
+        raise Forbidden('Cannot create collection at this location.')
 
     ifhdr = REQUEST.get_header('If', '')
     if IWriteLock.providedBy(parent) and parent.wl_isLocked():
@@ -72,7 +73,7 @@ def PUT(self, REQUEST, RESPONSE):
 
   self.dav__init(REQUEST, RESPONSE)
   if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-    raise Forbidden, 'REQUEST_METHOD should be PUT.'
+    raise Forbidden('REQUEST_METHOD should be PUT.')
 
   name = self.__name__
   parent = self.__parent__

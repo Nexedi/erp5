@@ -109,7 +109,7 @@ class State(XMLObject):
     else:
       result = []
       for x in wh:
-        if x.has_key('undo') and x['undo'] == 1:
+        if 'undo' in x and x['undo'] == 1:
           result.pop()
         else:
           result.append(x.copy())

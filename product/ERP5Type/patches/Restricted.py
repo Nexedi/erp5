@@ -223,7 +223,7 @@ from AccessControl.ZopeGuards import _dict_white_list
 # (closure) directly to ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+full_write_guard.__closure__[1].cell_contents.__self__[defaultdict] = True
 
 # In contrary to builtins such as dict/defaultdict, it is possible to set
 # attributes on OrderedDict instances, so only allow setitem/delitem
@@ -467,13 +467,13 @@ ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
 # of RestrictedPython (closure) directly to allow
 # write access to ndarray and pandas DataFrame.
 from RestrictedPython.Guards import full_write_guard
-full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
-full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
-full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.DataFrame] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.Series] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
-full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
+full_write_guard.__closure__[1].cell_contents.__self__[np.ndarray] = True
+full_write_guard.__closure__[1].cell_contents.__self__[np.core.records.recarray] = True
+full_write_guard.__closure__[1].cell_contents.__self__[np.core.records.record] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.DataFrame] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.Series] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.MultiIndex] = True
+full_write_guard.__closure__[1].cell_contents.__self__[pd.Index] = True

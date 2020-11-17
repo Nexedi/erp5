@@ -13,10 +13,10 @@ kw = { 'selection_index': selection_index,
 # Default behaviour is not as great but returns something
 kw.update(request.form)
 
-if kw.has_key('listbox_uid'): del kw['listbox_uid']
-if kw.has_key('list_start'): del kw['list_start']
+if 'listbox_uid' in kw: del kw['listbox_uid']
+if 'list_start' in kw: del kw['list_start']
 
-if request.form.has_key('dialog_id'):
+if 'dialog_id' in request.form:
   form_id = request.form['dialog_id']
 else:
   form_id = request.form['form_id']

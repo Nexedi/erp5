@@ -32,7 +32,7 @@ class ERP5TypeTestSuite(TestSuite):
       if self.log_directory:
         args = ('--log_directory', self.getLogDirectoryPath(*args, **kw), ) + args
 
-    if self.__dict__.has_key("bt5_path"):
+    if "bt5_path" in self.__dict__:
       args = ("--bt5_path=%s" % self.bt5_path,) + args
     instance_number = self.instance or 1
     if self.zserver_address_list:
@@ -71,7 +71,7 @@ class ERP5TypeTestSuite(TestSuite):
            + ('--verbose', '--erp5_sql_connection_string=' + mysql_db_list[0]) \
            + args
       status_dict = self.spawn(*args, **kw)
-    except SubprocessError, e:
+    except SubprocessError as e:
       status_dict = e.status_dict
     test_log = status_dict['stderr']
     search = self.RUN_RE.search(test_log)
@@ -148,7 +148,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
   def __init__(self, *args, **kw):
     # Use same portal id for all tests run by current instance
     # but keep it (per-run) random.
-    self._portal_id = 'portal_%i' % (random.randint(0, sys.maxint), )
+    self._portal_id = 'portal_%i' % (random.randint(0, sys.maxsize), )
     super(SavedTestSuite, self).__init__(*args, **kw)
 
   def getLogDirectoryPath(self, *args, **kw):
@@ -157,7 +157,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
     return super(SavedTestSuite, self).getLogDirectoryPath(*args, **kw)
 
   def __runUnitTest(self, *args, **kw):
-    if self.__dict__.has_key("bt5_path"):
+    if "bt5_path" in self.__dict__:
       args = ("--bt5_path=%s" % self.bt5_path,) + args
     return super(SavedTestSuite, self).runUnitTest(
       '--portal_id=' + self._portal_id,

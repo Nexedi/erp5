@@ -13,6 +13,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
@@ -55,11 +56,11 @@ from xml.sax.saxutils import escape, quoteattr
 import os
 from hashlib import md5
 
-from interfaces.query_catalog import ISearchKeyCatalog
+from .interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 
-from SearchText import isAdvancedSearchText, dequote
+from .SearchText import isAdvancedSearchText, dequote
 
 # Try to import ActiveObject in order to make SQLCatalog active
 try:
@@ -803,7 +804,7 @@ class Catalog(Folder,
     # Make sure no duplicates
     if getattr(aq_base(self), 'subject_set_uid_dict', None) is None:
       self._clearSubjectCache()
-    elif self.subject_set_uid_dict.has_key(subject_list):
+    elif subject_list in self.subject_set_uid_dict:
       return (self.subject_set_uid_dict[subject_list], None)
     # If the id_tool is there, it is better to use it, it allows
     # to create many new subject uids by the same time
@@ -1231,7 +1232,7 @@ class Catalog(Folder,
     c_elapse = time.clock() - c_elapse
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
+              urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
 
   security.declarePrivate('catalogObject')
   def catalogObject(self, object, path, is_object_moved=0):
@@ -1446,7 +1447,7 @@ class Catalog(Folder,
     if meta_type in self.HAS_ARGUMENT_SRC_METATYPE_SET:
       return method.arguments_src.split()
     elif meta_type in self.HAS_FUNC_CODE_METATYPE_SET:
-      return method.func_code.co_varnames[:method.func_code.co_argcount]
+      return method.__code__.co_varnames[:method.__code__.co_argcount]
     # Note: Raising here would completely prevent indexation from working.
     # Instead, let the method actually fail when called, so _catalogObjectList
     # can log the error and carry on.
@@ -1721,7 +1722,7 @@ class Catalog(Folder,
       return {}
     index = list(method(table=table))
     for line in index:
-      if table_index.has_key(line.KEY_NAME):
+      if line.KEY_NAME in table_index:
         table_index[line.KEY_NAME].append(line.COLUMN_NAME)
       else:
         table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
@@ -1832,7 +1833,7 @@ class Catalog(Folder,
       else:
         search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      func_code = script.func_code
+      func_code = script.__code__
       search_key = (
         AdvancedSearchKeyWrapperForScriptableKey if (
           # 5: search_value (under any name), "search_key", "group",
@@ -2529,10 +2530,10 @@ InitializeClass(Catalog)
 
 class CatalogError(Exception): pass
 
-from Query.Query import Query as BaseQuery
-from Query.SimpleQuery import SimpleQuery
-from Query.ComplexQuery import ComplexQuery
-from Query.AutoQuery import AutoQuery
+from .Query.Query import Query as BaseQuery
+from .Query.SimpleQuery import SimpleQuery
+from .Query.ComplexQuery import ComplexQuery
+from .Query.AutoQuery import AutoQuery
 Query = AutoQuery
 
 def NegatedQuery(query):
@@ -2547,7 +2548,7 @@ def OrQuery(*args):
 allow_class(SimpleQuery)
 allow_class(ComplexQuery)
 
-import SearchKey
+from . import SearchKey
 SEARCH_KEY_INSTANCE_POOL = {}
 SEARCH_KEY_CLASS_CACHE = {}
 
@@ -2657,10 +2658,10 @@ class AdvancedSearchKeyWrapperForScriptableKey(SearchKey.DefaultKey.DefaultKey):
     )
 InitializeClass(AdvancedSearchKeyWrapperForScriptableKey)
 
-from Operator import operator_dict
+from .Operator import operator_dict
 def getComparisonOperatorInstance(operator):
   return operator_dict[operator]
 
-from Query.EntireQuery import EntireQuery
+from .Query.EntireQuery import EntireQuery
 
 verifyClass(ISearchKeyCatalog, Catalog)

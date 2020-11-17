@@ -18,6 +18,6 @@ class PatchClass(tuple):
             return tuple.__new__(cls, args)
         _, ((cls,),), d = args
         for k, v in d.iteritems():
-            k == "__module__" or setattr(cls, k, v.im_func
+            k == "__module__" or setattr(cls, k, v.__func__
                 if getattr(v, "im_class", None) is cls and v.__self__ is None
                 else v)

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
@@ -55,7 +56,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
      persistent.
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
+      raise_(ValueError, '%s is not a valid group Id.' % (repr(id_group), ))
     if default is None:
       default = 0
     last_id_dict = getattr(self, 'last_id_dict', None)
@@ -106,7 +107,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       for id_group, last_id in portal_ids.dict_ids.items():
         if not isinstance(id_group, str):
           id_group = repr(id_group)
-        if self.last_id_dict.has_key(id_group) and \
+        if id_group in self.last_id_dict and \
            self.last_id_dict[id_group] > last_id:
           continue
         self.last_id_dict[id_group] = last_id
@@ -144,10 +145,10 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     if clear:
       self.clearGenerator()
     if not isinstance(id_dict, dict):
-      raise TypeError, 'the argument given is not a dictionary'
+      raise TypeError('the argument given is not a dictionary')
     for value in id_dict.values():
       if not isinstance(value, (int, long)):
-        raise TypeError, 'the value given in dictionary is not a integer'
+        raise TypeError('the value given in dictionary is not a integer')
     self.last_id_dict.update(id_dict)
 
   security.declareProtected(Permissions.ModifyPortalContent,

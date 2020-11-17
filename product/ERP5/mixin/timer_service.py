@@ -80,10 +80,10 @@ class TimerServiceMixin(object):
     super(TimerServiceMixin, self).manage_afterAdd(*args, **kw)
 
   security.declarePublic('getCurrentNode')
-  getCurrentNode = ActivityTool.getCurrentNode.im_func
+  getCurrentNode = ActivityTool.getCurrentNode.__func__
   security.declarePublic('getServerAddress')
-  getServerAddress = ActivityTool.getServerAddress.im_func
+  getServerAddress = ActivityTool.getServerAddress.__func__
 
-  _isValidNodeName = ActivityTool._isValidNodeName.im_func
+  _isValidNodeName = ActivityTool._isValidNodeName.__func__
 
 InitializeClass(TimerServiceMixin)

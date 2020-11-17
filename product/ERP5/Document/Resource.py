@@ -806,7 +806,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       try:
         result = quantity * self._getConversionRatio(from_unit, variation_list)\
                         / self._getConversionRatio(to_unit, variation_list)
-      except (ArithmeticError, AttributeError, LookupError, TypeError), error:
+      except (ArithmeticError, AttributeError, LookupError, TypeError) as error:
         # For compatibility, we only log the error and return None.
         # No exception for the moment.
         LOG('Resource.convertQuantity', WARNING,

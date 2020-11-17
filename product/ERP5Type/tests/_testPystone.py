@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2013 Nexedi SA and Contributors. All Rights Reserved.
@@ -33,4 +34,4 @@ class TestPystone(unittest.TestCase):
   """Tests to get pystone value
   """
   def test_pystone(self):
-    print "PYSTONE RESULT (time,score) : %r" % (pystone.pystones(),)
+    print("PYSTONE RESULT (time,score) : %r" % (pystone.pystones(),))

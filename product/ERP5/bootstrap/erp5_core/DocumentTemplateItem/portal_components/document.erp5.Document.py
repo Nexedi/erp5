@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import re
 from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
@@ -152,18 +153,18 @@ class DocumentConversionServerProxy():
           # Cloudooo return result in (200 or 402, dict(), '') format or just based type
           # 402 for error and 200 for ok
           result_set =  func(*args, **kw)
-        except SocketError, e:
+        except SocketError as e:
           message = 'Socket Error: %s' % (repr(e) or 'undefined.')
           socket_error_list.append(message)
           retry_server_list.append((uri, server_proxy))
-        except ProtocolError, e:
+        except ProtocolError as e:
           # Network issue
           message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
           if e.errcode == -1:
             message = "%s: Connection refused" % (e.url)
           protocol_error_list.append(message)
           retry_server_list.append((uri, server_proxy))
-        except Fault, e:
+        except Fault as e:
           # Return not supported data types
           fault_error_list.append(e)
         else:
@@ -759,7 +760,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       if existing_document is not None:
         document = existing_document
         if not _checkPermission(Permissions.ModifyPortalContent, existing_document):
-          raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId()
+          raise_(Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId())
         else:
           update_kw = {}
           for k in self.propertyIds():
