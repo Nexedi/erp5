@@ -289,13 +289,23 @@
                 });
               }
               for (i = 0; i < jump_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: jump_list[i].href
-                  }
-                });
+                if (jump_list[i].href.indexOf("http") !== -1) {
+                  parameter_list.push({
+                    command: 'display_dialog_with_history',
+                    options: {
+                      jio_key: gadget.state.jio_key,
+                      view: jump_list[i].href
+                    }
+                  });
+                } else {
+                  parameter_list.push({
+                    command: 'raw',
+                    options: {
+                      url: jump_list[i].href
+                    }
+                  });
+                }
+
               }
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
