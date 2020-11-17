@@ -1244,6 +1244,8 @@ div[data-gadget-scope='header'] .ui-header {
     padding: @half-margin-size 0;
 
     & > div {
+      // Do not expand every div, as some gadget fields
+      // may use div element which should have a more contrained size
       width: 100%;
     }
   }
