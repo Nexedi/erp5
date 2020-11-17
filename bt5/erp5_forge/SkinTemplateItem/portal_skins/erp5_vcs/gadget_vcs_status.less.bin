@@ -1,0 +1,50 @@
+div[data-gadget-url$="gadget_vcs_status.html"] {
+
+  li {
+    li {
+      padding-left: 1em;
+    }
+
+    input.showhide {
+      display: none;
+      &:checked ~ label.show {
+        display: none;
+      }
+      &:checked ~ ul {
+        display: none;
+      }
+      &:not(:checked) ~ label.hide {
+        display: none;
+      }
+    }
+
+    label {
+      &.showhide {
+        width: 1em;
+      }
+      display: inline-block;
+
+      input {
+        margin: 0 3pt;
+      }
+    }
+  }
+
+  button {
+    color: #212529;
+    padding: 3pt;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 0.325em;
+    display: inline-block;
+    margin-right: 6pt;
+
+    &:disabled, &[disabled] {
+      color: #999999;
+    }
+
+    &:before {
+      padding-right: 0.2em;
+    }
+  }
+
+}
