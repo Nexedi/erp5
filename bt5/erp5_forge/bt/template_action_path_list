@@ -15,6 +15,7 @@ Business Template | create_report
 Business Template | create_skin_folder
 Business Template | create_working_copy
 Business Template | git_commit
+Business Template | git_commit_action
 Business Template | manage_field_library
 Business Template | rename_proxy_field
 Business Template | svn_cleanup_locks
