@@ -22,7 +22,10 @@
       dd_element = document.createElement('dd');
       dd_element.setAttribute('class', 'document-listview');
       a_element = document.createElement('a');
-      a_element.setAttribute('class', action_list[i].class_name);
+      if (action_list[i].class_name) {
+        // Avoid add class='undefined' in HTML
+        a_element.setAttribute('class',   action_list[i].class_name);
+      }
       a_element.href = href_list[index + i];
       a_element.textContent = action_list[i].title;
       dd_element.appendChild(a_element);
