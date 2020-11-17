@@ -1541,6 +1541,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "view": erp5_action_list[-1]['name'],
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
+      if preferred_html_style_developper_mode and erp5_action_key == "object_jio_jump":
+        type_info = portal.portal_types.getTypeInfo(traversed_document)
+        if type_info is not None and type_info.Base_getSourceVisibility():
+          erp5_action_list.append({
+            'href': "%s?ignore_layout:int=1" % type_info.absolute_url_path(),
+            'name': "jump_to_portal_type",
+            'icon': None,
+            'title': "%s %s" % (
+              Base_translateString("Edit Portal Type"),
+              Base_translateString(traversed_document.getPortalType())
+            ),
+          })
+          context.log(erp5_action_list)
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
