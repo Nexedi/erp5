@@ -298,6 +298,8 @@
                     }
                   });
                 } else {
+                  // support action that redirect developers to the backend
+                  // For example, link to access a document portal type
                   parameter_list.push({
                     command: 'raw',
                     options: {
