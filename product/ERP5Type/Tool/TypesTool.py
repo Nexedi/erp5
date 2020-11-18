@@ -100,8 +100,29 @@ class TypesTool(TypeProvider):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  _bootstrap_type_list = (
+    'Business Template',
+    'Standard Property',
+    'Acquired Property',
+    # workflow (initializePortalTypeDynamicWorkflowMethods)
+    'Workflow Tool',
+    'Workflow State',
+    'Workflow Transition',
+    'Workflow Transition Variable',
+    'Workflow Script',
+    'Workflow Variable',
+    'Worklist',
+    'Workflow',
+    'Interaction Workflow Interaction',
+    'Interaction Workflow',
+    # the following ones are required to upgrade an existing site
+    'Category Property',
+    # the following is needed to bootstrap Catalog Tool and default catalog
+    'Catalog Tool',
+  )
+
   def _isBootstrapRequired(self):
-    if not self.has_key('Standard Property'):
+    if [x for x in self._bootstrap_type_list if not self.has_key(x)]:
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates
@@ -112,8 +133,11 @@ class TypesTool(TypeProvider):
     except AttributeError:
       pass
     try:
-      script = self.getPortalObject().portal_workflow \
-        .dynamic_class_generation_interaction_workflow.scripts \
+      workflow_tool = self.getPortalObject().portal_workflow
+      workflow = workflow_tool.dynamic_class_generation_interaction_workflow
+      script_dict = {script.getReference(): script
+                     for script in workflow.getScriptValueList()}
+      script = script_dict\
         .DynamicClassGeneration_resetDynamicDocuments
       new = '.resetDynamicDocumentsOnceAtTransactionBoundary('
       if new not in script._body:
@@ -125,16 +149,16 @@ class TypesTool(TypeProvider):
 
   def _bootstrap(self):
     from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
-      'Business Template',
-      'Standard Property',
-      'Acquired Property',
-      # the following ones are required to upgrade an existing site
-      'Category Property',
-      # the following is needed to bootstrap Catalog Tool and default catalog
-      'Catalog Tool',
-    ))
+    ERP5Generator.bootstrap(self,
+                            'erp5_core',
+                            'PortalTypeTemplateItem',
+                            self._bootstrap_type_list)
+    getattr(self, 'Workflow Transition Variable').base_category_list = ('causality',)
     ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow Tool')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow Transition')
+    ERP5Generator.bootstrap_allow_type(self, 'Interaction Workflow')
 
   def listContentTypes(self, container=None):
     """List content types from all providers

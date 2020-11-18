@@ -62,6 +62,7 @@
                 <string>_setTypePropertySheet.*</string>
                 <string>_setTypeBaseCategory.*</string>
                 <string>_setTypeAcquireLocalRole</string>
+                <string>_setTypeWorkflow.*</string>
               </list>
             </value>
         </item>

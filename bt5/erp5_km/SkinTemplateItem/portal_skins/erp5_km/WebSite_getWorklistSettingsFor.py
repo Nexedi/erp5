@@ -4,8 +4,6 @@ It includes some copy / paste of code from DCWorkflow. Refactoring
 needed through DCWorkflow API extension. 
 """
 
-kw = {}
-
 # Try to access the workflow defined by the action
 try:
   workflow_tool = context.portal_workflow
@@ -14,10 +12,9 @@ except AttributeError:
   return {}
 
 # If this is a worklist action, read the worklist definition
-worklist = getattr(workflow.worklists, action['worklist_id'])
-for varkey in worklist.getVarMatchKeys():
-  kw[varkey] = worklist.getVarMatch(varkey)
-  
+worklist = workflow.getWorklistValueByReference(action['worklist_id'])
+kw = worklist.getIdentityCriterionDict()
+
 # Automatically filter workflists per portal type
 # so that the same state can be used for different
 # worklists and they are not merged

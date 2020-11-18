@@ -1,4 +1,4 @@
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import Message
 
 # Check new catalog or catalog is the same as previous archive
