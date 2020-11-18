@@ -39,7 +39,7 @@ transaction.newContent(
   quantity=(-float(context.getTotalPrice())),
 )
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from zExceptions import Redirect
 try:
   transaction.Base_checkConsistency()

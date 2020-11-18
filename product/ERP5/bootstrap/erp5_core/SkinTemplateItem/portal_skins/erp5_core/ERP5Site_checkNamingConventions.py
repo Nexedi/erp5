@@ -184,22 +184,18 @@ for folder in context.portal_skins.objectValues(spec=('Folder',)):
 for wf in context.portal_workflow.objectValues():
 
   # Test workflow states
-  wf_states = wf.states
   message = ''
-  if wf_states not in (None, (), [], ''):
-    for state in wf_states.objectValues() :
-      message += checkTitle('/'.join(['portal_workflow', wf.id, 'states', state.id]), 'title', state.title)
-    if message:
-      message_list.append(message)
+  for state in wf.getStateValueList():
+    message += checkTitle(state.getRelativeUrl(), 'title', state.getTitle())
+  if message:
+    message_list.append(message)
 
 #   # Test workflow states
-#   wf_scripts = wf.scripts
 #   message = ''
-#   if wf_scripts not in (None, (), [], ''):
-#     for script in wf_scripts.objectValues():
-#       message += checkTitle('/'.join(['portal_workflow', wf.id, 'scripts', script.id]), 'id', script.id)
-#     if message:
-#       message_list.append(message)
+#   for script in wf.getScriptValueList():
+#     message += checkTitle(script.getRelativeUrl(), 'title', script.getTitle())
+#   if message:
+#     message_list.append(message)
 
 
 # Test portal types

@@ -33,7 +33,7 @@ from App.special_dtml import HTMLFile
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.PythonScripts.PythonScript import \
   PythonScript as ZopePythonScript
-from Products.ERP5.mixin.expression import ExpressionMixin
+from Products.ERP5Type.mixin.expression import ExpressionMixin
 
 # Only needed until skin tool is migrated
 manage_addPythonScriptFormThroughZMI = \
