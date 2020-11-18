@@ -9,7 +9,7 @@ import datetime
 import os
 import time
 import requests
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 present = False
 tz = None

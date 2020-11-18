@@ -168,7 +168,7 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
 
     base_constraint_definition_dict['id'] = \
         filesystem_definition_copy_dict.pop('id') + \
-          cls.getIdAsReferenceSuffix()
+          cls.getIdAsReferenceAffix()
 
     base_constraint_definition_dict['description'] = \
         filesystem_definition_copy_dict.pop('description', '')

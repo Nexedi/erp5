@@ -5,7 +5,7 @@
 # In this case we want to be sure that open assignments share the same site category.
 # XXX
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 # Get the assignment object and its parent
 assignment_object = state_change['object']

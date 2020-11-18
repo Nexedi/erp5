@@ -60,7 +60,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
     Set the Reference from a filesystem definition of a property
     """
     return context.newContent(portal_type=cls.portal_type,
-                              id=category_name + cls.getIdAsReferenceSuffix())
+                              id=category_name + cls.getIdAsReferenceAffix())
 
   getter_definition_dict = {
       # normal accessors
