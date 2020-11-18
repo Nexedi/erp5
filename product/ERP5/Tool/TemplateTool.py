@@ -1403,7 +1403,7 @@ class TemplateTool (BaseTool):
     def upgradeSite(self, bt5_list, deprecated_after_script_dict=None,
                     deprecated_reinstall_set=None, dry_run=False,
                     delete_orphaned=False,
-                    keep_bt5_id_set=[],
+                    keep_bt5_id_set=(),
                     update_catalog=False):
       """
       Upgrade many business templates at a time. bt5_list should
@@ -1438,9 +1438,17 @@ class TemplateTool (BaseTool):
         LOG('upgradeSite', 0, message)
       dependency_list = [x[1] for x in \
         self.resolveBusinessTemplateListDependency(bt5_list)]
+      keep_bt5_id_set = set(keep_bt5_id_set)
+      # XXX: Removed bt5: used to contain Configurator Workflow implementation
+      # (workflow_module) which has since been migrated to portal_workflow and
+      # erp5_core.  This must not be uninstalled as it would remove Workflow
+      # Portal Type and erp5_core upgrade then fails on _reindexObjectVariables():
+      #   Base_reindexObjectSecurity: getTypeInfo().getTypeAllowedContentTypeList()
+      #   => AttributeError: 'NoneType'
+      #
+      # Tested by testUpgradeInstanceWithOldDataFs
+      keep_bt5_id_set.add('erp5_workflow')
       if delete_orphaned:
-        if keep_bt5_id_set is None:
-          keep_bt5_id_set = set()
         to_remove_bt5_list = [x for x in self.getInstalledBusinessTemplateList()
                               if x.title not in dependency_list]
         sorted_to_remove_bt5_id_list = self.sortDownloadedBusinessTemplateList(

@@ -23,7 +23,6 @@ def dumpWorkflowChain(self, ignore_default=False,
   if ignore_id_set is None:
     ignore_id_set = set()
   workflow_tool = self.getPortalObject().portal_workflow
-  cbt = workflow_tool._chains_by_type
   ti = workflow_tool._listTypeInfo()
   types_info = []
   for t in ti:
@@ -32,15 +31,14 @@ def dumpWorkflowChain(self, ignore_default=False,
     if title == id_:
       title = None
     chain = None
-    if cbt is not None and cbt.has_key(id_):
-      cbt_list = [x for x in cbt[id_] if not(x in ignore_id_set)]
-      if keep_order:
-        chain = cbt_list
-      else:
-        chain = sorted(cbt_list)
-    else:
+    cbt_list = [x for x in t.getTypeWorkflowList() if not(x in ignore_id_set)]
+    if not cbt_list:
       if not(ignore_default):
         chain = ['(Default)']
+    elif keep_order:
+      chain = cbt_list
+    else:
+      chain = sorted(cbt_list)
     if chain:
       types_info.append({'id': id_,
                        'title': title,

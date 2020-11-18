@@ -73,6 +73,14 @@
   <item>SQL Non Continuous Increasing Id Generator</item>
   <item>ZODB Continuous Increasing Id Generator</item>
  </portal_type>
+ <portal_type id="Interaction">
+  <item>Transition Variable</item>
+ </portal_type>
+ <portal_type id="Interaction Workflow">
+  <item>Interaction Workflow Interaction</item>
+  <item>Workflow Script</item>
+  <item>Workflow Variable</item>
+ </portal_type>
  <portal_type id="Memcached Tool">
   <item>Memcached Plugin</item>
  </portal_type>
@@ -128,5 +136,19 @@
   <item>Base Type</item>
   <item>Preference Tool Type</item>
   <item>Preference Type</item>
+ </portal_type>
+ <portal_type id="Workflow">
+  <item>Workflow Script</item>
+  <item>Workflow State</item>
+  <item>Workflow Transition</item>
+  <item>Workflow Variable</item>
+  <item>Worklist</item>
+ </portal_type>
+ <portal_type id="Workflow Tool">
+  <item>Interaction Workflow</item>
+  <item>Workflow</item>
+ </portal_type>
+ <portal_type id="Workflow Transition">
+  <item>Workflow Transition Variable</item>
  </portal_type>
 </allowed_content_type_list>

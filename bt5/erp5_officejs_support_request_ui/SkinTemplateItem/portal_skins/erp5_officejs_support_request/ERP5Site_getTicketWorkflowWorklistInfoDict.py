@@ -13,39 +13,40 @@ workflow = portal.portal_workflow.ticket_workflow
 workflow_state_var = workflow.variables.getStateVar()
 
 for worklist in workflow.worklists.objectValues():
+  identity_criterion_dict = worklist.getIdentityCriterionDict()
   if portal_type \
-       and 'portal_type' in worklist.getVarMatchKeys() \
-       and portal_type not in worklist.getVarMatch('portal_type'):
+       and 'portal_type' in worklist.getCriterionPropertyList() \
+       and portal_type not in identity_criterion_dict.get('portal_type'):
     continue
 
-  query_list = [{
-    'type': 'complex',
-    'operator': 'OR',
-    'query_list': [
-      {'key': 'local_roles',
-       'type': 'simple',
-       'value': role, } for role in worklist.getGuard().getRolesText().split("; ")]
-  }]
-
-  for key in worklist.getVarMatchKeys():
-    value = worklist.getVarMatch(key)
+  query_list = []
+  for key, value in identity_criterion_dict.iteritems():
     if key == workflow_state_var:
       # instead of having {'validation_state': 'draft'}, we want to have
       #  {'translated_validation_state_title': 'Brouillon'}
       # so that it looks good in the module view.
       key = 'translated_%s_title' % key
-      state_title = workflow['states'].restrictedTraverse(value).title_or_id()
+      state_title = workflow.getStateValueByReference(value[0]).title_or_id()
       value = unicode(translateString(
         '%s [state in %s]' % (state_title, workflow.getId()),
         default=unicode(translateString(state_title))))
 
-    query_list.append({
-      'key': key,
-      'value': value,
-      'type': 'simple',
-    })
+    if isinstance(value, (tuple, list)):
+      query_list.extend([{
+        'type': 'complex',
+        'operator': 'OR',
+        'query_list': [{'key': key,
+                       'type': 'simple',
+                       'value': v, } for v in value]
+      }])
+    else:
+      query_list.append({
+        'key': key,
+        'value': value,
+        'type': 'simple',
+      })
 
-  query_dict[worklist.getId()] = {
+  query_dict[worklist.getReference()] = {
     'type': 'complex',
     'query_list': query_list
   }
