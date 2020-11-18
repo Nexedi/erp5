@@ -62,6 +62,18 @@ class CategoryTool(CMFCategoryTool, BaseTool):
 
     objectValues = BaseTool.objectValues
 
+    def _isBootstrapRequired(self):
+        return 'before_script' not in self
+
+    def _bootstrap(self):
+        from Products.ERP5.ERP5Site import ERP5Generator
+        ERP5Generator.bootstrap(self, 'erp5_core', 'CategoryTemplateItem', (
+            'before_script',
+            'before_commit_script',
+            'activate_script',
+            'after_script',
+        ))
+
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
