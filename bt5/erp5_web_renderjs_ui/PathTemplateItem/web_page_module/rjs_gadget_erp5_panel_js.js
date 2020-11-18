@@ -71,6 +71,7 @@
         view_list,
         action_list,
         jump_list,
+        raw_list,
         i;
 
       if (visible === undefined) {
@@ -90,6 +91,7 @@
           .concat(ensureArray(erp5_document._links.action_object_jio_button))
           .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
         jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
+        raw_list = ensureArray(erp5_document._links.action_object_jio_raw);
 
         if (view === 'view') {
           for (i = 0; i < view_list.length; i += 1) {
@@ -115,6 +117,7 @@
         view_list = JSON.stringify(view_list);
         action_list = JSON.stringify(action_list);
         jump_list = JSON.stringify(jump_list);
+        raw_list = JSON.stringify(raw_list);
       }
       return context.getUrlParameter('editable')
         .push(function (editable) {
@@ -125,6 +128,7 @@
             view_list: view_list,
             action_list: action_list,
             jump_list: jump_list,
+            raw_list: raw_list,
             global: true,
             jio_key: jio_key,
             view: view,
@@ -250,6 +254,7 @@
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("action_list") ||
           modification_dict.hasOwnProperty("jump_list") ||
+          modification_dict.hasOwnProperty("raw_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
@@ -261,7 +266,8 @@
                 parameter_list = [],
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+                jump_list = JSON.parse(gadget.state.jump_list),
+                raw_list = JSON.parse(gadget.state.raw_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
               for (i = 0; i < view_list.length; i += 1) {
@@ -292,30 +298,26 @@
                 });
               }
               for (i = 0; i < jump_list.length; i += 1) {
-                if (jump_list[i].href.indexOf("http") !== -1) {
-                  parameter_list.push({
-                    command: 'display_dialog_with_history',
-                    options: {
-                      jio_key: gadget.state.jio_key,
-                      view: jump_list[i].href
-                    }
-                  });
-                } else {
-                  // support action that redirect developers to the backend
-                  // For example, link to access a document portal type
-                  parameter_list.push({
-                    command: 'raw',
-                    options: {
-                      url: jump_list[i].href
-                    }
-                  });
-                }
-
+                parameter_list.push({
+                  command: 'display_dialog_with_history',
+                  options: {
+                    jio_key: gadget.state.jio_key,
+                    view: jump_list[i].href
+                  }
+                });
+              }
+              for (i = 0; i < raw_list.length; i += 1) {
+                parameter_list.push({
+                  command: 'raw',
+                  options: {
+                    url: raw_list[i].href
+                  }
+                });
               }
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
-                                           'Jumps'])
+                                           'Jumps', 'Developer Mode'])
               ]);
             })
             .push(function (result_list) {
@@ -323,7 +325,8 @@
                 dl_fragment = document.createDocumentFragment(),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+                jump_list = JSON.parse(gadget.state.jump_list),
+                raw_list = JSON.parse(gadget.state.raw_list);
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
@@ -339,7 +342,12 @@
                        jump_list, result_list[0],
                        view_list.length + workflow_list.length +
                        action_list.length);
-
+              if (raw_list.length !== 0) {
+                appendDt(dl_fragment, result_list[1][4], 'plane',
+                         raw_list, result_list[0],
+                         view_list.length + workflow_list.length +
+                         action_list.length);
+              }
               dl_element = gadget.element.querySelector("dl");
               while (dl_element.firstChild) {
                 dl_element.removeChild(dl_element.firstChild);
