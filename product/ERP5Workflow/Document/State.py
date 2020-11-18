@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie ZHENG <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,8 +27,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_inner, aq_parent
+from Persistence import PersistentMapping
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
@@ -38,7 +41,21 @@ class StateError(Exception):
   """
   pass
 
-class State(XMLObject):
+# Prototype of a mixin allowing to have custom storage for matrix
+class CustomStorageMatrixMixin(XMLMatrix):
+
+  def newCellContent(self, cell_id, **kw):
+    """
+    Creates a new content as a matrix box cell.
+    """
+    cell = self.newContent(id=cell_id, temp_object=True, **kw)
+    self.updateCellFromCustomStorage(cell)
+    return cell
+
+  def getCell(self, *kw , **kwd):
+    return self.newCell(*kw , **kwd)
+
+class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, CustomStorageMatrixMixin):
   """
   A ERP5 State.
   """
@@ -47,77 +64,126 @@ class State(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  default_reference = ''
+  state_type = ()
+  acquire_permission = []
+  state_permission_roles_dict = {}
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
+  var_values = None
   # Declarative properties
   property_sheets = (
              PropertySheet.Base,
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.Reference,
              PropertySheet.SortIndex,
              PropertySheet.State,)
 
-  def getAvailableTransitionList(self, document):
-    """
-    Return available transitions only if they are accessible for document.
-    """
-    transition_list = self.getDestinationValueList(portal_type = 'Transition')
-    result_list = []
-    for transition in transition_list:
-      value = transition._checkPermission(document)
-      if value:
-        result_list.append(transition)
-    return result_list
+  def addPossibleTransition(self, tr_ref):
+    possible_transition_list = self.getCategoryList()
+    transition = self.getParentValue()._getOb('transition_'+tr_ref, None)
+    if transition is not None:
+      tr_path = 'destination/' + '/'.join(transition.getPath().split('/')[2:])
+      possible_transition_list.append(tr_path)
+      self.setCategoryList(possible_transition_list)
 
-  def executeTransition(self, transition, document, form_kw=None):
-    """
-    Execute transition on the object.
-    """
-    if transition not in self.getAvailableTransitionList(document):
-      raise StateError
-    else:
-      transition.execute(document, form_kw=form_kw)
 
-  def undoTransition(self, document):
+  # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationList')
+  def getDestinationList(self):
     """
-    Reverse previous transition
+    this getter is redefined to improve performance:
+    instead of getting all the transition objects from the destination list
+    to then use their ids, extract the information from the string
     """
-    wh = self.getWorkflowHistory(document, remove_undo=1)
-    status_dict = wh[-2]
-    # Update workflow state
-    state_bc_id = self.getParentValue().getStateBaseCategory()
-    document.setCategoryMembership(state_bc_id, status_dict[state_bc_id])
-    # Update workflow history
-    status_dict['undo'] = 1
-    self.getParentValue()._updateWorkflowHistory(document, status_dict)
-    # XXX
-    LOG("State, undo", ERROR, "Variable (like DateTime) need to be updated!")
+    prefix_length = len('destination/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('destination/')]
 
-  def getWorkflowHistory(self, document, remove_undo=0, remove_not_displayed=0):
-    """
-    Return history tuple
-    """
-    wh = document.workflow_history[self.getParentValue()._generateHistoryKey()]
-    result = []
-    # Remove undo
-    if not remove_undo:
-      result = [x.copy() for x in wh]
-    else:
-      result = []
-      for x in wh:
-        if x.has_key('undo') and x['undo'] == 1:
-          result.pop()
-        else:
-          result.append(x.copy())
-    return result
 
-  def getVariableValue(self, document, variable_name):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationIdList')
+  def getDestinationIdList(self):
     """
-    Get current value of the variable from the object
+    this getter is redefined to improve performance:
+    instead of getting all the transition objects from the destination list
+    to then use their ids, extract the information from the string
     """
-    status_dict = self.getParentValue().getCurrentStatusDict(document)
-    return status_dict[variable_name]
+    return [path.split('/')[-1] for path in self.getCategoryList()
+            if path.startswith('destination/')]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationValueList')
+  def getDestinationValueList(self):
+    """
+    this getter is redefined to improve performance:
+    instead of getting all the transition objects from the destination list
+    to then use their ids, extract the information from the string
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(destination_id) for destination_id in
+            self.getDestinationIdList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTransitions')
+  getTransitions = getDestinationIdList
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'setStatePermissionRolesDict')
+  def setStatePermissionRolesDict(self, permission_roles):
+    """
+    create a dict containing the state's permission (as key) and its
+    associated role list (value)
+    use a PersistentMapping so that the ZODB is updated
+    when this dict is changed
+    """
+    self.state_permission_roles_dict = PersistentMapping(permission_roles)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getStatePermissionRolesDict')
+  def getStatePermissionRolesDict(self):
+    """
+    return the permission/roles dict
+    """
+    if self.state_permission_roles_dict is None:
+      return {}
+    return self.state_permission_roles_dict
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setPermission')
+  def setPermission(self, permission, acquired, roles, REQUEST=None):
+    """
+    Set a permission for this State.
+    """
+    self.state_permission_roles_dict[permission] = list(roles)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAvailableTypeList')
+  def getAvailableTypeList(self):
+    """
+    This is a method specific to ERP5. This returns a list of state types,
+    which are used for portal methods.
+    """
+    return (
+            'draft_order',
+            'planned_order',
+            'future_inventory',
+            'reserved_inventory',
+            'transit_inventory',
+            'current_inventory',
+            )
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'updateCellFromCustomStorage')
+  def updateCellFromCustomStorage(self, cell, **kw):
+    """
+    Creates a new content as a matrix box cell.
+    """
+    cell_permission = cell._getPermission()
+    cell_role = cell._getRole()
+    cell.selected = cell_role in self.getStatePermissionRolesDict()[cell_permission]

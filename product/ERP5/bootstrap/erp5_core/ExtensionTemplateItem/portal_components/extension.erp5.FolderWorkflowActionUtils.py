@@ -86,7 +86,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
         for workflow in wf_tool.getWorkflowsFor(doc):
           if workflow.getId() in skipped_workflow_id_list:
             continue
-          state_var = workflow.variables.getStateVar()
+          state_var = workflow.getStateVariable()
           translated_workflow_state_title = doc.getProperty(
                           'translated_%s_title' % state_var)
           if state_var == workflow_state:
@@ -117,7 +117,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
         for workflow in wf_tool.getWorkflowsFor(document):
           if workflow.getId() in skipped_workflow_id_list:
             continue
-          if state_var == workflow.variables.getStateVar():
+          if state_var == workflow.getStateVariable():
             key = (document.getPortalTypeName(), workflow.getId(),
                         document.getProperty(state_var))
             document_count = workflow_state_dict.get(key, (None, 0))[1]
@@ -127,7 +127,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
     for (ptype, workflow_id, _), (doc, document_count) in\
                 workflow_state_dict.iteritems():
       workflow = wf_tool.getWorkflowById(workflow_id)
-      state_var = workflow.variables.getStateVar()
+      state_var = workflow.getStateVariable()
       translated_workflow_state_title = doc.getProperty(
                       'translated_%s_title' % state_var)
       workflow_id = workflow.getId()
@@ -211,7 +211,7 @@ def getPossibleWorkflowActionItemList(self, brain, **kw):
   for action in portal.portal_actions.listFilteredActionsFor(brain).get('workflow', []):
     transition = action.get('transition', None)
     if transition is not None:
-      workflow_id = action['transition'].aq_parent.aq_parent.getId()
+      workflow_id = action['transition'].getParentValue().getId()
       if workflow_id == brain.workflow_id:
         dialog_id = action['url'].split('?', 1)[0].split('/')[-1]
         dialog_object = getattr(portal, dialog_id, None)

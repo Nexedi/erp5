@@ -34,6 +34,10 @@ Id Tool | Application Id Generator
 Id Tool | Conceptual Id Generator
 Id Tool | SQL Non Continuous Increasing Id Generator
 Id Tool | ZODB Continuous Increasing Id Generator
+Interaction Workflow | Interaction
+Interaction Workflow | Workflow Script
+Interaction Workflow | Workflow Variable
+Interaction | Transition Variable
 Memcached Tool | Memcached Plugin
 Preference Tool Type | Action Information
 Preference Tool Type | Role Information
@@ -64,7 +68,16 @@ Property Sheet | TALES Constraint
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template
+Transition | Transition Variable
 Trash Tool | Trash Bin
 Types Tool | Base Type
 Types Tool | Preference Tool Type
 Types Tool | Preference Type
+Workflow Tool | Interaction Workflow
+Workflow Tool | Workflow
+Workflow | State
+Workflow | Transition
+Workflow | Workflow Script
+Workflow | Workflow Variable
+Workflow | Worklist
+Worklist | Worklist Variable

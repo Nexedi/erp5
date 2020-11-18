@@ -14,9 +14,48 @@
 
 # Expression patch
 
-from Products.CMFCore.Expression import Expression
+from Products.CMFCore.Expression import Expression as CMFCore_Expression
+from Products.DCWorkflow import Expression
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Products.PageTemplates.Expressions import getEngine
+from Products.PageTemplates.Expressions import SecureModuleImporter
+from AccessControl.SecurityManagement import getSecurityManager
+from Products.DCWorkflow.Expression import StateChangeInfo
 
 def Expression_hash(self):
   return hash(self.text)
 
-Expression.__hash__ = Expression_hash
+CMFCore_Expression.__hash__ = Expression_hash
+
+# compatibility according to the new structure of workflow:
+# deploy script getter to return a list of script.
+def _createExprContext(sci):
+    '''
+    An expression context provides names for TALES expressions.
+    '''
+    ob = sci.object
+    wf = sci.workflow
+    script_dict = {script.getReference(): script
+                   for script in wf.getScriptValueList()}
+    container = aq_parent(aq_inner(ob))
+    data = {
+        'here':         ob,
+        'object':       ob,
+        'container':    container,
+        'folder':       container,
+        'nothing':      None,
+        'root':         ob.getPhysicalRoot(),
+        'request':      getattr( ob, 'REQUEST', None ),
+        'modules':      SecureModuleImporter,
+        'user':         getSecurityManager().getUser(),
+        'state_change': sci,
+        'transition':   sci.transition,
+        'status':       sci.status,
+        'kwargs':       sci.kwargs,
+        'workflow':     wf,
+        'scripts':      script_dict,
+        }
+    return getEngine().getContext(data)
+
+Expression.createExprContext = _createExprContext

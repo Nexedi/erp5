@@ -1,12 +1,9 @@
-State | view
-Transition Variable | view
-Transition | view
-Variable | view
+Configuration State | view
+Configuration Transition | view
+Configuration Workflow | launch_configuration
+Configuration Workflow | state_view
+Configuration Workflow | transition_view
+Configuration Workflow | variable_view
+Configuration Workflow | view
+PermissionRoles | view
 Workflow Module | view
-Workflow | state_view
-Workflow | transition_view
-Workflow | variable_view
-Workflow | view
-Workflow | view_graph
-Workflow | worklist_view
-Worklist | view

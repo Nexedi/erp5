@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
-#
+#               2015 Wenjie Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -26,13 +26,29 @@
 #
 ##############################################################################
 
+import sys
+
 from AccessControl import ClassSecurityInfo
-
+from Acquisition import aq_base
+from copy import deepcopy
+from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Accessor.Base import _evaluateTales
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Workflow.mixin.guardable import GuardableMixin
+from zLOG import LOG, ERROR, DEBUG, WARNING
 
-class Transition(XMLObject):
+TRIGGER_AUTOMATIC = 0
+TRIGGER_USER_ACTION = 1
+TRIGGER_WORKFLOW_METHOD = 2
+
+class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject,
+                 GuardableMixin):
   """
   A ERP5 Transition.
   """
@@ -42,7 +58,9 @@ class Transition(XMLObject):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-
+  trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
+  var_exprs = None  # A mapping.
+  default_reference = ''
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -53,96 +71,95 @@ class Transition(XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.Reference,
              PropertySheet.SortIndex,
              PropertySheet.Transition,
+             PropertySheet.Guard,
+             PropertySheet.ActionInformation,
   )
 
-  def execute(self, document, form_kw=None):
+  # following getters are redefined for performance improvements
+  # they use the categories paths directly and string operations
+  # instead of traversing from the portal to get the objects
+  # in order to have their id or value
+
+  # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActionType')
+  def getActionType(self):
+    for path in self.getCategoryList():
+      if path.startswith('action_type/'):
+        return path[12:] # 12 is len('action_type/')
+    return None
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeScriptList')
+  def getBeforeScriptList(self):
     """
-    Execute transition.
+    returns the list of before script
     """
-    workflow = self.getParentValue()
-    # Call the before script
-    self._executeBeforeScript(document)
+    prefix_length = len('before_script/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('before_script/')]
 
-    # Modify the state
-    self._changeState(document)
-
-    # Get variable values
-    status_dict = workflow.getCurrentStatusDict(document)
-    status_dict['undo'] = 0
-
-    # Modify workflow history
-    state_bc_id = workflow.getStateBaseCategory()
-    status_dict[state_bc_id] = document.getCategoryMembershipList(state_bc_id)[0]
-
-    state_object = document.unrestrictedTraverse(status_dict[state_bc_id])
-    object_ = workflow.getStateChangeInformation(document, state_object, transition=self)
-
-    # Update all variables
-    for variable in workflow.contentValues(portal_type='Variable'):
-      if variable.getAutomaticUpdate():
-        # if we have it in form get it from there
-        # otherwise use default
-        variable_title = variable.getTitle()
-        if variable_title in form_kw:
-          status_dict[variable_title] = form_kw[variable_title]
-        else:
-          status_dict[variable_title] = variable.getInitialValue(object=object_)
-
-    # Update all transition variables
-    if form_kw is not None:
-      object_.REQUEST.other.update(form_kw)
-    for variable in self.contentValues(portal_type='Transition Variable'):
-      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object_)
-
-    workflow._updateWorkflowHistory(document, status_dict)
-
-    # Call the after script
-    self._executeAfterScript(document, form_kw=form_kw)
-
-  def _changeState(self, document):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAfterScriptList')
+  def getAfterScriptList(self):
     """
-    Change the state of the object.
+    returns the list of after script
     """
-    state = self.getDestination()
-    if state is not None:
-      # Some transitions don't update the state
-      state_bc_id = self.getParentValue().getStateBaseCategory()
-      document.setCategoryMembership(state_bc_id, state)
+    prefix_length = len('after_script/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('after_script/')]
 
-  def _executeAfterScript(self, document, form_kw=None):
-    """
-    Execute post transition script.
-    """
-    if form_kw is None:
-      form_kw = {}
-    script_id = self.getAfterScriptId()
-    if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
 
-  def _executeBeforeScript(self, document, form_kw=None):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeScriptIdList')
+  def getBeforeScriptIdList(self):
     """
-    Execute pre transition script.
+    returns the list of before script ids
     """
-    if form_kw is None:
-      form_kw = {}
-    script_id = self.getBeforeScriptId()
-    if script_id is not None:
-      script = getattr(document, script_id)
-      script(**form_kw)
+    return [path.split('/')[-1] for path in self.getBeforeScriptList()]
 
-  def _checkPermission(self, document):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeScriptValueList')
+  def getBeforeScriptValueList(self):
     """
-    Check if transition is allowed.
+    returns the list of before script values
     """
-    expr_value = self.getGuardExpression(evaluate=0)
-    if expr_value is not None:
-      # do not use 'getGuardExpression' to calculate tales because
-      # it caches value which is bad. Instead do it manually
-      value = _evaluateTales(document, expr_value)
-    else:
-      value = True
-    #print "CALC", expr_value, '-->', value
-    return value
+    parent = self.getParentValue()
+    return [parent._getOb(transition_id) for transition_id
+            in self.getBeforeScriptIdList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAfterScriptIdList')
+  def getAfterScriptIdList(self):
+    """
+    returns the list of after script ids
+    """
+    return [path.split('/')[-1] for path in self.getAfterScriptList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAfterScriptValueList')
+  def getAfterScriptValueList(self):
+    """
+    returns the list of after script values
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(transition_id) for transition_id
+            in self.getAfterScriptIdList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationValue')
+  def getDestinationValue(self):
+    """
+    returns the destination object
+    """
+
+    destination_path_list = [path for path in self.getCategoryList()
+                             if path.startswith('destination/')]
+    if destination_path_list:
+      destination_id = destination_path_list[0].split('/')[-1]
+      parent = self.getParentValue()
+      return parent._getOb(destination_id)
+    return None

@@ -217,11 +217,11 @@ class SecurityTestCase(ERP5TypeTestCase):
         for wf in self.workflow_tool.getWorkflowsFor(document) or []:
           if wf.getId() == 'edit_workflow':
             continue
-          if isinstance(wf, InteractionWorkflowDefinition):
+          if wf.__class__.__name__ in ['InteractionWorkflowDefinition', 'Interaction Workflow'] :
             continue
           for wf_transition_id in wf._getWorkflowStateOf(
                                                 document).getTransitions():
-            wf_transition = wf.transitions[wf_transition_id]
+            wf_transition = wf.getTransitionValueById(wf_transition_id)
             if wf_transition.trigger_type == TRIGGER_USER_ACTION:
               workflow_transitions_description.append(
                 "%s%s[%s]: %s" % (

@@ -19,35 +19,41 @@ def catalog_translation_list(object_list):
 # Translate every workflow state in the context of the state variable
 object_list = []
 portal_workflow = context.portal_workflow
-for wf_id, portal_type_list in portal_workflow.getChainDict().items():
-  wf = getattr(portal_workflow, wf_id, None)
-  if wf is None:
-    continue
-  state_var = wf.variables.getStateVar()
-  if wf.states:
-    for state_id, state in wf.states.items():
+portal_type_list = context.portal_types.objectValues()
+for portal_type in portal_type_list:
+  associated_workflow_id_list = []
+  associated_workflow_id_list.extend(portal_type.getTypeWorkflowList())
+  for wf_id in associated_workflow_id_list:
+    wf = getattr(context.portal_workflow, wf_id, None)
+    if wf is None:
+      continue
+    state_var = wf.getStateVariable()
+
+    for state in wf.getStateValueList():
+      state_id = state.getReference()
       for lang in supported_languages:
-        for portal_type in portal_type_list:
-          key = (lang, portal_type, state_var, state_id)
+        key = (lang, portal_type.id, state_var, state_id)
+        if not translated_keys.has_key(key):
+          translated_message = context.Localizer.erp5_ui.gettext(state_id, lang=lang).encode('utf-8')
+          translated_keys[key] = None # mark as translated
+          object_list.append(dict(language=lang, message_context=state_var, portal_type=portal_type.id, original_message=state_id,
+                             translated_message=translated_message))
+
+        # translate state title as well
+        if state.title is not None and state.title != '':
+          state_var_title = '%s_title' % state_var
+          msg_id = getMessageIdWithContext(state.title, 'state', wf_id)
+          translated_message = context.Localizer.erp5_ui.gettext(msg_id, default='', lang=lang).encode('utf-8')
+          if translated_message == '':
+            msg_id = state.title
+            translated_message = context.Localizer.erp5_ui.gettext(state.title.decode('utf-8'), lang=lang).encode('utf-8')
+          key = (lang, portal_type.id, state_var_title, state_id, msg_id)
           if not translated_keys.has_key(key):
-            translated_message = context.Localizer.erp5_ui.gettext(state_id, lang=lang).encode('utf-8')
             translated_keys[key] = None # mark as translated
-            object_list.append(dict(language=lang, message_context=state_var, portal_type=portal_type, original_message=state_id,
+            object_list.append(dict(language=lang, message_context=state_var_title, portal_type=portal_type.id, original_message=state_id,
                                translated_message=translated_message))
 
-          # translate state title as well
-          if state.title != '' :
-            state_var_title = '%s_title' % state_var
-            msg_id = getMessageIdWithContext(state.title, 'state', wf.id)
-            translated_message = context.Localizer.erp5_ui.gettext(msg_id, default='', lang=lang).encode('utf-8')
-            if translated_message == '':
-              msg_id = state.title
-              translated_message = context.Localizer.erp5_ui.gettext(state.title.decode('utf-8'), lang=lang).encode('utf-8')
-            key = (lang, portal_type, state_var_title, state_id, msg_id)
-            if not translated_keys.has_key(key):
-              translated_keys[key] = None # mark as translated
-              object_list.append(dict(language=lang, message_context=state_var_title, portal_type=portal_type, original_message=state_id,
-                                 translated_message=translated_message))
+
 if object_list:
   catalog_translation_list(object_list)
 

@@ -31,6 +31,7 @@
 """
 
 # Update ERP5 Globals
+from Tool.WorkflowTool import WorkflowTool
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys
 import Permissions
@@ -40,7 +41,7 @@ document_classes = updateGlobals(this_module, globals(),
 
 # Define object classes and tools
 object_classes = ()
-portal_tools = ()
+portal_tools = (WorkflowTool,)
 content_classes = ()
 content_constructors = ()
 

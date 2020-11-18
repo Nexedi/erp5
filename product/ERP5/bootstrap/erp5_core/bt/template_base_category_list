@@ -1,6 +1,10 @@
 action_type
+activate_script
 activity
+after_script
 aggregate
+before_commit_script
+before_script
 business_application
 callable_type
 causality

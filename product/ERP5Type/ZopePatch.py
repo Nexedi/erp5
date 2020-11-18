@@ -30,13 +30,13 @@ from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
+from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import DCWorkflow
 from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import XMLExportImport
 from Products.ERP5Type.patches import ppml
-from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import sqltest
 from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware

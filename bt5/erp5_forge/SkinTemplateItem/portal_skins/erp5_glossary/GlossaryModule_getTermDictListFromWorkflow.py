@@ -1,34 +1,90 @@
+from Products.ERP5Type.Document import newTempBase
 marker = []
-prefix = 'erp5_'
-language = 'en'
 
-term_dict = {}
 result = []
 
-for bt_id in template_list:
+portal_catalog = context.portal_catalog
+portal_workflow = context.portal_workflow
+portal_templates = context.portal_templates
+
+def get_term_list(business_field, reference):
+  reference = reference.rsplit('_action', 1)[0]
+  term_list = portal_catalog(portal_type='Glossary Term',
+                             validation_state='validated',
+                             language_id='en',
+                             business_field_title=('core', business_field),
+                             reference=reference)
+  return [i.getObject() for i in term_list]
+
+def get_obj_and_reference_list(business_field):
+  business_field = business_field.split('/')[0]
+  result = []
   # XXX this might be too simple: some business template include more than one skin folder
-  bt = context.portal_templates.getInstalledBusinessTemplate(bt_id)
-  if bt is None: continue
-  if bt_id.startswith(prefix):
-    bt_id = bt_id[len(prefix):]
-
+  bt = portal_templates.getInstalledBusinessTemplate("erp5_%s" % business_field)
+  if bt is None: return result
   for wf_id in bt.getTemplateWorkflowIdList():
-    wf = getattr(context.portal_workflow, wf_id)
+    wf = getattr(portal_workflow, wf_id)
     if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?
-      term_dict[(wf_id, bt_id, wf.title, wf.description)] = wf_id
-      for state_id, state in wf.states.items():
-        term_dict[(state_id, bt_id, state.title, state.description)] = wf_id
-      for trans_id, trans in wf.transitions.items():
-        term_dict[(trans_id, bt_id, trans.title, trans.description)] = wf_id
-        if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION
-          term_dict[('%s_actbox_name' % trans_id, bt_id, trans.actbox_name, '')] = wf_id
+      result.append((wf, wf_id, 'workflow'))
+      for state in wf.getStateValueList():
+        result.append((state, state.getReference(), 'state'))
+      for transition in wf.getTransitionValueList():
+        result.append((transition, transition.getReference(), 'transition'))
+        if transition.trigger_type == 1 and transition.actbox_name: # 1 == TRIGGER_USER_ACTION
+          result.append((transition, "%s_actbox_name" % transition.getReference(), 'action'))
+  return result
 
-for (reference, business_field, title, description), workflow_id in term_dict.items():
-  result.append({'reference': reference,
-                 'language': language,
-                 'business_field': business_field,
-                 'title': title,
-                 'description': description,
-                 'workflow_id':workflow_id})
+business_field_list = [i for i in business_field_list if i]
 
-return result
+line_list = []
+c = 0
+item_dict = {}
+for business_field in business_field_list:
+  for wf_item, reference, type in get_obj_and_reference_list(business_field):
+    term_list = get_term_list(business_field, reference)
+    #if not term_list:
+    #  continue
+    if item_dict.has_key(wf_item):
+      continue
+    item_dict[wf_item] = True
+
+    c += 1
+    if type == 'workflow':
+      wf_item_path = wf_item.id
+      wf_item_title = wf_item.title
+    elif type == 'state':
+      wf_item_path = '%s/states/%s' % (wf_item.aq_parent.aq_parent.id, wf_item.id)
+      wf_item_title = wf_item.title
+    elif type == 'transition':
+      wf_item_path = '%s/transitions/%s' % (wf_item.aq_parent.aq_parent.id, wf_item.id)
+      wf_item_title = wf_item.title
+    else: # type == 'action'
+      wf_item_path = '%s/transitions/%s_actbox_name' % (wf_item.aq_parent.aq_parent.id, wf_item.id)
+      wf_item_title = wf_item.actbox_name
+    wf_item_description = wf_item.description
+
+    if type == 'transition' and wf_item_path.endswith('_action'):
+      if len(term_list) == 1 and \
+          term_list[0].getTitle() + ' Action' == wf_item_title and \
+          term_list[0].getDescription() == wf_item_description:
+        continue
+    else:
+      if len(term_list) == 1 and \
+          term_list[0].getTitle() == wf_item_title and \
+          term_list[0].getDescription() == wf_item_description:
+        continue
+
+    line = newTempBase(context, 'tmp_glossary_wf_item_%s' %  c)
+    line.edit(wf_item_path=wf_item_path,
+              wf_item_type=type,
+              wf_item_title=wf_item_title,
+              wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),
+              wf_item_description = wf_item_description,
+              reference=reference,
+              term_list=term_list
+              )
+    line.setUid(wf_item_path)
+    line_list.append(line)
+
+line_list.sort(key=lambda x:x.wf_item_path)
+return line_list

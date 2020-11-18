@@ -213,35 +213,6 @@ def removeAll(entry):
        DeprecationWarning)
   shutil.rmtree(entry, True)
 
-def getChainByType(context):
-  """
-  This is used in order to construct the full list
-  of mapping between type and list of workflow associated
-  This is only useful in order to use
-  portal_workflow.manage_changeWorkflows
-  """
-  pw = context.getPortalObject().portal_workflow
-  cbt = pw._chains_by_type
-  ti = pw._listTypeInfo()
-  types_info = []
-  for t in ti:
-    id = t.getId()
-    title = t.Title()
-    if title == id:
-      title = None
-    if cbt is not None and cbt.has_key(id):
-      chain = ', '.join(cbt[id])
-    else:
-      chain = '(Default)'
-    types_info.append({'id': id,
-                      'title': title,
-                      'chain': chain})
-  new_dict = {}
-  for item in types_info:
-    new_dict['chain_%s' % item['id']] = item['chain']
-  default_chain=', '.join(pw._default_chain)
-  return (default_chain, new_dict)
-
 def fixZSQLMethod(portal, method):
   """Make sure the ZSQLMethod uses a valid connection.
   """
@@ -1396,10 +1367,10 @@ class ObjectTemplateItem(BaseTemplateItem):
             for attr in ('allowed_content_types',
                          'hidden_content_type_list',
                          'property_sheet_list',
+                         'workflow_list',
                          'base_category_list'):
               portal_type_dict[attr] = getattr(old_obj, attr, ())
-            portal_type_dict['workflow_chain'] = \
-              getChainByType(context)[1].get('chain_' + object_id, '')
+            portal_type_dict['workflow_chain'] = old_obj.getTypeWorkflowList()
           container.manage_delObjects([object_id])
           # unindex here when it is a broken object
           if isinstance(old_obj, Broken):
@@ -1488,11 +1459,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.wl_clearLocks()
         if portal_type_dict:
           # set workflow chain
-          wf_chain = portal_type_dict.pop('workflow_chain')
-          chain_dict = getChainByType(context)[1]
-          default_chain = ''
-          chain_dict['chain_%s' % (object_id)] = wf_chain
-          context.portal_workflow.manage_changeWorkflows(default_chain, props=chain_dict)
+          workflow_list = portal_type_dict.pop('workflow_chain')
+          obj.setTypeWorkflowList(workflow_list)
           # restore some other properties
           obj.__dict__.update(portal_type_dict)
         # import sub objects if there is
@@ -2374,10 +2342,15 @@ class WorkflowTemplateItem(ObjectTemplateItem):
                                 installed_bt.getTemplatePortalTypeWorkflowChainList()]
       new_chain_list = [[y.strip() for y in x.split('|')] for x in \
                           context.getTemplatePortalTypeWorkflowChainList()]
-      chain_dict = getChainByType(context)[1]
+
+      types_tool = context.getPortalObject().portal_types
+      affected_portal_type_set = {
+          type_object.id for type_object in types_tool.listTypeInfo()
+          if any(workflow_id in removed_workflow_id_list for workflow_id in
+          type_object.getTypeWorkflowList())
+      }
+
       for workflow_id in removed_workflow_id_list:
-        affected_portal_type_set = {x[6:] for x, y in chain_dict.iteritems()
-          if any(workflow_id == y.strip() for y in y.split(','))}
         safe_portal_type_set = {x for x, y in installed_chain_list
                                   if y == workflow_id}
         safe_portal_type_set.difference_update(x for x, y in new_chain_list
@@ -2424,19 +2397,18 @@ class WorkflowTemplateItem(ObjectTemplateItem):
         obj.wl_clearLocks()
 
   def uninstall(self, context, **kw):
+    types_tool = context.getPortalObject().portal_types
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_keys = [object_path]
     else:
       object_keys = self._archive.keys()
     removed_workflow_id_list = {x.split('/', 1)[1] for x in object_keys}
-    (default_chain, chain_dict) = getChainByType(context)
-    for portal_type, workflow_ids in chain_dict.iteritems():
-      workflow_ids = {x.strip() for x in workflow_ids.split(',')} - \
-                     removed_workflow_id_list
-      chain_dict[portal_type] = ', '.join(workflow_ids)
-    context.portal_workflow.manage_changeWorkflows(default_chain,
-                                                   props=chain_dict)
+
+    for portal_type in types_tool.listTypeInfo():
+      workflow_set = set(portal_type.getTypeWorkflowList()) - \
+                      removed_workflow_id_list
+      portal_type.setTypeWorkflowList(workflow_set)
     ObjectTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
@@ -2463,6 +2435,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         if attr[0] == '_' or attr in ('allowed_content_types',
                                       'hidden_content_type_list',
                                       'property_sheet_list',
+                                      'workflow_list',
                                       'base_category_list',
                                       'last_id', 'uid') or \
             (attr == 'workflow_history' and
@@ -2505,11 +2478,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     force = kw.get('force')
     # We now need to setup the list of workflows corresponding to
     # each portal type
-    (default_chain, chain_dict) = getChainByType(context)
-    # Set the default chain to the empty string is probably the
-    # best solution, by default it is 'default_workflow', which is
-    # not very usefull
-    default_chain = ''
     for path, obj in self._objects.iteritems():
       if update_dict.has_key(path) or force:
         if not force:
@@ -2518,10 +2486,11 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
             continue
         portal_type = obj.id
         if self._workflow_chain_archive.has_key(portal_type):
-          chain_dict['chain_%s' % portal_type] = \
-              self._workflow_chain_archive[portal_type]
-    context.portal_workflow.manage_changeWorkflows(default_chain,
-                                                   props=chain_dict)
+          obj.setTypeWorkflowList([
+            w.strip() for w in
+            self._workflow_chain_archive[portal_type].split(',')
+            if w.strip() not in ('', '(Default)')
+          ])
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
   def _importFile(self, file_name, file):
@@ -2549,7 +2518,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # if nothing or +, chain is added to the existing one
     # if - chain is removed from the exisiting one
     # if = chain replaced the existing one
-    (default_chain, chain_dict) = getChainByType(context)
+    types_tool = self.getPortalObject().portal_types
     for key in self._archive.keys():
       wflist = key.split(' | ')
       if len(wflist) == 2:
@@ -2559,11 +2528,11 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         # portal type with no workflow defined
         portal_type = wflist[0][:-2]
         workflow = ''
-      portal_type_key = '%s%s' % (self._chain_string_prefix, portal_type)
-      if portal_type_key in chain_dict:
+      type_object = types_tool.getTypeInfo(portal_type)
+      if type_object is not None:
         workflow_name = workflow.lstrip('+-=')
         if workflow[0] != '-' and workflow_name not in \
-           chain_dict[portal_type_key].split(self._chain_string_separator):
+           type_object.getTypeWorkflowList():
           if not self.is_bt_for_diff:
             # here, we use 'LOG' instead of 'raise', because it can
             # happen when a workflow is removed from the chain by
@@ -2613,22 +2582,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     installed_bt = kw.get('installed_bt')
+    types_tool = self.getPortalObject().portal_types
+    changed = False
     if installed_bt is not None:
       previous_portal_type_workflow_chain_list = list(installed_bt\
           .getTemplatePortalTypeWorkflowChainList())
     else:
       previous_portal_type_workflow_chain_list = []
-    # We now need to setup the list of workflows corresponding to
-    # each portal type
-    (default_chain, chain_dict) = getChainByType(context)
-    # First convert all workflow_ids into list.
-    for key, value in chain_dict.iteritems():
-      chain_dict[key] = value.split(self._chain_string_separator)
-    orig_chain_dict = chain_dict.copy()
-    # Set the default chain to the empty string is probably the
-    # best solution, by default it is 'default_workflow', which is
-    # not very usefull
-    default_chain = ''
     for path in self._objects:
       if path in update_dict or force:
         if not force:
@@ -2640,13 +2600,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         if not path_splitted:
           continue
         portal_type = path_splitted[-1]
-        chain_key = '%s%s' % (self._chain_string_prefix, portal_type)
-        if chain_key in chain_dict:
-          # XXX we don't use the chain (Default) in erp5 so don't keep it
-          old_chain_list = [workflow_id for workflow_id in\
-                            chain_dict[chain_key] if workflow_id not in\
-                            ('(Default)', '',)]
-          old_chain_workflow_id_set = set(old_chain_list)
+        type_object = types_tool.getTypeInfo(portal_type)
+        if type_object is not None:
+          workflow_id_set = set(type_object.getTypeWorkflowList())
+          old_workflow_id_set = workflow_id_set
           # get new workflow id list
           workflow_id_list = self._objects[path]
           # fetch list of new workflows which shall be added to chains
@@ -2669,21 +2626,24 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                 # portal type, but current Business Template cancels this
                 # so it shall be removed
                 workflow_id_list.append('-%s' % previous_workflow_id)
+
           for wf_id in workflow_id_list:
             if wf_id[0] == '-':
               # remove wf id if already present
-              if wf_id[1:] in old_chain_workflow_id_set:
-                old_chain_workflow_id_set.remove(wf_id[1:])
+              if wf_id[1:] in workflow_id_set:
+                workflow_id_set.remove(wf_id[1:])
             elif wf_id[0] == '=':
               # replace existing chain by this one
-              old_chain_workflow_id_set = set()
-              old_chain_workflow_id_set.add(wf_id[1:])
+              workflow_id_set = set()
+              workflow_id_set.add(wf_id[1:])
             # then either '+' or nothing, add wf id to the list
             else:
               wf_id = wf_id.lstrip('+')
-              old_chain_workflow_id_set.add(wf_id)
-            # create the new chain
-            chain_dict[chain_key] = list(old_chain_workflow_id_set)
+              workflow_id_set.add(wf_id)
+
+            changed = not(workflow_id_set == old_workflow_id_set)
+            type_object.setTypeWorkflowList(workflow_id_set)
+
           if not workflow_id_list:
             # Check if it has normally to remove a workflow chain, in order to
             # improve the error message
@@ -2691,25 +2651,18 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
               if wf_id.startswith('-'):
                 raise ValueError, '"%s" is not a workflow ID for %s' % \
                                   (wf_id, portal_type)
-            chain_dict[chain_key] = self._objects[path]
+            changed = not(workflow_id_set == old_workflow_id_set)
+            type_object.setTypeWorkflowList(workflow_id_set)
         else:
-          if context.portal_types.getTypeInfo(portal_type) is None:
-            raise ValueError('Cannot chain workflow %r to non existing '
-                           'portal type %r' % (self._chain_string_separator\
-                                                     .join(self._objects[path])
-                                               , portal_type))
-          chain_dict[chain_key] = self._objects[path]
-    if orig_chain_dict == chain_dict:
-      return
-    self._resetDynamicModules()
-    # convert workflow list into string only at the end.
-    for key, value in chain_dict.iteritems():
-      chain_dict[key] =  self._chain_string_separator.join(value)
-    context.portal_workflow.manage_changeWorkflows(default_chain,
-                                                   props=chain_dict)
+          raise ValueError('Cannot chain workflow %r to non existing '
+                         'portal type %r' % (self._chain_string_separator\
+                                                   .join(self._objects[path])
+                                             , portal_type))
+    if changed:
+      self._resetDynamicModules()
 
   def uninstall(self, context, **kw):
-    (default_chain, chain_dict) = getChainByType(context)
+    types_tool = self.getPortalObject().portal_types
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_key_list = [object_path]
@@ -2721,20 +2674,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         continue
       portal_type = path_splitted[1]
       path = '%s%s' % (self._chain_string_prefix, portal_type)
-      if path in chain_dict:
-        workflow_id_list = chain_dict[path].\
-                                            split(self._chain_string_separator)
+      type_object = types_tool.getTypeInfo(portal_type)
+      if type_object is not None:
         removed_workflow_id_list = self._objects[object_key]
-        for workflow_id in removed_workflow_id_list:
-          for i in range(workflow_id_list.count(workflow_id)):
-            workflow_id_list.remove(workflow_id)
-        if not workflow_id_list:
-          del chain_dict[path]
-        else:
-          chain_dict[path] = self._chain_string_separator.\
-                                                  join(workflow_id_list)
-    context.getPortalObject().portal_workflow.\
-                                   manage_changeWorkflows('', props=chain_dict)
+        old_workflow_id_list = type_object.getTypeWorkflowList()
+        workflow_id_list = [workflow_id for workflow_id in old_workflow_id_list
+                            if workflow_id not in removed_workflow_id_list]
+        type_object.setTypeWorkflowList(workflow_id_list)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}

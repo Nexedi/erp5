@@ -37,12 +37,6 @@ class PortalTypeClassInteractor(Interactor):
     and dynamic properties.
   """
   def install(self):
-    # changing chains or workflows on Workflow Tool
-    from Products.CMFCore.WorkflowTool import WorkflowTool
-    self.on(WorkflowTool.manage_changeWorkflows).doAfter(self.resetDynamic)
-    self.on(WorkflowTool.setDefaultChain).doAfter(self.resetDynamic)
-    self.on(WorkflowTool.setChainForPortalTypes).doAfter(self.resetDynamic)
-
     from Products.DCWorkflow.Transitions import Transitions
     self.on(Transitions.addTransition).doAfter(self.resetDynamic)
     self.on(Transitions.deleteTransitions).doAfter(self.resetDynamic)
@@ -54,6 +48,33 @@ class PortalTypeClassInteractor(Interactor):
     from Products.Localizer.Localizer import Localizer
     self.on(Localizer.add_language).doAfter(self.resetDynamic)
     self.on(Localizer.del_language).doAfter(self.resetDynamic)
+
+    # New workflow compatibility
+
+    # Workflow/Portal Type association
+    from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+    from product.ERP5.Document.SolverTypeInformation import SolverTypeInformation
+    self.on(ERP5TypeInformation.setTypeWorkflowList).doAfter(self.resetDynamic)
+    self.on(ERP5TypeInformation._edit).doAfter(self.resetDynamic)
+    self.on(SolverTypeInformation.setTypeWorkflowList).doAfter(self.resetDynamic)
+    self.on(SolverTypeInformation._edit).doAfter(self.resetDynamic)
+
+    from Products.ERP5Workflow.Document.Workflow import Workflow
+    self.on(Workflow._delObject).doAfter(self.resetDynamic)
+    self.on(Workflow._edit).doAfter(self.resetDynamic)
+
+    self.on(Workflow.addTransition).doAfter(self.resetDynamic)
+    self.on(Workflow.deleteTransitions).doAfter(self.resetDynamic)
+
+    from Products.ERP5Workflow.Document.Transition import Transition
+    self.on(Transition._delObject).doAfter(self.resetDynamic)
+    self.on(Transition._edit).doAfter(self.resetDynamic)
+
+    from Products.ERP5Workflow.Document.WorkflowVariable import WorkflowVariable
+    self.on(WorkflowVariable._edit).doAfter(self.resetDynamic)
+
+    # XXX(WORKFLOW): add resetDynamic interaction on more method of new workflows?
+
 
   def resetDynamic(self, method_call_object, *args, **kw):
     """

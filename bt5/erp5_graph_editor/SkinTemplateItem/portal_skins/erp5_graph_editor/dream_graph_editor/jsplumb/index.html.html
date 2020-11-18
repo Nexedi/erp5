@@ -18,6 +18,7 @@
     <script src="../lib/jquery-ui.js"  type="text/javascript"></script>
     <script src="../lib/jquery.jsplumb.js" type="text/javascript"></script>
     <script src="../lib/handlebars.min.js" type="text/javascript"></script>
+    <script src="seedrandom.js" type="text/javascript"></script>
     <script src="../lib/springy.js" type="text/javascript"></script>
 
     <script src="../dream/mixin_promise.js" type="text/javascript"></script>
@@ -27,7 +28,7 @@
       <div class="window {{class}}"
            id="{{element_id}}"
            title="{{title}}">
-        {{name}}
+        <a href="{{name_href}}">{{name}}</a>
         <div class="ep"></div>
       </div>
     </script>

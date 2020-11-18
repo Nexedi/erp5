@@ -1,6 +1,7 @@
 Business Configuration | Configuration Save
 Business Configuration | File
 Business Configuration | Link
+Configuration Workflow | Embedded File
 Organisation Configurator Item | Address
 Organisation Configurator Item | Email
 Organisation Configurator Item | Telephone
@@ -8,4 +9,3 @@ Person Configurator Item | Address
 Person Configurator Item | Career
 Person Configurator Item | Email
 Person Configurator Item | Telephone
-Workflow | Embedded File

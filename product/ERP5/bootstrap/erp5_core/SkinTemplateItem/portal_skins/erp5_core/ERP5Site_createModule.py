@@ -124,8 +124,7 @@ form.manage_addField(
 object_portal_type_value = portal_types.newContent(id=object_portal_type_id, portal_type='Base Type', type_factory_method_id='addXMLObject')
 
 # Chain to edit_workflow
-portal.portal_workflow.setChainForPortalTypes([object_portal_type_id],
-                                              'edit_workflow')
+object_portal_type_value.setTypeWorkflowList(['edit_workflow'])
 
 # Set default actions
 object_portal_type_value.newContent(portal_type='Action Information',
