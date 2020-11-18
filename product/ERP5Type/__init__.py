@@ -35,6 +35,8 @@ from patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
+WITH_LEGACY_WORKFLOW = True # BBB
+
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
 # property, and category accessors (similar to getSourceValue().getReference())
@@ -89,7 +91,7 @@ import Products.ERP5Type.Workflow
 def initialize( context ):
   # Import Product Components
   from Tool import (CacheTool, MemcachedTool,
-                    TypesTool, PropertySheetTool,
+                    TypesTool, PropertySheetTool, WorkflowTool,
                     ComponentTool)
   import Document
   from Base import Base
@@ -106,6 +108,7 @@ def initialize( context ):
                    MemcachedTool.MemcachedTool,
                    TypesTool.TypesTool,
                    PropertySheetTool.PropertySheetTool,
+                   WorkflowTool.WorkflowTool,
                    ComponentTool.ComponentTool
                   )
   # Do initialization step

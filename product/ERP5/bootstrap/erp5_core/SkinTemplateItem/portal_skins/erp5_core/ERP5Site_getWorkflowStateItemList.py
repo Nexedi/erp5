@@ -12,7 +12,8 @@ if translate:
 else:
   translateString = lambda msg: msg
 
-workflow_tool = context.getPortalObject().portal_workflow
+portal = context.getPortalObject()
+workflow_tool = portal.portal_workflow
 workflow_set = set() # existing workflows.
 state_set = set(['deleted']) # existing state ids (we do not want to return a same state id twice 
                              # if more than one workflow define the same state). Also note that we
@@ -23,29 +24,31 @@ result_list = display_none_category and [('', '')] or []
 if isinstance(portal_type, basestring):
   portal_type = portal_type,
   
-chain_dict = workflow_tool.getWorkflowChainDict()
+type_tool = portal.portal_types
 for portal_type in portal_type:
-  for workflow_id in chain_dict['chain_%s' % portal_type].split(','):
-    workflow_id = workflow_id.strip()
+  portal_type = getattr(type_tool, portal_type)
+  for workflow_id in portal_type.getTypeWorkflowList():
     if workflow_id in workflow_set:
       continue
     workflow_set.add(workflow_id)
     
     workflow = workflow_tool[workflow_id]
     
+    state_value_list = workflow.getStateValueList()
     # skip interaction workflows or workflows with only one state (such as edit_workflow)
-    if workflow.states is None or len(workflow.states.objectIds()) <= 1:
+    if len(state_value_list) <= 1:
       continue
     
     # skip workflows using another state variable
-    if state_var not in (None, workflow.variables.getStateVar()):
+    if state_var not in (None, workflow.getStateVariable()):
       continue
     
-    for state in workflow.states.objectValues():
-      if state.id in state_set:
+    for state in state_value_list:
+      state_reference = state.getReference()
+      if state_reference in state_set:
         continue
-      state_set.add(state.id)
+      state_set.add(state_reference)
       
-      result_list.append((str(translateString(state.title)), state.id))
+      result_list.append((str(translateString(state.getTitle())), state_reference))
 
 return result_list

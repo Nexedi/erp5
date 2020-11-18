@@ -180,6 +180,8 @@ Transition
 TranslatableProperty
 Url
 Variable
+WorkflowVariable
+Guard
 Variation
 VariationRange
 Version
@@ -191,3 +193,5 @@ XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference
 GeographicalPoint
+Interaction
+Worklist

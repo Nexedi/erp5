@@ -1,5 +1,5 @@
 from Products.ERP5Type.Message import Message
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 inventory = state_change['object']
 

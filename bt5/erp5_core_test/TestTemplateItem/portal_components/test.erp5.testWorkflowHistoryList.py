@@ -221,5 +221,5 @@ class TestDedup(ERP5TypeTestCase):
         whl._p_deactivate()
     finally:
       Workflow.dedupStrings = orig_dedupStrings
-    self.assertEqual(deduped, [24])
-    self.assertEqual(len(list(whl)), 25)
+    self.assertEqual(deduped, [36])
+    self.assertEqual(len(list(whl)), 37)
