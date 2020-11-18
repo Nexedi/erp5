@@ -3,6 +3,17 @@
 (function (window, document, rJS, RSVP, console) {
   "use strict";
 
+  function removeScripts(head_inner_html) {
+    var div = document.createElement('div'), script_list, i;
+    div.innerHTML = head_inner_html;
+    script_list = div.getElementsByTagName('script');
+    i = script_list.length;
+    while (i--) {
+      script_list[i].parentNode.removeChild(script_list[i]);
+    }
+    return div.innerHTML;
+  }
+
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -60,10 +71,11 @@
             return return_submit_dict;
           }
           notebook_html = notebook_editor_iframe.contentDocument.firstChild;
+          //remove all notebook scripts from header as they may cause issues
+          notebook_html.firstChild.innerHTML =
+            removeScripts(notebook_html.firstChild.innerHTML);
           return new RSVP.Queue()
             .push(function () {
-              //remove notebook source as it may cause style issues
-              notebook_html.querySelector('[id="jsmd-source"]').remove();
               print_preview_window = window.open('', '', 'height=400,width=800');
               print_preview_window.document.write(notebook_html.innerHTML);
               print_preview_window.document.title = parent_options.doc.title;
