@@ -54,8 +54,13 @@ from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID,\
                                                    WORKLIST_METADATA_KEY
 from Products.ERP5Type.Utils import UpperCase, convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
-                                    TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
+
+#from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
+#                                    TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
+TRIGGER_AUTOMATIC = 0
+TRIGGER_USER_ACTION = 1
+TRIGGER_WORKFLOW_METHOD = 2
+
 from Products.ERP5Workflow.Document.WorkflowScript import SCRIPT_PREFIX
 from tempfile import mktemp
 from types import StringTypes

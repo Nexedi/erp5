@@ -32,7 +32,8 @@ from AccessControl import getSecurityManager, ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
+#from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
+TRIGGER_WORKFLOW_METHOD = 2
 from Products.ERP5Workflow.mixin.guardable import GuardableMixin
 
 class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject,

@@ -42,7 +42,8 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.DCWorkflow.Expression import createExprContext
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Workflow import addWorkflowFactory
-from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
+#from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
+TRIGGER_WORKFLOW_METHOD = 2
 from Products.ERP5Workflow.Document.Workflow import Workflow
 from Products.ERP5Workflow.Document.WorkflowScript import SCRIPT_PREFIX
 from types import StringTypes
