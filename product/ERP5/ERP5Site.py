@@ -2037,7 +2037,9 @@ class ERP5Generator(PortalGenerator):
     traverse = context.unrestrictedTraverse
     top = os.path.join(bt_path, item_name, context.id)
     prefix_len = len(os.path.join(top, ''))
-    for root, dirs, files in os.walk(top):
+    def onerror(error):
+      raise error
+    for root, dirs, files in os.walk(top, onerror=onerror):
       container_path = root[prefix_len:]
       container_obj = traverse(container_path)
       load = container_obj._importObjectFromFile
