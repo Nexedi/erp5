@@ -27,8 +27,8 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var gadget = this, html_data,
-        parent_gadget = parent_options.gadget,
+      var gadget = this, notebook_html, notebook_editor_iframe,
+        parent_gadget = parent_options.gadget, print_preview_window,
         return_submit_dict = {};
       return_submit_dict.redirect = {
         command: 'display',
@@ -48,12 +48,10 @@
           return erp5_form_gadget.getDeclaredGadget("text_content");
         })
         .push(function (result) {
-          var html_data = result.element
-              .querySelector('[data-gadget-scope="editor"]').firstChild
-              .contentDocument.body.firstChild.contentDocument.firstChild,
-            notebook_execution_done = html_data
-              .querySelector('[id="jsmd_eval_done"]');
-          if (!notebook_execution_done) {
+          notebook_editor_iframe = result.element
+            .querySelector('[data-gadget-scope="editor"]').firstChild
+            .contentDocument.body.firstChild;
+          if (notebook_editor_iframe.tagName !== "IFRAME") {
             return_submit_dict.notify = {
               message: "Wait until the notebook is fully executed",
               status: "error"
@@ -61,20 +59,21 @@
             delete return_submit_dict.redirect;
             return return_submit_dict;
           }
+          notebook_html = notebook_editor_iframe.contentDocument.firstChild;
           return new RSVP.Queue()
             .push(function () {
               //remove notebook source as it may cause style issues
-              html_data.querySelector('[id="jsmd-source"]').remove();
-              var print_preview_window = window.open('', '', 'height=400,width=800');
-              print_preview_window.document.write(html_data.innerHTML);
+              notebook_html.querySelector('[id="jsmd-source"]').remove();
+              print_preview_window = window.open('', '', 'height=400,width=800');
+              print_preview_window.document.write(notebook_html.innerHTML);
               print_preview_window.document.title = parent_options.doc.title;
               print_preview_window.onafterprint = function () {
                 print_preview_window.close();
               };
-              setTimeout(() => {
-                print_preview_window.document.close();
-                print_preview_window.print();
-              }, 3000);
+              return print_preview_window.document.close();
+            })
+            .push(function () {
+              print_preview_window.print();
             })
             .push(function () {
               return return_submit_dict;
