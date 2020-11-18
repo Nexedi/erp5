@@ -32,9 +32,8 @@ def getActorName(actor):
 workflow_item_list = portal_workflow.getInfoFor(
     ob=context, name='history', wf_id=workflow_id)
 
-wf_state_var = portal_workflow[workflow_id].variables.getStateVar()
-wf_states = portal_workflow[workflow_id].states
-wf_transitions = portal_workflow[workflow_id].transitions
+workflow = getattr(portal_workflow, workflow_id)
+wf_state_variable = workflow.getStateVariable()
 
 next_serial = None
 previous_obj = None
@@ -45,19 +44,15 @@ for workflow_item in workflow_item_list:
   for key, value in workflow_item.items():
     if key == 'serial' and not can_view_history:
       continue
-    # XXX Compatibility
-    for compatibility_name in ['building_', 'installation_']:
-      if key.startswith(compatibility_name):
-        # Display the workflow state in the state columns
-        key = key[len(compatibility_name):]
-    if key == wf_state_var: 
+    if key == wf_state_variable:
+      state = workflow.getStateValueById(value)
       # Store locally the id of state, usefull for merging action and transition
-      state_id = wf_states.get(value, marker) and wf_states[value].id
+      state_id = marker if state is None else value
       o.setProperty('state_id', state_id)
 
       key = 'state'
       if display:
-        value = wf_states.get(value, marker) and wf_states[value].title
+        value = marker if state is None else state.getTitle()
       else:
         value = state_id
     if key == 'action':
@@ -66,17 +61,20 @@ for workflow_item in workflow_item_list:
       if value != '' and value is not None:
         if value == "'edit'":
           value = "edit"
-        if display:
-          value = wf_transitions.get(value, marker) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value
-        else:
-          value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value
+        transition = workflow.getTransitionValueById(value)
+        if transition is not None:
+          if display:
+            value = transition.getTitle() or transition.getActionName() or value
+          else:
+            value = transition.getReference() or transition.getActionName() or value
     if display:
-      if key == 'error_message' and same_type(value, ''):
-        value = context.Localizer.erp5_ui.gettext(value)    
-      elif key == 'error_message' and same_type(value, []):
-        value = '. '.join(['%s' % x for x in value])
-      elif key == 'error_message':
-        value = '%s' % value
+      if key == 'error_message':
+        if same_type(value, ''):
+          value = context.Localizer.erp5_ui.gettext(value)
+        if same_type(value, []):
+          value = '. '.join(['%s' % x for x in value])
+        else:
+          value = '%s' % value
       elif key == 'actor':
         value = getActorName(value)
       elif same_type(value, '') and key == 'state':

@@ -67,7 +67,7 @@ class PropertySheetTool(BaseTool):
     'template_tool_component_id_property')
 
   def _isBootstrapRequired(self):
-    if not self.has_key('BaseType'):
+    if not self.has_key('Interaction'):
       return True
 
     bt_has_key = self.BusinessTemplate.has_key
@@ -87,6 +87,27 @@ class PropertySheetTool(BaseTool):
       'SimpleItem',
       'Version',
       'Comment',
+      # for workflows
+      'Guard',
+      'Variable',
+      'Variable/variable_default_expression_property',
+      'Variable/variable_default_value_property',
+      'WorkflowVariable',
+      'Interaction',
+      'ActionInformation/action_name_property',
+      'Transition',
+      'Transition/before_script_category,'
+      'Transition/after_script_category',
+      'Transition/trigger_type_property',
+      'State',
+      'State/acquire_permission_property',
+      'State/selected_property',
+      'State/state_type_property',
+      'Worklist',
+      'Workflow',
+      'Workflow/manager_bypass_property',
+      'Workflow/state_variable_property',
+      'Workflow/workflow_managed_permission_property',
       # the following ones are required to upgrade an existing site
       'Reference',
       'BaseCategory',
