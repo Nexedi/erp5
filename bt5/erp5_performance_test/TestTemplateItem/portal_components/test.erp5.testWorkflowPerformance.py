@@ -29,7 +29,7 @@ from test import pystone
 from time import time
 pystone.clock = time
 from erp5.component.test.testPerformance import TestPerformanceMixin
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Testing import ZopeTestCase
 
 class TestWorkflowPerformance(TestPerformanceMixin):
