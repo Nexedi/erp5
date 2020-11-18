@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST, RESPONSE, came_from=None, portal_status_message=None</string> </value>
+            <value> <string>redirect_url=None, keep_items=(), status_code=302, form_id=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>login_form</string> </value>
+            <value> <string>Base_redirect</string> </value>
         </item>
       </dictionary>
     </pickle>

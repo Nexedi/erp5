@@ -99,34 +99,15 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>openAndWait</td>
-  <td>${base_url}</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='__ac_name']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>type</td>
-  <td>//input[@name='__ac_name']</td>
-  <td>user_logout_test</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name='__ac_password']</td>
-  <td>user_logout_test</td>
-</tr>
-
-<tr>
-  <td>clickAndWait</td>
-  <td>//input[@value='Login']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="
+  login_form_url python: '${base_url}';
+  submit_name python: '//input[@value=\'Login\']';
+">
+  <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+    <tal:block metal:fill-slot="username">user_logout_test</tal:block>
+    <tal:block metal:fill-slot="password">user_logout_test</tal:block>
+  </tal:block>
+</tal:block>
 
 <tr>
   <td>waitForTextPresent</td>
@@ -198,34 +179,15 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>openAndWait</td>
-  <td>${base_url}</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='__ac_name']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>type</td>
-  <td>//input[@name='__ac_name']</td>
-  <td>user_logout_test</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name='__ac_password']</td>
-  <td>user_logout_test</td>
-</tr>
-
-<tr>
-  <td>clickAndWait</td>
-  <td>//input[@value='Login']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="
+  login_form_url python: '${base_url}';
+  submit_name python: '//input[@value=\'Login\']';
+">
+  <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+    <tal:block metal:fill-slot="username">user_logout_test</tal:block>
+    <tal:block metal:fill-slot="password">user_logout_test</tal:block>
+  </tal:block>
+</tal:block>
 
 <tr>
   <td>waitForTextPresent</td>

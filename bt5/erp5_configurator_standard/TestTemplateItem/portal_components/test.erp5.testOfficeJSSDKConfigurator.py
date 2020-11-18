@@ -217,6 +217,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_monaco_editor',
       'erp5_multimedia',
       'erp5_notebook',
+      'erp5_oauth2_resource',
       'erp5_officejs',
       'erp5_officejs_connector',
       'erp5_officejs_jquery_app',

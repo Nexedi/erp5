@@ -1,4 +1,7 @@
-<html tal:define="form_action string:WebSite_login;
+<html tal:define="
+                  ERP5Site python: modules['Products.ERP5.ERP5Site'];
+                  has_oauth2 python: options.get('has_oauth2', True);
+                  form_action python: 'logged_in_once' if has_oauth2 else 'WebSite_login';
                   absolute_url context/absolute_url;
                   portal context/getPortalObject;
                   available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
@@ -36,13 +39,7 @@
             </div>
           </section>
 
-          <section tal:condition="not: portal/portal_membership/isAnonymousUser">
-              <p i18n:domain="ui" i18n:translate="" >It seems you're already authenticated.</p>
-              <p><a tal:condition="exists: request/came_from"
-                     tal:attributes="href request/came_from" >Go back</a></p>
-          </section>
-
-          <section tal:condition="portal/portal_membership/isAnonymousUser">
+          <section>
             <section class="ui-content-header-plain">
                 <h3 class="ui-content-title ui-body-c">
                     <span class="ui-icon ui-icon-custom ui-icon-sign-in"></span>
@@ -50,15 +47,27 @@
                 </h3>
             </section>
             <form method="post" tal:attributes="action python: '%s/' % absolute_url" class="field_container">
+              <tal:block tal:condition="python: has_oauth2">
+                <input type="hidden"
+                  tal:attributes="
+                    name  python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME;
+                    value python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE;
+                  "
+                />
+                <input type="hidden"
+                  name="login_retry_url"
+                  tal:attributes="value python: request.get('login_retry_url', '')"
+                />
+              </tal:block>
               <div>
                 <div>
                   <div class="ui-field-contain">
                     <label i18n:domain="ui" i18n:translate="" >Username</label>
-                    <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
+                    <div><input autofocus type="text" value="" required="" tal:attributes="name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME if has_oauth2 else '__ac_name'"></div>
                   </div>
                   <div class="ui-field-contain">
                     <label i18n:domain="ui" i18n:translate="" >Password</label>
-                    <div><input type="password" name="__ac_password" value="" autocomplete="off" /></div>
+                    <div><input type="password" value="" autocomplete="off" tal:attributes="name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME if has_oauth2 else '__ac_password'"/></div>
                   </div>
                   <div class="dialog_button_container">
                     <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
