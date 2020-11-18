@@ -91,6 +91,7 @@
                         <string>my_configuration_stylesheet_url</string>
                         <string>my_configuration_wallpaper_url</string>
                         <string>my_configuration_icon_url</string>
+                        <string>my_configuration_oauth2_client_connector_id</string>
                       </list>
                     </value>
                 </item>
