@@ -35,7 +35,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from erp5.component.mixin.ERP5UserMixin import ERP5UserMixin
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 

@@ -9,7 +9,7 @@ info = {}
 
 workflow = portal.portal_workflow.ticket_workflow
 
-for state in workflow['states'].objectValues():
+for state in workflow.getStateValueList():
   state_title = state.title_or_id()
   if 0:
     # We don't translate yet, it needs several other fixes

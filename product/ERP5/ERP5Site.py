@@ -868,13 +868,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     Return a list of workflow states classified to a specific group.
     """
     def getStateList(group):
-      state_dict = {}
+      state_set = set()
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'states', None):
-          for state in wf.states.objectValues():
-            if group in getattr(state, 'type_list', ()):
-              state_dict[state.getId()] = None
-      return tuple(state_dict.keys())
+        for state in wf.getStateValueList():
+          if group in state.getStateTypeList():
+            state_set.add(state.getReference())
+      return tuple(state_set)
 
     getStateList = CachingMethod(getStateList,
                                  id=('_getPortalGroupedStateList', group),
@@ -1410,15 +1409,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       Return all states which is related to simulation state workflow and state type
     """
     def getStateList():
-      state_dict = {}
+      state_set = set()
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'variables', None) and \
-           wf.variables.getStateVar() == 'simulation_state':
-          if getattr(wf, 'states', None):
-            for state in wf.states.objectValues():
-              if getattr(state, 'type_list', None):
-                state_dict[state.getId()] = None
-      return tuple(sorted(state_dict.keys()))
+        if wf.getStateVariable() == 'simulation_state':
+          for state in wf.getStateValueList():
+            if state.getStateTypeList():
+              state_set.add(state.getReference())
+      return tuple(sorted(state_set))
 
     getStateList = CachingMethod(getStateList,
                                  id=('getPortalGroupedSimulationStateList'),
@@ -1915,7 +1912,7 @@ class PortalGenerator:
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
-        addCMFCoreTool('CMF Workflow Tool', None)
+        addERP5Tool(p, 'portal_workflow', 'Workflow Tool')
 
     def setupMailHost(self, p):
         p.manage_addProduct['MailHost'].manage_addMailHost(
@@ -2257,7 +2254,7 @@ class ERP5Generator(PortalGenerator):
     tool = p.portal_workflow
     tool.manage_delObjects(filter(tool.hasObject, workflow_list))
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
-    tool.setChainForPortalTypes(('Business Template',), workflow_list)
+    getattr(p.portal_types, 'Business Template').setTypeWorkflowList(workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed

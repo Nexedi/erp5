@@ -24,7 +24,7 @@ for worklist in workflow.worklists.objectValues():
     'query_list': [
       {'key': 'local_roles',
        'type': 'simple',
-       'value': role, } for role in worklist.getGuard().getRolesText().split("; ")]
+       'value': role, } for role in worklist.getGuardRoleList()]
   }]
 
   for key in worklist.getVarMatchKeys():
@@ -34,7 +34,7 @@ for worklist in workflow.worklists.objectValues():
       #  {'translated_validation_state_title': 'Brouillon'}
       # so that it looks good in the module view.
       key = 'translated_%s_title' % key
-      state_title = workflow['states'].restrictedTraverse(value).title_or_id()
+      state_title = workflow.getStateValueByReference(value[0]).title_or_id()
       value = unicode(translateString(
         '%s [state in %s]' % (state_title, workflow.getId()),
         default=unicode(translateString(state_title))))

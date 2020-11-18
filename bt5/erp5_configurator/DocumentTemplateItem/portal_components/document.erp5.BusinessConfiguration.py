@@ -1,6 +1,5 @@
 ##############################################################################
 #
-
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
 #                    Ivan Tyagov <ivan@nexedi.com>
@@ -32,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Persistence import PersistentMapping
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet
+from zLOG import LOG, ERROR
 
 from erp5.component.tool.ConfiguratorTool import _validateFormToRequest
 from erp5.component.document.Item import Item
@@ -40,6 +40,203 @@ from erp5.component.document.Item import Item
 INITIAL_STATE_TITLE = 'Start'
 DOWNLOAD_STATE_TITLE = 'Download'
 END_STATE_TITLE = 'End'
+
+## Methods defined in Configurator Workflow (workflow_module) implementation
+## but not needed for generic ERP5 Workflow (portal_workflow) implementation
+def initializeDocument(workflow, document):
+  """
+  Set initial state on the Document
+  """
+  state_bc_id = workflow.getStateBaseCategory()
+  document.setCategoryMembership(state_bc_id, workflow.getSource())
+
+  obj = workflow.getStateChangeInformation(document, workflow.getSourceValue())
+
+  # Initialize workflow history
+  status_dict = {state_bc_id: workflow.getSource()}
+  for variable in workflow.getVariableValueList():
+    status_dict[variable.getTitle()] = variable.getVariableDefaultExpression(object=obj)
+  _updateWorkflowHistory(workflow, document, status_dict)
+def _generateHistoryKey(workflow):
+  """
+  Generate a key used in the workflow history.
+  """
+  return workflow.getReference()
+def getWorkflowHistory(state, document, remove_undo=0, remove_not_displayed=0):
+  """
+  Return history tuple
+  """
+  wh = document.workflow_history[_generateHistoryKey(state.getParentValue())]
+  result = []
+  # Remove undo
+  if not remove_undo:
+    result = [x.copy() for x in wh]
+  else:
+    result = []
+    for x in wh:
+      if x.has_key('undo') and x['undo'] == 1:
+        result.pop()
+      else:
+        result.append(x.copy())
+  return result
+def _updateWorkflowHistory(workflow, document, status_dict):
+  """
+  Change the state of the object.
+  """
+  if workflow.getPortalType() in ('Interaction Workflow', 'InteractionWorkflowDefinition'):
+    return
+
+  # Create history attributes if needed
+
+  if getattr(aq_base(document), 'workflow_history', None) is None:
+    document.workflow_history = PersistentMapping()
+    # XXX this _p_changed is apparently not necessary
+    document._p_changed = 1
+
+  # Add an entry for the workflow in the history
+  workflow_key = workflow.getReference()
+  if not document.workflow_history.has_key(workflow_key):
+    document.workflow_history[workflow_key] = ()
+
+  # Update history
+  document.workflow_history[workflow_key] += (status_dict,)
+  # XXX this _p_changed marks the document modified, but only the
+  # PersistentMapping is modified
+  # document._p_changed = 1
+  # XXX this _p_changed is apparently not necessary
+  #document.workflow_history._p_changed = 1
+def undoTransition(state, document):
+  """
+  Reverse previous transition
+  """
+  workflow = state.getParentValue()
+  wh = getWorkflowHistory(state, document, remove_undo=1)
+  status_dict = wh[-2]
+  # Update workflow state
+  state_bc_id = state.getParentValue().getStateBaseCategory()
+  document.setCategoryMembership(
+    state_bc_id,
+    workflow.getStateValueByReference(status_dict[state_bc_id]).getRelativeUrl())
+  # Update workflow history
+  status_dict['undo'] = 1
+  _updateWorkflowHistory(workflow, document, status_dict)
+  # XXX
+  LOG("State, undo", ERROR, "Variable (like DateTime) need to be updated!")
+def _checkPermission(transition, document):
+  """
+  Check if transition is allowed.
+  """
+  expr_value = transition.getGuardExpression(evaluate=0)
+  if expr_value is not None:
+    # do not use 'getGuardExpression' to calculate tales because
+    # it caches value which is bad. Instead do it manually
+    from Products.ERP5Type.Accessor.Base import _evaluateTales
+    value = _evaluateTales(document, expr_value)
+  else:
+    value = True
+  #print "CALC", expr_value, '-->', value
+  return value
+def getAvailableTransitionList(state, document):
+  """
+  Return available transitions only if they are accessible for the current document.
+  """
+  result_list = []
+  for transition in state.getDestinationValueList():
+    value = _checkPermission(transition, document)
+    if value:
+      result_list.append(transition)
+  return result_list
+class StateError(Exception):
+  """
+  Must call only an available transition
+  """
+  pass
+def executeTransition(state, transition, document, form_kw=None):
+  """
+  Execute transition on the object.
+  """
+  if transition not in getAvailableTransitionList(state, document):
+    raise StateError
+  else:
+    execute(transition, document, form_kw=form_kw)
+def _executeBeforeScript(self, document, form_kw=None):
+  """
+  Execute pre transition script.
+  """
+  if form_kw is None:
+    form_kw = {}
+  script_id = getattr(self.aq_base, 'before_script_id', None)
+  if script_id is not None:
+    script = getattr(document, script_id)
+    script(**form_kw)
+def _changeState(self, document):
+  """
+  Change the state of the object.
+  """
+  state = self.getDestination()
+  if state is not None:
+    # Some transitions don't update the state
+    state_bc_id = self.getParentValue().getStateBaseCategory()
+    document.setCategoryMembership(state_bc_id, state)
+def _executeAfterScript(self, document, form_kw=None):
+  """
+  Execute post transition script.
+  """
+  if form_kw is None:
+    form_kw = {}
+  script_id = getattr(self.aq_base, 'after_script_id', None)
+  if script_id is not None:
+    script = getattr(document, script_id)
+    script(**form_kw)
+def execute(self, document, form_kw=None):
+  """
+  Execute transition.
+  """
+  workflow = self.getParentValue()
+  # Call the before script
+  _executeBeforeScript(self, document)
+
+  # Modify the state
+  _changeState(self, document)
+
+  # Get variable values
+  status_dict = workflow.getCurrentStatusDict(document)
+  status_dict['undo'] = 0
+
+  # Modify workflow history
+  state_bc_id = workflow.getStateBaseCategory()
+  state_object = document.unrestrictedTraverse(document.getCategoryMembershipList(state_bc_id)[0])
+  status_dict[state_bc_id] = state_object.getReference()
+  object_ = workflow.getStateChangeInformation(document, state_object, transition=self)
+
+  # Update all variables
+  expression_context = None
+  for variable in workflow.getVariableValueList():
+    if variable.getAutomaticUpdate():
+      # if we have it in form get it from there
+      # otherwise use default
+      variable_title = variable.getTitle()
+      if variable_title in form_kw:
+        status_dict[variable_title] = form_kw[variable_title]
+      else:
+        expression = variable.getVariableDefaultExpressionInstance()
+        if expression is not None:
+          if expression_context is None:
+            from Products.ERP5Type.Core.Workflow import createExpressionContext
+            from Products.DCWorkflow.Expression import StateChangeInfo
+            expression_context = createExpressionContext(StateChangeInfo(document, self, status_dict))
+          status_dict[variable_title] = expression(expression_context)
+
+  # Update all transition variables
+  if form_kw is not None:
+    object_.REQUEST.other.update(form_kw)
+  for variable in self.getTransitionVariableValueList():
+    status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object_)
+
+  _updateWorkflowHistory(workflow, document, status_dict)
+
+  # Call the after script
+  _executeAfterScript(self, document, form_kw=form_kw)
 
 class BusinessConfiguration(Item):
   """
@@ -93,15 +290,28 @@ class BusinessConfiguration(Item):
   def initializeWorkflow(self):
     """ Initialize Related Workflow"""
     workflow = self.getResourceValue()
-    workflow_history = getattr(self, 'workflow_history', {})
     if workflow is None:
       return
 
-    if self.getResource() not in workflow_history:
+    workflow_history = getattr(self, 'workflow_history', {})
+    if workflow.getReference() not in workflow_history:
       if len(self.objectValues("ERP5 Configuration Save")) > 0:
         raise ValueError("Business Configuration Cannot be initialized, \
                           it contains one or more Configurator Save")
-      workflow.initializeDocument(self)
+
+      # XXX: `state_base_category` points to the state category (usually
+      # 'current_state'). Without this, getCurrentState() is None and nothing
+      # happens because getNextTransition() returns None in such case.
+      #
+      # But does the state category really need to be configured, or should
+      # state_base_category be removed and `current_state` used by default?
+      #   * No field to modify `state_base_category`.
+      #   * In erp5.git, it is always `current_state`.
+      #   * Some code using directly `getCurrentState()`.
+      self.setCategoryMembership(workflow.getStateBaseCategory(),
+                                 workflow.getSource())
+
+      workflow.notifyCreated(self)
 
   security.declareProtected(Permissions.View, 'getNextTransition')
   def getNextTransition(self):
@@ -109,7 +319,7 @@ class BusinessConfiguration(Item):
     current_state = self.getCurrentStateValue()
     if current_state is None:
       return None
-    transition_list = current_state.getAvailableTransitionList(self)
+    transition_list = getAvailableTransitionList(current_state, self)
     transition_number = len(transition_list)
     if transition_number > 1:
       raise TypeError("More than one transition is available.")
@@ -150,7 +360,7 @@ class BusinessConfiguration(Item):
     ## Add some variables so we can get use them in workflow after scripts
     form_kw['configuration_save_url'] = configuration_save.getRelativeUrl()
     form_kw['transition'] = transition.getRelativeUrl()
-    current_state.executeTransition(transition, self, form_kw=form_kw)
+    executeTransition(current_state, transition, self, form_kw=form_kw)
 
   security.declarePrivate('_displayNextForm')
   def _displayNextForm(self, \
@@ -240,16 +450,18 @@ class BusinessConfiguration(Item):
   security.declarePrivate('_displayPreviousForm')
   def _displayPreviousForm(self):
     """ Render previous form using workflow history. """
-    workflow_history = self.getCurrentStateValue().getWorkflowHistory(self, remove_undo=1)
+    workflow_history = getWorkflowHistory(self.getCurrentStateValue(), self, remove_undo=1)
     workflow_history.reverse()
     for wh in workflow_history:
       ## go one step back
       current_state = self.getCurrentStateValue()
-      current_state.undoTransition(self)
+      undoTransition(current_state, self)
+      if not wh['transition']:
+        raise ValueError("Empty URL for transition in workflow history.")
       transition = self.unrestrictedTraverse(wh['transition'])
       conf_save = self.unrestrictedTraverse(wh['configuration_save_url'])
       ## check if this transition can be shown to user ...
-      if transition._checkPermission(self) and \
+      if _checkPermission(transition, self) and \
            transition.getTransitionFormId() is not None:
         return  self._displayNextForm(context=conf_save, transition=transition)
 
@@ -267,19 +479,22 @@ class BusinessConfiguration(Item):
     current_state = self.getCurrentStateValue()
     transition = self.getNextTransition()
     next_state = self.unrestrictedTraverse(transition.getDestination())
-    for wh in current_state.getWorkflowHistory(self):
-      if next_state == self.unrestrictedTraverse(wh['current_state']):
+    workflow = current_state.getParentValue()
+    for wh in getWorkflowHistory(current_state, self):
+      if next_state == workflow.getStateValueByReference(wh['current_state']):
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
   security.declarePrivate('_isAlreadyConfSaveInWorkflowHistory')
   def _isAlreadyConfSaveInWorkflowHistory(self, transition):
     """ check if we have an entry in worklow history for this state """
-    workflow_history = self.getCurrentStateValue().getWorkflowHistory(self, remove_undo=1)
+    current_state = self.getCurrentStateValue()
+    workflow = current_state.getParentValue()
+    workflow_history = getWorkflowHistory(current_state, self, remove_undo=1)
     workflow_history.reverse()
     for wh in workflow_history:
-      wh_state = self.unrestrictedTraverse(wh['current_state'])
-      for wh_transition in wh_state.getAvailableTransitionList(self):
+      wh_state = workflow.getStateValueByReference(wh['current_state'])
+      for wh_transition in getAvailableTransitionList(wh_state, self):
         if wh_transition.getTransitionFormId() is not None and \
            wh_transition != transition:
           return True
