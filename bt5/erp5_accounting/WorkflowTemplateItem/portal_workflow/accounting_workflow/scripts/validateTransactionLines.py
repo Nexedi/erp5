@@ -3,7 +3,7 @@
 XXX why proxy role ???
 """
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 
 transaction = state_change['object']
@@ -13,7 +13,8 @@ section_portal_type_list = ['Person', 'Organisation']
 invalid_state_list = ['invalidated', 'deleted']
 
 # first of all, validate the transaction itself
-container.validateTransaction(state_change)
+script_id = container.getScriptIdByReference('validateTransaction')
+container.getScriptValueById(script_id)(state_change)
 
 
 # Check that all lines uses open accounts, and doesn't use invalid third

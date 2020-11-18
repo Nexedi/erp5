@@ -1,4 +1,4 @@
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 check_result = context.checkConsistency()
 message_list = []
