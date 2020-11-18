@@ -51,7 +51,7 @@ if preferred_html_style_developper_mode:
 
 # add links for workflows
 if portal.portal_workflow.Base_getSourceVisibility():
-  workflow_list = portal.portal_workflow.getWorkflowsFor(context)
+  workflow_list = portal.portal_workflow.getWorkflowValueListFor(context)
   if workflow_list:
     result['workflow_list'] = [{"title": "-- %s --" %translate("Workflows"),
                                 "url": ""}]

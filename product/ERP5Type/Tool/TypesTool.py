@@ -101,7 +101,7 @@ class TypesTool(TypeProvider):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _isBootstrapRequired(self):
-    if not self.has_key('Standard Property'):
+    if not self.has_key('Interaction Workflow'):
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates
@@ -112,8 +112,11 @@ class TypesTool(TypeProvider):
     except AttributeError:
       pass
     try:
-      script = self.getPortalObject().portal_workflow \
-        .dynamic_class_generation_interaction_workflow.scripts \
+      workflow_tool = self.getPortalObject().portal_workflow
+      workflow = workflow_tool.dynamic_class_generation_interaction_workflow
+      script_dict = {script.getReference(): script
+                     for script in workflow.getScriptValueList()}
+      script = script_dict\
         .DynamicClassGeneration_resetDynamicDocuments
       new = '.resetDynamicDocumentsOnceAtTransactionBoundary('
       if new not in script._body:
@@ -129,12 +132,23 @@ class TypesTool(TypeProvider):
       'Business Template',
       'Standard Property',
       'Acquired Property',
+      # workflow (initializePortalTypeDynamicWorkflowMethods)
+      'State',
+      'Transition',
+      'Workflow Script',
+      'Workflow Variable',
+      'Worklist',
+      'Workflow',
+      'Interaction',
+      'Interaction Workflow',
       # the following ones are required to upgrade an existing site
       'Category Property',
       # the following is needed to bootstrap Catalog Tool and default catalog
       'Catalog Tool',
     ))
     ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow')
+    ERP5Generator.bootstrap_allow_type(self, 'Interaction Workflow')
 
   def listContentTypes(self, container=None):
     """List content types from all providers

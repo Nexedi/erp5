@@ -71,7 +71,7 @@ class TestTemplateTool(ERP5TypeTestCase):
   def beforeTearDown(self):
     self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
-           'erp5_workflow', 'erp5_configurator',
+           'erp5_configurator',
            'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard"]
     for bt_name in mark_replaced_bt_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
@@ -651,8 +651,7 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_installBusinessTemplatesFromRepository_install_dependency(self):
     """Test if dependencies are automatically installed properly
     """
-    # erp5_configurator_{ung,standard} depends on erp5_configurator which in
-    # turn depends on erp5_workflow
+    # erp5_configurator_{ung,standard} depends on erp5_configurator
     bt5_name_list = ['erp5_configurator_standard']
     template_tool = self.portal.portal_templates
     repository, = [
@@ -667,8 +666,6 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertEqual(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertEqual(bt, None)
-    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
     self.assertEqual(bt, None)
 
     self.assertRaises(BusinessTemplateMissingDependency,
@@ -695,23 +692,19 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
     self.assertNotEquals(bt, None)
-    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
-    self.assertNotEquals(bt, None)
     self.abort()
 
     # Same as above but also check that dependencies are properly resolved if
     # one of the dependency is explicitly added to the list of bt5 to be
     # installed
     template_tool.installBusinessTemplateListFromRepository(
-      bt5_name_list + ['erp5_workflow'],
+      bt5_name_list + ['erp5_configurator'],
       install_dependency=True)
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertNotEquals(bt, None)
-    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
     self.assertNotEquals(bt, None)
     self.abort()
 
