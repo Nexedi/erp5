@@ -2706,8 +2706,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       Make sure that changing workflow state after delivered changes
       records in stock table.
     """
-    delivered_state = self.portal.portal_workflow.inventory_workflow.states['delivered']
-    delivered_state.transitions = delivered_state.transitions + ('cancel',)
+    delivered_state = self.portal.portal_workflow.inventory_workflow.getStateValueById('delivered')
+    delivered_state.addPossibleTransition('cancel')
 
     self.commit()
 

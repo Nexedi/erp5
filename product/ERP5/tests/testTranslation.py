@@ -300,8 +300,9 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     # Get one portal type and its related workflow
     portal_type_id = 'Bug'
     workflow_id = 'bug_workflow'
-    assert(workflow_id in \
-            self.portal.portal_workflow.getChainFor(portal_type_id))
+    workflow_value = self.portal.portal_workflow._getOb(workflow_id)
+    assert(workflow_value in \
+            self.portal.portal_workflow.getWorkflowsFor(portal_type_id))
     bug = self.portal.getDefaultModule(portal_type_id).newContent(
         portal_type=portal_type_id)
     state_title = bug.getSimulationStateTitle()

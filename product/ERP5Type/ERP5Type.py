@@ -4,7 +4,7 @@
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#
+#               2014 Wenjie.Zheng <wenjie.zheng@tiolive.com>
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -229,6 +229,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
+    workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -430,7 +431,7 @@ class ERP5TypeInformation(XMLObject,
       if notify_workflow:
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
-        workflow_tool = getToolByName(portal, 'portal_workflow', None)
+        workflow_tool = portal.portal_workflow
         if workflow_tool is not None:
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
@@ -476,7 +477,7 @@ class ERP5TypeInformation(XMLObject,
       import erp5.portal_type as module
       return getattr(module, self.getId())
 
-    # The following 2 methods are needed before there are generated.
+    # The following methods are needed before there are generated.
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypePropertySheetList')
@@ -489,6 +490,27 @@ class ERP5TypeInformation(XMLObject,
     def getTypeBaseCategoryList(self):
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeWorkflowList')
+    def getTypeWorkflowList(self):
+      """Getter for 'type_workflow' property
+      XXXSEB : we will have to use propertysheets XXX
+      """
+      return list(self.workflow_list)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'setTypeWorkflowList')
+    def setTypeWorkflowList(self, type_workflow_list):
+      """Setter for 'type_workflow' property"""
+      # We use 'sorted' below to keep an order in the workflow list. Without
+      # this line, the actions can have different order depending on the order
+      # set during the installation or later. This is bad!
+      # It might not be the ideal solution, if you need to have the workflow
+      # defined in a specific order. Then, your new implementation should use
+      # indexes on workflows as in portal types action's priority.
+      # Note: 'sorted' also convert a tuple or a set to a list
+      self.workflow_list = sorted(type_workflow_list)
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
@@ -659,6 +681,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
+      search_source_list += self.getTypeWorkflowList()
       return ' '.join(filter(None, search_source_list))
 
     security.declareProtected(Permissions.AccessContentsInformation,

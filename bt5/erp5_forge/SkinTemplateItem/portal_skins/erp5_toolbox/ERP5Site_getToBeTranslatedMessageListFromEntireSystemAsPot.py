@@ -40,7 +40,7 @@ iterate(context.portal_skins)
 
 # Collect python script from workflow objects.
 for workflow in context.portal_workflow.objectValues():
-  for i in workflow.scripts.objectValues():
+  for i in workflow.getScriptValueDict().values():
     if i.meta_type=='Script (Python)':
       python_script_list.append(i)
 
@@ -107,20 +107,21 @@ for i in page_template_list:
 for i in context.portal_workflow.objectValues():
   add_message(i.title_or_id(), portal_url.getRelativeContentURL(i))
   
-  if not i.states:
+  state_value_list = i.getStateValueList()
+  if not state_value_list:
     continue
-  for s in i.states.values():
-    s_title = s.title
-    if s_title:
+  for s in state_value_list:
+    if s.title:
       # adding a context in msg_id for more precise translation
-      msg_id = getMessageIdWithContext(s_title,'state',i.id)
+      msg_id = getMessageIdWithContext(s.title,'state',i.id)
       add_message(msg_id, portal_url.getRelativeContentURL(s))
       # also use state title as msg_id for compatibility
-      add_message(s_title, portal_url.getRelativeContentURL(s))
+      add_message(s.title, portal_url.getRelativeContentURL(s))
   
-  if not i.transitions:
+  transition_value_list = i.getTransitionValueList()
+  if not transition_value_list:
     continue
-  for t in i.transitions.values():
+  for t in transition_value_list:
     if t.actbox_name:
       #adding a context in msg_id for more precise translation
       msg_id = getMessageIdWithContext(t.actbox_name,'transition',i.id)
@@ -133,7 +134,7 @@ for i in context.portal_workflow.objectValues():
       add_message(msg_id, portal_url.getRelativeContentURL(t))
       # also use transition title as msg_id for compatibility
       add_message(t.title, portal_url.getRelativeContentURL(t))
-  for worklist in i.worklists.objectValues():
+  for worklist in i.getWorklistValueList():
     add_message(worklist.actbox_name, portal_url.getRelativeContentURL(worklist))
 
 

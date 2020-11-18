@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-# Copyright (c) 2002,2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002,2005,2015 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
@@ -42,57 +42,6 @@ from DateTime import DateTime
 
 security = ClassSecurityInfo()
 WorkflowTool.security = security
-
-def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
-    '''
-    Allows the system to request a workflow action.  This method
-    must perform its own security checks.
-    '''
-    if type(transition_list) in StringTypes:
-      method_id = transition_list
-    elif len(transition_list) == 1:
-      method_id = transition_list[0]
-    else:
-      raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
-    sdef = self._getWorkflowStateOf(ob)
-    if sdef is None:
-        raise WorkflowException, 'Object is in an undefined state'
-    if method_id not in sdef.transitions:
-        raise Unauthorized(method_id)
-    tdef = self.transitions.get(method_id, None)
-    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
-        raise WorkflowException, (
-            'Transition %s is not triggered by a workflow method'
-            % method_id)
-    if not self._checkTransitionGuard(tdef, ob):
-        raise Unauthorized(method_id)
-    self._changeStateOf(ob, tdef, kw)
-    if getattr(ob, 'reindexObject', None) is not None:
-        if kw is not None:
-            activate_kw = kw.get('activate_kw', {})
-        else:
-            activate_kw = {}
-        ob.reindexObject(activate_kw=activate_kw)
-
-def DCWorkflowDefinition_notifyBefore(self, ob, transition_list, args=None, kw=None):
-    '''
-    Notifies this workflow of an action before it happens,
-    allowing veto by exception.  Unless an exception is thrown, either
-    a notifySuccess() or notifyException() can be expected later on.
-    The action usually corresponds to a method name.
-    '''
-    pass
-
-def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=None, kw=None):
-    '''
-    Notifies this workflow that an action has taken place.
-    '''
-    pass
-
-security.declarePrivate('notifyWorkflowMethod')
-DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
-DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
-DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
@@ -434,6 +383,18 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
               'permissions': (),  # Predetermined.
               'category': metadata['action_box_category']})
   return action_list
+
+# following 2 functions are necessary for workflow tool dynamic migration
+def WorkflowTool_isBootstrapRequired(self):
+  # migration is required if the tool is not the new one from ERP5 Workflow
+  # in case of old workflow tool, it acquires the portal type from ERP5 Site
+  return self.getPortalType() != "Workflow Tool"
+
+def WorkflowTool_bootstrap(self):
+  self.getPortalObject().migrateToPortalWorkflowClass()
+
+WorkflowTool._isBootstrapRequired = WorkflowTool_isBootstrapRequired
+WorkflowTool._bootstrap = WorkflowTool_bootstrap
 
 def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   """
@@ -816,20 +777,6 @@ def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
 
 security.declarePublic('isTransitionPossible')
 WorkflowTool.isTransitionPossible = WorkflowTool_isTransitionPossible
-
-def WorkflowTool_getWorkflowChainDict(self, sorted=True):
-  """Returns workflow chain compatible with workflow_chain_dict signature"""
-  chain = self._chains_by_type.copy()
-  return_dict = {}
-  for portal_type, workflow_id_list in chain.iteritems():
-    if sorted:
-      workflow_id_list = list(workflow_id_list)
-      workflow_id_list.sort()
-    return_dict['chain_%s' % portal_type] = ', '.join(workflow_id_list)
-  return return_dict
-
-security.declareProtected(Permissions.ManagePortal, 'getWorkflowChainDict')
-WorkflowTool.getWorkflowChainDict = WorkflowTool_getWorkflowChainDict
 
 WorkflowTool._reindexWorkflowVariables = lambda self, ob: \
   hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()

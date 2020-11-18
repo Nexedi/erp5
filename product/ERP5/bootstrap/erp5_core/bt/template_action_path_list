@@ -28,6 +28,7 @@ Base Type | role_view
 Base Type | translation_view
 Base Type | update_local_roles
 Base Type | view
+Business Template | convert_to_ERP5_workflows
 Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
@@ -87,6 +88,9 @@ Extension Component | view
 Extension Component | web_view
 Folder | view
 Id Tool | view
+Interaction Workflow | script_view
+Interaction Workflow | view
+Interaction | view
 Interface Component | view
 Interface Component | web_view
 Memcached Plugin | view
@@ -133,6 +137,8 @@ SQL Non Continuous Increasing Id Generator | view
 Script Constraint | predicate
 Script Constraint | view
 Standard Property | view
+State | permission
+State | view
 String Attribute Match Constraint | predicate
 String Attribute Match Constraint | view
 System Preference | captcha
@@ -152,6 +158,8 @@ Template Tool | view
 Test Component | run_live_test
 Test Component | view
 Test Component | web_view
+Transition Variable | view
+Transition | view
 Tool Component | view
 Tool Component | web_view
 Trash Bin | jump_bt5
@@ -159,6 +167,24 @@ Trash Bin | view
 Trash Folder | view
 Trash Tool | view
 Types Tool | view
+Workflow Script | proxy_role_view
+Workflow Script | proxy_role_view
+Workflow Script | repository_history_view
+Workflow Script | view
+Workflow Script | view
+Workflow Tool | conversion
+Workflow Tool | view
+Workflow Variable | view
+Workflow | launch_configuration
+Workflow | permission_view
+Workflow | script_view
+Workflow | transition_view
+Workflow | update_security_roles
+Workflow | variable_view
+Workflow | view
+Workflow | worklist_view
+Worklist Variable | view
+Worklist | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | callable_tool

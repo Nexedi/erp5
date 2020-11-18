@@ -152,22 +152,96 @@ class TestWorklist(ERP5TypeTestCase):
     self._addPropertySheet(self.checked_portal_type, 'SortIndex')
 
   def addWorkflowCataloguedVariable(self, workflow_id, variable_id):
-    variables = self.getWorkflowTool()[workflow_id].variables
-    variables.addVariable(variable_id)
-    assert variables[variable_id].for_catalog == 1
+    # add new workflow compatibility
+    workflow_value = self.getWorkflowTool()[workflow_id]
+    if workflow_value.__class__.__name__ == 'Workflow':
+      # Will add dynamic variable in worklist.
+      pass
+    else:
+      variables = workflow_value.variables
+      variables.addVariable(variable_id)
+      variable_value = variables[variable_id]
+      assert variable_value.for_catalog == 1
 
   def createWorklist(self, workflow_id, worklist_id, actbox_name,
                      actbox_url=None, **kw):
-    worklists = self.getWorkflowTool()[workflow_id].worklists
-    worklists.addWorklist(worklist_id)
-    worklists._getOb(worklist_id).setProperties('',
+    # add new workflow compatibility
+    tales_re = re.compile(r'(\w+:)?(.*)')
+    workflow_value = self.getWorkflowTool()[workflow_id]
+    if workflow_value.__class__.__name__ == 'Workflow':
+      worklist_value = workflow_value.newContent(portal_type='Worklist')
+      worklist_value.setReference(worklist_id)
+      # Configure new workflow:
+      actbox_name='%s (%%(count)s)' % actbox_name
+      worklist_value.setActboxName(str(actbox_name))
+      worklist_value.setActboxUrl(str(actbox_url))
+      worklist_value.setActboxCategory(str('global'))
+
+      props={k if k.startswith('guard_') else 'variable_' + k: v
+               for k, v in kw.iteritems()}
+      if 'variable_portal_type' in props:
+        v = props.get('variable_portal_type', None)
+        if v:
+          worklist_value.setMatchedPortalTypeList(v)
+      if 'variable_validation_state' in props:
+        v = props.get('variable_validation_state', None)
+        if v:
+          worklist_value.setMatchedValidationState('state_'+v)
+      if 'variable_' + self.int_catalogued_variable_id in props:
+        variable_ref = self.int_catalogued_variable_id
+        v = props.get('variable_'+self.int_catalogued_variable_id, None)
+        if v:
+          # Add a local worklist variable:
+          variable_value = worklist_value._getOb('variable_' + self.int_catalogued_variable_id, None)
+          if variable_value is None:
+            variable_value = worklist_value.newContent(portal_type='Worklist Variable')
+            variable_value.setReference(variable_ref)
+          variable_value.setInitialValue(str(v))
+      # test04 related key
+      if 'variable_region_uid' in props:
+        v = props.get('variable_region_uid', None)
+        if v:
+          variable_value = worklist_value._getOb('variable_region_uid', None)
+          if variable_value is None:
+            variable_value = worklist_value.newContent(portal_type='Worklist Variable')
+            variable_value.setReference('region_uid')
+          variable_value.setDefaultExpr(v)
+      if 'variable_base_category_id' in props:
+        variable_value = worklist_value._getOb('variable_base_category_id', None)
+        v = props.get('variable_base_category_id', None)
+        if variable_value is None:
+          variable_value = worklist_value.newContent(portal_type='Worklist Variable')
+          variable_value.setReference('base_category_id')
+        variable_value.setInitialValue(v)
+      # Update guard configuration for view and guard value.
+      if 'guard_roles' in props:
+        v = props.get('guard_roles', '')
+        if v:
+          worklist_value.setRoleList([ var.strip() for var in v.split(';') ])
+      if 'guard_expr' in props:
+        v = props.get('guard_expr', '')
+        if v:
+          worklist_value.setExpression(v)
+      worklist_value.getGuard()
+    else:
+      worklists = workflow_value.worklists
+      worklists.addWorklist(worklist_id)
+      worklist_value = worklists._getOb(worklist_id)
+      worklist_value.setProperties('',
         actbox_name='%s (%%(count)s)' % actbox_name, actbox_url=actbox_url,
         props={k if k.startswith('guard_') else 'var_match_' + k: v
                for k, v in kw.iteritems()})
 
+
   def removeWorklist(self, workflow_id, worklist_id_list):
-    worklists = self.getWorkflowTool()[workflow_id].worklists
-    worklists.deleteWorklists(worklist_id_list)
+    # add new workflow compatibility
+    workflow_value = self.getWorkflowTool()[workflow_id]
+    if workflow_value.__class__.__name__ == 'Workflow':
+      for worklist_id in worklist_id_list:
+        workflow_value._delObject('worklist_'+worklist_id)
+    else:
+      worklists = self.getWorkflowTool()[workflow_id].worklists
+      worklists.deleteWorklists(worklist_id_list)
 
   def createWorklists(self):
     for worklist_id, actbox_name, role, expr, state, int_variable in [

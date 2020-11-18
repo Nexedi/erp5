@@ -22,30 +22,25 @@ result_list = display_none_category and [('', '')] or []
 
 if isinstance(portal_type, basestring):
   portal_type = portal_type,
-  
-chain_dict = workflow_tool.getWorkflowChainDict()
-for portal_type in portal_type:
-  for workflow_id in chain_dict['chain_%s' % portal_type].split(','):
-    workflow_id = workflow_id.strip()
-    if workflow_id in workflow_set:
-      continue
-    workflow_set.add(workflow_id)
-    
-    workflow = workflow_tool[workflow_id]
-    
-    # skip interaction workflows or workflows with only one state (such as edit_workflow)
-    if workflow.states is None or len(workflow.states.objectIds()) <= 1:
-      continue
-    
-    # skip workflows using another state variable
-    if state_var not in (None, workflow.variables.getStateVar()):
-      continue
-    
-    for state in workflow.states.objectValues():
-      if state.id in state_set:
-        continue
-      state_set.add(state.id)
-      
-      result_list.append((str(translateString(state.title)), state.id))
+
+portal = context.getPortalObject()
+if isinstance(portal_type, str):
+  portal_type = (portal_type,)
+for current_type in portal_type:
+  current_type = getattr(portal.portal_types, current_type)
+  current_workflow_list = current_type.getTypeWorkflowList()
+  for workflow_id in current_workflow_list:
+    if workflow_id not in workflow_set:
+      workflow_set.add(workflow_id)
+      workflow = workflow_tool[workflow_id]
+      state_value_list = workflow.getStateValueList()
+      if (state_value_list is not None and
+          len(workflow.getStateIdList()) > 1 and
+          state_var in (None, workflow.getStateVariable())):
+        for state in state_value_list:
+          state_id = state.getReference()
+          if not state_id in state_set:
+            state_set.add(state_id)
+            result_list.append((str(translateString(state.title)), state_id))
 
 return result_list

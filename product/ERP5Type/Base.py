@@ -222,22 +222,27 @@ class WorkflowMethod(Method):
     for wf_id, transition_list in candidate_transition_item_list:
       candidate_workflow = wf[wf_id]
       valid_list = []
+      state = candidate_workflow._getWorkflowStateOf(instance, id_only=0)
       for transition_id in transition_list:
-        if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
+        # cannot pass state parameter to an interaction workflow's
+        # isWorkflowMethodSupported method
+        is_supported_kw = {} if state is None else {'state': state}
+
+        is_workflow_method_supported = candidate_workflow.isWorkflowMethodSupported(instance, transition_id, **is_supported_kw)
+        if is_workflow_method_supported:
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
             # a run-once transition, prevent it from running again in
             # the same transaction
             transactional_variable[once_transition_key] = 1
-        elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
+        elif candidate_workflow.__class__.__name__ in ['DCWorkflowDefinition', 'Workflow']:
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           # XXX Keep the log for projects that needs to comment out
           #     the previous line.
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
-              % (wf_id, transition_id, instance,
-                 candidate_workflow._getWorkflowStateOf(instance, id_only=1)))
+              % (wf_id, transition_id, instance, state))
       if valid_list:
         valid_transition_item_list.append((wf_id, valid_list))
 
@@ -508,19 +513,19 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   # infinitely. For instance, if a workflow is missing, and the acquisition
   # wrapper contains an object with _aq_dynamic defined, the workflow id
   # is looked up with _aq_dynamic, thus causes infinite recursions.
-
   portal_workflow = aq_inner(portal_workflow)
   portal_type = ptype_klass.__name__
 
-  dc_workflow_dict = {}
+  workflow_dict = {}
   interaction_workflow_dict = {}
   for wf in portal_workflow.getWorkflowsFor(portal_type):
-    wf_id = wf.id
+    wf_id = wf.getId()
     wf_type = wf.__class__.__name__
-    if wf_type == "DCWorkflowDefinition":
+    wf_transition_id_list = wf.getTransitionIdList()
+    if wf_type in ['DCWorkflowDefinition', 'Workflow']:
       # Create state var accessor
       # and generate methods that support the translation of workflow states
-      state_var = wf.variables.getStateVar()
+      state_var = wf.getStateVariable()
       for method_id, getter in (
           ('get%s' % UpperCase(state_var), WorkflowState.Getter),
           ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
@@ -536,11 +541,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
-      storage = dc_workflow_dict
-      transitions = wf.transitions
+      storage = workflow_dict
 
-      for transition in transitions.objectValues():
-        transition_id = transition.getId()
+      for transition_id in wf_transition_id_list:
         list_method_id = 'get%sTransitionDateList' % UpperCase(transition_id)
         if not hasattr(ptype_klass, list_method_id):
           method = WorkflowHistoryAccessor.ListGetter(list_method_id, wf_id, transition_id, 'time')
@@ -553,23 +556,24 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
-    elif wf_type == "InteractionWorkflowDefinition":
+    elif wf_type in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
       storage = interaction_workflow_dict
-      transitions = wf.interactions
     else:
       continue
 
     # extract Trigger transitions from workflow definitions for later
-    transition_id_set = set(transitions.objectIds())
+    transition_id_set = set(wf_transition_id_list)
+
     trigger_dict = {}
     for tr_id in transition_id_set:
-      tdef = transitions[tr_id]
+      tdef = wf.getTransitionValueById(tr_id)
       if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
         trigger_dict[tr_id] = tdef
 
     storage[wf_id] = (transition_id_set, trigger_dict)
 
-  for wf_id, v in dc_workflow_dict.iteritems():
+  # Generate Workflow method
+  for wf_id, v in workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       method_id = convertToMixedCase(tr_id)
@@ -624,7 +628,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                    portal_type_group in tdef.portal_type_group_filter):
           continue
 
-      for imethod_id in tdef.method_id:
+      for imethod_id in tdef.getTriggerMethodIdList():
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
           # XXX What happens if exception ?
@@ -634,7 +638,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           interaction_queue.append((wf_id,
                                     tr_id,
                                     transition_id_set,
-                                    tdef.once_per_transaction,
+                                    tdef.getTriggerOncePerTransaction(),
                                     method_id_matcher))
 
           # XXX - class stuff is missing here
@@ -653,7 +657,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
               ptype_klass.security.declareProtected(
                   Permissions.AccessContentsInformation, method_id)
             ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id,
-                                               tdef.once_per_transaction)
+                                               tdef.getTriggerOncePerTransaction())
             continue
 
           # Wrap method
@@ -676,7 +680,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
             transition_id = method.getTransitionId()
             if transition_id in transition_id_set:
               method.registerTransitionAlways(portal_type, wf_id, transition_id)
-          if tdef.once_per_transaction:
+          if tdef.getTriggerOncePerTransaction():
             method.registerTransitionOncePerTransaction(portal_type, wf_id, tr_id)
           else:
             method.registerTransitionAlways(portal_type, wf_id, tr_id)
@@ -2803,7 +2807,7 @@ class Base(
     """Test if the context is in 'deleted' state"""
     for wf in self.getPortalObject().portal_workflow.getWorkflowsFor(self):
       state = wf._getWorkflowStateOf(self)
-      if state is not None and state.getId() == 'deleted':
+      if state is not None and state.getReference() == 'deleted':
         return True
     return False
 
@@ -2843,8 +2847,8 @@ class Base(
       Returns a list of tuples {id:workflow_id, state:workflow_state}
     """
     result = []
-    for wf in self.portal_workflow.getWorkflowsFor(self):
-      result += [(wf.id, wf._getWorkflowStateOf(self, id_only=1))]
+    for wf in self.portal_workflow.getWorkflowsFor(self.getPortalType()):
+      result += [(wf.getId(), wf._getWorkflowStateOf(self, id_only=1))]
     return result
 
   security.declarePublic('getWorkflowInfo')
@@ -3491,12 +3495,14 @@ class Base(
     # Use meta transition to jump from one state to another
     # without existing transitions.
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow
     worflow_variable_list = []
     for workflow in workflow_tool.getWorkflowsFor(self):
-      if not isinstance(workflow, InteractionWorkflowDefinition):
-        worflow_variable_list.append(self.getProperty(workflow.state_var))
+      if not isinstance(workflow, InteractionWorkflowDefinition) and \
+          not isinstance(workflow, InteractionWorkflow):
+        worflow_variable_list.append(self.getProperty(workflow.getStateVariable()))
 
     # then restart ingestion with new portal_type
     # XXX Contribution Tool accept only document which are containing
