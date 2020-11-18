@@ -45,6 +45,7 @@ class SolverMixin(object):
   # Declarative interfaces
   zope.interface.implements(ISolver,)
 
+  workflow_list = ()
   def _solve(self, activate_kw=None):
     raise NotImplementedError
 

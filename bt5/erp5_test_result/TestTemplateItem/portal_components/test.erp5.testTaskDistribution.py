@@ -1,4 +1,4 @@
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep

@@ -25,6 +25,10 @@
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>Workflow and Worklist variable</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Variable</string> </value>
         </item>

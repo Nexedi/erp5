@@ -210,7 +210,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
     delivery = self.getCausalityValue()
     # Check the whole history to not drop simulation in case of redraft
     draft_state_list = portal.getPortalDraftOrderStateList()
-    workflow, = [wf for wf in portal.portal_workflow.getWorkflowsFor(delivery)
+    workflow, = [wf for wf in portal.portal_workflow.getWorkflowValueListFor(delivery)
                     if wf.isInfoSupported(delivery, 'simulation_state')]
     for history_item in workflow.getInfoFor(delivery, 'history', ()):
       if history_item['simulation_state'] in draft_state_list:
