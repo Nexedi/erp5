@@ -43,7 +43,7 @@ class UrlRegistryTool(BaseTool):
   title = 'Url Registry Tool'
   id = 'portal_url_registry'
   meta_type = 'ERP5 Url Registry Tool'
-  title = 'Url Registries'
+  title = 'Contribution URLs'
   portal_type = 'Url Registry Tool'
 
   # Declarative Security
