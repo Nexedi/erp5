@@ -228,14 +228,6 @@ class TestUpgrader(ERP5TypeTestCase):
   def stepCheckPostUpgradeEmptyConstraintList(self, sequence=None):
     self._checkEmptyConstraintList('upgrader_check_post_upgrade')
 
-  def stepCheckPosUpgradeWorkflowChainConsistency(self, sequence=None):
-    alarm = getattr(self.portal.portal_alarms, 'upgrader_check_post_upgrade')
-    active_process = alarm.getLastActiveProcess()
-    detail_list = active_process.getResultList()[0].detail
-    message = 'Preference - Expected: edit_workflow, preference_interaction_workflow, preference_workflow <> Found: (Default)'
-    self.assertIn(message, detail_list)
-    self.assertTrue(detail_list.count(message), 1)
-
   def stepSetConstraintInPersonModulePortalType(self, sequence=None):
     types_tool = self.portal.portal_types
     portal_type = types_tool['Person Module']
@@ -253,14 +245,6 @@ class TestUpgrader(ERP5TypeTestCase):
     if 'TemplateToolPostUpgradeConstraint' not in property_sheet_list:
       portal_type.setTypePropertySheetList(
         portal_type.getTypePropertySheetList() + ['TemplateToolPostUpgradeConstraint',])
-
-  def stepSetDefaultWorkflowChainToPreference(self, sequence=None):
-    workflow_chain_per_type_dict = {}
-    for portal_type, workflow_chain_list in self.portal.ERP5Site_dumpWorkflowChainByPortalType().iteritems():
-      workflow_chain_per_type_dict['chain_%s' % portal_type] = ",".join(workflow_chain_list)
-    workflow_chain_per_type_dict['chain_Preference'] = '(Default)'
-    self.portal.portal_workflow.manage_changeWorkflows(default_chain="",
-      props=workflow_chain_per_type_dict)
 
   def _stepSolveAlarm(self, alarm_id):
     getattr(self.portal.portal_alarms, alarm_id).solve()
@@ -519,34 +503,6 @@ class TestUpgrader(ERP5TypeTestCase):
     message = 'Portal Type Organisation still contains the category activity'
     self.assertTrue(message in detail_list, detail_list)
     self.assertTrue(detail_list.count(message), 1)
-
-  def test_workflow_chain_constraint(self):
-    """ Check if Workflow chains is broken, it can be detected and fixed after
-    upgrade"""
-    sequence_list = SequenceList()
-    sequence_string = """
-      stepActiveSensePreUpgradeAlarm
-      stepTic
-      stepRunUpgrader
-      stepTic
-      stepCheckUpgradeNotRequired
-      stepTic
-      stepSetConstraintInTemplateToolPortalType
-      stepActiveSensePostUpgradeAlarm
-      stepTic
-      stepCheckPostUpgradeEmptyConstraintList
-      stepSetDefaultWorkflowChainToPreference
-      stepActiveSensePostUpgradeAlarm
-      stepTic
-      stepCheckPosUpgradeWorkflowChainConsistency
-      stepRunPostUpgrade
-      stepTic
-      stepActiveSensePostUpgradeAlarm
-      stepTic
-      stepCheckPostUpgradeEmptyConstraintList
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
 
   def test_not_post_many_active_result_when_upgrade(self):
     """ Check that is possible fix consistency before the upgrade"""

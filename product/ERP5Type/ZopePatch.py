@@ -20,6 +20,8 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+
 # Load all monkey patches
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
@@ -30,10 +32,12 @@ from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
-from Products.ERP5Type.patches import DCWorkflow
-from Products.ERP5Type.patches import Worklists
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.patches import DCWorkflow
+  from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
-from Products.ERP5Type.patches import WorkflowTool
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import XMLExportImport
 from Products.ERP5Type.patches import ppml
 from Products.ERP5Type.patches import Expression
@@ -42,7 +46,8 @@ from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
-from Products.ERP5Type.patches import States
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.patches import States
 from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
@@ -95,5 +100,6 @@ from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
-from Products.ERP5Type.patches.DCWorkflow import ValidationFailed, ERP5TransitionDefinition
+from Products.ERP5Type.Core.Workflow import ValidationFailed
+from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base

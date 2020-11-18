@@ -187,6 +187,15 @@ class _(PatchClass(PythonScript)):
   def _bindAndExec(self, args, kw, caller_namespace):
     return self(*args, **kw) # caller_namespace not used by PythonScript
 
+  # Following methods are necessary for Workflow showAsXML() function
+  # WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+  def getBody(self):
+    return self._body
+  def getParams(self):
+    return self._params
+  def getProxyRole(self):
+    return self._proxy_roles
+
 addGuard(PythonScript, 'Change Python Scripts')
 
 InitializeClass(PythonScript)

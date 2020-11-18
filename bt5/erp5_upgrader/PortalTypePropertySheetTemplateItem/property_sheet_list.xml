@@ -3,6 +3,5 @@
   <item>TemplateToolBusinessTemplateInstallationConstraint</item>
   <item>TemplateToolCategoryNameConstraint</item>
   <item>TemplateToolTableConsistencyConstraint</item>
-  <item>TemplateToolWorkflowChainConsistencyConstraint</item>
  </portal_type>
 </property_sheet_list>

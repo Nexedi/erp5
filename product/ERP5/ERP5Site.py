@@ -830,13 +830,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     Return a list of workflow states classified to a specific group.
     """
     def getStateList(group):
-      state_dict = {}
+      state_set = set()
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'states', None):
-          for state in wf.states.objectValues():
-            if group in getattr(state, 'type_list', ()):
-              state_dict[state.getId()] = None
-      return tuple(state_dict.keys())
+        for state in wf.getStateValueList():
+          if group in state.getStateTypeList():
+            state_set.add(state.getReference())
+      return tuple(state_set)
 
     getStateList = CachingMethod(getStateList,
                                  id=('_getPortalGroupedStateList', group),
@@ -1372,15 +1371,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
       Return all states which is related to simulation state workflow and state type
     """
     def getStateList():
-      state_dict = {}
+      state_set = set()
       for wf in self.portal_workflow.objectValues():
-        if getattr(wf, 'variables', None) and \
-           wf.variables.getStateVar() == 'simulation_state':
-          if getattr(wf, 'states', None):
-            for state in wf.states.objectValues():
-              if getattr(state, 'type_list', None):
-                state_dict[state.getId()] = None
-      return tuple(sorted(state_dict.keys()))
+        if wf.getVariableValueDict() and wf.getStateVariable() == 'simulation_state':
+          for state in wf.getStateValueList():
+            if state.getStateTypeList():
+              state_set.add(state.getReference())
+      return tuple(sorted(state_set))
 
     getStateList = CachingMethod(getStateList,
                                  id=('getPortalGroupedSimulationStateList'),
@@ -1836,6 +1833,47 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     """
     return 0
 
+  security.declareProtected(Permissions.ManagePortal,
+                            'migrateToPortalWorkflowClass')
+  def migrateToPortalWorkflowClass(self):
+    """
+    Migrate portal_workflow from CMFCore to ERP5 Workflow. Also migrate
+    Workflow Chains not defined anymore on portal_workflow but on the Portal
+    Type.
+
+    Like other Tools migrations (ERP5CatalogTool...), this is called at
+    startup by synchronizeDynamicModules(), thus Workflows are *not* migrated
+    from DCWorkflow to ERP5 Workflow (ERP5 Workflow portal_workflow can work
+    with both DCWorkflows and ERP5 Workflows), because this is not needed at
+    this stage (handled by bt5 upgrade) and avoid making bootstrap more
+    complicated than it already is.
+    """
+    from Products.ERP5Type.Tool.WorkflowTool import WorkflowTool
+    current_tool = self.portal_workflow
+    if not isinstance(current_tool, WorkflowTool):
+      # CMFCore portal_workflow -> ERP5 Workflow portal_workflow
+      addERP5Tool(self, 'portal_workflow_new', 'Workflow Tool')
+      new_tool = self._getOb("portal_workflow_new")
+      LOG('ERP5Site', 0, 'migrateToPortalWorkflowClass: %r' % new_tool)
+      new_tool._chains_by_type = current_tool._chains_by_type
+
+      for workflow_id, workflow in current_tool.objectItems():
+        workflow_copy = workflow._getCopy(new_tool)
+        workflow_copy._setId(workflow_id)
+        new_tool._setObject(workflow_id, workflow_copy)
+
+        workflow_copy = new_tool._getOb(workflow_id)
+        workflow_copy._postCopy(new_tool, op=0)
+        workflow_copy.wl_clearLocks()
+
+      self.portal_workflow = new_tool
+      self.portal_workflow.id = 'portal_workflow'
+      self._delObject('portal_workflow_new')
+
+      # Migrate Workflow Chains to Portal Types
+      if getattr(new_tool, '_chains_by_type', None) is not None:
+        new_tool.reassignWorkflowWithoutConversion()
+
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
@@ -1875,7 +1913,7 @@ class PortalGenerator:
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
-        addCMFCoreTool('CMF Workflow Tool', None)
+        addERP5Tool(p, 'portal_workflow', 'Workflow Tool')
 
         addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
         addCMFDefaultTool('Default Discussion Tool', None)
@@ -2258,7 +2296,7 @@ class ERP5Generator(PortalGenerator):
     tool = p.portal_workflow
     tool.manage_delObjects(filter(tool.hasObject, workflow_list))
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
-    tool.setChainForPortalTypes(('Business Template',), workflow_list)
+    getattr(p.portal_types, 'Business Template').setTypeWorkflowList(workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed

@@ -2470,7 +2470,11 @@ return 1
     document.reject()
     document.share()
     logged_in_user = self.portal.portal_membership.getAuthenticatedMember().getId()
-    event_list = document.Base_getWorkflowEventInfoList()
+    # on the new document, during initialization, some workflow set the event's
+    # action to None, but they are not interesting in this test, just filter
+    # them
+    event_list = [event for event in document.Base_getWorkflowEventInfoList()
+                  if event.action is not None]
     event_list.reverse()
     # all actions by logged in user
     for event in event_list:

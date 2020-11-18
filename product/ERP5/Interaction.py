@@ -16,10 +16,12 @@
 # GNU General Public License for more details.
 #
 ##############################################################################
-""" Interaction in a web-configurable workflow.
-
-$Id$
 """
+Interaction in a web-configurable workflow. This is DCWorkflow
+implementation *deprecated* in favor of ERP5 Workflow.
+"""
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+assert WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
 
 from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type.Globals import DTMLFile, PersistentMapping
@@ -28,6 +30,7 @@ from Products.ERP5Type import Globals
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.Permissions import ManagePortal
+from Products.ERP5Type.Base import Base
 
 from Products.DCWorkflow.ContainerTab import ContainerTab
 from Products.DCWorkflow.Guard import Guard
@@ -35,6 +38,7 @@ from Products.DCWorkflow.Expression import Expression
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.ERP5 import _dtmldir
+from Products.ERP5Type.patches.DCWorkflow import convertToERP5Workflow
 
 class InteractionDefinition (SimpleItem):
     meta_type = 'Workflow Interaction'
@@ -105,6 +109,28 @@ class InteractionDefinition (SimpleItem):
 
     def getAvailableVarIds(self):
         return self.getWorkflow().variables.keys()
+
+    def getTriggerMethodIdList(self):
+      return self.method_id
+
+    def getTriggerOncePerTransaction(self):
+      return self.once_per_transaction
+
+    def getBeforeScriptValueList(self):
+      script_dict = self.getWorkflow().scripts
+      return [script_dict[script_name] for script_name in self.script_name]
+
+    def getAfterScriptValueList(self):
+      script_dict = self.getWorkflow().scripts
+      return [script_dict[script_name] for script_name in self.after_script_name]
+
+    def getBeforeCommitScriptValueList(self):
+      script_dict = self.getWorkflow().scripts
+      return [script_dict[script_name] for script_name in self.before_commit_script_name]
+
+    def getActivateScriptValueList(self):
+      script_dict = self.getWorkflow().scripts
+      return [script_dict[script_name] for script_name in self.activate_script_name]
 
     _properties_form = DTMLFile('interaction_properties', _dtmldir)
 
@@ -255,6 +281,43 @@ class InteractionDefinition (SimpleItem):
                 ve[id] = expr
 
             return self.manage_variables(REQUEST, 'Variables changed.')
+
+    def getReference(self):
+        return self.id
+
+    def getTitle(self):
+        return self.title
+
+    def getDescription(self):
+        return self.description
+
+    def getTemporaryDocumentDisallowed(self):
+        return self.temporary_document_disallowed
+
+    def getTriggerType(self):
+        return self.trigger_type
+
+    def getPortalTypeFilterList(self):
+        if self.portal_type_filter is None:
+            return []
+        return self.portal_type_filter
+
+    def checkGuard(self, *args, **kwargs):
+        from Products.ERP5Type.mixin.guardable import GuardableMixin
+        return GuardableMixin.checkGuard.im_func(self, *args, **kwargs)
+
+    def getPortalTypeGroupFilterList(self):
+        if self.portal_type_group_filter is None:
+            return []
+        return self.portal_type_group_filter
+
+    def getTransitionVariableValueList(self):
+        if self.var_exprs is None:
+            return []
+        return self.var_exprs
+
+    showDict = Base.showDict
+    convertToERP5Workflow = convertToERP5Workflow
 
 Globals.InitializeClass(InteractionDefinition)
 

@@ -7,7 +7,7 @@ from zLOG import LOG, WARNING
 import datetime
 import os
 import time
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 present = False
 tz = None

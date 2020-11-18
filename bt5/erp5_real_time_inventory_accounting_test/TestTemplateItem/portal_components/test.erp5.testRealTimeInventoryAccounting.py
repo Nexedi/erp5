@@ -48,7 +48,7 @@ class TestRealTimeInventoryAccountingMixin:
     sequence.edit(current_production_packing_list=sequence['production_packing_list_1'])
 
   def _transitAndCheck(self, document, workflow_method_id, expected_state):
-    from Products.DCWorkflow.DCWorkflow import ValidationFailed
+    from Products.ERP5Type.Core.Workflow import ValidationFailed
     try:
       if workflow_method_id.endswith('_action'):
         self.portal.portal_workflow.doActionFor(document, workflow_method_id)
