@@ -15,8 +15,9 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   def indent(text):
     return ''.join(("  " + line) for line in text.splitlines(True))
 
-  is_python_script = 'bound_names' in data
-  if is_python_script:
+  # don't show 'undefined-variable' errors for {Python,Workflow} Script parameters
+  is_script = 'bound_names' in data
+  if is_script:
     signature_parts = data['bound_names']
     if data['params']:
       signature_parts += [data['params']]
@@ -31,7 +32,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
 
   message_list = checkPythonSourceCode(body.encode('utf8'), data.get('portal_type'))
   for message_dict in message_list:
-    if is_python_script:
+    if is_script:
       message_dict['row'] = message_dict['row'] - 2
     else:
       message_dict['row'] = message_dict['row'] - 1

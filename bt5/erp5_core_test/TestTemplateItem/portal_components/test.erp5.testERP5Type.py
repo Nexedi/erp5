@@ -129,11 +129,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.login()
     # all those tests does strange things with Person type, so we won't
     # filter content types to add inside Person.
-    self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+    person_type_object = self.getTypesTool().getTypeInfo('Person')
+    person_type_object.filter_content_types = 0
     self.commit()
 
     # save workflow chain for Person type
-    self.person_chain = self.getWorkflowTool().getChainFor('Person')
+    self.person_workflow_list = person_type_object.getTypeWorkflowList()
 
   def beforeTearDown(self):
     self.abort()
@@ -144,13 +145,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                     self.getCategoryTool().region ]:
       module.manage_delObjects(list(module.objectIds()))
 
+    person_type_object = self.getTypesTool().getTypeInfo('Person')
     # set Person.acquire_local_roles back.
     if getattr(self, 'person_acquire_local_roles', None) is not None:
-      self.getTypesTool().getTypeInfo('Person').setTypeAcquireLocalRole(self.person_acquire_local_roles)
+      person_type_object.acquire_local_roles = self.person_acquire_local_roles
 
     # restore workflows for other tests
-    self.getWorkflowTool().setChainForPortalTypes(
-      ['Person'], self.person_chain)
+    person_type_object.setTypeWorkflowList(self.person_workflow_list)
 
     super(TestERP5Type, self).beforeTearDown()
 
@@ -987,24 +988,24 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person = self.getPersonModule().newContent(id='1', portal_type='Person')
     wf = self.getWorkflowTool().validation_workflow
     # those are assumptions for this test.
-    self.assertTrue(wf.getId() in
-                      self.getWorkflowTool().getChainFor('Person'))
-    self.assertEqual('validation_state', wf.variables.getStateVar())
-    initial_state = wf.states[wf.initial_state]
-    other_state = wf.states['validated']
+    self.assertTrue(wf in
+                      self.getWorkflowTool().getWorkflowValueListFor('Person'))
+    self.assertEqual('validation_state', wf.getStateVariable())
+    initial_state = wf.getSourceValue()
+    other_state = wf.getStateValueById('validated')
 
     self.assertTrue(hasattr(person, 'getValidationState'))
     self.assertTrue(hasattr(person, 'getValidationStateTitle'))
     self.assertTrue(hasattr(person, 'getTranslatedValidationStateTitle'))
 
-    self.assertEqual(initial_state.getId(), person.getValidationState())
+    self.assertEqual(initial_state.getReference(), person.getValidationState())
     self.assertEqual(initial_state.title,
                       person.getValidationStateTitle())
     self.assertEqual(initial_state.title,
                       person.getTranslatedValidationStateTitle())
     self.assertTrue([initial_state.title], message_catalog._translated)
 
-    self.assertEqual(initial_state.getId(),
+    self.assertEqual(initial_state.getReference(),
                       person.getProperty('validation_state'))
     self.assertEqual(initial_state.title,
                       person.getProperty('validation_state_title'))
@@ -1014,7 +1015,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.assertTrue([initial_state.title], message_catalog._translated)
 
     # default parameter is accepted by getProperty for compatibility
-    self.assertEqual(initial_state.getId(),
+    self.assertEqual(initial_state.getReference(),
                       person.getProperty('validation_state', 'default'))
     self.assertEqual(initial_state.title,
                       person.getProperty('validation_state_title', 'default'))
@@ -1026,12 +1027,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # pass a transition and check accessors again.
     person.validate()
-    self.assertEqual(other_state.getId(), person.getValidationState())
+    self.assertEqual(other_state.getReference(), person.getValidationState())
     self.assertEqual(other_state.title,
                       person.getValidationStateTitle())
     self.assertEqual(other_state.title,
                       person.getTranslatedValidationStateTitle())
-    self.assertEqual(other_state.getId(),
+    self.assertEqual(other_state.getReference(),
                       person.getProperty('validation_state'))
     self.assertEqual(other_state.title,
                       person.getProperty('validation_state_title'))

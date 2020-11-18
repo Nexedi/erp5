@@ -118,23 +118,24 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
       Remove workflow related to the portal type
     """
-    self.getWorkflowTool().setChainForPortalTypes(
-        ['Organisation'], ())
+    self.getPortalObject().portal_types.Organisation.setTypeWorkflowList([])
 
   def stepAssociateWorkflows(self, sequence=None, sequence_list=None, **kw):
     """
       Associate workflow to the portal type
     """
-    self.getWorkflowTool().setChainForPortalTypes(
-        ['Organisation'], ('validation_workflow', 'edit_workflow'))
+    self.getPortalObject().portal_types.Organisation.setTypeWorkflowList([
+      'validation_workflow', 'edit_workflow'
+    ])
 
   def stepAssociateWorkflowsExcludingEdit(self, sequence=None,
                                           sequence_list=None, **kw):
     """
       Associate workflow to the portal type
     """
-    self.getWorkflowTool().setChainForPortalTypes(
-        ['Organisation'], ('validation_workflow',))
+    self.getPortalObject().portal_types.Organisation.setTypeWorkflowList([
+      'validation_workflow'
+    ])
 
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
@@ -189,7 +190,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
   def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None,
                                     **kw):
     """
-      Set a different title value
+      Set the same title value
     """
     object_instance = sequence.get('object_instance')
     object_instance.edit(title=object_instance.getTitle())
@@ -907,8 +908,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                      'workflow_history', property_value)
 
   def test_12_editTempObject(self, quiet=quiet, run=run_all_test):
-    """Simple t
-    est to edit a temp object.
+    """
+    Simple test to edit a temp object.
     """
     portal = self.getPortal()
     tmp_object = portal.newContent(temp_object=True, portal_type='Organisation',
@@ -933,14 +934,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     self.commit()
 
-    cbt = pw._chains_by_type
-    props = {}
-    for id_, wf_ids in cbt.iteritems():
-      if id_ == portal_type:
-        wf_ids = list(wf_ids) + [dummy_worlflow_id]
-      props['chain_%s' % id_] = ','.join(wf_ids)
-    pw.manage_changeWorkflows('', props = props)
-    pw.manage_delObjects([dummy_worlflow_id])
+    organisation_type = portal.portal_types.getTypeInfo(portal_type)
+    organisation_initial_workflow_list = organisation_type.getTypeWorkflowList()
+    organisation_type.setTypeWorkflowList(
+      organisation_initial_workflow_list + [non_existent_worlflow_id])
+    pw.manage_delObjects([non_existent_worlflow_id])
 
     self.commit()
 
@@ -949,15 +947,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                         'thisMethodShouldNotBePresent')
     finally:
       # Make sure that the artificial workflow is not referred to any longer.
-      cbt = pw._chains_by_type
-      props = {}
-      for id, wf_ids in cbt.iteritems():
-        if id == portal_type:
-          # Remove the non-existent workflow.
-          wf_ids = [wf_id for wf_id in wf_ids \
-                    if wf_id != dummy_worlflow_id]
-        props['chain_%s' % id] = ','.join(wf_ids)
-      pw.manage_changeWorkflows('', props = props)
+      organisation_type.setTypeWorkflowList(organisation_initial_workflow_list)
 
       self.commit()
 
@@ -984,13 +974,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     dummy_simulation_worlflow = pw[dummy_simulation_worlflow_id]
     dummy_validation_worlflow = pw[dummy_validation_worlflow_id]
     dummy_validation_worlflow.variables.setStateVar('validation_state')
-    cbt = pw._chains_by_type
-    props = {}
-    for id_, wf_ids in cbt.iteritems():
-      if id_ == portal_type:
-        old_wf_ids = wf_ids
-      props['chain_%s' % id_] = ','.join([dummy_validation_worlflow_id, dummy_simulation_worlflow_id])
-    pw.manage_changeWorkflows('', props=props)
+    organisation_type = portal.portal_types.getTypeInfo(portal_type)
+    organisation_initial_workflow_list = organisation_type.getTypeWorkflowList()
+    organisation_type.setTypeWorkflowList([dummy_validation_worlflow_id,
+                                           dummy_simulation_worlflow_id])
     permission_list = list(dummy_simulation_worlflow.permissions)
     manager_has_permission = {}
     for permission in permission_list:
@@ -1032,14 +1019,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.assertTrue(user.has_permission(permission, obj))
     finally:
       # Make sure that the artificial workflow is not referred to any longer.
-      cbt = pw._chains_by_type
-      props = {}
-      for id, wf_ids in cbt.iteritems():
-        if id == portal_type:
-          # Remove the non-existent workflow.
-          wf_ids = old_wf_ids
-        props['chain_%s' % id] = ','.join(wf_ids)
-      pw.manage_changeWorkflows('', props=props)
+      organisation_type.setTypeWorkflowList(organisation_initial_workflow_list)
       pw.manage_delObjects([dummy_simulation_worlflow_id, dummy_validation_worlflow_id])
 
   def test_getViewPermissionOwnerDefault(self):

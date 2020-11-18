@@ -150,6 +150,17 @@ class ERP5(_ERP5):
       status_dict['skip_count'] = int(group_dict['expected_failure'])
     return status_dict
 
+class WORKFLOW(ERP5):
+  # new test suite running a few test related to Workflow
+  # (to be used instead of ERP5 class, which run all tests)
+  def getTestList(self):
+    return ['testERP5Workflow', 'testERP5Type', 'testInteractionWorkflow',
+      'erp5_core_test:testSQLCachedWorklist', 'erp5_core_test:testWorklist',
+      'erp5_workflow_test:testWorkflowAndDCWorkflow', 'testERP5Simulation',
+      'testDmsWithPreConversion', 'testERP5BankingCashInventory',
+      'testInventoryModule', 'testPackingList', 'testBase',
+      'testERP5BankingUsualCashTransfer']
+
 
 class ERP5_simulation(_ERP5):
 

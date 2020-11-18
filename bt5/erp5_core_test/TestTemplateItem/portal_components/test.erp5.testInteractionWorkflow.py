@@ -91,8 +91,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     if getattr(wf.interactions, 'edit_interaction', None) is None:
       wf.interactions.addInteraction(id='edit_interaction')
     self.interaction = wf.interactions['edit_interaction']
-    self.getWorkflowTool().setChainForPortalTypes(
-                  [self.portal_type],'test_workflow, validation_workflow')
+    portal = self.getPortalObject()
+    type_object = portal.portal_types.getTypeInfo(self.portal_type)
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def createInteractionWorkflowWithTwoInteractions(self):
@@ -110,8 +111,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.scriptB = wf.scripts['afterEditB']
     wf.interactions.addInteraction(id='editB')
     self.interactionB = wf.interactions['editB']
-    self.getWorkflowTool().setChainForPortalTypes(
-                  [self.portal_type],'test_workflow, validation_workflow')
+    portal = self.getPortalObject()
+    type_object = portal.portal_types.getTypeInfo(self.portal_type)
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def test_no_interactions(self):
@@ -679,8 +681,9 @@ context.setTitle('Bar')
 
   def test_portal_type_filter(self):
     self.createInteractionWorkflow()
-    self.getWorkflowTool().setChainForPortalTypes(
-                  ['Bank Account'],'test_workflow, validation_workflow')
+    portal = self.getPortalObject()
+    type_object = portal.portal_types.getTypeInfo('Bank Account')
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     self.interaction.setProperties(
             'default',
             # only for bank accounts
@@ -704,8 +707,9 @@ context.setTitle('Bar')
 
   def test_portal_type_group_filter(self):
     self.createInteractionWorkflow()
-    self.getWorkflowTool().setChainForPortalTypes(
-                  ['Bank Account'],'test_workflow, validation_workflow')
+    portal = self.getPortalObject()
+    type_object = portal.portal_types.getTypeInfo('Bank Account')
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     self.interaction.setProperties(
             'default',
             # only for payment nodes portal type group (ie. bank account)

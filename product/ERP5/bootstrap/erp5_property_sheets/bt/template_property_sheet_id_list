@@ -177,9 +177,12 @@ TradePreference
 Transformation
 TransformedResource
 Transition
+ConfiguratorTransition
 TranslatableProperty
 Url
 Variable
+WorkflowVariable
+Guard
 Variation
 VariationRange
 Version
@@ -191,3 +194,6 @@ XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference
 GeographicalPoint
+Interaction
+WorkflowConfigurator
+Worklist

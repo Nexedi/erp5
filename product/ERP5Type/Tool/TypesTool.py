@@ -111,8 +111,11 @@ class TypesTool(TypeProvider):
     except AttributeError:
       pass
     try:
-      script = self.getPortalObject().portal_workflow \
-        .dynamic_class_generation_interaction_workflow.scripts \
+      workflow_tool = self.getPortalObject().portal_workflow
+      workflow = workflow_tool.dynamic_class_generation_interaction_workflow
+      script_dict = {script.getReference(): script
+                     for script in workflow.getScriptValueList()}
+      script = script_dict\
         .DynamicClassGeneration_resetDynamicDocuments
       new = '.resetDynamicDocumentsOnceAtTransactionBoundary('
       if new not in script._body:
@@ -128,6 +131,8 @@ class TypesTool(TypeProvider):
       'Business Template',
       'Standard Property',
       'Acquired Property',
+      # workflow
+      'Workflow',
       # the following ones are required to upgrade an existing site
       'Category Property',
       # the following is needed to bootstrap Catalog Tool and default catalog

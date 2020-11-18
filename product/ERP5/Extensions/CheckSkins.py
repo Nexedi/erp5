@@ -310,34 +310,31 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
   # Workflows.
   for wf in self.portal_workflow.objectValues():
     # Transitions.
-    for id in wf.transitions.objectIds():
-      transition = wf.transitions._getOb(id)
+    for transition in wf.getTransitionValueList():
       text = transition.actbox_url
       for info in info_list:
         if info.regexp.search(text) is not None:
           text = info.regexp.sub(info.new_name, text)
-          line = 'Transition %s of %s is modified for %s' % (id, 'portal_workflow/' + wf.id, info.name)
+          line = 'Transition %s of %s is modified for %s' % (transition.getReference(), 'portal_workflow/' + wf.id, info.name)
           LOG('fixSkinNames', 0, line)
           msg += '%s\n' % line
           if not dry_run:
             transition.actbox_url = text
           break
     # Worklists.
-    for id in wf.worklists.objectIds():
-      worklist = wf.worklists._getOb(id)
+    for worklist  in wf.getWorklistValueList():
       text = worklist.actbox_url
       for info in info_list:
         if info.regexp.search(text) is not None:
           text = info.regexp.sub(info.new_name, text)
-          line = 'Worklist %s of %s is modified for %s' % (id, 'portal_workflow/' + wf.id, info.name)
+          line = 'Worklist %s of %s is modified for %s' % (worklist.getReference(), 'portal_workflow/' + wf.id, info.name)
           LOG('fixSkinNames', 0, line)
           msg += '%s\n' % line
           if not dry_run:
             worklist.actbox_url = text
           break
     # Scripts.
-    for id in wf.scripts.objectIds():
-      script = wf.scripts._getOb(id)
+    for script in wf.getScriptValueList():
       text = script.manage_FTPget()
       name_list = []
       for info in info_list:
@@ -345,7 +342,7 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
           text = info.regexp.sub(info.new_name, text)
           name_list.append(info.name)
       if len(name_list) > 0:
-        line = 'Script %s of %s is modified for %s' % (id, 'portal_workflow/' + wf.id, ', '.join(name_list))
+        line = 'Script %s of %s is modified for %s' % (script.getReference(), 'portal_workflow/' + wf.id, ', '.join(name_list))
         LOG('fixSkinNames', 0, line)
         msg += '%s\n' % line
         if not dry_run:

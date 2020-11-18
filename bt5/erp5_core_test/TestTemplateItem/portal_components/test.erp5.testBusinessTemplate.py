@@ -129,17 +129,14 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
     pw = self.getWorkflowTool()
 
-    cbt = pw._chains_by_type
     props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        wf_ids = list(wf_ids)
-        if 'geek_workflow' in wf_ids:
-          wf_ids.remove('geek_workflow')
-        if id != "Geek Object":
-          props['chain_%s' % id] = ', '.join(wf_ids)
 
-    pw.manage_changeWorkflows('', props=props)
+    for type_object in self.getTypesTool().listTypeInfo():
+      workflow_list = type_object.getTypeWorkflowList()
+      if 'geek_workflow' in workflow_list:
+        workflow_set = set(workflow_list) - {'geek_workflow'}
+        type_object.setTypeWorkflowList(workflow_set)
+
     if 'erp5_geek' in self.getSkinsTool().objectIds():
       self.getSkinsTool().manage_delObjects(['erp5_geek'])
       ps = self.getSkinsTool()
@@ -1331,13 +1328,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     workflow = pw._getOb(wf_id, None)
     self.assertTrue(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    props['chain_Geek Object'] = wf_id
-    pw.manage_changeWorkflows('', props=props)
+
+    type_object = self.getPortalObject().portal_types.getTypeInfo('Geek Object')
+    type_object.setTypeWorkflowList([wf_id])
 
   def stepModifyWorkflowChain(self, sequence=None, **kw):
     """
@@ -1347,49 +1340,18 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     pw = self.getWorkflowTool()
     workflow = pw._getOb(wf_id, None)
     self.assertTrue(workflow is not None)
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    props['chain_Base Category'] = 'edit_workflow,%s' % wf_id
-    pw.manage_changeWorkflows('', props=props)
-
-  def stepSaveWorkflowChain(self, sequence=None, **kw):
-    """
-    Save the workflow chain as it is
-    """
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    pw.manage_changeWorkflows('', props=props)
+    type_object = self.getPortalObject().portal_types.getTypeInfo('Base Category')
+    type_object.setTypeWorkflowList(['edit_workflow', wf_id])
 
   def stepCheckWorkflowChainRemoved(self, sequence=None, **kw):
     """
     Check if the workflowChain has been removed
     """
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          self.assertEqual(len(wf_ids), 0)
+    type_object = self.getPortalObject().portal_types._getOb("Geek Object", None)
 
-  def stepCheckWorkflowChainExists(self, sequence=None, **kw):
-    """
-    Check if the workflowChain has been added
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
+    if type_object is not None:
+      self.assertEqual(len(type_object.getTypeWorkflowList()), 0)
+
 
   def stepAppendWorkflowToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
@@ -1439,15 +1401,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     workflow = pw._getOb(wf_id, None)
     self.assertTrue(workflow is None)
     # remove workflowChain
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        wf_ids = list(wf_ids)
-        if wf_id in wf_ids:
-          wf_ids.remove(wf_id)
-        props['chain_%s' % id] = ','.join(wf_ids)
-    pw.manage_changeWorkflows('', props=props)
+    for type_object in self.getTypesTool().listTypeInfo():
+      workflow_list = type_object.getTypeWorkflowList()
+      if wf_id in workflow_list:
+        workflow_set = set(workflow_list) - {wf_id}
+        type_object.setTypeWorkflowList(workflow_set)
 
   def stepCheckWorkflowExists(self, sequence=None, **kw):
     """
@@ -2962,17 +2920,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     workflow = pw._getOb(wf_id, None)
     self.assertTrue(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    key = 'chain_Geek Object'
-    if props.has_key(key):
-      props[key] = '%s,%s' % (props[key], wf_id)
-    else:
-      props[key] = wf_id
-    pw.manage_changeWorkflows('', props=props)
+
+    type_object = self.getPortalObject().portal_types.getTypeInfo('Geek Object')
+    type_object.setTypeWorkflowList(type_object.getTypeWorkflowList() + [wf_id])
 
   def stepCreateCustomBusinessTemplate(self, sequence=None, **kw):
     """
@@ -2991,46 +2941,27 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     Check custom workflow chain
     """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
+    type_object = self.getPortalObject().portal_types._getOb('Geek Object', None)
+    self.assertNotEqual(type_object, None)
+    self.assertSameSet(type_object.getTypeWorkflowList(),
                        ('geek_workflow', 'custom_geek_workflow'))
 
   def stepCheckOriginalWorkflowChain(self, sequence=None, **kw):
     """
     Check original workflow chain
     """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
+    type_object = self.getPortalObject().portal_types._getOb('Geek Object', None)
+    self.assertNotEqual(type_object, None)
+    self.assertSameSet(type_object.getTypeWorkflowList(),
                        ('geek_workflow', ))
 
   def stepCheckEmptyWorkflowChain(self, sequence=None, **kw):
     """
     Check that workflow chain is empty
     """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-          break
-    if present:
-      self.assertEqual(0, len(wf_ids))
+    type_object = self.getPortalObject().portal_types._getOb('Geek Object', None)
+    if type_object is not None:
+      self.assertEqual(type_object.getTypeWorkflowList(), [])
 
   def stepCopyBusinessTemplate(self, sequence=None, **kw):
     """
@@ -3611,7 +3542,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckWorkflowExists \
-                       CheckWorkflowChainExists \
                        CreateSecondBusinessTemplate \
                        UseSecondBusinessTemplate \
                        CheckModifiedBuildingState \
@@ -3637,7 +3567,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckSkinsLayers \
                        CheckWorkflowExists \
                        CheckWorkflowChainRemoved \
-                       SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -3676,7 +3605,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckWorkflowExists \
-                       CheckWorkflowChainExists \
                        CreateSecondBusinessTemplate \
                        UseSecondBusinessTemplate \
                        CheckModifiedBuildingState \
@@ -3702,7 +3630,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckSkinsLayers \
                        CheckWorkflowRemoved \
                        CheckWorkflowChainRemoved \
-                       SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -3740,7 +3667,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckWorkflowExists \
-                       CheckWorkflowChainExists \
                        CreateSecondBusinessTemplate \
                        UseSecondBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
@@ -4914,7 +4840,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckWorkflowChainExists \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
                        CheckCatalogMethodExists \
@@ -4940,7 +4865,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckWorkflowChainExists \
                        CheckFirstActionExists \
                        CheckSecondActionExists \
                        CheckCatalogMethodExists \
@@ -5721,7 +5645,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        UninstallBusinessTemplate \
                        Tic \
                        CheckOriginalWorkflowChain \
-                       CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5790,7 +5713,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        InstallWithoutForceBusinessTemplate \
                        Tic \
                        CheckOriginalWorkflowChain \
-                       CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5866,7 +5788,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        InstallBusinessTemplate \
                        Tic \
                        CheckOriginalWorkflowChain \
-                       CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -6454,14 +6375,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           title='Dummy Role Definition',
                           role_name_list=('Assignee', ))
 
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type.copy()
-    props = {}
-    for id, wf_ids in cbt.items():
-      props['chain_%s' % id] = ','.join(wf_ids)
-    props['chain_Dummy Type'] = 'edit_workflow'
-    pw.manage_changeWorkflows('', props=props)
-    self.assertEqual(('edit_workflow', ), pw.getChainFor('Dummy Type'))
+    dummy_type_initial_workflow_list = dummy_type.getTypeWorkflowList()
+    dummy_type.setTypeWorkflowList(['edit_workflow'])
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
@@ -6499,8 +6414,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       shutil.rmtree(export_dir)
 
-    # uninstall the workflow chain
-    pw._chains_by_type = cbt
+    # undo changes on workflow list associated to Dummy Type portal type
+    dummy_type.setTypeWorkflowList(dummy_type_initial_workflow_list)
     # unregister type provider
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
@@ -6537,7 +6452,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.assertEqual(['Dummy Role Definition'],
                         [role.getTitle() for role in role_list])
 
-      self.assertEqual(('edit_workflow',), pw.getChainFor('Dummy Type'))
+      self.assertEqual(['edit_workflow'], dummy_type.getTypeWorkflowList())
 
       # and our type can be used
       instance = self.portal.newContent(portal_type='Dummy Type',

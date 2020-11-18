@@ -1,0 +1,9 @@
+<type_roles>
+  <role id='Auditor; Author'>
+   <multi_property id='category'>group/test_group</multi_property>
+  </role>
+  <role id='Assignor'>
+   <property id='title'>Developer Group</property>
+   <multi_property id='category'>group/develop_group</multi_property>
+  </role>
+</type_roles>

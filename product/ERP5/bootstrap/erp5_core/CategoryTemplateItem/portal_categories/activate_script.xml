@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Base Category" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: []</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>activate_script</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>activate_script</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Category</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Activate Script</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
