@@ -35,8 +35,6 @@ from erp5.component.module.ExpandPolicy import policy_dict
 from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
-from pprint import pformat
-
 
 def _compare(tester_list, prevision_movement, decision_movement):
   for tester in tester_list:
@@ -281,9 +279,6 @@ class RuleMixin(Predicate):
         if quantity:
           if decision_movement.isFrozen():
             # Compensate
-            raise NotImplementedError(
-              'Compensation undesired: decision_movement %s = %s' % (decision_movement.getPath(),
-              pformat(decision_movement.__dict__), ))
             new_movement = decision_movement.asContext(quantity=-quantity)
             new_movement.setDelivery(None)
             movement_collection_diff.addNewMovement(new_movement)
@@ -331,12 +326,6 @@ class RuleMixin(Predicate):
             not_completed_movement = decision_movement
           # Frozen must be compensated
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
-            raise NotImplementedError(
-              'Compensation undesired: prevision_movement %s = %s decision_movement %s = %s' % (
-                prevision_movement.getPath(),
-                pformat(prevision_movement.__dict__),
-                decision_movement.getPath(),
-                pformat(decision_movement.__dict__) ))
             new_movement = decision_movement.asContext(
                                 quantity=-decision_movement_quantity)
             new_movement.setDelivery(None)
@@ -355,12 +344,6 @@ class RuleMixin(Predicate):
         if decision_movement.isFrozen():
           # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
-            raise NotImplementedError(
-              'Compensation undesired: prevision_movement %s = %s decision_movement %s = %s' % (
-                prevision_movement.getPath(),
-                pformat(prevision_movement.__dict__),
-                decision_movement.getPath(),
-                pformat(decision_movement.__dict__) ))
             new_movement = decision_movement.asContext(
                                   quantity=-decision_movement_quantity)
             new_movement.setDelivery(None)
