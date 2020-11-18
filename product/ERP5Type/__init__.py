@@ -89,7 +89,7 @@ import Products.ERP5Type.Workflow
 def initialize( context ):
   # Import Product Components
   from Tool import (CacheTool, MemcachedTool,
-                    TypesTool, PropertySheetTool,
+                    TypesTool, PropertySheetTool, WorkflowTool,
                     ComponentTool)
   import Document
   from Base import Base
@@ -106,6 +106,7 @@ def initialize( context ):
                    MemcachedTool.MemcachedTool,
                    TypesTool.TypesTool,
                    PropertySheetTool.PropertySheetTool,
+                   WorkflowTool.WorkflowTool,
                    ComponentTool.ComponentTool
                   )
   # Do initialization step

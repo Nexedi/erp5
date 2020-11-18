@@ -246,6 +246,8 @@ class BusinessConfiguration(Item):
       ## go one step back
       current_state = self.getCurrentStateValue()
       current_state.undoTransition(self)
+      if not wh['transition']:
+        raise ValueError("Empty URL for transition in workflow history.")
       transition = self.unrestrictedTraverse(wh['transition'])
       conf_save = self.unrestrictedTraverse(wh['configuration_save_url'])
       ## check if this transition can be shown to user ...

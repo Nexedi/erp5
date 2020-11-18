@@ -536,7 +536,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     """
     # changing type_list here is somehow dirty, decision would need to be taken if this is acceptable
     # for everyone to have auto_planned as part of future inventory
-    self.portal.portal_workflow.order_workflow.states['auto_planned'].type_list = ('planned_order', 'future_inventory')
+    self.portal.portal_workflow.order_workflow.getStateValueById('auto_planned').setStateTypeList(('planned_order', 'future_inventory'))
     self.portal.portal_caches.clearAllCache()
     self.assertTrue('auto_planned' in self.portal.getPortalFutureInventoryStateList())
     # end of patch
