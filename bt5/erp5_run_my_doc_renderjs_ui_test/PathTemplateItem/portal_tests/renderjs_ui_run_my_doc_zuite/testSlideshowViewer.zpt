@@ -1,0 +1,163 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/test_page_module</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Object created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Go to test form -->
+<tal:block tal:define="click_configuration python: {'text': 'Edit Slideshow'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>0 Slides</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>0 Slides</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Create first slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='New Slide']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Set text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: 'slide 1 text content'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Edit the title of the slide</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>title_html</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go to the comment form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Comments']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>title_html</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Set text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: 'slide 1 comment content'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+
+<tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/save"/>
+
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Slideshow'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td colspan="3"><b>Verify displayed slide</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_text_content"]//iframe</td>
+  <td></td>
+</tr>
+<tr><!-- gadget iframe -->
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-scope="field_my_text_content"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//section[@class="present"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="present"]/h1[text()="slide 1 test title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="present"]/p[text()="slide 1 text content"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="future"]/p[text()="slide 1 comment content"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><p></p></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
