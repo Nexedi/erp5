@@ -34,7 +34,7 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var gadget = this, html_data,
+      var gadget = this, notebook_html, notebook_editor_iframe,
         parent_gadget = parent_options.gadget,
         return_submit_dict = {};
       return_submit_dict.redirect = {
@@ -55,12 +55,10 @@
           return erp5_form_gadget.getDeclaredGadget("text_content");
         })
         .push(function (result) {
-          var html_data = result.element
-              .querySelector('[data-gadget-scope="editor"]').firstChild
-              .contentDocument.body.firstChild.contentDocument.firstChild,
-            notebook_execution_done = html_data
-              .querySelector('[id="jsmd_eval_done"]');
-          if (!notebook_execution_done) {
+          notebook_editor_iframe = result.element
+            .querySelector('[data-gadget-scope="editor"]').firstChild
+            .contentDocument.body.firstChild;
+          if (notebook_editor_iframe.tagName !== "IFRAME") {
             return_submit_dict.notify = {
               message: "Wait until the notebook is fully executed",
               status: "error"
@@ -68,11 +66,13 @@
             delete return_submit_dict.redirect;
             return return_submit_dict;
           }
+          notebook_html = notebook_editor_iframe.contentDocument.firstChild;
           return new RSVP.Queue()
             .push(function () {
               //remove notebook source as it may cause style issues
-              html_data.querySelector('[id="jsmd-source"]').remove();
-              return downloadHTML(gadget, html_data.innerHTML, parent_options.doc.title);
+              notebook_html.querySelector('[id="jsmd-source"]').remove();
+              return downloadHTML(gadget, notebook_html.innerHTML,
+                                  parent_options.doc.title);
             })
             .push(function () {
               return return_submit_dict;
