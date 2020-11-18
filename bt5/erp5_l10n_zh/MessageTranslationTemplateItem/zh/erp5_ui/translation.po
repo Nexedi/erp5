@@ -4894,7 +4894,7 @@ msgstr "门户类型"
 msgid "Portal type"
 msgstr "门户类型"
 
-msgid "Possibles Transition"
+msgid "Possible Transitions"
 msgstr "可能过渡流程"
 
 msgid "Post"
