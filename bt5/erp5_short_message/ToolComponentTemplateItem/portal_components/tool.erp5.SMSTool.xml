@@ -74,7 +74,119 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>text_content</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+# -*- coding: utf-8 -*-\n
+##############################################################################\n
+#\n
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.\n
+#                    François-Xavier Algrain <fxalgrain@tiolive.com>\n
+#\n
+# WARNING: This program as such is intended to be used by professional\n
+# programmers who take the whole responsability of assessing all potential\n
+# consequences resulting from its eventual inadequacies and bugs\n
+# End users who are looking for a ready-to-use solution with commercial\n
+# garantees and support are strongly adviced to contract a Free Software\n
+# Service Company\n
+#\n
+# This program is Free Software; you can redistribute it and/or\n
+# modify it under the terms of the GNU General Public License\n
+# as published by the Free Software Foundation; either version 2\n
+# of the License, or (at your option) any later version.\n
+#\n
+# This program is distributed in the hope that it will be useful,\n
+# but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+# GNU General Public License for more details.\n
+#\n
+# You should have received a copy of the GNU General Public License\n
+# along with this program; if not, write to the Free Software\n
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+#\n
+##############################################################################\n
+\n
+from AccessControl import ClassSecurityInfo\n
+from Products.ERP5Type.Tool.BaseTool import BaseTool\n
+from Products.ERP5Type.Permissions import ManagePortal\n
+\n
+#from Products.ERP5ShortMessage import _dtmldir\n
+\n
+class SMSTool(BaseTool):\n
+  """\n
+    This tool manages gadgets.\n
+\n
+    It is used as a central point to manage gadgets (ERP5 or external ones)...\n
+  """\n
+  id = \'portal_sms\'\n
+  meta_type = \'ERP5 SMS Tool\'\n
+  portal_type = \'SMS Tool\'\n
+\n
+  # Declarative Security\n
+  security = ClassSecurityInfo()\n
+  security.declareProtected(ManagePortal, \'manage_overview\')\n
+  #manage_overview = DTMLFile(\'explainSMSTool\', _dtmldir )\n
+\n
+  security.declareProtected(ManagePortal, \'send\')\n
+  def send(self, text, recipient, sender, gateway_reference=\'default\',\n
+           document_relative_url=None, activate_kw=None):\n
+    """Send the message\n
+\n
+    gateway_reference: send message throught the gateway with this reference.\n
+    document_relative_url (optional) : allows to send back result to a document\n
+    activate_kw (optional) : Call SMSTool_afterSend if founded in activity with\n
+                            message_id and document_relative_url\n
+    """\n
+\n
+    gateway = self._findGateway(gateway_reference)\n
+\n
+    message_id = gateway.send(\n
+            text=text,\n
+            recipient=recipient,\n
+            sender=sender)\n
+\n
+    if getattr(self, \'SMSTool_afterSend\'):\n
+      # We need to use activities in order to avoid any conflict\n
+      send_activate_kw = {\'activity\':\'SQLQueue\'}\n
+      if activate_kw is not None:\n
+        send_activate_kw.update(**activate_kw)\n
+      self.activate(**send_activate_kw).SMSTool_afterSend(\n
+              message_id,\n
+              document_relative_url=document_relative_url,\n
+              gateway_relative_url=gateway.getRelativeUrl())\n
+\n
+  security.declareProtected(ManagePortal, \'getMessageStatus\')\n
+  def getMessageStatus(self,message_id, gateway_reference=\'default\'):\n
+\n
+    gateway = self._findGateway(gateway_reference)\n
+    return gateway.getMessageStatus(message_id)\n
+\n
+  security.declarePublic(\'isSendByTitleAllowed\')\n
+  def isSendByTitleAllowed(self, gateway_reference=\'default\'):\n
+    """Define the support or not to use the title of the telephone instead of\n
+        the number when send a message."""\n
+    gateway = self._findGateway(gateway_reference)\n
+    return gateway.isTitleMode()\n
+\n
+\n
+  def _findGateway(self, gateway_reference=\'default\'):\n
+    """Search the gateway by its reference"""\n
+\n
+    result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(\n
+        parent_uid=self.getUid(),\n
+        reference=gateway_reference)\n
+    if result:\n
+      result, = result # ensure only one gateway with this reference\n
+      return result.getObject()\n
+    raise ValueError("Impossible to find gateway with reference %s" % gateway_reference)\n
+\n
+
+
+]]></string> </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>

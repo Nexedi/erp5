@@ -40,8 +40,9 @@ class SMSTool(BaseTool):
     It is used as a central point to manage gadgets (ERP5 or external ones)...
   """
   id = 'portal_sms'
-  meta_type = 'ERP5 SMS Tool'
+  meta_type = 'ERP5 S M S Tool'
   portal_type = 'SMS Tool'
+  title = "Short Message Services"
 
   # Declarative Security
   security = ClassSecurityInfo()
