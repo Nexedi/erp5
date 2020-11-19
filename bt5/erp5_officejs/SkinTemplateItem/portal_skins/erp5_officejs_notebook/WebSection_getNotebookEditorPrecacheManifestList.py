@@ -44,7 +44,6 @@ url_list = [
   "notebook_download_html_action.html",
   "notebook_download_html_action.js",
   "interface.css",
-  "notebook.css",
   "paged.polyfill.js"
 ]
 
