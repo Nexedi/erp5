@@ -40,7 +40,12 @@
 
       // Transform every details into a section, and move it outside the first vertical section
       for (i = 0; i < len; i += 1) {
-        slide_element.appendChild(replaceNode(detail_list[i], 'section'));
+        if (detail_list[i].firstChild) {
+          slide_element.appendChild(replaceNode(detail_list[i], 'section'));
+        } else {
+          // Drop empty details element
+          section_element.removeChild(detail_list[i]);
+        }
       }
     }
     return slide_element;
