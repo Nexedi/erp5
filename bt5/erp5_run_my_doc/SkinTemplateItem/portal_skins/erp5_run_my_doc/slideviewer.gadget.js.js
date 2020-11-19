@@ -28,7 +28,6 @@
       len = detail_list.length,
       i,
       section_element;
-    console.log('cleanup', slide_element, detail_list);
 
     if (len > 0) {
       // Create the first vertical section containing every else than details
@@ -83,8 +82,6 @@
             cleanupPresentationFormat(gadget.state.value)
           ]);
 
-          // console.log(gadget.element.innerHTML);
-
           return Reveal.initialize(gadget.element, {
             controls: true,
             progress: true,
@@ -98,7 +95,15 @@
           });
         })
         .push(function () {
-          return Reveal.configure({slideNumber: 'c / t'});
+          Reveal.configure({
+            slideNumber: 'c / t',
+            // XXX This will not work if iframe is from another domain
+            width: window.parent.innerWidth,
+            height: window.parent.innerHeight,
+            minScale: 0.01,
+            maxScale: 10,
+          });
+          Reveal.layout();
         });
     });
 
