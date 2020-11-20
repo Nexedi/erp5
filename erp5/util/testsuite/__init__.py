@@ -219,8 +219,8 @@ class TestSuite(object):
     else:
       stdout, stderr = p.communicate()
       if not quiet:
-        sys.stdout.write(stdout)
-      sys.stderr.write(stderr)
+        stdbin(sys.stdout).write(stdout)
+      stdbin(sys.stderr).write(stderr)
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
     if p.returncode:
