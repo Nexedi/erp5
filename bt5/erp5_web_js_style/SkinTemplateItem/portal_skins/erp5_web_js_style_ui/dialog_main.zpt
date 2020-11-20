@@ -1,0 +1,75 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="
+      dummy python: request.set('is_web_mode', True);
+      dummy python: request.set('ignore_layout', False);
+      dummy python: request.set('editable_mode', True);
+      dialog_category python: 'couscous';
+      web_site python: here.getWebSiteValue();
+      web_section python: here.getWebSectionValue();
+      global_definitions_macros here/global_definitions/macros;">
+      <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+<html>
+  <head>
+  <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
+  <title tal:content="python: here.getTranslatedTitle() or web_site.getTranslatedTitle()"></title>
+  <noscript>
+    <link rel="stylesheet" href="jsstyle.css">
+  </noscript>
+  <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
+  <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
+  <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
+  <script src="gadget_global.js"></script>
+  <script src="jsstyle.js"></script>
+  </head>
+  <body tal:attributes="data-nostyle-gadget-url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='')">
+    <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
+    <main>
+
+                <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>
+                <tal:block tal:condition="request/field_errors | nothing">
+                  <p id="information_area" i18n:translate="" i18n:domain="ui">
+                    Input data has errors. Please look at the error messages below.
+                  </p>
+                </tal:block>
+
+          <form id="main_form"
+                tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
+                action url;
+                method python:str(path('form/method | string:post')).lower()">
+            <!--fieldset id="hidden_fieldset" class="hidden_fieldset">
+              <input tal:condition="form_action | nothing"
+                     id="hidden_button" class="hidden_button" type="submit" value="dummy"
+                     tal:attributes="name string:${form_action}:method" />
+              <tal:block metal:use-macro="global_definitions_macros/http_definitions" />
+            </fieldset-->
+
+<input type="hidden" name="dialog_method" tal:attributes="value form/action" />
+<input type="hidden" name="dialog_id" tal:attributes="value form/id | template/id" />
+
+<!--input type="hidden" name="form_id" value="WebSite_view" />
+<input type="hidden" name="object_path" value="/erp5/web_site_module/2" /-->
+<!--input type="hidden" name="update_method" value="" /-->
+<!--input type="hidden" name="cancel_url" value="https://softinst136575.host.vifib.net/erp5/web_site_module/WebSiteModule_viewWebSiteList" /-->
+<!--input type="hidden" name="dialog_category" value="None" />
+<input type="hidden" name="editable_mode:int" value="1" /-->
+
+      <tal:block metal:define-slot="main"/>
+            <button tal:condition="form/action|nothing" accesskey="V"
+                    id="dialog_submit_button" name="Base_callDialogMethod:method"
+                    type="submit">
+              <span i18n:translate="" i18n:domain="ui"
+                    tal:content="python:here.Base_getFormViewDialogActionButtonTitle(form)">Submit</span>
+            </button>
+      </form>
+    </main>
+  </body>
+</html>
+    </tal:block>
+  </tal:block>
+
+</tal:block>
