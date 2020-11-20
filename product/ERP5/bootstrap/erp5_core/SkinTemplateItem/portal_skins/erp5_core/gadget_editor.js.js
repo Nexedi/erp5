@@ -14,6 +14,7 @@
  *  can modify the content, false for a "read only" editor
  * @property {string} language the user language, if the editor supports
  *  localisation it will be displayed in this language
+ * @property {string} password a password to decrypt the content
  * @property {boolean} run a hack for jsmd editor
  * @property {string} key Key for ERP5 form
  */
@@ -88,6 +89,7 @@
           //this is temporary until the viewer becomes editable
           run: options.run || false,
           key: options.key,
+          password: options.password,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
