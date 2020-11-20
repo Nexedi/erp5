@@ -42,12 +42,73 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
+  <td>//main//form</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
+  <td>//main//form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='render_count'][contains(text(), '1')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_id</td>
+  <td>erp5_web_js_style_test_site</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_title</td>
+  <td>Demo Form</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@id='dialog_submit_button']//span[text()='Do It']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='portal_status_message' and contains(text(), '')]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>Check the form validation</b></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_id</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//header/h1[text()='JS Style Demo']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//main//form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//main//form</td>
   <td></td>
 </tr>
 <tr>
@@ -62,182 +123,59 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Change to one subsection</b></td>
+  <td>assertValue</td>
+  <td>field_your_id</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_title</td>
+  <td>Demo Form</td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='portal_status_message' and contains(text(), 'Input data has errors. Please look at the error messages below.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//span[@class='error' and contains(text(), 'Input is required but no input given.')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the form submission</b></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_id</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>b</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td>//nav[@id='sitemap']//a[text()='Demo Section 1']</td>
+  <td>dialog_submit_button</td>
   <td></td>
 </tr>
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//header/h1[text()='JS Style Demo']</td>
   <td></td>
 </tr>
-
-<tr>
-  <td colspan="3"><b>Check the page content uses the web section 1</b></td>
-</tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
+  <td>//main//form</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/jsstyle_demo.html')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='render_count'][contains(text(), '1')]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Change to second level subsection</b></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//nav[@id='sitemap']//a[text()='Demo Section 11']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//header/h1[text()='JS Style Demo']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Check the page content uses the web section 11</b></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/erp5_web_js_style_test_section_11/jsstyle_demo.html')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='render_count'][contains(text(), '1')]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Change to parent subsection</b></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//nav[@id='sitemap']//a[text()='Demo Section 1']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//header/h1[text()='JS Style Demo']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Check the page content uses the web section 1</b></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/jsstyle_demo.html')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='render_count'][contains(text(), '1')]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Change to one sibling</b></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//nav[@id='sitemap']//a[text()='Demo Section 2']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//header/h1[text()='JS Style Demo']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Check the page content uses the web section 2</b></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_2/jsstyle_demo.html')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//p[@id='render_count'][contains(text(), '1')]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Change to one web site</b></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//nav[@id='sitemap']//a[text()='Demo Style With Language']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//header/h1[text()='JS Style Demo']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Check the page content uses the web site</b></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
+  <td>//main//form</td>
   <td></td>
 </tr>
 <tr>
@@ -248,6 +186,28 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='render_count'][contains(text(), '1')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertValue</td>
+  <td>field_your_id</td>
+  <td>erp5_web_js_style_test_site</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_title</td>
+  <td>Demo Form</td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='portal_status_message' and contains(text(), 'Submitted a b')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//span[@class='error' and contains(text(), 'Input is required but no input given.')]</td>
   <td></td>
 </tr>
 
