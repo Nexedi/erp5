@@ -87,6 +87,10 @@
                           <string>Sale Packing List</string>
                           <string>Sale Packing List</string>
                         </tuple>
+                        <tuple>
+                          <string>Returned Sale Packing List</string>
+                          <string>Returned Sale Packing List</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
