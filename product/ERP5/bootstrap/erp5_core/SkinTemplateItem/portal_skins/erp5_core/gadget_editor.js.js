@@ -88,6 +88,7 @@
           //this is temporary until the viewer becomes editable
           run: options.run || false,
           key: options.key,
+          password: options.password,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()

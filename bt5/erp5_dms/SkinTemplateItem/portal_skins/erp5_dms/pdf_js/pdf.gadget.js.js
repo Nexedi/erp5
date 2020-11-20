@@ -1,7 +1,7 @@
 /*jslint indent: 2, nomen: true */
-/*global window, rJS, RSVP, PDFJS, webViewerLoad, Uint8Array,
-        ArrayBuffer, PDFViewerApplication, FileReader */
-(function (window, rJS, RSVP, PDFJS, webViewerLoad) {
+/*global window, rJS, RSVP, PDFJS, configure, webViewerInitialized,
+        PDFViewerApplication, FileReader, PasswordPrompt */
+(function (window, rJS, RSVP, PDFJS, configure, webViewerInitialized, PDFViewerApplication, PasswordPrompt) {
   "use strict";
 
   rJS(window)
@@ -17,6 +17,17 @@
       gadget.props.key = options.key;
       configure(PDFJS);
       PDFJS.locale = options.language;
+      if (options.password) {
+        PasswordPrompt._original_open = PasswordPrompt.open;
+        var retries = 0;
+        PasswordPrompt.open = function () {
+          if (retries) {
+            return this._original_open()
+          }
+          retries++;
+          return this.updatePassword(options.password);
+        }
+      }
       return PDFViewerApplication.initialize().then(function() {
         webViewerInitialized(options.value);
         // hide some buttons that do not make sense for us 
@@ -52,4 +63,4 @@
         return form_data;
       });
     });
-}(window, rJS, RSVP, PDFJS, webViewerLoad, PDFViewerApplication));
+}(window, rJS, RSVP, PDFJS, configure, webViewerInitialized, PDFViewerApplication, PasswordPrompt));
