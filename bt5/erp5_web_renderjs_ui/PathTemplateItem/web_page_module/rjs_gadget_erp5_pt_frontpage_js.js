@@ -52,7 +52,8 @@
       // First, get the list of modules
       return gadget.jio_allDocs({
         select_list: select_list,
-        query: '(parent_uid:"0" AND meta_type:"ERP5 Folder" AND id:"%_module")',
+        // XXX XXX XXX How to search tools only when developper mode is activated?
+        query: '(parent_uid:"0" AND (meta_type:"ERP5 Folder" AND id:"%_module") OR (id:"portal_%"))',
         limit: 1000
       })
         .push(function (result_list) {
@@ -109,6 +110,7 @@
             card_list = [],
             module_list = [],
             other_module_list = [],
+            tool_list = [],
             current_business_application_title = '';
 
           function pushNewCard() {
@@ -128,21 +130,33 @@
           for (i = 0; i < len; i += 1) {
             // Inject the module url into the document
             document_list[i].link = url_list[i];
-            // Create card if needed
-            if (document_list[i].business_application_translated_title !==
-                current_business_application_title) {
-              pushNewCard();
-              module_list = [];
-              current_business_application_title =
-                document_list[i].business_application_translated_title;
+            // Tools do not have any business application
+            // Workaround this limitation
+            if (document_list[i].id.indexOf('portal_') === 0) {
+              tool_list.push(document_list[i]);
+            } else {
+              // Create card if needed
+              if (document_list[i].business_application_translated_title !==
+                  current_business_application_title) {
+                pushNewCard();
+                module_list = [];
+                current_business_application_title =
+                  document_list[i].business_application_translated_title;
+              }
+              module_list.push(document_list[i]);
             }
-            module_list.push(document_list[i]);
           }
           pushNewCard();
           if (other_module_list.length) {
             card_list.push({
               business_application_translated_title: translated_other_title,
               module_list: other_module_list
+            });
+          }
+          if (tool_list.length) {
+            card_list.push({
+              business_application_translated_title: 'XXX Tools to translate',
+              module_list: tool_list
             });
           }
 
