@@ -1,0 +1,50 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Test Float Value with Float Fields</title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Test basic functionality and decimal precision in both modes (non/editable)</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+      <!-- Shortcut for full renderjs url -->
+      <tr>
+        <td>store</td>
+        <td>${base_url}/web_site_module/renderjs_runner</td>
+        <td>renderjs_url</td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${renderjs_url}/#/foo_module/1?editable=1</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+      <!-- 6.66666 is a rational number specially picked as it can make some interpreters
+           fail to be represented accurately. It is thus perfect to trigger an error on
+           the step in some browsers -->
+      <tr>
+        <td>type</td>
+        <td>field_my_price</td>
+        <td>6.66666</td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+      <tr>
+        <td>verifyValue</td>
+        <td>field_my_price</td>
+        <td>6.66666</td>
+      </tr>
+
+    </tbody>
+  </table>
+</body>
+
+</html>
