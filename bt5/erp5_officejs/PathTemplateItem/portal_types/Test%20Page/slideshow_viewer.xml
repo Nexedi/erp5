@@ -27,8 +27,12 @@
             </value>
         </item>
         <item>
+            <key> <string>float_index</string> </key>
+            <value> <float>2.0</float> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>slideshow_editor_view</string> </value>
+            <value> <string>slideshow_viewer</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -42,11 +46,11 @@
         </item>
         <item>
             <key> <string>reference</string> </key>
-            <value> <string>slideshow_editor_view</string> </value>
+            <value> <string>slideshow_viewer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Edit</string> </value>
+            <value> <string>View</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -59,7 +63,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TestPage_viewForSlideshowEditor</string> </value>
+            <value> <string>string:${object_url}/TestPage_viewForSlideshowViewer</string> </value>
         </item>
       </dictionary>
     </pickle>
