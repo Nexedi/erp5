@@ -45,7 +45,7 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
   if gadget_field_patch:
     try:
       result["values"]["url"] = result["values"]["gadget_url"]
-      result["values"]["js_sandbox"] = result["values"]["js_sandbox"]
+      result["values"]["sandbox"] = result["values"]["js_sandbox"]
       result["values"]["renderjs_extra"] = result["values"]["renderjs_extra"][0][0]
     except (ValueError, KeyError, IndexError):
       log("error while patching form gadget list definition")
