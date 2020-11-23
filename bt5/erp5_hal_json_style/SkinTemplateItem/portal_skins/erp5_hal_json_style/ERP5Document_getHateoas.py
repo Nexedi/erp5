@@ -1503,6 +1503,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
     # Extract & modify action URLs
+    if preferred_html_style_developper_mode and 'object_jio_raw' not in erp5_action_dict:
+      erp5_action_dict["object_jio_raw"] = []
+
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
@@ -1541,14 +1544,26 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "view": erp5_action_list[-1]['name'],
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
+
       if preferred_html_style_developper_mode and erp5_action_key == "object_jio_raw":
+        type_info = portal.portal_types.getTypeInfo(traversed_document)
+        if type_info is not None and type_info.Base_getSourceVisibility():
+          erp5_action_list.append({
+            'href': "%s?ignore_layout:int=1" % type_info.absolute_url_path(),
+            'name': "jump_to_portal_type",
+            'icon': None,
+            'title': "%s %s" % (
+              Base_translateString("Edit Portal Type"),
+              Base_translateString(traversed_document.getPortalType())
+            ),
+          })
         if portal.portal_workflow.Base_getSourceVisibility():
           for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
             erp5_action_list.append({
               'href': "%s/manage_properties?ignore_layout:int=1" % workflow.absolute_url_path(),
               'name': "jump_to_%s" % workflow.id,
               'icon': None,
-              'title': workflow.title,
+              'title': workflow.title
             })
 
       if erp5_action_list:
