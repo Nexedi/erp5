@@ -13,6 +13,7 @@
     // this is for scenarios were the portal type has several "View"
     // (like view, jio_view, custom_view)
     // priority: app_view ; default_view ; other
+    return views_dict;
     var only_view, key,
       view_list = Object.keys(views_dict).map(function (key) {
         if (views_dict[key].title === "View") { return key; }
@@ -40,6 +41,7 @@
         .replace(/,\]/g, ']')
         .replace(/\'/g, '"');
       configuration_list = JSON.parse(configuration_list_string);
+      console.log('configuration_list', configuration_list)
       for (i = 0; i < configuration_list.length; i += 1) {
         pair = configuration_list[i].split(" | ");
         if (pair.length !== 2) {
@@ -59,6 +61,7 @@
         throw e;
       }
     }
+    console.log('formatted_list', formatted_list);
     return formatted_list;
   }
 
@@ -130,14 +133,18 @@
 
     .declareMethod("getViewAndActionDict", function (portal_type, app_view,
       default_view, app_actions_string, jio_key) {
+      // console.log('app_actions_string', app_actions_string);
       var gadget = this,
         action_info_dict = {view_list: {}, action_list: {}},
         query = buildSearchQuery(portal_type),
         app_actions,
         app_actions_result = formatSettingList(app_actions_string, portal_type);
+      console.log('app_actions_string', app_actions_result);
       app_actions = app_actions_result.map(function (pair) {
         return pair[1];
       });
+      console.log('app_actions', app_actions);
+
       return gadget.jio_allDocs({query: query})
         .push(function (action_list) {
           var path_for_jio_get_list = [], row;
@@ -150,6 +157,9 @@
           return RSVP.all(path_for_jio_get_list);
         })
         .push(function (action_document_list) {
+          // console.log(JSON.stringify(action_document_list));
+          console.log('app_actions', app_actions);
+
           var action_key, action_doc, action_settings;
           for (action_key in action_document_list) {
             if (action_document_list.hasOwnProperty(action_key)) {
@@ -176,8 +186,11 @@
               }
             }
           }
+          console.log('couscous', JSON.stringify(action_info_dict));
           action_info_dict.view_list =
             filterViewList(action_info_dict.view_list, app_view, default_view);
+          console.log('taboulet', JSON.stringify(action_info_dict));
+
           return action_info_dict;
         });
     })
