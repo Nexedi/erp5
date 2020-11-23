@@ -18,6 +18,7 @@ portal_types/PDF/pdf_viewer_view
 portal_types/Test Page Module/slideshow_editor_view
 portal_types/Test Page/slideshow_editor_clone
 portal_types/Test Page/slideshow_editor_view
+portal_types/Test Page/slideshow_view
 portal_types/Web Illustration/svg_editor_clone
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
