@@ -5,7 +5,13 @@ url_list = [
   "slideshow_editor_app_logo.svg",
   "slideeditor.gadget.html",
   "slideeditor.gadget.js",
-  "slideeditor.gadget.css"
+  "slideeditor.gadget.css",
+  "slideviewer.gadget.html",
+  "slideviewer.gadget.js",
+  "reveal.js",
+  "zoom.js",
+  "reveal.css",
+  "reveal_theme_white.css"
 ]
 
 return url_list
