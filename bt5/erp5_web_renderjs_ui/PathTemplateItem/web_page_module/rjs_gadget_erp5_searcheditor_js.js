@@ -29,7 +29,8 @@
   function isNumericComparison(value) {
     return value.indexOf('date') !== -1 ||
       value.indexOf('quantity') !== -1 ||
-      value.indexOf('price') !== -1;
+      value.indexOf('price') !== -1 ||
+      value.indexOf('float_index') !== -1;
   }
   function getComparisonOptionList(value) {
     if (value.indexOf(PREFIX_COLUMN) === 0) {
