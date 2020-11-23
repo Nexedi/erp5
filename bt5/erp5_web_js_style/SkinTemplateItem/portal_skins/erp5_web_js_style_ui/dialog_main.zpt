@@ -7,7 +7,7 @@
       dummy python: request.set('is_web_mode', True);
       dummy python: request.set('ignore_layout', False);
       dummy python: request.set('editable_mode', True);
-      dialog_category python: 'couscous';
+      dialog_category python: '';
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
       global_definitions_macros here/global_definitions/macros;">
@@ -30,33 +30,20 @@
     <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
     <main>
 
-                <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>
-                <tal:block tal:condition="request/field_errors | nothing">
-                  <p id="information_area" i18n:translate="" i18n:domain="ui">
-                    Input data has errors. Please look at the error messages below.
-                  </p>
-                </tal:block>
+    <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>
+    <tal:block tal:condition="request/field_errors | nothing">
+      <p id="information_area" i18n:translate="" i18n:domain="ui">
+        Input data has errors. Please look at the error messages below.
+      </p>
+    </tal:block>
 
-          <form id="main_form"
-                tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
-                action url;
-                method python:str(path('form/method | string:post')).lower()">
-            <!--fieldset id="hidden_fieldset" class="hidden_fieldset">
-              <input tal:condition="form_action | nothing"
-                     id="hidden_button" class="hidden_button" type="submit" value="dummy"
-                     tal:attributes="name string:${form_action}:method" />
-              <tal:block metal:use-macro="global_definitions_macros/http_definitions" />
-            </fieldset-->
+    <form id="main_form"
+          tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
+          action url;
+          method python:str(path('form/method | string:post')).lower()">
 
-<input type="hidden" name="dialog_method" tal:attributes="value form/action" />
-<input type="hidden" name="dialog_id" tal:attributes="value form/id | template/id" />
-
-<!--input type="hidden" name="form_id" value="WebSite_view" />
-<input type="hidden" name="object_path" value="/erp5/web_site_module/2" /-->
-<!--input type="hidden" name="update_method" value="" /-->
-<!--input type="hidden" name="cancel_url" value="https://softinst136575.host.vifib.net/erp5/web_site_module/WebSiteModule_viewWebSiteList" /-->
-<!--input type="hidden" name="dialog_category" value="None" />
-<input type="hidden" name="editable_mode:int" value="1" /-->
+      <input type="hidden" name="dialog_method" tal:attributes="value form/action" />
+      <input type="hidden" name="dialog_id" tal:attributes="value form/id | template/id" />
 
       <tal:block metal:define-slot="main"/>
             <button tal:condition="form/action|nothing" accesskey="V"
