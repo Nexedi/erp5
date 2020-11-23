@@ -97,10 +97,12 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Thu Sep 10 14:56:06 2020\n
+# generated on Tue Dec  1 10:11:44 2020\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZS9zbGlkZXNob3dfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9UZXN0UGFnZV92aWV3Rm9yU2xpZGVzaG93Vmlld2Vy\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZS9zbGlkZXNob3dfZWRpdG9yX3ZpZXc=\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9UZXN0UGFnZV92aWV3Rm9yU2xpZGVzaG93RWRpdG9y\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZS9zbGlkZXNob3dfZWRpdG9yX2Nsb25l\n
