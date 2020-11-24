@@ -41,6 +41,7 @@ class SecurePaymentTool(BaseTool):
   id = 'portal_secure_payments'
   meta_type = 'ERP5 Secure Payment Tool'
   portal_type = 'Secure Payment Tool'
+  title = 'Secure Payments'
 
   def find(self, service_reference="default"):
     """Search a payment service by reference"""
