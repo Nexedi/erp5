@@ -56,6 +56,7 @@
           maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
+          run: options.run || false,
           key: options.key,
           // Force calling subfield render
           // as user may have modified the input value
@@ -116,7 +117,9 @@
           queue
             .push(function () {
               var url = editor_dict[gadget.state.editor].url;
-              if (gadget.state.editable && (gadget.state.editor === 'jsmd_editor')) {
+              if (gadget.state.editor === 'jsmd_editor' &&
+                !gadget.state.run &&
+                gadget.state.editable) {
                 url = editor_dict.codemirror.url;
               }
               return gadget.declareGadget(
