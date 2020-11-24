@@ -38,8 +38,9 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var gadget = this, notebook_html, notebook_editor_iframe,
-        parent_gadget = parent_options.gadget, print_preview_window,
+      var gadget = this,
+        notebook_html,
+        print_preview_window,
         return_submit_dict = {};
       return_submit_dict.redirect = {
         command: 'display',
@@ -48,21 +49,12 @@
           editable: true
         }
       };
-      return parent_gadget.getDeclaredGadget("fg")
-        .push(function (subgadget) {
-          return subgadget.getDeclaredGadget("erp5_pt_gadget");
+      return parent_options.gadget.getDeclaredGadget("fg")
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
         })
-        .push(function (subgadget) {
-          return subgadget.getDeclaredGadget("erp5_form");
-        })
-        .push(function (erp5_form_gadget) {
-          return erp5_form_gadget.getDeclaredGadget("text_content");
-        })
-        .push(function (result) {
-          notebook_editor_iframe = result.element
-            .querySelector('[data-gadget-scope="editor"]').firstChild
-            .contentDocument.body.firstChild;
-          if (notebook_editor_iframe.tagName !== "IFRAME") {
+        .push(function (content_dict) {
+          if (Object.keys(content_dict).length === 0) {
             return_submit_dict.notify = {
               message: "Wait until the notebook is fully executed",
               status: "error"
@@ -70,14 +62,11 @@
             delete return_submit_dict.redirect;
             return return_submit_dict;
           }
-          notebook_html = notebook_editor_iframe.contentDocument.firstChild;
-          //remove all notebook scripts from header as they may cause issues
-          notebook_html.firstChild.innerHTML =
-            removeScripts(notebook_html.firstChild.innerHTML);
+          notebook_html = removeScripts(content_dict.text_content);
           return new RSVP.Queue()
             .push(function () {
               print_preview_window = window.open('', '', 'height=400,width=800');
-              print_preview_window.document.write(notebook_html.innerHTML);
+              print_preview_window.document.write(notebook_html);
               print_preview_window.document.title = parent_options.doc.title;
               print_preview_window.onafterprint = function () {
                 print_preview_window.close();
