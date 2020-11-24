@@ -193,7 +193,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -224,8 +224,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>{"editor": "jsmd_editor", "maximize": true}</string>
-                          <string>{"editor": "jsmd_editor", "maximize": true}</string>
+                          <string>{"editor": "jsmd_editor", "maximize": true, "run": true}</string>
+                          <string>{"editor": "jsmd_editor", "maximize": true, "run": true}</string>
                         </tuple>
                       </list>
                     </value>
