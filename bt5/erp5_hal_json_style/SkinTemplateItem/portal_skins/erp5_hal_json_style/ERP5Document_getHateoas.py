@@ -1340,6 +1340,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           "script_id": script.id
         },
         "name": portal.getTitle(),
+        "developper_mode": preferred_html_style_developper_mode == True
       }
     }
     # possible other attributes
