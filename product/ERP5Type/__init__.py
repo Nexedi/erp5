@@ -32,7 +32,7 @@
 """
 from __future__ import absolute_import
 from App.config import getConfiguration
-from .patches import python, pylint, globalrequest
+from .patches import python, globalrequest # pylint
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
@@ -68,7 +68,8 @@ PropertySheet = registerDynamicModule('Products.ERP5Type.PropertySheet',
 # Switch(es) for ongoing development which require single code base
 
 # Update ERP5 Globals
-import sys, Permissions, os
+import sys, os
+from . import Permissions
 from App.Common import package_home
 this_module = sys.modules[ __name__ ]
 product_path = package_home( globals() )
