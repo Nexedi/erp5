@@ -61,6 +61,7 @@ class BuilderTool(BaseTool):
   """
 
   security = ClassSecurityInfo()
+  title = 'Builders'
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBuilderValueList')
