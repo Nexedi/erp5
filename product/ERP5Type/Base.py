@@ -32,7 +32,8 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
-import thread, threading
+import _thread as thread
+import threading
 
 from BTrees.OOBTree import OOBTree
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile

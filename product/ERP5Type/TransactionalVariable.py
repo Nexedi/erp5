@@ -59,13 +59,13 @@ import warnings
 from threading import local
 from transaction import get as get_transaction
 import transaction.interfaces
-import zope.interface
+from zope.interface import implementer
 
+@implementer(transaction.interfaces.IDataManager)
 class TransactionalVariable(dict):
   """TransactionalVariable provides a dict-like look-n-feel.
   This class must not be used directly outside.
   """
-  zope.interface.implements(transaction.interfaces.IDataManager)
 
   _unregistered = True
 
@@ -111,10 +111,8 @@ def getTransactionalVariable():
     transactional_variable_pool.instance = tv
     return tv
 
-
+@implementer(transaction.interfaces.IDataManager)
 class TransactionalResource(object):
-
-  zope.interface.implements(transaction.interfaces.IDataManager)
 
   def __init__(self, transaction_manager=None, **kw):
     if transaction_manager is None:
