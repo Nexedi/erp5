@@ -56,6 +56,8 @@
           maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
+          //run value is used to make jsmd viewer available in editable mode
+          //this is temporary until the viewer becomes editable
           run: options.run || false,
           key: options.key,
           // Force calling subfield render
