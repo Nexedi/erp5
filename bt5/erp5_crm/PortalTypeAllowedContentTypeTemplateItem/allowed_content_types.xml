@@ -21,6 +21,9 @@
  <portal_type id="Letter">
   <item>Embedded File</item>
  </portal_type>
+ <portal_type id="Mail Message">
+  <item>Embedded File</item>
+ </portal_type>
  <portal_type id="Meeting">
   <item>Event Path</item>
  </portal_type>
