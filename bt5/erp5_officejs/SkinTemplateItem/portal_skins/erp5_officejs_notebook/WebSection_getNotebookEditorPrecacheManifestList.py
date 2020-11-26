@@ -24,6 +24,7 @@ url_list = [
   "pyodide.asm.data",
   "pyodide.asm.wasm",
   "pandas.js",
+  "pandas.data",
   "pyodide.asm.html",
   "pyparsing.data",
   "pyparsing.js",
