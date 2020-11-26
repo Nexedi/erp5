@@ -44,7 +44,8 @@ url_list = [
   "notebook_download_html_action.html",
   "notebook_download_html_action.js",
   "interface.css",
-  "paged.polyfill.js"
+  "paged.polyfill.js",
+  "gadget_officejs_notebook_editor.configuration"
 ]
 
 return url_list
