@@ -56,7 +56,6 @@ class DiffTool(BaseTool):
   compare objects.
   """
   id = 'portal_diff'
-  title = 'Diffs'
   meta_type = 'ERP5 Diff Tool'
   portal_type = 'Diff Tool'
   title = 'Differences'
