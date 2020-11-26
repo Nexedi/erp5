@@ -38,9 +38,6 @@ def dummySuiteLog(_):
 
 class ERP5TestNode(TestCase):
 
-  _handler = logging.StreamHandler(sys.stdout)
-  _handler.setFormatter(logging.Formatter('TESTNODE LOG: %(message)s'))
-
   def setUp(self):
     self._temp_dir = tempfile.mkdtemp()
     self.working_directory = os.path.join(self._temp_dir, 'testnode')
@@ -66,11 +63,9 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
     os.mkdir(self.remote_repository2)
-    logging.getLogger().addHandler(self._handler)
 
   def tearDown(self):
     shutil.rmtree(self._temp_dir, True)
-    logging.getLogger().removeHandler(self._handler)
 
   def getTestNode(self):
     config = {}

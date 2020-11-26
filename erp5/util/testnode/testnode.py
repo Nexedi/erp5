@@ -190,6 +190,7 @@ shared = true
     finally:
       logger.propagate = True
       logger.removeHandler(handler)
+      handler.close()
 
   def checkRevision(self, test_result, node_test_suite):
     if node_test_suite.revision == test_result.revision:
