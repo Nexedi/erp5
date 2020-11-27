@@ -62,6 +62,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
             'erp5_mrp',
             'erp5_hal_json_style',
             'erp5_font',
+            'erp5_notebook',
             'erp5_web_renderjs_ui',
             'erp5_code_mirror',
             'erp5_multimedia',
