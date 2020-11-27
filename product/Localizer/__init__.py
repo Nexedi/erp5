@@ -46,7 +46,7 @@ def initialize(context):
         message = (
             "The Localizer product must be installed within the 'Products'"
             " folder with the name 'Localizer' (not '%s').") % filename
-raise_(RuntimeError, message)
+        raise_(RuntimeError, message)
 
     # XXX This code has been written by Cornel Nitu, it may be a solution to
     # upgrade instances.

@@ -85,7 +85,7 @@ if 1: # For easy diff with original
                 return ''
             else:
                 err = 'Invalid empty string value for <em>%s</em>' % name
-raise_(ValueError, err)
+                raise_(ValueError, err)
 
 
         if not vs:
