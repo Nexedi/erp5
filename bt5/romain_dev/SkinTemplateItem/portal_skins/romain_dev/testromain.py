@@ -1,3 +1,27 @@
+from AccessControl import getSecurityManager
+from pprint import pformat
+# vgetattr = context.test_vincent_getattr
+user = getSecurityManager().getUser()
+print 'User    :', repr(user)
+# print '__dict__:', vgetattr(user, '__dict__')
+print 'Id      :', repr(user.getId())
+print 'Name    :', repr(user.getUserName())
+print 'Roles   :', repr(user.getRoles())
+print 'Groups  :', repr(getattr(user, 'getGroups', lambda: None)())
+print 'Document:', repr(user.getUserValue())
+print 'Login   :', repr(user.getLoginValue())
+"""
+print 'Properties:', pformat({
+  x: user.getPropertysheet(x).propertyItems()
+  for x in getattr(user, 'listPropertysheets', lambda: ())()
+})
+"""
+return printed
+
+from DateTime import DateTime
+context.edit(start_date=DateTime())
+return "ok"
+
 sql_catalog = context.getPortalObject().portal_catalog.getSQLCatalog()
 
 invalid_column_list = []
