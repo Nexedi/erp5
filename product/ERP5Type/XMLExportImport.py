@@ -38,7 +38,7 @@ from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
 from zLOG import LOG
 from base64 import standard_b64encode
-
+import copyreg
 from hashlib import sha1
 
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
@@ -47,7 +47,7 @@ marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
 
 class OrderedPickler(Pickler):
 
-    dispatch = Pickler.dispatch.copy()
+    dispatch = copyreg.dispatch_table.copy()
 
     def save_dict(self, obj):
         write = self.write
