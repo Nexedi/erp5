@@ -1,5 +1,6 @@
 bt5_update_catalog_list = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_full_text_mroonga_catalog')
 bt5_installation_list = bt5_update_catalog_list + ('erp5_xhtml_style',
+                                                   'romain_dev',
                                                    # 'erp5_officejs', 'erp5_web_jabber_client',
                                                    # 'erp5_officejs_ooffice',
                                                    'erp5_upgrader',
@@ -74,5 +75,7 @@ bt5_installation_list = bt5_update_catalog_list + ('erp5_xhtml_style',
                                                    'erp5_web_js_style',
                                                    'erp5_web_js_style_test',
                                                    'erp5_officejs_appstore_base',
+                                                   # 'erp5_oauth2_authorization',
+                                                   # 'erp5_oauth2_resource',
                                                    )
 return bt5_installation_list, []
