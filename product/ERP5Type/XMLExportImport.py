@@ -29,8 +29,8 @@
 
 from Acquisition import aq_base, aq_inner
 
-from cStringIO import StringIO
-from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap, DictionaryType
+from io import BytesIO as StringIO
+from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
@@ -60,7 +60,7 @@ class OrderedPickler(Pickler):
         item_list.sort()
         self._batch_setitems(iter(item_list))
 
-    dispatch[DictionaryType] = save_dict
+    dispatch[dict] = save_dict
     if not PyStringMap is None:
         dispatch[PyStringMap] = save_dict
 
