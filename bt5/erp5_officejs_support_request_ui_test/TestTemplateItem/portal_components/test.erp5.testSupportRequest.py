@@ -102,7 +102,7 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
       p for p in self.portal.getPortalDocumentTypeList() \
       if p not in ("Sound", "Video", "Web Page", 'Video', 'Web Illustration',
                    'Web Manifest', 'Web Page', 'Web Script', 'Web Style',
-                   'Web Table')]
+                   'Web Table', 'Notebook')]
     # Should not happens but we never know
     assert portal_type_list, portal_type_list
 
