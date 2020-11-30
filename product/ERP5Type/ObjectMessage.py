@@ -27,17 +27,16 @@
 ##############################################################################
 
 from future.utils import raise_
-import zope.interface
+from zope.interface import implementer
 
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type import interfaces
 
+@implementer(interfaces.IObjectMessage)
 class ObjectMessage:
   """
   Object Message is used for notifications to user.
   """
-
-  zope.interface.implements( interfaces.IObjectMessage, )
 
   def __init__(self, object_relative_url='', message='', mapping={}, **kw):
 

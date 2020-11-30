@@ -26,19 +26,18 @@
 #
 ##############################################################################
 
-import zope.interface
+from zope.interface import implementer
 from Acquisition import aq_base
 
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 from Products.ERP5Type import interfaces
 
+@implementer(interfaces.IConsistencyMessage)
 class ConsistencyMessage(ObjectMessage):
   """
   Consistency Message is used for notifications to user after checkConsistency.
   """
-
-  zope.interface.implements( interfaces.IConsistencyMessage, )
 
   def __init__(self, constraint, object_relative_url='',
               message='', mapping = {}, **kw):
