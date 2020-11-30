@@ -80,54 +80,28 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
+  <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
+  <td>check</td>
+  <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
-  <td></td>
-</tr>
-<!-- Check if save the page again will not create the links again -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
+  <td>//label[@for="field_my_preferred_html_style_translator_mode"]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"][1]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"][2]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href="formTest"]/span/strong</td>
+  <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=2 and @title="Translate this field title"]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//a[@href="formTest"]/span/strong</td>
+  <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=3 and @title="Translate this field description"]</td>
   <td></td>
 </tr>
 </tbody></table>
