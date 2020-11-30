@@ -233,8 +233,9 @@
             dom_element.appendChild(parent_element);
           }
 
-          if (form_definition.hasOwnProperty("edit_form_href")) {
-            field_href = domsugar("a");
+          if (form_definition.hasOwnProperty("edit_form_href") &&
+              !form_gadget.element.querySelector(".edit-form")) {
+            field_href = domsugar("a", {"class": "edit-form"});
             field_href.href = form_definition.edit_form_href;
             field_href.title = "Edit this form";
             field_href.appendChild(domsugar("img"));
@@ -242,8 +243,9 @@
             form_gadget.element.insertBefore(field_href, dom_element);
           }
 
-          if (form_definition.hasOwnProperty("edit_form_action_href")) {
-            field_href = domsugar("a");
+          if (form_definition.hasOwnProperty("edit_form_action_href") &&
+              !form_gadget.element.querySelector(".edit-form-action")) {
+            field_href = domsugar("a", {"class": "edit-form-action"});
             field_href.href = form_definition.edit_form_action_href;
             field_href.title = "Edit this form's action";
             field_href.appendChild(domsugar("img"));

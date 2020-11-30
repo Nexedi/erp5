@@ -133,8 +133,9 @@
       this.props.label_element.setAttribute('for', gadget.state.scope);
 
       if (field_json) {
-        if (field_json.hasOwnProperty('edit_field_href')) {
-          field_href = domsugar("a");
+        if (field_json.hasOwnProperty('edit_field_href') &&
+            !this.props.label_element.querySelector(".edit-field")) {
+          field_href = domsugar("a", {"class": "edit-field"});
           field_href.href = field_json.edit_field_href;
           field_href.title = "Edit this field";
           field_href.appendChild(domsugar("img"));
@@ -142,8 +143,9 @@
           this.props.label_element.appendChild(field_href);
         }
 
-        if (field_json.hasOwnProperty('translate_title_href')) {
-          field_href = domsugar("a");
+        if (field_json.hasOwnProperty('translate_title_href') &&
+            !this.props.label_element.querySelector(".translate-title")) {
+          field_href = domsugar("a", {"class": "translate-title"});
           field_href.href = field_json.translate_title_href;
           field_href.title = "Translate this field title";
           field_href.appendChild(domsugar("img"));
@@ -151,8 +153,9 @@
           this.props.label_element.appendChild(field_href);
         }
 
-        if (field_json.hasOwnProperty('translate_description_href')) {
-          field_href = domsugar("a");
+        if (field_json.hasOwnProperty('translate_description_href') &&
+            !this.props.label_element.querySelector(".translate-description")) {
+          field_href = domsugar("a", {"class": "translate-description"});
           field_href.href = field_json.translate_description_href;
           field_href.title = "Translate this field description";
           field_href.appendChild(domsugar("img"));
