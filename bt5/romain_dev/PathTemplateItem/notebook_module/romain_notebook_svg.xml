@@ -115,18 +115,17 @@ function createBoxTemplateElement(id, width, height, text_height) {\n
   }, [\n
     domsugar(document.createElementNS(SVG_NS, \'g\'), {\n
       stroke: "#000",\n
-      "stroke-width": 1.5,\n
+      "stroke-width": 3,\n
     }, [\n
       domsugar(document.createElementNS(SVG_NS, \'rect\'), {\n
         width: width + \'em\',\n
         height: height + \'em\',\n
-\n
-        // fill: "#CE7975"\n
+        fill: "#FFFFCC"\n
       }),\n
       domsugar(document.createElementNS(SVG_NS, \'rect\'), {\n
         width: width + \'em\',\n
         height: text_height + \'em\',\n
-        fill: "#F00"\n
+        fill: "#333366"\n
       })\n
     ])\n
   ]);\n
@@ -149,8 +148,8 @@ function createPortalTypeTemplateElement(portal_type, template_id, element_id, w
       }),\n
       domsugar(document.createElementNS(SVG_NS, \'text\'), {\n
         // textLength: TEXT_WIDTH + \'em\',\n
-        y: \'1em\',\n
-        x: \'1em\',\n
+        y: \'1.8em\',\n
+        x: \'0.5em\',\n
         "font-size": "1em",\n
         text: portal_type,\n
         fill: TEXT_COLOR\n
@@ -176,7 +175,11 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     y2,\n
     x3,\n
     y3,\n
-    margin = 0.1;\n
+    tx = 1,\n
+    ty = 1,\n
+    margin = 0.1,\n
+    text_margin = 0.25,\n
+    element_list = [];\n
 \n
   if (box_side === \'top\') {\n
     x1 = source_x + 0.5;\n
@@ -191,12 +194,14 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
       x3 = destination_x - margin;\n
       y2 = destination_y + 0.5;\n
     } else {\n
-      // End arrow on the left side of the destination\n
+      // End arrow on the right side of the destination\n
       x3 = destination_x + 1 + margin;\n
       y2 = destination_y + 0.5;\n
     }\n
     y3 = y2;\n
     y1 -= margin;\n
+    tx = x1 + margin;\n
+    ty = y2 + text_margin;\n
   } else if (box_side === \'bottom\') {\n
     x1 = source_x + 0.5;\n
     y1 = source_y + 1;\n
@@ -206,16 +211,16 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
       // Always put the end line at the bottom\n
       y2 = destination_y - margin;\n
     } else if (source_x < destination_x) {\n
-      // End arrow on the left side of the destination\n
       x3 = destination_x - margin;\n
       y2 = destination_y + 0.5;\n
     } else {\n
-      // End arrow on the left side of the destination\n
       x3 = destination_x + 1 + margin;\n
       y2 = destination_y + 0.5;\n
     }\n
     y3 = y2;\n
     y1 += margin;\n
+    tx = x1 + margin;\n
+    ty = y2 - text_margin;\n
   } else if (box_side === \'right\') {\n
     x1 = source_x + 1;\n
     y1 = source_y + 0.5;\n
@@ -235,6 +240,8 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     }\n
     x3 = x2;\n
     x1 += margin;\n
+    tx = x1 + margin;\n
+    ty = y1 + margin;\n
   } else if (box_side === \'left\') {\n
     x1 = source_x;\n
     y1 = source_y + 0.5;\n
@@ -254,27 +261,56 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     }\n
     x3 = x2;\n
     x1 -= margin;\n
+    tx = x2 + margin;\n
+    ty = y1 + margin;\n
   } else {\n
     throw new Error(\'not supported box side \' + box_side);\n
   }\n
-  console.log(x1, x2, x3, y1, y2, y3);\n
-  return domsugar(document.createElementNS(SVG_NS, \'g\'), {\n
-    stroke: "black",\n
-    "stroke-width": "2"\n
-  }, [\n
-    domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
-      x1: x1 * width + \'em\',\n
-      y1: y1 * width + \'em\',\n
-      x2: x2 * width + \'em\',\n
-      y2: y2 * width + \'em\',\n
-    }),\n
-    domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
-      x1: x2 * width + \'em\',\n
-      y1: y2 * width + \'em\',\n
-      x2: x3 * width + \'em\',\n
-      y2: y3 * width + \'em\',\n
+\n
+  if ((x2 === x3) && (y2 === y3)) {\n
+    element_list = [\n
+      domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
+        x1: x1 * width + \'em\',\n
+        y1: y1 * width + \'em\',\n
+        x2: x2 * width + \'em\',\n
+        y2: y2 * width + \'em\',\n
+        "marker-end": "url(#arrowhead)"\n
+      })\n
+    ];\n
+  } else {\n
+    element_list = [\n
+      domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
+        x1: x1 * width + \'em\',\n
+        y1: y1 * width + \'em\',\n
+        x2: x2 * width + \'em\',\n
+        y2: y2 * width + \'em\',\n
+      }),\n
+      domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
+        x1: x2 * width + \'em\',\n
+        y1: y2 * width + \'em\',\n
+        x2: x3 * width + \'em\',\n
+        y2: y3 * width + \'em\',\n
+        "marker-end": "url(#arrowhead)"\n
+      })\n
+    ];\n
+  }\n
+  element_list.push(\n
+    domsugar(document.createElementNS(SVG_NS, \'text\'), {\n
+      // textLength: TEXT_WIDTH + \'em\',\n
+      y: ty * width + \'em\',\n
+      x: tx * width + \'em\',\n
+      "font-size": "1em",\n
+      text: text,\n
+      stroke: \'none\'\n
     })\n
-  ]);\n
+  );\n
+\n
+  console.log(x1, x2, x3, y1, y2, y3, text, tx, ty);\n
+  return domsugar(document.createElementNS(SVG_NS, \'g\'), {\n
+    stroke: "#4C1900",\n
+    "stroke-width": "4",\n
+    "stroke-dasharray": "10,5"\n
+  }, element_list);\n
 }\n
 \n
 function createSVG(definition) {\n
@@ -304,7 +340,7 @@ function createSVG(definition) {\n
   // Add 2 as left/right padding for the text\n
   box_width = (max_string_length / 2) + 2;\n
   element_list = [\n
-    createBoxTemplateElement(BOX_TEMPLATE_ID, box_width, box_width, 1.2)\n
+    createBoxTemplateElement(BOX_TEMPLATE_ID, box_width, box_width, 3)\n
   ];\n
   for (i = 0; i < node_list.length; i += 1) {\n
     element_list.push(\n
@@ -313,17 +349,26 @@ function createSVG(definition) {\n
     );\n
   }\n
   // Create arrow markers\n
-  /*\n
-  <defs>\n
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" \n
-    refX="0" refY="3.5" orient="auto">\n
-      <polygon points="0 0, 10 3.5, 0 7" />\n
-    </marker>\n
-  </defs>\n
-*/\n
+  element_list.push(\n
+    domsugar(document.createElementNS(SVG_NS, \'marker\'), {\n
+      id: "arrowhead",\n
+      markerWidth: "10",\n
+      markerHeight: "7",\n
+      refX: "8",\n
+      refY: "3.5",\n
+      orient: "auto",\n
+      stroke: "#4C1900",\n
+      fill: "#4C1900",\n
+    }, [\n
+      domsugar(document.createElementNS(SVG_NS, \'polygon\'), {\n
+        points: "0 0, 10 3.5, 0 7"\n
+      })\n
+    ]),\n
+  );\n
+\n
   // Create the defs part\n
   element_list = [\n
-    domsugar(document.createElementNS(SVG_NS, \'defs\'), element_list)\n
+    domsugar(document.createElementNS(SVG_NS, \'defs\'), element_list),\n
   ];\n
 \n
   // Draw boxes\n
