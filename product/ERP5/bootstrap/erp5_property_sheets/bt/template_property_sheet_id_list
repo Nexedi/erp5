@@ -177,7 +177,6 @@ TradePreference
 Transformation
 TransformedResource
 Transition
-ConfiguratorTransition
 TranslatableProperty
 Url
 Variable
