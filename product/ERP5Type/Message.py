@@ -81,7 +81,7 @@ if 1: # BBB
   getGlobalTranslationService = GlobalTranslationService
 
 from Products.ERP5Type import Globals
-from cPickle import dumps, loads
+from pickle import dumps, loads
 from string import Template
 from base64 import b64encode, b64decode
 

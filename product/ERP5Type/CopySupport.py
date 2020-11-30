@@ -21,8 +21,8 @@ from AccessControl.Permission import Permission
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import CopyError
-from OFS.CopySupport import eNotSupported, eNoItemsSpecified, eNoData
-from OFS.CopySupport import eNotFound, eInvalid
+#from OFS.CopySupport import eNotSupported, eNoItemsSpecified, eNoData
+#from OFS.CopySupport import eNotFound, eInvalid
 from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path
 from OFS.CopySupport import sanity_check
 from Products.ERP5Type import Permissions
