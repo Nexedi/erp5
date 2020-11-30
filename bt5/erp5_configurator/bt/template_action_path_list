@@ -8,8 +8,6 @@ Catalog Keyword Key Configurator Item | view
 Categories Spreadsheet Configurator Item | view
 Category Configurator Item | view
 Configuration Save | view
-Configuration Workflow | configurator_settings
-Configuration Workflow | launch_configuration
 Configurator Tool | view
 Currency Configurator Item | view
 Customer BT5 Configurator Item | view
@@ -29,4 +27,6 @@ Site Property Configurator Item | view
 Solver Configurator Item | view
 Standard BT5 Configurator Item | view
 System Preference Configurator Item | view
+Workflow | configurator_settings
+Workflow | launch_configuration
 portal_actions | use_configurator

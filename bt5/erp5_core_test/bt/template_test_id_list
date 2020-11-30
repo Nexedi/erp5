@@ -21,6 +21,7 @@ test.erp5.testERP5Coordinate
 test.erp5.testERP5Core
 test.erp5.testERP5Type
 test.erp5.testERP5TypeInterfaces
+test.erp5.testERP5Workflow
 test.erp5.testFieldValueCache
 test.erp5.testFields
 test.erp5.testFolder

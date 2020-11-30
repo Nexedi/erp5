@@ -38,10 +38,6 @@ class TestERP5Workflow(ERP5TypeTestCase):
     Tests ERP5 Workflow.
   """
 
-  def getBusinessTemplateList(self):
-    """Returns list of BT to be installed."""
-    return ('erp5_workflow',)
-
   def changeToAnonymous(self):
     """
     Change the current user to Anonymous
