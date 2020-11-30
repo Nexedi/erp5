@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>State_view</string> </value>
+            <value> <string>ConfigurationState_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
