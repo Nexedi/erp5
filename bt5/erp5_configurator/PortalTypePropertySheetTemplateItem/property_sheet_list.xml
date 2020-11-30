@@ -1,5 +1,5 @@
 <property_sheet_list>
- <portal_type id="Configuration Workflow">
+ <portal_type id="Workflow">
   <item>DefaultImage</item>
   <item>WorkflowConfigurator</item>
  </portal_type>
