@@ -219,6 +219,7 @@
           var dom_element = form_gadget.element.querySelector(".field_container"),
             parent_element,
             field_href,
+            current_field,
             j;
 
           if (modification_dict.hasOwnProperty('hash')) {
@@ -233,25 +234,34 @@
             dom_element.appendChild(parent_element);
           }
 
+          current_field = form_gadget.element.querySelector(".edit-form");
           if (form_definition.hasOwnProperty("edit_form_href") &&
-              !form_gadget.element.querySelector(".edit-form")) {
+              !current_field) {
             field_href = domsugar("a", {"class": "edit-form"});
             field_href.href = form_definition.edit_form_href;
             field_href.title = "Edit this form";
             field_href.appendChild(domsugar("img"));
             field_href.firstElementChild.src = form_definition.edit_form_icon;
             form_gadget.element.insertBefore(field_href, dom_element);
+          } else if (!form_definition.hasOwnProperty("edit_form_href") &&
+                     current_field) {
+            form_gadget.element.removeChild(current_field);
           }
 
+          current_field = form_gadget.element.querySelector(".edit-form-action");
           if (form_definition.hasOwnProperty("edit_form_action_href") &&
-              !form_gadget.element.querySelector(".edit-form-action")) {
+              !current_field) {
             field_href = domsugar("a", {"class": "edit-form-action"});
             field_href.href = form_definition.edit_form_action_href;
             field_href.title = "Edit this form's action";
             field_href.appendChild(domsugar("img"));
             field_href.firstElementChild.src = form_definition.edit_form_action_icon;
             form_gadget.element.insertBefore(field_href, dom_element);
+          } else if (!form_definition.hasOwnProperty("edit_form_action_href") &&
+                     current_field) {
+            form_gadget.element.removeChild(current_field);
           }
+
         });
     })
 

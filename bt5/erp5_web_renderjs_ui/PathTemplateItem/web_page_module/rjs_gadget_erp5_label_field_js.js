@@ -112,7 +112,8 @@
         i,
         queue,
         new_div,
-        field_href;
+        field_href,
+        current_field;
 
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
@@ -133,34 +134,46 @@
       this.props.label_element.setAttribute('for', gadget.state.scope);
 
       if (field_json) {
+        current_field = this.props.label_element.querySelector(".edit-field");
         if (field_json.hasOwnProperty('edit_field_href') &&
-            !this.props.label_element.querySelector(".edit-field")) {
+            !current_field) {
           field_href = domsugar("a", {"class": "edit-field"});
           field_href.href = field_json.edit_field_href;
           field_href.title = "Edit this field";
           field_href.appendChild(domsugar("img"));
           field_href.firstElementChild.src = field_json.edit_field_icon;
           this.props.label_element.appendChild(field_href);
+        } else if (!field_json.hasOwnProperty('edit_field_href') &&
+                   current_field) {
+          this.props.label_element.removeChild(current_field);
         }
 
+        current_field = this.props.label_element.querySelector(".translate-title");
         if (field_json.hasOwnProperty('translate_title_href') &&
-            !this.props.label_element.querySelector(".translate-title")) {
+            !current_field) {
           field_href = domsugar("a", {"class": "translate-title"});
           field_href.href = field_json.translate_title_href;
           field_href.title = "Translate this field title";
           field_href.appendChild(domsugar("img"));
           field_href.firstElementChild.src = field_json.translate_title_icon;
           this.props.label_element.appendChild(field_href);
+        } else if (!field_json.hasOwnProperty('translate_title_href') &&
+                   current_field) {
+          this.props.label_element.removeChild(current_field);
         }
 
+        current_field = this.props.label_element.querySelector(".translate-description");
         if (field_json.hasOwnProperty('translate_description_href') &&
-            !this.props.label_element.querySelector(".translate-description")) {
+            !current_field) {
           field_href = domsugar("a", {"class": "translate-description"});
           field_href.href = field_json.translate_description_href;
           field_href.title = "Translate this field description";
           field_href.appendChild(domsugar("img"));
           field_href.firstElementChild.src = field_json.translate_description_icon;
           this.props.label_element.appendChild(field_href);
+        } else if (!field_json.hasOwnProperty('translate_description_href') &&
+                   current_field) {
+          this.props.label_element.removeChild(current_field);
         }
 
       }
