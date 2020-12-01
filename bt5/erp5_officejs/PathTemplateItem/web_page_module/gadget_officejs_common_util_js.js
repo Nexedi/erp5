@@ -9,15 +9,19 @@
                              "object_web_view", "object_jio_search"];
 
   function filterViewList(views_dict, app_view, default_view) {
+    console.warn('filterViewList', JSON.stringify(views_dict), JSON.stringify(app_view),
+                 JSON.stringify(default_view));
     // there must be only one "View" action (title = "View")
     // this is for scenarios were the portal type has several "View"
     // (like view, jio_view, custom_view)
     // priority: app_view ; default_view ; other
-    return views_dict;
+    // return views_dict;
     var only_view, key,
       view_list = Object.keys(views_dict).map(function (key) {
         if (views_dict[key].title === "View") { return key; }
       });
+    console.warn('filterViewList2', JSON.stringify(view_list));
+
     if (view_list.includes(app_view)) {
       only_view = app_view;
     } else if (view_list.includes(default_view)) {
@@ -30,6 +34,7 @@
         delete views_dict[view_list[key]];
       }
     }
+    console.warn('filterViewList3', JSON.stringify(views_dict));
     return views_dict;
   }
 
