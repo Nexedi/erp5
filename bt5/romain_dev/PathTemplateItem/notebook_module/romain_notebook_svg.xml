@@ -452,20 +452,22 @@ function attachSVG(id, definition) {\n
 attachSVG(\'img_cloud\', {\n
  node_list: [\n
   ["Person", 2, 0],\n
-  ["Software Installation", 0, 2],\n
+  ["Software Installation", 0, 1],\n
   ["Computer", 2, 2],\n
-  ["Hosting Subscription", 4, 2],\n
-  ["Software/Slave Instance", 4, 4]\n
+  ["Computer Partition", 2, 4],\n
+  ["Hosting Subscription", 4, 0],\n
+  ["Software/Slave Instance", 5, 2]\n
  ],\n
  arrow_list: [\n
   ["top", "Software Installation", "end", "Person", "destination_section"],\n
   ["top", "Computer", "end", "Person", "source_administration"],\n
-  ["top", "Hosting Subscription", "end", "Person", "destination_section"],\n
-  ["right", "Software Installation", "end", "Computer", "aggregate"],\n
-  ["left", "Software/Slave Instance", "end", "Computer", "aggregate"],\n
+  ["left", "Hosting Subscription", "end", "Person", "destination_section"],\n
+  ["bottom", "Software Installation", "end", "Computer", "aggregate"],\n
+  ["bottom", "Software/Slave Instance", "end", "Computer Partition", "aggregate"],\n
   ["top", "Software/Slave Instance", "end", "Hosting Subscription", "specialise"],\n
   ["bottom", "Hosting Subscription", "end", "Software/Slave Instance", "predecessor"],\n
-  // ["bottom", "Software/Slave Instance", "end", "Software/Slave Instance", "predecessor"],\n
+  ["top", "Computer Partition", "end", "Computer", "parent"],\n
+  // TODO ["bottom", "Software/Slave Instance", "end", "Software/Slave Instance", "predecessor"],\n
  ]\n
 });\n
 \n
@@ -482,28 +484,115 @@ attachSVG(\'img_consumption_eco\', {\n
   ["Computer", 0, 0],\n
   ["Consumption Document", 0, 2],\n
   ["Sale Packing List", 2, 1],\n
-  ["Person", 4, 0],\n
-  ["Organisation", 4, 2]\n
+  ["Sale Packing List Line", 2, 3],\n
+  ["Person", 4, 2],\n
+  ["Organisation", 4, 0]\n
  ],\n
  arrow_list: [\n
   ["top", "Consumption Document", "end", "Computer", "contribution"],\n
-  ["top", "Sale Packing List", "end", "Person", "destination_decision destination"],\n
-  ["bottom", "Sale Packing List", "end", "Organisation", "source source_section destination_section"],\n
-\n
-\n
- /*\n
-  ["top", "Software Installation", "end", "Person", "destination_section"],\n
-  ["top", "Computer", "end", "Person", "source_administration"],\n
-  ["top", "Hosting Subscription", "end", "Person", "destination_section"],\n
-  ["right", "Software Installation", "end", "Computer", "aggregate"],\n
-  ["left", "Software/Slave Instance", "end", "Computer", "aggregate"],\n
-  ["top", "Software/Slave Instance", "end", "Hosting Subscription", "specialise"],\n
-  ["bottom", "Hosting Subscription", "end", "Software/Slave Instance", "predecessor"],\n
-  // ["bottom", "Software/Slave Instance", "end", "Software/Slave Instance", "predecessor"],\n
-  */\n
+  ["right", "Sale Packing List", "end", "Person", "destination_decision destination"],\n
+  ["right", "Sale Packing List Line", "end", "Person", "destination_decision destination_section"],\n
+  ["top", "Sale Packing List Line", "end", "Sale Packing List", "parent"],\n
+  ["top", "Sale Packing List", "end", "Organisation", "source source_section destination_section"],\n
  ]\n
 });\n
 \n
+%% md\n
+\n
+## CRM\n
+\n
+<img id=\'img_crm\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_crm\', {\n
+ node_list: [\n
+  ["Person (user)", 0, 0],\n
+  ["Person (agent)", 2, 0],\n
+  ["Organisation", 4, 0],\n
+  ["Hosting Subscription", 6, 0],\n
+  ["Support Request", 4, 2],\n
+  ["Notification Message", 0, 3],\n
+  ["Event", 2, 3],\n
+  ["Incident Response", 6, 4],\n
+ ],\n
+ arrow_list: [\n
+  ["left", "Support Request", "end", "Person (user)", "destination_decision"],\n
+  ["left", "Support Request", "end", "Person (agent)", "source_decision"],\n
+  ["top", "Support Request", "end", "Organisation", "source source_section source_trade"],\n
+  ["right", "Support Request", "end", "Hosting Subscription", "aggregate"],\n
+  ["right", "Event", "end", "Support Request", "follow_up"],\n
+  ["bottom", "Support Request", "end", "Incident Response", "follow_up"],\n
+ ]\n
+});\n
+\n
+%% md\n
+\n
+## Invoicing\n
+\n
+<img id=\'img_invoicing\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_invoicing\', {\n
+ node_list: [\n
+  ["Organisation", 0, 0],\n
+  ["Person", 2, 0],\n
+  ["Sale Packing List", 0, 2],\n
+  ["Sale Invoice Transaction", 3, 2],\n
+  ["Payment", 5, 2],\n
+  ["Applied Rule", 0, 4],\n
+ ],\n
+ arrow_list: [\n
+  ["top", "Sale Packing List", "end", "Organisation", "source_section"],\n
+  ["right", "Sale Packing List", "end", "Person", "source destination destination_section"],\n
+  ["top", "Applied Rule", "end", "Sale Packing List", "causality"],\n
+ ]\n
+});\n
+\n
+%% md\n
+\n
+## Subscription\n
+\n
+<img id=\'img_subscription\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_subscription\', {\n
+ node_list: [\n
+  ["Business Process", 6, 0],\n
+  ["Sale Trade Condition", 4, 0],\n
+  ["Person", 0, 0],\n
+  ["Organisation", 0, 2],\n
+  ["Open Sale Order", 2, 2],\n
+  ["Open Sale Order Line", 2, 4],\n
+  ["Hosting Subscription", 4, 4],\n
+  ["Applied Rule", 4, 6],\n
+  ["Subscription Item Root Sim. Rule", 2, 6],\n
+  ["Simulation Movement", 6, 6],\n
+  ["Sale Packing List", 6, 2],\n
+  ["Sale Packing List Line", 6, 4],\n
+\n
+\n
+\n
+ ],\n
+ arrow_list: [\n
+  ["right", "Sale Trade Condition", "end", "Business Process", "specialise"],\n
+  ["top", "Open Sale Order", "end", "Person", "destination destination_decision"],\n
+  ["left", "Open Sale Order", "end", "Organisation", "source source_section destination_section"],\n
+  ["right", "Open Sale Order", "end", "Sale Trade Condition", "specialise"],\n
+  ["top", "Open Sale Order Line", "end", "Open Sale Order", "parent"],\n
+  ["right", "Open Sale Order Line", "end", "Hosting Subscription", "aggregate"],\n
+  ["top", "Applied Rule", "end", "Hosting Subscription", "causality"],\n
+  ["left", "Applied Rule", "end", "Subscription Item Root Sim. Rule", "specialise"],\n
+  ["left", "Simulation Movement", "end", "Applied Rule", "parent"],\n
+  ["top", "Sale Packing List Line", "end", "Sale Packing List", "parent"],\n
+  ["top", "Simulation Movement", "end", "Sale Packing List Line", "delivery"],\n
+  ["left", "Sale Packing List Line", "end", "Hosting Subscription", "aggregate"],\n
+  ["left", "Sale Packing List", "end", "Sale Trade Condition", "specialise"],\n
+\n
+ ]\n
+});\n
 
 
 ]]></string> </value>
