@@ -179,7 +179,7 @@
             generateSection(result_dict.translation_list[2], 'ellipsis-v', breadcrumb_action_list)
           ];
           if (raw_action_list.length > 0) {
-            sub_element_list.push(generateSection(result_dict.translation_list[3], 'plane', raw_action_list))
+            sub_element_list.push(generateSection(result_dict.translation_list[3], 'plane', raw_action_list));
           }
           domsugar(gadget.element, sub_element_list);
 
