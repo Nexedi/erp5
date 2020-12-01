@@ -11,10 +11,6 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
-            <key> <string>actbox_icon</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Validate</string> </value>
         </item>
@@ -46,7 +42,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>Document_checkConsistency</string> </value>
+            <value> <string>checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_checkConsistency</string> </value>
+            <value> <string>checkConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

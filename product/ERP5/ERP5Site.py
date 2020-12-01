@@ -25,7 +25,6 @@ from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
 from ZPublisher.BaseRequest import RequestContainer
 from AccessControl import ClassSecurityInfo
-
 from Products.CMFDefault.Portal import CMFSite
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
