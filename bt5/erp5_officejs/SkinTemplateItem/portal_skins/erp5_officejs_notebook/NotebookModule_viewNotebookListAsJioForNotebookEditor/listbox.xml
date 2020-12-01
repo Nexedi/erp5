@@ -224,7 +224,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>notebook_module_selection</string> </value>
+                    <value> <string>notebook_editor_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
