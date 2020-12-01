@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Blob, jIO */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Blob, jIO) {
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
@@ -29,10 +29,6 @@
                                  };
           return document;
         });
-    })
-
-    .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      return {};
     });
 
-}(window, rJS, RSVP, Blob, jIO));
+}(window, rJS));

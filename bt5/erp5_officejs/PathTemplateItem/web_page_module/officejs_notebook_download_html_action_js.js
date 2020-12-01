@@ -22,7 +22,8 @@
     div.innerHTML = head_inner_html;
     script_list = div.getElementsByTagName('script');
     i = script_list.length;
-    while (i--) {
+    while (i > 0) {
+      i -= 1;
       script_list[i].parentNode.removeChild(script_list[i]);
     }
     return div.innerHTML;
@@ -45,6 +46,7 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
+      /*jslint unparam: true*/
       var gadget = this,
         notebook_html,
         return_submit_dict = {};
@@ -94,5 +96,6 @@
             });
         });
     });
+  /*jslint unparam: false*/
 
 }(window, document, rJS, RSVP, Blob, console));

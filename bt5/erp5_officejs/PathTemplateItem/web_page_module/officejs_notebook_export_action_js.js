@@ -8,7 +8,8 @@
     div.innerHTML = head_inner_html;
     script_list = div.getElementsByTagName('script');
     i = script_list.length;
-    while (i--) {
+    while (i > 0) {
+      i -= 1;
       script_list[i].parentNode.removeChild(script_list[i]);
     }
     return div.innerHTML;
@@ -38,8 +39,8 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var gadget = this,
-        notebook_html,
+      /*jslint unparam: true*/
+      var notebook_html,
         print_preview_window,
         return_submit_dict = {};
       return_submit_dict.redirect = {
@@ -89,5 +90,6 @@
             });
         });
     });
+  /*jslint unparam: false*/
 
 }(window, document, rJS, RSVP, console));
