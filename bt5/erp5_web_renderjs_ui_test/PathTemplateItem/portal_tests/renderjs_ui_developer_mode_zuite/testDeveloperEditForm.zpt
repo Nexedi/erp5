@@ -16,7 +16,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
   <td></td>
 </tr>
