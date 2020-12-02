@@ -106,6 +106,9 @@
 
 <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/save"/>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define="click_configuration python: {'text': 'Export'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
