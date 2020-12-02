@@ -267,7 +267,7 @@ a:hover {
 }
 a:focus {
   outline-offset: -2px;
-  outline: 2px solid #ffff8a;
+  outline: 2px solid #3388cc;
 }
 @media not screen and (max-width: 85em) {
   a[accesskey]:after {

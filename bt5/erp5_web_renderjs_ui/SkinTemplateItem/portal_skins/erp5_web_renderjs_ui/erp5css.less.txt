@@ -29,7 +29,7 @@
 @colorsubheaderbackground: #0E81C2;
 @colorsubheaderlink: #f8fff3;
 
-@colorfocus: #ffff8a;
+@colorfocus: #3388cc;
 @colorblocklinkbackground: #e0e0e0;
 
 @paneldarkerbackgroundcolor: @black;
