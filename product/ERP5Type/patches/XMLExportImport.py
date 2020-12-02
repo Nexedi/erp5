@@ -107,9 +107,7 @@ def exportXML(jar, oid, file=None):
     def getReorderedPickle(oid):
         p = pickle_dict[oid]
         if p is None:
-            # Versions are ignored, but some 'load()' implementations require them
-            # FIXME: remove "''" when TmpStore.load() on ZODB stops asking for it.
-            p = load(oid, '')[0]
+            p = load(oid)[0]
             p = reorderPickle(jar, p)[1]
             if len(p) < max_cache[0]:
                 max_cache[0] -= len(p)

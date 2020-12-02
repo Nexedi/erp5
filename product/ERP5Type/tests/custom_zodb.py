@@ -168,7 +168,10 @@ else:
   else:
     forkNodes()
     from ZEO.ClientStorage import ClientStorage
-    Storage = ClientStorage(zeo_client)
+    try:
+        Storage = ClientStorage(zeo_client, server_sync=True)
+    except TypeError: # BBB: ZEO<5
+        Storage = ClientStorage(zeo_client)
 
 if node_pid_list is not None:
   _print("Instance at %r loaded ... " % instance_home)

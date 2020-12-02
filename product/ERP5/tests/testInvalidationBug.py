@@ -90,6 +90,9 @@ class TestInvalidationBug(ERP5TypeTestCase):
     self.assertEqual(result_list[-2], None)  # ZODB
     self.assertEqual(result_list[-1], [1,1]) # activity tables last
 
+  # TODO: - skip this test for ZEO>=5 because it's covered upstream
+  #         (and later remove it)
+  #       - in slapos.git, enable server_sync in zope.conf
   def testLateInvalidationFromZEO(self):
     ### Check unit test is run properly
     from ZEO.ClientStorage import ClientStorage
