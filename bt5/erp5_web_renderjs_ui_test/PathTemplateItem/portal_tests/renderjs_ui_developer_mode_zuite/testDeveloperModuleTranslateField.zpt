@@ -1,0 +1,62 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Module Translate Field</td></tr>
+</thead><tbody>
+<tal:block tal:define="is_listbox python: False">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/disable_developer_mode" />
+</tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>check</td>
+  <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li/a[text()="Modules"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li/a[text()="Modules"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li/a[text()="Accounting"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li/a[text()="Accounting"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="ui-table-header ui-header"]/h1/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="ui-table-header ui-header"]/h1/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="regex" and @value="^Accounting Transactions$"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
