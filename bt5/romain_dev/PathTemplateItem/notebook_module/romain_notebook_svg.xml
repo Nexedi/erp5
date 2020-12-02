@@ -168,7 +168,7 @@ function useTemplateElement(template_id, x, y) {\n
 }\n
 \n
 function drawArrow(source_x, source_y, destination_x, destination_y,\n
-                   box_side, arrow_location, text, width) {\n
+                   box_side, arrow_location, text, width, height) {\n
   var x1,\n
     y1,\n
     x2,\n
@@ -271,9 +271,9 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     element_list = [\n
       domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
         x1: x1 * width + \'em\',\n
-        y1: y1 * width + \'em\',\n
+        y1: y1 * height + \'em\',\n
         x2: x2 * width + \'em\',\n
-        y2: y2 * width + \'em\',\n
+        y2: y2 * height + \'em\',\n
         "marker-end": "url(#arrowhead)"\n
       })\n
     ];\n
@@ -281,15 +281,15 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     element_list = [\n
       domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
         x1: x1 * width + \'em\',\n
-        y1: y1 * width + \'em\',\n
+        y1: y1 * height + \'em\',\n
         x2: x2 * width + \'em\',\n
-        y2: y2 * width + \'em\',\n
+        y2: y2 * height + \'em\',\n
       }),\n
       domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
         x1: x2 * width + \'em\',\n
-        y1: y2 * width + \'em\',\n
+        y1: y2 * height + \'em\',\n
         x2: x3 * width + \'em\',\n
-        y2: y3 * width + \'em\',\n
+        y2: y3 * height + \'em\',\n
         "marker-end": "url(#arrowhead)"\n
       })\n
     ];\n
@@ -307,7 +307,7 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
       return domsugar(document.createElementNS(SVG_NS, \'tspan\'), {\n
         text: word,\n
         x: tx * width + \'em\',\n
-        y: (ty * width) + i + \'em\'\n
+        y: (ty * height) + i + \'em\'\n
       });\n
     }))\n
   );\n
@@ -330,6 +330,7 @@ function createSVG(definition) {\n
     node_list = definition.node_list,\n
     arrow_list = definition.arrow_list,\n
     box_width,\n
+    box_heigth,\n
     max_grid_x,\n
     max_grid_y,\n
     NODE_ID_PREFIX = \'node_template_\',\n
@@ -347,13 +348,14 @@ function createSVG(definition) {\n
   // without increasing the svg size too much\n
   // Add 2 as left/right padding for the text\n
   box_width = (max_string_length / 2) + 2;\n
+  box_height = 8;\n
   element_list = [\n
-    createBoxTemplateElement(BOX_TEMPLATE_ID, box_width, box_width, 3)\n
+    createBoxTemplateElement(BOX_TEMPLATE_ID, box_width, box_height, 3)\n
   ];\n
   for (i = 0; i < node_list.length; i += 1) {\n
     element_list.push(\n
       createPortalTypeTemplateElement(node_list[i][0], BOX_TEMPLATE_ID,\n
-                                      NODE_ID_PREFIX + i, box_width, box_width)\n
+                                      NODE_ID_PREFIX + i, box_width, box_height)\n
     );\n
   }\n
   // Create arrow markers\n
@@ -388,7 +390,7 @@ function createSVG(definition) {\n
     node_location_dict[node_list[i][0]] = [node_list[i][1], node_list[i][2]];\n
     element_list.push(\n
       useTemplateElement(NODE_ID_PREFIX + i, (node_list[i][1] + IMAGE_MARGIN) * box_width,\n
-                         (node_list[i][2] + IMAGE_MARGIN) * box_width)\n
+                         (node_list[i][2] + IMAGE_MARGIN) * box_height)\n
     );\n
   }\n
 \n
@@ -403,7 +405,8 @@ function createSVG(definition) {\n
         arrow_list[i][0],\n
         arrow_list[i][2],\n
         arrow_list[i][4],\n
-        box_width\n
+        box_width,\n
+        box_height\n
       )\n
     );\n
   }\n
@@ -421,7 +424,7 @@ function createSVG(definition) {\n
                                           "svg");\n
   domsugar(xml_document, {\n
     width: box_width * (max_grid_x + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
-    height: box_width * (max_grid_y + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
+    height: box_height * (max_grid_y + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
     baseProfile: \'full\',\n
     version: \'1.1\',\n
     "xmlns:xlink": "http://www.w3.org/1999/xlink"\n
