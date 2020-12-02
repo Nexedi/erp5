@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Globals import PersistentMapping
 from zLOG import LOG, ERROR
+from past.builtins import xrange
 
 def _makeForbiddenCharList(*args):
   result = [True] * 256

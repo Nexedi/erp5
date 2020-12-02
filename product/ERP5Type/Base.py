@@ -90,11 +90,11 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
 from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
-from zope.interface import classImplementsOnly, implementedBy
+from zope.interface import classImplementsOnly, implementedBy, implementer
 
 import sys, re
 
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from socket import gethostname, gethostbyaddr
 import random
 
@@ -707,6 +707,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       else:
         method.registerTransitionAlways(portal_type, wf_id, tr_id)
 
+@implementer(interfaces.ICategoryAccessProvider,
+             interfaces.IValueAccessProvider)
 class Base(
             ResponseHeaderGenerator,
             CopyContainer,
@@ -767,11 +769,6 @@ class Base(
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.ICategoryAccessProvider,
-                            interfaces.IValueAccessProvider,
-                            )
 
   # We want to use a default property view
   manage_main = manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
