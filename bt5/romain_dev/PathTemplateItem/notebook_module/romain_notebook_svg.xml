@@ -333,7 +333,8 @@ function createSVG(definition) {\n
     max_grid_x,\n
     max_grid_y,\n
     NODE_ID_PREFIX = \'node_template_\',\n
-    node_location_dict = {};\n
+    node_location_dict = {},\n
+    IMAGE_MARGIN = 0.25;\n
 \n
   // calculate the max length\n
   max_string_length = 0;\n
@@ -386,8 +387,8 @@ function createSVG(definition) {\n
     max_grid_y = Math.max(max_grid_y, node_list[i][2]);\n
     node_location_dict[node_list[i][0]] = [node_list[i][1], node_list[i][2]];\n
     element_list.push(\n
-      useTemplateElement(NODE_ID_PREFIX + i, (node_list[i][1] + 1) * box_width,\n
-                         (node_list[i][2] + 1) * box_width)\n
+      useTemplateElement(NODE_ID_PREFIX + i, (node_list[i][1] + IMAGE_MARGIN) * box_width,\n
+                         (node_list[i][2] + IMAGE_MARGIN) * box_width)\n
     );\n
   }\n
 \n
@@ -395,10 +396,10 @@ function createSVG(definition) {\n
   for (i = arrow_list.length - 1; i >= 0; i -= 1) {\n
     element_list.unshift(\n
       drawArrow(\n
-        node_location_dict[arrow_list[i][1]][0] + 1,\n
-        node_location_dict[arrow_list[i][1]][1] + 1,\n
-        node_location_dict[arrow_list[i][3]][0] + 1,\n
-        node_location_dict[arrow_list[i][3]][1] + 1,\n
+        node_location_dict[arrow_list[i][1]][0] + IMAGE_MARGIN,\n
+        node_location_dict[arrow_list[i][1]][1] + IMAGE_MARGIN,\n
+        node_location_dict[arrow_list[i][3]][0] + IMAGE_MARGIN,\n
+        node_location_dict[arrow_list[i][3]][1] + IMAGE_MARGIN,\n
         arrow_list[i][0],\n
         arrow_list[i][2],\n
         arrow_list[i][4],\n
@@ -419,8 +420,8 @@ function createSVG(definition) {\n
   xml_document = document.createElementNS("http://www.w3.org/2000/svg",\n
                                           "svg");\n
   domsugar(xml_document, {\n
-    width: box_width * (max_grid_x + 3) + \'em\',\n
-    height: box_width * (max_grid_y + 3) + \'em\',\n
+    width: box_width * (max_grid_x + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
+    height: box_width * (max_grid_y + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
     baseProfile: \'full\',\n
     version: \'1.1\',\n
     "xmlns:xlink": "http://www.w3.org/1999/xlink"\n
