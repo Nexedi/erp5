@@ -46,6 +46,7 @@ from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Acquisition import aq_self
+from past.builtins import xrange
 
 from AccessControl import ModuleSecurityInfo
 from AccessControl.SecurityInfo import allow_class
@@ -254,7 +255,7 @@ def convertToUpperCase(key):
   try:
     return _cached_convertToUpperCase[key]
   except KeyError:
-    if not isinstance(key, basestring):
+    if not isinstance(key, str):
       raise_(TypeError, '%s is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
@@ -279,7 +280,7 @@ def convertToMixedCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  if not isinstance(key, basestring):
+  if not isinstance(key, str):
     raise_(TypeError, '%s is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
@@ -420,7 +421,7 @@ def fill_args_from_request(*optional_args):
     wrapper.__name__ = wrapped.__name__
     wrapper.__doc__ = wrapped.__doc__
     return wrapper
-  if len(optional_args) == 1 and not isinstance(optional_args[0], basestring):
+  if len(optional_args) == 1 and not isinstance(optional_args[0], str):
     function, = optional_args
     optional_args = ()
     return decorator(function)
@@ -1640,7 +1641,7 @@ try:
 except ImportError:
   warnings.warn("urlnorm lib is not installed", DeprecationWarning)
   urlnorm = None
-import urlparse
+import urllib.parse as urlparse
 import urllib
 
 # Regular expressions
