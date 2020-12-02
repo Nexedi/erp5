@@ -179,7 +179,9 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     ty = 1,\n
     margin = 0.1,\n
     text_margin = 0.25,\n
-    element_list = [];\n
+    element_list = [],\n
+    marker_end,\n
+    stroke_options;\n
 \n
   if (box_side === \'top\') {\n
     x1 = source_x + 0.5;\n
@@ -267,6 +269,23 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
     throw new Error(\'not supported box side \' + box_side);\n
   }\n
 \n
+  if (arrow_location === \'end\') {\n
+    marker_end = "url(#arrowhead)";\n
+    stroke_options = {\n
+      stroke: "#4C1900",\n
+      "stroke-width": "4",\n
+      "stroke-dasharray": "10,5"\n
+    };\n
+  } else if (arrow_location === \'parent\') {\n
+    marker_end = null;\n
+    stroke_options = {\n
+      stroke: "black",\n
+      "stroke-width": "2",\n
+    };\n
+  } else {\n
+    throw new Error(\'Unsupported arrow_location: \' + arrow_location);\n
+  }\n
+\n
   if ((x2 === x3) && (y2 === y3)) {\n
     element_list = [\n
       domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
@@ -274,7 +293,7 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
         y1: y1 * height + \'em\',\n
         x2: x2 * width + \'em\',\n
         y2: y2 * height + \'em\',\n
-        "marker-end": "url(#arrowhead)"\n
+        "marker-end": marker_end\n
       })\n
     ];\n
   } else {\n
@@ -290,34 +309,32 @@ function drawArrow(source_x, source_y, destination_x, destination_y,\n
         y1: y2 * height + \'em\',\n
         x2: x3 * width + \'em\',\n
         y2: y3 * height + \'em\',\n
-        "marker-end": "url(#arrowhead)"\n
+        "marker-end": marker_end\n
       })\n
     ];\n
   }\n
-  element_list.push(\n
-    domsugar(document.createElementNS(SVG_NS, \'text\'), {\n
-      // textLength: TEXT_WIDTH + \'em\',\n
-      // y: ty * width + \'em\',\n
-      // x: tx * width + \'em\',\n
-      "font-size": "1em",\n
-      // text: text,\n
-      stroke: \'none\'\n
-    }, text.split(\' \').map(function (word, i) {\n
-      console.log(word, i);\n
-      return domsugar(document.createElementNS(SVG_NS, \'tspan\'), {\n
-        text: word,\n
-        x: tx * width + \'em\',\n
-        y: (ty * height) + i + \'em\'\n
-      });\n
-    }))\n
-  );\n
-  console.log(element_list[element_list.length - 1].innerHTML);\n
-  console.log(x1, x2, x3, y1, y2, y3, text, tx, ty);\n
-  return domsugar(document.createElementNS(SVG_NS, \'g\'), {\n
-    stroke: "#4C1900",\n
-    "stroke-width": "4",\n
-    "stroke-dasharray": "10,5"\n
-  }, element_list);\n
+\n
+  // Display the related text\n
+  if (text) {\n
+    element_list.push(\n
+      domsugar(document.createElementNS(SVG_NS, \'text\'), {\n
+        // textLength: TEXT_WIDTH + \'em\',\n
+        // y: ty * width + \'em\',\n
+        // x: tx * width + \'em\',\n
+        "font-size": "1em",\n
+        // text: text,\n
+        stroke: \'none\'\n
+      }, text.split(\' \').map(function (word, i) {\n
+        return domsugar(document.createElementNS(SVG_NS, \'tspan\'), {\n
+          text: word,\n
+          x: tx * width + \'em\',\n
+          y: (ty * height) + i + \'em\'\n
+        });\n
+      }))\n
+    );\n
+  }\n
+\n
+  return domsugar(document.createElementNS(SVG_NS, \'g\'), stroke_options, element_list);\n
 }\n
 \n
 function createSVG(definition) {\n
@@ -470,7 +487,7 @@ attachSVG(\'img_cloud\', {\n
   ["bottom", "Software/Slave Instance", "end", "Computer Partition", "aggregate"],\n
   ["top", "Software/Slave Instance", "end", "Hosting Subscription", "specialise"],\n
   ["bottom", "Hosting Subscription", "end", "Software/Slave Instance", "predecessor"],\n
-  ["top", "Computer Partition", "end", "Computer", "parent"],\n
+  ["top", "Computer Partition", "parent", "Computer"],\n
   // TODO ["bottom", "Software/Slave Instance", "end", "Software/Slave Instance", "predecessor"],\n
  ]\n
 });\n
@@ -496,7 +513,7 @@ attachSVG(\'img_consumption_eco\', {\n
   ["top", "Consumption Document", "end", "Computer", "contribution"],\n
   ["right", "Sale Packing List", "end", "Person", "destination_decision destination"],\n
   ["right", "Sale Packing List Line", "end", "Person", "destination_decision destination_section"],\n
-  ["top", "Sale Packing List Line", "end", "Sale Packing List", "parent"],\n
+  ["top", "Sale Packing List Line", "parent", "Sale Packing List"],\n
   ["top", "Sale Packing List", "end", "Organisation", "source source_section destination_section"],\n
  ]\n
 });\n
@@ -585,12 +602,12 @@ attachSVG(\'img_subscription\', {\n
   ["top", "Open Sale Order", "end", "Person", "destination destination_decision"],\n
   ["left", "Open Sale Order", "end", "Organisation", "source source_section destination_section"],\n
   ["right", "Open Sale Order", "end", "Sale Trade Condition", "specialise"],\n
-  ["top", "Open Sale Order Line", "end", "Open Sale Order", "parent"],\n
+  ["top", "Open Sale Order Line", "parent", "Open Sale Order"],\n
   ["right", "Open Sale Order Line", "end", "Hosting Subscription", "aggregate"],\n
   ["top", "Applied Rule", "end", "Hosting Subscription", "causality"],\n
   ["left", "Applied Rule", "end", "Subscription Item Root Sim. Rule", "specialise"],\n
-  ["left", "Simulation Movement", "end", "Applied Rule", "parent"],\n
-  ["top", "Sale Packing List Line", "end", "Sale Packing List", "parent"],\n
+  ["left", "Simulation Movement", "parent", "Applied Rule"],\n
+  ["top", "Sale Packing List Line", "parent", "Sale Packing List"],\n
   ["top", "Simulation Movement", "end", "Sale Packing List Line", "delivery"],\n
   ["left", "Sale Packing List Line", "end", "Hosting Subscription", "aggregate"],\n
   ["left", "Sale Packing List", "end", "Sale Trade Condition", "specialise"],\n
