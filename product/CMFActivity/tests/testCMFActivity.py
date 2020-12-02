@@ -928,38 +928,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool.flush(p, invoke=0)
     self.commit()
 
-  def test_82_AbortTransactionSynchronously(self):
-    """
-      This test checks if transaction.abort() synchronizes connections. It
-      didn't do so back in Zope 2.7
-    """
-    # Make a new persistent object, and commit it so that an oid gets
-    # assigned.
-    module = self.getOrganisationModule()
-    organisation = module.newContent(portal_type = 'Organisation')
-    organisation_id = organisation.getId()
-    self.tic()
-    organisation = module[organisation_id]
-
-    # Now fake a read conflict.
-    from ZODB.POSException import ReadConflictError
-    tid = organisation._p_serial
-    oid = organisation._p_oid
-    conn = organisation._p_jar
-    try:
-      conn.db().invalidate({oid: tid})
-    except TypeError:
-      conn.db().invalidate(tid, {oid: tid})
-    conn._cache.invalidate(oid)
-
-    # Access to invalidated object in non-MVCC connections should raise a
-    # conflict error
-    organisation = module[organisation_id]
-    self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
-
-    self.abort()
-    organisation.uid
-
   @for_each_activity
   def testCallWithGroupIdParamater(self, activity):
     dedup = activity != 'SQLQueue'
