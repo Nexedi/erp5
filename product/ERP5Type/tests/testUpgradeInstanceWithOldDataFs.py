@@ -73,7 +73,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
   def testUpgrade(self):
     if not self.portal.portal_templates.getRepositoryList():
       self.setupAutomaticBusinessTemplateRepository(
-        searchable_business_template_list=["erp5_core", "erp5_base"])
+        searchable_business_template_list=["erp5_core", "erp5_base", "erp5_notebook"])
 
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     createZODBPythonScript(
