@@ -56,9 +56,10 @@ class TrashTool(BaseTool):
   manage_overview = DTMLFile( 'explainTrashTool', _dtmldir )
 
   security.declarePrivate('backupObject')
-  def backupObject(self, trashbin, container_path, object_id, save, **kw):
+  def backupObject(self, trashbin, container_path, object_id, save, keep_subobjects=False):
     """
       Backup an object in a trash bin
+
     """
 #     LOG('Trash : backup object', 0, str((container_path, object_id)))
     if save:
@@ -131,10 +132,9 @@ class TrashTool(BaseTool):
               "Can't backup object %s" % object_path)
           return {}
 
-    keep_sub = kw.get('keep_subobjects', 0)
     subobjects_dict = {}
 
-    if not keep_sub:
+    if not keep_subobjects:
       # export subobjects
       if save:
         obj = backup_object_container._getOb(object_id, None)
