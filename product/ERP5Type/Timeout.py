@@ -30,7 +30,7 @@ import threading
 import time
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from ZPublisher.HTTPResponse import status_codes
-from Products.TimerService.timerserver.TimerServer import TimerRequest
+#from Products.TimerService.timerserver.TimerServer import TimerRequest
 
 __all__ = (
   'TimeoutReachedError', 'Deadline', 'getDeadline', 'getTimeLeft',
