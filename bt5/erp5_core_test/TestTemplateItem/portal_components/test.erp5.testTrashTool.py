@@ -355,6 +355,32 @@ class TestTrashTool(ERP5TypeTestCase):
     self.assertTrue(subcat is not None)
     sequence.edit(subcat_path=subcat.getPath())
 
+  def stepDeleteBaseCategory(self, sequence=None, sequence_list=None, **kw):
+    pc = self.getCategoryTool()
+    pc.manage_delObjects(ids=[sequence.get('bc_id')])
+
+  def stepRestore(self, sequence=None, sequence_list=None, **kw):
+    trash_id = sequence.get('trash_id')
+    trash = self.getTrashTool()
+    trashbin = trash._getOb(trash_id, None)
+    bc_id = sequence.get('bc_id')
+    trash.restoreObject(trashbin, ['portal_categories_items'], bc_id)
+
+  def stepCheckRestore(self, sequence=None, sequence_list=None, **kw):
+    bc_id = sequence.get('bc_id')
+    bc = self.portal.portal_categories[bc_id]
+    self.assertTrue(
+      sorted(bc.objectIds()) == sorted(sequence.get('category_id_list'))
+    )
+    self.assertEqual(
+      len(
+        self.portal.portal_catalog(
+          portal_type='Category',
+          parent_uid=bc.getUid()
+        )
+      ), 10
+    )
+
   # tests
   def test_01_checkTrashBinCreation(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -477,6 +503,30 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_07_checkRestore(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check Backup Without Subobjects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CheckTrashToolExists  \
+                       CreateTrashBin \
+                       AddBaseCategory \
+                       AddCategories \
+                       Tic \
+                       BackupObjectsWithKeepingSubobjects \
+                       Tic \
+                       CheckObjectBackupWithSubObjects \
+                       DeleteBaseCategory \
+                       Tic \
+                       Restore \
+                       Tic \
+                       CheckRestore \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
 
 def test_suite():
