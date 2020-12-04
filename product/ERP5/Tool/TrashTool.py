@@ -189,6 +189,76 @@ class TrashTool(BaseTool):
                               )
     return trashbin
 
+  security.declarePrivate('restoreObject')
+  def restoreObject(self, trashbin, container_path, object_id):
+    """
+      Restore an object from the trash bin (copy it under portal)
+    """
+    portal = self.getPortalObject()
+    # recreate path of the backup object if necessary
+    backup_object_container = portal
+    for path in container_path:
+      if path.endswith('_items'):
+        path = path[0:-len('_items')]
+      if path not in backup_object_container.objectIds():
+        if not hasattr(aq_base(backup_object_container), "newContent"):
+          backup_object_container.manage_addFolder(id=path,)
+          backup_object_container = backup_object_container._getOb(path)
+        else:
+          backup_object_container = backup_object_container.newContent(
+            portal_type='Folder',
+            id=path,
+          )
+      else:
+        backup_object_container = backup_object_container._getOb(path)
+    # backup the object
+    # here we choose export/import to copy because cut/paste
+    # do too many things and check for what we want to do
+    object_path = container_path + [object_id]
+    obj = trashbin.restrictedTraverse(object_path, None)
+    if obj is not None:
+      connection = obj._p_jar
+      o = obj
+      while connection is None:
+        o = o.aq_parent
+        connection=o._p_jar
+      if obj._p_oid is None:
+        LOG("Trash Tool backupObject", WARNING,
+            "Trying to backup uncommitted object %s" % object_path)
+        return {}
+      if isinstance(obj, Broken):
+        LOG("Trash Tool backupObject", WARNING,
+            "Can't backup broken object %s" % object_path)
+        klass = obj.__class__
+        if klass.__module__[:27] in ('Products.ERP5Type.Document.',
+                                      'erp5.portal_type'):
+          # meta_type is required so that a broken object
+          # can be removed properly from a BTreeFolder2
+          # (unfortunately, we can only guess it)
+          klass.meta_type = 'ERP5' + re.subn('(?=[A-Z])', ' ',
+                                              klass.__name__)[0]
+        return
+      copy = connection.exportFile(obj._p_oid)
+      # import object in trash
+      connection = backup_object_container._p_jar
+      o = backup_object_container
+      while connection is None:
+        o = o.aq_parent
+        connection=o._p_jar
+      copy.seek(0)
+      try:
+        backup = connection.importFile(copy)
+        if hasattr(aq_base(backup), 'isIndexable'):
+          del backup.isIndexable
+        backup_object_container._setObject(object_id, backup)
+      except (AttributeError, ImportError):
+        # XXX we can go here due to formulator because attribute
+        # field_added doesn't not exists on parent if it is a Trash
+        # Folder and not a Form, or a module for the old object is
+        # already removed, and we cannot backup the object
+        LOG("Trash Tool backupObject", WARNING,
+            "Can't backup object %s" % object_path)
+
   security.declareProtected(Permissions.ManagePortal, 'getTrashBinObjectsList')
   def getTrashBinObjectsList(self, trashbin):
     """
