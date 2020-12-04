@@ -138,11 +138,15 @@
         current_field = this.props.label_element.querySelector(".edit-field");
         if (field_json.hasOwnProperty('edit_field_href') &&
             !current_field) {
-          field_href = domsugar("a", {"class": "edit-field"});
-          field_href.href = field_json.edit_field_href;
-          field_href.title = "Edit this field";
-          field_href.appendChild(domsugar("img"));
-          field_href.firstElementChild.src = field_json.edit_field_icon;
+          field_href = domsugar("a", {
+            "class": "edit-field",
+            href: field_json.edit_field_href,
+            title: "Edit this field"
+          }, [
+            domsugar("img", {
+              src: field_json.edit_field_icon
+            })
+          ]);
           this.props.label_element.appendChild(field_href);
         } else if (!field_json.hasOwnProperty('edit_field_href') &&
                    current_field) {
@@ -152,11 +156,15 @@
         current_field = this.props.label_element.querySelector(".translate-title");
         if (field_json.hasOwnProperty('translate_title_href') &&
             !current_field) {
-          field_href = domsugar("a", {"class": "translate-title"});
-          field_href.href = field_json.translate_title_href;
-          field_href.title = "Translate this field title";
-          field_href.appendChild(domsugar("img"));
-          field_href.firstElementChild.src = field_json.translate_title_icon;
+          field_href = domsugar("a", {
+            "class": "translate-title",
+            href: field_json.translate_title_href,
+            title: "Translate this field title"
+          }, [
+            domsugar("img", {
+              src: field_json.translate_title_icon
+            })
+          ]);
           this.props.label_element.appendChild(field_href);
         } else if (!field_json.hasOwnProperty('translate_title_href') &&
                    current_field) {
@@ -166,11 +174,15 @@
         current_field = this.props.label_element.querySelector(".translate-description");
         if (field_json.hasOwnProperty('translate_description_href') &&
             !current_field) {
-          field_href = domsugar("a", {"class": "translate-description"});
-          field_href.href = field_json.translate_description_href;
-          field_href.title = "Translate this field description";
-          field_href.appendChild(domsugar("img"));
-          field_href.firstElementChild.src = field_json.translate_description_icon;
+          field_href = domsugar("a", {
+            "class": "translate-description",
+            href: field_json.translate_description_href,
+            title: "Translate this field description"
+          }, [
+            domsugar("img", {
+              src: field_json.translate_description_icon
+            })
+          ]);
           this.props.label_element.appendChild(field_href);
         } else if (!field_json.hasOwnProperty('translate_description_href') &&
                    current_field) {
