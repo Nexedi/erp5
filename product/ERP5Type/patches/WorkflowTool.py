@@ -14,7 +14,6 @@
 ##############################################################################
 
 from zLOG import LOG, WARNING
-from types import StringTypes
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
@@ -48,7 +47,7 @@ def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=No
     Allows the system to request a workflow action.  This method
     must perform its own security checks.
     '''
-    if type(transition_list) in StringTypes:
+    if isinstance(transition_list, str):
       method_id = transition_list
     elif len(transition_list) == 1:
       method_id = transition_list[0]
