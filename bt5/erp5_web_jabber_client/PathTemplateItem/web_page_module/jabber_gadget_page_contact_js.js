@@ -1,6 +1,6 @@
-/*global window, rJS*/
+/*global window, rJS, Notification*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, Notification) {
   "use strict";
 
   rJS(window)
@@ -102,7 +102,13 @@
               ]]
             }
           });
+        })
+        .push(function () {
+          if (Notification.permission !== "denied") {
+            // Do not return the promise to not block rendering
+            Notification.requestPermission();
+          }
         });
     });
 
-}(window, rJS));
+}(window, rJS, Notification));
