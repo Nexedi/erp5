@@ -30,6 +30,9 @@
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
 from future.utils import raise_
+from future import standard_library
+standard_library.install_aliases()
+
 import os
 import re
 import string
