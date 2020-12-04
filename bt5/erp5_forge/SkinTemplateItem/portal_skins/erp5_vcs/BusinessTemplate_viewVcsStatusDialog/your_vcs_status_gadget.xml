@@ -13,6 +13,8 @@
                 <string>gadget_url</string>
                 <string>renderjs_extra</string>
                 <string>title</string>
+                <string>validator_field_id</string>
+                <string>validator_form_id</string>
               </list>
             </value>
         </item>
@@ -104,6 +106,14 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Gadget</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string>my_core_mode_text_content_validator</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
