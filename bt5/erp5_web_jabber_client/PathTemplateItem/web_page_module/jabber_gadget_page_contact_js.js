@@ -1,6 +1,6 @@
-/*global window, rJS*/
+/*global window, rJS, Notification*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, Notification) {
   "use strict";
 
   rJS(window)
@@ -102,7 +102,16 @@
               ]]
             }
           });
+        })
+        .push(function () {
+          return gadget.requestNotificationPermition();
         });
+    })
+
+    .declareJob("requestNotificationPermition", function () {
+      if (Notification !== undefined && Notification.permission !== "denied") {
+        return Notification.requestPermission();
+      }
     });
 
-}(window, rJS));
+}(window, rJS, Notification));

@@ -1,14 +1,21 @@
-/*global window, rJS, RSVP, jIO, document, loopEventListener */
+/*global window, rJS, RSVP, jIO, Notification, document, loopEventListener */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, jIO, document, loopEventListener) {
+(function (window, rJS, RSVP, jIO, Notification, document, loopEventListener) {
   "use strict";
 
   var CONNECTION_GADGET_SCOPE = "connection",
     CONNECTION_GADGET_URL = "connection/",
     JIO_GADGET_URL = "gadget_jio.html";
 
-  function dropNotification() {
+  function dropNotification(gadget) {
+    var contact;
     document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_ok.ico");
+    for (contact in gadget.state_parameter_dict.notification_per_contact) {
+      if (gadget.state_parameter_dict.notification_per_contact.hasOwnProperty(contact)) {
+        gadget.state_parameter_dict.notification_per_contact[contact].close();
+        delete gadget.state_parameter_dict.notification_per_contact[contact];
+      }
+    }
   }
 
   function wrapJioCall(gadget, method_name, argument_list) {
@@ -272,7 +279,8 @@
           document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
         }
 
-        var gadget = this;
+        var gadget = this,
+          from = argument_list[0];
         return addLog(this, argument_list[0], argument_list[2], true)
           .push(function () {
             return initializeContact(gadget, argument_list[0]);
@@ -280,6 +288,17 @@
           .push(function (doc) {
             doc.notification = true;
             return gadget.state_parameter_dict.volatile_jio.put(argument_list[0], doc);
+          })
+          .push(function () {
+            if (!document.hasFocus() && Notification.permission === "granted") {
+              gadget.state_parameter_dict.notification_per_contact[from] = new Notification(
+                "New message from " + from,
+                {
+                  silent: true,
+                  tag: 'jabberclient:' + from
+                }
+              );
+            }
           })
           .push(function () {
             return gadget.refresh();
@@ -361,9 +380,10 @@
         connected: false,
         server: 'https://mail.nexedi.net/chat/http-bind/',
         jio: '',
-        passwd: ''
+        passwd: '',
+        notification_per_contact: {}
       };
-      dropNotification();
+      dropNotification(gadget);
     })
     .ready(function (gadget) {
       return gadget.getDeclaredGadget('persistent_jio')
@@ -485,12 +505,16 @@
     })
 
     .declareService(function () {
+      var gadget = this;
+      function _dropNotification() {
+        return dropNotification(gadget);
+      }
       return loopEventListener(
         window,
         'focus',
         false,
-        dropNotification
+        _dropNotification
       );
     });
 
-}(window, rJS, RSVP, jIO, document, loopEventListener));
+}(window, rJS, RSVP, jIO, Notification, document, loopEventListener));
