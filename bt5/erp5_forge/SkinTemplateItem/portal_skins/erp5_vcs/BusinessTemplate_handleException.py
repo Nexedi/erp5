@@ -1,5 +1,6 @@
 from erp5.component.module.Git import GitLoginError
 from erp5.component.module.SubversionClient import SubversionSSLTrustError, SubversionLoginError
+import json
 
 try:
   raise exception
@@ -16,5 +17,11 @@ except GitLoginError, e:
   kw = dict(remote_url=context.getVcsTool().getRemoteUrl())
   method = 'BusinessTemplate_viewGitLogin'
 
-context.REQUEST.set('portal_status_message', message)
-return getattr(context.asContext(**kw), method)(caller=caller, caller_kw=caller_kw)
+commit_dict['caller'] = caller
+# Always propage all informations throught formulator hidden field
+request = context.REQUEST
+request.form['your_commit_json'] = json.dumps(commit_dict)
+
+return context.asContext(**kw).Base_renderForm(method, keep_items={
+  'portal_status_message': message
+})
