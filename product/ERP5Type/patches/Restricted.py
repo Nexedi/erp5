@@ -15,7 +15,7 @@ import copy
 import sys
 import types
 
-from RestrictedPython.RestrictionMutator import RestrictionMutator
+# from RestrictedPython.RestrictionMutator import RestrictionMutator
 _MARKER = []
 def checkNameLax(self, node, name=_MARKER):
   """Verifies that a name being assigned is safe.
@@ -34,7 +34,7 @@ def checkNameLax(self, node, name=_MARKER):
     self.error(node, '"%s" is an invalid variable name because '
                      'it ends with "__roles__".' % name)
 
-RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
+#RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire
@@ -48,16 +48,17 @@ from AccessControl.ZopeGuards import (safe_builtins, _marker, Unauthorized,
 # TODO: add buffer/bytearray
 
 def add_builtins(**kw):
-    assert not set(safe_builtins).intersection(kw)
+    assert not set(safe_builtins).intersection(kw), "%r intersect %r" %(safe_builtins, kw)
     safe_builtins.update(kw)
 
 del safe_builtins['dict']
 del safe_builtins['list']
 add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
-             dict=dict, list=list, set=set, frozenset=frozenset)
+             dict=dict, list=list) #, set=set, frozenset=frozenset)
 
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
-             property=property, slice=slice, staticmethod=staticmethod,
+             property=property, # <F11>slice=slice,
+             staticmethod=staticmethod,
              super=super, type=type)
 
 def guarded_next(iterator, default=_marker):
@@ -80,7 +81,7 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-add_builtins(next=guarded_next)
+# add_builtins(next=guarded_next)
 
 _safe_class_attribute_dict = {}
 import inspect
