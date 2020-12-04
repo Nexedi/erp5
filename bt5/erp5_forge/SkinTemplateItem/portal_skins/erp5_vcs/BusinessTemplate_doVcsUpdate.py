@@ -1,11 +1,19 @@
+import json
+commit_dict = json.loads(commit_json) if commit_json is not None else {
+  'keep': keep
+}
+
+if keep:
+  commit_dict['keep'] = keep
+
 try:
-  new_bt = context.getVcsTool().update(keep)
+  new_bt = context.getVcsTool().update(commit_dict['keep'])
 except Exception, error:
   return context.BusinessTemplate_handleException(
-    error, script.id, form_id=form_id, keep=keep)
+    error, script.id, commit_dict)
 
-request = context.REQUEST
-request.set('portal_status_message', 'Working copy updated successfully.')
-return request.RESPONSE.redirect(
-  '%s/BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=%s'
-  % (new_bt.absolute_url_path(), form_id))
+return new_bt.Base_redirect('BusinessTemplate_viewInstallationDialog', keep_items={
+  'portal_status_message': 'Working copy updated successfully.',
+  'workflow_action': 'install_action',
+  'form_id': 'view'
+})
