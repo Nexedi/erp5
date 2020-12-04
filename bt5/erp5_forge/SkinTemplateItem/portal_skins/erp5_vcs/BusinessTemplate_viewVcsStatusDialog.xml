@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>BusinessTemplate_doVcsCommit</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
@@ -57,15 +57,15 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_vcs_status_gadget</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>your_vcs_status_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
