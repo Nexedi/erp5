@@ -15,7 +15,7 @@ if not changelog.strip():
   request.set('cancel_url', context.absolute_url() +
     '/BusinessTemplate_viewVcsStatus?do_extract:int=0'
     '&portal_status_message=Commit%20cancelled.')
-  return context.asContext(**kw).BusinessTemplate_viewVcsChangelog()
+  return context.asContext(**kw).Base_renderForm('BusinessTemplate_viewVcsChangelog')
 
 try:
   return context.getVcsTool().commit(changelog, **kw)

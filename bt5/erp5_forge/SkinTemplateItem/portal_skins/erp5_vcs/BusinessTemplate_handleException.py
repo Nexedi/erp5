@@ -17,4 +17,4 @@ except GitLoginError, e:
   method = 'BusinessTemplate_viewGitLogin'
 
 context.REQUEST.set('portal_status_message', message)
-return getattr(context.asContext(**kw), method)(caller=caller, caller_kw=caller_kw)
+return context.asContext(**kw).Base_renderForm(method, caller=caller, caller_kw=caller_kw)
