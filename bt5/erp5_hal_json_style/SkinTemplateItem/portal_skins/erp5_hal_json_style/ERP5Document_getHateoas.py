@@ -1560,7 +1560,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if portal.portal_workflow.Base_getSourceVisibility():
           for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
             erp5_action_list.append({
-              'href': "%s/manage_properties?ignore_layout:int=1" % workflow.absolute_url_path(),
+              'href': "%s/manage_properties" % workflow.absolute_url_path(),
               'name': "jump_to_%s" % workflow.id,
               'icon': None,
               'title': workflow.title
