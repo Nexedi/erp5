@@ -25,7 +25,7 @@ from Acquisition import Implicit, aq_base
 from Persistence import Persistent
 from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
-from AccessControl.Permission import name_trans
+from AccessControl.Permission import getPermissionIdentifier #name_trans
 from AccessControl.Permissions import import_export_objects, \
     manage_zcatalog_entries
 from .SQLCatalog import CatalogError
@@ -1364,7 +1364,8 @@ InitializeClass(ZCatalog)
 
 
 def p_name(name):
-  return '_' + string.translate(name, name_trans) + '_Permission'
+  return getPermissionIdentifier(name)
+#  return '_' + string.translate(name, name_trans) + '_Permission'
 
 def absattr(attr):
   if callable(attr): return attr()
