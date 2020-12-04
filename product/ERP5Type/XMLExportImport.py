@@ -38,7 +38,13 @@ from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
 from zLOG import LOG
 from base64 import standard_b64encode
-import copyreg
+try:
+    # BBB copy_reg was renamed to copyreg in python 3
+    # althoug copyreg exists in python 2, dispatch_table is only
+    # accessible via copy_reg module
+    import copy_reg as copyreg
+except ModuleNotFoundError:
+    import copyreg
 from hashlib import sha1
 
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
