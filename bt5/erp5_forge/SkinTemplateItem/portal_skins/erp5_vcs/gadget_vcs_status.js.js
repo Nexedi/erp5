@@ -487,9 +487,8 @@
         get_tree_url: options.get_tree_url,
         remote_comment: options.remote_comment,
         remote_url: options.remote_url,
-        // key: options.key,
-        // value: options.value || "",
-        value: JSON.stringify({added: [], modified: [], deleted: [],
+        key: options.key,
+        value: options.value || JSON.stringify({added: [], modified: [], deleted: [],
                                changelog: ''}),
         editable: (options.editable === undefined) ? true : options.editable
       });
@@ -517,7 +516,9 @@
         return renderChangelogView(gadget);
       }
 
-      throw new Error('Unhandled display step: ' + gadget.state.display_step);
+      if (modification_dict.hasOwnProperty('display_step')) {
+        throw new Error('Unhandled display step: ' + gadget.state.display_step);
+      }
 
     })
 
@@ -624,7 +625,33 @@
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
+      return true;
       throw new Error('checkValidity not implemented');
-    }, {mutex: 'changestate'});
+    }, {mutex: 'changestate'})
+
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .onEvent('change', function change() {
+      return RSVP.all([
+        this.checkValidity(),
+        this.notifyChange("change")
+      ]);
+    }, false, false)
+
+    .onEvent('input', function input() {
+      return RSVP.all([
+        this.checkValidity(),
+        this.notifyChange("input")
+      ]);
+    }, false, false)
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false);
 
 }(window, rJS, RSVP, domsugar, jIO, console, document, NodeFilter));
