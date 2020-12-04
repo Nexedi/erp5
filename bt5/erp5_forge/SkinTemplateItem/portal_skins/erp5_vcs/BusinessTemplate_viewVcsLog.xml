@@ -38,6 +38,10 @@
             <value> <string>BusinessTemplate_doVcsMultiDiff</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -110,7 +114,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>vcs_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
