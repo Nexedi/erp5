@@ -38,6 +38,10 @@
             <value> <string>BusinessTemplate_doVcsLogin</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -74,7 +78,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_commit_json</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -123,7 +129,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>vcs_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
