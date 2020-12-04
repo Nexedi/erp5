@@ -32,7 +32,6 @@ from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
-from ZTUtils import make_query
 from erp5.component.module.WorkingCopy import \
   WorkingCopy, NotAWorkingCopyError, NotVersionedError, Dir, File, selfcached
 
@@ -321,10 +320,8 @@ class Git(WorkingCopy):
       return self.git('rev-parse', '--short', 'HEAD') + '+'
     return self.git('rev-parse', 'HEAD')
 
-  def commit(self, changelog, added=(), modified=(), removed=()):
+  def commit(self, changelog, push, added=(), modified=(), removed=()):
     context = self.aq_parent
-    request = context.REQUEST
-    push = request.get('push')
     reset = 1
     if push:
       # if we can't push because we are not up-to-date, we'll either 'merge' or
@@ -390,9 +387,9 @@ class Git(WorkingCopy):
       portal_status_message = translateString(
         'Files committed successfully in revision ${revision}',
         mapping=dict(revision=head))
-    return request.RESPONSE.redirect('%s/view?%s' % (
-      context.absolute_url_path(),
-      make_query(portal_status_message=portal_status_message)))
+    return context.Base_redirect('view', keep_items={
+      'portal_status_message': portal_status_message
+    })
 
   def log(self, path='.'):
     log = []
