@@ -3393,7 +3393,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
   # tests
   def test_Title(self):
     """Tests the Title of the Template Tool."""
-    self.assertEqual('Template Tool', self.getTemplateTool().Title())
+    self.assertEqual('Business Templates', self.getTemplateTool().Title())
 
   def test_01_checkNewSite(self):
     """Test Check New Site"""
