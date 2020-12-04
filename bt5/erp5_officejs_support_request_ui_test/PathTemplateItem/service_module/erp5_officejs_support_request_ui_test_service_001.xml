@@ -53,6 +53,27 @@
             </value>
         </item>
         <item>
+            <key> <string>__translation_dict</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key>
+                      <tuple>
+                        <string>title</string>
+                        <string>fr</string>
+                      </tuple>
+                    </key>
+                    <value>
+                      <tuple>
+                        <string>BugReport</string>
+                        <string>Rapport d\'anomalie</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>

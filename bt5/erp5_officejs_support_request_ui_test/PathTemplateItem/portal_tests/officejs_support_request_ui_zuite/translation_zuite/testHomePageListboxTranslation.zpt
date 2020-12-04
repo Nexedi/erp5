@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Home Page Listbox Translation</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/fr/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//tr/td[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//h1</td>
+  <td>glob:Modifications récentes*</td>
+</tr>
+
+<!-- listbox title -->
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[1]</td>
+  <td>Titre</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[2]</td>
+  <td>Référence</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[3]</td>
+  <td>Type de la demande d'assistance</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[4]</td>
+  <td>Demandé par</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[5]</td>
+  <td>Date du commentaire</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[6]</td>
+  <td>Auteur du commentaire</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[7]</td>
+  <td>Date de début</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//thead/tr/th[8]</td>
+  <td>État</td>
+</tr>
+
+<!-- listbox content -->
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[1]</td>
+  <td>Yesterday - PlaneMaking - Open</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[2]</td>
+  <td>glob:SR*</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[3]</td>
+  <td>Rapport d'anomalie</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[4]</td>
+  <td></td>
+</tr>
+<!-- this is a date relative to now, so we can not really test this part -->
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[5]</td>
+  <td>glob:*20*</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[6]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[7]</td>
+  <td>glob:*20*</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@class="document_table"]//tr/td[8]</td>
+  <td>Ouvert</td>
+</tr>
+
+</tbody></table>
+  </body>
+</html>
