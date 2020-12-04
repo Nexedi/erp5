@@ -13,8 +13,12 @@
 ##############################################################################
 
 # Import: add rename feature and make _importObjectFromFile return the object
-from OFS.ObjectManager import ObjectManager, customImporters
-from App.version_txt import getZopeVersion
+from OFS.ObjectManager import ObjectManager
+from OFS.XMLExportImport import magic
+from OFS.XMLExportImport import importXML
+
+customImporters={magic: importXML,
+                        }
 
 def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id=None, suppress_events=False):
     #LOG('_importObjectFromFile, filepath',0,filepath)

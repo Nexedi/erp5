@@ -34,7 +34,9 @@
 #    where you can find a one-line hack to bypass the error)
 # - M2Crypto doesn't automatically redirect from .../test_web to .../test_web/
 
-from urllib import URLopener
+from future import standard_library
+standard_library.install_aliases()
+from urllib.request import URLopener
 
 python_open_https = URLopener.open_https
 try:
