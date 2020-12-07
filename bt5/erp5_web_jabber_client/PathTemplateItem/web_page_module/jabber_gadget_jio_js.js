@@ -18,6 +18,24 @@
     }
   }
 
+  function focusWindowOnNotificationClick(gadget) {
+    return function (event) {
+      window.focus();
+      return gadget.getUrlParameter('jio_key')
+        .push(function (jio_key) {
+          if (jio_key !== event.target.data.from) {
+            return gadget.redirect({
+              'command': 'change',
+              'options': {
+                'jio_key': event.target.data.from,
+                'page': 'jabberclient_dialog'
+              }
+            });
+          }
+        });
+    };
+  }
+
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.persistent_jio;
     return storage[method_name].apply(storage, argument_list);
@@ -291,13 +309,16 @@
           })
           .push(function () {
             if (!document.hasFocus() && Notification.permission === "granted") {
-              gadget.state_parameter_dict.notification_per_contact[from] = new Notification(
+              var notification = new Notification(
                 "New message from " + from,
                 {
                   silent: true,
-                  tag: 'jabberclient:' + from
+                  tag: 'jabberclient:' + from,
+                  data: {from: from}
                 }
               );
+              gadget.state_parameter_dict.notification_per_contact[from] = notification;
+              notification.addEventListener("click", focusWindowOnNotificationClick(gadget));
             }
           })
           .push(function () {
@@ -402,6 +423,7 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('redirect', 'redirect')
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
+    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .declareAcquiredMethod('refresh', 'refresh')
 
     .declareMethod('createJio', function () {
