@@ -20,7 +20,7 @@ import ExtensionClass
 import OFS.History
 from App.class_init import default__class_init__ as InitializeClass
 from App.special_dtml import DTMLFile
-from thread import allocate_lock, get_ident
+from _thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import (
@@ -41,7 +41,7 @@ from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 
-from compiler.consts import CO_VARKEYWORDS
+from inspect import CO_VARKEYWORDS
 from functools import wraps
 import time
 import urllib
@@ -50,7 +50,7 @@ import pprint
 import re
 import warnings
 from contextlib import contextmanager
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
