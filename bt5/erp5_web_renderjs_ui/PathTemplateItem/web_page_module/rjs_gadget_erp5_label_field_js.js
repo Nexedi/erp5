@@ -115,7 +115,8 @@
         queue,
         new_div,
         field_href,
-        current_field;
+        current_field,
+        developer_root_field;
 
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
@@ -134,63 +135,6 @@
       }
       this.props.label_element.setAttribute('for', gadget.state.scope);
 
-      if (field_json) {
-        current_field = this.props.label_element.querySelector(".edit-field");
-        if (field_json.hasOwnProperty('edit_field_href') &&
-            !current_field) {
-          field_href = domsugar("a", {
-            "class": "edit-field",
-            href: field_json.edit_field_href,
-            title: "Edit this field"
-          }, [
-            domsugar("img", {
-              src: field_json.edit_field_icon
-            })
-          ]);
-          this.props.label_element.appendChild(field_href);
-        } else if (!field_json.hasOwnProperty('edit_field_href') &&
-                   current_field) {
-          this.props.label_element.removeChild(current_field);
-        }
-
-        current_field = this.props.label_element.querySelector(".translate-title");
-        if (field_json.hasOwnProperty('translate_title_href') &&
-            !current_field) {
-          field_href = domsugar("a", {
-            "class": "translate-title",
-            href: field_json.translate_title_href,
-            title: "Translate this field title"
-          }, [
-            domsugar("img", {
-              src: field_json.translate_title_icon
-            })
-          ]);
-          this.props.label_element.appendChild(field_href);
-        } else if (!field_json.hasOwnProperty('translate_title_href') &&
-                   current_field) {
-          this.props.label_element.removeChild(current_field);
-        }
-
-        current_field = this.props.label_element.querySelector(".translate-description");
-        if (field_json.hasOwnProperty('translate_description_href') &&
-            !current_field) {
-          field_href = domsugar("a", {
-            "class": "translate-description",
-            href: field_json.translate_description_href,
-            title: "Translate this field description"
-          }, [
-            domsugar("img", {
-              src: field_json.translate_description_icon
-            })
-          ]);
-          this.props.label_element.appendChild(field_href);
-        } else if (!field_json.hasOwnProperty('translate_description_href') &&
-                   current_field) {
-          this.props.label_element.removeChild(current_field);
-        }
-
-      }
-
       if (modification_dict.hasOwnProperty('css_class') && this.state.css_class) {
         css_class = this.state.css_class.split(' ');
         for (i = 0; i < css_class.length; i += 1) {
@@ -204,6 +148,67 @@
           this.props.container_element.insertBefore(this.props.label_element, this.props.container_element.firstChild);
         } else {
           this.props.container_element.removeChild(this.props.label_element);
+        }
+      }
+
+      if (field_json) {
+        if (this.state.label === true) {
+          developer_root_field = this.props.label_element;
+        } else {
+          developer_root_field = this.props.container_element;
+        }
+        current_field = developer_root_field.querySelector(".edit-field");
+        if (field_json.hasOwnProperty('edit_field_href') &&
+            !current_field) {
+          field_href = domsugar("a", {
+            "class": "edit-field",
+            href: field_json.edit_field_href,
+            title: "Edit this field"
+          }, [
+            domsugar("img", {
+              src: field_json.edit_field_icon
+            })
+          ]);
+          developer_root_field.appendChild(field_href);
+        } else if (!field_json.hasOwnProperty('edit_field_href') &&
+                   current_field) {
+          developer_root_field.removeChild(current_field);
+        }
+
+        current_field = developer_root_field.querySelector(".translate-title");
+        if (field_json.hasOwnProperty('translate_title_href') &&
+            !current_field) {
+          field_href = domsugar("a", {
+            "class": "translate-title",
+            href: field_json.translate_title_href,
+            title: "Translate this field title"
+          }, [
+            domsugar("img", {
+              src: field_json.translate_title_icon
+            })
+          ]);
+          developer_root_field.appendChild(field_href);
+        } else if (!field_json.hasOwnProperty('translate_title_href') &&
+                   current_field) {
+          developer_root_field.removeChild(current_field);
+        }
+
+        current_field = developer_root_field.querySelector(".translate-description");
+        if (field_json.hasOwnProperty('translate_description_href') &&
+            !current_field) {
+          field_href = domsugar("a", {
+            "class": "translate-description",
+            href: field_json.translate_description_href,
+            title: "Translate this field description"
+          }, [
+            domsugar("img", {
+              src: field_json.translate_description_icon
+            })
+          ]);
+          developer_root_field.appendChild(field_href);
+        } else if (!field_json.hasOwnProperty('translate_description_href') &&
+                   current_field) {
+          developer_root_field.removeChild(current_field);
         }
       }
 
