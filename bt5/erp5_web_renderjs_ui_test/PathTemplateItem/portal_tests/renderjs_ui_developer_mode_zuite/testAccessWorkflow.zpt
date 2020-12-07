@@ -23,11 +23,11 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Developer mode</td>
+  <td>Developer Mode</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//ul[@class="document-listview"]/li/a[text()="Edit Workflow"]</td>
   <td></td>
 </tr>
