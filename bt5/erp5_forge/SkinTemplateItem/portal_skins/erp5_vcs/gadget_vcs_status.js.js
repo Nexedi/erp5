@@ -115,7 +115,7 @@
           name = {
             'green': 'added',
             'orange': 'modified',
-            'red': 'deleted'
+            'red': 'removed'
           }[current_node.getAttribute('aCol')];
           child_list.push(domsugar('label', [
             domsugar('input', {
@@ -329,7 +329,7 @@
       name;
     result.added = [];
     result.modified = [];
-    result.deleted = [];
+    result.removed = [];
     for (i = 0; i < checkbox_list.length; i += 1) {
       name = checkbox_list[i].name;
       if (name && checkbox_list[i].checked) {
@@ -369,7 +369,7 @@
         renderGadgetHeader(gadget, true);
 
         var form_data = new FormData(),
-          key_list = ['modified', 'added', 'deleted'],
+          key_list = ['modified', 'added', 'removed'],
           key,
           i,
           j;
@@ -445,7 +445,7 @@
                 type: 'checkbox',
                 class: 'vcs_to_commit',
                 value: ajax_result.deleted_list[i].path,
-                name: 'deleted',
+                name: 'removed',
                 checked: 'checked'
               }),
               ajax_result.deleted_list[i].path
@@ -468,7 +468,7 @@
       domsugar('h3', {text: 'Modified Files'}),
       domsugar('pre', {text: result.modified.join('\n')}),
       domsugar('h3', {text: 'Deleted Files'}),
-      domsugar('pre', {text: result.deleted.join('\n')})
+      domsugar('pre', {text: result.removed.join('\n')})
     ]);
   }
 
@@ -493,7 +493,7 @@
         added_key: options.added_key,
         removed_key: options.removed_key,
         modified_key: options.modified_key,
-        value: options.value || JSON.stringify({added: [], modified: [], deleted: [],
+        value: options.value || JSON.stringify({added: [], modified: [], removed: [],
                                changelog: ''}),
         editable: (options.editable === undefined) ? true : options.editable
       });
