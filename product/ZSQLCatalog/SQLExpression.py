@@ -32,8 +32,8 @@ from future.utils import raise_
 import warnings
 from .interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
-from zope.interface import implements
-from types import NoneType
+from zope.interface import implementer
+# from types import NoneType # XXX will be reintroduce in python3.10...
 
 SQL_LIST_SEPARATOR = ', '
 SQL_TABLE_FORMAT = '%s' # XXX: should be changed to '`%s`', but this breaks some ZSQLMethods.
@@ -81,10 +81,9 @@ def conflictSafeGet(dikt, key, default=None):
   if isinstance(result, MergeConflict):
     result() # Raises
   return result
-
+@implementer(ISQLExpression)
 class SQLExpression(object):
 
-  implements(ISQLExpression)
 
   def __init__(self,
                query,
@@ -110,7 +109,7 @@ class SQLExpression(object):
     # Exactly one of (where_expression, where_expression_operator) must be given, except if sql_expression_list is given and contains exactly one entry
     assert where_expression is not None or where_expression_operator is not None or (sql_expression_list is not None and len(sql_expression_list) == 1)
     # where_expression must be a basestring instance if given
-    assert isinstance(where_expression, (NoneType, basestring))
+    assert isinstance(where_expression, (type(None), basestring))
     # where_expression_operator must be 'and', 'or' or 'not' (if given)
     assert where_expression_operator in (None, 'and', 'or', 'not'), where_expression_operator
     self.where_expression = where_expression

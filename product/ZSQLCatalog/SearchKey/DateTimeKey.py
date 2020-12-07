@@ -34,14 +34,14 @@ from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
-from DateTime.DateTime import DateTime, DateTimeError, _cache
+from DateTime.DateTime import DateTime, DateTimeError, _TZINFO
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
 
 MARKER = []
 
-timezone_dict = _cache._zmap
+timezone_dict = _TZINFO._zmap
 
 date_completion_format_dict = {
   None: ['01/01/%s', '01/%s'],

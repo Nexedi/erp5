@@ -36,7 +36,7 @@ from Products.ZSQLCatalog.ColumnMap import ColumnMap
 from zLOG import LOG, WARNING
 from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ZSQLCatalog.TableDefinition import LegacyTableDefinition
 
 # SQL identifier
@@ -80,14 +80,13 @@ def defaultDict(value):
   assert isinstance(value, dict)
   return value
 
+@implementer(IEntireQuery)
 class EntireQuery(object):
   """
     This is not a Query subclass, since it does not define a
     registerColumnMap method, and instead does the ColumnMap handling
     internally.
   """
-
-  implements(IEntireQuery)
 
   column_map = None
   limit = None
