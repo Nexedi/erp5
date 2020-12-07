@@ -104,7 +104,7 @@
 
           return RSVP.hash({
             url_list: gadget.getUrlForList(url_for_kw_list),
-            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete', 'Developer mode']),
+            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete', 'Developer Mode']),
             page_title: calculatePageTitle(gadget, erp5_document)
           });
         })
