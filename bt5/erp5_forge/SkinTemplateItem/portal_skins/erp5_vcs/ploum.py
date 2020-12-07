@@ -10,4 +10,5 @@ print "This is the", script.meta_type, '"%s"' % script.getId(),
 if script.title:
     print "(%s)" % html_quote(script.title),
 print "in", container.absolute_url()
+
 return printed
