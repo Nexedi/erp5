@@ -78,6 +78,14 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -142,7 +150,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
+            <value> <string>python: [(\'modified_key\', \'field_your_modified:list\'), (\'removed_key\', \'field_your_removed:list\'), (\'added_key\', \'field_your_added:list\'), (\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
         </item>
       </dictionary>
     </pickle>
