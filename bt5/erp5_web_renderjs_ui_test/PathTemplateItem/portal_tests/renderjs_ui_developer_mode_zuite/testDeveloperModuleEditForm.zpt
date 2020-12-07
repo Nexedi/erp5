@@ -36,11 +36,6 @@
   <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/manage_main"]</td>
   <td></td>
 </tr>
-<!--tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="ui-table-header ui-header"]/h1/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
-  <td></td>
-</tr-->
 <tr>
   <td>store</td>
   <td>javascript{selenium.browserbot.currentWindow.location.href}</td>
@@ -93,12 +88,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="ui-table-header ui-header"]/h1/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
+  <td>//div[@class="ui-field-contain"]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@class="ui-table-header ui-header"]/h1/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
+  <td>//div[@class="ui-field-contain"]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
