@@ -205,12 +205,14 @@
         text: 'Diff',
         disabled: (gadget.state.display_step === DISPLAY_DIFF),
         class: 'diff-tree-btn ui-btn-icon-left ' + diff_icon
+/*
       }),
       domsugar('button', {
         type: 'button',
         text: 'Changelog',
         disabled: (gadget.state.display_step === DISPLAY_CHANGELOG),
         class: 'changelog-btn ui-btn-icon-left ' + changelog_icon
+*/
       })
     );
 
