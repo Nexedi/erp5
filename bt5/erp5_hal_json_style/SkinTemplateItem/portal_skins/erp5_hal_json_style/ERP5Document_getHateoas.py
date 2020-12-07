@@ -1552,10 +1552,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             'href': "%s?ignore_layout:int=1" % type_info.absolute_url_path(),
             'name': "jump_to_portal_type",
             'icon': None,
-            'title': "%s %s" % (
-              Base_translateString("Edit Portal Type"),
-              Base_translateString(traversed_document.getPortalType())
-            ),
+            'title': Base_translateString(
+              "Edit Portal Type ${portal_type_name}",
+              mapping={
+                "portal_type_name": traversed_document.getTranslatedPortalType()
+              }),
           })
         if portal.portal_workflow.Base_getSourceVisibility():
           for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
