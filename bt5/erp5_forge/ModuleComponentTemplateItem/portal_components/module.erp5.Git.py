@@ -390,9 +390,9 @@ class Git(WorkingCopy):
       portal_status_message = translateString(
         'Files committed successfully in revision ${revision}',
         mapping=dict(revision=head))
-    return request.RESPONSE.redirect('%s/view?%s' % (
-      context.absolute_url_path(),
-      make_query(portal_status_message=portal_status_message)))
+    return context.Base_redirect('view', keep_items={
+      'portal_status_message': portal_status_message
+    })
 
   def log(self, path='.'):
     log = []
