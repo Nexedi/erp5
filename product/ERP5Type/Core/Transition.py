@@ -156,4 +156,21 @@ class Transition(IdAsReferenceMixin("transition_"),
     """
     return objectValues(portal_type='Transition Variable')
 
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.Utils import deprecated
+  from ComputedAttribute import ComputedAttribute
+
+  Transition.actbox_url = ComputedAttribute(
+    deprecated('`actbox_url` is deprecated; use getAction()')\
+              (lambda self: self.getAction()))
+  Transition.security.declareProtected(Permissions.AccessContentsInformation,
+                                       'actbox_url')
+
+  Transition.actbox_name = ComputedAttribute(
+    deprecated('`actbox_name` is deprecated; use getActionName()')\
+              (lambda self: self.getActionName()))
+  Transition.security.declareProtected(Permissions.AccessContentsInformation,
+                                       'actbox_name')
+
 InitializeClass(Transition)
