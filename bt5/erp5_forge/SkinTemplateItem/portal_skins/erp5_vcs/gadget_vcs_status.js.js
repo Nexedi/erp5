@@ -492,11 +492,12 @@
         remote_comment: options.remote_comment,
         remote_url: options.remote_url,
         key: options.key,
-        added_key: options.added_key,
-        removed_key: options.removed_key,
-        modified_key: options.modified_key,
-        value: options.value || JSON.stringify({added: [], modified: [], removed: [],
-                               changelog: ''}),
+        value: options.value || JSON.stringify({
+          added: [],
+          modified: [],
+          removed: [],
+          changelog: ''
+        }),
         editable: (options.editable === undefined) ? true : options.editable
       });
     })
@@ -627,9 +628,6 @@
             parsed_value_dict = JSON.parse(gadget.state.value);
           if (gadget.state.editable) {
             result[gadget.state.key] = gadget.state.value;
-            // result[gadget.state.added_key] = parsed_value_dict.added;
-            // result[gadget.state.removed_key] = parsed_value_dict.removed;
-            // result[gadget.state.modified_key] = parsed_value_dict.modified;
           }
           console.log('getContent', result);
           return result;

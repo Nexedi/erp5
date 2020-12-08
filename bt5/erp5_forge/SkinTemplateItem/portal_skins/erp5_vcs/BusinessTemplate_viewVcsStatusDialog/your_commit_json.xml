@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_vcs_status_gadget</string> </value>
+            <value> <string>your_commit_json</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,20 +62,18 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>renderjs_extra</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -103,7 +101,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>gadget_vcs_status.html</string> </value>
                 </item>
                 <item>
                     <key> <string>renderjs_extra</string> </key>
@@ -137,25 +135,12 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string: gadget_vcs_status.html</string> </value>
+            <value> <string>python: [(\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'modified_key\', \'field_your_modified:list\'), (\'removed_key\', \'field_your_removed:list\'), (\'added_key\', \'field_your_added:list\'), (\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
