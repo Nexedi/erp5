@@ -318,7 +318,7 @@ else:
         if this function is called and memcachedtool is disabled, fail loudly
         with a meaningfull message.
       """
-raise_(RuntimeError, 'MemcachedTool is disabled. You should ask the'\
+      raise_(RuntimeError, 'MemcachedTool is disabled. You should ask the'\
         ' server administrator to enable it by installing python-memcached.')
 
     memcached_tool_configure = failingMethod
