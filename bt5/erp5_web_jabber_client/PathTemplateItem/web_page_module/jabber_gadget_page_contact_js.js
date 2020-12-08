@@ -104,11 +104,15 @@
           });
         })
         .push(function () {
-          if (Notification.permission !== "denied") {
-            // Do not return the promise to not block rendering
-            Notification.requestPermission();
-          }
+          return gadget.requestNotificationPermition();
         });
+    })
+
+    .declareJob("requestNotificationPermition", function () {
+      if (Notification !== undefined && Notification.permission !== "denied") {
+        // Do not return the promise to not block rendering
+        return Notification.requestPermission();
+      }
     });
 
 }(window, rJS, Notification));
