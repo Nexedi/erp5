@@ -1,4 +1,10 @@
+@orange: #FF6600;
+@white: #FFFFFF;
+@green: #22CC22;
+@red: red;
+
 div[data-gadget-url$="gadget_vcs_status.html"] {
+  background-color: @white;
 
   li {
     li {
@@ -26,6 +32,15 @@ div[data-gadget-url$="gadget_vcs_status.html"] {
 
       input {
         margin: 0 3pt;
+      }
+      &.added {
+        color: @green;
+      }
+      &.modified {
+        color: @orange;
+      }
+      &.removed {
+        color: @red;
       }
     }
   }
