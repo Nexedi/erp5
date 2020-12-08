@@ -321,10 +321,8 @@ class Git(WorkingCopy):
       return self.git('rev-parse', '--short', 'HEAD') + '+'
     return self.git('rev-parse', 'HEAD')
 
-  def commit(self, changelog, added=(), modified=(), removed=()):
+  def commit(self, changelog, push, added=(), modified=(), removed=()):
     context = self.aq_parent
-    request = context.REQUEST
-    push = request.get('push')
     reset = 1
     if push:
       # if we can't push because we are not up-to-date, we'll either 'merge' or
