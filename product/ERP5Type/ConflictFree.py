@@ -1,5 +1,7 @@
 import operator
-from itertools import imap as map, islice
+from builtins import next
+from builtins import map
+from itertools import islice
 from persistent import Persistent
 
 

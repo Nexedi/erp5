@@ -17,10 +17,9 @@
 from ZODB.utils import u64, p64
 from Shared.DC.xml import ppml
 from base64 import encodestring
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile
-from types import TupleType
 from OFS import ObjectManager, XMLExportImport
 from ..XMLExportImport import OrderedPickler
 
@@ -46,7 +45,7 @@ def reorderPickle(jar, p):
 
         "Remap a persistent id to an existing ID and create a ghost for it."
 
-        if type(ooid) is TupleType: ooid, klass = ooid
+        if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
 
         try:

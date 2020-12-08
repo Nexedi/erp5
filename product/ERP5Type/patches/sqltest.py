@@ -14,6 +14,7 @@ from future.utils import raise_
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
+from builtins import range
 
 list_type_list = list, tuple, set, frozenset, dict
 
@@ -105,4 +106,4 @@ if 1: # For easy diff with original
         return "%s %s %s" % (self.column, self.op, vs[0])
     SQLTest.render = SQLTest.__call__ = render
 
-sqltest.valid_type = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in xrange(7))).__contains__
+sqltest.valid_type = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in range(7))).__contains__

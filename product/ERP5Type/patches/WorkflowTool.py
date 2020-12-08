@@ -33,7 +33,6 @@ from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Workflow import WorkflowHistoryList as NewWorkflowHistoryList
-from sets import ImmutableSet
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import PersistentMapping
 from MySQLdb import ProgrammingError, OperationalError
@@ -357,8 +356,8 @@ def getWorklistListQuery(getQuery, grouped_worklist_dict):
 # This dict is used to tell which cast to apply to worklist parameters to get
 # values comparable with SQL result content.
 _sql_cast_dict = {
-  'i': long,
-  'l': long,
+  'i': int,
+  'l': int,
   'n': float,
   'd': DateTime,
 }
@@ -392,9 +391,9 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
           criterion_id_list.append(criterion_id)
           expected_class = class_dict[criterion_id]
           if type(criterion_value_list[0]) is not expected_class:
-            criterion_dict[criterion_id] = ImmutableSet([expected_class(x) for x in criterion_value_list])
+            criterion_dict[criterion_id] = frozenset([expected_class(x) for x in criterion_value_list])
           elif type(criterion_value_list) is not ImmutableSet:
-            criterion_dict[criterion_id] = ImmutableSet(criterion_dict[criterion_id])
+            criterion_dict[criterion_id] = frozenset(criterion_dict[criterion_id])
     # Read catalog result and distribute to matching worklists
     for result_line in catalog_result:
       result_count = int(result_line[COUNT_COLUMN_TITLE])
@@ -655,7 +654,7 @@ def WorkflowTool_refreshWorklistCache(self):
       portal_catalog = getToolByName(self, 'portal_catalog')
       search_result = portal_catalog.unrestrictedSearchResults
       sql_catalog = portal_catalog.getSQLCatalog()
-      table_column_id_set = ImmutableSet(
+      table_column_id_set = frozenset(
           [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
       security_column_id_list = list(
         sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict().values()) + \

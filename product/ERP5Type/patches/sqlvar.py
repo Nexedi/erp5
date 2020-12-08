@@ -14,9 +14,12 @@
 
 # dtml-sqlvar patch to convert None to NULL, and deal with DateTime
 
+from builtins import map
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 from Shared.DC.ZRDB.sqlvar import SQLVar
 from Shared.DC.ZRDB import sqlvar
-from string import atoi,atof
 from DateTime import DateTime
 
 def SQLVar_render(self, md):
@@ -41,7 +44,7 @@ def SQLVar_render(self, md):
             if type(v) is str:
                 if v[-1:]=='L':
                     v=v[:-1]
-                atoi(v)
+                int(v)
                 return v
             return str(int(v))
         except Exception:
@@ -51,7 +54,7 @@ def SQLVar_render(self, md):
             if type(v) is str:
                 if v[-1:]=='L':
                     v=v[:-1]
-                atof(v)
+                float(v)
                 return v
             # ERP5 patch, we use repr that have better precision than str for
             # floats
@@ -85,7 +88,7 @@ def SQLVar_render(self, md):
 # Patched by yo. datetime is added.
 
 valid_type = 'int', 'float', 'string', 'nb', 'datetime'
-valid_type += tuple(map('datetime(%s)'.__mod__, xrange(7)))
+valid_type += tuple(map('datetime(%s)'.__mod__, range(7)))
 valid_type = valid_type.__contains__
 
 SQLVar.render = SQLVar_render
