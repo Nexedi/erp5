@@ -117,7 +117,9 @@
             'orange': 'modified',
             'red': 'removed'
           }[current_node.getAttribute('aCol')];
-          child_list.push(domsugar('label', [
+          child_list.push(domsugar('label', {
+            class: name
+          }, [
             domsugar('input', {
               type: 'checkbox',
               class: 'vcs_to_commit',
@@ -625,9 +627,9 @@
             parsed_value_dict = JSON.parse(gadget.state.value);
           if (gadget.state.editable) {
             result[gadget.state.key] = gadget.state.value;
-            result[gadget.state.added_key] = parsed_value_dict.added;
-            result[gadget.state.removed_key] = parsed_value_dict.removed;
-            result[gadget.state.modified_key] = parsed_value_dict.modified;
+            // result[gadget.state.added_key] = parsed_value_dict.added;
+            // result[gadget.state.removed_key] = parsed_value_dict.removed;
+            // result[gadget.state.modified_key] = parsed_value_dict.modified;
           }
           console.log('getContent', result);
           return result;
