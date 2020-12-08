@@ -33,7 +33,8 @@ from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
+import sys
+from . import Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 

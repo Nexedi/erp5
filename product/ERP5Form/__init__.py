@@ -34,7 +34,8 @@ from __future__ import absolute_import
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 from AccessControl import ModuleSecurityInfo
-import sys, Permissions
+import sys
+from . import Permissions
 from Products.PythonScripts.Utility import allow_class
 from AccessControl.SecurityInfo import allow_module
 this_module = sys.modules[ __name__ ]
