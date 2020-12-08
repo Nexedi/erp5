@@ -1764,7 +1764,7 @@
     </tr>
   </tal:block>
 
-  <tal:block metal:define-macro="disable_developer_mode">
+  <tal:block metal:define-macro="enable_developer_mode">
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
