@@ -88,7 +88,7 @@
     if (root_element.constructor === HTMLLabelElement) {
       root_element.appendChild(field_href);
     } else {
-      root_element.insertBefore(field_href, root_element.firstChild);
+      root_element.insertBefore(field_href, root_element.querySelector("div"));
     }
   }
 
@@ -224,7 +224,9 @@
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
           }
-          if (field_json) {
+          // make sure we have field_json and avoid
+          // display developer action to listbox cells
+          if (field_json && !field_json.hasOwnProperty("column")) {
             queue
               .push(function (field_gadget) {
                 var root_element,
@@ -235,7 +237,6 @@
                 } else {
                   root_element = field_gadget.element;
                 }
-
                 current_field = root_element.querySelector(".edit-field");
                 if (field_json.hasOwnProperty('edit_field_href') &&
                     !current_field) {
