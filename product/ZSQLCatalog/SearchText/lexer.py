@@ -148,5 +148,9 @@ def update_docstrings(klass):
         destination = getattr(klass, property)
         assert callable(destination)
         if destination.__doc__ is None:
-          destination.__doc__ = source.__doc__  
+          try:
+              destination.__doc__ = source.__doc__  
+          except AttributeError:
+              # BBB python2 
+              destination.__func__.__doc__ = source.__doc__
 

@@ -25,7 +25,11 @@ from Acquisition import Implicit, aq_base
 from Persistence import Persistent
 from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
-from AccessControl.Permission import getPermissionIdentifier #name_trans
+try:
+  from AccessControl.Permission import getPermissionIdentifier
+except:
+  # BBB for version use before zope4
+  from AccessControl.Permission import name_trans as getPermissionIdentifier  
 from AccessControl.Permissions import import_export_objects, \
     manage_zcatalog_entries
 from .SQLCatalog import CatalogError

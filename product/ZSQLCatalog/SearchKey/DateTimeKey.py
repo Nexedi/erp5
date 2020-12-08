@@ -34,7 +34,12 @@ from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
-from DateTime.DateTime import DateTime, DateTimeError, _TZINFO
+from DateTime.DateTime import DateTime, DateTimeError
+try:
+  from DateTime.DateTime import _TZINFO
+except ImportError:
+  # BBB version < zope4
+  from DateTime.DateTime import _cache as _TZINFO
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
