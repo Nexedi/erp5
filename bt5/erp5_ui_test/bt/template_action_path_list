@@ -38,6 +38,7 @@ Foo | select_bar
 Foo | view
 Foo | view_action_title
 Foo | view_crash_on_save
+Foo | view_developer_mode_action
 Foo | view_dialog_with_only_update
 Foo | view_dialog_with_validation_error
 Foo | view_duration_field
