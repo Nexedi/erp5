@@ -11,4 +11,5 @@ if script.title:
     print "(%s)" % html_quote(script.title),
 print "in", container.absolute_url()
 
+
 return printed
