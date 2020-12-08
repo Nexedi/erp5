@@ -44,12 +44,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="ui-field-contain"]/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
+  <td>//div[@class="ui-field-contain"]/div/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@class="ui-field-contain"]/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
+  <td>//div[@class="ui-field-contain"]/div/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
   <td></td>
 </tr>
 <tr>
