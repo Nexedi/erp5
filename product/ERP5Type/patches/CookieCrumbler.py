@@ -25,11 +25,13 @@ Patch CookieCrumbler to prevent came_from to appear in the URL
 when ERP5 runs in "require_referer" mode.
 """
 
+from future import standard_library
+standard_library.install_aliases()
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import InitializeClass
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.CookieCrumbler import CookieCrumblerDisabled
-from urllib import quote, unquote
+from urllib.parse import quote, unquote
 from ZPublisher.HTTPRequest import HTTPRequest
 
 ATTEMPT_NONE = 0       # No attempt at authentication
