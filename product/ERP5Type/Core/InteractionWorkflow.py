@@ -230,10 +230,7 @@ class InteractionWorkflow(Workflow):
       former_status = self._getStatusOf(ob)
       # Pass lots of info to the script in a single parameter.
       sci = StateChangeInfo(ob, self, former_status, tdef, None, None, kwargs=kw)
-      script_value_list = tdef.getBeforeScriptValueList()
-      if script_value_list:
-        script_context = self._asScriptContext()
-      for script in script_value_list:
+      for script in tdef.getBeforeScriptValueList():
         script(sci)  # May throw an exception.
     return filtered_transition_list
 
@@ -300,10 +297,7 @@ class InteractionWorkflow(Workflow):
             ob, self, former_status, tdef, None, None, kwargs=kw)
 
       # Execute the "after" script.
-      after_script_value_list = tdef.getAfterScriptValueList()
-      if after_script_value_list:
-        script_context = self._asScriptContext()
-      for script in after_script_value_list:
+      for script in tdef.getAfterScriptValueList():
         script(sci) # May throw an exception.
 
       # Queue the "Before Commit" scripts
@@ -335,9 +329,7 @@ class InteractionWorkflow(Workflow):
         setSecurityManager(current_security_manager)
 
   security.declarePrivate('activeScript')
-  def activeScript(self, script_name, ob_url, former_status, tdef_id,
-                   script_context=None):
-    script_context = self._asScriptContext()
+  def activeScript(self, script_name, ob_url, former_status, tdef_id):
     script = self.getScriptValueById(script_name)
     ob = self.unrestrictedTraverse(ob_url)
     tdef = self._getOb(tdef_id)
@@ -519,3 +511,15 @@ class InteractionWorkflow(Workflow):
       return root
     return etree.tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
+
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.Utils import deprecated
+  from ComputedAttribute import ComputedAttribute
+
+  InteractionWorkflow.interactions = ComputedAttribute(
+    deprecated('`interactions` is deprecated; use getTransitionValueList()')\
+              (lambda self: {o.getReference(): o for o in self.getTransitionValueList()}),
+    1) # must be Acquisition-wrapped
+  InteractionWorkflow.security.declareProtected(Permissions.AccessContentsInformation,
+                                                'interactions')

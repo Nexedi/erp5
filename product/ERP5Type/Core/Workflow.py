@@ -59,6 +59,17 @@ def createExpressionContext(sci):
         }
     return getEngine().getContext(data)
 
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  ## Patch for ERP5 Workflow: This must go before any Products.DCWorkflow
+  ## imports as createExprContext() is from-imported in several of its modules
+  import Products.DCWorkflow.Expression
+  Products.DCWorkflow.Expression.createExprContext = createExpressionContext
+  import inspect
+  for _, __m in inspect.getmembers(Products.DCWorkflow, inspect.ismodule):
+    if 'createExprContext' in __m.__dict__:
+      assert __m.__dict__['createExprContext'] is createExpressionContext
+
 import sys
 
 from collections import  defaultdict
@@ -839,7 +850,6 @@ class Workflow(XMLObject):
     econtext = None
     moved_exc = None
     validation_exc = None
-    script_context = None
     object_context = None
 
     # Figure out the old and new states.
@@ -873,14 +883,12 @@ class Workflow(XMLObject):
         if sci is None:
           sci = StateChangeInfo(document, self, former_status, tdef, old_state,
                                 new_state, form_kw)
-        if script_context is None:
-          script_context = self._asScriptContext()
         for script in script_value_list:
           # Pass lots of info to the script in a single parameter.
           if script.getPortalType() != 'Workflow Script':
             raise NotImplementedError ('Unsupported Script %s for state %s' %
                                        (script.getId(), old_state_reference))
-          script = getattr(script_context, script.getId())
+          script = getattr(self, script.getId())
           try:
             script(sci)  # May throw an exception.
           except ValidationFailed, validation_exc:
@@ -988,9 +996,7 @@ class Workflow(XMLObject):
           else:
             # Pass lots of info to the script in a single parameter.
             if script.getPortalType() == 'Workflow Script':
-              if script_context is None:
-                script_context = self._asScriptContext()
-              script = getattr(script_context, script.getId())
+              script = getattr(self, script.getId())
               script(sci)  # May throw an exception.
 
     # Return the new state object.
@@ -1428,31 +1434,6 @@ class Workflow(XMLObject):
           acquired_permission_set.remove(permission)
           state.setAcquirePermissionList(list(acquired_permission_set))
 
-  def _asScriptContext(self):
-    """
-      change the context given to the script by adding foo for script_foo to the
-      context dict in order to be able to call the script using its reference
-      (= not prefixed by script_) from another workflow script
-
-      historically, __getattr__ method of Workflow class was overriden for
-      the same purpose, but it was heavyweight: doing a lot of useless
-      operations (each time, it was checking for script_foo, even if foo was a
-      transition, state, ...)
-    """
-    script_context = self.asContext()
-    # asContext creates a temporary object and temporary object's "activate"
-    # method code is: "return self". This means that the script is not put in
-    # the activity queue as expected but it is instead directly executed. To fix
-    # this, we override the temporary object's "activate" method with the one of
-    # the original object.
-    script_context.activate = self.activate
-    script_prefix_len = len(SCRIPT_PREFIX)
-    for script_id in self.objectIds(meta_type="ERP5 Python Script"):
-      if script_id.startswith(SCRIPT_PREFIX):
-        script = getattr(script_context, script_id)
-        setattr(script_context, script_id[script_prefix_len:], script)
-    return script_context
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSourceValue')
   def getSourceValue(self):
@@ -1467,3 +1448,65 @@ class Workflow(XMLObject):
       source_id = source_path_list[0].split('/')[-1]
       return self._getOb(source_id)
     return None
+
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  import warnings
+  def __getattr__(self, name):
+    """
+    Allow a Workflow Script to call another Workflow Script directly without
+    SCRIPT_PREFIX. This can be dropped as soon as DCWorkflow Compatibility is
+    not required anymore.
+    """
+    if not name or name[0] == '_': # Optimization (Folder.__getattr__)
+      raise AttributeError(name)
+    try:
+      return super(Workflow, self).__getattr__(name)
+    except AttributeError:
+      from Products.ERP5Type.Core.WorkflowScript import SCRIPT_PREFIX
+      if name.startswith(SCRIPT_PREFIX):
+        raise
+      prefixed_name = SCRIPT_PREFIX + name
+      if not hasattr(aq_base(self), prefixed_name):
+        raise
+      warnings.warn(
+        "%r: Script calling %s instead of %s" % (self, name, prefixed_name),
+        DeprecationWarning)
+      return self._getOb(prefixed_name)
+  Workflow.__getattr__ = __getattr__
+
+  Workflow._isAWorkflow = True # DCWorkflow Tool compatibility
+
+  from Products.ERP5Type.Utils import deprecated
+  from ComputedAttribute import ComputedAttribute
+
+  Workflow.state_var = ComputedAttribute(
+    deprecated('`state_var` attribute is deprecated; use getStateVariable()')\
+              (lambda self: self.getStateVariable()))
+  Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'state_var')
+
+  Workflow.states = ComputedAttribute(
+    deprecated('`states` is deprecated; use getStateValueList()')\
+              (lambda self: {o.getReference(): o for o in self.getStateValueList()}),
+    1) # must be Acquisition-wrapped
+  Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'states')
+
+  Workflow.transitions = ComputedAttribute(
+    deprecated('`transitions` is deprecated; use getTransitionValueList()')\
+              (lambda self: {o.getReference(): o for o in self.getTransitionValueList()}),
+    1) # must be Acquisition-wrapped
+  Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')
+
+  @deprecated('`scripts` is deprecated; use getScriptValueList()')
+  def _scripts(self):
+    """
+    Backward compatibility to avoid modifying Workflow Scripts code
+    """
+    script_dict = {}
+    for script in self.getScriptValueList():
+      # wf.scripts['foobar']
+      script_dict[script.getReference()] = script
+      # another_workflow_with_the_same_script_id.scripts[script.getId()]
+      script_dict[script.getId()] = script
+    return script_dict
+  Workflow.scripts = ComputedAttribute(_scripts, 1)
+  Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'scripts')

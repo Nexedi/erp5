@@ -130,10 +130,6 @@ class State(IdAsReferenceMixin("state_"), XMLObject, CustomStorageMatrixMixin):
             self.getDestinationIdList()]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitions')
-  getTransitions = getDestinationIdList
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'setStatePermissionRolesDict')
   def setStatePermissionRolesDict(self, permission_roles):
     """
@@ -187,3 +183,19 @@ class State(IdAsReferenceMixin("state_"), XMLObject, CustomStorageMatrixMixin):
     cell_permission = cell._getPermission()
     cell_role = cell._getRole()
     cell.selected = cell_role in self.getStatePermissionRolesDict()[cell_permission]
+
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.Utils import deprecated
+
+  State.getTransitions = deprecated(
+    "getTransitions() is deprecated; use getDestinationIdList()")\
+    (State.getDestinationIdList)
+  State.security.declareProtected(Permissions.AccessContentsInformation, 'getTransitions')
+
+  from ComputedAttribute import ComputedAttribute
+  State.transitions = ComputedAttribute(
+    deprecated('`transitions` is deprecated; use getDestinationValueList()')\
+              (lambda self: {o.getReference(): o for o in self.getDestinationValueList()}),
+    1) # must be Acquisition-wrapped
+  State.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')
