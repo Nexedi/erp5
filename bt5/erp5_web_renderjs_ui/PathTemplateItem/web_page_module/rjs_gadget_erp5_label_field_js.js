@@ -1,4 +1,4 @@
-/*global window, document, rJS, domsugar */
+/*global window, document, rJS, domsugar, HTMLLabelElement*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS, domsugar) {
+(function (window, document, rJS, domsugar, HTMLLabelElement) {
   "use strict";
 
   var SCOPE = 'field';
@@ -74,6 +74,24 @@
     return field_url;
   }
 
+  function addDeveloperAction(class_name,
+      title_href, title, icon_src, root_element) {
+    var field_href = domsugar("a", {
+      "class": class_name,
+      href: title_href,
+      title: title
+    }, [
+      domsugar("img", {
+        src: icon_src
+      })
+    ]);
+    if (root_element.constructor === HTMLLabelElement) {
+      root_element.appendChild(field_href);
+    } else {
+      root_element.insertBefore(field_href, root_element.firstChild);
+    }
+  }
+
   rJS(window)
     .setState({
       label_text: '',
@@ -113,10 +131,7 @@
         css_class,
         i,
         queue,
-        new_div,
-        field_href,
-        current_field,
-        developer_root_field;
+        new_div;
 
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
@@ -148,67 +163,6 @@
           this.props.container_element.insertBefore(this.props.label_element, this.props.container_element.firstChild);
         } else {
           this.props.container_element.removeChild(this.props.label_element);
-        }
-      }
-
-      if (field_json) {
-        if (this.state.label === true) {
-          developer_root_field = this.props.label_element;
-        } else {
-          developer_root_field = this.props.container_element;
-        }
-        current_field = developer_root_field.querySelector(".edit-field");
-        if (field_json.hasOwnProperty('edit_field_href') &&
-            !current_field) {
-          field_href = domsugar("a", {
-            "class": "edit-field",
-            href: field_json.edit_field_href,
-            title: "Edit this field"
-          }, [
-            domsugar("img", {
-              src: field_json.edit_field_icon
-            })
-          ]);
-          developer_root_field.appendChild(field_href);
-        } else if (!field_json.hasOwnProperty('edit_field_href') &&
-                   current_field) {
-          developer_root_field.removeChild(current_field);
-        }
-
-        current_field = developer_root_field.querySelector(".translate-title");
-        if (field_json.hasOwnProperty('translate_title_href') &&
-            !current_field) {
-          field_href = domsugar("a", {
-            "class": "translate-title",
-            href: field_json.translate_title_href,
-            title: "Translate this field title"
-          }, [
-            domsugar("img", {
-              src: field_json.translate_title_icon
-            })
-          ]);
-          developer_root_field.appendChild(field_href);
-        } else if (!field_json.hasOwnProperty('translate_title_href') &&
-                   current_field) {
-          developer_root_field.removeChild(current_field);
-        }
-
-        current_field = developer_root_field.querySelector(".translate-description");
-        if (field_json.hasOwnProperty('translate_description_href') &&
-            !current_field) {
-          field_href = domsugar("a", {
-            "class": "translate-description",
-            href: field_json.translate_description_href,
-            title: "Translate this field description"
-          }, [
-            domsugar("img", {
-              src: field_json.translate_description_icon
-            })
-          ]);
-          developer_root_field.appendChild(field_href);
-        } else if (!field_json.hasOwnProperty('translate_description_href') &&
-                   current_field) {
-          developer_root_field.removeChild(current_field);
         }
       }
 
@@ -269,6 +223,63 @@
             });
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
+          }
+          if (field_json) {
+            queue
+              .push(function (field_gadget) {
+                var root_element,
+                  current_field;
+
+                if (gadget.state.label === true) {
+                  root_element = gadget.props.label_element;
+                } else {
+                  root_element = field_gadget.element;
+                }
+
+                current_field = root_element.querySelector(".edit-field");
+                if (field_json.hasOwnProperty('edit_field_href') &&
+                    !current_field) {
+                  addDeveloperAction(
+                    "edit-field",
+                    field_json.edit_field_href,
+                    "Edit this field",
+                    field_json.edit_field_icon,
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('edit_field_href') &&
+                           current_field) {
+                  root_element.removeChild(current_field);
+                }
+                current_field = root_element.querySelector(".translate-title");
+                if (field_json.hasOwnProperty('translate_title_href') &&
+                    !current_field) {
+                  addDeveloperAction(
+                    "translate-title",
+                    field_json.translate_title_href,
+                    "Translate this field title",
+                    field_json.translate_title_icon,
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('translate_title_href') &&
+                           current_field) {
+                  root_element.removeChild(current_field);
+                }
+                current_field = root_element.querySelector(".translate-description");
+                if (field_json.hasOwnProperty('translate_description_href') &&
+                    !current_field) {
+                  addDeveloperAction(
+                    "translate-description",
+                    field_json.translate_description_href,
+                    "Translate this field description",
+                    field_json.translate_description_icon,
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('translate_description_href') &&
+                           current_field) {
+                  root_element.removeChild(current_field);
+                }
+                return field_gadget;
+              });
           }
           return queue
             .push(function (field_gadget) {
@@ -333,4 +344,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS, domsugar));
+}(window, document, rJS, domsugar, HTMLLabelElement));
