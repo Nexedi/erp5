@@ -128,10 +128,6 @@ class State(IdAsReferenceMixin("state_"),
             self.getDestinationIdList()]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitions')
-  getTransitions = getDestinationIdList
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'setStatePermissionRolesDict')
   def setStatePermissionRolesDict(self, permission_roles):
     """
@@ -185,5 +181,19 @@ class State(IdAsReferenceMixin("state_"),
     cell_permission = cell._getPermission()
     cell_role = cell._getRole()
     cell.selected = cell_role in self.getStatePermissionRolesDict()[cell_permission]
+
+from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  from Products.ERP5Type.Utils import deprecated
+
+  State.getTransitions = deprecated(
+    'getTransitions() is deprecated; use getDestinationIdList()')\
+    (State.getDestinationIdList)
+  State.security.declareProtected(Permissions.AccessContentsInformation, 'getTransitions')
+
+  State.transitions = deprecated(
+    '`transitions` is deprecated; use getDestinationValueList()')\
+    (State.getDestinationIdList)
+  State.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')
 
 InitializeClass(State)
