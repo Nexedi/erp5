@@ -78,7 +78,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_commit_json</string>
+                      </list>
                     </value>
                 </item>
                 <item>

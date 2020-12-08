@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>exception, caller, **caller_kw</string> </value>
+            <value> <string>exception, caller, commit_dict, **caller_kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

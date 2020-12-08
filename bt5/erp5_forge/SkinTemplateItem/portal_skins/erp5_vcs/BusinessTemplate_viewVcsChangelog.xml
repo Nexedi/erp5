@@ -64,6 +64,7 @@
             <value>
               <list>
                 <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -71,6 +72,14 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>your_commit_json</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
