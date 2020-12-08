@@ -58,7 +58,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_vcs_status_gadget</string>
+                        <string>your_commit_json</string>
                       </list>
                     </value>
                 </item>
