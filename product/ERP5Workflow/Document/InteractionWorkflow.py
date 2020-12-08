@@ -240,11 +240,9 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       ob, self, former_status, tdef, None, None, kwargs=kw)
 
       script_value_list = tdef.getBeforeScriptValueList()
-      if script_value_list:
-        script_context = self._asScriptContext()
       for script in script_value_list:
         if script:
-          script = getattr(script_context, script.id)
+          script = getattr(self, script.id)
           script(sci)  # May throw an exception.
     return filtered_transition_list
 
@@ -310,11 +308,9 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
 
       # Execute the "after" script.
       after_script_value_list = tdef.getAfterScriptValueList()
-      if after_script_value_list:
-        script_context = self._asScriptContext()
       for script in after_script_value_list:
         if script:
-          script = getattr(script_context, script.id)
+          script = getattr(self, script.id)
           script(sci)  # May throw an exception.
 
       # Queue the "Before Commit" scripts
@@ -343,15 +339,13 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
         # between here and when the interaction was executed... So we
         # need to switch to the security manager as it was back then
         setSecurityManager(security_manager)
-        self._getOb(script_name)(sci)
+        getattr(self, script_name)(sci)
       finally:
         setSecurityManager(current_security_manager)
 
   security.declarePrivate('activeScript')
-  def activeScript(self, script_name, ob_url, former_status, tdef_id,
-                   script_context=None):
-    script_context = self._asScriptContext()
-    script = getattr(script_context, script_name)
+  def activeScript(self, script_name, ob_url, former_status, tdef_id):
+    script = getattr(self, script_name)
     ob = self.unrestrictedTraverse(ob_url)
     tdef = self._getOb(tdef_id)
     sci = StateChangeInfo(

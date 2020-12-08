@@ -7,5 +7,4 @@ if old_state.getId() == 'draft':
   if internal_invoice.InternalInvoiceTransaction_getAuthenticatedUserSection() == internal_invoice.getDestinationSection():
     raise ValidationFailed(translateString("Your entity should not be destination."))
 
-script = state_change.getPortal().portal_workflow.accounting_workflow.getScriptValueById(script.getId())
-return script(state_change)
+return state_change.getPortal().portal_workflow.accounting_workflow.scripts[script.getId()](state_change)

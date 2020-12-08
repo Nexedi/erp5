@@ -39,6 +39,8 @@ this_module = sys.modules[__name__]
 document_classes = updateGlobals(this_module, globals(),
                                  permissions_module=Permissions)
 
+WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY = True
+
 # Define object classes and tools
 object_classes = ()
 portal_tools = (WorkflowTool,)
