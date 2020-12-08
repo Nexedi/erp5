@@ -15,7 +15,6 @@
    'version': '001', 
    'creation_from': DateTime('2010/02/23 13:11:11.698 GMT+2')}
 """
-from future.utils import raise_
 from DateTime import DateTime
 
 def render_filetype_list(filetype_list):
@@ -102,7 +101,7 @@ def resolveCriterion(criterion_alias, criterion_value_list):
       break
     seen_alias_dict[criterion_alias] = None
     if next_alias in seen_alias_dict:
-      raise_(Exception, 'Endless alias loop detected: lookup of %r reached alias %r twice' % (initial_criterion_alias, next_alias))
+      raise Exception, 'Endless alias loop detected: lookup of %r reached alias %r twice' % (initial_criterion_alias, next_alias)
     criterion_alias = next_alias
   return criterion_alias, criterion_value_list
 

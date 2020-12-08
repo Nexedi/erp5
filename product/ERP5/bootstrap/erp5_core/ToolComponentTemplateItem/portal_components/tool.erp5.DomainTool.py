@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -285,7 +284,7 @@ class DomainTool(BaseTool):
         # Feel free to improve.
         if getMappedValuePropertyList is not None:
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            if mapped_value_property not in mapped_value_property_dict:
+            if not mapped_value_property_dict.has_key(mapped_value_property):
               value = predicate.getProperty(mapped_value_property)
               if value is not None:
                 mapped_value_property_dict[mapped_value_property] = value
@@ -360,7 +359,7 @@ class DomainTool(BaseTool):
           break
       else:
         if domain is _MARKER: return default
-raise_(KeyError, subdomain)
+        raise KeyError, subdomain
     return domain
 
 InitializeClass(DomainTool)

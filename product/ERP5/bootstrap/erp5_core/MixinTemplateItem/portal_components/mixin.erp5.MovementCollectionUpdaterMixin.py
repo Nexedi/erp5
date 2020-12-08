@@ -112,7 +112,7 @@ class MovementCollectionUpdaterMixin:
     # First find out all existing (decision) movements which belong to no group
     no_group_list = []
     for tester_key in decision_movement_dict.keys():
-      if tester_key in prevision_movement_dict:
+      if prevision_movement_dict.has_key(tester_key):
         for decision_movement in decision_movement_dict[tester_key]:
           no_match = True
           for prevision_movement in prevision_movement_dict[tester_key]:

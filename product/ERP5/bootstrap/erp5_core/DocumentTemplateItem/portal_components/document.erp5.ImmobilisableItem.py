@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
@@ -167,8 +166,8 @@ class ImmobilisableItem(Item, Amount):
         # Test immobilisation movement
         if filter_valid and movement.getImmobilisationState() in ('invalid',
                                                                   'calculating',):
-          raise_(ImmobilisationValidityError, \
-                '%s : some preceding movements are still in calculating state' % self.getRelativeUrl())
+          raise ImmobilisationValidityError, \
+                '%s : some preceding movements are still in calculating state' % self.getRelativeUrl()
         immo_list.append(movement)
     return immo_list
 
@@ -328,8 +327,8 @@ class ImmobilisableItem(Item, Amount):
                                                  'price':{},
                                                  'currency': {}})
     kw['immo_cache_dict'] = immo_cache_dict
-    if (self.getRelativeUrl(), from_date, to_date) +
-            tuple([(key,kw[key]) for key in kw_key_list]) in immo_cache_dict['period'] :
+    if immo_cache_dict['period'].has_key((self.getRelativeUrl(), from_date, to_date) +
+            tuple([(key,kw[key]) for key in kw_key_list])) :
       return immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) +
           tuple( [(key,kw[key]) for key in kw_key_list]) ]
     def setPreviousPeriodParameters(period_list,
@@ -366,8 +365,8 @@ class ImmobilisableItem(Item, Amount):
       if section_movement.getStopDate() in date_list and \
             section_movement not in section_movement_list and \
             section_movement not in immobilisation_list:
-        raise_(ImmobilisationCalculationError, \
-            "Some movements related to item %s have the same date" % self.getRelativeUrl())
+        raise ImmobilisationCalculationError, \
+            "Some movements related to item %s have the same date" % self.getRelativeUrl()
       elif section_movement.getStopDate() not in date_list and \
             section_movement not in section_movement_list:
         #The section movement is different from immobilisation movements
@@ -603,7 +602,7 @@ class ImmobilisableItem(Item, Amount):
     # Round dates since immobilisation calculation is made on days
     for immo_period in immo_period_list:
       for property_ in ('start_date', 'stop_date', 'initial_date',):
-        if property_ in immo_period:
+        if immo_period.has_key(property_):
           immo_period[property_] = roundDate(immo_period[property_])
     immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) +
             tuple([(key,kw[key]) for key in kw_key_list]) ] = immo_period_list
@@ -648,7 +647,7 @@ class ImmobilisableItem(Item, Amount):
     elif len(immo_period_list) > 0 and at_date is None:
       return 1
     immo_period = immo_period_list[-1]
-    if 'stop_date' in immo_period:
+    if immo_period.has_key('stop_date'):
       # It means the latest period is terminated before the current date
       return 0
     return 1
@@ -671,9 +670,9 @@ class ImmobilisableItem(Item, Amount):
     if at_date is None:
       at_date = DateTime()
     new_kw = dict(kw)
-    if 'to_date' in new_kw:
+    if new_kw.has_key('to_date'):
       del new_kw['to_date']
-    if 'at_date' in new_kw:
+    if new_kw.has_key('at_date'):
       del new_kw['at_date']
     if immo_period_list is None:
       immo_period_list = self.getImmobilisationPeriodList(to_date=at_date, **new_kw)
@@ -710,9 +709,9 @@ class ImmobilisableItem(Item, Amount):
       at_date = DateTime()
 
     new_kw = dict(kw)
-    if 'to_date' in new_kw:
+    if new_kw.has_key('to_date'):
       del new_kw['to_date']
-    if 'at_date' in new_kw:
+    if new_kw.has_key('at_date'):
       del new_kw['at_date']
     if immo_period_list is None:
       immo_period_list = self.getImmobilisationPeriodList(to_date=at_date, **new_kw)
@@ -722,7 +721,7 @@ class ImmobilisableItem(Item, Amount):
 
     immo_period = immo_period_list[-1]
     # Second case : the item is not currently immobilised
-    if 'stop_date' in immo_period:
+    if immo_period.has_key('stop_date'):
       return immo_period['stop_durability']
 
     # Third case : the item is currently immobilised
@@ -794,7 +793,7 @@ class ImmobilisableItem(Item, Amount):
 
     immo_cache_dict_price_key = ((self.getRelativeUrl(), at_date) +
                                  tuple([(key,kw[key]) for key in kw_key_list]))
-    if immo_cache_dict_price_key in immo_cache_dict['price'] :
+    if immo_cache_dict['price'].has_key(immo_cache_dict_price_key) :
       returned_price = immo_cache_dict['price'][immo_cache_dict_price_key]
       if with_currency:
         currency = immo_cache_dict['currency'][immo_cache_dict_price_key]
@@ -831,7 +830,7 @@ class ImmobilisableItem(Item, Amount):
       start_durability = self.getRemainingDurability(at_date=start_date,
                                                        immo_cache_dict=immo_cache_dict)
     # Get the current period stop date, duration and durability
-    if 'stop_date' in immo_period:
+    if immo_period.has_key('stop_date'):
       stop_date = immo_period['stop_date']
       period_stop_date = stop_date
     else:
@@ -951,18 +950,18 @@ class ImmobilisableItem(Item, Amount):
         LOG('ERP5 Warning :', 0,
             'Unable to find the ratio calculation script %s for item %s at date %s' % (
                  '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date)))
-raise_(ImmobilisationCalculationError, \
+        raise ImmobilisationCalculationError, \
               'Unable to find the ratio calculation script %s for item %s at date %s' % (
-                 '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date)))
+                 '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date))
 
       current_ratio = ratio_script(**ratio_params)
       if current_ratio is None:
         LOG("ERP5 Warning :",0,
             "Unable to calculate the ratio during the amortisation calculation on item %s at date %s : script %s returned None" % (
                   self.getRelativeUrl(), repr(at_date), '%s/ratioCalculation' % amortisation_method))
-raise_(ImmobilisationCalculationError, \
+        raise ImmobilisationCalculationError, \
               "Unable to calculate the ratio during the amortisation calculation on item %s at date %s" % (
-                  repr(self), repr(at_date)))
+                  repr(self), repr(at_date))
 
     # Calculate the value at the beginning of the annuity
     annuity_start_price = depreciable_price

@@ -1,4 +1,3 @@
-from future.utils import raise_
 from Products.ERP5Type.Document import newTempBase
 portal = context.getPortalObject()
 field_list = []
@@ -96,7 +95,7 @@ for skin_folder_id in skin_id_list:
                            alternate_field_library_id))):
       obj = getForm(skin_folder, object_id)
       if obj is None:
-        raise_(KeyError, '%s/%s' % (skin_folder_id, object_id))
+        raise KeyError, '%s/%s' % (skin_folder_id, object_id)
       elif obj.meta_type == 'ERP5 Form':
         modified_object_dict['%s/%s' % (skin_folder_id, object_id)] = \
                                                                   '4_delete_form'
@@ -115,14 +114,14 @@ for skin_folder_id in skin_id_list:
       form_id = form.getId()
       form_path = '%s/%s' % (skin_folder_id, form_id)
 
-      if form_path in modified_object_dict:
+      if modified_object_dict.has_key(form_path):
         # The form is a Field Library
         if modified_object_dict[form_path] == '4_delete_form':
           # As the form will be deleted, no need to manage its fields
           pass
         else:
-          raise_(KeyError, 'Unexpected form handling %s for %s' % \
-              (modified_object_dict[form_path], form_path))
+          raise KeyError, 'Unexpected form handling %s for %s' % \
+              (modified_object_dict[form_path], form_path)
       elif form_id not in (field_library_id, alternate_field_library_id,
                            'Base_viewFieldLibrary',):
         # Check that proxy field are proxified to field library

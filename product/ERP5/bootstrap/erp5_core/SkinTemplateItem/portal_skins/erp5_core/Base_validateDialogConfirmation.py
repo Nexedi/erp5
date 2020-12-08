@@ -1,1 +1,1 @@
-return 'Base_showUpdateDialog' in request or value
+return request.has_key('Base_showUpdateDialog') or value

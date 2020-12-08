@@ -1,4 +1,3 @@
-from functools import reduce
 #
 # This script is used by portal_catalog/erp5_mysql_innodb/z_catalog_predicate_category_list
 #

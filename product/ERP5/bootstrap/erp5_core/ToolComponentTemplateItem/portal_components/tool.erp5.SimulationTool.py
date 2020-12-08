@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
@@ -196,7 +195,7 @@ class SimulationTool(BaseTool):
       if not as_text:
         prop_value = category_tool.getCategoryValue(prop)
         if prop_value is None:
-          raise_(ValueError, 'Category %s does not exists' % prop)
+          raise ValueError, 'Category %s does not exists' % prop
         property_uid_list.append(prop_value.getUid())
       else:
         property_uid_list.append(prop)
@@ -205,7 +204,7 @@ class SimulationTool(BaseTool):
         if not as_text:
           prop_value = category_tool.getCategoryValue(property_item)
           if prop_value is None:
-            raise_(ValueError, 'Category %s does not exists' % property_item)
+            raise ValueError, 'Category %s does not exists' % property_item
           property_uid_list.append(prop_value.getUid())
         else:
           property_uid_list.append(property_item)
@@ -217,7 +216,7 @@ class SimulationTool(BaseTool):
         if not as_text:
           prop_value = category_tool.getCategoryValue(property_item)
           if prop_value is None:
-            raise_(ValueError, 'Category %s does not exists' % property_item)
+            raise ValueError, 'Category %s does not exists' % property_item
           tmp_uid_list.append(prop_value.getUid())
         else:
           tmp_uid_list.append(property_item)
@@ -317,9 +316,9 @@ class SimulationTool(BaseTool):
       # XXX In this case, we must not set sql_kw[input_simumlation_state] before
       input_simulation_state = None
       output_simulation_state = None
-      if 'input_simulation_state' in sql_kw:
+      if sql_kw.has_key('input_simulation_state'):
         input_simulation_state = sql_kw.get('input_simulation_state')
-      if 'output_simulation_state' in sql_kw:
+      if sql_kw.has_key('output_simulation_state'):
         output_simulation_state = sql_kw.get('output_simulation_state')
       if input_simulation_state is not None \
          or output_simulation_state is not None:
@@ -1142,7 +1141,7 @@ class SimulationTool(BaseTool):
     total_result = 0.0
     if len(result) > 0:
       if len(result) != 1:
-        raise ValueError('Sorry we must have only one')
+        raise ValueError, 'Sorry we must have only one'
       result = result[0]
 
       if hasattr(result, "converted_quantity"):
@@ -1420,8 +1419,7 @@ class SimulationTool(BaseTool):
       inventory_cache_kw['date'] = to_date
     try:
       cached_sql_result = Resource_zGetInventoryCacheResult(**inventory_cache_kw)
-    except ProgrammingError as xxx_todo_changeme:
-      (code, _) = xxx_todo_changeme.args
+    except ProgrammingError, (code, _):
       if code != NO_SUCH_TABLE:
         raise
       # First use of the optimisation, we need to create the table
@@ -2187,7 +2185,7 @@ class SimulationTool(BaseTool):
     # Pass simulation state to request
     if next_item_simulation_state:
       new_kw['simulation_state_list'] = next_item_simulation_state
-    elif 'item.simulation_state' in kw:
+    elif kw.has_key('item.simulation_state'):
       new_kw['simulation_state_list'] = kw['item.simulation_state']
     else:
       new_kw['simulation_state_list'] =  None
@@ -2585,7 +2583,8 @@ class SimulationTool(BaseTool):
     """
     # XXX For now, consider that from_date and to_date are required
     if (from_date is None) or (to_date is None):
-      raise NotImplementedError("getAvailableTime does not managed yet None values")
+      raise NotImplementedError, \
+            "getAvailableTime does not managed yet None values"
     portal = self.getPortalObject()
     # Calculate portal_type
     if not portal_type:

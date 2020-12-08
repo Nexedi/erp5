@@ -1,4 +1,3 @@
-from __future__ import print_function
 new_category_list = ()
 from_cat = from_cat + '/'
 to_cat = to_cat + '/'
@@ -15,8 +14,8 @@ if from_cat is not None and to_cat is not None:
       new_category_list += (cat,)
     if has_changed == 1:
       o.setCategoryList(new_category_list)
-      print("changed category %s with %s on %s" % (str(from_cat),str(to_cat),str(o.getPath())))
+      print "changed category %s with %s on %s" % (str(from_cat),str(to_cat),str(o.getPath()))
 
 
-print(" ")
+print " "
 return printed

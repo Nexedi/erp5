@@ -1,6 +1,5 @@
 """Print all field that uses non existing scripts as external_validator
 """
-from __future__ import print_function
 portal = context.getPortalObject()
 restrictedTraverse = portal.restrictedTraverse
 skins_tool = portal.portal_skins
@@ -33,11 +32,11 @@ for skin_name, skin_path_list in skins_tool.getSkinPaths():
         if external_validator:
           method_name = external_validator.getMethodName()
           if restrictedTraverse(method_name, None) is None:
-            print("{form_path}/{field_id} uses an external validator non existant in {skin_name}: {method_name}".format(
+            print "{form_path}/{field_id} uses an external validator non existant in {skin_name}: {method_name}".format(
                 form_path=form_path,
                 field_id=field.getId(),
                 skin_name=skin_name,
                 method_name=method_name,
-            ))
+            )
 
 return printed

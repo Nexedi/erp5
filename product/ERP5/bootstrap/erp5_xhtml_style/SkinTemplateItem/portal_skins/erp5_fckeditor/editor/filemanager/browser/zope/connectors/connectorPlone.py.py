@@ -710,13 +710,13 @@ portal_path = portal_url.replace(server_url,'')
 
 if ConfigUserFilesPath != "" :
    sUserFilesPath = ConfigUserFilesPath
-elif 'ServerPath' in dicoRequest:
+elif dicoRequest.has_key('ServerPath'):
    sUserFilesPath = dicoRequest ['ServerPath']
 else :
    sUserFilesPath = "/"
 
 
-if 'CurrentFolder' in dicoRequest:
+if dicoRequest.has_key('CurrentFolder'):
    sCurrentFolder = dicoRequest ['CurrentFolder']
    if sUserFilesPath!='/' and sUserFilesPath.rstrip('/') not in sCurrentFolder:
         sCurrentFolder = sUserFilesPath
@@ -725,23 +725,23 @@ else :
 
 
 
-if 'Command' in dicoRequest:
+if dicoRequest.has_key('Command'):
     sCommand = dicoRequest ['Command']
 else :
     message_error="No Command in request"
 
-if 'Type' in dicoRequest:
+if dicoRequest.has_key('Type'):
     sResourceType = dicoRequest ['Type']
 else :
     message_error="No Type in request"
 
 
-if 'NewFolderName' in dicoRequest:
+if dicoRequest.has_key('NewFolderName'):
     sFolderName = dicoRequest ['NewFolderName']
 
 
 # interception File Upload
-if sCommand=='FileUpload' and 'NewFile' in dicoRequest:
+if sCommand=='FileUpload' and dicoRequest.has_key('NewFile'):
     sData = dicoRequest ['NewFile']
     sTitle = utf8Decode(dicoRequest ['Title'])
     chaineHtmlUpload = UploadFile(sResourceType, sCurrentFolder, sData, sTitle)

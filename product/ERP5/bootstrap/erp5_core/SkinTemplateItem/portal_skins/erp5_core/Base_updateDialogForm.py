@@ -13,7 +13,7 @@ for k in kw.keys():
     if v is not None:
       i = 1
       for line in v:
-        if listbox_key in line:
+        if line.has_key(listbox_key):
           key = '%s' % line[listbox_key]
         else:
           key = str(zfill(i,3))

@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 import zope.interface
 from collections import defaultdict
 from math import log
@@ -304,8 +303,8 @@ class Amount(Base, VariatedMixin):
       variation_list = []
     for property_id, property_value in property_dict.items():
       if property_id not in variation_list:
-        raise_(KeyError, "Can not set the property variation '%s'" % \
-                        property_id)
+        raise KeyError, "Can not set the property variation '%s'" % \
+                        property_id
       else:
         try:
           self.setProperty(property_id, property_value)

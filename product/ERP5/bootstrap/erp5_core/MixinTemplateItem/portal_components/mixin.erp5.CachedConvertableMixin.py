@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from hashlib import md5
 from warnings import warn
 import string
@@ -136,7 +135,7 @@ class CachedConvertableMixin:
       cached_value = data
       conversion_md5 = md5(str(data.data)).hexdigest()
       size = len(data.data)
-    elif isinstance(data, (str, unicode)):
+    elif isinstance(data, (str, unicode,)):
       cached_value = data
       conversion_md5 = md5(cached_value).hexdigest()
       size = len(cached_value)
@@ -150,7 +149,7 @@ class CachedConvertableMixin:
       conversion_md5 = None
       size = len(cached_value)
     else:
-      raise_(NotImplementedError, 'Not able to store type:%r' % type(data))
+      raise NotImplementedError, 'Not able to store type:%r' % type(data)
     if date is None:
       date = DateTime()
     stored_data_dict = {'content_md5': self.getContentMd5(),
@@ -204,13 +203,13 @@ class CachedConvertableMixin:
                        'cache entry invalidated for key:%r' % cache_id)
         content_md5 = data_dict['content_md5']
         if content_md5 != self.getContentMd5():
-          raise_(KeyError, 'Conversion cache key is compromised for %r' % cache_id)
+          raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
         # Fill transactional cache in order to help
         # querying real cache during same transaction
         tv[cache_id] = data_dict
         return data_dict
 
-    raise_(KeyError, 'Conversion cache key does not exists for %r' % cache_id)
+    raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConversion')
   def getConversion(self, **kw):

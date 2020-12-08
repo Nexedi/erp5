@@ -6,7 +6,7 @@ if listbox_id is None:
 request = context.REQUEST
 
 # It must be possible to initialise the fast input, and to add empty lines after
-if 'my_empty_line_number' in request:
+if request.has_key('my_empty_line_number'):
   empty_line_number = request['my_empty_line_number']
 
 
@@ -37,7 +37,7 @@ if hasattr(request, listbox_id):
       # 0 was added because of checkbox field in some fast input
       if (value not in ['',None,0]) and (key != listbox_key):
         is_empty = 0
-      if ('field_errors' in request):
+      if (request.has_key('field_errors')):
         is_empty = 0
       #o.edit(key=listbox[i][key])
       o.setProperty(key,listbox[i][key])
@@ -46,7 +46,7 @@ if hasattr(request, listbox_id):
       l.append(o)
     
 # add empty lines
-if not('field_errors' in request):
+if not(request.has_key('field_errors')):
   for i in range(first_empty_line_id,first_empty_line_id+empty_line_number):
 
     o = newTempBase(portal_object, str(i))

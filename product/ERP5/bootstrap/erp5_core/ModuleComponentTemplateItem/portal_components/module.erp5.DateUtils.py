@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 import warnings
 
 from AccessControl import ModuleSecurityInfo
@@ -447,7 +446,7 @@ def convertDateToHour(date=None):
   # and this provides the use of toordinal method.
   formatted_creation_date = datetime(creation_date_dict['year'],creation_date_dict['month'],creation_date_dict['day'])
   # reference date which is the first day of creation date year
-  reference_date = datetime(creation_date_dict['year'], 0o1, 1)
+  reference_date = datetime(creation_date_dict['year'], 01, 1)
   # calculate the ordinal date of the creation date and the reference date
   ordinal_date = datetime.toordinal(formatted_creation_date)
   ordinal_reference_date = datetime.toordinal(reference_date)
@@ -526,7 +525,7 @@ def atTheEndOfPeriod(date, period):
     end = atTheEndOfPeriod(date, 'day')
     end = addToDate(end, day=(1-end.dow()) % 7)
   else:
-    raise_(NotImplementedError, 'Period "%s" not Handled yet' % period)
+    raise NotImplementedError, 'Period "%s" not Handled yet' % period
   return end
 
 def copyDate(date, year=None, month=None, day=None,
