@@ -1549,7 +1549,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         type_info = portal.portal_types.getTypeInfo(traversed_document)
         if type_info is not None and type_info.Base_getSourceVisibility():
           erp5_action_list.append({
-            'href': "%s?ignore_layout:int=1" % type_info.absolute_url_path(),
+            # XXX - this is probably a hack to use raw in gadget_erp5_page_action.js
+            'href': "#/%s" % type_info.getRelativeUrl(),
             'name': "jump_to_portal_type",
             'icon': None,
             'title': Base_translateString(
