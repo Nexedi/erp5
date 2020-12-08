@@ -13,8 +13,7 @@ section_portal_type_list = ['Person', 'Organisation']
 invalid_state_list = ['invalidated', 'deleted']
 
 # first of all, validate the transaction itself
-script_id = container.getScriptIdByReference('validateTransaction')
-container.getScriptValueById(script_id)(state_change)
+container.validateTransaction(state_change)
 
 
 # Check that all lines uses open accounts, and doesn't use invalid third

@@ -344,7 +344,8 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
         # between here and when the interaction was executed... So we
         # need to switch to the security manager as it was back then
         setSecurityManager(security_manager)
-        self._getOb(script_name)(sci)
+        script_context = self._asScriptContext()
+        getattr(script_context, script_name)(sci)
       finally:
         setSecurityManager(current_security_manager)
 

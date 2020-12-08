@@ -52,7 +52,7 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.patches.DCWorkflow import _marker
 from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID,\
                                                    WORKLIST_METADATA_KEY
-from Products.ERP5Type.Utils import UpperCase, convertToMixedCase
+from Products.ERP5Type.Utils import UpperCase, convertToMixedCase, deprecated
 from Products.ERP5Type.XMLObject import XMLObject
 
 #from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
@@ -1416,6 +1416,8 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       the same purpose, but it was heavyweight: doing a lot of useless
       operations (each time, it was checking for script_foo, even if foo was a
       transition, state, ...)
+
+      TODO-ARNAU: Should it be cached somewhere?
     """
     script_context = self.asContext()
     # asContext creates a temporary object and temporary object's "activate"
@@ -1424,12 +1426,23 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     # this, we override the temporary object's "activate" method with the one of
     # the original object.
     script_context.activate = self.activate
-    script_prefix_len = len(SCRIPT_PREFIX)
-    for script_id in self.objectIds(meta_type="ERP5 Python Script"):
-      if script_id.startswith(SCRIPT_PREFIX):
-        script = getattr(script_context, script_id)
-        setattr(script_context, script_id[script_prefix_len:], script)
+    for script in self.objectValues(portal_type="Workflow Script"):
+      setattr(script_context, script.getReference(), script)
     return script_context
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'scripts')
+  @property
+  @deprecated
+  def scripts(self):
+    """
+    Backward compatibility with DC Workflow to avoid modifying existing Python
+    Script code
+    """
+    script_dict = {}
+    for script in self.objectValues(portal_type="Workflow Script"):
+      script_dict[script.getReference()] = script
+    return script_dict
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSourceValue')
