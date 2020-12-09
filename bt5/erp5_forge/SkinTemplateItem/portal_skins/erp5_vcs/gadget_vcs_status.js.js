@@ -29,7 +29,7 @@
     var word_list = ['Added Files', 'Modified Files', 'Removed Files',
                      'Tree', 'Diff', 'Changelog', 'Expand'];
     return gadget.getTranslationList(word_list)
-      .push(function(result_list) {
+      .push(function (result_list) {
         var result = {},
           i;
         for (i = 0; i < word_list.length; i += 1) {
@@ -193,16 +193,18 @@
       ])
     ],
       tree_icon = 'ui-icon-check-square',
-      diff_icon = 'ui-icon-search-plus',
-      changelog_icon = 'ui-icon-git';
+      diff_icon = 'ui-icon-search-plus';
+      // changelog_icon = 'ui-icon-git';
 
     if (loading) {
       if (gadget.state.display_step === DISPLAY_TREE) {
         tree_icon = 'ui-icon-spinner';
       } else if (gadget.state.display_step === DISPLAY_DIFF) {
         diff_icon = 'ui-icon-spinner';
+/*
       } else if (gadget.state.display_step === DISPLAY_CHANGELOG) {
         changelog_icon = 'ui-icon-spinner';
+*/
       } else {
         throw new Error("Can't render header state " +
                         gadget.state.display_step);
@@ -428,7 +430,9 @@
         var i,
           element_list = [];
 
-        element_list.push(domsugar('h3', {text: translation_dict['Modified Files']}));
+        element_list.push(domsugar('h3', {
+          text: translation_dict['Modified Files']
+        }));
         for (i = 0; i < result_list.length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -445,7 +449,9 @@
           );
         }
 
-        element_list.push(domsugar('h3', {text: translation_dict['Added Files']}));
+        element_list.push(domsugar('h3', {
+          text: translation_dict['Added Files']
+        }));
         for (i = 0; i < ajax_result.added_list.length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -461,18 +467,20 @@
           );
         }
 
-        element_list.push(domsugar('h3', {text: translation_dict['Removed Files']}));
-        for (i = 0; i < result['removed'].length; i += 1) {
+        element_list.push(domsugar('h3', {
+          text: translation_dict['Removed Files']
+        }));
+        for (i = 0; i < result.removed.length; i += 1) {
           element_list.push(
             domsugar('label', [
               domsugar('input', {
                 type: 'checkbox',
                 class: 'vcs_to_commit',
-                value: result['removed'][i],
+                value: result.removed[i],
                 name: 'removed',
                 checked: 'checked'
               }),
-              result['removed'][i]
+              result.removed[i]
             ])
           );
         }
@@ -650,19 +658,16 @@
 
       return queue
         .push(function () {
-          var result = {},
-            parsed_value_dict = JSON.parse(gadget.state.value);
+          var result = {};
           if (gadget.state.editable) {
             result[gadget.state.key] = gadget.state.value;
           }
-          console.log('getContent', result);
           return result;
         });
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
       return true;
-      throw new Error('checkValidity not implemented');
     }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
