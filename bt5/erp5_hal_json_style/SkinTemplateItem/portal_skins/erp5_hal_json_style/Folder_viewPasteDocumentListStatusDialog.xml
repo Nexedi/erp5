@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Delete multiple documents at once</string> </value>
+            <value> <string>Paste multiple documents at once</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_pasteDocumentListStatusDialog</string> </value>
+            <value> <string>Folder_viewPasteDocumentListStatusDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_pasteDocumentListStatusDialog</string> </value>
+            <value> <string>Folder_viewPasteDocumentListStatusDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
