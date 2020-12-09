@@ -163,7 +163,7 @@
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_viewLoyaltyRequest</string> </value>
+            <value> <string>WebSection_viewLoyaltyRequestDialog</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
