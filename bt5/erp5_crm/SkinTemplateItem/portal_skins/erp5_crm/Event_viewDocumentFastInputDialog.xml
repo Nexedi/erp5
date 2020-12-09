@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_viewDocumentFastInputList</string> </value>
+            <value> <string>Event_viewDocumentFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -125,7 +125,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Event_viewDocumentFastInputList</string> </value>
+            <value> <string>Event_viewDocumentFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
