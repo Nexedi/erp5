@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_doNothingDialog</string> </value>
+            <value> <string>Folder_viewDoNothingDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Folder_doNothingDialog</string> </value>
+            <value> <string>Folder_viewDoNothingDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
