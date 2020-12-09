@@ -15,7 +15,7 @@
 # dtml-sqlvar patch to convert None to NULL, and deal with DateTime
 
 from builtins import map
-from builtins import str
+#from builtins import str
 from builtins import range
 from past.builtins import basestring
 from Shared.DC.ZRDB.sqlvar import SQLVar
@@ -27,12 +27,12 @@ def SQLVar_render(self, md):
     t=args['type']
     try:
         expr=self.expr
-        if type(expr) is str: v=md[expr]
+        if isinstance(expr, basestring): v=md[expr]
         else: v=expr(md)
     except Exception:
         if args.get('optional'):
             return 'null'
-        if type(expr) is not str:
+        if not isinstance(expr, basestring):
             raise
         raise ValueError('Missing input variable, <em>%s</em>' % self.__name__)
 
@@ -41,7 +41,7 @@ def SQLVar_render(self, md):
 
     if t=='int':
         try:
-            if type(v) is str:
+            if isinstance(v, basestring):
                 if v[-1:]=='L':
                     v=v[:-1]
                 int(v)
@@ -51,7 +51,7 @@ def SQLVar_render(self, md):
             t = 'integer'
     elif t=='float':
         try:
-            if type(v) is str:
+            if isinstance(v, basestring):
                 if v[-1:]=='L':
                     v=v[:-1]
                 float(v)
