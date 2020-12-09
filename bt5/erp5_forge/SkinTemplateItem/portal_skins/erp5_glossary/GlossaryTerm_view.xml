@@ -90,7 +90,6 @@
                         <string>my_causality_title</string>
                         <string>my_language</string>
                         <string>my_title</string>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -100,6 +99,7 @@
                       <list>
                         <string>my_description</string>
                         <string>my_comment</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
