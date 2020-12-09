@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProjectModule_generateMilestoneReportDialog</string> </value>
+            <value> <string>ProjectModule_viewMilestoneReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
