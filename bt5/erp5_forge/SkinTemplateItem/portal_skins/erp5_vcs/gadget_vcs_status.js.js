@@ -25,6 +25,20 @@
     DISPLAY_DIFF = 'display_diff',
     DISPLAY_CHANGELOG = 'display_changelog';
 
+  function getTranslationDict(gadget) {
+    var word_list = ['Added Files', 'Modified Files', 'Removed Files',
+                     'Tree', 'Diff', 'Changelog', 'Expand'];
+    return gadget.getTranslationList(word_list)
+      .push(function(result_list) {
+        var result = {},
+          i;
+        for (i = 0; i < word_list.length; i += 1) {
+          result[word_list[i]] = result_list[i];
+        }
+        return result;
+      });
+  }
+
   function keepOnlyChildren(current_node) {
     var fragment = document.createDocumentFragment();
 
@@ -167,7 +181,7 @@
     return tree_xml_element;
   }
 
-  function renderGadgetHeader(gadget, loading) {
+  function renderGadgetHeader(gadget, loading, translation_dict) {
     var element_list = [
       domsugar('p', [
         'Repository: ',
@@ -198,20 +212,20 @@
     element_list.push(
       domsugar('button', {
         type: 'button',
-        text: 'Tree',
+        text: translation_dict.Tree,
         disabled: (gadget.state.display_step === DISPLAY_TREE),
         class: 'display-tree-btn ui-btn-icon-left ' + tree_icon
       }),
       domsugar('button', {
         type: 'button',
-        text: 'Diff',
+        text: translation_dict.Diff,
         disabled: (gadget.state.display_step === DISPLAY_DIFF),
         class: 'diff-tree-btn ui-btn-icon-left ' + diff_icon
 /*
       }),
       domsugar('button', {
         type: 'button',
-        text: 'Changelog',
+        text: translation_dict.Changelog,
         disabled: (gadget.state.display_step === DISPLAY_CHANGELOG),
         class: 'changelog-btn ui-btn-icon-left ' + changelog_icon
 */
@@ -222,7 +236,7 @@
       element_list.push(
         domsugar('button', {
           type: 'button',
-          text: 'Expand',
+          text: translation_dict.Expand,
           class: 'expand-tree-btn ui-btn-icon-left ui-icon-arrows-v'
         })
       );
@@ -285,9 +299,11 @@
 
 
   function renderTreeView(gadget, extract) {
-    return new RSVP.Queue()
-      .push(function () {
-        renderGadgetHeader(gadget, true);
+    var translation_dict;
+    return getTranslationDict(gadget)
+      .push(function (result) {
+        translation_dict = result;
+        renderGadgetHeader(gadget, true, translation_dict);
 
         var form_data = new FormData();
         form_data.append('show_unmodified:int', 0);
@@ -305,7 +321,7 @@
         });
       })
       .push(function (evt) {
-        renderGadgetHeader(gadget, false);
+        renderGadgetHeader(gadget, false, translation_dict);
 
         domsugar(gadget.element.querySelector('div.vcsbody'), [
           renderTreeXml(gadget, evt.target.response.querySelector('tree'))
@@ -365,10 +381,12 @@
   function renderDiffView(gadget) {
     var result = JSON.parse(gadget.state.value),
       ajax_result,
-      diff_count = result.modified.length;
-    return new RSVP.Queue()
-      .push(function () {
-        renderGadgetHeader(gadget, true);
+      diff_count = result.modified.length,
+      translation_dict;
+    return getTranslationDict(gadget)
+      .push(function (result2) {
+        translation_dict = result2;
+        renderGadgetHeader(gadget, true, translation_dict);
 
         var form_data = new FormData(),
           key_list = ['modified', 'added', 'removed'],
@@ -410,7 +428,7 @@
         var i,
           element_list = [];
 
-        element_list.push(domsugar('h3', {text: 'Modified Files'}));
+        element_list.push(domsugar('h3', {text: translation_dict['Modified Files']}));
         for (i = 0; i < result_list.length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -427,7 +445,7 @@
           );
         }
 
-        element_list.push(domsugar('h3', {text: 'Added Files'}));
+        element_list.push(domsugar('h3', {text: translation_dict['Added Files']}));
         for (i = 0; i < ajax_result.added_list.length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -443,7 +461,7 @@
           );
         }
 
-        element_list.push(domsugar('h3', {text: 'Removed Files'}));
+        element_list.push(domsugar('h3', {text: translation_dict['Removed Files']}));
         for (i = 0; i < result['removed'].length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -459,23 +477,26 @@
           );
         }
 
-        renderGadgetHeader(gadget, false);
+        renderGadgetHeader(gadget, false, translation_dict);
         domsugar(gadget.element.querySelector('div.vcsbody'), element_list);
       });
   }
 
   function renderChangelogView(gadget) {
     var result = JSON.parse(gadget.state.value);
-    renderGadgetHeader(gadget, false);
-    domsugar(gadget.element.querySelector('div.vcsbody'), [
-      domsugar('textarea', {value: result.changelog}),
-      domsugar('h3', {text: 'Added Files'}),
-      domsugar('pre', {text: result.added.join('\n')}),
-      domsugar('h3', {text: 'Modified Files'}),
-      domsugar('pre', {text: result.modified.join('\n')}),
-      domsugar('h3', {text: 'Deleted Files'}),
-      domsugar('pre', {text: result.removed.join('\n')})
-    ]);
+    return getTranslationDict(gadget)
+      .push(function (translation_dict) {
+        renderGadgetHeader(gadget, false, translation_dict);
+        domsugar(gadget.element.querySelector('div.vcsbody'), [
+          domsugar('textarea', {value: result.changelog}),
+          domsugar('h3', {text: translation_dict['Added Files']}),
+          domsugar('pre', {text: result.added.join('\n')}),
+          domsugar('h3', {text: translation_dict['Modified Files']}),
+          domsugar('pre', {text: result.modified.join('\n')}),
+          domsugar('h3', {text: translation_dict['Removed Files']}),
+          domsugar('pre', {text: result.removed.join('\n')})
+        ]);
+      });
   }
 
   function getContentFromChangelogView(gadget) {
@@ -486,6 +507,7 @@
 
   rJS(window)
 
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareMethod('render', function (options) {
       return this.changeState({
         display_step: DISPLAY_TREE,
