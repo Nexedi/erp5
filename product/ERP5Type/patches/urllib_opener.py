@@ -29,15 +29,17 @@
 
 # Install openers
 # -> testTemplateTool.TestTemplateTool.test_getBusinessTemplateUrl
-import urllib
-import urllib2
-import cStringIO
+from future import standard_library
+standard_library.install_aliases()
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+from io import BytesIO as StringIO
 import socket
 import os
 import dircache
 import mimetypes, mimetools
 from email.utils import formatdate
-class DirectoryFileHandler(urllib2.FileHandler):
+class DirectoryFileHandler(urllib.request.FileHandler):
     """
     Extends the file handler to provide an HTML
     representation of local directories.
@@ -61,29 +63,29 @@ class DirectoryFileHandler(urllib2.FileHandler):
         size = stats.st_size
         modified = formatdate(stats.st_mtime, usegmt=True)
         mtype = mimetypes.guess_type(file)[0]
-        headers = mimetools.Message(cStringIO.StringIO(
+        headers = mimetools.Message(StringIO(
             'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
             (mtype or 'text/plain', size, modified)))
         if host:
-            host, port = urllib.splitport(host)
+            host, port = urllib.parse.splitport(host)
         if not host or \
            (not port and socket.gethostbyname(host) in self.get_names()):
             try:
               file_list = dircache.listdir(localfile)
-              s = cStringIO.StringIO()
+              s = StringIO()
               s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
               s.write('<p>Directory Content:</p>')
               for f in file_list:
-                s.write('<p><a href="%s">%s</a></p>\n' % (urllib.quote(f), f))
+                s.write('<p><a href="%s">%s</a></p>\n' % (urllib.parse.quote(f), f))
               s.write('</body></html>')
               s.seek(0)
-              headers = mimetools.Message(cStringIO.StringIO(
+              headers = mimetools.Message(StringIO(
                   'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
                   ('text/html', size, modified)))
               return urllib2.addinfourl(s, headers, 'file:' + file)
             except OSError:
               return urllib2.addinfourl(open(localfile, 'rb'),
                                         headers, 'file:'+file)
-        raise urllib2.URLError('file not on local host')
-opener = urllib2.build_opener(DirectoryFileHandler)
-urllib2.install_opener(opener)
+        raise urllib.error.URLError('file not on local host')
+opener = urllib.request.build_opener(DirectoryFileHandler)
+urllib.request.install_opener(opener)
