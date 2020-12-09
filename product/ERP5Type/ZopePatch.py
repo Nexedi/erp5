@@ -101,7 +101,9 @@ from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-from Products.ERP5Type.patches import Publish
+if six.PY2:
+  # No ZServer
+  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 from Products.ERP5Type.patches import urllib_opener
 
