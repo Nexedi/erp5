@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_importGapFileForm</string> </value>
+            <value> <string>CategoryTool_viewImportGapFileDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_importGapFileForm</string> </value>
+            <value> <string>CategoryTool_viewImportGapFileDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
