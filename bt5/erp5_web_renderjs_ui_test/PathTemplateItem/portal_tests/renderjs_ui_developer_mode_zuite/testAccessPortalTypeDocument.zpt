@@ -13,12 +13,12 @@
 </tal:block>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Actions"]</td>
+  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Views"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Actions"]</td>
+  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Views"]</td>
   <td></td>
 </tr>
 <tr>
@@ -38,11 +38,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//p[text()="Preference" and @id="field_my_id"]</td>
+  <td>//input[@value="Preference" and @id="field_my_id"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//a[@data-i18n="Editable"]</td>
   <td></td>
 </tr>
