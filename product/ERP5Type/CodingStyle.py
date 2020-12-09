@@ -60,6 +60,11 @@ def getSkinPrefixList(self):
   # Add interfaces prefix, without the I prefix
   skin_prefix_list.extend([x[1:] for x in portal_types.getInterfaceTypeList()])
 
+  # Add property sheets
+  skin_prefix_list.extend([
+      x.getId().replace(' ', '')
+      for x in portal.portal_property_sheets.contentValues()])
+
   # Add other prefix
   skin_prefix_list.extend((
     'ERP5Type',
