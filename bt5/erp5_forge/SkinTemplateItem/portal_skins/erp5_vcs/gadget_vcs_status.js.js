@@ -409,6 +409,8 @@
       .push(function (result_list) {
         var i,
           element_list = [];
+
+        element_list.push(domsugar('h3', {text: 'Modified Files'}));
         for (i = 0; i < result_list.length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -425,6 +427,7 @@
           );
         }
 
+        element_list.push(domsugar('h3', {text: 'Added Files'}));
         for (i = 0; i < ajax_result.added_list.length; i += 1) {
           element_list.push(
             domsugar('label', [
@@ -440,17 +443,18 @@
           );
         }
 
-        for (i = 0; i < ajax_result.deleted_list.length; i += 1) {
+        element_list.push(domsugar('h3', {text: 'Removed Files'}));
+        for (i = 0; i < result['removed'].length; i += 1) {
           element_list.push(
             domsugar('label', [
               domsugar('input', {
                 type: 'checkbox',
                 class: 'vcs_to_commit',
-                value: ajax_result.deleted_list[i].path,
+                value: result['removed'][i],
                 name: 'removed',
                 checked: 'checked'
               }),
-              ajax_result.deleted_list[i].path
+              result['removed'][i]
             ])
           );
         }
