@@ -63,19 +63,32 @@ def getSkinPrefixList(self):
   # Add other prefix
   skin_prefix_list.extend((
     'ERP5Type',
+
+    # Modules (maybe should be interfaces)
     'Module',
-    
+    'InventoryModule',
+    'OrderModule',
+    'DeliveryModule',
+    'PackingListModule',
+    'SupplyModule',
+    'ResourceModule',
+
+    # Base classes (maybe should be interfaces)
+    'Entity', # A base class for Person / Organisation
+    'PackingListLine',
+    'IndividualVariation',
+    'ExternalLogin',
+
     # Catalog brains
     'Brain',
     'InventoryListBrain',
     'TrackingListBrain',
     'MovementHistoryListBrain',
 
+    # Zope classes
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
     'MailHost',
-
-    'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
 
     # ERP5Form
@@ -123,26 +136,7 @@ ignored_skin_id_set = {
   'resolveUid',
   'IndividualVariation_init',
   'QuantityUnitConversion_getQuantityUnitList',
-  'ResourceModule_getSelection',
-  'DeliveryModule_getDeliveryLineList',
-  'DeliveryModule_getDeliveryLineReportSectionList',
-  'DeliveryModule_getMovementPortalTypeItemList',
-  'DeliveryModule_getShipmentDeliveryList',
-  'DeliveryModule_getShipmentLineData',
-  'DeliveryModule_getShipmentLineList',
-  'DeliveryModule_getShipmentReportSectionList',
-  'OrderModule_activateGetOrderStatList',
-  'OrderModule_deleteAutoPlannedOrderList',
-  'OrderModule_filterOrderStatResul',
-  'OrderModule_getOrderReport',
-  'OrderModule_getOrderReportParameterDict',
-  'OrderModule_getOrderReportSectionList',
-  'OrderModule_getOrderStatList',
-  'OrderModule_launchOrderReport',
-  'OrderModule_processOrderStat',
-  'OrderModule_statOrderStatList',
   'PackingListContent_updateAfterEdit',
-  'PackingListModule_getPackingListReport',
   'Builder_selectAutoPlannedOrderList',
   'Builder_updateManufacturingOrderAfterBuild',
   'ManufacturingOrderBuilder_selectSimulationMovement',
@@ -169,8 +163,6 @@ ignored_skin_id_set = {
   'SaleInvoiceTransaction_selectTaskReportMovement',
   'TaskListOverviewGadget_setPreferences',
   'TaskListsGadgetListbox_getLineCss',
-  'InventoryModule_reindexMovementList',
-  'DeliveryModule_mergeDeliveryList',
   'ERP5VCS_doCreateJavaScriptDiff.js',
   'ERP5VCS_doCreateJavaScriptStatus.js',
   'PdmZuite_CommonTemplate',
