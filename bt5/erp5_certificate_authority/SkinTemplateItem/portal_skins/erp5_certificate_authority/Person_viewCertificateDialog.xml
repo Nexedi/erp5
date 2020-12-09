@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getCertificateForm</string> </value>
+            <value> <string>Person_viewCertificateDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +119,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Person_getCertificateForm</string> </value>
+            <value> <string>Person_viewCertificateDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
