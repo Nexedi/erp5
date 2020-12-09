@@ -186,6 +186,18 @@ ignored_skin_id_set = {
   'TaskDistributorAlarm_optimize',
   'TestDocument_optimize',
   'TestResultAlarm_restartStuckTestResult',
+  'ActivityTool_viewWatcher',
+  'BaseWorkflow_viewWorkflowActionDialog',
+  'Base_jumpToRelatedObjectList',
+  'Base_viewHistory',
+  'Base_viewZODBHistory',
+  'BusinessTemplate_viewObjectsDiff',
+  'CacheFactory_viewStatisticList',
+  'Folder_deleteDocumentListStatusDialog',
+  'Folder_generateWorkflowReportDialog',
+  'Folder_modifyDocumentListStatusDialog',
+  'PasswordTool_viewEmailPassword',
+  'PasswordTool_viewResetPassword',
 }
 
 # Generic method to check consistency of a skin item
