@@ -115,7 +115,7 @@
                         <string>my_order</string>
                         <string>my_delivery</string>
                         <string>my_translated_causality_state_title</string>
-                        <string>my_simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
