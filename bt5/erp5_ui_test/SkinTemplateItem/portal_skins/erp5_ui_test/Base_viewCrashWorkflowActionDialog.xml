@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BaseWorkflow_viewCrashWorkflowActionDialog</string> </value>
+            <value> <string>Base_viewCrashWorkflowActionDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BaseWorkflow_viewCrashWorkflowActionDialog</string> </value>
+            <value> <string>Base_viewCrashWorkflowActionDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
