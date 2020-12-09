@@ -12,6 +12,7 @@
               <list>
                 <string>default</string>
                 <string>items</string>
+                <string>required</string>
                 <string>title</string>
               </list>
             </value>
@@ -115,6 +116,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
