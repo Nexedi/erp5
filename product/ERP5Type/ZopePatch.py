@@ -24,7 +24,7 @@ import six
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
-if six.PY2
+if six.PY2:
   # XXX Restricted changed a log, need to check closure too
   from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
@@ -50,7 +50,7 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-if six.PY2
+if six.PY2:
   # XXX- patch for webdav
   from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
