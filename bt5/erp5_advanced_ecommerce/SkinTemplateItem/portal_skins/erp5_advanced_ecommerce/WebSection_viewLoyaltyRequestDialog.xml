@@ -128,7 +128,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewLoyaltyRequest</string> </value>
+            <value> <string>WebSection_viewLoyaltyRequestDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -136,7 +136,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebSection_viewLoyaltyRequest</string> </value>
+            <value> <string>WebSection_viewLoyaltyRequestDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
