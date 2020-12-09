@@ -116,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_renameProxyFieldDialog</string> </value>
+            <value> <string>BusinessTemplate_viewRenameProxyFieldDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
