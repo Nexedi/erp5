@@ -64,7 +64,9 @@
         <item>
             <key> <string>type_interface</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>ISpreadsheetConfiguratorItem</string>
+              </tuple>
             </value>
         </item>
         <item>
