@@ -14,8 +14,11 @@
 import copy
 import sys
 import types
+import six
 
-# from RestrictedPython.RestrictionMutator import RestrictionMutator
+if six.PY2:
+  from RestrictedPython.RestrictionMutator import RestrictionMutator
+
 _MARKER = []
 def checkNameLax(self, node, name=_MARKER):
   """Verifies that a name being assigned is safe.
@@ -53,13 +56,23 @@ def add_builtins(**kw):
 
 del safe_builtins['dict']
 del safe_builtins['list']
-add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
-             dict=dict, list=list) #, set=set, frozenset=frozenset)
+if six.PY2:
+  add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
+               dict=dict, list=list, set=set, frozenset=frozenset)
 
-add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
-             property=property, # <F11>slice=slice,
-             staticmethod=staticmethod,
-             super=super, type=type)
+  add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
+               property=property, slice=slice,
+               staticmethod=staticmethod,
+               super=super, type=type)
+else:
+  add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
+               dict=dict, list=list) #, set=set, frozenset=frozenset)
+
+  add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
+               property=property, # <F11>slice=slice,
+               staticmethod=staticmethod,
+               super=super, type=type)
+
 
 def guarded_next(iterator, default=_marker):
     """next(iterator[, default])
@@ -81,7 +94,8 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-# add_builtins(next=guarded_next)
+if six.PY2:
+  add_builtins(next=guarded_next)
 
 _safe_class_attribute_dict = {}
 import inspect

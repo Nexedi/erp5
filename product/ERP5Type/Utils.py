@@ -388,7 +388,9 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
 
-#from rfc822 import AddressList
+import six
+if six.PY2:
+  from rfc822 import AddressList
 
 def Email_parseAddressHeader(text):
   """

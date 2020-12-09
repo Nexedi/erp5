@@ -19,12 +19,14 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
-
+import six
 # Load all monkey patches
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
-#from Products.ERP5Type.patches import Restricted
+if six.PY2
+  # XXX Restricted changed a log, need to check closure too
+  from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
@@ -48,7 +50,9 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-# from Products.ERP5Type.patches import PropertySheets XXX- patch for webdav
+if six.PY2
+  # XXX- patch for webdav
+  from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import OFSFile
@@ -58,13 +62,17 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-#from Products.ERP5Type.patches import http_server
+if six.PY2:
+  # No more ZServer
+  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
-#from Products.ERP5Type.patches import DemoStorage
+if six.PY2:
+  # Check with other work on ZODB
+  from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
 from Products.ERP5Type.patches import ZopePageTemplateUtils

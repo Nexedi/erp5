@@ -32,7 +32,10 @@
 """
 from __future__ import absolute_import
 from App.config import getConfiguration
-from .patches import python, globalrequest # pylint
+from .patches import python, globalrequest
+import six
+if six.PY2:
+  import pylint
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
