@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ExternalIndentifier_view</string> </value>
+            <value> <string>ExternalIdentifier_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
