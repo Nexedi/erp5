@@ -1545,12 +1545,17 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
 
-      if preferred_html_style_developper_mode and erp5_action_key == "object_jio_raw":
+      if preferred_html_style_developper_mode and erp5_action_key == "object_jio_jump":
         type_info = portal.portal_types.getTypeInfo(traversed_document)
         if type_info is not None and type_info.Base_getSourceVisibility():
           erp5_action_list.append({
-            # XXX - this is probably a hack to use raw in gadget_erp5_page_action.js
-            'href': "#/%s" % type_info.getRelativeUrl(),
+            'href': url_template_dict["traverse_generator_action"] % {
+              "root_url": site_root.absolute_url(),
+              "script_id": script.id,
+              "relative_url": getRealRelativeUrl(type_info).replace("/", "%2F"),
+              "view": "view",
+              "extra_param_json": ""
+            },
             'name': "jump_to_portal_type",
             'icon': None,
             'title': Base_translateString(
@@ -1559,6 +1564,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "portal_type_name": traversed_document.getTranslatedPortalType()
               }),
           })
+
+      if preferred_html_style_developper_mode and erp5_action_key == "object_jio_raw":
         if portal.portal_workflow.Base_getSourceVisibility():
           for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
             erp5_action_list.append({
