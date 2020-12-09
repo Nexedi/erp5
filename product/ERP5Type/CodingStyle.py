@@ -63,19 +63,27 @@ def getSkinPrefixList(self):
   # Add other prefix
   skin_prefix_list.extend((
     'ERP5Type',
+
+    # Modules (maybe should be interfaces)
     'Module',
-    
+    'OrderModule'
+    'DeliveryModule',
+    'PackingListModule',
+
+    # Base classes (maybe should be interfaces)
+    'Entity', # A base class for Person / Organisation
+    'PackingListLine',
+
     # Catalog brains
     'Brain',
     'InventoryListBrain',
     'TrackingListBrain',
     'MovementHistoryListBrain',
 
+    # Zope classes
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
     'MailHost',
-
-    'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
 
     # ERP5Form
