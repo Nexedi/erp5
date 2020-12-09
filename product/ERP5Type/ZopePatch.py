@@ -48,7 +48,7 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-from Products.ERP5Type.patches import PropertySheets
+# from Products.ERP5Type.patches import PropertySheets XXX- patch for webdav
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import OFSFile
@@ -58,13 +58,13 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-from Products.ERP5Type.patches import http_server
+#from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
-from Products.ERP5Type.patches import DemoStorage
+#from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
 from Products.ERP5Type.patches import ZopePageTemplateUtils

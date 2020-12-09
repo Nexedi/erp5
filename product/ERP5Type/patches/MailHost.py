@@ -21,7 +21,7 @@ In ERP5, we have Activity Tool to postpone mail delivery.
 from inspect import getargspec, isfunction
 from Products.MailHost.MailHost import MailBase
 
-for f in MailBase.__dict__.itervalues():
+for f in MailBase.__dict__.values():
   if isfunction(f):
     args, _, _, defaults = getargspec(f)
     try:
