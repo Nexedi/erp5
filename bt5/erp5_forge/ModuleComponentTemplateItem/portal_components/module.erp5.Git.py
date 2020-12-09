@@ -32,7 +32,6 @@ from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
-from ZTUtils import make_query
 from erp5.component.module.WorkingCopy import \
   WorkingCopy, NotAWorkingCopyError, NotVersionedError, Dir, File, selfcached
 
