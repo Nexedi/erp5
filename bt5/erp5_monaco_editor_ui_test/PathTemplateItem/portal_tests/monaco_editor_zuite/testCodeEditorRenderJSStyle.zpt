@@ -112,9 +112,9 @@
 <tr><td>click</td>
     <td>//a[@data-i18n="Views"]</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//a[.="portal_components"]</td><td></td></tr>
+    <td>//a[.="Components"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//a[.="portal_components"]</td><td></td></tr>
+    <td>//a[.="Components"]</td><td></td></tr>
 </tal:block>
 </tbody></table>
 </body>
