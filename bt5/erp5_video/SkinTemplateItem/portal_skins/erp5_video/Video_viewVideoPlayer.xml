@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Video_watch</string> </value>
+            <value> <string>Video_viewVideoPlayer</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
