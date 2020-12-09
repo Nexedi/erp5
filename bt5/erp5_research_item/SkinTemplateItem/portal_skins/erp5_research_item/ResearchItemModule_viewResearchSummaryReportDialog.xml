@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ResearchItemModule_viewResearchSummaryReport</string> </value>
+            <value> <string>ResearchItemModule_viewResearchSummaryReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
