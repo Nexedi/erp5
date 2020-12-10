@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Foo_viewDialogWithOnlyUpdate</string> </value>
+            <value> <string>Foo_viewDialogWithOnlyUpdateDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,7 +123,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Foo_viewDialogWithOnlyUpdate</string> </value>
+            <value> <string>Foo_viewDialogWithOnlyUpdateDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
