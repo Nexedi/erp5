@@ -106,9 +106,7 @@
             exchange_jio_actions actions/object_jio_exchange | nothing;
             report_actions actions/object_report | nothing;
             report_jio_actions actions/object_jio_report | nothing;
-            button_action actions/object_button | empty_array;
-            button_jio_action actions/object_jio_button | empty_array;
-            button_actions python: button_action + button_jio_action;
+            button_actions python:here.Base_fixDialogActions(actions, 'object_button') or [];
             fast_input_actions actions/object_fast_input | nothing;
             fast_input_jio_actions actions/object_jio_fast_input | nothing;
             sort_actions actions/object_sort | nothing;

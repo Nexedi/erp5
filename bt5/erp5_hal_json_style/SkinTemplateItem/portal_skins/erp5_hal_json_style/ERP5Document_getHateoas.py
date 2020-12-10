@@ -49,6 +49,7 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 
 from ZTUtils import make_query
 import json
+import urllib
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
@@ -337,8 +338,13 @@ url_template_dict = {
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
-Base_translateString = context.getPortalObject().Base_translateString
+portal = context.getPortalObject()
+portal_absolute_url = portal.absolute_url()
+preference_tool = portal.portal_preferences
+Base_translateString = portal.Base_translateString
 
+preferred_html_style_developer_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
+preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
 def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
@@ -414,7 +420,9 @@ def getFieldDefault(form, field, key, value=MARKER):
   return value
 
 
-def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
+def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
+                key=None, key_prefix=None, selection_params=None,
+                request_field=True, form_relative_url=None):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -445,6 +453,26 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
   }
+
+  if preferred_html_style_developer_mode:
+    result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
+
+  if preferred_html_style_translator_mode:
+    erp5_ui = portal.Localizer.erp5_ui
+    selected_language = erp5_ui.get_selected_language()
+    result["translate_title_href"] = '%s/manage_messages?%s' % (
+      '/'.join(erp5_ui.getPhysicalPath()),
+      urllib.urlencode({"regex": "^%s$" % field.title(),
+                        "lang": selected_language})
+    )
+
+    field_description = field.Field_getDescription()
+    if field_description:
+      result["translate_description_href"] = '%s/manage_messages?%s' % (
+        '/'.join(erp5_ui.getPhysicalPath()),
+        urllib.urlencode({"regex": "^%s$" % field_description,
+                          "lang": selected_language})
+      )
 
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
@@ -737,7 +765,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
-        "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
+        "form_relative_url": "%s/%s" % (form_relative_url, field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable(list_method_query_dict))),
@@ -873,7 +901,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       for editable_attribute, _ in field.get_value('editable_attributes')]
     result.update({
       'data': field.render(key=key, value=value, REQUEST=REQUEST, render_format='list'),
-      'template_field_dict': {template_field: renderField(traversed_document, getattr(form, template_field), form)
+      'template_field_dict': {template_field: renderField(traversed_document,
+                                                          getattr(form, template_field),
+                                                          form,
+                                                          form_relative_url=form_relative_url)
         for template_field in template_field_names
         if template_field in form},
     })
@@ -1040,7 +1071,10 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, request_field=not use_relation_form_page_template)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix,
+                                              selection_params=selection_params,
+                                              request_field=not use_relation_form_page_template,
+                                              form_relative_url=form_relative_url)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
@@ -1207,6 +1241,14 @@ def renderFormDefinition(form, response_dict):
   response_dict["update_action"] = form.update_action
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
+  if preferred_html_style_developer_mode:
+    form_relative_url = getFormRelativeUrl(form)
+    response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
+    response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
+      site_root.getId(),
+      form.action)
+
+
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
   if isinstance(level, (str, unicode)):
@@ -1291,7 +1333,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # Always inform about portal
       "portal": {
         "href": default_document_uri_template % {
-          "root_url": portal.absolute_url(),
+          "root_url": portal_absolute_url,
           # XXX the portal has an empty getRelativeUrl. Make it still compatible
           # with restrictedTraverse
           "relative_url": portal.getId(),
@@ -1460,7 +1502,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           '_view': embedded_dict
         }
 
-    # Extract & modify action URLs
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
@@ -1477,7 +1518,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                               "object_list_action", "object_jio_jump")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
-            "_jio" in erp5_action_key):
+            "_jio" in erp5_action_key) and not erp5_action_key.endswith("_raw"):
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"

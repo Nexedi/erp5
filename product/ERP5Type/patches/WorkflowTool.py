@@ -460,6 +460,14 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   for wf_id in self.getChainFor(info.object):
     wf = self.getWorkflowById(wf_id)
     if wf is not None:
+      actions.append({
+        "id": "onlyjio_%s" % wf.id,
+        "name": wf.title,
+        "url": "%s/manage_properties" % wf.absolute_url_path(),
+        "icon": None,
+        "category": "object_onlyjio_jump_raw",
+        "priority": 100
+      })
       actions.extend(wf.listObjectActions(info))
 
   portal = self.getPortalObject()

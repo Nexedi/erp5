@@ -28,7 +28,6 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
 class TestWorklist(ERP5TypeTestCase):
 
@@ -262,7 +261,22 @@ class TestWorklist(ERP5TypeTestCase):
         self.logMessage("Check %s worklist" % user_id)
         self.loginByUserName(user_id)
         result = workflow_tool.listActions(object=document)
-        self.assertEqual(result, [])
+        self.assertEqual(len(result), 2)
+        action, = [r for r in result if r["id"] == "onlyjio_validation_workflow"]
+        self.assertEqual(action["name"], "Validation Workflow")
+        self.assertTrue(
+          action["url"].endswith("/portal_workflow/validation_workflow/manage_properties"),
+          action
+        )
+        self.assertEqual(action["category"], "object_onlyjio_jump_raw")
+
+        action, = [r for r in result if r["id"] == "onlyjio_edit_workflow"]
+        self.assertEqual(action["name"], "Edit Workflow")
+        self.assertTrue(
+          action["url"].endswith("/portal_workflow/edit_workflow/manage_properties"),
+          action
+        )
+        self.assertEqual(action["category"], "object_onlyjio_jump_raw")
 
       for role, user_id_list in (('Assignor', ('foo', 'manager')),
                                  ('Assignee', ('foo', 'bar'))):
