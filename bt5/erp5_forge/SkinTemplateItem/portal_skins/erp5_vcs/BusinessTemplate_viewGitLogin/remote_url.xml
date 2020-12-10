@@ -125,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getVcsTool().getRemoteUrl()</string> </value>
+            <value> <string>here/remote_url</string> </value>
         </item>
       </dictionary>
     </pickle>
