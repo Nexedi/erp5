@@ -265,7 +265,8 @@
         return cell_gadget.render({
           field_type: sub_field_json.type,
           field_json: sub_field_json,
-          label: false
+          label: false,
+          development_link: false
         });
       });
   }

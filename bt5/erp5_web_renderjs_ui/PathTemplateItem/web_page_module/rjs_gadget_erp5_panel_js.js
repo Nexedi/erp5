@@ -1,7 +1,45 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
-(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray,
+         mergeGlobalActionWithRawActionList*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+           mergeGlobalActionWithRawActionList) {
   "use strict";
+
+/*
+  function appendDt(fragment, dt_title, dt_icon,
+                    action_list, href_list, index) {
+// <dt class="ui-btn-icon-left ui-icon-eye">Views</dt>
+// {{#each view_list}}
+// <dd class="document-listview">
+//   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
+// </dd>
+// {{/each}}
+    var dt_element = document.createElement('dt'),
+      dd_element,
+      a_element,
+      i;
+    dt_element.textContent = dt_title;
+    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
+    fragment.appendChild(dt_element);
+    for (i = 0; i < action_list.length; i += 1) {
+      dd_element = document.createElement('dd');
+      dd_element.setAttribute('class', 'document-listview');
+      a_element = document.createElement('a');
+      if (action_list[i].options && action_list[i].options.class_name) {
+        // Avoid add class='undefined' in HTML
+        a_element.setAttribute('class', action_list[i].options.class_name);
+      }
+      if (action_list[i].command === "raw") {
+        a_element.href = action_list[i].options.href;
+      } else {
+        a_element.href = href_list[index + i];
+      }
+      a_element.textContent = action_list[i].options.title;
+      dd_element.appendChild(a_element);
+      fragment.appendChild(dd_element);
+    }
+  }
+*/
 
   rJS(window)
     //////////////////////////////////////////////
@@ -41,11 +79,11 @@
         display_workflow_list,
         context = this,
         workflow_list,
+        group_mapping,
         view_list,
         action_list,
         clone_list,
-        jump_list,
-        i;
+        jump_list;
 
       if (visible === undefined) {
         visible = context.state.visible;
@@ -58,46 +96,35 @@
       }
 
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
-        workflow_list = ensureArray(erp5_document._links.action_workflow);
-        view_list = ensureArray(erp5_document._links.action_object_view);
-        action_list = ensureArray(erp5_document._links.action_object_jio_action)
-          .concat(ensureArray(erp5_document._links.action_object_jio_button))
-          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
-        clone_list = ensureArray(erp5_document._links.action_object_clone_action);
-        jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
+        group_mapping = mergeGlobalActionWithRawActionList(jio_key,
+          view, jump_view,
+          erp5_document._links, [
+            "action_workflow",
+            "action_object_view", [
+              "action_object_jio_action",
+              "action_object_jio_button",
+              "action_object_jio_fast_input"
+            ],
+            "action_object_clone_action",
+            "action_object_jio_jump"
+          ], {
+            "action_object_jio_action": "display_dialog_with_history",
+            "action_object_clone_action": "display_dialog_with_history"
+          }, {
+            "action_object_clone_action": true
+          });
 
-        if (view === 'view') {
-          for (i = 0; i < view_list.length; i += 1) {
-            view_list[i].class_name = view_list[i].name === view ? 'active' : '';
-          }
-        } else {
-          for (i = 0; i < workflow_list.length; i += 1) {
-            workflow_list[i].class_name = workflow_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < view_list.length; i += 1) {
-            view_list[i].class_name = view_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < action_list.length; i += 1) {
-            action_list[i].class_name = action_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < clone_list.length; i += 1) {
-            clone_list[i].class_name = clone_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < jump_list.length; i += 1) {
-            jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
-          }
-        }
-        // Prevent has much as possible to modify the DOM panel
-        // stateChange prefer to compare strings
-        workflow_list = JSON.stringify(workflow_list);
-        view_list = JSON.stringify(view_list);
-        action_list = JSON.stringify(action_list);
-        clone_list = JSON.stringify(clone_list);
-        jump_list = JSON.stringify(jump_list);
+        workflow_list = JSON.stringify(group_mapping.action_workflow);
+        view_list = JSON.stringify(group_mapping.action_object_view);
+        action_list = JSON.stringify(group_mapping.action_object_jio_action);
+        clone_list = JSON.stringify(group_mapping.action_object_clone_action);
+        jump_list = JSON.stringify(group_mapping.action_object_jio_jump);
       }
+
       if (extra_menu_list !== undefined) {
         extra_menu_list = JSON.stringify(extra_menu_list);
       }
+
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
@@ -117,10 +144,8 @@
           });
         });
     })
-
     .onStateChange(function onStateChange(modification_dict) {
       var i,
-        context = this,
         gadget = this,
         workflow_list,
         view_list,
@@ -146,7 +171,7 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return context.getDeclaredGadget('erp5_searchfield');
+            return gadget.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
             return search_gadget.render({
@@ -161,7 +186,7 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlForList([
+              gadget.getUrlForList([
                 {command: 'display'},
                 {command: 'display', options: {page: "front"}},
                 {command: 'display', options: {page: "worklist"}},
@@ -170,7 +195,7 @@
                 {command: 'display', options: {page: "preference"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
-              context.getTranslationList([
+              gadget.getTranslationList([
                 'Editable',
                 'Home',
                 'Modules',
@@ -180,7 +205,7 @@
                 'Preferences',
                 'Logout'
               ]),
-              context.getDeclaredGadget("erp5_checkbox")
+              gadget.getDeclaredGadget("erp5_checkbox")
             ]);
           })
           .push(function (result_list) {
@@ -197,7 +222,7 @@
                 'sliders', null,
                 'power-off', 'o'
               ],
-              ul_element = context.element.querySelector("ul");
+              ul_element = gadget.element.querySelector("ul");
 
             for (i = 0; i < result_list[0].length; i += 1) {
               // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
@@ -219,7 +244,7 @@
             ul_element.appendChild(ul_fragment);
 
             // Update the checkbox field value
-            if (context.state.editable) {
+            if (gadget.state.editable) {
               editable_value = ['editable'];
             }
             return result_list[2].render({field_json: {
@@ -244,64 +269,23 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
           modification_dict.hasOwnProperty("extra_menu_list"))) {
+
         dl_fragment = document.createDocumentFragment();
         gadget.element.querySelector("dl").textContent = '';
         if (this.state.view_list !== undefined) {
           queue
             .push(function () {
               var parameter_list = [];
+
               view_list = JSON.parse(gadget.state.view_list);
               action_list = JSON.parse(gadget.state.action_list);
               clone_list = JSON.parse(gadget.state.clone_list);
               jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
-              for (i = 0; i < view_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: view_list[i].href
-                  }
-                });
-              }
-              for (i = 0; i < workflow_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: workflow_list[i].href
-                  }
-                });
-              }
-              for (i = 0; i < action_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: action_list[i].href
-                  }
-                });
-              }
-              for (i = 0; i < clone_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: clone_list[i].href,
-                    editable: true
-                  }
-                });
-              }
-              for (i = 0; i < jump_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: jump_list[i].href
-                  }
-                });
-              }
+              parameter_list = view_list.concat(workflow_list).concat(
+                action_list
+              ).concat(clone_list).concat(jump_list);
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
@@ -335,7 +319,10 @@
               var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
                 href_list = [];
               for (i = 0; i < extra_menu_list.length; i += 1) {
-                extra_menu_list[i].class_name = extra_menu_list[i].active ? "active" : "";
+                extra_menu_list[i].options = {
+                  "class_name": extra_menu_list[i].active ? "active" : "",
+                  "title": extra_menu_list[i].title
+                };
                 href_list.push(extra_menu_list[i].href);
               }
               appendDt(dl_fragment, translation_list[0], 'globe',
@@ -444,4 +431,5 @@
 */
     // }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+  mergeGlobalActionWithRawActionList));

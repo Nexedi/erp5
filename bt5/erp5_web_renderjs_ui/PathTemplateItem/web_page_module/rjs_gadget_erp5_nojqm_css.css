@@ -1881,6 +1881,20 @@ ul.ui-list-grid > li button:focus {
   outline: 2px solid #3388cc;
 }
 /**********************************************
+* Developer mode actions
+**********************************************/
+.edit-form,
+.edit-form-action,
+.edit-field,
+.translate-title,
+.translate-description {
+  margin-left: 3pt;
+  color: #1F1F1F;
+}
+.translate-description {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+/**********************************************
 * Icons
 **********************************************/
 .ui-btn-icon-top::before,
