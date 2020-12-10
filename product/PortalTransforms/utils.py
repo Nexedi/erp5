@@ -2,7 +2,7 @@
 """some common utilities
 """
 
-import mimetools
+import mimetools, six
 if six.PY2:
     from email import message_from_file as message_from_bytes
 else:
