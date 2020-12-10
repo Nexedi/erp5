@@ -235,6 +235,41 @@ ignored_skin_id_set = {
   'ProductionDelivery_viewInventory',
 }
 
+# TODO: ignore officejs skins for now, but these should probably be
+# renamed
+ignored_skin_id_set.update({
+  # erp5_officejs
+  'Base_cloneDocumentForCodemirrorEditor',
+  'Base_viewNewContentDialogForCodemirror',
+  'Base_cloneDocumentForSlideshowEditor',
+  'Base_cloneNotebookForNotebookEditor',
+  'Base_downloadDialogForNotebookEditor',
+  'Base_downloadHtmlDialogForNotebookEditor',
+  'Base_exportDialogForNotebookEditor',
+  'Base_uploadDialogForNotebookEditor',
+  'Notebook_previewViewForNotebookEditor',
+  'Base_cloneDocumentForPDFViewer',
+  'Base_viewNewContentDialogForPdfViewer',
+  'WebSite_createAppConfigurationManifest',
+  'Base_cloneDocumentForTextEditor',
+  'Base_viewNewContentDialogForTextEditor',
+  'Base_cloneDocumentForSvgEditor',
+  'Base_viewNewContentDialogForSvgEditor',
+
+  # erp5_officejs_jquery_app
+  'Base_cloneDocumentForWebTable',
+  'Base_viewNewContentDialogForWebTableEditor',
+  'Base_cloneDocumentForImageEditor',
+  'Base_viewNewContentDialogForImageEditor',
+
+  # erp5_officejs_ooffice
+ 'Base_cloneDocumentForOofficeEditor',
+ 'Base_uploadDialogForOofficeEditor',
+ 'SpreadsheetDocument_viewAsJioForOofficeSpreadsheetEditor',
+ 'Base_downloadDialogForOofficeEditor',
+ 'PresentationDocument_viewAsJioForOofficePresentationEditor',
+})
+
 # Generic method to check consistency of a skin item
 def checkConsistency(self, fixit=0, source_code=None):
   """
