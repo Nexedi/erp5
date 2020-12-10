@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TransformedResource_completeQuantityMatrixForm</string> </value>
+            <value> <string>TransformedResource_viewCompleteQuantityMatrixDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TransformedResource_completeQuantityMatrixForm</string> </value>
+            <value> <string>TransformedResource_viewCompleteQuantityMatrixDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
