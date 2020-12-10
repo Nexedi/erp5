@@ -1,8 +1,5 @@
 import json
 
-context.log('BusinessTemplate_viewVcsStatusDialog\nchnagelog %s\npush %s\nadded %s\nmodified %s\nremoved %s\njson %s\nkw %s' % (changelog, push, added, modified, removed, commit_json, str(kw)))
-
-
 commit_dict = json.loads(commit_json) if commit_json is not None else {
   'added': (),
   'modified': (),
