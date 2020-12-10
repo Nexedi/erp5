@@ -18,12 +18,13 @@
 """
 Output dates and times in locale format.
 """
+from __future__ import absolute_import
 
 # Import from the Standard Library
 from decimal import Decimal
 
 # Import from itools
-from accept import get_accept
+from .accept import get_accept
 
 
 def get_format(source, accept):
