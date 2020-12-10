@@ -13,6 +13,11 @@ elif dialog_category == 'object_action':
   return sorted(actions.get('object_action', []) + actions.get('object_jio_action', []), key=lambda x: x["priority"])
 elif dialog_category == 'object_fast_input':
   return sorted(actions.get('object_fast_input', []) + actions.get('object_jio_fast_input', []), key=lambda x: x["priority"])
+elif dialog_category == 'object_button':
+  return sorted(actions.get('object_button', []) +
+                actions.get('object_jio_button', []) +
+                actions.get('object_jio_button_raw', []),
+                key=lambda x: x["priority"])
 if dialog_category != 'object_print':
   return actions.get(dialog_category, [])
 
