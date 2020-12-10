@@ -20,7 +20,11 @@ protocol.
 """
 
 # Import from the Standard Library
-import __builtin__
+import six
+if six.PY2:
+    import __builtin__
+else:
+    import builtins as __builtin__
 from decimal import Decimal
 from locale import getdefaultlocale
 
