@@ -56,4 +56,4 @@ try:
     removed=commit_dict['removed']
   )
 except Exception, error:
-  return context.BusinessTemplate_handleException(error, script.id, commit_dict=commit_dict)
+  return context.BusinessTemplate_handleException(error, script.id, commit_dict)
