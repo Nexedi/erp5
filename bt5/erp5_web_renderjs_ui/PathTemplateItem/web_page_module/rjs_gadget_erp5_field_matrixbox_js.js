@@ -199,6 +199,7 @@
 
                   return sub_gadget.render({
                     label: false,
+                    development_link: false,
                     field_type: column.type,
                     field_json: field_json
                   });
