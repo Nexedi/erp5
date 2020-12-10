@@ -526,7 +526,7 @@
             has_error: false,
             show_line_selector: false,
             show_select_action: false,
-            show_clipboard_action: false,
+            show_clipboard_action: false
           });
         });
       return queue;
@@ -712,7 +712,6 @@
               span_element = document.createElement('span'),
               tr_element,
               th_element,
-              field_href,
               a_element;
 
             div_element.setAttribute('class', 'ui-table-header ui-header');
