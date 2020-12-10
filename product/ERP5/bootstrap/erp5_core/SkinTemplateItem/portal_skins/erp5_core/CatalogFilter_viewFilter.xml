@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Method_viewFilter</string> </value>
+            <value> <string>CatalogFilter_viewFilter</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -98,7 +98,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CatalogTool_viewFilter</string> </value>
+            <value> <string>CatalogFilter_viewFilter</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
