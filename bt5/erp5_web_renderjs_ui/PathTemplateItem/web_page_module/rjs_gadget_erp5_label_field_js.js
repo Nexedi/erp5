@@ -1,4 +1,4 @@
-/*global window, document, rJS*/
+/*global window, document, rJS, domsugar, HTMLLabelElement*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS) {
+(function (window, document, rJS, domsugar, HTMLLabelElement) {
   "use strict";
 
   var SCOPE = 'field';
@@ -76,6 +76,20 @@
     return field_url;
   }
 
+  function addDeveloperAction(class_name,
+      title_href, title, root_element) {
+    var field_href = domsugar("a", {
+      "class": class_name,
+      href: title_href,
+      title: title
+    });
+    if (root_element.constructor === HTMLLabelElement) {
+      root_element.appendChild(field_href);
+    } else {
+      root_element.insertBefore(field_href, root_element.querySelector("div"));
+    }
+  }
+
   rJS(window)
     .setState({
       label_text: '',
@@ -98,6 +112,7 @@
         hidden: options.field_json.hidden,
         css_class: options.field_json.css_class
       };
+
       // RenderJS would overwrite default value with empty variables :-(
       // So we have to mitigate this behaviour
       if (state_dict.label === undefined) {
@@ -109,11 +124,14 @@
 
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
+        options = modification_dict.options || {},
+        field_json = options.field_json,
         span,
         css_class,
         i,
         queue,
         new_div;
+
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
           container_element: gadget.element.querySelector('div'),
@@ -176,15 +194,12 @@
           }
         }
       }
-
       if (modification_dict.hasOwnProperty('options')) {
         if (this.state.field_url) {
           if (modification_dict.hasOwnProperty('field_url')) {
-            //if (!modification_dict.hasOwnProperty('first_call')) {
             gadget.props.container_element.removeChild(
               gadget.props.container_element.querySelector('div')
             );
-            //}
             new_div = document.createElement('div');
             span = gadget.props.container_element.lastElementChild;
             if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
@@ -204,6 +219,65 @@
             });
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
+          }
+          if (field_json && field_json.editable &&
+              gadget.state.options.development_link !== false) {
+            queue
+              .push(function (field_gadget) {
+                var root_element,
+                  field;
+
+                if (gadget.state.label === true) {
+                  root_element = gadget.props.label_element;
+                } else {
+                  root_element = field_gadget.element;
+                }
+                if (field_json.hasOwnProperty('edit_field_href') &&
+                    !root_element.querySelector(".edit-field")) {
+                  addDeveloperAction(
+                    "edit-field ui-icon-edit ui-btn-icon-left",
+                    field_json.edit_field_href,
+                    "Edit this field",
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('edit_field_href')) {
+                  field = root_element.querySelector(".edit-field");
+                  if (field) {
+                    root_element.removeChild(field);
+                  }
+                }
+
+                if (field_json.hasOwnProperty('translate_title_href') &&
+                    !root_element.querySelector(".translate-title")) {
+                  addDeveloperAction(
+                    "translate-title ui-icon-language ui-btn-icon-left",
+                    field_json.translate_title_href,
+                    "Translate this field title",
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('translate_title_href')) {
+                  field = root_element.querySelector(".translate-title");
+                  if (field) {
+                    root_element.removeChild(field);
+                  }
+                }
+
+                if (field_json.hasOwnProperty('translate_description_href') &&
+                    !root_element.querySelector(".translate-description")) {
+                  addDeveloperAction(
+                    "translate-description ui-icon-language ui-btn-icon-left",
+                    field_json.translate_description_href,
+                    "Translate this field description",
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('translate_description_href')) {
+                  field = root_element.querySelector(".translate-description");
+                  if (field) {
+                    root_element.removeChild(field);
+                  }
+                }
+                return field_gadget;
+              });
           }
           return queue
             .push(function (field_gadget) {
@@ -268,4 +342,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS));
+}(window, document, rJS, domsugar, HTMLLabelElement));
