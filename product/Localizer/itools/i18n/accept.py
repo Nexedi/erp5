@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# Copyright (C) 2002-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2002-2008, 2010 J. David Ibáñez <jdavid.ibp@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,9 +36,6 @@ one = Decimal('1.0')
 class AcceptLanguage(dict):
     """Implements the Accept-Language tree.
     """
-
-    # Allow unrestricted access to AcceptLanguage and subobjects from Zope
-    __allow_access_to_unprotected_subobjects__ = 1
 
     def set(self, key, quality):
         if not isinstance(quality, Decimal):
