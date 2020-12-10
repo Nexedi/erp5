@@ -102,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Foo_viewListBoxInReportMode</string> </value>
+            <value> <string>Foo_viewListBoxInReportModeReport</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Foo_viewListBoxInReportMode</string> </value>
+            <value> <string>Foo_viewListBoxInReportModeReport</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
