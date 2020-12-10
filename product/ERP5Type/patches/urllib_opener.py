@@ -37,8 +37,14 @@ from io import BytesIO as StringIO
 import socket
 import os
 import dircache
-import mimetypes, mimetools
+import mimetypes
+import six
+if six.PY2:
+    from email import message_from_file as message_from_bytes
+else:
+    from email import message_from_bytes
 from email.utils import formatdate
+
 class DirectoryFileHandler(urllib.request.FileHandler):
     """
     Extends the file handler to provide an HTML
@@ -63,7 +69,7 @@ class DirectoryFileHandler(urllib.request.FileHandler):
         size = stats.st_size
         modified = formatdate(stats.st_mtime, usegmt=True)
         mtype = mimetypes.guess_type(file)[0]
-        headers = mimetools.Message(StringIO(
+        headers = message_from_bytes(StringIO(
             'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
             (mtype or 'text/plain', size, modified)))
         if host:
@@ -79,7 +85,7 @@ class DirectoryFileHandler(urllib.request.FileHandler):
                 s.write('<p><a href="%s">%s</a></p>\n' % (urllib.parse.quote(f), f))
               s.write('</body></html>')
               s.seek(0)
-              headers = mimetools.Message(StringIO(
+              headers = message_from_bytes(StringIO(
                   'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
                   ('text/html', size, modified)))
               return urllib2.addinfourl(s, headers, 'file:' + file)
