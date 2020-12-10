@@ -36,7 +36,6 @@ import urllib.request, urllib.error, urllib.parse
 from io import BytesIO as StringIO
 import socket
 import os
-import dircache
 import mimetypes
 import six
 if six.PY2:
@@ -77,7 +76,7 @@ class DirectoryFileHandler(urllib.request.FileHandler):
         if not host or \
            (not port and socket.gethostbyname(host) in self.get_names()):
             try:
-              file_list = dircache.listdir(localfile)
+              file_list = os.listdir(localfile)
               s = StringIO()
               s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
               s.write('<p>Directory Content:</p>')
