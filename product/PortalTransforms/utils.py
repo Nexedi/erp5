@@ -3,7 +3,11 @@
 """
 
 import mimetools
-import cStringIO
+if six.PY2:
+    from email import message_from_file as message_from_bytes
+else:
+    from email import message_from_bytes
+from io import BytesIO as StringIO
 
 class TransformException(Exception):
     pass
@@ -42,4 +46,4 @@ def parseContentType(content_type):
       parsed_content_type.getparam('charset')  -> 'utf-8'
       parsed_content_type.typeheader  -> 'text/plain;charset="utf-8"'
   """
-  return mimetools.Message(cStringIO.StringIO("Content-Type:" + content_type.replace("\r\n", "\r\n\t")))
+  return message_from_bytes(StringIO("Content-Type:" + content_type.replace("\r\n", "\r\n\t")))

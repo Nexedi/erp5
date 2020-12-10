@@ -10,11 +10,13 @@ import re
 import getopt
 import glob
 import cgi
-import mimetools
 import urllib
 import urlparse
 import multifile
-import StringIO
+if six.PY2:
+    from email import message_from_file as message_from_bytes
+else:
+    from email import message_from_bytes
 
 _TEST_CASE_HEADER = """\
 <html>
@@ -370,7 +372,7 @@ class ScenarioGenerator:
         if uri is None:
             return # XXX foreign site
 
-        headers = mimetools.Message( f )
+        headers = message_from_bytes ( f )
 
         body_start = f.tell()
         content_length = body_end - body_start
@@ -423,7 +425,7 @@ class ScenarioGenerator:
             status = response_file.readline().rstrip()
             match = RESPONSE_LINE.match( status )
             http_verb, code, reason = match.groups()
-            response_headers = mimetools.Message( response_file )
+            response_headers = message_from_bytes ( response_file )
             response_file.close()
         else:
             code = 200
