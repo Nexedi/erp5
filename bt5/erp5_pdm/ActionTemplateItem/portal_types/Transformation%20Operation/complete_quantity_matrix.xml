@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TransformedResource_completeQuantityMatrixForm</string> </value>
+            <value> <string>string:${object_url}/TransformedResource_viewCompleteQuantityMatrixDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
