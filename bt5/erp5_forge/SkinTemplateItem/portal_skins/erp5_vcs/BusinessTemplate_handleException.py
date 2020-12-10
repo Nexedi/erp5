@@ -18,11 +18,10 @@ except GitLoginError, e:
   method = 'BusinessTemplate_viewGitLogin'
 
 commit_dict['caller'] = caller
-# XXX caller_kw
 # Always propage all informations throught formulator hidden field
 request = context.REQUEST
 request.form['your_commit_json'] = json.dumps(commit_dict)
 
-return context.Base_renderForm(method, keep_items={
+return context.asContext(**kw).Base_renderForm(method, keep_items={
   'portal_status_message': message
 })
