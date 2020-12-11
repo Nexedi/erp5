@@ -390,9 +390,9 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
         if type(criterion_value_list) is not ExclusionList:
           criterion_id_list.append(criterion_id)
           expected_class = class_dict[criterion_id]
-          if type(criterion_value_list[0]) is not expected_class:
+          if not isinstance(criterion_value_list[0], expected_class):
             criterion_dict[criterion_id] = frozenset([expected_class(x) for x in criterion_value_list])
-          elif type(criterion_value_list) is not ImmutableSet:
+          elif not isinstance(criterion_value_list, frozenset):
             criterion_dict[criterion_id] = frozenset(criterion_dict[criterion_id])
     # Read catalog result and distribute to matching worklists
     for result_line in catalog_result:
