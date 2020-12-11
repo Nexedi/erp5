@@ -121,8 +121,10 @@ class TestFacebookLogin(ERP5TypeTestCase):
         'erp5.component.extension.FacebookLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
+      getAccessTokenFromCode_mock.__defaults__ = getAccessTokenFromCode.__defaults__
+      getUserEntry_mock.__defaults__ = getUserEntry.__defaults__
       self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()
@@ -161,8 +163,10 @@ class TestFacebookLogin(ERP5TypeTestCase):
         'erp5.component.extension.FacebookLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
+      getAccessTokenFromCode_mock.__defaults__ = getAccessTokenFromCode.__defaults__
+      getUserEntry_mock.__defaults__ = getUserEntry.__defaults__
       self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
 
     ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_facebook_hash=' in v]
@@ -227,8 +231,10 @@ return credential_request
         'erp5.component.extension.FacebookLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
+      getAccessTokenFromCode_mock.__defaults__ = getAccessTokenFromCode.__defaults__
+      getUserEntry_mock.__defaults__ = getUserEntry.__defaults__
       response = self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
     facebook_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_facebook_hash")["value"]
     self.assertEqual("8cec04e21e927f1023f4f4980ec11a77", facebook_hash)
