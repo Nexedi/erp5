@@ -27,7 +27,7 @@
 
   function getTranslationDict(gadget) {
     var word_list = ['Added Files', 'Modified Files', 'Removed Files',
-                     'Tree', 'Diff', 'Changelog', 'Expand'];
+                     'Tree', 'Diff', 'Changelog', 'Expand', 'Push'];
     return gadget.getTranslationList(word_list)
       .push(function (result_list) {
         var result = {},
@@ -492,6 +492,13 @@
       .push(function (translation_dict) {
         renderGadgetHeader(gadget, false, translation_dict);
         domsugar(gadget.element.querySelector('div.vcsbody'), [
+          domsugar('label', {text: translation_dict.Push}, [
+            ' ',
+            domsugar('input', {
+              type: 'checkbox',
+              checked: result.push || gadget.state.default_push || false
+            })
+          ]),
           domsugar('h3', {text: translation_dict.Changelog}),
           domsugar('textarea', {
             value: result.changelog || gadget.state.default_changelog || ''
@@ -509,6 +516,7 @@
   function getContentFromChangelogView(gadget) {
     var result = JSON.parse(gadget.state.value);
     result.changelog = gadget.element.querySelector('textarea').value;
+    result.push = gadget.element.querySelector('input').checked;
     gadget.state.value = JSON.stringify(result);
   }
 
