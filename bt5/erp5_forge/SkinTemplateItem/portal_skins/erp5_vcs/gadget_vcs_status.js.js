@@ -516,6 +516,10 @@
   function getContentFromChangelogView(gadget) {
     var result = JSON.parse(gadget.state.value);
     result.changelog = gadget.element.querySelector('textarea').value;
+    // Ensure user set a changelog
+    if (result.changelog === gadget.state.default_changelog) {
+      result.changelog = '';
+    }
     result.push = gadget.element.querySelector('input').checked;
     gadget.state.value = JSON.stringify(result);
   }
