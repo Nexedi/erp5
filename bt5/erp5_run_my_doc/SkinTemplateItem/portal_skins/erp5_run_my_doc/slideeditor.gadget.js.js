@@ -757,9 +757,9 @@
           .push(function () {
             var slide_list = getSlideElementList(gadget.state.value);
             slide_list.splice(parseInt(
-                evt.target.getAttribute('data-slide-index'),
-                10
-              ), 1);
+              evt.target.getAttribute('data-slide-index'),
+              10
+            ), 1);
             return RSVP.all([
               gadget.changeState({
                 value: slideListAsHTML(slide_list)
