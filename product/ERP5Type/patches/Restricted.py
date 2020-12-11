@@ -16,9 +16,6 @@ import sys
 import types
 import six
 
-if six.PY2:
-  from RestrictedPython.RestrictionMutator import RestrictionMutator
-
 _MARKER = []
 def checkNameLax(self, node, name=_MARKER):
   """Verifies that a name being assigned is safe.
@@ -37,7 +34,9 @@ def checkNameLax(self, node, name=_MARKER):
     self.error(node, '"%s" is an invalid variable name because '
                      'it ends with "__roles__".' % name)
 
-#RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
+if six.PY2:
+  from RestrictedPython.RestrictionMutator import RestrictionMutator
+  RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire
