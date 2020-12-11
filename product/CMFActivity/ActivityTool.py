@@ -26,14 +26,15 @@ from __future__ import absolute_import
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from future import standard_library
+standard_library.install_aliases()
 
 import socket
 import urllib
 import threading
 import sys
-from types import StringType
 from collections import defaultdict
-from cPickle import dumps, loads
+from pickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
@@ -171,7 +172,7 @@ def getCurrentNode():
 # Structure:
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
 global_activity_buffer = defaultdict(dict)
-from thread import get_ident
+from _thread import get_ident
 
 MESSAGE_NOT_EXECUTED = 0
 MESSAGE_EXECUTED = 1

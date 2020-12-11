@@ -86,14 +86,18 @@
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
 from future.utils import raise_
 __version__='$Revision: 1.20 $'[11:-2]
-
+import six
 import os
 import re
-import _mysql
+if six.PY2:
+  import _mysql
+  from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
+else:
+  from MySQLdb import _mysql
+  from MySQLdb._exceptions import OperationalError, NotSupportedError, ProgrammingError
 import MySQLdb
 import warnings
-from contextlib import contextmanager, nested
-from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
+from contextlib import contextmanager, ExitStack as nested
 from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
 MySQLdb_version_required = (0,9,2)
 

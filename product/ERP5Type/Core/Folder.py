@@ -28,6 +28,8 @@
 ##############################################################################
 
 from future.utils import raise_
+from future import standard_library
+standard_library.install_aliases()
 import transaction
 from collections import deque
 from functools import wraps
@@ -77,7 +79,7 @@ from random import randint
 import os
 from zLOG import LOG, WARNING
 import warnings
-from urlparse import urlparse
+from urllib.parse import urlparse
 from Products.ERP5Type.Message import translateString
 from ZODB.POSException import ConflictError
 
