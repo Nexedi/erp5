@@ -25,7 +25,7 @@ if push is not None:
 commit_dict.pop('caller', None)
 commit_dict.pop('caller_kw', None)
 
-# Always propage all informations throught formulator hidden field
+# Always propage all information throught formulator hidden field
 request = context.REQUEST
 request.form['your_commit_json'] = json.dumps(commit_dict)
 request.form['your_added'] = commit_dict['added']
