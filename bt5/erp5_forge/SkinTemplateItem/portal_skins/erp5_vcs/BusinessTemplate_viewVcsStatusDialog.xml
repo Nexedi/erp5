@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Commit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
