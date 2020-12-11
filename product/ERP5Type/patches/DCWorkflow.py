@@ -37,6 +37,7 @@ from Products.ERP5Type.Utils import convertToMixedCase
 import sys
 from Acquisition import aq_base
 from copy import deepcopy
+from future.utils import raise_
 
 # Patch WorkflowUIMixin to add description on workflows
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
@@ -475,7 +476,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         sci.setWorkflowVariable(error_message=before_script_error_message)
         if validation_exc :
             # reraise validation failed exception
-            raise validation_exc.with_traceback(validation_exc_traceback)
+            raise raise_(validation_exc, None, validation_exc_traceback)
         return new_sdef
 
     # Update state.
