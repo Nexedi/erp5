@@ -18,7 +18,7 @@ except GitLoginError, e:
   method = 'BusinessTemplate_viewGitLogin'
 
 commit_dict['caller'] = caller
-# Always propage all informations throught formulator hidden field
+# Always propage all information throught formulator hidden field
 request = context.REQUEST
 request.form['your_commit_json'] = json.dumps(commit_dict)
 
