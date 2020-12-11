@@ -193,18 +193,16 @@
       ])
     ],
       tree_icon = 'ui-icon-check-square',
-      diff_icon = 'ui-icon-search-plus';
-      // changelog_icon = 'ui-icon-git';
+      diff_icon = 'ui-icon-search-plus',
+      changelog_icon = 'ui-icon-git';
 
     if (loading) {
       if (gadget.state.display_step === DISPLAY_TREE) {
         tree_icon = 'ui-icon-spinner';
       } else if (gadget.state.display_step === DISPLAY_DIFF) {
         diff_icon = 'ui-icon-spinner';
-/*
       } else if (gadget.state.display_step === DISPLAY_CHANGELOG) {
         changelog_icon = 'ui-icon-spinner';
-*/
       } else {
         throw new Error("Can't render header state " +
                         gadget.state.display_step);
@@ -223,14 +221,12 @@
         text: translation_dict.Diff,
         disabled: (gadget.state.display_step === DISPLAY_DIFF),
         class: 'diff-tree-btn ui-btn-icon-left ' + diff_icon
-/*
       }),
       domsugar('button', {
         type: 'button',
         text: translation_dict.Changelog,
         disabled: (gadget.state.display_step === DISPLAY_CHANGELOG),
         class: 'changelog-btn ui-btn-icon-left ' + changelog_icon
-*/
       })
     );
 
@@ -496,7 +492,10 @@
       .push(function (translation_dict) {
         renderGadgetHeader(gadget, false, translation_dict);
         domsugar(gadget.element.querySelector('div.vcsbody'), [
-          domsugar('textarea', {value: result.changelog}),
+          domsugar('h3', {text: translation_dict.Changelog}),
+          domsugar('textarea', {
+            value: result.changelog || gadget.state.default_changelog || ''
+          }),
           domsugar('h3', {text: translation_dict['Added Files']}),
           domsugar('pre', {text: result.added.join('\n')}),
           domsugar('h3', {text: translation_dict['Modified Files']}),
@@ -526,11 +525,14 @@
         remote_comment: options.remote_comment,
         remote_url: options.remote_url,
         key: options.key,
+        default_changelog: options.default_changelog,
+        default_push: options.default_push,
         value: options.value || JSON.stringify({
           added: [],
           modified: [],
           removed: [],
-          changelog: ''
+          changelog: '',
+          push: false
         }),
         editable: (options.editable === undefined) ? true : options.editable
       });
