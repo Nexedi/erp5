@@ -74,7 +74,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 

@@ -278,10 +278,11 @@
           ["bottom", [["your_slide_content"]]]
         ]
       }
-    };
-    // Show chapter_title and slide_type inputs only during slide editing
-    if (title_html !== null && type !== null) {
+    },
+      extra_group_list = [];
 
+    // Show chapter_title and slide_type inputs only during slide editing
+    if (title_html !== null) {
       ck_editor_json.erp5_document._embedded._view.your_chapter_title = {
         "title": translation_dict["Chapter Title"],
         "type": "StringField",
@@ -290,7 +291,10 @@
         "key": "title_html",
         "value": title_html
       };
+      extra_group_list.push(["your_chapter_title"]);
+    }
 
+    if (type !== null) {
       ck_editor_json.erp5_document._embedded._view.your_slide_type = {
         "title": translation_dict["Type of Slide"],
         "type": "ListField",
@@ -305,6 +309,7 @@
                       ],
         value: type
       };
+      extra_group_list.push(["your_slide_type"]);
 
       if (image_url !== null) {
         ck_editor_json.erp5_document._embedded._view.your_image_url = {
@@ -324,25 +329,15 @@
           "key": "image_caption",
           "value": image_caption
         };
-
-        ck_editor_json.form_definition.group_list = [
-          ["left", [
-            ["your_chapter_title"],
-            ["your_slide_type"],
-            ["your_image_url"],
-            ["your_image_caption"]
-          ]]
-        ].concat(ck_editor_json.form_definition.group_list);
-      } else {
-        ck_editor_json.form_definition.group_list = [
-          ["left", [
-            ["your_chapter_title"],
-            ["your_slide_type"]
-          ]]
-        ].concat(ck_editor_json.form_definition.group_list);
+        extra_group_list.push(["your_image_url"], ["your_image_caption"]);
       }
     }
 
+    if (extra_group_list.length !== 0) {
+      ck_editor_json.form_definition.group_list = [
+        ["left", extra_group_list]
+      ].concat(ck_editor_json.form_definition.group_list);
+    }
     return ck_editor_json;
   }
 
@@ -384,7 +379,7 @@
         translation_dict,
         "comment_html",
         slide_dict.comment_html,
-        null,
+        slide_dict.title_html,
         null,
         null,
         null
