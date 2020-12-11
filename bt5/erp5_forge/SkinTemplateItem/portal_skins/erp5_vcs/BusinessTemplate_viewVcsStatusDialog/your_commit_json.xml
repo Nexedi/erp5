@@ -135,7 +135,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'default_changelog\', "{}: ".format(context.getTitle())), (\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
+            <value> <string>python: [(\'default_push\', preferences.getPreferredVcsPushMode() and not here.getVcsTool().getAheadCount()), (\'default_changelog\', "{}: ".format(context.getTitle())), (\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
         </item>
       </dictionary>
     </pickle>
