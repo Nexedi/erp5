@@ -21,6 +21,7 @@ methodDraw.addExtension("shapes", function() {
   // This populates the category list
   var categories = {
     basic: 'Basic',
+    nexedi: 'Nexedi Shapes',
     object: 'Objects',
     symbol: 'Symbols',
     arrow: 'Arrows',
