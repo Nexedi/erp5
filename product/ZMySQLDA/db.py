@@ -97,7 +97,11 @@ else:
   from MySQLdb._exceptions import OperationalError, NotSupportedError, ProgrammingError
 import MySQLdb
 import warnings
-from contextlib import contextmanager, ExitStack as nested
+from contextlib import contextmanager
+if six.PY2:
+  from contextlib import nested
+else:
+  from contextlib import ExitStack as nested
 from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
 MySQLdb_version_required = (0,9,2)
 
