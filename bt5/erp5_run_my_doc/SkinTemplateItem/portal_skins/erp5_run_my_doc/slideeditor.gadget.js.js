@@ -102,7 +102,7 @@
     // No idea what it is for now
 
     // Get the comment
-    details = slide.querySelector(':scope > details');
+    details = slide.querySelector(':scope > details:last-child');
     if (details !== null) {
       result.comment_html = details.innerHTML;
       slide.removeChild(details);
@@ -169,8 +169,8 @@
     }
     slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' +
                       img +
-                      '<details>' + slide_dict.comment_html + '</details>' +
-                      slide_dict.slide_html;
+                      slide_dict.slide_html +
+                      '<details>' + slide_dict.comment_html + '</details>';
 
     return slideListAsHTML(slide_list);
   }
