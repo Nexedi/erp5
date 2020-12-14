@@ -1,6 +1,5 @@
 """Returns the `text_content` that should be set on the translation data script for this RJS website.
 """
-import re
 import json
 
 portal = context.getPortalObject()
@@ -11,24 +10,33 @@ Base_translateString = context.Base_translateString
 #   <span data-18n="The message">The message</span>
 # or in comments, like this:
 #   <!-- data-i18n="The message" -->
-attribute_filter_re = re.compile(r"""(data-i18n)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?""")
 translatable_message_set = set([])
-for web_page in portal.web_page_module.searchFolder(portal_type='Web Page',
-                                                    reference=context.Base_getTranslationSourceFileList(only_html=1)):
-  data = attribute_filter_re.findall(web_page.getTextContent())
-  for attribute in data:
-    a = re.sub(r'[{|}]', "", attribute[1])
-    a = re.sub(r'\[.*?\]', "", a)
-    if a:
-      translatable_message_set.add(a)
+
+# Web pages can be in web page module ...
+web_page_reference_list = context.Base_getTranslationSourceFileList(only_html=1)
+not_found_in_web_page_reference_set = set([])
+for web_page_reference in web_page_reference_list:
+  web_page = context.getDocumentValue(web_page_reference)
+  if web_page is None:
+    not_found_in_web_page_reference_set.add(web_page_reference)
+  else:
+    for message in portal.ERP5Site_extractTranslationMessageListFromHTML(web_page.getTextContent()):
+      translatable_message_set.add(message)
+# ... or in skin folders
+for web_page_reference in not_found_in_web_page_reference_set:
+  if not '/' in web_page_reference:
+    web_page = context.restrictedTraverse(web_page_reference, None)
+    if web_page is not None and hasattr(web_page, 'manage_FTPget'):
+      for message in portal.ERP5Site_extractTranslationMessageListFromHTML(web_page.manage_FTPget()):
+        translatable_message_set.add(message)
 
 tmp = {}
 for language in context.getAvailableLanguageSet():
   tmp[language] = {}
   for word in translatable_message_set:
-    tmp[language][word] = Base_translateString(word, lang = language)
+    tmp[language][word] = unicode(Base_translateString(word, lang = language), 'utf-8')
 
-return """/**
+return u"""/**
  * This translation data is generated automatically and updated with upgrader in post-upgarde.
  * Do not edit manually, but use "Update Translation Data" action on web site to update from
  * Localizer and from data-i18n tags on web pages.
@@ -41,7 +49,7 @@ return """/**
   // @ts-ignore
   window.translation_data = %s;
 }(window));
-""" % ("\n  ".join(
+""" % (u"\n  ".join(
         json.dumps(
             tmp,
             sort_keys=True,
