@@ -1,0 +1,365 @@
+.draginputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.draginput {
+  background-color: var(--z2);
+  border-radius: var(--x1);
+  width: calc(50% - var(--x2));
+  height: calc(var(--x9) * 2);
+  display: block;
+  position: relative;
+  margin: 0 var(--x2) var(--x2) 0;
+  overflow: hidden;
+  transition: var(--transition);
+  box-shadow:  none;
+}
+
+.dragging .draginput {
+  pointer-events:  none;
+}
+
+.dragging .draginput.active {
+  pointer-events:  all;
+  box-shadow: none;
+}
+
+.draginput:hover {
+  background-color: var(--z3);
+  transition: none;
+  box-shadow:  var(--shadow-bg);
+}
+
+.draginput:hover span,
+.draginput.active span {
+  color: var(--z15);
+}
+
+.draginput:hover input,
+.draginput.active input {
+  color: var(--accent8);
+}
+
+.draginput.active, 
+.draginput.active:hover {
+  background-color: var(--z0);
+}
+
+.draginput.active:hover {
+  transition: none;
+}
+
+/* TODO this will only work for two line buttons */
+
+.draginput-button {
+  text-align: center;
+  color: var(--z9);
+  padding-top: var(--x5);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.draginput-button-delete:hover {
+  background-color:  var(--a7);
+  color:  var(--a15);
+  transition: none;
+}
+
+ .draginput .caret {
+  border: solid transparent 5px;
+  border-top-color: var(--z9);
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: 5px;
+  margin-top: -2px;
+  top: 50%;
+}
+
+.draginput label {
+  margin: 28px 10px 0 5px;
+  font-size: 14px;
+  color: var(--z15);
+  font-weight: bold;
+}
+
+.draginput label#resolution_label,  .draginput label#seg_type_label {
+  font: bold 12px/110% sans-serif;
+  position: absolute;
+  left: auto;
+  right: 10px;
+  z-index: 0;
+  text-align: right;
+}
+
+.draginput label#seg_type_label {
+  margin-top: 40px;
+}
+
+.draginput label#seg_type_label .caret {
+  top: 66%;
+}
+
+.draginput label#resolution_label .pull {
+  position: relative;
+  left: -15px;
+}
+
+.draginput label#resolution_label span {
+  right: -13px;
+  left: auto;
+  font-size: 16px;
+  top: 2px;
+  font-weight: bold;
+  color: white;
+}
+
+.draginput input {
+  border: none;
+  background: transparent;
+  font: 24px/normal sans-serif;
+  text-align: center;
+  color: var(--accent7);
+  padding: 30px 0 16px;
+  width: 100%;
+  height: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.draginput input::selection { background: var(--accent9); }
+
+.draginput.text-input input, 
+.draginput.text-input input:hover, 
+.draginput.text-input input:active {
+  cursor: text;
+}
+
+.draginput.text-input input {
+  text-align: left;
+  text-indent: var(--x2);
+}
+
+.draginput.textcontent.hidden {
+  position: absolute;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.draginput.textcontent input {
+  cursor: text;
+  text-align: left;
+  text-indent:  var(--x2);
+}
+
+.draginput.textcontent input,
+.draginput.textcontent input:hover,
+.draginput.textcontent input:active {
+  cursor: text;
+}
+
+.text-path .draginput.textcontent {
+  opacity:  1;
+  position: relative;
+  cursor: text;
+  pointer-events: auto;
+}
+
+.draginput.twocol {
+  width: 100%;
+}
+
+.draginput input, .draginput input:hover, .draginput input:active {  
+    cursor: url(../images/drag.png), move;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+}
+
+.draginput input[type="checkbox"], .draginput input[type="checkbox"]:hover, .draginput input[type="checkbox"]:active {  
+    cursor: pointer;
+}
+
+.draginput.checkbox {
+  cursor: pointer;
+}
+
+.draginput.active input, .draginput.active input:hover, .draginput.active input:active {  
+    cursor: url(../images/dragging.png), move;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+}
+
+.draginput input:invalid {
+  color: var(--a7);
+}
+
+.draginput.error {
+  background-color: var(--a7);
+  color: var(--a15);
+}
+
+.draginput span {
+  font: 12px/130% sans-serif;
+  color: var(--z8);
+  display: block;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  text-align: left;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.draginput.stroke_tool {
+  text-align: center;
+}
+
+.draginput select {
+  -webkit-appearance: none;
+  opacity: 0;
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  cursor:  pointer;
+}
+
+.draginput:hover .draginput_cursor {
+  border-color: var(--accent6);
+}
+
+.draginput_cursor{
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  border-top: solid var(--accent4) 1px;
+  z-index: 0;
+}
+
+.draginput input[readonly=readonly] {
+  -webkit-appearance: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.draginput input:focus {
+  background: var(--accent7);
+  color: var(--accent15);
+  outline: none;
+  box-shadow: 0 0 5px 2px var(--accent7);
+}
+
+ .draginput input:focus+span {
+  z-index: 10;
+  color: var(--z15);
+}
+
+.draginput .push_bottom {
+  bottom: 0;
+  position: absolute;
+}
+
+.draginput .angle {
+  width: var(--x12);
+  height: var(--x12);
+  border-radius: var(--x12);
+  background-color: var(--z3);
+  position: absolute;
+  bottom: var(--x1);
+  left: 14px;
+}
+
+body.dragging .draginput .angle {
+  background-color: var(--z1);
+}
+
+.draginput:hover .angle {
+  background: var(--z4);
+}
+
+.draginput .angle-cursor {
+  width:         4px;
+  height:        25px;
+  border-top: solid var(--accent7) 3px;
+  position: absolute;
+  margin: 0 0 0 23px;
+  transform-origin: 50% 0;
+}
+
+.draginput.font_style:hover {
+  background-color: var(--z2);
+}
+
+.draginput.loading:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color:  var(--z2);
+  opacity:  0.8;
+  z-index: 10;
+}
+
+.draginput.loading:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--x4);
+  height: var(--x4);
+  border-radius: var(--x4);
+  z-index: 10;
+  border: solid var(--accent7) 2px;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0%   { transform: translate(-50%, -50%) rotate(0);      }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+
+
+
+/* inverted */
+
+.inverted .draginput {
+  background-color: var(--z1);
+}
+
+.inverted .draginput {
+  background-color: var(--z1);
+}
+
+
+.inverted .draginput:hover {
+  background-color: var(--z0);
+}
+
+.inverted .draginput .angle {
+  background-color: var(--z2);
+}
+
+.inverted .draginput span {
+  color: var(--z9);
+}
+
+body.inverted.dragging .draginput .angle {
+  background-color: var(--z1);
+}
