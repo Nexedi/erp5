@@ -28,7 +28,13 @@
 ##############################################################################
 
 from future.utils import raise_
-from webdav.client import Resource
+import six
+if six.PY2:
+    from webdav.client import Resource
+else:
+    # No ZServer
+    class Resource:
+        pass
 
 from App.config import getConfiguration
 import os
@@ -48,7 +54,7 @@ from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 import urllib2
 import re

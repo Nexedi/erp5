@@ -31,6 +31,7 @@ from __future__ import absolute_import
 
 from .Constraint import Constraint
 from DateTime import DateTime
+import six
 
 boolean_type_list = (int, bool)
 
@@ -48,7 +49,6 @@ class PropertyTypeValidity(Constraint):
     'int':                (int, ),
     'boolean':            boolean_type_list,
     'float':              (float, ),
-    'long':               (long, ),
     'tales':              (str, ),
     'lines':              (list, tuple),
     'tokens':             (list, tuple),
@@ -56,7 +56,8 @@ class PropertyTypeValidity(Constraint):
     'multiple selection': (list, tuple),
     'date':               (DateTime, ),
   }
-
+  if six.PY2:
+      _type_dict['long'] = (long,),
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object', 'data')
 

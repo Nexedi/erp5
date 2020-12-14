@@ -26,11 +26,14 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+
 try:
   from ZODB._compat import cPickle
   PicklingError = cPickle.PicklingError
 except ImportError: # BBB: ZODB < 4
-  from cPickle import PicklingError
+  from pickle import PicklingError
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
   PropertyConstantGetter

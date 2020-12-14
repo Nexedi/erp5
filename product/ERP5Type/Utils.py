@@ -747,7 +747,7 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
     from zope.interface import Interface
     from Products.ERP5Type import interfaces
     InterfaceClass = type(Interface)
-    for k, v in module.__dict__.iteritems():
+    for k, v in module.__dict__.items():
       if type(v) is InterfaceClass and v is not Interface:
         setattr(interfaces, k, v)
 

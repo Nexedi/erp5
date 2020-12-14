@@ -27,7 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-import sys
+import sys, six
 import transaction
 from random import getrandbits
 import MySQLdb
@@ -77,7 +77,10 @@ def render_datetime(x):
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
   sqltest_dict = {}
-  no_quote_type = int, float, long
+  if six.PY2:
+    no_quote_type = int, float, long
+  else:
+    no_quote_type = int, float
   def _(name, column=None, op="="):
     if column is None:
       column = name

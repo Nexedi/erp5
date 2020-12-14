@@ -22,11 +22,11 @@
 ZServer hook to dump a traceback of the running python threads.
 """
 
-import thread
+import _thread
 from sys import _current_frames
 import traceback
 import time
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 from zLOG import LOG, DEBUG, ERROR
 from App.config import getConfiguration
@@ -113,6 +113,7 @@ def match(self, request):
         return 1
     else:
         return 0
-
-from ZServer.HTTPServer import zhttp_handler
-zhttp_handler.match = match
+import six
+if six.PY2:
+  from ZServer.HTTPServer import zhttp_handler
+  zhttp_handler.match = match

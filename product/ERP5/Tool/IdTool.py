@@ -28,7 +28,7 @@
 
 from future.utils import raise_
 import warnings
-import zope.interface
+from zope.interface import implementer
 
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -43,11 +43,11 @@ from BTrees.Length import Length
 
 _marker = object()
 
+@implementer(interfaces.IIdTool)
 class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
   """
-  zope.interface.implements(interfaces.IIdTool)
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'
