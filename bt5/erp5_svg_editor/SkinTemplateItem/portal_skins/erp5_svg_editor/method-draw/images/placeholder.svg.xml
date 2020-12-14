@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>anonymous_http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>placeholder.svg</string> </value>
         </item>
