@@ -1,0 +1,90 @@
+#shape_buttons {
+  overflow: auto;
+  top: 0;
+  bottom: 0;
+  left: 136px;
+  right: 0;
+  position: absolute;
+  vertical-align: top;
+}
+
+#shape_cats {
+  min-width: 110px;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 320px;
+  background: var(--z14);
+  border-radius: var(--x1) 0 0 var(--x1);
+  z-index: 2;
+}
+
+#shape_cats > div {
+  padding: 0 var(--x4);
+  background: var(--z14);
+  color: var(--z6);
+  height: var(--x7);
+  line-height: var(--x7);
+  transition:  background-color 100ms ease;
+}
+
+#shape_cats > div:first-child {
+  border-radius: var(--x1) 0 0 0;
+}
+
+#shape_cats > div:last-child {
+  border-radius: 0 0 0 var(--x1);
+}
+
+#shape_cats div:hover {
+  color: var(--z0);
+}
+
+#shape_cats div.current {
+  font-weight: bold;
+  background: var(--accent7);
+  color: var(--z15);
+}
+
+.tools_flyout {
+  position: absolute;
+  display: none;
+  cursor: pointer;
+  width: 410px;
+  z-index: 10;
+  left: var(--x12);
+  top: 230px;
+  height: 336px;
+  background: var(--z15);
+  border-radius: var(--x1);
+  box-shadow: var(--shadow);
+}
+
+ .tools_flyout .tool_button {
+  float: left;
+  background-color: var(--z15);
+  height: var(--x6);
+  width: var(--x6);
+}
+
+/* Necessary to keep the flyouts sized properly */
+#shape_buttons {background: var(--z15); border-radius: 0 3px 3px 0; padding: 10px}
+
+.tools_flyout .tool_button,
+.tools_flyout .tool_flyout {
+  background: var(--z15);
+  width: var(--x10);
+  height: var(--x10);
+  margin: var(--x1);
+}
+
+.tools_flyout .tool_button svg,
+.inverted .tools_flyout .tool_button svg {
+  fill: var(--z4);
+}
+
+.tools_flyout .tool_button:hover svg {
+  fill: var(--z1);
+}
+
