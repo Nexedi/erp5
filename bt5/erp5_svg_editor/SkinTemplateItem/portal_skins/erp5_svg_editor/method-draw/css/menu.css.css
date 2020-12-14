@@ -1,0 +1,198 @@
+#menu_bar {
+  padding: 0 0 0 var(--x12);
+  position: relative;
+  z-index: 2;
+  height: var(--x8);
+  display: flex;
+}
+
+#menu_bar.active .menu.open .menu_list {
+  display: block;
+}
+
+.menu {
+  position: relative;
+  z-index: 5;
+  color: var(--z3);
+  display: inline-block;
+}
+
+.menu_title {
+  cursor: pointer;
+  display: inline-block;
+  z-index: 10;
+  color: var(--z15);
+  position: relative;
+  line-height: var(--x8);
+  padding: 0 var(--x3);
+  vertical-align: top;
+}
+
+.menu .menu_title:hover {
+  background: var(--z2);
+}
+
+.menu_list .separator {
+  margin: var(--x1) 0;
+  border-top: solid var(--z14) 1px;
+}
+
+.menu_list {
+  position: absolute;
+  left: 0;
+  top: var(--x8);
+  white-space: nowrap;
+  background: var(--z15);
+  padding: var(--x2) 0;
+  border-radius: 0 var(--x2) var(--x2) var(--x2);
+  box-shadow:  var(--shadow);
+}
+
+
+#menu_bar.active .menu.open .menu_title {
+  background: var(--z15);
+  color: var(--z1);
+}
+
+.inverted #menu_bar.active .menu.open .menu_title {
+  background: var(--z0);
+  color: var(--z15);
+}
+
+.menu .menu_list {
+  display: none;
+  position: absolute;
+}
+
+.menu_list .menu_item {
+  position: relative;
+  overflow: hidden;
+  line-height: var(--x6);
+  padding: var(--x1) var(--x16) var(--x1) var(--x6);
+  cursor: pointer;
+  color: var(--z3);
+}
+
+.menu_list input[type=file] {
+  -webkit-appearance: none;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: block;
+  background: red;
+  z-index: 100;
+}
+
+
+.menu_list .menu_item.tool_button {
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: var(--x1) var(--x16) var(--x1) var(--x6);
+  height: auto;
+  width: auto;
+}
+
+.menu_list .menu_item.push_button_pressed:before {
+  content: '✔';
+  position: absolute;
+  display: block;
+  left: 6px;
+  top: var(--x1);
+}
+
+.menu_list .menu_item:hover,
+.menu_list .menu_item.push_button_pressed:hover {
+  background: var(--accent15);
+  color: #000;
+}
+
+.menu_list .menu_item.disabled:hover,
+.menu_list .menu_item.push_button_pressed.disabled:hover {
+  background: transparent;
+  color: var(--z3);
+}
+
+.menu_list .menu_item.push_button_pressed {
+  background: transparent;
+  border: none; 
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+.menu_list .menu_item span {
+  display: block;
+  position: absolute;
+  right: var(--x2);
+  padding: 0 var(--x2);
+  background: var(--z14);
+  top: 50%;
+  transform: translate(0, -50%);
+  text-align: center;
+  font-size: 12px;
+  line-height: var(--x6);
+  border-radius: var(--x1);
+  font-weight: 600;
+}
+
+.menu_list .menu_item:not(.disabled):hover span {
+  background: var(--accent13);
+}
+
+#modal_donate {
+  display: none;
+}
+
+.menu-right {
+  margin-left: auto;
+}
+
+.menu-right button {
+  background: transparent;
+  line-height: var(--x5);
+}
+
+.menu-right button:hover {
+  background: transparent;
+}
+
+.menu-right button:active {
+  box-shadow: none;
+  outline: none;
+}
+
+.menu-right button:hover svg {
+  fill:  var(--z12);
+}
+
+.menu-right svg {
+  fill:  var(--z5);
+}
+
+.inverted .menu-right svg {
+  fill:  var(--z10);
+}
+
+#logo svg {
+  pointer-events: none;
+  margin-top: var(--x2);
+  fill: var(--z7);
+}
+
+#logo svg path:last-child {
+  fill:  var(--z13);
+}
+
+#logo:hover svg {
+  fill:  var(--z9);
+}
+
+#logo svg path:last-child {
+  fill:  var(--z15);
+}
+
