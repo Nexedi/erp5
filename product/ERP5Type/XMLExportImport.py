@@ -27,6 +27,10 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+import six
+
 from Acquisition import aq_base, aq_inner
 
 from io import BytesIO as StringIO
@@ -38,13 +42,10 @@ from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
 from zLOG import LOG
 from base64 import standard_b64encode
-try:
-    # BBB copy_reg was renamed to copyreg in python 3
-    # althoug copyreg exists in python 2, dispatch_table is only
-    # accessible via copy_reg module
-    import copy_reg as copyreg
-except ModuleNotFoundError:
-    import copyreg
+if six.PY2:
+  from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap
+else:
+  from pickle import _Pickler as Pickler, EMPTY_DICT, MARK, DICT, PyStringMap
 from hashlib import sha1
 
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
@@ -53,7 +54,7 @@ marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
 
 class OrderedPickler(Pickler):
 
-    dispatch = copyreg.dispatch_table.copy()
+    dispatch = Pickler.dispatch.copy()
 
     def save_dict(self, obj):
         write = self.write

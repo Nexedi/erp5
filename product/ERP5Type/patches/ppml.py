@@ -14,6 +14,9 @@
 ##############################################################################
 
 import re
+from future import standard_library
+standard_library.install_aliases()
+import six
 
 # Import everything right now, not after
 # or new patch will not work
@@ -22,13 +25,6 @@ from Shared.DC.xml import ppml
 
 from marshal import dumps as mdumps
 from zLOG import LOG
-try:
-  # BBB copy_reg was renamed to copyreg in python 3
-  # althoug copyreg exists in python 2, dispatch_table is only
-  # accessible via copy_reg module
-  import copy_reg as copyreg
-except ModuleNotFoundError:
-  import copyreg
 
 # For converting to a more readable expression.
 reprs = {}
@@ -472,6 +468,10 @@ class Long(Scalar):
             return result[:-1]
         return result
 
+if six.PY2:
+    from pickle import Unpickler
+else:
+    from pickle import _Unpickler as Unpickler
 class ToXMLUnpickler(Unpickler):
 
     def load(self, id_mapping=None):
@@ -482,7 +482,7 @@ class ToXMLUnpickler(Unpickler):
       return Pickle(Unpickler.load(self), self.id_mapping)
 
     dispatch = {}
-    dispatch.update(copyreg.dispatch_table.copy())
+    dispatch.update(Unpickler.dispatch.copy())
 
     def persistent_load(self, v):
         return Persistent(v, self.id_mapping)
