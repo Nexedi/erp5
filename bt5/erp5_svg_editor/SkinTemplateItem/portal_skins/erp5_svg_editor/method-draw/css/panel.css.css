@@ -1,0 +1,44 @@
+ #panels {
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--panel-width);
+  right: var(--x1);
+  top: var(--x5);
+  bottom: 0;
+  border-bottom: none;
+  overflow: auto;
+  padding: 0;
+}
+
+.context_panel {
+  display: none;
+}
+
+.context_panel h4 {
+  color: var(--z15);
+  font-weight: normal;
+  margin: 0;
+  padding: 10px 0 5px 0;
+}
+
+.context_panel label {
+  display: block;
+  color: var(--z13);
+  white-space: nowrap;
+}
+
+#align_tools {
+  display: none;
+}
+
+#panels.multiselected #multiselected_panel {
+  display: block !important;
+}
+
+#panels.multiselected #multiselected_panel .hidable {
+  display: none;
+}
+
+#tool_text_on_path {
+  display: none !important;
+}
