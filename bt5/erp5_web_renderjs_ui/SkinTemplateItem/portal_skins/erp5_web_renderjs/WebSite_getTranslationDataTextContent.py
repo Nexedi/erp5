@@ -12,23 +12,21 @@ Base_translateString = context.Base_translateString
 #   <!-- data-i18n="The message" -->
 translatable_message_set = set([])
 
-# Web pages can be in web page module ...
 web_page_reference_list = context.Base_getTranslationSourceFileList(only_html=1)
-not_found_in_web_page_reference_set = set([])
 for web_page_reference in web_page_reference_list:
+  # Web pages can be in web page module ...
   web_page = context.getDocumentValue(web_page_reference)
-  if web_page is None:
-    not_found_in_web_page_reference_set.add(web_page_reference)
+  if web_page is not None:
+    web_page_text_content = web_page.getTextContent()
   else:
-    for message in portal.ERP5Site_extractTranslationMessageListFromHTML(web_page.getTextContent()):
-      translatable_message_set.add(message)
-# ... or in skin folders
-for web_page_reference in not_found_in_web_page_reference_set:
-  if not '/' in web_page_reference:
+    # ... or in skin folders
     web_page = context.restrictedTraverse(web_page_reference, None)
     if web_page is not None and hasattr(web_page, 'manage_FTPget'):
-      for message in portal.ERP5Site_extractTranslationMessageListFromHTML(web_page.manage_FTPget()):
-        translatable_message_set.add(message)
+      web_page_text_content = web_page.manage_FTPget()
+
+  if web_page_text_content:
+    for message in portal.ERP5Site_extractTranslationMessageListFromHTML(web_page_text_content):
+      translatable_message_set.add(message)
 
 tmp = {}
 for language in context.getAvailableLanguageSet():
@@ -36,7 +34,12 @@ for language in context.getAvailableLanguageSet():
   for word in translatable_message_set:
     tmp[language][word] = unicode(Base_translateString(word, lang = language), 'utf-8')
 
-return u"""/**
+
+# We pass unicode to this json.dump(ensure_ascii=False), so that it produce
+# UTF-8 string and not escaped characters. At the end we return an UTF-8
+# encoded string and not an unicode instance, because text_content property
+# is usually UTF-8 encoded str (not unicode).
+return (u"""/**
  * This translation data is generated automatically and updated with upgrader in post-upgarde.
  * Do not edit manually, but use "Update Translation Data" action on web site to update from
  * Localizer and from data-i18n tags on web pages.
@@ -55,4 +58,4 @@ return u"""/**
             sort_keys=True,
             indent=2,
             ensure_ascii=False,
-            separators=(',', ': ')).splitlines()))
+            separators=(',', ': ')).splitlines()))).encode('utf-8')

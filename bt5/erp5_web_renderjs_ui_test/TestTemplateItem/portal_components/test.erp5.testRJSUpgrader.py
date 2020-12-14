@@ -200,7 +200,7 @@ class TestRenderUpdateTranslationData(RenderJSUpgradeTestCase):
     self.web_script_translation_data_js.publish()
     self.web_page_translation_gadget = self.portal.web_page_module.newContent(
         portal_type='Web Page',
-        reference='{}.html'.format(self.id()),
+        reference='{}_translation.html'.format(self.id()),
         content_type='text/html',
         text_content=textwrap.dedent('''
             <!DOCTYPE html>
@@ -313,7 +313,7 @@ class TestRenderUpdateTranslationData(RenderJSUpgradeTestCase):
     self.assertIn('"Message with [square brackets]":', translation_data_text_content)
     self.assertIn('"Message in <a href=\'link\'>HTML</a>":', translation_data_text_content)
     self.assertIn('"Message in script attributes":', translation_data_text_content)
-    self.assertIn(u'"メッサージュ":', translation_data_text_content)
+    self.assertIn('"メッサージュ":', translation_data_text_content)
 
   def test_WebSite_getTranslationDataTextContent_extract_from_page_template(self):
     self.portal.portal_skins.custom.manage_addProduct['PageTemplates'].manage_addPageTemplate(
