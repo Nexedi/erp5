@@ -342,7 +342,7 @@ portal_absolute_url = portal.absolute_url()
 preference_tool = portal.portal_preferences
 Base_translateString = portal.Base_translateString
 
-preferred_html_style_developper_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
+preferred_html_style_developer_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
 preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
 def getRealRelativeUrl(document):
@@ -451,10 +451,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "description": field.get_value("description"),
   }
 
-  if preferred_html_style_developper_mode or meta_type == "ListBox":
+  if preferred_html_style_developer_mode or meta_type == "ListBox":
     form_relative_url = getFormRelativeUrl(form)
 
-  if preferred_html_style_developper_mode:
+  if preferred_html_style_developer_mode:
     result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
     result["edit_field_icon"] = "%s/images/editfield.png" % portal_absolute_url
 
@@ -1238,7 +1238,7 @@ def renderFormDefinition(form, response_dict):
   response_dict["update_action"] = form.update_action
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
-  if preferred_html_style_developper_mode:
+  if preferred_html_style_developer_mode:
     form_relative_url = getFormRelativeUrl(form)
     response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
     response_dict["edit_form_icon"] = "%s/images/editform.png" % portal_absolute_url
@@ -1503,7 +1503,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
     # Extract & modify action URLs
-    if preferred_html_style_developper_mode and 'object_jio_raw' not in erp5_action_dict:
+    if preferred_html_style_developer_mode and 'object_jio_raw' not in erp5_action_dict:
       erp5_action_dict["object_jio_raw"] = []
 
     for erp5_action_key in erp5_action_dict.keys():
@@ -1536,7 +1536,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           extra_param_json['form_id'] = current_action['view_id'] \
             if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
             else last_form_id
-
           erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
                 "root_url": site_root.absolute_url(),
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
@@ -1545,27 +1544,24 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
 
-      if preferred_html_style_developper_mode and erp5_action_key == "object_jio_jump":
-        type_info = portal.portal_types.getTypeInfo(traversed_document)
-        if type_info is not None and type_info.Base_getSourceVisibility():
-          erp5_action_list.append({
-            'href': url_template_dict["traverse_generator_action"] % {
-              "root_url": site_root.absolute_url(),
-              "script_id": script.id,
-              "relative_url": getRealRelativeUrl(type_info).replace("/", "%2F"),
-              "view": "view",
-              "extra_param_json": ""
-            },
-            'name': "jump_to_portal_type",
-            'icon': None,
-            'title': Base_translateString(
-              "Edit Portal Type ${portal_type_name}",
-              mapping={
-                "portal_type_name": traversed_document.getTranslatedPortalType()
-              }),
-          })
+      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_jump":
+        erp5_action_list.append({
+          "href": url_template_dict["traverse_generator"] % {
+          "root_url": site_root.absolute_url(),
+          "script_id": script.id,
+          "view": "Base_redirectToPortalTypeDocument",
+          "relative_url": getRealRelativeUrl(traversed_document)
+        },
+          'name': "jump_to_portal_type",
+          'icon': None,
+          'title': Base_translateString(
+            "Edit Portal Type ${portal_type_name}",
+            mapping={
+              "portal_type_name": traversed_document.getTranslatedPortalType()
+            }),
+        })
 
-      if preferred_html_style_developper_mode and erp5_action_key == "object_jio_raw":
+      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_raw":
         if portal.portal_workflow.Base_getSourceVisibility():
           for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
             erp5_action_list.append({
