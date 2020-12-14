@@ -133,7 +133,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 
