@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox</string> </value>
+            <value> <string>matrixbox1</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -216,11 +216,11 @@
                 </item>
                 <item>
                     <key> <string>as_cell_range_script_id</string> </key>
-                    <value> <string>SupplyLine_asCellRange</string> </value>
+                    <value> <string>SupplyLine_asOptionVariationCellRange</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_base_id</string> </key>
-                    <value> <string>path_additional_price</string> </value>
+                    <value> <string>path_optional_discount_ratio</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_getter_method</string> </key>
@@ -263,8 +263,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>additional_price</string>
-                          <string>additional_price</string>
+                          <string>discount_ratio</string>
+                          <string>discount_ratio</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_list</string>
@@ -322,7 +322,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
+                    <value> <string>Matrixbox</string> </value>
                 </item>
                 <item>
                     <key> <string>update_cell_range</string> </key>

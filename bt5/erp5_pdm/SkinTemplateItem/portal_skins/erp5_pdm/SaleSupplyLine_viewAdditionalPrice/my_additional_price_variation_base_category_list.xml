@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="MatrixBox" module="Products.ERP5Form.MatrixBox"/>
+      <global name="MultiListField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox</string> </value>
+            <value> <string>my_additional_price_variation_base_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -17,6 +17,14 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -27,18 +35,6 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -58,10 +54,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -70,11 +62,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>getter_method</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -82,11 +74,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>tabs</string> </key>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,7 +90,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>update_cell_range</string> </key>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -109,26 +109,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>as_cell_range_script_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_getter_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -145,10 +125,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -157,11 +133,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>getter_method</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -169,11 +145,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>tabs</string> </key>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -181,7 +163,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>update_cell_range</string> </key>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -192,55 +178,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_editable_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>target_quantity</string>
-                          <string>quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>price</string>
-                        </tuple>
-                        <tuple>
-                          <string>predicate_value</string>
-                          <string>predicate_value</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>as_cell_range_script_id</string> </key>
-                    <value> <string>SupplyLine_asCellRange</string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_base_id</string> </key>
-                    <value> <string>path_additional_price</string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_getter_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_portal_type</string> </key>
-                    <value> <string>Sale Supply Cell</string> </value>
-                </item>
-                <item>
-                    <key> <string>cell_range</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -248,7 +187,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -259,25 +200,6 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>additional_price</string>
-                          <string>additional_price</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_category_list</string>
-                          <string>variation_category_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>predicate_category_list</string>
-                          <string>predicate_category_list</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -286,50 +208,62 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>getter_method</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>global_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>mapped_value_property_list</string>
-                          <string>mapped_value_property_list</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>setter_method</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>tabs</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>size</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
+                    <value> <string>Additional Price Variation Axes</string> </value>
                 </item>
                 <item>
-                    <key> <string>update_cell_range</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br/>
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getVariationRangeBaseCategoryItemList(omit_optional_variation=1, display_id=\'translated_title\')</string> </value>
         </item>
       </dictionary>
     </pickle>

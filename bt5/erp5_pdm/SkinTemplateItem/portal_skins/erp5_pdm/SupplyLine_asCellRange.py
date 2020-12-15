@@ -34,7 +34,7 @@ else:
                                         getPVariationBaseCategoryList()
   else:
     property_id = '%s_variation_base_category_list' % base_id[len('path_'):]
-    selected_base_category_list = context.getProperty(property_id)
+    selected_base_category_list = context.getProperty(property_id, [])
   base_category_list_list = [[x] for x in selected_base_category_list]
 
 # Generate cell range
