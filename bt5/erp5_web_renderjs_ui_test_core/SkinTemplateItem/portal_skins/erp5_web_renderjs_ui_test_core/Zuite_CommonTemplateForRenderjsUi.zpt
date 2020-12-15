@@ -1768,7 +1768,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/renderjs_runner/</td>
+      <td tal:content="website_url"></td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -1799,7 +1799,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/renderjs_runner/</td>
+      <td tal:content="website_url"></td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
