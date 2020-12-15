@@ -57,7 +57,7 @@ class PropertyTypeValidity(Constraint):
     'date':               (DateTime, ),
   }
   if six.PY2:
-      _type_dict['long'] = (long,),
+      _type_dict['long'] = (long,)
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object', 'data')
 
