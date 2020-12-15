@@ -37,6 +37,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.Globals import PersistentMapping
 from MySQLdb import ProgrammingError, OperationalError
 from DateTime import DateTime
+import six
 
 security = ClassSecurityInfo()
 WorkflowTool.security = security
@@ -361,6 +362,9 @@ _sql_cast_dict = {
   'n': float,
   'd': DateTime,
 }
+if six.PY2:
+  _sql_cast_dict['l']: long
+
 _sql_cast_fallback = str
 
 def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):

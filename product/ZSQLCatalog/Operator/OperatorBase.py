@@ -29,6 +29,7 @@
 ##############################################################################
 
 from future.utils import raise_
+import six
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
@@ -53,14 +54,15 @@ def valueNoneRenderer(value):
 
 value_renderer = {
   int: str,
-#  long: str,
   float: valueFloatRenderer,
   DateTime: valueDateTimeRenderer,
   None.__class__: valueNoneRenderer,
   bool: int,
   str: escapeString,
-#  unicode: escapeString,
 }
+if six.PY2:
+  value_renderer[long] = str
+  value_renderer[unicode] = escapeString
 
 value_search_text_renderer = {
   DateTime: str,
