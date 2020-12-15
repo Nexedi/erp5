@@ -70,6 +70,7 @@ from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
 import time
+from pickle import loads, dumps
 
 WIN = os.name == 'nt'
 
@@ -712,7 +713,7 @@ class TemplateTool (BaseTool):
         Decode the uid of a business template from a repository.
         Return a repository and an id.
       """
-      return cPickle.loads(b64decode(uid))
+      return loads(b64decode(uid))
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -720,7 +721,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(cPickle.dumps((repository, id)))
+      return b64encode(dumps((repository, id)))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
