@@ -17,7 +17,7 @@
 from __future__ import absolute_import
 
 from future.utils import raise_
-import thread, threading
+import _thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals

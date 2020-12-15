@@ -37,7 +37,7 @@ from Products.ERP5 import _dtmldir
 from zLOG import LOG, WARNING
 from DateTime import DateTime
 from Acquisition import aq_base
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 class TrashTool(BaseTool):
   """

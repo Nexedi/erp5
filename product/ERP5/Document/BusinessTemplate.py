@@ -91,7 +91,7 @@ from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-from urllib import quote, unquote
+from urllib.parse import quote_from_bytes as quote, unquote_to_bytes as unquote
 from difflib import unified_diff
 import posixpath
 import transaction

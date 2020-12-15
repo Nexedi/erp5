@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import zope.interface
+from zope.interface import implementer
 import re
 
 from AccessControl import ClassSecurityInfo
@@ -36,6 +36,7 @@ from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5Type.Message import translateString
 
+@implementer(interfaces.IDeliverySolverFactory)
 class SolverTool(TypeProvider):
   """ The SolverTool provides API to find out which solver can be applied in
   which case and contains SolverProcess instances which are used to keep track
@@ -49,9 +50,6 @@ class SolverTool(TypeProvider):
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IDeliverySolverFactory,)
 
   # IDeliverySolverFactory implementation
   security.declareProtected(Permissions.AccessContentsInformation,
