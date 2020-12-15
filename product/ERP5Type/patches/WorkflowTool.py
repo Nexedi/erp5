@@ -363,7 +363,7 @@ _sql_cast_dict = {
   'd': DateTime,
 }
 if six.PY2:
-  _sql_cast_dict['l']: long
+  _sql_cast_dict['l'] = long
 
 _sql_cast_fallback = str
 
