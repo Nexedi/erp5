@@ -34,7 +34,6 @@ from .TypeDefinition import asList, identity
 from . import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
-from types import ListType, TupleType
 
 from zLOG import LOG
 
@@ -195,7 +194,7 @@ class DefaultGetter(Base.Getter):
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
-        if type(list_value) in (ListType, TupleType):
+        if isinstance(list_value, (list, tuple)):
           if len(list_value) > 0:
             return list_value[0]
           else:

@@ -32,21 +32,20 @@ from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-import zope.interface
+from zope.interface import implementer
 import re
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.interfaces.component import IComponent
 
 from Products.CMFCore import utils
 
+@implementer(IComponent)
 class ToolComponent(DocumentComponent):
   """
   ZODB Component for Tools, used to be found on Products.XXX.Tool on FS
   """
   meta_type = 'ERP5 Tool Component'
   portal_type = 'Tool Component'
-
-  zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

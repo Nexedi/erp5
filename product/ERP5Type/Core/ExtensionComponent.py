@@ -32,9 +32,10 @@ from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-import zope.interface
+from zope.interface import implementer
 from Products.ERP5Type.interfaces.component import IComponent
 
+@implementer(IComponent)
 class ExtensionComponent(ModuleComponent):
   """
   ZODB Component for Extensions previously defined in the bt5 and installed in
@@ -42,8 +43,6 @@ class ExtensionComponent(ModuleComponent):
   """
   meta_type = 'ERP5 Extension Component'
   portal_type = 'Extension Component'
-
-  zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

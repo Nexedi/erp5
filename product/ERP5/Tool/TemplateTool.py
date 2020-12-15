@@ -28,6 +28,8 @@
 ##############################################################################
 
 from future.utils import raise_
+from future import standard_library
+standard_library.install_aliases()
 import six
 if six.PY2:
     from webdav.client import Resource
@@ -55,13 +57,13 @@ from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
 from io import BytesIO as StringIO
-from urllib import pathname2url, urlopen, splittype, urlretrieve
-import urllib2
+from urllib.request import pathname2url, urlopen, urlretrieve
+from urllib.parse import splittype
 import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
 import struct
-import cPickle
+import pickle
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
@@ -1390,14 +1392,14 @@ class TemplateTool (BaseTool):
           LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
               % url)
         try:
-          urllib2.urlopen(url)
+          urlopen(url)
           return url
         except (urllib2.HTTPError, OSError):
           # XXX Try again with ".bt5" in case the folder format be used
           # Instead tgz one.
           url = "%s.bt5" % url
           try:
-            urllib2.urlopen(url)
+            urlopen(url)
             return url
           except (urllib2.HTTPError, OSError):
             pass
