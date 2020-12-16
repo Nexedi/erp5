@@ -6,13 +6,13 @@ utool = portal.portal_url
 portal_url = utool()
 param = '?ignore_layout:int=1' if int(portal.REQUEST.get('ignore_layout', 0)) else ''
 if include_root:
-    result = [{
+  result = [{
         'id'    : 'root',
         'title' : portal.title,
         'url'   : '%s/view%s' % (portal_url, param),
     }]
 else:
-    result = []
+  result = []
 
 obj = portal
 now = []
@@ -23,7 +23,7 @@ for name in utool.getRelativeContentPath(context):
       getattr(obj, "getCompactTranslatedTitle", lambda: None)() or
       obj.getTitle() or obj.getId()
   )
-    if name != 'talkback':
+  if name != 'talkback':
     result.append( { 'id'      : name
                        , 'title'   : title
                        , 'url'     : '%s/%s/view%s' % (portal_url, '/'.join(now), param)
