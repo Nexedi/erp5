@@ -2228,7 +2228,7 @@ class ERP5Generator(PortalGenerator):
     # Set the 'custom' layer a high priority, so it remains the first
     #   layer when installing new business templates.
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
-    skin_folders = ', '.join(['custom', 'external_method'])
+    skin_folders = ', '.join(('custom', 'external_method'))
     ps.addSkinSelection( 'View'
                        , skin_folders
                        , make_default = 1

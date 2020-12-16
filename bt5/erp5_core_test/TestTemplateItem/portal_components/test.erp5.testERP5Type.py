@@ -52,6 +52,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from DateTime import DateTime
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -2479,7 +2480,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     folder = self.getOrganisationModule()
     obj = folder.newContent(portal_type='Organisation')
     self.assertIsInstance(portal.creation_date, DateTime)
-    self.assertLess(portal.creation_date, object.getCreationDate())
+    self.assertLess(portal.creation_date, obj.getCreationDate())
     self.assertIsNone(folder.getCreationDate())
 
   def test_copyWithoutModificationRight(self):
