@@ -52,6 +52,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from DateTime import DateTime
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
