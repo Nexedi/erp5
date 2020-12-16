@@ -456,7 +456,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
   if preferred_html_style_developer_mode:
     result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
-    result["edit_field_icon"] = "%s/images/editfield.png" % portal_absolute_url
 
   if preferred_html_style_translator_mode:
     erp5_ui = portal.Localizer.erp5_ui
@@ -466,7 +465,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       field.title(),
       selected_language
     )
-    result["translate_title_icon"] = "%s/images/translate.png" % portal_absolute_url
 
     field_description = field.Field_getDescription()
     if field_description:
@@ -475,7 +473,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         field_description,
         selected_language
       )
-      result["translate_description_icon"] = "%s/images/translate_tooltip.png" % portal_absolute_url
 
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
@@ -1241,12 +1238,10 @@ def renderFormDefinition(form, response_dict):
   if preferred_html_style_developer_mode:
     form_relative_url = getFormRelativeUrl(form)
     response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
-    response_dict["edit_form_icon"] = "%s/images/editform.png" % portal_absolute_url
     response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
       form_relative_url,
       form.action
     )
-    response_dict["edit_form_action_icon"] = "%s/images/editformaction.png" % portal_absolute_url
 
 
 def statusLevelToString(level):
