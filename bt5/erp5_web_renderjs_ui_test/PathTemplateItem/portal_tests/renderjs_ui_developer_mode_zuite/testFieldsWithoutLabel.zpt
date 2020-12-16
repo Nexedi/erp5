@@ -82,72 +82,72 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//label[@for="field_listbox_left"]/a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_left/manage_main"]</td>
+        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_left/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//label[@for="field_listbox_left"]/a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
+        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_listbox_left"]/a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_left/manage_main"]</td>
+        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_left/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_listbox_left"]/a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
+        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
         <td></td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//label[@for="field_listbox_right"]/a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_right/manage_main"]</td>
+        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_right/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//label[@for="field_listbox_right"]/a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
+        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_listbox_right"]/a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_right/manage_main"]</td>
+        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox_right/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_listbox_right"]/a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
+        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_my_title"]/a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/my_title/manage_main"]</td>
+        <td>//label[@for="field_my_title"]/a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/my_title/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_my_title"]/a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Title$&amp;lang=en"]</td>
+        <td>//label[@for="field_my_title"]/a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Title$&amp;lang=en"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_your_description"]/a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/your_description/manage_main"]</td>
+        <td>//label[@for="field_your_description"]/a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/your_description/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_your_description"]/a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Description$&amp;lang=en"]</td>
+        <td>//label[@for="field_your_description"]/a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Description$&amp;lang=en"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//a[@class="edit-field" and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox/manage_main"]</td>
+        <td>//a[contains(@class, 'edit-field') and @href="portal_skins/erp5_ui_test/Foo_viewDeveloperModeAction/listbox/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//a[@class="translate-title" and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
+        <td>//a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
         <td></td>
       </tr>
     </tbody>
