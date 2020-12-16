@@ -86,7 +86,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
       /organisation
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade')
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade')
 
   def getCategoriesTool(self):
     return getattr(self.portal, 'portal_categories', None)
@@ -754,6 +754,58 @@ class TestCMFCategory(ERP5TypeTestCase):
                              id='the_sub_id', title='The Sub Title')
     whitespace_number = self.portal.portal_preferences.getPreferredWhitespaceNumberForChildItemIndentation()
     self.assertEqual(NBSP_UTF8 * whitespace_number + 'The Sub Title', sub_cat.getIndentedTitle())
+
+  def test_CategoryChildTitleItemListFilterNodeFilterLeave(self):
+    base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
+    base_cat.newContent(
+        portal_type='Category',
+        id='the_id',
+        title='The Title'
+    ).newContent(
+        portal_type='Category',
+        id='the_sub_id',
+        title='The Sub Title')
+    self.assertEqual(
+        base_cat.getCategoryChildTitleItemList(filter_node=True),
+        [
+          ['', ''],
+          ['The Sub Title', 'the_id/the_sub_id'],
+        ]
+    )
+    self.assertEqual(
+        base_cat.getCategoryChildTitleItemList(filter_leave=True),
+        [
+          ['', ''],
+          ['The Title', 'the_id'],
+        ]
+    )
+
+  def test_CategoryChildTitleItemListDisableNodeDisableLeave(self):
+    base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
+    base_cat.newContent(
+        portal_type='Category',
+        id='the_id',
+        title='The Title'
+    ).newContent(
+        portal_type='Category',
+        id='the_sub_id',
+        title='The Sub Title')
+    self.assertEqual(
+        base_cat.getCategoryChildTitleItemList(disable_node=True),
+        [
+          ['', ''],
+          ['The Title', None],
+          ['The Sub Title', 'the_id/the_sub_id'],
+        ]
+    )
+    self.assertEqual(
+        base_cat.getCategoryChildTitleItemList(disable_leave=True),
+        [
+          ['', ''],
+          ['The Title', 'the_id'],
+          ['The Sub Title', None],
+        ]
+    )
 
   def test_20_CategoryChildTitleAndIdItemList(self):
     """Tests getCategoryChildTitleAndIdItemList."""

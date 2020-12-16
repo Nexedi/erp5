@@ -43,29 +43,25 @@ from warnings import warn
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
 DEFAULT_CACHE_FACTORY = 'erp5_ui_short'
-is_cache_initialized = 0
-is_cache_ready = 0
+is_cache_initialized = False
+
 
 def initializePortalCachingProperties(self):
   """ Init CachingMethod properties."""
   ## check if global CachingMethod is initialized in RAM for this ERP5 site. If not init it
   global is_cache_initialized
-  global is_cache_ready
   if not is_cache_initialized:
     portal_caches = getattr(self.getPortalObject(), 'portal_caches', None)
     if portal_caches is None:
       return
     # we set is_cache_initialized right now to prevent infinite loops
-    is_cache_initialized = 1
+    is_cache_initialized = True
     ## update cache structure from portal_caches
     try:
       portal_caches.updateCache()
     except AttributeError:
-      is_cache_initialized = 0
+      is_cache_initialized = False
       return
-    # we mark the cache as ready after initialization, because initialization
-    # itself will cause cache misses that we want to ignore
-    is_cache_ready = 1
 
 
 class ZODBCookie(Persistent):
@@ -272,12 +268,8 @@ class CachingMethod:
       # on CachingMethod instead of self, we want a global variable
       cache_factory = CachingMethod.factories[self.cache_factory]
     except KeyError:
-      global is_cache_ready
-      if is_cache_ready:
-        ## no caching enabled for this site or no such cache factory
-        LOG("Cache.__call__", WARNING,
-            "Factory %s not found, method %s executed without cache" % (
-             self.cache_factory, self.callable_object))
+      # No cache factory ready, execute without cache. This happens during
+      # initialisation
       value = self.callable_object(*args, **kwd)
     else:
       value = cache_factory(

@@ -4,7 +4,7 @@
   containing searched words as well highlighting the searched 
   words in the text itself.
 """
-from Products.ERP5.Document.Document import NotConvertedError
+from erp5.component.document.Document import NotConvertedError
 
 encoding = 'utf-8'
 is_gadget_mode = context.REQUEST.get('is_gadget_mode', 0)

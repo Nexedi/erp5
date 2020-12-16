@@ -1,4 +1,6 @@
+from Products.ERP5Type.Message import translateString
 obj = state_change['object']
+request = container.REQUEST
 
 error_list = []
 warning_list = []
@@ -12,6 +14,12 @@ for message_dict in obj.checkSourceCode():
     error_list.append(message)
   else:
     warning_list.append(message)
+
+if warning_list or error_list:
+  request.set(
+      'portal_status_message',
+      translateString("Errors found in source code."))
+  request.set('portal_status_level', 'error')
 
 obj.setTextContentWarningMessageList(warning_list)
 obj.setTextContentErrorMessageList(error_list)

@@ -1,4 +1,16 @@
 document.erp5.BusinessLink
-document.erp5.BusinessProcess
+document.erp5.Container
+document.erp5.ContainerCell
+document.erp5.ContainerLine
+document.erp5.DeliveryRootSimulationRule
+document.erp5.DeliverySimulationRule
 document.erp5.DuplicateInventoryConstraint
+document.erp5.OrderCell
+document.erp5.OrderLine
+document.erp5.OrderRootSimulationRule
+document.erp5.PaymentCondition
+document.erp5.TradeCondition
+document.erp5.TradeModelCell
+document.erp5.TradeModelLine
+document.erp5.TradeModelLineCellConsistencyConstraint
 document.erp5.TradeModelPath

@@ -104,7 +104,7 @@ class XMLObject( Folder ):
       """
           Replace the content of this object by providing an xml content
       """
-      from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+      from erp5.component.module.ERP5Conduit import ERP5Conduit
       conduit = ERP5Conduit()
       conduit.addNode(object=self, xml=xml)
 

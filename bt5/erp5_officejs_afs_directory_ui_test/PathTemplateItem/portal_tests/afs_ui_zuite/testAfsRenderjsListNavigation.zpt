@@ -232,7 +232,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//span[text()='2 Records']</td>
+  <td>//span[text()='3 Records']</td>
   <td></td>
 </tr>
 <tr>

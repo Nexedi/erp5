@@ -17,7 +17,7 @@
 
 from DateTime import DateTime
 from six.moves import map
-import threading
+import thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals
@@ -35,12 +35,13 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Type.Log import log as unrestrictedLog
+from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import \
   getTransactionalVariable, TransactionalResource
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from string import join
@@ -231,7 +232,7 @@ getSite, setSite = _site()
 
 _missing_tools_registered = None
 
-class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
+class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
   of a new ERP5.  It should not assist in the functionality at all.
@@ -441,6 +442,20 @@ class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
           synchronizeDynamicModules(self)
 
     return self
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  def skinSuper(self, skin, id):
+    if id[:1] != '_' and id[:3] != 'aq_':
+      skin_info = SKINDATA.get(thread.get_ident())
+      if skin_info is not None:
+        _, skin_selection_name, _, _ = skin_info
+        skin_value = skinResolve(self, (skin_selection_name, skin), id)
+        if skin_value is not None:
+          # Wrap at the portal to set the owner of the executing script.
+          # This mimics the usual way to get an object from skin folders,
+          # and it's required when 'skin_value' is a script with proxy roles.
+          return skin_value.__of__(self)
+    raise AttributeError(id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isDeletable')
@@ -1312,6 +1327,14 @@ class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
     return self._getPortalGroupedTypeList('domain')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalPostTypeList')
+  def getPortalPostTypeList(self):
+    """
+      Return post types.
+    """
+    return self._getPortalGroupedTypeList('post')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCurrentInventoryStateList')
   def getPortalCurrentInventoryStateList(self):
     """
@@ -1791,12 +1814,13 @@ class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
   def log(self, *args, **kw):
     """Put a log message
 
-    See the warning in Products.ERP5Type.Log.log
+    See the warning in erp5.component.module.Log.log
     Catchall parameters also make this method not publishable to avoid DoS.
     """
     warnings.warn("The usage of ERP5Site.log is deprecated.\n"
-                  "Please use Products.ERP5Type.Log.log instead.",
+                  "Please use erp5.component.module.Log.log instead.",
                   DeprecationWarning)
+    from erp5.component.module.Log import log as unrestrictedLog
     unrestrictedLog(*args, **kw)
 
   security.declarePublic('setPlacelessDefaultReindexParameters')
@@ -2030,7 +2054,9 @@ class ERP5Generator(PortalGenerator):
     traverse = context.unrestrictedTraverse
     top = os.path.join(bt_path, item_name, context.id)
     prefix_len = len(os.path.join(top, ''))
-    for root, dirs, files in os.walk(top):
+    def onerror(error):
+      raise error
+    for root, dirs, files in os.walk(top, onerror=onerror):
       container_path = root[prefix_len:]
       container_obj = traverse(container_path)
       load = container_obj._importObjectFromFile
@@ -2056,17 +2082,6 @@ class ERP5Generator(PortalGenerator):
     types_tool[portal_type].allowed_content_types = [x.text for x in parse(
       os.path.join(bt_path, 'PortalTypeAllowedContentTypeTemplateItem', 'allowed_content_types.xml')
       ).iterfind("portal_type[@id='%s']/*" % portal_type)]
-
-  def setupLastTools(self, p, **kw):
-    """
-    Set up finals tools
-    We want to set the activity tool only at the end to
-    make sure that we do not put un the queue the full reindexation
-    """
-    addERP5Tool(p, 'portal_rules', 'Rule Tool')
-    addERP5Tool(p, 'portal_simulation', 'Simulation Tool')
-    addERP5Tool(p, 'portal_deliveries', 'Delivery Tool')
-    addERP5Tool(p, 'portal_orders', 'Order Tool')
 
   def setupTemplateTool(self, p, **kw):
     """
@@ -2106,16 +2121,10 @@ class ERP5Generator(PortalGenerator):
 
     # Add ERP5 Tools
     addERP5Tool(p, 'portal_categories', 'Category Tool')
-    addERP5Tool(p, 'portal_ids', 'Id Tool')
     if not p.hasObject('portal_templates'):
       self.setupTemplateTool(p)
     addERP5Tool(p, 'portal_trash', 'Trash Tool')
     addERP5Tool(p, 'portal_alarms', 'Alarm Tool')
-    addERP5Tool(p, 'portal_domains', 'Domain Tool')
-    addERP5Tool(p, 'portal_tests', 'Test Tool')
-    addERP5Tool(p, 'portal_password', 'Password Tool')
-    addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
-    addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
 
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
@@ -2219,7 +2228,7 @@ class ERP5Generator(PortalGenerator):
     # Set the 'custom' layer a high priority, so it remains the first
     #   layer when installing new business templates.
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
-    skin_folders = ', '.join(['custom', 'external_method'])
+    skin_folders = ', '.join(('custom', 'external_method'))
     ps.addSkinSelection( 'View'
                        , skin_folders
                        , make_default = 1
@@ -2379,8 +2388,6 @@ class ERP5Generator(PortalGenerator):
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
 
-    self.setupLastTools(p, **kw)
-
     # Make sure tools are cleanly indexed with a uid before creating children
     # XXX for some strange reason, member was indexed 5 times
     if not update:
@@ -2411,7 +2418,6 @@ class ERP5Generator(PortalGenerator):
       template_tool.updateRepositoryBusinessTemplateList(repository.split())
       template_tool.installBusinessTemplateListFromRepository(
           ['erp5_promise'], activate=True, install_dependency=True)
-      p.portal_alarms.subscribe()
 
 
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.

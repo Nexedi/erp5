@@ -1,3 +1,4 @@
+from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Form.Report import ReportSection
 
 REQUEST = context.REQUEST
@@ -9,20 +10,6 @@ elif reference_variation_category_list == []:
 
 result = []
 
-#  from Products.ERP5Type.Utils import cartesianProduct
-# XXX unable to import cartesianProduct, so, I copied the code (Romain)
-def cartesianProduct(list_of_list):
-  if len(list_of_list) == 0:
-    return [[]]
-  result = []
-  head = list_of_list[0]
-  tail = list_of_list[1:]
-  product = cartesianProduct(tail)
-  for v in head:
-    for p in product:
-      result += [[v] + p]
-  return result
-
 # Separate reference_variation_category_list by base category
 variation_category_dict = {}
 for variation_category in reference_variation_category_list:
@@ -33,9 +20,7 @@ for variation_category in reference_variation_category_list:
     variation_category_dict[base_category] = [variation_category]
 
 variation_key_list = cartesianProduct( variation_category_dict.values() )
-        
-        
-portal = context.portal_url.getPortalObject()
+
 
 for variation_key in variation_key_list:
   params =  { 

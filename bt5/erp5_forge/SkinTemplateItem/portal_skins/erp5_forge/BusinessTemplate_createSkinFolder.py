@@ -11,10 +11,10 @@ skin_folder = portal.portal_skins[skin_folder_name]
 
 if skin_layer_priority:
   marker = []
-  if skin_folder.getProperty("business_template_skin_layer_priorty", marker) is marker:
-    skin_folder.manage_addProperty("business_template_skin_layer_priorty", skin_layer_priority, "string")
+  if skin_folder.getProperty("business_template_skin_layer_priority", marker) is marker:
+    skin_folder.manage_addProperty("business_template_skin_layer_priority", skin_layer_priority, "float")
   else:
-    skin_folder.manage_changeProperties({"business_template_skin_layer_priorty": skin_layer_priority})
+    skin_folder.manage_changeProperties({"business_template_skin_layer_priority": skin_layer_priority})
 
 if skin_layer_list:
   all_skin_layers_selected = len(skin_layer_list) == len(portal.portal_skins.getSkinPaths())

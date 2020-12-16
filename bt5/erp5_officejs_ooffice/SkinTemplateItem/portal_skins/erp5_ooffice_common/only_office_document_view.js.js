@@ -11,6 +11,8 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
 
@@ -119,9 +121,16 @@
             name_list.push(view_gadget.state.mime_type);
             content_dict.filename = name_list.join('.');
           }
-          return child_gadget.submitContent(
-            child_gadget.state.jio_key, undefined, content_dict
-          );
+          return gadget.jio_get(child_gadget.state.jio_key);
+        })
+        .push(function (doc) {
+          var property;
+          for (property in content_dict) {
+            if (content_dict.hasOwnProperty(property)) {
+              doc[property] = content_dict[property];
+            }
+          }
+          return gadget.jio_put(child_gadget.state.jio_key, doc);
         })
         .push(function () {
           if (view_gadget.state.content_editable) {
@@ -137,6 +146,12 @@
                     format: view_gadget.state.mime_type,
                     jio_key: child_gadget.state.jio_key
                   });
+              })
+              .push(function () {
+                return gadget.notifySubmitted({
+                  message: "Data Updated",
+                  status: "success"
+                });
               });
           }
         }, function (error) {

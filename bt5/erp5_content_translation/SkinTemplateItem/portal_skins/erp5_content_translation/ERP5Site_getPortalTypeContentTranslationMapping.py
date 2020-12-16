@@ -3,11 +3,11 @@ from Products.ERP5Type.Cache import CachingMethod
 def getPortalTypeContentTranslationMapping():
   result = {}
   for type_information in context.getPortalObject().portal_types.listTypeInfo():
-    content_translation_domain_property_name_list =\
-      type_information.getContentTranslationDomainPropertyNameList()
-    if content_translation_domain_property_name_list:
-      result[type_information.getId()] = content_translation_domain_property_name_list
-  return result    
+    for property_name, translation_domain in type_information.getPropertyTranslationDomainDict().items():
+      domain_name = translation_domain.getDomainName()
+      if domain_name:
+        result.setdefault(type_information.getId(), []).append(property_name)
+  return result
 
 getPortalTypeContentTranslationMapping = CachingMethod(
   getPortalTypeContentTranslationMapping,

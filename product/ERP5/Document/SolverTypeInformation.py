@@ -205,6 +205,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
   def _callMethod(self, configurable, method_id, default=None):
     # Implemented through type based method
     # and using read transaction cache
+    from erp5.component.interface.ISolver import ISolver
     portal_type = configurable.getPortalType()
     if portal_type == 'Solver Decision':
       try:
@@ -216,7 +217,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
           causality_value=configurable)
       except AttributeError:
         return default
-    elif interfaces.ISolver.providedBy(configurable):
+    elif ISolver.providedBy(configurable):
       solver_portal_type = portal_type
       solver = configurable
     else:

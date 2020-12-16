@@ -7297,8 +7297,8 @@ msgstr "보임"
 msgid "Visit"
 msgstr "방문"
 
-msgid "Volume (m&#179;)"
-msgstr "체적 (m&#179;)"
+msgid "Volume (m³)"
+msgstr "체적 (m³)"
 
 msgid "Warehouse"
 msgstr "웨어하우스"

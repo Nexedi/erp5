@@ -1,10 +1,10 @@
 <html>
-<head><title>Test stock browser for confirmed state</title></head>
+<head><title>Test stock browser for ordered state</title></head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="4">
-Test stock browser for confirmed state
+Test stock browser for ordered state
 </td></tr>
 </thead>
 <tbody tal:define="init_method string:PdmZuite_createDelivery?state=ordered">
@@ -13,38 +13,32 @@ Test stock browser for confirmed state
 <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/init" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
-<!-- Check destination -->
-<tal:block tal:define="title python: 'erp5_pdm_ui_test_destination_node_title';
-                       index python: 1;
-                       current_inventory python: 0.0;
-                       available_inventory python: 0.0;
-                       future_inventory python: 1.0;
-                       ">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/init" />
-</tal:block>
-
 <!-- Check source -->
-<tal:block tal:define="title python: 'erp5_pdm_ui_test_source_node_title';
-                       index python: 2;
-                       current_inventory python: 0.0;
-                       available_inventory python: 0.0;
-                       future_inventory python: -1.0;
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
+                       node_title string: erp5_pdm_ui_test_source_node_title;
+                       inventory_list_count python: 1;
+                       current_inventory python: 0;
+                       available_inventory python: 0;
+                       future_inventory python: -1;
                        ">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/init" />
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
 </tal:block>
 
-<!-- Check for total value -->
-<tal:block tal:define="current_inventory python: 0.0;
-                       available_inventory python: 0.0;
-                       future_inventory python: 0.0;
-                      ">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_total_for_inventory" />
+<!-- Check destination -->
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
+                       node_title string: erp5_pdm_ui_test_destination_node_title;
+                       inventory_list_count python: 1;
+                       current_inventory python: 0;
+                       available_inventory python: 0;
+                       future_inventory python: 1;
+                       ">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
 </tal:block>
 
 <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/check_links_for_stocks" />
 
 <!-- Check the links in hardcoded way -->
-<!-- TODO: If possible, move to micros -->
+<!-- TODO: If possible, move to macros -->
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[1]/a</td>
@@ -75,10 +69,9 @@ Test stock browser for confirmed state
 
 <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/check_links" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
 
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[5]/a</td>
   <td></td>
 </tr>

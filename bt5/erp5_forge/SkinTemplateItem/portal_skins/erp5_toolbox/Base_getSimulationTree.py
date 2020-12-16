@@ -2,11 +2,11 @@
 # Author: Lukasz Nowak <lukasz.nowak@ventis.com.pl>
 # Copyright 2007 Ventis s. c.
 # SYNOPSIS
-# This script exctracts simulations (Applied Rule and Simulation Movement) for context.
+# This script extracts simulations (Applied Rule and Simulation Movement) for context.
 # If start_path is given it instead extracts tree with root as given start_path.
 
 
-def getByRecurse(obj,rv=[]):
+def getByRecurse(obj):
   rv = []
   for o in [q.getObject() for q in obj.searchFolder()]:
     rv.append(getByRecurse(o))

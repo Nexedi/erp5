@@ -16,7 +16,7 @@ import transaction
 import Acquisition
 import astor
 import importlib
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 # Display matplotlib figure automatically like
 # the original python kernel

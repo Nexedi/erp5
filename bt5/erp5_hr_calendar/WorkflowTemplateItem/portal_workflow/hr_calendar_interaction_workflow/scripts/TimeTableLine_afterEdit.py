@@ -3,7 +3,7 @@
 # automatically set a good start and stop date to make generic code working
 
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 time_table_line = state_change["object"]
 
 day_of_week = time_table_line.getDayOfWeek()

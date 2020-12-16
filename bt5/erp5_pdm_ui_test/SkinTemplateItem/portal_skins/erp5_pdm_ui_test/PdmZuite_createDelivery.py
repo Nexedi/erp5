@@ -12,10 +12,7 @@ delivery_title = "erp5_pdm_ui_test_delivery_title"
 source_node_id = "erp5_pdm_ui_test_source_node"
 destination_node_id = "erp5_pdm_ui_test_destination_node"
 
-resource_id = "erp5_pdm_ui_test_product"
 business_process_id = 'erp5_default_business_process'
-
-quantity = 1
 
 business_process_module = portal.getDefaultModule("Business Process")
 business_process = getattr(business_process_module, business_process_id, None)
@@ -40,9 +37,9 @@ if state in ['planned', 'ordered']:
     specialise_value=business_process,
     start_date=DateTime(),
   )
-  order_line = order.newContent(
+  order.newContent(
     portal_type=order_line_portal_type,
-    resource='product_module/%s' % resource_id,
+    resource=resource_relative_url,
     quantity=1,
   )
   order.portal_workflow.doActionFor(order, 'plan_action')
@@ -63,9 +60,9 @@ else:
     specialise_value=business_process,
     start_date=DateTime(),
   )
-  delivery_line = delivery.newContent(
+  delivery.newContent(
     portal_type=delivery_line_portal_type,
-    resource='product_module/%s' % resource_id,
+    resource=resource_relative_url,
     quantity=1,
   )
   for next_state, transition in [
@@ -87,8 +84,6 @@ else:
       break
 
 if delivery.getSimulationState() != state:
-  raise ImplementationError, 'Delivery state is %s and not %s' % (delivery.getSimulationState(), state)
+  raise NotImplementedError('Delivery state is %s and not %s' % (delivery.getSimulationState(), state))
 
 return "Delivery Created."
-
-# vim: syntax=python

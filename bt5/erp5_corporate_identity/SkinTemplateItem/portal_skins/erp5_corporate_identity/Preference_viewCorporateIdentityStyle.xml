@@ -89,9 +89,11 @@
                       <list>
                         <string>my_preferred_corporate_identity_template_default_organisation_relative_url</string>
                         <string>my_preferred_corporate_identity_template_default_theme</string>
+                        <string>my_preferred_corporate_identity_template_default_logo_prefix</string>
                         <string>my_preferred_corporate_identity_template_theme_css_relative_url</string>
                         <string>my_preferred_corporate_identity_template_fallback_logo_absolute_url</string>
                         <string>my_preferred_corporate_identity_template_fallback_logo_relative_url</string>
+                        <string>my_preferred_corporate_identity_template_slide_last_slide_relative_url</string>
                       </list>
                     </value>
                 </item>

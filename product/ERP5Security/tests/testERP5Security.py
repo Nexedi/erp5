@@ -30,9 +30,11 @@
 """Tests ERP5 User Management.
 """
 
+import mock
 import itertools
 import transaction
 import unittest
+import urlparse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -235,6 +237,35 @@ class TestUserManagement(UserManagementTestCase):
     """Tests a person with a login & password is a valid user."""
     _, login, password = self._makePerson()
     self._assertUserExists(login, password)
+
+  def test_AnonymousCanCreateUser(self):
+    """Anonymous user can create users, as long as the user creation is done
+    from a security context which allows it.
+    (ie. there should not be interaction workflow raising Unauthorized)
+    """
+    test_script_id = 'ERP5Site_createTestUser%s' % self.id()
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        test_script_id,
+        'login, password',
+        '''if 1:
+          new_person = context.getPortalObject().person_module.newContent(
+              portal_type='Person')
+          new_person.newContent(portal_type='Assignment').open()
+          new_person.newContent(
+              portal_type='ERP5 Login',
+              reference=login,
+              password=password,
+          ).validate()
+        ''')
+    script = getattr(self.portal, test_script_id)
+    script.manage_proxy(('Manager', 'Owner',))
+    self.logout()
+
+    login = 'login-%s' % self._login_generator()
+    script(login, 'password')
+    self.tic()
+    self._assertUserExists(login, 'password')
 
   def test_PersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
@@ -489,6 +520,28 @@ class DuplicatePrevention(UserManagementTestCase):
   def test_duplicateLoginReferenceInAnotherTransaction(self):
     self._duplicateLoginReference(True)
 
+  def test_AutoGenerateExistingUserId(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # Create a state where the next generated user_id is already taken.
+    # This test assumes that generated user id are "P%i" % i where i is inscreasing
+    self.assertEqual(person.getUserId()[0], 'P')
+    latest_user_id = int(person.getUserId()[1:])
+    person.setUserId('P%i' % (latest_user_id + 1))
+    self.tic()
+
+    # When generating an user id we check this user id already exists
+    # and fail if we generate an already existant user id
+    self.assertRaisesRegexp(
+        ValidationFailed,
+        'user id P%i already exists' % (latest_user_id + 1),
+        self.portal.person_module.newContent,
+        portal_type='Person')
+
+    # This error is not permanent, the id is skipped and next generation should succeed
+    self.assertEqual(
+        self.portal.person_module.newContent(portal_type='Person').getUserId(),
+        'P%i' % (latest_user_id + 2))
+
 
 class TestPreferences(UserManagementTestCase):
 
@@ -532,7 +585,13 @@ class TestPreferences(UserManagementTestCase):
       current_password='bad' + password,
       new_password=new_password,
     )
-    self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences/PreferenceTool_viewChangePasswordDialog?portal_status_message=Current%20password%20is%20wrong.')
+    parsed_url = urlparse.urlparse(result)
+    self.assertEqual(
+        parsed_url.path.split('/')[-2:],
+        ['portal_preferences', 'PreferenceTool_viewChangePasswordDialog'])
+    self.assertEqual(
+        urlparse.parse_qs(parsed_url.query),
+        {'portal_status_message': ['Current password is wrong.'], 'portal_status_level': ['error']})
 
     self.login()
     self._assertUserExists(login, password)
@@ -734,28 +793,44 @@ class TestPASAPI(UserManagementTestCase):
 class TestMigration(UserManagementTestCase):
   """Tests migration to from login on the person to ERP5 Login documents.
   """
-  def test_PersonLoginMigration(self):
+  def _enableERP5UsersPlugin(self):
+    """enable the legacy erp5_users plugin"""
     if 'erp5_users' not in self.portal.acl_users:
       self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
     self.portal.acl_users.erp5_users.manage_activateInterfaces([
       'IAuthenticationPlugin',
       'IUserEnumerationPlugin',
     ])
+
+  def _createERP5UserPerson(self, username, password):
     pers = self.portal.person_module.newContent(
       portal_type='Person',
-      reference='the_user',
+      reference=username,
       user_id=None,
     )
     pers.newContent(
       portal_type='Assignment',
     ).open()
-    pers.setPassword('secret')
+    pers.setPassword(password)
     self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
     self.tic()
+    return pers
+
+  def test_PersonLoginMigration(self):
+    # migration creates ERP5 Login for person and disable erp5_users plugin at the end.
+    self._enableERP5UsersPlugin()
+    pers = self._createERP5UserPerson('the_user', 'secret')
     self._assertUserExists('the_user', 'secret')
+    person_module_serial = self.portal.person_module._p_serial
     self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
     self.portal.portal_caches.clearAllCache()
-    self.tic()
+    # during migration, old users can still login
+    def stop_condition(message_list):
+      self._assertUserExists('the_user', 'secret')
+      return False
+    self.tic(stop_condition=stop_condition)
+    # running this migration did not modify person module
+    self.assertEqual(self.portal.person_module._p_serial, person_module_serial)
     self._assertUserExists('the_user', 'secret')
     self.assertEqual(pers.getPassword(), None)
     self.assertEqual(pers.Person_getUserId(), 'the_user')
@@ -771,6 +846,7 @@ class TestMigration(UserManagementTestCase):
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
   def test_ERP5LoginUserManagerMigration(self):
+    # migration creates and activate erp5_login_users plugin
     acl_users= self.portal.acl_users
     acl_users.manage_delObjects(ids=['erp5_login_users'])
     portal_templates = self.portal.portal_templates
@@ -783,6 +859,85 @@ class TestMigration(UserManagementTestCase):
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
     self.assertTrue('erp5_login_users' in \
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
+
+  def test_DuplicateUserIdPreventionDuringMigration(self):
+    self._enableERP5UsersPlugin()
+    pers = self._createERP5UserPerson('old_user_id', 'secret')
+    self.assertRaisesRegexp(
+        ValidationFailed,
+        'user id old_user_id already exists',
+        self.portal.person_module.newContent,
+        portal_type='Person',
+        reference='old_user_id')
+
+    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    def stop_condition(message_list):
+      if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+        self.assertRaisesRegexp(
+          ValidationFailed,
+          'user id old_user_id already exists',
+          self.portal.person_module.newContent,
+          portal_type='Person',
+          reference='old_user_id')
+      return False
+    self.tic(stop_condition=stop_condition)
+    self.portal.person_module.newContent(portal_type='Person', reference='old_user_id')
+    self.assertRaisesRegexp(
+        ValidationFailed,
+        'user id old_user_id already exists',
+        self.portal.person_module.newContent,
+        portal_type='Person',
+        user_id='old_user_id')
+
+  def test_DuplicateUserIdFromInitUserIdPreventionDuringMigration(self):
+    self._enableERP5UsersPlugin()
+    self._createERP5UserPerson('P1234', 'secret')
+
+    # mock user id generator to generate a value that was used as reference on that existing person.
+    def generateNewId(id_group, id_generator, *args, **kw):
+      if id_group == 'user_id' and id_generator == 'non_continuous_integer_increasing':
+        return 1234 # this will be 'P%i' and become P1234
+      return mock.DEFAULT
+
+    with mock.patch.object(self.portal.portal_ids.__class__, 'generateNewId', side_effect=generateNewId):
+      self.assertRaisesRegexp(
+            ValidationFailed,
+            'user id P1234 already exists',
+            self.portal.person_module.newContent,
+            portal_type='Person',)
+  
+      self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+      def stop_condition(message_list):
+        if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+          self.assertRaisesRegexp(
+            ValidationFailed,
+            'user id P1234 already exists',
+            self.portal.person_module.newContent,
+            portal_type='Person',)
+        return False
+      self.tic(stop_condition=stop_condition)
+
+      self.assertRaisesRegexp(
+          ValidationFailed,
+          'user id P1234 already exists',
+          self.portal.person_module.newContent,
+          portal_type='Person',)
+
+  def test_NonMigratedPersonCanBecomeUserLater(self):
+    self._enableERP5UsersPlugin()
+    non_migrated_person = self.portal.person_module.newContent(
+        portal_type='Person',
+        user_id=None,
+    )
+    self.tic()
+
+    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.tic()
+    non_migrated_person.newContent(portal_type='Assignment').open()
+    non_migrated_person.newContent(portal_type='ERP5 Login', reference='login', password='password').validate()
+    self.tic()
+    self._assertUserExists('login', 'password')
+    self.assertTrue(non_migrated_person.getUserId())
 
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
@@ -811,9 +966,6 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     """
 
     _, login, _ = self._makePerson()
-    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
-    reference = self.portal.restrictedTraverse(pas_user['path']).getReference()
-
     base_url = self.portal.absolute_url(relative=1)
 
     # without key we are Anonymous User so we should be redirected with proper HTML
@@ -828,7 +980,8 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     # view front page we should be logged in if we use authentication key
     response = self.publish(base_url, env={self.user_id_key.replace('-', '_').upper(): login})
     self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
+    self.assertIn('Logged In', response.getBody())
+    self.assertIn(login, response.getBody())
 
 
 class TestLocalRoleManagement(RoleManagementTestCase):
@@ -1363,3 +1516,19 @@ class TestReindexObjectSecurity(UserManagementTestCase):
     check(['immediateReindexObject'] * (len(person) + 1))
     self.tic()
 
+
+class TestUserCaption(UserManagementTestCase):
+
+  def test_zodb_user(self):
+    self.login()
+    self.assertEqual(self.portal.Base_getUserCaption(), 'ERP5TypeTestCase')
+
+  def test_anonymous_user(self):
+    self.logout()
+    self.assertEqual(self.portal.Base_getUserCaption(), 'Anonymous User')
+
+  def test_erp5_login(self):
+    user_id, login, _ = self._makePerson()
+    self.tic()
+    self.login(user_id)
+    self.assertEqual(self.portal.Base_getUserCaption(), login)

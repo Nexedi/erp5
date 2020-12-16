@@ -36,7 +36,7 @@ var repair = false;
         }
       },
       remote_sub_storage: {
-        type: "appcache",
+        type: "precache",
         manifest: gadget.props.cache_file,
         version: gadget.props.version_url,
         take_installer: true

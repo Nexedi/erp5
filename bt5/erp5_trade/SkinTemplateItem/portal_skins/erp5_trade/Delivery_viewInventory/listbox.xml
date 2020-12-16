@@ -124,7 +124,7 @@
                       <list>
                         <tuple>
                           <string>node_title</string>
-                          <string>Stock</string>
+                          <string>Warehouse</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>

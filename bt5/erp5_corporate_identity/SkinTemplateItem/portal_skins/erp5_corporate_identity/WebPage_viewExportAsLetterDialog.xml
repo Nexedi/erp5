@@ -77,7 +77,8 @@
                         <string>format</string>
                         <string>portal_skin</string>
                         <string>display_head</string>
-                        <string>display_source_address</string>
+                        <string>letter_header_margin_to_top</string>
+                        <string>display_sender_company_above_recipient</string>
                         <string>display_svg</string>
                         <string>document_save</string>
                       </list>
@@ -91,6 +92,8 @@
                         <string>override_source_person_title</string>
                         <string>override_destination_organisation_title</string>
                         <string>override_destination_person_title</string>
+                        <string>destination_position_in_letter</string>
+                        <string>destination_position_padding_left</string>
                         <string>override_date</string>
                       </list>
                     </value>

@@ -19,7 +19,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
   <td></td>
 </tr>
 <tr>
@@ -104,12 +104,12 @@
 <!-- Generate links to module -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='2 (Foo)' and contains(@href, '#!display') and contains(@href, 'n.jio_key=foo_module%2F2')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='2 (Foo)' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=foo_module%2F2')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>Foo Module</td>
+  <td>Foos</td>
   <td></td>
 </tr>
 <tr>

@@ -26,8 +26,8 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.Item import Item
-from Products.ERP5.mixin.mail_message import MailMessageMixin
+from erp5.component.document.Item import Item
+from erp5.component.mixin.MailMessageMixin import MailMessageMixin
 
 import email
 
@@ -52,7 +52,7 @@ class InternetMessagePost(Item, MailMessageMixin):
     order to permit the dot-atom-text form. Thus those "<" and ">" should
     be stripped when working with message-ids
     """
-    if message_id is not None:
+    if message_id:
       if message_id[0] == '<':
         message_id = message_id[1:]
       if message_id[-1] == '>':

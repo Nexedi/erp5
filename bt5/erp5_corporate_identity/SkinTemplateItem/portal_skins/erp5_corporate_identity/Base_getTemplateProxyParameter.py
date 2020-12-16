@@ -8,8 +8,8 @@ Return local parameters that require proxy role to access
 # pass_parameter             (portal-) type of data to fetch
 # pass_source_data           followup uid or context for retrieving info
 # pass_flag_site             whether called from a web site (no follow-up)
-
-portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter"]
+from base64 import b64encode
+portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter", "Test Page"]
 portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity", "Requirement Document", "Person"]
 portal_type = context.getPortalType()
 portal_object = context.getPortalObject()
@@ -42,29 +42,29 @@ def populateProductDictFromCategoryList(my_category_list):
 def populateProductDict(my_product_list):
   result_list = []
   for product in my_product_list:
-    output_dict = {}
-    output_dict["title"] = product.getTitle() or err("product software")
-    result_list.append(output_dict)
+    result_list.append({
+      "title": product.getTitle() or err("product software")
+    })
   return result_list
 
 def populateImageDict(my_image_list):
   result_list = []
   for image in my_image_list:
-    output_dict = {}
-    output_dict["relative_url"] = image.getRelativeUrl()
-    output_dict["reference"] = image.getReference() or err("reference")
-    output_dict["description"] = image.getDescription() or err("description")
-    result_list.append(output_dict)
+    result_list.append({
+      "relative_url": image.getRelativeUrl(),
+      "reference": image.getReference() or err("reference"),
+      "description": image.getDescription() or err("description")
+    })
   return result_list
 
 def populateBankDict(my_bank_list):
   result_list = []
   for bank in my_bank_list:
-    output_dict = {}
-    output_dict["bank"] = bank.getTitle() or err("bank account title")
-    output_dict["iban"] = bank.getIban() or err("iban")
-    output_dict["bic"] =  bank.getBicCode() or err("bic")
-    result_list.append(output_dict)
+    result_list.append({
+      "bank": bank.getTitle() or err("bank account title"),
+      "iban": bank.getIban() or err("iban"),
+      "bic":  bank.getBicCode() or err("bic")
+    })
   return result_list
 
 def populatePersonDict(my_person_list):
@@ -80,7 +80,7 @@ def populatePersonDict(my_person_list):
     output_dict["name"] = person.getTitle() or err("title")
     output_dict["title"] = person.getFunctionTitle() or err("function title")
     output_dict["uid"] = person.getUid() or err("uid")
-    if person.getDefaultAddress() is not None:
+    if person_address:
       output_dict["address"] = person_address.getStreetAddress() or err("street address")
       output_dict["postal_code"] = person_address.getZipCode() or err("postal code")
       output_dict["city"] = person_address.getCity() or err("city")
@@ -88,17 +88,17 @@ def populatePersonDict(my_person_list):
       output_dict["address"] = err("street_adress")
       output_dict["postal_code"] = err("postal_code")
       output_dict["city"] = err("city")
-    if person_region is not None:
+    if person_region:
       output_dict["country"] = person_region.getTitle() or err("country")
       output_dict["codification"] = person_region.getCodification() or err("country code")
     else:
       output_dict["country"] = err("country")
       output_dict["codification"] = err("country code")
-    if person_default_telephone is not None:
+    if person_default_telephone:
       output_dict["phone"] = person_default_telephone.getCoordinateText() or err("phone")
     else:
       output_dict["phone"] = err("phone")
-    if person_default_mail is not None:
+    if person_default_mail:
       output_dict["email"] = person_default_mail.getUrlString() or err("email")
     else:
       output_dict["email"] = err("email")
@@ -114,8 +114,8 @@ def populateOrganisationDict(my_organisation_list):
     organisation_region = organisation.getRegionValue()
     organisation_phone = organisation.getDefaultTelephoneValue()
     organisation_fax = organisation.getDefaultFax()
-    organisation_link_list = organisation.objectValues(portal_type="Link",title="Corporate Web Site")
-    organisation_bank_list = organisation.objectValues(portal_type="Bank Account",title="Default Bank Account")
+    organisation_link_list = [x for x in organisation.objectValues(portal_type="Link") if x.getTitle()=="Corporate Web Site"]
+    organisation_bank_list = [x for x in organisation.objectValues(portal_type="Bank Account") if x.getValidationState()=='validated' and x.getTitle()=="Default Bank Account"]
     organisation_default_image = organisation.getDefaultImage()
 
     output_dict["organisation_title"] = organisation.getTitle()
@@ -125,8 +125,11 @@ def populateOrganisationDict(my_organisation_list):
     output_dict["activity_code"] = organisation.getActivityCode() or err("activitiy code")
 
     #output_dict["logo_url"] = organisation.getDefaultImageAbsoluteUrl() or err("logo_url")
-    if organisation_default_image is not None:
+    if organisation_default_image:
       output_dict["logo_url"] = organisation_default_image.getRelativeUrl()
+      output_dict["logo_data_url"] = 'data:image/png;;base64,%s' % (
+        b64encode(organisation_default_image.convert(format="png", display="thumbnail")[1])
+      )
     else:
       output_dict["logo_url"] = err("logo_url")
 
@@ -137,7 +140,7 @@ def populateOrganisationDict(my_organisation_list):
     output_dict["vat"] = organisation.getVatCode() or err("vat")
     output_dict["corporate_registration"] = organisation.getCorporateRegistrationCode() or err("corporate_registration")
     output_dict["email"] = organisation.getDefaultEmailText() or err("email")
-    if organisation.getDefaultAddress() is not None:
+    if organisation_address:
       output_dict["address"] = organisation_address.getStreetAddress() or err("street address")
       output_dict["postal_code"] = organisation_address.getZipCode() or err("postal code")
       output_dict["city"] = organisation_address.getCity() or err("city")
@@ -145,25 +148,26 @@ def populateOrganisationDict(my_organisation_list):
       output_dict["address"] = err("street address")
       output_dict["postal_code"] = err("postal code")
       output_dict["city"] = err("city")
-    if organisation_region is not None:
+    if organisation_region:
       output_dict["country"] = organisation_region.getTitle() or err("country")
       output_dict["codification"] = organisation_region.getCodification() or err("country code")
     else:
       output_dict["country"] = err("country")
       output_dict["codification"] = err("country code")
-    if organisation_phone is not None:
+    if organisation_phone:
       output_dict["phone"] = organisation_phone.getCoordinateText() or err("phone")
     else:
       output_dict["phone"] = err("phone")
-    if organisation_fax is not None:
+    if organisation_fax:
       output_dict["fax"] = organisation_fax.getCoordinateText() or err("fax")
     else:
       output_dict["fax"] = err("fax")
     if len(organisation_link_list) == 1:
+      #XXXX only 1 ?
       output_dict["website"] = organisation_link_list[0].getUrlString() or err("Website")
     else:
       output_dict["website"] = err("web site")
-    if len(organisation_bank_list) > 0:
+    if organisation_bank_list:
       output_dict["bank"] = organisation_bank_list[0].getTitle() or err("bank account title")
       output_dict["iban"] = organisation_bank_list[0].getIban() or err("iban")
       output_dict["bic"] =  organisation_bank_list[0].getBicCode() or err("bic")
@@ -216,10 +220,12 @@ if pass_parameter is not None and pass_source_data is not None:
   # ---------------------- Override Person -------------------------------------
   # returns [{person_dict}]
   if pass_parameter == "override_person":
-    return populatePersonDict(portal_object.portal_catalog(
+    person_list = portal_object.portal_catalog(
       portal_type="Person",
       title=pass_source_data
-    ))
+    )
+    person_list = [x for x in person_list if x.getTitle() == pass_source_data]
+    return populatePersonDict(person_list)
 
   # -------------------------- Contributor -------------------------------------
   # returns [{person_dict}, {person_dict...}]
@@ -232,11 +238,13 @@ if pass_parameter is not None and pass_source_data is not None:
   # XXX remove, too much ambiguity if multiple results
   # returns [{organisation_dict}]
   if pass_parameter == "override_organisation":
-    return populateOrganisationDict(portal_object.portal_catalog(
+    organisation_list = portal_object.portal_catalog(
       portal_type="Organisation",
       #title=(''.join(["=", str(pass_source_data)]))
-      title=pass_source_data
-    ))
+      title=pass_source_data,
+    )
+    organisation_list = [x for x in organisation_list if x.getTitle()==pass_source_data]
+    return populateOrganisationDict(organisation_list)
 
   # ------------ Override Sender/Recipient Organisation (URL) --------------------
   # returns [{organisation_dict}]
@@ -246,22 +254,19 @@ if pass_parameter is not None and pass_source_data is not None:
   # -------------- Source/Destination (Person => Organisation) -----------------
   # returns [{organisation_dict}]
   if pass_parameter == "source" or pass_parameter == "destination":
-    person_candidate_list = portal_object.person_module.searchFolder(uid=pass_source_data)
-    organisation_candidate_list = portal_object.organisation_module.searchFolder(uid=pass_source_data)
+    candidate = portal_object.portal_catalog.getResultValue(
+      portal_type=('Person', 'Organisation'),
+      uid=pass_source_data)
 
-    if len(person_candidate_list) > 0:
-      for c in person_candidate_list:
-        organisation = c.getCareerSubordinationValue()
+    if candidate:
+      if candidate.getPortalType() == 'Person':
+        organisation = candidate.getCareerSubordinationValue()
         if organisation is not None:
           return populateOrganisationDict([organisation])
         else:
-          return populatePersonDict([c])
-
-    # events might pass organisation as sender/recipient
-    if len(organisation_candidate_list) > 0:
-      organisation_candidate_list = portal_object.organisation_module.searchFolder(uid=pass_source_data)
-      for o in organisation_candidate_list:
-        return populateOrganisationDict([o])
+          return populatePersonDict([candidate])
+      # events might pass organisation as sender/recipient
+      return populateOrganisationDict([candidate])
 
     return []
 
@@ -299,13 +304,20 @@ if pass_parameter is not None and pass_source_data is not None:
       use_language = context.getLanguage() or "en"
     except AttributeError:
       use_language = "en"
-
-    return populateImageDict(portal_object.portal_catalog(
+    logo_list = portal_object.portal_catalog(
       portal_type="Image",
       language=use_language,
       validation_state=validation_state,
       reference=pass_source_data
-    ))
+    )
+    if not logo_list and use_language != "en":
+      logo_list = portal_object.portal_catalog(
+        portal_type="Image",
+        language="en",
+        validation_state=validation_state,
+        reference=pass_source_data
+      )
+    return populateImageDict(logo_list)
 
   # ------------------------- Product (Website) --------------------------------
   if pass_parameter == "product":
@@ -328,7 +340,7 @@ if pass_parameter is not None and pass_source_data is not None:
     theme = None
     tmp = context
     #check if web page is inside web site or web section
-    while portal_type == 'Web Page':
+    while portal_type in ('Web Page', 'Test Page'):
       tmp = tmp.aq_parent
       portal_type = tmp.getPortalType()
       

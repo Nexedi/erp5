@@ -1,10 +1,12 @@
 translateString = context.Base_translateString
-request = context.REQUEST
 ptype = context.getPortalType()
 
 if not description:
   return context.Base_redirect(dialog_id,
-              keep_items = dict(portal_status_message = translateString("Question can not be empty.",), cancel_url = cancel_url))
+              keep_items = dict(
+                  portal_status_message=translateString("Question can not be empty.",),
+                  portal_status_level='error',
+                  cancel_url=cancel_url))
 
 query = context.Base_newQuery(description=description)
 query_id = query.getId()

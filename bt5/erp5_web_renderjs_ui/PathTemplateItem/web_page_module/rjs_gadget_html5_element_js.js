@@ -45,10 +45,10 @@
         data_attr;
       if (!isEmpty(this.state.text_content)) {
         if (this.state.prepend) {
-          content = this.state.prepend + "&nbsp;" + content;
+          content = this.state.prepend + content;
         }
         if (this.state.append) {
-          content = content + "&nbsp;" + this.state.append;
+          content = content + this.state.append;
         }
         new_element.textContent = content;
       } else if (!isEmpty(this.state.inner_html)) {
@@ -96,6 +96,17 @@
       }
       return data;
     })
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
+
     .declareMethod("checkValidity", function checkValidity() {
       return true;
     });

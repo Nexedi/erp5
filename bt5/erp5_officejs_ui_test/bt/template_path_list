@@ -1,6 +1,8 @@
 document_module/test_officejs_*
+notebook_module/notebook_test_cell_error_handling
 notebook_module/notebook_test_purejs
 notebook_module/notebook_test_python_basic
 portal_tests/officejs_ui_*_zuite
 portal_tests/officejs_ui_*_zuite/**
 sound_module/test_audio
+web_page_module/gadget_officejs_erp5_page_smart_assistant_test_upload_shared_file*

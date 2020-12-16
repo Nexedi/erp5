@@ -3851,8 +3851,8 @@ msgstr "Главное (Бухучет)"
 msgid "Visit"
 msgstr "Визит"
 
-msgid "Volume (m&#179;)"
-msgstr "Объем (м&#179;)"
+msgid "Volume (m³)"
+msgstr "Объем (м³)"
 
 msgid "Warehouse"
 msgstr "Склад"

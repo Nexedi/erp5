@@ -1,1 +1,3 @@
-document.erp5.ImmobilisableItem
+document.erp5.AmortisationRule
+document.erp5.Immobilisation
+document.erp5.ImmobilisationLine

@@ -16,7 +16,6 @@ with portal.Localizer.translationContext(localizer_language):
   else:
     form = None
 
-  selection_name = request.get('prefixed_selection_name')
   data = context.render_report_section.pt_render(
                 extra_context=dict(form=form,
                                    first=report_section_idx == 0,

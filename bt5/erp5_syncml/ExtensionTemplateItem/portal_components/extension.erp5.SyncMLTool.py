@@ -27,7 +27,7 @@
 import base64
 from lxml import etree
 from difflib import unified_diff
-from Products.ERP5Type.DiffUtils import DiffFile
+from erp5.component.module.DiffUtils import DiffFile
 
 def diffXML(xml_plugin="", xml_erp5="", gid="", html=True):
   if isinstance(xml_erp5, unicode):

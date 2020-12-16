@@ -10,4 +10,3 @@ except SubversionLoginError, error1 :
   context.REQUEST.set('portal_status_message', 'Server needs authentication, no cookie found')
   return context.asContext(caller='info', realm = error1.getRealm(), username = vcs_tool.getPreferredUsername()).BusinessTemplate_viewSvnLogin()
 return entry_dict
-return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()

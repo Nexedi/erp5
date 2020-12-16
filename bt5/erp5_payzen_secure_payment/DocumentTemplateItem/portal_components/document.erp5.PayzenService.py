@@ -1,8 +1,7 @@
 import zope
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Document import newTempDocument
 import hashlib
 from zLOG import LOG, WARNING
 import datetime
@@ -259,11 +258,12 @@ finally:
     del(os.environ['TZ'])
   time.tzset()
 
+from erp5.component.interface.IPaymentService import IPaymentService
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
   portal_type = 'Payzen Service'
 
-  zope.interface.implements(interfaces.IPaymentService)
+  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -343,7 +343,7 @@ class PayzenService(XMLObject, PayzenSOAP):
     if message_list:
       raise ValidationFailed, message_list
 
-    temp_document = newTempDocument(self, 'id')
+    temp_document = self.newContent(temp_object=True, portal_type='Document', id='id')
     temp_document.edit(
       link_url_string=self.getLinkUrlString(),
       title='title',

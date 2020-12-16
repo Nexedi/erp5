@@ -27,6 +27,7 @@ def digestCaption(my_caption, my_caption_title, my_count, my_shift):
   if match_doubles.get(my_caption_title, None) is None:
     match_doubles[my_caption_title] = my_count
     caption_relevant_count = my_count
+    my_count += 1
   else:
     caption_relevant_count = match_doubles[my_caption_title]
   caption_id = caption_abbreviation + "-" + str(caption_relevant_count)
@@ -41,7 +42,6 @@ def digestCaption(my_caption, my_caption_title, my_count, my_shift):
     my_shift
   )
   caption_list.append(caption_dict)
-  my_count = my_count + 1
   return my_count
 
 # XXX single quotes?

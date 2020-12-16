@@ -1,7 +1,6 @@
 from Products.ERP5Type.Document import newTempBase
 marker = []
 
-result = []
 
 portal_catalog = context.portal_catalog
 portal_workflow = context.portal_workflow
@@ -40,7 +39,7 @@ line_list = []
 c = 0
 item_dict = {}
 for business_field in business_field_list:
-  for wf_item, reference, type in get_obj_and_reference_list(business_field):
+  for wf_item, reference, type_ in get_obj_and_reference_list(business_field):
     term_list = get_term_list(business_field, reference)
     #if not term_list:
     #  continue
@@ -49,21 +48,21 @@ for business_field in business_field_list:
     item_dict[wf_item] = True
 
     c += 1
-    if type == 'workflow':
+    if type_ == 'workflow':
       wf_item_path = wf_item.id
       wf_item_title = wf_item.title
-    elif type == 'state':
+    elif type_ == 'state':
       wf_item_path = '%s/states/%s' % (wf_item.aq_parent.aq_parent.id, wf_item.id)
       wf_item_title = wf_item.title
-    elif type == 'transition':
+    elif type_ == 'transition':
       wf_item_path = '%s/transitions/%s' % (wf_item.aq_parent.aq_parent.id, wf_item.id)
       wf_item_title = wf_item.title
-    else: # type == 'action'
+    else: # type_ == 'action'
       wf_item_path = '%s/transitions/%s_actbox_name' % (wf_item.aq_parent.aq_parent.id, wf_item.id)
       wf_item_title = wf_item.actbox_name
     wf_item_description = wf_item.description
 
-    if type == 'transition' and wf_item_path.endswith('_action'):
+    if type_ == 'transition' and wf_item_path.endswith('_action'):
       if len(term_list) == 1 and \
           term_list[0].getTitle() + ' Action' == wf_item_title and \
           term_list[0].getDescription() == wf_item_description:
@@ -76,7 +75,7 @@ for business_field in business_field_list:
 
     line = newTempBase(context, 'tmp_glossary_wf_item_%s' %  c)
     line.edit(wf_item_path=wf_item_path,
-              wf_item_type=type,
+              wf_item_type=type_,
               wf_item_title=wf_item_title,
               wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),
               wf_item_description = wf_item_description,

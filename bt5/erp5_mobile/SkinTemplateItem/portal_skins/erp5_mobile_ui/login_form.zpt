@@ -44,12 +44,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
       <fieldset class="left fielset_login">
         <div class="field">
-          <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>
+          <label for="name" class="required" i18n:translate="" i18n:domain="ui">Username</label>
           <div class="input"><input type="text" name="__ac_name" id="name" /></div>
         </div>
         <div class="field">
           <label for="password" i18n:translate="" i18n:domain="ui">Password</label>
-          <div class="input"><input type="password" name="__ac_password" id="password"/></div>
+          <div class="input"><input type="password" name="__ac_password" id="password" autocomplete="off" /></div>
         </div>
         <div class="field">
           <label>&nbsp;</label>

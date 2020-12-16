@@ -13,8 +13,8 @@
       var field_json = options.field_json || {},
         state_dict,
         value;
-      if (field_json.default === 'on') {
-        value = 1;
+      if (typeof field_json.default === "string") {
+        value = !(field_json.default === '');
       } else {
         value = field_json.default;
       }
@@ -24,6 +24,7 @@
         id: field_json.key,
         name: field_json.key,
         title: field_json.title,
+        error_text: field_json.error_text,
         hidden: field_json.hidden,
         // Force calling subfield render
         // as user may have modified the input value

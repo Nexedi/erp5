@@ -1,0 +1,402 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/test_page_module</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Object created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Go to test form -->
+<tal:block tal:define="click_configuration python: {'text': 'Edit Slideshow'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>0 Slides</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>0 Slides</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Create first slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='New Slide']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Set text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: 'slide 1 text content'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Edit the title of the slide</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go to the comment form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Comments']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Set text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: 'slide 1 comment content'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Go to the text form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: '<p>slide 1 text content</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Check the metadata</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go to the comment form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Comments']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check comment content</b></td>
+</tr>
+<tal:block tal:define="text_content python: '<p>slide 1 comment content</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Go back to the slide list</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>1 Slides</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go back to the slide 1</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Edit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go to the text form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>Check the metadata</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+
+<tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/save"/>
+
+<tr>
+  <td>assertValue</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Add a new slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='New Slide']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Slide 2</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go to previous slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Previous']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+<tr>
+
+<td colspan="3"><b>Change the type to Illustration</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//select[@name='type']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name='type']</td>
+  <td>label=Illustration</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>image_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>image_url</td>
+  <td>https://example.com/image.png</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>image_caption</td>
+  <td></td>
+</tr>
+<!--<tr>
+  <td>type</td>
+  <td>image_caption</td>
+  <td>Illustration</td>
+</tr>-->
+
+<tr>
+  <td colspan="3"><b>Go to next slide</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Slide 2</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Delete slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Delete']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>1 Slides</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>1 Slides</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@src='https://example.com/image.png']</td>
+  <td></td>
+</tr>
+<!--
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@title='Illustration']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@alt='Illustration']</td>
+  <td></td>
+</tr>
+-->
+
+<tr>
+  <td colspan="3"><b>Go back to the slide 1</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Edit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>type</td>
+  <td></td>
+</tr>
+<tr>
+
+<td colspan="3"><b>Check text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: '<p>slide 1 text content</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block>
+
+<td colspan="3"><b>Check the title</b></td>
+<tr>
+  <td>assertValue</td>
+  <td>title_html</td>
+  <td>slide 1 test title</td>
+</tr>
+
+<td colspan="3"><b>Check the image url</b></td>
+<tr>
+  <td>assertValue</td>
+  <td>image_url</td>
+  <td>https://example.com/image.png</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

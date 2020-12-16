@@ -1,8 +1,9 @@
 /*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
 /*global window, rJS, RSVP, URI,
- SimpleQuery, ComplexQuery, Query, QueryFactory, document*/
+ SimpleQuery, ComplexQuery, Query, QueryFactory, document, XMLHttpRequest,
+ console*/
 (function (window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory) {
+  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console) {
   "use strict";
 
   function displayNonEditableLink(gadget) {
@@ -148,6 +149,7 @@
         key: options.key,
         view: options.view,
         search_view: options.search_view,
+        error_text: options.error_text || "",
         url: options.url,
         allow_creation: options.allow_creation,
         portal_types: JSON.stringify(options.portal_types),
@@ -230,8 +232,19 @@
         // First display of the input
         buildEditableInputHTML(gadget);
       }
-
       input = gadget.element.querySelector("input");
+      if (gadget.state.error_text &&
+          !input.classList.contains("is-invalid")) {
+        input.classList.add("is-invalid");
+      } else if (
+        // value_portal_type not empty means that user
+        // wants to create a Document
+        (!gadget.state.error_text || gadget.state.value_portal_type) &&
+          input.classList.contains("is-invalid")
+      ) {
+        input.classList.remove("is-invalid");
+      }
+
       if (modification_dict.hasOwnProperty("value_text")) {
         input.value = gadget.state.value_text;
       }
@@ -248,8 +261,7 @@
       return RSVP.Queue()
         .push(function () {
           var plane = gadget.element.querySelector("a"),
-            ul = gadget.element.querySelector(".search_ul"),
-            translation_promise;
+            ul = gadget.element.querySelector(".search_ul");
           plane.href = '';
 
           // uid is known
@@ -315,114 +327,154 @@
               return RSVP.delay(200);
             })
             .push(function () {
-              translation_promise = gadget.getTranslationList([
-                'Create New',
-                'Explore the Search Result List'
+              return RSVP.all([
+
+                gadget.jio_allDocs({
+                  query: Query.objectToSearchText(new ComplexQuery({
+                    operator: "AND",
+                    query_list: [
+                      QueryFactory.create(
+                        new URI(gadget.state.query).query(true).query
+                      ),
+                      new SimpleQuery({
+                        key: gadget.state.catalog_index,
+                        value: value_text
+                      })
+                    ]
+                  })),
+                  limit: [0, 10],
+                  select_list: [gadget.state.catalog_index, "uid"],
+                  sort_on: JSON.parse(gadget.state.sort_list_json)
+                }),
+
+                gadget.getTranslationList([
+                  'Create New',
+                  'Explore the Search Result List'
+                ])
+
               ]);
+            })
+            .push(function (result_list) {
+              var i,
+                row,
+                portal_type_list,
+                translated_portal_type_list,
+                fragment_element = document.createDocumentFragment(),
+                li_element;
 
-              return gadget.jio_allDocs({
-                query: Query.objectToSearchText(new ComplexQuery({
-                  operator: "AND",
-                  query_list: [
-                    QueryFactory.create(
-                      new URI(gadget.state.query).query(true).query
-                    ),
-                    new SimpleQuery({
-                      key: gadget.state.catalog_index,
-                      value: value_text
-                    })
-                  ]
-                })),
-                limit: [0, 10],
-                select_list: [gadget.state.catalog_index, "uid"],
-                sort_on: JSON.parse(gadget.state.sort_list_json)
-              })
-                .push(function (result) {
-                  return new RSVP.Queue()
-                    .push(function () {
-                      return RSVP.all([result, translation_promise]);
-                    })
-                    .push(function (result_list) {
-                      var i,
-                        row,
-                        portal_type_list,
-                        translated_portal_type_list,
-                        fragment_element = document.createDocumentFragment(),
-                        li_element;
+              plane.className = JUMP_UNKNOWN_CLASS_STR;
 
-                      plane.className = JUMP_UNKNOWN_CLASS_STR;
-
-                      // Documents
+              // Documents
 // <li class="ui-icon-sign-in ui-btn-icon-right" data-relative-url="{{id}}"
 //     data-uid="{{uid}}">{{value}}</li>
-                      for (i = 0; i < result_list[0].data.rows.length; i += 1) {
-                        row = result_list[0].data.rows[i];
-                        li_element = document.createElement('li');
-                        li_element.setAttribute('class',
-                          'ui-icon-sign-in ui-btn-icon-right');
-                        li_element.setAttribute('data-relative-url', row.id);
-                        li_element.setAttribute('data-uid', row.value.uid);
-                        li_element.textContent =
-                          row.value[gadget.state.catalog_index];
-                        fragment_element.appendChild(li_element);
-                      }
+              for (i = 0; i < result_list[0].data.rows.length; i += 1) {
+                row = result_list[0].data.rows[i];
+                li_element = document.createElement('li');
+                li_element.setAttribute('class',
+                  'ui-icon-sign-in ui-btn-icon-right');
+                li_element.setAttribute('data-relative-url', row.id);
+                li_element.setAttribute('data-uid', row.value.uid);
+                li_element.textContent =
+                  row.value[gadget.state.catalog_index];
+                fragment_element.appendChild(li_element);
+              }
 
-                      // New documents
+              // New documents
 //  <li class="ui-icon-plus ui-btn-icon-right" data-i18n="Create New"
 //      data-create-object="{{value}}" name="{{name}}">Create New
 //    <span> {{name}}: {{../value}}</span></li>
-                      if (gadget.state.allow_creation) {
-                        portal_type_list =
-                          JSON.parse(gadget.state.portal_types);
-                        translated_portal_type_list =
-                          JSON.parse(gadget.state.translated_portal_types);
-                        for (i = 0; i < portal_type_list.length; i += 1) {
-                          li_element = document.createElement('li');
-                          li_element.setAttribute('class',
-                            'ui-icon-plus ui-btn-icon-right');
-                          li_element.setAttribute('data-create-object',
-                                                  portal_type_list[i]);
-                          li_element.setAttribute('name',
-                            translated_portal_type_list[i]);
-                          li_element.textContent =
-                            result_list[1][0] + ' ' +
-                            translated_portal_type_list[i] +
-                            ': ' + value_text;
-                          fragment_element.appendChild(li_element);
-                        }
-                      }
+              if (gadget.state.allow_creation) {
+                portal_type_list =
+                  JSON.parse(gadget.state.portal_types);
+                translated_portal_type_list =
+                  JSON.parse(gadget.state.translated_portal_types);
+                for (i = 0; i < portal_type_list.length; i += 1) {
+                  li_element = document.createElement('li');
+                  li_element.setAttribute('class',
+                    'ui-icon-plus ui-btn-icon-right');
+                  li_element.setAttribute('data-create-object',
+                                          portal_type_list[i]);
+                  li_element.setAttribute('name',
+                    translated_portal_type_list[i]);
+                  li_element.textContent =
+                    result_list[1][0] + ' ' +
+                    translated_portal_type_list[i] +
+                    ': ' + value_text;
+                  fragment_element.appendChild(li_element);
+                }
+              }
 
-                      // Explore
+              // Explore
 // <li class="ui-icon-search ui-btn-icon-right" data-explore=true
 //     data-i18n="Explore the Search Result List" ></li>
-                      li_element = document.createElement('li');
-                      li_element.setAttribute('class',
-                        'ui-icon-search ui-btn-icon-right');
-                      li_element.setAttribute('data-explore',
-                                              true);
-                      li_element.textContent = result_list[1][1];
-                      fragment_element.appendChild(li_element);
+              li_element = document.createElement('li');
+              li_element.setAttribute('class',
+                'ui-icon-search ui-btn-icon-right');
+              li_element.setAttribute('data-explore',
+                                      true);
+              li_element.textContent = result_list[1][1];
+              fragment_element.appendChild(li_element);
 
-                      while (ul.firstChild) {
-                        ul.removeChild(ul.firstChild);
+              while (ul.firstChild) {
+                ul.removeChild(ul.firstChild);
+              }
+              ul.appendChild(fragment_element);
+            }, function (error) {
+              if (error instanceof Error &&
+                  error.hash &&
+                  error.hash.expected &&
+                  error.hash.expected.length === 1 &&
+                  error.hash.expected[0] === "'QUOTE'") {
+                return gadget.getTranslationList([
+                  "Invalid Search Criteria"
+                ])
+                  .push(function (translation_list) {
+                    if (gadget.state.error_text !== translation_list[0]) {
+                      // Avoid call deferErrorText if error_text is already set
+                      // Otherwise, onStateChange will run forever
+                      return RSVP.all([
+                        gadget.deferErrorText(translation_list[0]),
+                        gadget.notifyInvalid(translation_list[0])
+                      ]);
+                    }
+                    return gadget.notifyInvalid(translation_list[0]);
+                  });
+              }
+              // do not crash interface if allDocs fails
+              if (error.target instanceof XMLHttpRequest) {
+                console.warn(error);
+                return gadget.getTranslationList([
+                  "You are offline",
+                  "Unexpected server error"
+                ])
+                  .push(function (translation_list) {
+                    if (error.target.status === 0) {
+                      if (gadget.state.error_text !== translation_list[0]) {
+                        // Avoid call deferErrorText if error_text is already
+                        // set. Otherwise, onStateChange will run forever
+                        return RSVP.all([
+                          gadget.deferErrorText(translation_list[0]),
+                          gadget.notifyInvalid(translation_list[0])
+                        ]);
                       }
-                      ul.appendChild(fragment_element);
-                    });
-                }, function (error) {
-                  if (error instanceof Error &&
-                      error.hash &&
-                      error.hash.expected &&
-                      error.hash.expected.length === 1 &&
-                      error.hash.expected[0] === "'QUOTE'") {
-                    return gadget.getTranslationList([
-                      "Invalid search criteria"
-                    ])
-                      .push(function (translation_list) {
-                        return gadget.notifyInvalid(translation_list[0]);
-                      });
-                  }
-                  throw error;
-                });
+                      return gadget.notifyInvalid(translation_list[0]);
+                    }
+                    if (error.target.status >= 500) {
+                      if (gadget.state.error_text !== translation_list[0]) {
+                        // Avoid call deferErrorText if error_text is already
+                        // set. Otherwise, onStateChange will run forever
+                        return RSVP.all([
+                          gadget.deferErrorText(translation_list[1]),
+                          gadget.notifyInvalid(translation_list[1])
+                        ]);
+                      }
+                      return gadget.notifyInvalid(translation_list[1]);
+                    }
+                    throw error;
+                  });
+              }
+              // Crash by default
+              throw error;
             });
         });
 
@@ -497,6 +549,7 @@
       }
     }, false, false)
 
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
     .onEvent('blur', function (evt) {
       var gadget = this;
       if (evt.target.tagName.toLowerCase() === 'input') {
@@ -509,22 +562,27 @@
             return gadget.changeState({
               has_focus: false
             });
+          })
+          .push(function () {
+            return gadget.notifyBlur();
           });
       }
     }, true, false)
 
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
     .onEvent('focus', function (evt) {
       var gadget = this;
       if (evt.target.tagName.toLowerCase() === 'input') {
-        return gadget.changeState({
-          has_focus: true
-        });
+        return RSVP.all([
+          gadget.notifyFocus(),
+          gadget.changeState({has_focus: true})
+        ]);
       }
     }, true, false)
 
+    .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
       var gadget = this;
-
       if ((this.state.value_text) && (
           (this.state.value_relative_url === null) &&
             (this.state.value_uid === null) &&
@@ -532,19 +590,34 @@
         )) {
         return gadget.translate("No such document was found")
           .push(function (error_message) {
-            return gadget.notifyInvalid(error_message);
+            return RSVP.all([
+              gadget.deferErrorText(error_message),
+              gadget.notifyInvalid(error_message)
+            ]);
           })
           .push(function () {
             return false;
           });
       }
-      return true;
+      return gadget.notifyValid()
+        .push(function () {
+          return true;
+        });
     }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      return this.changeState({
+        error_text: error_text
+      });
+    })
 
     // XXX Use html5 input
     .onEvent('invalid', function (evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false)
 
     .onEvent('change', function () {
@@ -553,22 +626,25 @@
 
 
     .onEvent('input', function (event) {
+      var gadget = this;
       if (!this.state.editable) {
         return;
       }
-
-      var context = this;
       return this.changeState({
         value_text: event.target.value,
         value_relative_url: null,
         value_uid: null,
         value_portal_type: null,
-        has_focus: true
+        has_focus: true,
+        error_text: ""
       })
         .push(function () {
-          return context.notifyChange();
+          return RSVP.all([
+            gadget.notifyValid(),
+            gadget.notifyChange()
+          ]);
         });
     }, true, false);
 
 }(window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory));
+  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console));

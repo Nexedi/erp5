@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/ 
+* http://meyerweb.com/eric/tools/css/reset/
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -329,13 +329,22 @@ select:focus {
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid,
 textarea:invalid,
-select:invalid {
+select:invalid,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid,
+textarea.is-invalid,
+select.is-invalid {
   border: 1px solid #FF6600;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid:focus,
 textarea:invalid:focus,
-select:invalid:focus {
+select:invalid:focus,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid:focus,
+textarea.is-invalid:focus,
+select.is-invalid:focus {
   box-shadow: 0 0 12pt #FF6600;
+}
+label.is-invalid {
+  color: #FF6600;
 }
 input[type="search"] {
   -webkit-appearance: textfield;
@@ -1045,6 +1054,19 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content button[name='action_update']:active {
   background-color: #a9a9a9;
 }
+.gadget-content .sign_in_with_google {
+  height: 46px;
+  width: 191px;
+  display: inline-block;
+  overflow: hidden;
+  margin-top: 6pt;
+}
+.gadget-content .sign_in_with_google img:hover {
+  margin-top: -46px;
+}
+.gadget-content .sign_in_with_google img:active {
+  margin-top: -92px;
+}
 @media not screen and (max-width: 85em) {
   div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
     margin-left: 180pt;
@@ -1064,7 +1086,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .field_container > div > div > div.ui-field-contain {
   padding: 3pt 0;
 }
-.gadget-content .field_container > div > div > div.ui-field-contain div {
+.gadget-content .field_container > div > div > div.ui-field-contain > div {
   width: 100%;
 }
 .gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain {
@@ -1161,7 +1183,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
-.gadget-content .ui-field-contain > label {
+.gadget-content .ui-field-contain > label:not(:is-invalid) {
   color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {
@@ -1268,6 +1290,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .relation-input div {
   position: relative;
+  width: 100%;
 }
 .relation-input ul {
   position: absolute;
@@ -1424,6 +1447,10 @@ div.invisible_header .document_table .ui-table-header {
 .document_table table thead tr th,
 .document_table table tfoot tr th {
   padding: 6pt 3pt;
+}
+.document_table table thead tr th.ui-icon::before,
+.document_table table tfoot tr th.ui-icon::before {
+  margin-right: 6pt;
 }
 @media not screen and (min-width: 45em) {
   .document_table table thead,

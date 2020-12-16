@@ -29,11 +29,22 @@
 
 import unittest
 
+from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
     foreground = 0
+
+    def afterSetUp(self):
+        # change ownership of the preference
+        pref = self.portal.portal_preferences._getOb(
+            'accounting_zuite_preference',
+            None,
+        )
+        if pref is not None:
+            pref.changeOwnership(getSecurityManager().getUser(), True)
+        super(TestZeleniumCore, self).afterSetUp()
 
     def getBusinessTemplateList(self):
         """

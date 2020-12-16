@@ -22,8 +22,11 @@ portal.portal_selections.setSelectionParamsFor('accounting_create_related_paymen
 if len(object_list) >= 1000:
   return context.Base_redirect(
       form_id,
-      keep_items={'portal_status_message': translateString(
-          'Refusing to process more than 1000 objects, check your selection.')})
+      keep_items={
+        'portal_status_message': translateString(
+            'Refusing to process more than 1000 objects, check your selection.'),
+        'portal_status_level': 'error',
+      })
 
 tag = 'payment_creation_%s' % random.randint(0, 1000)
 activated = 0
@@ -35,8 +38,10 @@ for obj in object_list:
       return context.Base_redirect(
           form_id,
           abort_transaction=True,
-          keep_items={'portal_status_message': translateString(
-              'Payment creation already in progress, abandon.')})
+          keep_items={
+            'portal_status_message': translateString('Payment creation already in progress, abandon.'),
+            'portal_status_level': 'error',
+          })
     obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(
                                                   node=node,
                                                   payment_mode=payment_mode,
@@ -47,8 +52,10 @@ for obj in object_list:
 if not activated:
   return context.Base_redirect(
       form_id,
-      keep_items={'portal_status_message': translateString(
-          'No invoice in your selection.')})
+      keep_items={
+        'portal_status_message': translateString( 'No invoice in your selection.'),
+        'portal_status_level': 'error',
+      })
 
 # activate something on the folder
 context.activate(after_tag=tag).getTitle()

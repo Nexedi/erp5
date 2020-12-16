@@ -57,11 +57,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Fill in detailled information for each ERP5 user. At end of configuration process each TioLive user will receive an email containing his username and password.</string> </value>
+            <value> <string>Fill in detailed information for each ERP5 user.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>9</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>8</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

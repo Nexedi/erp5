@@ -30,9 +30,9 @@
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.CMFCore.utils import _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 from OFS.Image import File as OFSFile
-from Products.ERP5.Document.Document import ConversionError, NotConvertedError
-from Products.ERP5.mixin.base_extensible_traversable import BaseExtensibleTraversableMixin
-from Products.ERP5.mixin.document_extensible_traversable import DocumentExtensibleTraversableMixin
+from erp5.component.document.Document import ConversionError, NotConvertedError
+from erp5.component.mixin.BaseExtensibleTraversableMixin import BaseExtensibleTraversableMixin
+from erp5.component.mixin.DocumentExtensibleTraversableMixin import DocumentExtensibleTraversableMixin
 
 # XXX: these duplicate ones in ERP5.Document
 EMBEDDED_FORMAT = '_embedded'

@@ -36,6 +36,8 @@ portal_tests/renderjs_ui_page_templates_zuite
 portal_tests/renderjs_ui_page_templates_zuite/**
 portal_tests/renderjs_ui_page_zuite
 portal_tests/renderjs_ui_page_zuite/**
+portal_tests/renderjs_ui_parallel_list_field_zuite
+portal_tests/renderjs_ui_parallel_list_field_zuite/**
 portal_tests/renderjs_ui_radio_field_zuite
 portal_tests/renderjs_ui_radio_field_zuite/**
 portal_tests/renderjs_ui_recover_password_zuite
@@ -44,8 +46,11 @@ portal_tests/renderjs_ui_relation_field_zuite
 portal_tests/renderjs_ui_relation_field_zuite/**
 portal_tests/renderjs_ui_router_zuite
 portal_tests/renderjs_ui_router_zuite/**
+portal_tests/renderjs_ui_service_worker_zuite
+portal_tests/renderjs_ui_service_worker_zuite/**
 portal_tests/renderjs_ui_translate_zuite
 portal_tests/renderjs_ui_translate_zuite/**
 portal_tests/renderjs_ui_zuite
 portal_tests/renderjs_ui_zuite/**
 web_page_module/gadget_erp5_page_router_test_*
+web_page_module/gadget_erp5_page_service_worker_test_*

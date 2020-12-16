@@ -62,3 +62,45 @@ def MKCOL(self, REQUEST, RESPONSE):
 
 from webdav.NullResource import NullResource
 NullResource.MKCOL = MKCOL
+
+NullResource_PUT = NullResource.PUT
+def PUT(self, REQUEST, RESPONSE):
+  """Create a new non-collection resource.
+  """
+  if getattr(self.__parent__, 'PUT_factory', None) is not None: # BBB
+    return NullResource_PUT(self, REQUEST, RESPONSE)
+
+  self.dav__init(REQUEST, RESPONSE)
+  if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+    raise Forbidden, 'REQUEST_METHOD should be PUT.'
+
+  name = self.__name__
+  parent = self.__parent__
+
+  ifhdr = REQUEST.get_header('If', '')
+  if IWriteLock.providedBy(parent) and parent.wl_isLocked():
+    if ifhdr:
+      parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
+    else:
+      # There was no If header at all, and our parent is locked,
+      # so we fail here
+      raise Locked
+  elif ifhdr:
+    # There was an If header, but the parent is not locked
+    raise PreconditionFailed
+
+  # <ERP5>
+  # XXX: Do we really want to force 'id'
+  #      when PUT is called on Contribution Tool ?
+  kw = {'id': name, 'data': None, 'filename': name}
+  contribution_tool = parent.getPortalObject().portal_contributions
+  if aq_base(contribution_tool) is not aq_base(parent):
+    kw.update(container=parent, discover_metadata=False)
+  ob = contribution_tool.newContent(**kw)
+  # </ERP5>
+
+  ob.PUT(REQUEST, RESPONSE)
+  RESPONSE.setStatus(201)
+  RESPONSE.setBody('')
+  return RESPONSE
+NullResource.PUT = PUT

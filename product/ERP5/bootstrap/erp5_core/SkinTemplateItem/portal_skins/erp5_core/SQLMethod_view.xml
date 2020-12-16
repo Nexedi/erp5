@@ -23,7 +23,10 @@
         <item>
             <key> <string>edit_order</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>id</string>
+              </list>
             </value>
         </item>
         <item>

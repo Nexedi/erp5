@@ -1,7 +1,7 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+/*global window, rJS, RSVP, calculatePageTitle, domsugar,
          ensureArray */
-(function (window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+(function (window, rJS, RSVP, calculatePageTitle, domsugar,
            ensureArray) {
   "use strict";
 
@@ -25,13 +25,17 @@
           gadget.element.querySelector('.dialog_button_container'),
       update_button = button_container.querySelector('button'),
       submit_input = button_container.querySelector('input');
-    submit_input.disabled = true;
+    if (submit_input !== null) {
+      submit_input.disabled = true;
+    }
     if (update_button !== null) {
       update_button.disabled = true;
     }
 
     function enableButton() {
-      submit_input.disabled = false;
+      if (submit_input !== null) {
+        submit_input.disabled = false;
+      }
       if (update_button !== null) {
         update_button.disabled = false;
       }
@@ -86,16 +90,19 @@
                 (!result.view)) {
               // don't update navigation history when not really redirecting
               return gadget.redirect({command: 'cancel_dialog_with_history'});
-            } else if (gadget.state.jio_key === result.jio_key) {
+            }
+            if (gadget.state.jio_key === result.jio_key) {
               command = 'display_with_history_and_cancel';
             } else {
               // Check if the redirection goes to a same parent's subdocument.
               // In this case, do not add current document to the history
               // example: when cloning, do not keep the original document in history
+              // Exception for the modules, to prevent redirecting to the homepage to fast
               splitted_jio_key_list = result.jio_key.split('/');
               splitted_current_jio_key_list = gadget.state.jio_key.split('/');
               command = 'display_with_history';
-              if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
+              if ((splitted_jio_key_list.length === splitted_current_jio_key_list.length) &&
+                  (splitted_jio_key_list.length > 1)) {
                 for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
                   if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
                     command = 'push_history';
@@ -133,13 +140,7 @@
     return submitDialog.apply(this, [false, param_list[0]]);
   }
 
-  var gadget_klass = rJS(window),
-    dialog_button_source = gadget_klass.__template_element
-                         .getElementById("dialog-button-template")
-                         .innerHTML,
-    dialog_button_template = Handlebars.compile(dialog_button_source);
-
-  gadget_klass
+  rJS(window)
     .setState({
       'redirect_to_parent': false,  // set by a presence of special field
       'has_update_action': undefined  // default "submit" issue update in case of its presence
@@ -152,8 +153,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("submitContent", "submitContent")
     .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
                             submitDialogWithCustomDialogMethod)
@@ -185,12 +185,13 @@
             form_definition: options.form_definition,
             erp5_form: options.erp5_form || {},
             // editable: true,  // ignore global editable state (be always editable)
+            has_action: Boolean(options.form_definition.action),
             action_title: options.form_definition.action_title,
             has_update_action: Boolean(options.form_definition.update_action),
             update_action_title: options.form_definition.update_action_title,
             // pass extended_search from previous view in case any gadget is curious
             extended_search: extended_search,
-            redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
+            redirect_to_parent: options.erp5_document._embedded._view.your_redirect_to_parent !== undefined
           });
         });
     })
@@ -238,39 +239,55 @@
           // Set the dialog button
           if (modification_dict.hasOwnProperty('has_update_action') ||
               modification_dict.hasOwnProperty('update_action_title')) {
-            return form_gadget.translateHtml(dialog_button_template({
-              show_update_button: form_gadget.state.has_update_action
-            }))
-              .push(function (html) {
-                var div = document.createElement('div'),
-                  dialog_button_container = form_gadget.element
-                                   .querySelector('.dialog_button_container');
-                div.innerHTML = html;
-                if (form_gadget.state.has_update_action && form_gadget.state.update_action_title) {
-                  div.querySelector('button[name="action_update"]')
-                     .textContent = form_gadget.state.form_definition
-                                                     .update_action_title;
+
+            return form_gadget.getTranslationList(['Update', 'Proceed', 'Cancel'])
+              .push(function (translation_list) {
+                var dom_list = [];
+
+                if (form_gadget.state.has_update_action) {
+                  dom_list.push(
+                    domsugar('button', {disabled: true,
+                                        name: 'action_update',
+                                        type: 'button',
+                                        text: form_gadget.state.update_action_title || translation_list[0]}
+                            )
+                  );
                 }
-                while (dialog_button_container.firstChild) {
-                  dialog_button_container.firstChild.remove();
+
+                if (form_gadget.state.has_action) {
+                  dom_list.push(
+                    domsugar('input', {disabled: true,
+                                       name: 'action_confirm',
+                                       class: 'dialogconfirm',
+                                       type: 'submit',
+                                       value: translation_list[1]}),
+                    domsugar('a', {class: 'dialogcancel',
+                                   text: translation_list[2]})
+                  );
                 }
-                dialog_button_container.innerHTML = div.innerHTML;
+
+                domsugar(form_gadget.element
+                                    .querySelector('.dialog_button_container'),
+                         dom_list);
               });
+
           }
         })
         .push(function () {
           // Calculate the h3 properties
-          return RSVP.all([
-            form_gadget.translate(form_gadget.state.form_definition.title),
-            form_gadget.translate(title)
+          return form_gadget.getTranslationList([
+            form_gadget.state.form_definition.title,
+            title
           ]);
         })
         .push(function (translated_title_list) {
           var action_confirm = form_gadget.element.querySelector('input.dialogconfirm');
-          if (form_gadget.state.action_title) {
-            action_confirm.value = form_gadget.state.action_title;
-          } else {
-            action_confirm.value = translated_title_list[1];
+          if (action_confirm !== null) {
+            if (form_gadget.state.action_title) {
+              action_confirm.value = form_gadget.state.action_title;
+            } else {
+              action_confirm.value = translated_title_list[1];
+            }
           }
 
           selector.textContent = "\u00A0" + translated_title_list[0];
@@ -303,7 +320,10 @@
           ]);
         })
         .push(function (all_result) {
-          form_gadget.element.querySelector('a.dialogcancel').href = all_result[0];
+          var action_cancel = form_gadget.element.querySelector('a.dialogcancel');
+          if (action_cancel !== null) {
+            action_cancel.href = all_result[0];
+          }
           form_gadget.enableButtonAsJob();
           return form_gadget.updateHeader({
             cancel_url: all_result[0],
@@ -339,10 +359,12 @@
             gadget.element.querySelector('.dialog_button_container'),
         update_button = button_container.querySelector('button'),
         submit_input = button_container.querySelector('input');
-      submit_input.disabled = false;
+      if (submit_input !== null) {
+        submit_input.disabled = false;
+      }
       if (update_button !== null) {
         update_button.disabled = false;
       }
     });
 
-}(window, document, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));
+}(window, rJS, RSVP, calculatePageTitle, domsugar, ensureArray));

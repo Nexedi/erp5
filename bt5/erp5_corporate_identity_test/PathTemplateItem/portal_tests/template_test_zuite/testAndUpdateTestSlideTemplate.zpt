@@ -122,9 +122,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -323,9 +328,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -564,9 +574,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -765,9 +780,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -862,12 +882,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>001</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -876,12 +891,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1017,9 +1032,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -1119,12 +1139,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>004</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1133,12 +1148,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1274,9 +1289,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -1371,12 +1391,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>002</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1385,12 +1400,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1526,9 +1541,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -1633,12 +1653,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>003</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1647,12 +1662,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1789,9 +1804,14 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as SlideShow</td>
     </tr>
     <tr>
       <td>waitForTextPresent</td>
@@ -1891,12 +1911,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>005</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1905,12 +1920,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>

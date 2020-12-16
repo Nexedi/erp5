@@ -20,7 +20,7 @@ if test_suite.getReference() is None:
 def generateRandomString(size):
   tab = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"  
   my_string = ''
-  for i in range(size):
+  for _ in range(size):
     my_string = my_string + choice(tab)
   return my_string
 

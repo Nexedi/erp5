@@ -10,8 +10,8 @@
 <tr><td rowspan="1" colspan="3">Test Gadget Interface Validation UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="check_configuration python: {'app_cache_reference': 'gadget_interface_validator_test.appcache',
-                                                    'gadget_count': 8}">
+<tal:block tal:define="check_configuration python: {'precache_reference': './WebSection_getInterfaceValidatorTestPrecacheManifest',
+                                                    'gadget_count': 9}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiInterface/macros/run_app_interface_check" />
 </tal:block>
 
@@ -21,7 +21,7 @@
 <tr>
   <td>assertText</td>
   <td>//tbody/tr/td</td>
-  <td>gadget_interface_validator_test_correct_implemented_gadget.html</td>
+  <td>*/gadget_interface_validator_test_correct_implemented_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
@@ -30,26 +30,26 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check interface with invalid syntax</b></td>
+  <td colspan="3"><b>Check failing service</b></td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[2]/td</td>
-  <td>gadget_interface_validator_test_invalid_interface_gadget.html</td>
+  <td>*/gadget_interface_validator_test_failing_service_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[2]/td[2]</td>
-  <td>Failure</td>
+  <td>Unexpected error*</td>
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check missing interface</b></td>
+  <td colspan="3"><b>Check interface with invalid syntax</b></td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[3]/td</td>
-  <td>gadget_interface_validator_test_missing_interface_declaration_gadget.html</td>
+  <td>*/gadget_interface_validator_test_invalid_interface_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
@@ -58,12 +58,12 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check missing method declaration</b></td>
+  <td colspan="3"><b>Check missing interface</b></td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[4]/td</td>
-  <td>gadget_interface_validator_test_missing_method_declaration_gadget.html</td>
+  <td>*/gadget_interface_validator_test_missing_interface_declaration_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
@@ -72,16 +72,30 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check correct use case for multiple interface</b></td>
+  <td colspan="3"><b>Check missing method declaration</b></td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[5]/td</td>
-  <td>gadget_interface_validator_test_multiple_interface_correct_implemented_gadget.html</td>
+  <td>*/gadget_interface_validator_test_missing_method_declaration_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[5]/td[2]</td>
+  <td>Failure</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check correct use case for multiple interface</b></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[6]/td</td>
+  <td>*/gadget_interface_validator_test_multiple_interface_correct_implemented_gadget.html</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[6]/td[2]</td>
   <td>Success</td>
 </tr>
 
@@ -90,22 +104,8 @@
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tbody/tr[6]/td</td>
-  <td>gadget_interface_validator_test_multiple_interface_duplicated_method_name.html</td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//tbody/tr[6]/td[2]</td>
-  <td>Failure</td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Check not existent gadget</b></td>
-</tr>
-<tr>
-  <td>assertText</td>
   <td>//tbody/tr[7]/td</td>
-  <td>gadget_interface_validator_test_nonexistent_gadget.html</td>
+  <td>*/gadget_interface_validator_test_multiple_interface_duplicated_method_name.html</td>
 </tr>
 <tr>
   <td>assertText</td>
@@ -114,16 +114,30 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check unknown method declaration</b></td>
+  <td colspan="3"><b>Check not existent gadget</b></td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[8]/td</td>
-  <td>gadget_interface_validator_test_unknown_method_declaration_gadget.html</td>
+  <td>*/gadget_interface_validator_test_nonexistent_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[8]/td[2]</td>
+  <td>Failure</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check unknown method declaration</b></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[9]/td</td>
+  <td>*/gadget_interface_validator_test_unknown_method_declaration_gadget.html</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[9]/td[2]</td>
   <td>Failure</td>
 </tr>
 

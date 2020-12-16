@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
+from erp5.component.module.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
 
 portal = context.getPortalObject()
 portal_categories = context.portal_categories

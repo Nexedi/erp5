@@ -29,6 +29,7 @@
         type: options.type || 'text',
         title: options.title,
         focus: options.focus,
+        error_text: options.error_text || "",
         step: options.step,
         hidden: options.hidden,
         trim: options.trim || false,
@@ -43,13 +44,13 @@
     .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('input'),
         tmp; // general use short-scope variable
-
       if (this.state.type === 'checkbox') {
         textarea.checked = this.state.checked;
       } else {
         textarea.setAttribute('value', this.state.value);
         textarea.value = this.state.value;
       }
+
       if (this.state.type === 'radio') {
         textarea.checked = this.state.checked;
       }
@@ -86,7 +87,7 @@
         textarea.readonly = false;
       }
 
-      if (this.state.hidden) {
+      if (this.state.hidden && !modification_dict.error_text) {
         textarea.hidden = true;
       } else {
         textarea.hidden = false;
@@ -117,6 +118,15 @@
         this.element.insertBefore(tmp, textarea);
         tmp = undefined;
       }
+
+      if (this.state.error_text &&
+          !textarea.classList.contains("is-invalid")) {
+        textarea.classList.add("is-invalid");
+      } else if (!this.state.error_text &&
+                 textarea.classList.contains("is-invalid")) {
+        textarea.classList.remove("is-invalid");
+      }
+
     })
 
     .declareService(function focus() {
@@ -176,15 +186,24 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('input').checkValidity(),
+      var input = this.element.querySelector('input'),
+        result = input.checkValidity(),
         gadget = this;
+
+      if (gadget.state.type === "radio") {
+        result = result && !gadget.state.error_text;
+      }
+
       if (result) {
-        return this.notifyValid()
+        return gadget.notifyValid()
           .push(function () {
             var date,
               value;
-            if (!result) {
-              return result;
+            if ((gadget.state.type === 'checkbox') && gadget.state.error_text) {
+              return gadget.notifyInvalid(gadget.state.error_text)
+                .push(function () {
+                  return result;
+                });
             }
             if ((gadget.state.type === 'date') ||
                 (gadget.state.type === 'datetime-local')) {
@@ -194,7 +213,10 @@
                 if (isNaN(date)) {
                   return gadget.translate("Invalid DateTime")
                     .push(function (error_message) {
-                      return gadget.notifyInvalid(error_message);
+                      return RSVP.all([
+                        gadget.deferErrorText(error_message),
+                        gadget.notifyInvalid(error_message)
+                      ]);
                     })
                     .push(function () {
                       return false;
@@ -205,8 +227,23 @@
             return result;
           });
       }
+      if (gadget.state.error_text) {
+        return gadget.notifyInvalid(gadget.state.error_text)
+          .push(function () {
+            return result;
+          });
+      }
+
       return result;
     }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      var input = this.element.querySelector("input");
+      return this.changeState({
+        value: input.value,
+        error_text: error_text
+      });
+    })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .onEvent('change', function change() {
@@ -215,6 +252,7 @@
         this.notifyChange("change")
       ]);
     }, false, false)
+
     .onEvent('input', function input() {
       return RSVP.all([
         this.checkValidity(),
@@ -222,10 +260,23 @@
       ]);
     }, false, false)
 
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
+
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false);
 
 }(window, document, rJS, RSVP, jIO, getFirstNonEmpty));

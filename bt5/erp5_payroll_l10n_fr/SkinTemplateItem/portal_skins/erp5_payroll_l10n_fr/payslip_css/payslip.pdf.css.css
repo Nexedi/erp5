@@ -45,7 +45,7 @@ table.payslip-income-tax thead tr td{
   border-radius:1%;
   width:45%;
   text-align: left;
-  min-height:200px;
+  min-height:150px;
 }
 
 .payslip-cumul-net-to-pay:after,

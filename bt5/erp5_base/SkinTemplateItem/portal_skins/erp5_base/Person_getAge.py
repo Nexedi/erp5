@@ -3,7 +3,7 @@ If `year` is true, return the integer value, otherwise returns a translated
 string.
 """
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import getIntervalBetweenDates
+from erp5.component.module.DateUtils import getIntervalBetweenDates
 Base_translateString = context.Base_translateString
 
 birthday = context.getBirthday()

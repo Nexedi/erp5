@@ -1,8 +1,8 @@
 /*jslint indent: 2*/
-/*global self, fetch, Request, Response */
+/*global self, fetch, Request, Response, URL, Blob */
 var global = self, window = self;
 
-(function (self, fetch, Request, Response) {
+(function (self, fetch, Response, Blob) {
   "use strict";
 
   self.DOMParser = {};
@@ -52,7 +52,8 @@ var global = self, window = self;
   self.addEventListener("fetch", function (event) {
     var relative_url = './' + event.request.url.split("#")[0]
       .replace(self.registration.scope, "")
-      .replace(self.version_url, "");
+      .replace(self.version_url, ""),
+      tmp;
     if (relative_url === './no-cache') {
       event.respondWith(new Response(self.cache_list));
       return;
@@ -80,6 +81,42 @@ var global = self, window = self;
             return new Response(error, {"statusText": error.message, "status": 500});
           })
       );
+    } else if (
+      // postData from manifest.json
+      event.request.method === 'POST' &&
+        relative_url.split('?')[0].endsWith('postData')
+    ) {
+      self.request = event.request;
+      event.respondWith(Response.redirect('.'));
+    } else if (
+      // Determine if it hasSharedData
+      event.request.url.endsWith('hasSharedData')
+    ) {
+      event.respondWith(new Response(self.request ? "true" : "false"));
+    } else if (
+      // getSharedData from upload_shared_file page
+      // upload_shared_file page processes the data
+      event.request.url.endsWith('getSharedData') &&
+        event.request.method === 'GET'
+    ) {
+      if (!self.request) {
+        event.respondWith(new Response(''));
+      } else {
+        tmp = self.request;
+        delete self.request;
+        event.respondWith(
+          new self.RSVP.Queue()
+            .push(function () {
+              return tmp.formData();
+            })
+            .push(function (data) {
+              return data.get('file');
+            })
+            .push(function (file) {
+              return new Response(new Blob([file], {type: file.type}));
+            })
+        );
+      }
     } else {
       event.respondWith(
         new self.RSVP.Queue()
@@ -101,4 +138,4 @@ var global = self, window = self;
     }
   });
 
-}(self, fetch, Request, Response));
+}(self, fetch, Response, Blob));

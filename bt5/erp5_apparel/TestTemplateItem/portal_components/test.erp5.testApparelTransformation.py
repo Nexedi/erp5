@@ -30,7 +30,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from erp5.component.test.testOrder import TestOrderMixin
 
 class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   """

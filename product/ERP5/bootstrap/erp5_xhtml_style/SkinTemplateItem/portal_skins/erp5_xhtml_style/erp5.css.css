@@ -423,8 +423,28 @@ fieldset.bottom > .field > label {
   border-width: 0;
 }
 
+.login a.google {
+  height: 46px;
+  width: 191px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.login a.google img:hover {
+  margin-top: -46px;
+}
+
+.login a.google img:active {
+  margin-top: -92px;
+}
+
+
 .content .field {
   padding-bottom: 3px;
+}
+
+.content .field textarea {
+  padding: revert;
 }
 
 .content .field label {

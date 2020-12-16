@@ -25,62 +25,58 @@
 
     .declareMethod("render", function () {
       var gadget = this;
-      return new RSVP.Queue()
+      return gadget.updateHeader({
+        page_title: "Success Story List"
+      })
+      .push(function () {
+        return gadget.getDeclaredGadget("form_list");
+      })
+      .push(function (form_gadget) {
+        var column_list = [
+          ['title', 'Title'],
+          ['software', 'Software'],
+          ['publisher', 'Publisher'],
+          ['industry', 'Industry'],
+          ['category_list', 'Software Categories'],
+          ['customer', 'Customer'],
+          ['country', 'Country'],
+          ['language', 'Language']
+        ];
 
-        .push(function () {
-          return gadget.updateHeader({
-            page_title: "Success Story List"
-          });
-        })
-        .push(function () {
-          return gadget.getDeclaredGadget("form_list");
-        })
-        .push(function (form_gadget) {
-          var column_list = [
-            ['title', 'Title'],
-            ['software', 'Software'],
-            ['publisher', 'Publisher'],
-            ['industry', 'Industry'],
-            ['category_list', 'Software Categories'],
-            ['customer', 'Customer'],
-            ['country', 'Country'],
-            ['language', 'Language']
-          ];
-
-          return form_gadget.render({
-            erp5_document: {"_embedded": {"_view": {
-              "listbox": {
-                "column_list": column_list,
-                "show_anchor": 0,
-                "default_params": {},
-                "editable": 1,
-                "editable_column_list": [],
-                "key": "field_listbox",
-                "lines": 20,
-                "list_method": "portal_catalog",
-                "query": 'urn:jio:allDocs?query=portal_type:"success_case"',
-                "portal_type": [],
-                "search_column_list": column_list,
-                "sort_column_list": column_list,
-                "title": "",
-                "type": "ListBox"
-              }
-            }},
-              "_links": {
-                "type": {
-                  // form_list display portal_type in header
-                  name: ""
-                }
-              }
-              },
-            form_definition: {
-              group_list: [[
-                "bottom",
-                [["listbox"]]
-              ],
-                ["hidden", ["listbox_modification_date"]]]
+        return form_gadget.render({
+          erp5_document: {"_embedded": {"_view": {
+            "listbox": {
+              "column_list": column_list,
+              "show_anchor": 0,
+              "default_params": {},
+              "editable": 1,
+              "editable_column_list": [],
+              "key": "field_listbox",
+              "lines": 20,
+              "list_method": "portal_catalog",
+              "query": 'urn:jio:allDocs?query=portal_type:"success_case"',
+              "portal_type": [],
+              "search_column_list": column_list,
+              "sort_column_list": column_list,
+              "title": "",
+              "type": "ListBox"
             }
-          });
+          }},
+            "_links": {
+              "type": {
+                // form_list display portal_type in header
+                name: ""
+              }
+            }
+            },
+          form_definition: {
+            group_list: [[
+              "bottom",
+              [["listbox"]]
+            ],
+              ["hidden", ["listbox_modification_date"]]]
+          }
         });
+      });
     });
 }(window, RSVP, rJS));

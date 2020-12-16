@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import getNumberOfDayInMonth
+from erp5.component.module.DateUtils import getNumberOfDayInMonth
 
 def getLastDateOfMonth(date):
   return DateTime(date.year(), date.month(), getNumberOfDayInMonth(date))

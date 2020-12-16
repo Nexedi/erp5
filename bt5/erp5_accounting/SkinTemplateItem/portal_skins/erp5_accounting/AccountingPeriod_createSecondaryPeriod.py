@@ -1,5 +1,5 @@
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 from Products.ERP5Type.Message import translateString
 
 month_added = 1

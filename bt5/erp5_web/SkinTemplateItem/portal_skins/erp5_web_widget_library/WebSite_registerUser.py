@@ -6,7 +6,7 @@
 
   XXX - redirect, translation of dialogs
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 req = context.REQUEST
 
 # check if everything was filled

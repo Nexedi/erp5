@@ -3,21 +3,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <script src="handlebars.js" type="text/javascript"></script>
     <script src="jslint.js" type="text/javascript"></script>
-
-    <script id="jslint_template" type="text/x-handlebars-template">
-      {{#each error_list}}
-        {{#if this}}
-        <tr class="Data{{this.line_letter}}">
-          <td class="listbox-table-data-cell">line: {{this.line}}: {{this.character}}: {{this.evidence}}</td>
-          <td class="listbox-table-data-cell">{{this.reason}}</td>
-        </tr>
-        {{/if}}
-      {{else}}
-        <tr class="DataA"><td>No error!</td></tr>
-      {{/each}}
-    </script> 
 
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>

@@ -1,5 +1,3 @@
-request = context.REQUEST
-
 project_line_portal_type = 'Project Line'
 
 domain_list = []

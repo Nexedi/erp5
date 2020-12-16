@@ -3,7 +3,7 @@ if not date:
 try:
   now =  DateTime()
   date = DateTime(date)
-except:
+except Exception:
   return ''  
 Base_translateString = context.Base_translateString
 diff = now - date

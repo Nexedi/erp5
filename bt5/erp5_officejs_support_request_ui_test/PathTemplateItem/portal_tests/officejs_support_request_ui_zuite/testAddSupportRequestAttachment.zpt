@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+    <table cellpadding="1" cellspacing="1" border="1">
+      <thead>
+        <tr>
+          <td rowspan="1" colspan="3">Support Request Zuite</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+        <tr>
+          <td>setTimeout</td>
+          <td>360000</td> <!-- upload document and run all activities around this upload takes time, so we use a larger timeout -->
+          <td></td>
+        </tr>
+        <tr>
+          <td>open</td>
+          <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+        <tr>
+          <td>click</td>
+          <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>type</td>
+          <td>//input[@name='field_your_title']</td>
+          <td>test</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>field_your_project</td>
+          <td>RobotMaking</td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>FeatureRequire</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>field_your_resource</td>
+          <td>FeatureRequire</td>
+        </tr>
+        <tal:block tal:define="text_content string:Post test">
+          <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+        </tal:block>
+        <tr>
+          <td>setFile</td>
+          <td>field_your_file</td>
+          <td>portal_skins/erp5_officejs_support_request_test/test_support_request_text.pdf test_support_request_text.pdf</td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'New Support Request created.'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@data-i18n="[value]Post Comment"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>Comments:</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForText</td>
+          <td>//ol[@id="post_list"]//li/p</td>
+          <td>Post test</td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>Reference</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>Project</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>Begin Date</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>Support Request Type</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>State</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>Submitted</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertText</td>
+          <td>//ol[@id="post_list"]/li/a</td>
+          <td>test_support_request_text.pdf</td>
+        </tr>
+        <tr>
+          <td>store</td>
+          <td>javascript{selenium.browserbot.currentWindow.location.href}</td>
+          <td>current_location</td>
+        </tr>
+        <tr>
+          <td>storeText</td>
+          <td>//p[@id="field_my_reference"]</td>
+          <td>current_reference</td>
+        </tr>
+
+        <tal:block tal:repeat="filename python: ['test_support_request_presentation.pptx',
+                                                 'test_support_request_spreadsheet.xlsx',
+                                                 'test_support_request_docx.docx',
+                                                 'test_support_request_txt.txt',
+                                                 'test_support_request_png.png']">
+          <tr>
+            <td>setFile</td>
+            <td>attachment</td>
+            <td tal:content="string: portal_skins/erp5_officejs_support_request_test/${filename} ${filename}"></td>
+          </tr>
+          <tal:block tal:define="text_content string:Post test ${filename}">
+            <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+          </tal:block>
+          <tr>
+            <td>click</td>
+            <td>//input[@data-i18n="[value]Post Comment"]</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>waitForElementPresent</td>
+            <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Comment added']</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>openAndWait</td>
+            <td tal:content="string: ${here/portal_url}/Zuite_waitForActivities"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>waitForTextPresent</td>
+            <td>Done.</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>open</td>
+            <td>${current_location}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>waitForTextPresent</td>
+            <td tal:content="string:Post test ${filename}"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>waitForElementPresent</td>
+            <td>attachment</td>
+            <td></td>
+          </tr>
+        </tal:block>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Home"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Home"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@class="document_table"]/table/tbody/tr[1]/td[2]/a</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//div[@class="document_table"]/table/tbody/tr[1]/td[2]/a</td>
+          <td></td>
+        </tr>
+        <tal:block tal:repeat="filename python: ['test_support_request_text.pdf',
+                                                 'test_support_request_presentation.pptx',
+                                                 'test_support_request_spreadsheet.xlsx',
+                                                 'test_support_request_docx.docx',
+                                                 'test_support_request_txt.txt',
+                                                 'test_support_request_png.png']">
+          <tr>
+            <td>waitForElementPresent</td>
+            <td tal:content="string: //a[contains(text(), '${filename}')]"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>click</td>
+            <td tal:content="string: //a[contains(text(), '${filename}')]"></td>
+            <td></td>
+          </tr>
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+          <tr tal:define="title python: filename.split('.')[0]">
+            <td>waitForElementPresent</td>
+            <td tal:content="python: '//div[@class=\'ui-header\']/h1/a[contains(text(), \'{}\')]'.format(title)"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertTextNotPresent</td>
+            <td>undefined</td>
+            <td></td>
+          </tr>
+          <tr tal:define="title python: filename.split('.')[0]">
+            <td>click</td>
+            <td tal:content="python: '//div[@class=\'ui-header\']/h1/a[contains(text(), \'{}\')]'.format(title)"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>waitForElementPresent</td>
+            <td>//p[contains(text(), '${current_reference}')]</td>
+            <td></td>
+          </tr>
+        </tal:block>
+      </tbody>
+    </table>
+  </body>
+</html>

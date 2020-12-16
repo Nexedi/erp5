@@ -18,7 +18,7 @@ default_sub_field_property_dict.update(title='&nbsp;',
                                        field_type='ListField',
                                        size=1,
                                        item_list=[('', '')] + item_list,
-                                       value=None)
+                                       value='')
 for value in value_list:
   new_dict = default_sub_field_property_dict.copy()
   new_dict['value'] = value

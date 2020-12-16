@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import atTheEndOfPeriod
+from erp5.component.module.DateUtils import atTheEndOfPeriod
 request = container.REQUEST
 from_date = request.get('from_date', None)
 to_date = request.get('at_date', None)

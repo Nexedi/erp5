@@ -4,7 +4,7 @@ is based on calculation of the frequency_index and creation_date_index.
 Documents which their frequency_index and creation_date_index are the
 same as those calculated, are updated.
 """
-from Products.ERP5Type.DateUtils import convertDateToHour
+from erp5.component.module.DateUtils import convertDateToHour
 date_dict = {}
 
 # Shared function
@@ -27,7 +27,7 @@ for frequency_reference, creation_date in date_dict.items():
   max_in_activities = 1000 
   offset = 0
   loop = documents_to_update / max_in_activities
-  for i in range(loop):
+  for _ in range(loop):
     limit = '%s,%s' % (offset, max_in_activities)
     sql_kw['limit'] = limit
     updateDocumentList(**sql_kw)

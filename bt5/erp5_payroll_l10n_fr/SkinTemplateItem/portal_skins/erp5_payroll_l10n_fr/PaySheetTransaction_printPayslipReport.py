@@ -17,7 +17,7 @@ return context.Base_printAsReport(
   report_name = "PaySheetTransaction_generatePayslipReport",
   report_footer = "PaySheetTransaction_generatePayslipReportFooter",
   conversion_dict = dict(
-    margin_top=70,
+    margin_top=60,
     header_spacing=5
   ),
   css_path="payslip_css/payslip",

@@ -26,48 +26,22 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import deprecated
 from zLOG import (
   LOG,
-  INFO,
-  TRACE,
-  DEBUG,
-  BLATHER,
-  INFO,
-  PROBLEM,
-  WARNING,
-  ERROR,
-  PANIC,
+  INFO
 )
 
-from traceback import extract_stack
-
 marker_ = []
+
+@deprecated
 def log(description, content=marker_, level=INFO):
-    """Put a log message
+    """Deprecated method
 
-    This method is supposed to be used by restricted environment,
-    such as Script (Python).
-
-    WARNING: When called with more than 1 argument, the first one is appended
-             to the usual information about the caller, in order to form a
-             subsystem string. Because a logging.Logger object is created for
-             each subsystem, and is never freed, you can experience memory
-             leaks if description is not constant.
+    Use erp5.componement.Log instead.
+    
+    Kept for compatbility to allow instance upgrade.
     """
     if content is marker_: # allow for content only while keeping interface
         description, content = content, description
-    st = extract_stack()
-    head = []
-    for frame in st[-2:-6:-1]: # assume no deep nesting in Script (Python)
-        if frame[3] is not None and frame[3].startswith('self.log'): # called from class
-            head.append('%s, %d' % (frame[2], frame[1]))
-            break
-        if frame[0] == 'Script (Python)': # does anybody log from ZPT or dtml?
-            head.append('%s, %d' % (frame[2], frame[1]))
-        elif frame[0] == 'ERP5 Python Script':
-            head.append('%s, %d' % (frame[2], frame[1]))
-    del st # Prevent cycling references.
-    head = ' -> '.join(head)
-    description = '%s: %s' % (head, description)
     LOG(description, level, content)
-

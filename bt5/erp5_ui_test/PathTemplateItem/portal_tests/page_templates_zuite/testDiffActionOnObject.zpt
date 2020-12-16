@@ -54,48 +54,58 @@
   <td>Diff Object</td>
 </tr>
 
-<!-- Check the diff content -->
-<tr>
-  <td>verifyValue</td>
-  <td>field_your_first_path</td>
-  <td>bar_module/1</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>field_your_second_path</td>
-  <td>bar_module/1</td>
-</tr>
+<tal:block tal:repeat="_ python: (1, 2)">
 
-<tr>
-  <td>assertText</td>
-  <td>//a[@class="listbox_title"]</td>
-  <td>exact:Diff</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[1]</td>
-  <td>title</td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/div[@data-gadget-sandbox="public"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>storeEval</td>
-  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-1 DataB']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
-  <td>_data_gadget_value</td>
-</tr>
-<tr>
-  <td>verifyEval</td>
-  <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
-  <td>---+++@@-1+1@@-Title1+Title2</td>
-</tr>
+  <!-- Check the diff content -->
+  <tr>
+    <td>verifyValue</td>
+    <td>field_your_first_path</td>
+    <td>bar_module/1</td>
+  </tr>
+  <tr>
+    <td>verifyValue</td>
+    <td>field_your_second_path</td>
+    <td>bar_module/1</td>
+  </tr>
 
+  <tr>
+    <td>assertText</td>
+    <td>//a[@class="listbox_title"]</td>
+    <td>exact:Diff</td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertText</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[1]</td>
+    <td>title</td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/div[@data-gadget-sandbox="public"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>storeEval</td>
+    <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-1 DataB']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
+    <td>_data_gadget_value</td>
+  </tr>
+  <tr>
+    <td>verifyEval</td>
+    <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
+    <td>---+++@@-1+1@@-Title1+Title2</td>
+  </tr>
+
+  <!-- submit the action again, it should be same -->
+  <tr>
+    <td>clickAndWait</td>
+    <td>dialog_submit_button</td>
+    <td></td>
+  </tr>
+
+</tal:block>
 </body>
 </html>

@@ -42,13 +42,6 @@ car_width = 6
 depth_width = 10 
 # the same over the vertical axis
 depth_height = 10 
-# mid block size in wich we try to insert text
-block_width = 40 
-# margin between the block and the delimitation (this permits to have
-# blocks a bit smaller that lines or columns)
-margin = 5 
-
-
 
 size_planning_width = basic.field.get_value('size_planning_width')
 size_x_axis_height = basic.field.get_value('size_x_axis_height')

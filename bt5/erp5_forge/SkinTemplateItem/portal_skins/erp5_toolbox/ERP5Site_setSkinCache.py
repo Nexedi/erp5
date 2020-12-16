@@ -4,9 +4,9 @@ result = []
 
 def setCache(skin):
   for o in skin.objectValues():
-    id = o.id
-    if callable(id): id = id()
-    if o.meta_type in ('Image', 'File', 'Filesystem Image', 'Filesystem File') or id.endswith('.css') or id.endswith('.js'):
+    id_ = o.id
+    if callable(id_): id_ = id_()
+    if o.meta_type in ('Image', 'File', 'Filesystem Image', 'Filesystem File') or id_.endswith('.css') or id_.endswith('.js'):
       if o.ZCacheable_getManagerId() != cache_manager_id:
         o.ZCacheable_setManagerId(cache_manager_id)
         result.append(o.absolute_url(relative=1))

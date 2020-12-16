@@ -6,4 +6,4 @@ in the certain organisation - for this, all we need is the first part
 of the group category.
 """
 
-return context.ERP5Type_getSecurityCategoryFromAssignmentTree(base_category_list, user_name, object, portal_type, strict=True, root=True)
+return context.ERP5Type_getSecurityCategoryFromAssignmentTree(base_category_list, user_name, obj, portal_type, strict=True, root=True)

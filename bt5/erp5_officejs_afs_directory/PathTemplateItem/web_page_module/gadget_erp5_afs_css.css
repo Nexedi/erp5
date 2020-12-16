@@ -477,7 +477,20 @@ div[data-gadget-scope='panel'] {
   text-decoration: underline;
   color: lightblue;
 }
-
+.ui-hidden-accessible {
+  position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px,1px,1px,1px);
+  visibility: hidden;
+}
+.ui-content-licence + a {
+  float: left;
+  padding-right: 1em;
+  padding-bottom: 2em;
+  margin-top: 1.75em;
+}
 
 
 

@@ -33,7 +33,6 @@
                 <string>resource/service_module/cheque_vacance</string>
                 <string>source_section/organisation_module/20</string>
                 <string>destination/account_module/dette_fournisseur</string>
-                <string>contribution_share/employee</string>
                 <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_salariales</string>
                 <string>base_contribution/base_amount/payroll/report_section/l10n/fr/amount_non_subject_to_contribution</string>
                 <string>base_contribution/base_amount/payroll/base/income_tax</string>
@@ -154,34 +153,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <int>0</int> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>contribution_share/employee</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

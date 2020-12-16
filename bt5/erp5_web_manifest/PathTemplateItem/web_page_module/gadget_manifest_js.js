@@ -288,6 +288,30 @@
       }
       return param_list;
     })
+    .allowPublicAcquisition("translate", function (param_list) {
+      if (this.setLanguage) {
+        return this.getDeclaredGadget("translate")
+          .push(function (translation_gadget) {
+            return translation_gadget.translate.apply(
+              translation_gadget,
+              param_list
+            );
+          });
+      }
+      return param_list;
+    })
+    .allowPublicAcquisition("getTranslationList", function (param_list) {
+      if (this.setLanguage) {
+        return this.getDeclaredGadget("translate")
+          .push(function (translation_gadget) {
+            return translation_gadget.getTranslationList.apply(
+              translation_gadget,
+              param_list
+            );
+          });
+      }
+      return param_list;
+    })
 
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {
       // Hey, I want to display some URL

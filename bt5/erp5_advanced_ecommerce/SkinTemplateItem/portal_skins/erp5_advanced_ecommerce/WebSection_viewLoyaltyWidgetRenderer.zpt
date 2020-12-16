@@ -1,0 +1,32 @@
+<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">
+  <tal:block tal:condition="not: isAnon"
+             tal:define="customer here/ERP5Site_getAuthenticatedMemberPersonValue;
+                         login customer/getReference | string: ;
+                         website here/getWebSiteValue">
+
+    <p class="article" tal:condition="python: len(customer.contentValues(portal_type='Loyalty Account')) or customer.Person_getTotalLoyaltyPoint()">
+      <span tal:condition="python: len(customer.contentValues(portal_type='Loyalty Account'))">
+        <span tal:replace="python: here.Base_translateString('Your Number:')" />
+        <span tal:replace="python: customer.contentValues(portal_type='Loyalty Account')[0].getReference()" />
+        <br/>
+      </span>
+      <span>
+        <span tal:replace="python: here.Base_translateString('You have')"/>
+        <b> <span tal:replace="customer/Person_getTotalLoyaltyPoint"/> </b>
+        <span tal:replace="python: here.Base_translateString('Points')"/>.
+      </span>
+      <br/>
+    </p>
+    <p class="article" tal:condition="python: not len(customer.contentValues(portal_type='Loyalty Account'))">
+      <span>
+        <a tal:attributes="href python: website.loyalty.absolute_url()">
+          <span tal:replace="python: here.Base_translateString('Join the Loyalty Program!')"/>
+        </a>
+      </span>
+    </p>
+
+
+  </tal:block>
+
+
+</tal:block>

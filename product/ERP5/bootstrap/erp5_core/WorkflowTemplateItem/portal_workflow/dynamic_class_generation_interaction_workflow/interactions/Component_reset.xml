@@ -56,6 +56,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
+                <string>_setSourceReference</string>
                 <string>validate</string>
                 <string>invalidate</string>
               </list>

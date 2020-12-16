@@ -84,10 +84,6 @@ class TestSpellChecking(ERP5TypeTestCase):
             'erp5_advanced_invoicing',
             'erp5_apparel',
             'erp5_archive',
-            #'erp5_banking_cash',
-            #'erp5_banking_check',
-            #'erp5_banking_core',
-            #'erp5_banking_inventory',
             'erp5_budget',
             'erp5_calendar',
             'erp5_commerce',
@@ -97,8 +93,6 @@ class TestSpellChecking(ERP5TypeTestCase):
             'erp5_credential',
             'erp5_data_protection',
             'erp5_dms',
-            #'erp5_egov_catalog',
-            #'erp5_egov',
             'erp5_forge',
             'erp5_hr',
             'erp5_immobilisation',
@@ -109,10 +103,8 @@ class TestSpellChecking(ERP5TypeTestCase):
             'erp5_payroll',
             'erp5_project',
             'erp5_publication',
-            #'erp5_registry_ohada',
             'erp5_simulation_performance_test',
             'erp5_ui_test',
-            'erp5_wizard',
             )
 
   def validate_spell(self, sentence):

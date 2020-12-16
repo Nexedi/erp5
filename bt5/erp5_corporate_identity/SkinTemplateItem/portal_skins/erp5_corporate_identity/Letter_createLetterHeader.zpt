@@ -61,7 +61,7 @@ Generates the letter header
   <tal:block metal:define-macro="letter_header">
     <div class="ci-letter-header">
 		  <div class="ci-letter-bar">
-		    <div class="ci-letter-bar-logo">
+		    <div tal:attributes="class python: 'ci-letter-bar-logo' if letter_theme_logo_alt else 'ci-letter-bar-logo ci-letter-bar-logo-without-description'">
   		      <img tal:attributes="src python: letter_theme_logo_url;
     		                           alt python: letter_theme_logo_alt" />
             <span tal:content="letter_theme_logo_alt"></span>

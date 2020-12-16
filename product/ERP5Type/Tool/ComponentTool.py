@@ -59,6 +59,7 @@ class ComponentTool(BaseTool):
   id = "portal_components"
   meta_type = "ERP5 Component Tool"
   portal_type = "Component Tool"
+  title = "Components"
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -147,11 +148,26 @@ class ComponentTool(BaseTool):
     import erp5.component
     from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
     with aq_method_lock:
+      component_package_list = []
       for package in erp5.component.__dict__.itervalues():
         if isinstance(package, ComponentDynamicPackage):
           package.reset()
+          component_package_list.append(package.__name__)
 
+      erp5.component.filesystem_import_dict = None
       erp5.component.ref_manager.gc()
+
+      # Clear pylint cache
+      try:
+        from astroid.builder import MANAGER
+      except ImportError:
+        pass
+      else:
+        astroid_cache = MANAGER.astroid_cache
+        for k in astroid_cache.keys():
+          if k.startswith('erp5.component.') and k not in component_package_list:
+            del astroid_cache[k]
+
     if reset_portal_type_at_transaction_boundary:
       portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
     else:

@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-
+from collections import defaultdict
 import os
 import unittest
 
@@ -1116,6 +1116,30 @@ class TestERP5Base(ERP5TypeTestCase):
     bank_account.Base_createCloneDocument()
     self.assertEqual(2, len(person))
 
+  def test_CurrencyModule_getCurrencyItemList(self):
+    currency_module = self.portal.currency_module
+    currency_module.newContent(
+        portal_type='Currency',
+        id='validated',
+        title='Validated',
+        reference='VA',
+    ).validate()
+    invalidated = currency_module.newContent(
+        portal_type='Currency',
+        title='Invalidated',
+        reference='INV',
+    )
+    invalidated.validate()
+    invalidated.invalidate()
+    currency_module.newContent(
+        portal_type='Currency',
+        title='Draft',
+        reference='DRAFT',
+    )
+    self.assertEqual(
+        currency_module.CurrencyModule_getCurrencyItemList(),
+        [('', ''), ('VA', 'currency_module/validated')])
+
   def getWorkflowHistory(self, document, workflow_id):
     return self.portal.portal_workflow.getInfoFor(ob=document, name='history',
         wf_id=workflow_id)
@@ -1153,7 +1177,8 @@ class TestERP5Base(ERP5TypeTestCase):
   def test_user_creation(self):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
-                                   group='nexedi/storever')
+                                   group='nexedi/storever',
+                                   site='distibution/tokyo')
     self.assertNotEquals(None, assignment.getGroupValue())
     assignment.open()
     self.portal.portal_workflow.doActionFor(person, 'create_user_action',
@@ -1182,6 +1207,9 @@ class TestERP5Base(ERP5TypeTestCase):
     # for his assignment group
     self.assertEqual('group/nexedi/storever',
         self.portal.portal_preferences.getPreferredSectionCategory())
+    # and assignment function
+    self.assertEqual('site/distibution/tokyo',
+        self.portal.portal_preferences.getPreferredNodeCategory())
 
   def test_default_address_acquisition(self):
     # more complete version of test_04_SubordinationAndAddress
@@ -1663,7 +1691,232 @@ class TestERP5Base(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(chat_address.getId(), chat_address_id)
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Base))
-  return suite
+  def test_response_header_generator(self):
+    portal = self.portal
+    person_module = portal.person_module
+    response_header_dict = defaultdict(set)
+    def setResponseHeaderRule(
+      document,
+      header_name,
+      method_id=None,
+      fallback_value='',
+      fallback_value_replace=False,
+    ):
+      document.setResponseHeaderRule(
+        header_name,
+        method_id,
+        fallback_value,
+        fallback_value_replace,
+      )
+      self.commit()
+      # document.setResponseHeaderRule succeeded, flag for cleanup
+      response_header_dict[document].add(header_name)
+    def assertPublishedHeaderEqual(document, header_name, value):
+      self.assertEqual(
+        self.publish(document.getPath()).getHeader(header_name),
+        value,
+      )
+
+    try:
+      # Invalid header names are rejected
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, ' ')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, ':')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, '\t')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, '\r')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, '\n')
+
+      # Invalid header values are rejected
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\x7f',
+      )
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\x1f',
+      )
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\r',
+      )
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\n',
+      )
+
+      # Test sanity checks
+      # Nothing succeeded, cleanup must still be empty.
+      assert not response_header_dict
+      header_name = 'Bar'
+      value = 'this is a value'
+      script_value = 'this comes from the script'
+      other_value = 'this is another value'
+      script_container_value = self.getSkinsTool().custom
+      script_argument_string = (
+        'request, header_name, fallback_value, fallback_value_replace, '
+        'current_value'
+      )
+      script_id = 'ERP5Site_getBarResponseHeader'
+      createZODBPythonScript(
+        script_container_value,
+        script_id,
+        script_argument_string,
+        'return %r, False' % (script_value, ),
+      )
+      raising_script_id = 'ERP5Site_getBarResponseHeaderRaising'
+      createZODBPythonScript(
+        script_container_value,
+        raising_script_id,
+        script_argument_string,
+        'raise Exception',
+      )
+      bad_value_script_id = 'ERP5Site_getBadBarResponseHeader'
+      createZODBPythonScript(
+        script_container_value,
+        bad_value_script_id,
+        script_argument_string,
+        'return "\\n", False',
+      )
+      assertPublishedHeaderEqual(portal, header_name, None)
+      assertPublishedHeaderEqual(person_module, header_name, None)
+
+      # Basic functionality: fallback only
+      setResponseHeaderRule(portal, header_name, fallback_value=value)
+      assertPublishedHeaderEqual(portal, header_name, value)
+      assertPublishedHeaderEqual(person_module, header_name, value)
+
+      # Basic functionality: dynamic invalid value
+      setResponseHeaderRule(portal, header_name, method_id=bad_value_script_id)
+      assertPublishedHeaderEqual(portal, header_name, None)
+      assertPublishedHeaderEqual(person_module, header_name, None)
+
+      # Basic functionality: dynamic value with fallback
+      setResponseHeaderRule(portal, header_name, method_id=raising_script_id, fallback_value=value)
+      assertPublishedHeaderEqual(portal, header_name, value)
+      assertPublishedHeaderEqual(person_module, header_name, value)
+
+      # Basic functionality: dynamic value
+      setResponseHeaderRule(portal, header_name, method_id=script_id)
+      assertPublishedHeaderEqual(portal, header_name, script_value)
+      assertPublishedHeaderEqual(person_module, header_name, script_value)
+
+      # Value overriding
+      setResponseHeaderRule(person_module, header_name, fallback_value=other_value, fallback_value_replace=True)
+      assertPublishedHeaderEqual(portal, header_name, script_value)
+      assertPublishedHeaderEqual(person_module, header_name, other_value)
+
+      # Already-set value is appended to
+      setResponseHeaderRule(person_module, header_name, fallback_value=other_value, fallback_value_replace=False)
+      assertPublishedHeaderEqual(portal, header_name, script_value)
+      assertPublishedHeaderEqual(person_module, header_name, script_value + ', ' + other_value)
+    finally:
+      for document, header_name_set in response_header_dict.iteritems():
+        for header_name in header_name_set:
+          try:
+            document.deleteResponseHeaderRule(header_name)
+          except KeyError:
+            pass
+
+
+class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
+  """tests for Base_getDialogSectionCategoryItemList script.
+
+  Users, if they are persons, can only select groups that are "included" in their
+  assignments.
+
+  """
+  def afterSetUp(self):
+    super(ERP5TypeTestCase, self).afterSetUp()
+    self.user_id = self.id()
+    self.portal.acl_users.zodb_roles.doAssignRoleToPrincipal(self.user_id, 'Auditor')
+    self.person = self.portal.person_module.newContent(
+        portal_type='Person',
+        user_id=self.user_id,
+    )
+    group_base_category = self.portal.portal_categories.group
+    group_base_category.manage_delObjects(list(group_base_category.objectIds()))
+    main_group = group_base_category.newContent(
+        id='main_group',
+        title='Main Group',
+        int_index=1,
+    )
+    main_group.newContent(
+        id='sub_group',
+        title='Sub Group',
+        int_index=1,
+    )
+    main_group.newContent(
+        id='another_sub_group',
+        title='Another Sub Group',
+        int_index=2,
+    )
+    main_group = group_base_category.newContent(
+        id='main_group_2',
+        title='Another Top Level Group',
+        int_index=2,
+    )
+    # XXX group categories are cached
+    self.portal.portal_caches.clearAllCache()
+
+  def test_person_on_main_group(self):
+    self.person.newContent(portal_type='Assignment', group='main_group').open()
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group', 'group/main_group'],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+            [
+                'Main Group/Another Sub Group',
+                'group/main_group/another_sub_group'
+            ],
+        ])
+
+  def test_person_on_sub_group_user(self):
+    self.person.newContent(portal_type='Assignment', group='main_group/sub_group').open()
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+        ])
+
+  def test_only_valid_assignments_are_considered(self):
+    self.person.newContent(portal_type='Assignment', group='main_group/sub_group').open()
+    self.person.newContent(portal_type='Assignment', group='main_group', stop_date=DateTime(1970, 1, 1)).open()
+    self.person.newContent(portal_type='Assignment', group='main_group') # left as draft
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+        ])
+
+  def test_non_person_user(self):
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group', 'group/main_group'],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+            [
+                'Main Group/Another Sub Group',
+                'group/main_group/another_sub_group'
+            ],
+            ['Another Top Level Group', 'group/main_group_2'],
+        ])
+
+  def test_person_user_with_manager_role_added_by_zodb_roles(self):
+    self.person.newContent(portal_type='Assignment').open()
+    self.tic()
+    self.portal.acl_users.zodb_roles.doAssignRoleToPrincipal(self.user_id, 'Manager')
+    self.login(self.user_id)
+
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group', 'group/main_group'],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+            [
+                'Main Group/Another Sub Group',
+                'group/main_group/another_sub_group'
+            ],
+            ['Another Top Level Group', 'group/main_group_2'],
+        ])

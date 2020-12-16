@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable-all
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.

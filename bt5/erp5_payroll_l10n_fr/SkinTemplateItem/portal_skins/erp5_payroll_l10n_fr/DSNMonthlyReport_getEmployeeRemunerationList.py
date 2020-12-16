@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import getNumberOfDayInMonth
+from erp5.component.module.DateUtils import getNumberOfDayInMonth
 
 portal = context.getPortalObject()
 

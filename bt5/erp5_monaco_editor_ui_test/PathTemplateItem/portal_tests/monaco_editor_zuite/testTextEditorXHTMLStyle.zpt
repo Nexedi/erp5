@@ -72,7 +72,7 @@
     <td>css=.bottom iframe</td><td></td></tr>
 <tr><td>waitForText</td>
     <td>//body</td>
-    <td>glob:1*Hello</td></tr>
+    <td>glob:1*Hello*</td></tr>
 <tr><td>selectFrame</td>
     <td>relative=top</td><td></td></tr>
 

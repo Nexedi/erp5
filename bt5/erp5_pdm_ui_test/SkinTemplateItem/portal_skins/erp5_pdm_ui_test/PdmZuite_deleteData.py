@@ -1,11 +1,6 @@
 portal = context.getPortalObject()
 
-resource_portal_type = "Product"
 node_portal_type = "Organisation"
-site_portal_type = "Category"
-
-resource_id = "erp5_pdm_ui_test_product"
-
 source_node_id = "erp5_pdm_ui_test_source_node"
 destination_node_id = "erp5_pdm_ui_test_destination_node"
 
@@ -14,10 +9,11 @@ destination_site_id = "erp5_pdm_ui_test_destination_site"
 
 delivery_id = "erp5_pdm_ui_test_delivery"
 
-# Delete resource
-module = portal.getDefaultModule(resource_portal_type)
-if getattr(module, resource_id, None) is not None:
-  module.manage_delObjects([resource_id])
+# Delete resources
+if getattr(portal.product_module, 'erp5_pdm_ui_test_product', None) is not None:
+  portal.product_module.manage_delObjects(['erp5_pdm_ui_test_product'])
+if getattr(portal.component_module, 'erp5_pdm_ui_test_component', None) is not None:
+  portal.component_module.manage_delObjects(['erp5_pdm_ui_test_component'])
 
 # Delete nodes
 module = portal.getDefaultModule(node_portal_type)

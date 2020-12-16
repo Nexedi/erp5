@@ -28,7 +28,7 @@
       return this.getUrlParameter(argument_list)
         .push(function (result) {
           if ((result === undefined) && (argument_list[0] === SORT_STRING)) {
-            return [['lines', 'descending']];
+            return [['line_total', 'descending']];
           }
           return result;
         });
@@ -49,10 +49,10 @@
           var column_list = [
             ['title', 'Title'],
             ['country', 'Country'],
-            ['lines', 'Total Lines of Code']
+            ['line_total', 'Total Lines of Code']
           ],
             sort_column_list = [
-              ['lines', 'Total Lines of Code']
+              ['line_total', 'Total Lines of Code']
             ];
 
           return form_gadget.render({
@@ -69,7 +69,7 @@
                 "portal_type": [],
                 "search_column_list": column_list,
                 "sort_column_list": sort_column_list,
-                "sort_on": ["lines", "descending"],
+                "sort_on": ["line_total", "descending"],
                 "title": "Documents",
                 "type": "ListBox"
               }

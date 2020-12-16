@@ -7,5 +7,5 @@ event = sci['object']
 ticket = event.getFollowUpValue()
 if ticket is not None:
   afterNewEvent = ticket.getTypeBasedMethod('afterNewEvent')
-  if afterNewEvent:
+  if afterNewEvent is not None:
     afterNewEvent(event)

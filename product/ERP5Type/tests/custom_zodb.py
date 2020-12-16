@@ -69,6 +69,11 @@ else:
   from Products.ERP5.ERP5Site import default_sql_connection_string
   sql_db = Products.ZMySQLDA.db.DB(os.environ.get('erp5_sql_connection_string',
                                                   default_sql_connection_string))
+
+  _, view_list = sql_db.query("SHOW FULL TABLES WHERE table_type='VIEW'")
+  if view_list:
+    sql_db.query('DROP VIEW ' +
+                 ','.join('`%s`' % view[0] for view in view_list))
   table_list = sql_db.tables()
   if table_list:
     sql_db.query('DROP TABLE ' +
@@ -163,7 +168,10 @@ else:
   else:
     forkNodes()
     from ZEO.ClientStorage import ClientStorage
-    Storage = ClientStorage(zeo_client)
+    try:
+        Storage = ClientStorage(zeo_client, server_sync=True)
+    except TypeError: # BBB: ZEO<5
+        Storage = ClientStorage(zeo_client)
 
 if node_pid_list is not None:
   _print("Instance at %r loaded ... " % instance_home)

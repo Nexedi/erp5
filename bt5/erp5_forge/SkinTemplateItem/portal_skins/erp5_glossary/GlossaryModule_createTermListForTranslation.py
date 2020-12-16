@@ -17,7 +17,7 @@ for i in catalog(portal_type='Glossary Term',
                             language_id=language) is not None:
     continue
 
-  new_term = glossary_module.newContent(portal_type='Glossary Term',
+  glossary_module.newContent(portal_type='Glossary Term',
                                         reference=reference,
                                         business_field=business_field,
                                         language=language,

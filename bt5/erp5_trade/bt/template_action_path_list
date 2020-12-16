@@ -8,7 +8,6 @@ Container Line | view
 Container Line | view_quantity
 Container | fast_input
 Container | view
-Delivery Cell | view
 Delivery Node Module | view
 Delivery Node | view
 Delivery Root Simulation Rule | view

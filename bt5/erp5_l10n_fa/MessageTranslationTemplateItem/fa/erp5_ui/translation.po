@@ -1155,7 +1155,7 @@ msgstr ""
 msgid "Bank Account Number"
 msgstr ""
 
-msgid "Bank Account TItle"
+msgid "Bank Account Title"
 msgstr ""
 
 msgid "Bank Accounts"
@@ -4397,9 +4397,6 @@ msgstr ""
 
 msgid "Files committed successfully in revision ${revision}."
 msgstr "پرونده ها با موفقیت در بازبینی شماره ${revision} وارد شد."
-
-msgid "Fill in detailled information for each ERP5 user. At end of configuration process each TioLive user will receive an email containing his username and password."
-msgstr ""
 
 msgid "Fill your login and new password."
 msgstr "نام کاربری و رمز ورود جدید خود را وارد کنید."

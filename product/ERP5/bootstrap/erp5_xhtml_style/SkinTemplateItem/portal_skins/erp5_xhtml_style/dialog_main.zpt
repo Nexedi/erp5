@@ -31,7 +31,7 @@
               <span i18n:translate="" i18n:domain="ui"
                     tal:content="python:here.Base_getFormViewDialogActionButtonUpdateActionTitle(form)">Update</span>
             </button>
-            <button accesskey="V"
+            <button tal:condition="form/action|nothing" accesskey="V"
                     id="dialog_submit_button" name="Base_callDialogMethod:method"
                     type="submit" class="bt-med dialog_submit_button">
               <span i18n:translate="" i18n:domain="ui"

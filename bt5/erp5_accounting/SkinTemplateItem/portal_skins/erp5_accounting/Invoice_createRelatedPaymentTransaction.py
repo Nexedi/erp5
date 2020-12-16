@@ -37,7 +37,10 @@ if sum(total_payable_price_details.values()) == 0:
   if not batch_mode:
     return context.Base_redirect(
       form_id,
-      keep_items={'portal_status_message': Base_translateString('Nothing more to pay.')})
+      keep_items={
+          'portal_status_message': Base_translateString('Nothing more to pay.'),
+          'portal_status_level': 'error'
+      })
   return None
 
 related_payment = portal.accounting_module.newContent(

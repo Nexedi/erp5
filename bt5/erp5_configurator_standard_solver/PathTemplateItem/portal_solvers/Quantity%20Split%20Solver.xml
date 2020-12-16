@@ -172,7 +172,7 @@
         </item>
         <item>
             <key> <string>solver_action_title</string> </key>
-            <value> <string>Split and Differ</string> </value>
+            <value> <string>Split and Defer</string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>

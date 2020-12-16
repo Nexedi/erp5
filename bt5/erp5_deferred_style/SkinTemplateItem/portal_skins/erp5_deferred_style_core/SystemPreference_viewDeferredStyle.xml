@@ -76,6 +76,7 @@
                         <string>my_preferred_deferred_report_notification_message_reference</string>
                         <string>my_preferred_deferred_report_classification</string>
                         <string>my_preferred_deferred_report_publication_section</string>
+                        <string>my_preferred_deferred_report_activity_family</string>
                       </list>
                     </value>
                 </item>

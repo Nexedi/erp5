@@ -5574,6 +5574,9 @@ msgstr "アップロード用モジュール"
 msgid "User"
 msgstr "ユーザ"
 
+msgid "Username"
+msgstr "ユーザ名"
+
 msgid "User Account Workflow"
 msgstr "ユーザアカウントワークフロー"
 
@@ -5706,8 +5709,8 @@ msgstr "ソース"
 msgid "Visit"
 msgstr "訪問"
 
-msgid "Volume (m&#179;)"
-msgstr "体積 (m&#179;)"
+msgid "Volume (m³)"
+msgstr "体積 (m³)"
 
 msgid "Warehouse"
 msgstr "倉庫"

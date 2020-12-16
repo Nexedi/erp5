@@ -4,12 +4,14 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped (not yet)
 // TypeScript Version: 2.4
 
+// erp5_monaco_editor_include portal_skins/erp5_monaco_editor/monaco-rsvp.d.ts rsvp
+
 // XXX needs nexedi RSVP patch loaded.
 
 /**
  * A gadget state dict.
  */
-interface GadgetState {
+interface GadgetState extends Object {
     [key: string]: any;
 }
 
@@ -53,6 +55,11 @@ declare class Gadget {
      * To mutate the state, use `changeState`.
      */
     public state: GadgetState;
+    
+    /**
+     * The element where this gadget is attached in the DOM, if gadget is already in the DOM. 
+     */
+    public element?: HTMLElement;
 
     /**
      * Because declared methods will be added to the gadget class, the type declaration is loose.
@@ -89,15 +96,6 @@ declare class Gadget {
     getDeclaredGadget(gadgetScope: string): RSVP.Queue<Gadget>;
 
     /**
-     * `setState`: Set Initial State
-     *
-     * The gadget's state should be set once when initialising the gadget. The state should contain key/value pairs, but the state is just an ordinary JavaScript object with no hard restrictions.
-     *
-     * @param initialState the initial state.
-     */
-    setState(initialState: GadgetState): RSVP.Queue<void>;
-
-    /**
      * `changeState`: Change State
      *
      * Change the state by passing in a new key-value pair, which only overwrites the keys provided in the changeState call, and only if the current and new values are different. All other keys remain unchanged.
@@ -112,6 +110,11 @@ declare class Gadget {
  *  RenderJs gadget class.
  */
 interface GadgetKlass {
+    /**
+     * The HTML element where this gadget class is declared.
+     */
+    __template_element: HTMLDocument;
+
     /**
      * `setState`: Set Initial State
      *
@@ -228,7 +231,7 @@ interface GadgetKlass {
          * @param argument_list The arguments which the method is called.
          * @param scope The caller gadget scope.
          */
-        (this: Gadget, argument_list: any[], scope: string) => any
+        (this: Gadget, argument_list: any[], scope: string) => RSVP.Promise<any>
     ): GadgetKlass;
 
     /**

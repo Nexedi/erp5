@@ -5,7 +5,8 @@ def migrateToERP5Login(self):
     # no user id and no login is required
     return
   if not self.hasUserId() or self.getUserId() == reference:
-    self.setUserId(reference)
+    self._baseSetUserId(reference)
+    self.reindexObject()
   if not self.hasPassword():
     # no login is required, but possibly another Login type object is required if implemented
     return

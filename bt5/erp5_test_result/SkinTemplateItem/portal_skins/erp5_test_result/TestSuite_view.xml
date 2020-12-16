@@ -104,6 +104,7 @@
                         <string>my_additional_bt5_repository_id</string>
                         <string>my_source_project_title</string>
                         <string>my_specialise_title</string>
+                        <string>my_retry_test_pattern</string>
                       </list>
                     </value>
                 </item>

@@ -60,17 +60,17 @@
     .declareMethod('getSearchCriteria', function (name, seriesName) {
       var search_criteria, cur_mid_night = new Date(), days_2 = new Date(),
         days_7 = new Date(), days_30 = new Date(), begin_date, end_date;
+      cur_mid_night.setHours(0, 0, 0, 0);
+      cur_mid_night.setDate(cur_mid_night.getDate() + 1);
+      days_30.setDate(cur_mid_night.getDate() - 30);
+      days_30.setHours(0, 0, 0, 0);
+
       if (seriesName !== 'Support Request') {
         // Situation 1: Search Support Request with date.
-        cur_mid_night.setHours(0, 0, 0, 0);
-        cur_mid_night.setDate(cur_mid_night.getDate() + 1);
-
         days_2.setDate(cur_mid_night.getDate() - 2);
         days_7.setDate(cur_mid_night.getDate() - 7);
-        days_30.setDate(cur_mid_night.getDate() - 30);
         days_2.setHours(0, 0, 0, 0);
         days_7.setHours(0, 0, 0, 0);
-        days_30.setHours(0, 0, 0, 0);
 
         if (name === '< 2') {
           begin_date = days_2;
@@ -88,8 +88,8 @@
         }
         search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND delivery.start_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND delivery.start_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
       } else {
-        // Situation 2: Search Support Request without date.
-        search_criteria = '( translated_simulation_state_title: "' + name + '")';
+        // Situation 2: Search Support Request by state with limit of 30 days.
+        search_criteria = '( translated_simulation_state_title: "' + name + '" AND delivery.start_date: >= ' + days_30.toISOString().slice(0, 10) + ' )';
       }
       return search_criteria;
     })
@@ -108,7 +108,7 @@
           throw error;
         })
         .push(function () {
-          var restore_filter_input = gadget.element.querySelectorAll("input")[2];
+          var restore_filter_input = gadget.element.querySelectorAll("input")[1];
           restore_filter_input.disabled = false;
           restore_filter_input.classList.remove("ui-disabled");
         });
@@ -181,9 +181,9 @@
             graph_gadget_1 = result_list[1],
             graph_gadget_2 = result_list[2],
             count_by_state_and_date_range = sp_data.count_by_state_and_date_range;
-          gadget.property_dict.graph_widget = graph_gadget_1;
-          return RSVP.all([graph_gadget_1.render(
-            {
+          return RSVP.all([
+            // render first graph
+            graph_gadget_1.render({
               value: {
                 data: [
                   {
@@ -222,53 +222,49 @@
                   title: "Support Request Pipe"
                 }
               }
-            }
-          ),
-            sp_data,
-            graph_gadget_2
-            ]);
-        })
-        .push(function (result_list) {
-          var sp_data = result_list[1], graph_gadget = result_list[2];
-          gadget.property_dict.graph_widget = graph_gadget;
-          return graph_gadget.render({
-            value:
-              {
-                data: [
-                  {
-                    value_dict: {
-                      0: [
-                        sp_data.state_title_by_state_id.validated,
-                        sp_data.state_title_by_state_id.submitted,
-                        sp_data.state_title_by_state_id.suspended,
-                        sp_data.state_title_by_state_id.invalidated
-                      ],
-                      1: [
-                        sp_data.count_by_state.validated || 0,
-                        sp_data.count_by_state.submitted || 0,
-                        sp_data.count_by_state.suspended || 0,
-                        sp_data.count_by_state.invalidated || 0
-                      ],
+            }),
+
+            // render second graph
+            graph_gadget_2.render({
+              value:
+                {
+                  data: [
+                    {
+                      value_dict: {
+                        0: [
+                          sp_data.state_title_by_state_id.validated,
+                          sp_data.state_title_by_state_id.submitted,
+                          sp_data.state_title_by_state_id.suspended,
+                          sp_data.state_title_by_state_id.invalidated
+                        ],
+                        1: [
+                          sp_data.count_by_state.validated || 0,
+                          sp_data.count_by_state.submitted || 0,
+                          sp_data.count_by_state.suspended || 0,
+                          sp_data.count_by_state.invalidated || 0
+                        ]
+                      },
+                      colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
+                      type: "pie",
+                      title: "Support Request"
+                    }
+                  ],
+                  layout: {
+                    axis_dict : {
+                      0: {"title": "date"},
+                      1: {"title": "value",  "value_type": "number"}
                     },
-                    colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
-                    type: "pie",
-                    title: "Support Request"
+                    title: "Last Month Activity"
                   }
-                ],
-                layout: {
-                  axis_dict : {
-                    0: {"title": "date"},
-                    1: {"title": "value",  "value_type": "number"}
-                  },
-                  title: "Last Month Activity"
                 }
-              }
-          });
+            })
+
+          ]);
         });
     })
     .declareService(function () {
       var gadget = this,
-        restore_filter_input = gadget.element.querySelectorAll("input")[2];
+        restore_filter_input = gadget.element.querySelectorAll("input")[1];
       return gadget.getUrlParameter('extended_search')
         .push(function (result) {
           if (result !== undefined) {
@@ -281,29 +277,8 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          var generate_rss_input = gadget.element.querySelectorAll("input")[1],
-            restore_filter_input = gadget.element.querySelectorAll("input")[2],
-            one = new RSVP.Queue().push(function () {
-              return promiseEventListener(generate_rss_input, "click", false);
-            }).push(function () {
-              generate_rss_input.disabled = true;
-              generate_rss_input.classList.add("ui-disabled");
-              return gadget.getSetting("hateoas_url")
-                .push(function (hateoas_url) {
-                  return gadget.jio_getAttachment(
-                    'support_request_module',
-                    hateoas_url + 'support_request_module'
-                      + "/SupportRequestModule_generateRSSLinkAsJson"
-                  );
-                })
-                .push(function (result) {
-                  generate_rss_input.parentNode.href = result.restricted_access_url;
-                  generate_rss_input.value = "RSS Link";
-                  generate_rss_input.disabled = false;
-                  generate_rss_input.classList.remove("ui-disabled");
-                });
-            }),
-            two = loopEventListener(restore_filter_input, "click", false, function () {
+          var restore_filter_input = gadget.element.querySelectorAll("input")[1],
+            one = loopEventListener(restore_filter_input, "click", false, function () {
               restore_filter_input.disabled = true;
               restore_filter_input.classList.add("ui-disabled");
               return gadget.redirect({
@@ -315,9 +290,7 @@
               });
             }, true);
 
-          generate_rss_input.disabled = false;
-          generate_rss_input.classList.remove("ui-disabled");
-          return RSVP.all([one, two]);
+          return one;
         });
     })
     .onStateChange(function () {
@@ -335,7 +308,7 @@
           var erp5_document = result_list[0],
             worklist_gadget = result_list[1],
             field_listbox_begin_from = result_list[2],
-            view_list = erp5_document._links.action_object_view || [];
+            view_list = erp5_document._links.view || [];
 
           gadget.property_dict.option_dict = {
             // graph_gadget: Keep ending slash to be consistent with the automatically set "base" tag

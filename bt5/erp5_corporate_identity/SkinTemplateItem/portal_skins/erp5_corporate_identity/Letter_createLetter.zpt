@@ -16,30 +16,14 @@ Generates the complete letter
                        letter_template_css_url              python: options.get('letter_template_css_url');
 
                        letter_timestamp                     python: options.get('letter_timestamp');
-                       letter_source_company                python: options.get('letter_source_company');
                        letter_source_company_corporate_name python: options.get('letter_source_company_corporate_name');
                        letter_source_company                python: options.get('letter_source_company');
                        letter_source_company_capital        python: options.get('letter_source_company_capital');
                        letter_source_company_capital_currency python: options.get('letter_source_company_capital_currency');
                        letter_source_registered_court       python: options.get('letter_source_registered_court');
                        letter_source_ape_code               python: options.get('letter_source_ape_code');
-
                        letter_source_address                python: options.get('letter_source_address');
                        letter_source_country_code           python: options.get('letter_source_country_code');
-                       letter_source_postal_code            python: options.get('letter_source_postal_code');
-                       letter_source_city                   python: options.get('letter_source_city');
-                       letter_destination_company           python: options.get('letter_destination_company');
-                       letter_destination_person            python: options.get('letter_destination_person');
-                       letter_destination_address           python: options.get('letter_destination_address');
-                       letter_destination_postal_code       python: options.get('letter_destination_postal_code');
-                       letter_destination_city              python: options.get('letter_destination_city');
-                       letter_destination_country           python: options.get('letter_destination_country');
-
-                       letter_content                       python: options.get('letter_content');
-                       letter_display_source_address        python: options.get('letter_display_source_address');
-
-                       letter_source_company                python: options.get('letter_source_company');
-                       letter_source_address                python: options.get('letter_source_address');
                        letter_source_postal_code            python: options.get('letter_source_postal_code');
                        letter_source_city                   python: options.get('letter_source_city');
                        letter_source_country                python: options.get('letter_source_country');
@@ -51,7 +35,19 @@ Generates the complete letter
                        letter_source_website                python: options.get('letter_source_website');
                        letter_source_bank                   python: options.get('letter_source_bank');
                        letter_source_bic                    python: options.get('letter_source_bic');
-                       letter_source_iban                   python: options.get('letter_source_iban');">
+                       letter_source_iban                   python: options.get('letter_source_iban');
+
+                       letter_destination_company           python: options.get('letter_destination_company');
+                       letter_destination_person            python: options.get('letter_destination_person');
+                       letter_destination_address           python: options.get('letter_destination_address');
+                       letter_destination_postal_code       python: options.get('letter_destination_postal_code');
+                       letter_destination_city              python: options.get('letter_destination_city');
+                       letter_destination_country           python: options.get('letter_destination_country');
+                       letter_destination_position          python: options.get('letter_destination_position');
+                       letter_destination_position_padding_left  python: options.get('letter_destination_position_padding_left');
+
+                       letter_content                       python: options.get('letter_content');
+                       letter_display_sender_company_above_recipient python: options.get('letter_display_sender_company_above_recipient');">
   <!DOCTYPE html>
   <html tal:attributes="class                               python: ''.join(['ci-', letter_theme, ' ci-', letter_language])">
   <head>

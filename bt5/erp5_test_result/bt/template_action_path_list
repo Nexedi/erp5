@@ -4,6 +4,7 @@ Cloud Performance Unit Test Distributor | view
 ERP5 Project Unit Test Distributor | view
 ERP5 Scalability Distributor | view
 Gitlab REST Connector | view
+Project | jump_to_test_suite
 Scalability Test Suite | vcs_repository
 Scalability Test Suite | view
 SlapOS Agent Distributor | view
@@ -19,12 +20,11 @@ Test Result Line | jump_previous_test_result_line
 Test Result Line | view
 Test Result Line | view_result_history
 Test Result Module | view
-Test Result Module | view_chart_report
 Test Result Module | view_test_perf_report
 Test Result Module | view_test_result_diff
 Test Result Node | view
 Test Result | jump_previous_test_result
-Test Result | jump_test_suite
+Test Result | jump_to_test_suite
 Test Result | jump_viewvc_revision
 Test Result | view
 Test Result | view_graph
@@ -32,5 +32,6 @@ Test Result | view_node_list
 Test Result | view_performance_graph
 Test Suite Module | view
 Test Suite Repository | view
+Test Suite | jump_to_test_result
 Test Suite | periodicity
 Test Suite | view

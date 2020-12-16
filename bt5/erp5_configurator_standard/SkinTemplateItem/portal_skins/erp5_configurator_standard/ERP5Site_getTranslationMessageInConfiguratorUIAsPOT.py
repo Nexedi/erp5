@@ -45,11 +45,10 @@ def iterate(obj, script=True, form=True, field=True, listbox=True, template=True
 iterate(context.portal_skins.nexedi_express_configuration, form=False)
 iterate(context.portal_skins.erp5_generator, template=True, form=False, field=False)
 iterate(context.portal_skins.erp5_generator_widgets, template=True, form=False, field=False)
-iterate(context.portal_skins.erp5_wizard, template=True, form=False, field=False)
 
-# Collect from ERP5Configurator and ERP5Wizard products.
+# Collect from ERP5Configurator product.
 for message, path in context.Base_findMessageListFromPythonInProduct(FUNC_NAME_LIST):
-  if 'ERP5Wizard' in path or 'ERP5Configurator' in path:
+  if 'ERP5Configurator' in path:
     add_message(message, path)
 
 # Collect workflow transition documents from workflow module.
@@ -69,7 +68,6 @@ for page_dict in context.ConfigurationTemplate_readOOCalcFile('nexedi_express_co
 # ERP5 Form title
 #
 # Add exceptional form
-form_list.append(context.erp5_wizard.WizardTool_view)
 form_list.append(context.nexedi_express_configuration.ExpressConfiguration_setupEmployeeListForm)
 for i in form_list:
   if (i.getId().endswith('_viewFieldLibrary') or
@@ -81,8 +79,6 @@ for i in form_list:
   add_message(i.title, portal_url.getRelativeContentURL(i))
 
 # Add exceptional fields
-field_list.append(context.erp5_wizard.WizardTool_view.my_ac_password)
-field_list.append(context.erp5_wizard.WizardTool_view.my_user_preferred_language)
 for i in field_list:
   add_message(safe_get_value(i, 'title'), portal_url.getRelativeContentURL(i))
   if i.has_value('default') and not i.get_tales('default'):
@@ -125,13 +121,13 @@ for row in context.ConfigurationTemplate_readOOCalcFile('standard_currency_list.
 #
 # Output
 #
-def format(string):
+def formatText(string):
   line_list = string.split('\n')
   length = len(line_list)
   if length==1:
     return '"%s"' % string
   else:
-    return '\n'.join(['""']+[format(i) for i in line_list])
+    return '\n'.join(['""']+[formatText(i) for i in line_list])
 
 
 MESSAGE_TEMPLATE = '''\
@@ -145,7 +141,7 @@ for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, format(message))
+  print MESSAGE_TEMPLATE % (comment, formatText(message))
 
 context.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
 

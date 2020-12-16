@@ -1,0 +1,64 @@
+<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">
+  <tal:block tal:condition="isAnon">
+   <p class="article">
+     <span tal:replace="python: here.Base_translateString('You are not logged in')"/>
+   </p>
+   <p class="article">
+     <a tal:attributes="href python: here.getWebSiteValue().absolute_url()+'/register';
+                        class string: articlelink">
+       &#149; <span tal:replace="python: here.Base_translateString('I want to create an account')"/>
+     </a>
+   </p>
+
+     <table>
+       <tr>
+         <td class="article"><span tal:replace="python: here.Base_translateString('Username')"/>:</td>
+         <td><input name="__ac_name" size="10" type="text" tal:attributes="value python: request.get('__ac_name') or ''"/></td>
+       </tr>
+       <tr>
+         <td class="article"><span tal:replace="python: here.Base_translateString('Password')"/>:</td>
+         <td><input type="password" name="__ac_password" size="10" class="input"/></td>
+       </tr>
+       <tr>
+         <td><input type="hidden" name="came_from" tal:attributes="value here/absolute_url"/>
+             <input type="hidden" name="__ac_persistent" value="1"/>
+             <input type="submit" value="Login" name="WebSite_login:method"/>
+         </td>
+       </tr>
+     </table>
+   </tal:block>
+
+  <tal:block tal:condition="not: isAnon"
+             tal:define="customer here/ERP5Site_getAuthenticatedMemberPersonValue;
+                         login customer/getReference | string: ;
+                         website here/getWebSiteValue">
+
+    <p class="article">
+      <span>
+        <span tal:condition="python: not login.startswith('fb_') and not login.startswith('go_')" tal:replace="python: here.Base_translateString('You are logged as')"/>
+        <img tal:condition="python: login.startswith('fb_')" 
+             class="user_photo"
+             tal:attributes="src python:'https://graph.facebook.com/%s/picture?type=square' % login[3:]">
+        <img tal:condition="python: login.startswith('go_') and request.cookies.get('__ac_google_picture') is not None" 
+             class="user_photo"
+             tal:attributes="src python: request.cookies.get('__ac_google_picture')">
+
+        <span tal:replace="customer/getTitle | string:Unknown User"/>
+      </span>
+    </p>
+    <a class="articlelink" 
+      tal:attributes="href python: '%s/SaleOrderModule_viewAsWebSaleOrderList' % website.absolute_url()">
+      <span tal:replace="python: here.Base_translateString('My Orders')"/>
+    </a> &nbsp;
+    <a class="articlelink" 
+       tal:attributes="href python: '%s' % customer.absolute_url()"> 
+       <span tal:replace="python: here.Base_translateString('My Account')"/>
+    </a> &nbsp;
+    <a class="articlelink" 
+      tal:attributes="href python: '%s/WebSite_logout' %website.absolute_url()">
+      <span tal:replace="python: here.Base_translateString('Logout')"/>
+    </a>
+    <br/>
+  </tal:block>
+
+</tal:block>

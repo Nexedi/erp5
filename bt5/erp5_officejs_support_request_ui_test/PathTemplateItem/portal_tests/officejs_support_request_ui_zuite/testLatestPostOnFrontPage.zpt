@@ -14,12 +14,12 @@
 
 <tr><td>open</td>
     <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//input[@data-i18n='[value]Submit New Support Request']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr><td>click</td>
     <td>//input[@data-i18n='[value]Submit New Support Request']</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//input[@data-i18n="[value]Proceed"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>type</td>
     <td>//input[@name='field_your_title']</td>
     <td>testLatestPostOnFrontPage</td></tr>
@@ -33,8 +33,14 @@
     <td>FeatureRequire</td></tr>
 <tal:block tal:define="text_content string:Post test">
     <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/></tal:block>
-<tr><td>click</td>
-    <td>//input[@data-i18n='[value]Proceed']</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'New Support Request created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>waitForText</td>
     <td>//ol[@id="post_list"]//li/p</td>
     <td>Post test</td></tr>
@@ -48,6 +54,9 @@
 
 <tr><td>open</td>
     <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr><td>waitForText</td>
     <td>//div[@class="document_table"]//tr[1]/td[1]</td>
     <td>testLatestPostOnFrontPage</td></tr>

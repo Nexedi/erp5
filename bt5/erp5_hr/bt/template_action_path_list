@@ -22,6 +22,7 @@ Position Opportunity | print
 Position Opportunity | view
 Position | document_view
 Position | history
+Position | jump_to_document
 Position | metadata
 Position | print
 Position | view

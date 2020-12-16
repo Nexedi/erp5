@@ -20,15 +20,11 @@
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
+
 <!-- Enter a search query to create a selection parameter -->
 <tal:block tal:define="parsed_query python: '';
                        search_query python: 'title'">

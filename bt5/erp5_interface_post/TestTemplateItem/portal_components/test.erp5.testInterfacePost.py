@@ -25,10 +25,10 @@
 #
 ##############################################################################
 import email
+import mock
 import time
 
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from DateTime import DateTime
@@ -81,14 +81,6 @@ class TestInterfacePost(ERP5TypeTestCase):
     for module_id in ('event_module', 'internet_message_post_module', 'letter_post_module'):
       module = getattr(self.portal, module_id)
       module.manage_delObjects(list(module.objectIds()))
-
-    custom_skin = self.portal.portal_skins.custom
-    if 'Entity_sendEmail' in custom_skin.objectIds():
-      removeZODBPythonScript(
-        custom_skin,
-        'Entity_sendEmail',
-      )
-      self.commit()
 
   def _portal_catalog(self, **kw):
     result_list = self.portal.portal_catalog(**kw)
@@ -342,20 +334,19 @@ class TestInterfacePost(ERP5TypeTestCase):
     pdf_document, = pdf_document_list
     self.assertEqual(2, int(pdf_document.getContentInformation()['Pages']))
 
-
   def stepMakeEntitySendEmailFailOnce(self, sequence=None):
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'Entity_sendEmail',
-      self.portal.Entity_sendEmail.params(),
-      """portal = context.getPortalObject()
-for activity in portal.portal_activities.getMessageList():
-  if activity.method_id == script.id:
-    if activity.retry == 0:
-      raise ValueError('Failure on purpose')
-    else:
-      return context.skinSuper('custom', script.id)(%s)""" % (self.portal.Entity_sendEmail.params(),)
-    )
+    def Entity_sendEmail(*args, **kw):
+      self.Entity_sendEmail_patcher.stop()
+      raise ValueError("Fail on first execution")
+    self.Entity_sendEmail_patcher = mock.patch(
+        'erp5.portal_type.Person.Entity_sendEmail',
+        create=True,
+        side_effect=Entity_sendEmail)
+    self.Entity_sendEmail_mock = self.Entity_sendEmail_patcher.start()
+    self.addCleanup(self.Entity_sendEmail_patcher.stop)
+
+  def stepCheckEntitySendEmailCalled(self, sequence=None):
+    self.Entity_sendEmail_mock.assert_called()
 
   def test_emailSendingIsPilotedByInternetMessagePost(self):
     """
@@ -433,6 +424,7 @@ for activity in portal.portal_activities.getMessageList():
       stepCheckInternetMessagePostCreated
       stepCheckOnlyOneMessageHasBeenSentFromMailHost
       stepCheckLatestMessageListFromMailHost
+      stepCheckEntitySendEmailCalled
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)

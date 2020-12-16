@@ -1,0 +1,9 @@
+document.erp5.AssortedResource
+document.erp5.Consumption
+document.erp5.Measure
+document.erp5.QuantityUnitConversionDefinition
+document.erp5.QuantityUnitConversionGroup
+document.erp5.ResourceMeasuresConsistencyConstraint
+document.erp5.Transformation
+document.erp5.TransformedResource
+document.erp5.Variation

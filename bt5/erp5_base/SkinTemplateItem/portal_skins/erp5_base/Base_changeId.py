@@ -1,3 +1,5 @@
+# this script has an `id` argument
+# pylint: disable=redefined-builtin
 from Products.ERP5Type.Message import translateString
 
 if id and id != context.getId():
@@ -17,4 +19,5 @@ return context.Base_redirect(form_id,
           keep_items=dict(selection_name=selection_name,
                           selection_index=selection_index,
                           cancel_url=cancel_url,
-                          portal_status_message=translateString("Cancelled.")),)
+                          portal_status_message=translateString("Cancelled."),
+                          portal_status_level='error'),)

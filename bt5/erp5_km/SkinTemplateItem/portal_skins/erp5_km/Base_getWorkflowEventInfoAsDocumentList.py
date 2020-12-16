@@ -1,7 +1,6 @@
 from Products.ERP5Type.Document import newTempBase
 
 request = context.REQUEST
-portal = context.getPortalObject()
 
 # we can use current_web_document in case it's "embedded" into a Web Section
 document = request.get('current_web_document', context)

@@ -6,13 +6,27 @@ image_module/officejs_audioplayer_*
 image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
+portal_types/Notebook Module/notebook_editor_view
+portal_types/Notebook Module/notebook_upload
+portal_types/Notebook/notebook_download
+portal_types/Notebook/notebook_download_html
+portal_types/Notebook/notebook_editor_clone
+portal_types/Notebook/notebook_editor_view
+portal_types/Notebook/notebook_export
+portal_types/Notebook/notebook_preview
+portal_types/PDF/pdf_viewer_clone
 portal_types/PDF/pdf_viewer_view
+portal_types/Test Page Module/slideshow_editor_view
+portal_types/Test Page/slideshow_editor_clone
+portal_types/Test Page/slideshow_editor_view
+portal_types/Web Illustration/svg_editor_clone
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
 portal_types/Web Page Module/svg_editor_view
 portal_types/Web Page Module/text_editor_view
 portal_types/Web Page/text_editor_clone
 portal_types/Web Page/text_editor_view
+portal_types/Web Script/codemirror_clone
 portal_types/Web Script/codemirror_view
 web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
@@ -20,6 +34,7 @@ web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
+web_page_module/officejs_notebook_*
 web_page_module/officejs_todomvc_*
 web_page_module/ojs_*
 web_page_module/wallsearch_privacy_policy_html
@@ -40,6 +55,8 @@ web_site_module/officejs_notebook
 web_site_module/officejs_notebook/**
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
+web_site_module/officejs_slideshow_editor
+web_site_module/officejs_slideshow_editor/**
 web_site_module/officejs_smart_assistant
 web_site_module/officejs_smart_assistant/**
 web_site_module/officejs_svg_editor

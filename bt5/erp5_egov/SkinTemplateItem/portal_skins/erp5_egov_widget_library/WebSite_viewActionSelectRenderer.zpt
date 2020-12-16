@@ -1,5 +1,0 @@
-  <div class="adminSection" tal:define="actions request/actions">
-    <tal:block metal:use-macro="here/context_box_render/macros/action"/>
-    <div class="clear">
-    </div>
-  </div>

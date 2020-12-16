@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Loyalty Transaction">
+  <item>Loyalty Transaction Line</item>
+ </portal_type>
+ <portal_type id="Loyalty Transaction Module">
+  <item>Loyalty Transaction</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Loyalty Account</item>
+ </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Loyalty Transaction Simulation Rule</item>
+ </portal_type>
+</allowed_content_type_list>

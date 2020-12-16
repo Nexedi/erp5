@@ -1,0 +1,546 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Front Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Front Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/PurchasePackingList_deliver</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/logout" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/reset_shopcart" />
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_colour_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="colour/red" and contains(text(), 'Red (In Stock)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="colour/blue" and contains(text(), 'Blue (Sold Out)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>Red (In Stock)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>Blue (Sold Out)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_size_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="size/paris/38" and contains(text(), '38 (In Stock)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//ul[contains(@class, "Individual_variation")]//a[contains(@href,'test_size_variation_product/1')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>38 (In Stock)</td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//ul[contains(@class, "Individual_variation")]//a[contains(@href,'test_size_variation_product/2')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>39 (In Stock)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "no_base_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//select[@name="field_your_buy_quantity"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_normal_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//select[@name="field_your_buy_quantity"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//td[@class="cart_middle"]//div[contains(text(), "356")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="left"]//div[contains(@class, "checkout")]//a[contains(@href, "cart")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Update Shipping Method"]</td>
+  <td>
+</tr>
+
+<tr>
+  <td>check</td>
+  <td>//input[@value="service_module/test_deliver_mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Update Shipping Method"]</td>
+  <td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Shipping Price</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>358</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//a[@href="WebSection_viewSelectShipmentMethod"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@href="WebSection_viewSelectShipmentMethod"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Cancel"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Confirm Order"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="__ac_name"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="__ac_password"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Proceed to Payment"]</td>
+  <td></td>
+</tr>
+  
+<tr>
+  <td>verifyTextPresent</td>
+  <td>payment confirmed</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example/WebSection_finalizeShopping</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Thank you for using our online shop</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example/SaleOrderModule_viewAsWebSaleOrderList</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//a[contains(@href, "SaleOrder_viewDetailAsWeb") and contains(text(), "Planned")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//a[contains(@href, "SaleOrder_viewDetailAsWeb") and contains(text(), "358")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "SaleOrder_viewDetailAsWeb") and contains(text(), "Planned")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Order Details</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/sale_order_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(text(), "Planned")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="11.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_colour"]</td>
+  <td>colour/red</td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_variation"]</td>
+  <td>variation/product_module/test_colour_variation_product/12</td>
+</tr>
+  
+  
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="breadcrumb"]//a[3]</td>
+  <td></td>
+</tr>
+  
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="10.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_colour"]</td>
+  <td>colour/blue</td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_variation"]</td>
+  <td>variation/product_module/test_colour_variation_product/12</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="breadcrumb"]//a[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="14.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_size"]</td>
+  <td>size/paris/38</td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_variation"]</td>
+  <td>variation/product_module/test_size_variation_product/1</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="breadcrumb"]//a[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="17.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_size"]</td>
+  <td>size/paris/39</td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_variation"]</td>
+  <td>variation/product_module/test_size_variation_product/2</td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="breadcrumb"]//a[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="12.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelectedValue</td>
+  <td>//select[@name="subfield_field_my_variation_category_list_variation"]</td>
+  <td>variation/product_module/test_no_base_variation_product/12</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="breadcrumb"]//a[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="280.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_resource_title"]</td>
+  <td>Kroshma SarongSS</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id="breadcrumb"]//a[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//span[text()="2.00"]/..</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_resource_title"]</td>
+  <td>test_deliver_mode</td>
+</tr>
+
+
+
+</tbody></table>
+</body>
+</html>

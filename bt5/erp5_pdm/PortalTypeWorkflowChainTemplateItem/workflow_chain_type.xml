@@ -24,6 +24,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Product Individual Variation</type>
+  <workflow>edit_workflow, visibility_workflow</workflow>
+ </chain>
+ <chain>
   <type>Purchase Supply</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

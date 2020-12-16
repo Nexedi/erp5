@@ -12,6 +12,7 @@ web_site_module/officejs_media_player
 web_page_module/gadget_officejs_*
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
+web_page_module/officejs_notebook_*
 web_page_module/officejs_todomvc_*
 web_page_module/ojs_*
 web_page_module/wallsearch_privacy_policy_html
@@ -28,6 +29,7 @@ web_site_module/officejs_cribjs/**
 web_site_module/officejs_drive_app
 web_site_module/officejs_drive_app/**
 web_site_module/officejs_export
+portal_types/Notebook/notebook_download_html
 web_site_module/officejs_notebook
 web_site_module/officejs_notebook/**
 web_site_module/officejs_pdf_viewer

@@ -1,0 +1,4 @@
+mixin.erp5.ConfigurableMixin
+mixin.erp5.ConfigurablePropertySolverMixin
+mixin.erp5.EquivalenceTesterMixin
+mixin.erp5.SolverMixin

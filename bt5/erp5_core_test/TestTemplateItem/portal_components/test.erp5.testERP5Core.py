@@ -595,25 +595,26 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # now let's simulate a site just migrated from Zope 2.8 that's being
     # accessed for the first time:
     from Products.ERP5 import ERP5Site
-    setSite()
-    # Sites from Zope2.8 don't have a site_manager yet.
-    del self.portal._components
-    self.assertIsNotNone(ERP5Site._missing_tools_registered)
-    ERP5Site._missing_tools_registered = None
-    self.commit()
-    # check that we can't get any translation utility
-    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
-    # Now simulate first access. Default behaviour from
-    # ObjectManager is to raise a ComponentLookupError here:
+    if 1: # BBB
+      setSite()
+      # Sites from Zope2.8 don't have a site_manager yet.
+      del self.portal._components
+      self.assertIsNotNone(ERP5Site._missing_tools_registered)
+      ERP5Site._missing_tools_registered = None
+      self.commit()
+      # check that we can't get any translation utility
+      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
+      # Now simulate first access. Default behaviour from
+      # ObjectManager is to raise a ComponentLookupError here:
 
-    setSite(self.portal)
-    self.commit()
-    self.assertIsNotNone(ERP5Site._missing_tools_registered)
-    # This should have automatically reconstructed the i18n utility
-    # registrations:
-    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
-                     erp5_ui_catalog)
-    self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
+      setSite(self.portal)
+      self.commit()
+      self.assertIsNotNone(ERP5Site._missing_tools_registered)
+      # This should have automatically reconstructed the i18n utility
+      # registrations:
+      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
+                       erp5_ui_catalog)
+      self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
 
   def test_BasicAuthenticateDesactivated(self):
     """Make sure Unauthorized error does not lead to Basic auth popup in browser"""

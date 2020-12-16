@@ -1,4 +1,7 @@
+# pylint:disable=redefined-builtin
+# this script uses file= argument
 portal = context.getPortalObject()
+translateString = portal.Base_translateString
 logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 now = DateTime()
@@ -32,11 +35,11 @@ if description is not None or file is not None:
 
 return support_request.Base_redirect('officejs_support_request_view',
   keep_items={
-    'portal_status_message': portal.Base_translateString(
-      'New ${portal_type} created.',
-      mapping={
-        'portal_type': 'Support Request',
-      },
+    'portal_status_message': translateString(
+      'New Support Request created.',
+      default=translateString(
+          "New ${portal_type} created.",
+          mapping={"portal_type": translateString("Support Request")}),
     ),
   },
 )

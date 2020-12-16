@@ -45,6 +45,7 @@ class SolverTool(TypeProvider):
   id = 'portal_solvers'
   meta_type = 'ERP5 Solver Tool'
   portal_type = 'Solver Tool'
+  title = 'Solvers'
   allowed_types = ( 'ERP5 Solver Type', )
 
   # Declarative Security
@@ -65,12 +66,9 @@ class SolverTool(TypeProvider):
 
     movement_list -- movements to initialise the instance with
     """
-    solver_type = self._getOb(portal_type)
-    solver_class = re.sub('^add', 'newTemp',
-                       solver_type.getTypeFactoryMethodId())
-    module = __import__('Products.ERP5Type.Document', globals(), locals(),
-                        [solver_class])
-    tmp_solver = getattr(module, solver_class)(self, 'delivery_solver')
+    tmp_solver = self.newContent(portal_type=portal_type,
+                                 temp_object=True,
+                                 id='delivery_solver')
     tmp_solver.setDeliveryValueList(movement_list)
     return tmp_solver
 

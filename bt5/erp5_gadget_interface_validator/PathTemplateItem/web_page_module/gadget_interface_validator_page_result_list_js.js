@@ -93,7 +93,7 @@
                 "list_method": "portal_catalog",
                 "query": "urn:jio:allDocs",
                 "portal_type": [],
-                "search_column_list": [['appcache_url', 'Appcache']],
+                "search_column_list": [['precache_url', 'Precache']],
                 "sort_column_list": [],
                 "sort": [],
                 "title": "Gadgets",

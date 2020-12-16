@@ -111,10 +111,6 @@
                           <string>source_decision_title</string>
                           <string>Judicial Representative</string>
                         </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Stop Date</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -127,7 +123,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource</string>
+                          <string>resource_translated_title</string>
                           <string>Insolvency Proceeding Type</string>
                         </tuple>
                         <tuple>
@@ -139,8 +135,16 @@
                           <string>Debtor</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>

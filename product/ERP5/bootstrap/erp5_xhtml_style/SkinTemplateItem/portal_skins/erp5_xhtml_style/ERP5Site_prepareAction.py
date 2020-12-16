@@ -1,5 +1,5 @@
 # Script to call in action scripts before executig the actual action.
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 log("ERP5Site_prepare is deprecated, "
     "use Base_updateListboxSelection instead")
 

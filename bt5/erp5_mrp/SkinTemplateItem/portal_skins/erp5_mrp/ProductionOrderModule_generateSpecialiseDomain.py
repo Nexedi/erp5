@@ -1,6 +1,4 @@
-request = context.REQUEST
 domain_list = []
-supply_chain_module = context.getPortalObject().supply_chain_module
 if depth == 0:
   category_list = []
   for q in context.ProductionOrderModule_getSelectionProductionOrderList():

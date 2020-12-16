@@ -434,12 +434,15 @@ input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio])
     border: @focus-border;
     box-shadow: @focus-box-shadow;
   }
-  &:invalid {
+  &:invalid, &.is-invalid {
     border: @invalid-border;
     &:focus {
       box-shadow: @invalid-box-shadow;
     }
   }
+}
+label.is-invalid {
+  color: @txtorange;
 }
 
 // Force safari to render search input as text
@@ -1200,6 +1203,20 @@ div[data-gadget-scope='header'] .ui-header {
     .renderPageSubmitButton(@grey);
   }
 
+  .sign_in_with_google {
+    height: 46px;
+    width: 191px;
+    display: inline-block;
+    overflow: hidden;
+    margin-top: @margin-size;
+  }
+  .sign_in_with_google img:hover {
+    margin-top: -46px;
+  }
+  .sign_in_with_google img:active {
+    margin-top: -92px;
+  }
+
   @media @desktop {
     div[data-role='page']:not(.desktop-panel-hidden) & {
       // Keep the panel always visible
@@ -1223,7 +1240,9 @@ div[data-gadget-scope='header'] .ui-header {
   .field_container > div > div > div.ui-field-contain {
     padding: @half-margin-size 0;
 
-    div {
+    & > div {
+      // Do not expand every div, as some gadget fields
+      // may use div element which should have a more contrained size
       width: 100%;
     }
   }
@@ -1278,7 +1297,7 @@ div[data-gadget-scope='header'] .ui-header {
       border-bottom-style: none;
       box-shadow: 0 1px 3px rgba(0,0,0,.15);
       background-color: @colorbackground;
-  
+
       &:not(.ui-li-has-count) {
         a {
           &:after {
@@ -1344,7 +1363,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   //Label
   .ui-field-contain {
-    & > label {
+    & > label:not(:is-invalid) {
       color: @colorlabel;
 
     }
@@ -1485,6 +1504,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   div {
     position: relative;
+    width: 100%;
   }
   ul {
     position: absolute;
@@ -1667,10 +1687,16 @@ div[data-gadget-scope='erp5_searchfield'] {
         text-decoration: underline;
       }
 
-      // XXX Same than cells
-      tr { th {
-        padding: @margin-size @half-margin-size;
-      }}
+      tr {
+        th {
+          // XXX Same than cells
+          padding: @margin-size @half-margin-size;
+
+          &.ui-icon::before {
+            margin-right: @margin-size;
+          }
+        }
+      }
 
       // text-align: center;
 

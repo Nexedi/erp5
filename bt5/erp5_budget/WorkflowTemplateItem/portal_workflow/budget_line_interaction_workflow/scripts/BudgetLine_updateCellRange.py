@@ -10,7 +10,7 @@ if line.getMembershipCriterionBaseCategoryList():
   for variation in budget_line_category_list:
     if not variation:
       continue
-    base, category = variation.split('/', 1)
+    base = variation.split('/', 1)[0]
     if base in line.getMembershipCriterionBaseCategoryList():
       line.setMembershipCriterionCategoryList(
             [variation,] + line.getMembershipCriterionCategoryList())

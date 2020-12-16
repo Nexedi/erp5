@@ -1,5 +1,5 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, RSVP, Handlebars, JSON*/
+/*global window, document, rJS, RSVP, domsugar, JSON*/
 /** MatrixBox renders a N-dimensional cube of editable values based on axes description.
  *
  * Example JSON returned from HATEOAS where cell_range format is
@@ -33,14 +33,8 @@
   see around https://lab.nexedi.com/nexedi/erp5/blob/feature/renderjs-matrixbox/product/ERP5Form/MatrixBox.py#L427
   *
   */
-(function (window, document, rJS, RSVP, Handlebars, JSON) {
+(function (window, document, rJS, RSVP, domsugar, JSON) {
   "use strict";
-
-  var gadget_klass = rJS(window),
-    table_template_source = gadget_klass.__template_element
-                                        .getElementById("table-template")
-                                        .innerHTML,
-    table_template = Handlebars.compile(table_template_source);
 
   /** Recursively introspect an object if it is empty */
   function is_empty_recursive(data) {
@@ -77,23 +71,11 @@
       key: ''
     })
 
-    //////////////////////////////////////////////
-    // acquired method
-    //////////////////////////////////////////////
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")
-    .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("translate", "translate")
 
     /** Render constructs and saves gadgets into `props.gadget_dict` if they don not exist yet. 
      */
     .declareMethod('render', function (options) {
       var gadget = this,
-        element = gadget.element.querySelector('div.document_table'),
         data = options.field_json.data,
         // note we make COPY of data in their original form - important since
         // data.shift used later modify the structure inplace!
@@ -117,11 +99,7 @@
         .push(function () {
           return RSVP.all(data.map(function (table, table_index) {
             var header = table.shift(), // first item of table is the header
-              table_title = header.shift(),  // first item of header is the table (tab) title
-              table_body = document.createElement('tbody'),
-              table_element = document.createElement('table');
-
-            table_element.innerHTML = table_template({table_title: table_title, header: header});
+              table_title = header.shift(); // first item of header is the table (tab) title
 
             return new RSVP.Queue()
               .push(function () {
@@ -158,18 +136,25 @@
                 }));
               })
               .push(function (row_element_list) {
-                row_element_list.forEach(function (row_element) {
-                  table_body.appendChild(row_element);
-                });
-                table_element.appendChild(table_body);
-                return table_element;
+                var th_dom_list = [
+                  domsugar('th', {text: table_title})
+                ],
+                  i;
+                for (i = 0; i < header.length; i += 1) {
+                  th_dom_list.push(domsugar('th', {html: header[i]}));
+                }
+                return domsugar('table', [
+                  domsugar('thead', [
+                    domsugar('tr', th_dom_list)
+                  ]),
+                  domsugar('tbody', row_element_list)
+                ]);
               });
           }));
         })
         .push(function (table_element_list) {
-          table_element_list.forEach(function (table_element) {
-            element.appendChild(table_element);
-          });
+          domsugar(gadget.element.querySelector('div.document_table'),
+                   table_element_list);
           return gadget.changeState(new_state);
         });
     })
@@ -270,4 +255,4 @@
       return true;
     });
 
-}(window, document, rJS, RSVP, Handlebars, JSON));
+}(window, document, rJS, RSVP, domsugar, JSON));

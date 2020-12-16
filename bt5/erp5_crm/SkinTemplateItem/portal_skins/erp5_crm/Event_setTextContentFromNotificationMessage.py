@@ -20,7 +20,7 @@ if notification_message is not None:
   target_format = "txt"
   if context.getContentType() == 'text/html':
     target_format = "html"
-  mime, text_content = notification_message.convert(target_format,
+  _, text_content = notification_message.convert(target_format,
       substitution_method_parameter_dict=substitution_method_parameter_dict)
   context.setTextContent(text_content)
   context.setAggregateSet(

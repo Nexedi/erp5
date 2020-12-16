@@ -45,7 +45,7 @@ SOURCE_DESTINATION_REFERENCE_LEGACY = True
 
 # This is used to register all Document classes used in ERP5
 # items are class names, values are class paths, e.g.:
-#   'Person' -> 'Products.ERP5.Document.Person.Person'
+#   'Person' -> 'erp5.component.document.Person.Person'
 document_class_registry = {}
 # similarly for mixins
 mixin_class_registry = {}
@@ -88,8 +88,8 @@ import Products.ERP5Type.Workflow
 
 def initialize( context ):
   # Import Product Components
-  from Tool import (CacheTool, MemcachedTool, SessionTool,
-                    TypesTool, WebServiceTool, PropertySheetTool,
+  from Tool import (CacheTool, MemcachedTool,
+                    TypesTool, PropertySheetTool,
                     ComponentTool)
   import Document
   from Base import Base
@@ -104,9 +104,7 @@ def initialize( context ):
                       ERP5TypeInformation, )
   portal_tools = ( CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
-                   SessionTool.SessionTool,
                    TypesTool.TypesTool,
-                   WebServiceTool.WebServiceTool,
                    PropertySheetTool.PropertySheetTool,
                    ComponentTool.ComponentTool
                   )
@@ -185,9 +183,7 @@ allow_module('Products.ERP5Type.Log')
 allow_module('Products.ERP5Type.ImmediateReindexContextManager')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
 ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeValidity')
-ModuleSecurityInfo('Products.ERP5Type.DiffUtils').declarePublic('DiffFile')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
-ModuleSecurityInfo('Products.ERP5Type.XMLUtils').declarePublic('parseStream')
 
 import zExceptions
 ModuleSecurityInfo('zExceptions').declarePublic(*filter(

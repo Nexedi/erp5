@@ -35,6 +35,7 @@
           name: field_json.key,
           title: field_json.title,
           precision: window.parseFloat(field_json.precision),
+          error_text: field_json.error_text,
           // erp5 always put value into "default" (never "value")
           value: window.parseFloat(field_json.default),
           text_content: '',
@@ -49,15 +50,15 @@
         },
         tmp;
 
-      if (!window.isNaN(state_dict.precision)) {
-        state_dict.step = Math.pow(10, -state_dict.precision);
-        state_dict.value = state_dict.value.toFixed(state_dict.precision);
-      }
       if (percentage) {
         // ERP5 always devides the value by 100 if it is set to percentages
         // thus we have to mitigate that in javascript here
         state_dict.value *= 100.0;
         state_dict.append = "%";
+      }
+      if (!window.isNaN(state_dict.precision)) {
+        state_dict.step = 1 / Math.pow(10, state_dict.precision);
+        state_dict.value = state_dict.value.toFixed(state_dict.precision);
       }
       if (!window.isNaN(state_dict.value)) {
         state_dict.text_content = state_dict.value.toString();

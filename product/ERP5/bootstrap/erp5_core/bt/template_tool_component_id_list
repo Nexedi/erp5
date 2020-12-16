@@ -1,2 +1,16 @@
+tool.erp5.AcknowledgementTool
+tool.erp5.BuilderTool
 tool.erp5.CallableTool
+tool.erp5.ContributionRegistryTool
+tool.erp5.ContributionTool
+tool.erp5.DeliveryTool
 tool.erp5.DiffTool
+tool.erp5.DomainTool
+tool.erp5.IntrospectionTool
+tool.erp5.NotificationTool
+tool.erp5.OrderTool
+tool.erp5.PasswordTool
+tool.erp5.RuleTool
+tool.erp5.SessionTool
+tool.erp5.SimulationTool
+tool.erp5.TestTool

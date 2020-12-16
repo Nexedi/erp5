@@ -15,45 +15,48 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=1</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text()='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Custom Required Dialog']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Custom Required Dialog']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Wait for gadget to be loaded -->
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Custom Required Dialog'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@name='field_your_custom_workflow_variable']</td>
   <td></td>
 </tr>
 <tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_your_custom_workflow_variable']</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//input[@name='field_your_custom_workflow_variable']</td>
   <td>AZERTYUIOPQSDFGHJKLMWXCVBNazertyuiopqsdfghjklmwxcvbn</td>
 </tr>
-
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_your_custom_workflow_variable']</td>
+  <td>blur</td>
+</tr>
 <!-- Fill long string to provoke form validation failure -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_custom_workflow_variable</td>
+  <td>focus</td>
+</tr>
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_custom_workflow_variable"]/div/span</td><td></td></tr>
 <tr><td>assertText</td>

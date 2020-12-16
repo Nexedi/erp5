@@ -37,7 +37,6 @@ def migrateToEmbeddedFile(self, force=0):
   if portal_type in ('File', 'Image') and self.getValidationState()=='embedded':
     embedded_type = 'Embedded File'
     container = self.getParentValue()
-    id = self.id
     if force == 1:
-      changeObjectClass(container, id, getattr(erp5.portal_type, embedded_type))
+      changeObjectClass(container, self.id, getattr(erp5.portal_type, embedded_type))
     return '%s: %s -> %s' % (self.getRelativeUrl(), portal_type, embedded_type),

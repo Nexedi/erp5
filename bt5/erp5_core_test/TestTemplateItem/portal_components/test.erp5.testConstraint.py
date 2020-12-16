@@ -30,7 +30,7 @@
 import unittest
 from unittest import expectedFailure
 
-from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
+from erp5.component.test.testERP5Type import PropertySheetTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 
@@ -1615,6 +1615,32 @@ class TestConstraint(PropertySheetTestCase):
     document.setTitle("Foo")
     document.checkConsistency()
     self.assertEqual("Fooa", document.getTitle())
+
+  def test_checkConsistency_is_recursive(self):
+    self._addProperty(
+        self.object_content_portal_type,
+        self.id(),
+        commit=True,
+        property_id="title_constraint",
+        portal_type='Attribute Equality Constraint',
+        constraint_attribute_name = 'title',
+        constraint_attribute_value = 'string:a',
+    )
+
+    obj = self._makeOne()
+    self.assertEqual([], obj.checkConsistency())
+    self.assertEqual([], obj.fixConsistency())
+
+    obj.newContent(portal_type=self.object_content_portal_type)
+    self.assertEqual(1, len(obj.checkConsistency()))
+    self.assertEqual(1, len(obj.fixConsistency()))
+
+    # non ERP5 objects are ignored
+    from OFS.Image import manage_addFile
+    manage_addFile(obj, self.id(),)
+    self.assertEqual(1, len(obj.checkConsistency()))
+    self.assertEqual(1, len(obj.fixConsistency()))
+
 
 def test_suite():
   suite = unittest.TestSuite()

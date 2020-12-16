@@ -1,0 +1,7 @@
+document.erp5.EmploymentContract
+document.erp5.PaySheetModel
+document.erp5.PaySheetModelCell
+document.erp5.PaySheetModelLine
+document.erp5.PaySheetModelSlice
+document.erp5.PaySheetTransaction
+document.erp5.PaySheetTransactionLine

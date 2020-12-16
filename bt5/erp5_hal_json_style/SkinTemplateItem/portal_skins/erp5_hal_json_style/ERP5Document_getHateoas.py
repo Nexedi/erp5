@@ -57,7 +57,7 @@ import time
 from email.utils import formatdate
 import re
 from zExceptions import Unauthorized
-from Products.ERP5Type.Log import log, WARNING, ERROR
+from erp5.component.module.Log import log, WARNING, ERROR
 from Products.ERP5Type.Message import Message
 from collections import OrderedDict
 from Products.ERP5Form.Selection import Selection
@@ -344,14 +344,24 @@ def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
 
 
-def parseActionUrl(url):
+def parseActionUrl(context_relative_url, url):
   """Parse usual ERP5 Action URL into components: ~root, context~, view_id, param_dict, url.
 
   :param url: {str} is expected to be in form https://<site_root>/context/view_id?optional=params
   """
   param_dict = {}
   url_and_params = url.split(site_root.absolute_url())[-1].split('?')
-  _, script = url_and_params[0].strip("/ ").rsplit('/', 1)
+  url_path = url_and_params[0].strip("/ ")
+  other_context = None
+  _, script = url_path.rsplit('/', 1)
+  if context_relative_url is not None:
+    context_index = url_path.find(context_relative_url)
+    if context_index > -1:
+      # Do not forget to remove the '/' after the relative url
+      url_path = url_path[context_index + len(context_relative_url) + 1:]
+      if '/' in url_path:
+        # Check if there is an extra context
+        other_context, script = url_path.rsplit('/', 1)
   if len(url_and_params) > 1:
     for param in url_and_params[1].split('&'):
       param_name, param_value = param.split('=')
@@ -373,6 +383,7 @@ def parseActionUrl(url):
       param_dict[param_name] = param_value
   return {
     'view_id': script,
+    'other_context': other_context,
     'params': param_dict,
     'url': url
   }
@@ -460,15 +471,57 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "sub_select_key": traversed_document.Field_getSubFieldKeyDict(field, 'default:list', key=result["key"]),
         "sub_input_key": "default_" + traversed_document.Field_getSubFieldKeyDict(field, 'default:list:int', key=result["key"])
       })
+
+    if meta_type == "ParallelListField":
+      # Keep all other keys (like items) even if huge
+      # This allows to support client without the parallelistfield JS implementation
+      hash_script_id = field.get_value('hash_script_id')
+      if hash_script_id:
+        # Copy the dict, as some hashscript cache the result,
+        # which should not in this case be modified
+        result.update({"subfield_list": [x.copy() for x in getattr(field, hash_script_id)(
+                [x for x in result['items'] if (x[1] != '' and x[0] != '')],
+                # Drop empty values
+                result['default'],
+                default_sub_field_property_dict={
+                  'key': 'default',
+                  'field_type': 'MultiListField',
+                  'item_list': [],
+                  'value': [],
+                  'is_right_display': 0,
+                  'title': result['title'],
+                  'required': result['required'],
+                  'editable': result['editable']
+                },
+                is_right_display=0
+        )]})
+        for subdict in result['subfield_list']:
+          if subdict['title'] == '&nbsp;':
+            subdict['title'] = ''
+          subdict['items'] = subdict['item_list']
+          del subdict['item_list']
+          subdict['key'] = field.generate_subfield_key(
+                                     subdict['key'], key=result['key'])
+
+      else:
+        result['subfield_list'] = [result.copy()]
+        result['subfield_list'][0]['field_type'] = 'MultiListField'
+      result['title'] = ''
+
     return result
 
   if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
                    "LinesField", "ImageField", "FileField", "IntegerField",
-                   "PasswordField", "EditorField"):
+                   "PasswordField", "EditorField", "HyperLinkField"):
     if meta_type == "FloatField":
       result.update({
         "precision": field.get_value("precision"),
         "input_style": field.get_value("input_style"),
+      })
+    if meta_type == "HyperLinkField":
+      result.update({
+        "extra": field.get_value("extra"),
+        "href": field.get_value("href"),
       })
     if meta_type == "ImageField":
       options = {
@@ -906,7 +959,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       "script_id": script.id
     },
     "name": getRealRelativeUrl(traversed_document),
-    "title": ensureUTF8(traversed_document.getTitle())
+    "title": ensureUTF8(traversed_document.getTranslatedTitle())
   }
 
   form_relative_url = getFormRelativeUrl(form)
@@ -1274,7 +1327,14 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     action_dict = {}  # actions available on current `traversed_document`
     last_form_id = None  # will point to the previous form so we can obtain previous selection
 
-    result_dict['title'] = ensureUTF8(traversed_document.getTitle())
+    result_dict['title'] = ensureUTF8(traversed_document.getTranslatedTitle())
+    result_dict['_links']["traversed_document"] = {
+      "href": default_document_uri_template % {
+        "relative_url": getRealRelativeUrl(traversed_document)
+      },
+      "name": getRealRelativeUrl(traversed_document),
+      "title": result_dict['title']
+    }
 
     # extra_param_json should be base64 encoded JSON at this point
     # only for mode == 'form' it is already a dictionary
@@ -1326,7 +1386,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       for view_action in erp5_action_dict[erp5_action_key]:
         # Try to embed the form in the result
         if (view == view_action['id']):
-          current_action = parseActionUrl('%s' % view_action['url'])  # current action/view being rendered
+          current_action = parseActionUrl(relative_url, '%s' % view_action['url'])  # current action/view being rendered
           current_action['category_type'] = erp5_action_key
 
     if view and (view != 'view') and (current_action.get('view_id', None) is None):
@@ -1338,7 +1398,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # If we have current action definition we are able to render embedded view
     # which should be a "ERP5 Form" but in reality can be anything
     if current_action.get('view_id', ''):
-      view_instance = getattr(traversed_document, current_action['view_id'])
+      if current_action.get('other_context', None) is None:
+        view_context = traversed_document
+      else:
+        view_context = traversed_document.restrictedTraverse(current_action['other_context'])
+      view_instance = getattr(view_context, current_action['view_id'])
       if (view_instance is not None):
         embedded_dict = {
           '_links': {
@@ -1359,9 +1423,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # then we execute it directly
         if "Script" in getattr(view_instance, "meta_type", "Script"):
           if current_action.get('category_type', None) == 'object_jio_jump':
-            view_instance = getattr(traversed_document, 'Base_viewFakeJumpForm')
+            view_instance = getattr(view_context, 'Base_viewFakeJumpForm')
           else:
-            view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
+            view_instance = getattr(view_context, 'Base_viewFakePythonScriptActionForm')
 
         if view_instance.pt == "form_dialog":
           # If there is a "form_id" in the REQUEST then it means that last view was actually a form
@@ -1372,7 +1436,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # REQUEST but expect all (formerly) URL query parameters to appear in their **kw
         # thus we send extra_param_json (=rjs way of passing parameters to REQUEST) as
         # selection_params so they get into callable's **kw.
-        renderForm(traversed_document, view_instance, embedded_dict,
+        renderForm(view_context, view_instance, embedded_dict,
                    selection_params=extra_param_json, extra_param_json=extra_param_json)
 
         if view_instance.pt in ["form_python_action", "form_jump"]:
@@ -1384,7 +1448,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           embedded_dict['_actions'] = {
             'put': {
               "href": url_template_dict["form_action"] % {
-                "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
+                "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(view_context),
                 "action_id": current_action['view_id']
               }
             },
@@ -1417,7 +1481,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
-          if erp5_action_key not in ("view", "object_view", "object_jio_view"):
+          if erp5_action_key not in ("view", "object_view", "object_jio_view", "object_jio_jump"):
             url_template_key = "traverse_generator_action"
           # but when we do not have the last form id we do not pass is of course
           if not (current_action.get('view_id', '') or last_form_id):
@@ -1641,6 +1705,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       count_method = source_field.get_value('count_method')
     has_listbox_a_count_method = (count_method != "") and (count_method.getMethodName() != list_method)
 
+    # Cast to list if only one element is provided
+    if select_list is None:
+      select_list = []
+    elif same_type(select_list, ""):
+      select_list = [select_list]
+
     # hardcoded responses for site and portal objects (which are not Documents!)
     # we let the flow to continue because the result of a list_method call can
     # be similar - they can in practice return anything
@@ -1664,6 +1734,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             byteify(
               json.loads(urlsafe_b64decode(default_param_json)))))
       if query:
+        # Forbid querying unknown catalog column
+        invalid_column_list = []
+        def isValidColumnOrRaise(column_id):
+          is_valid_column = sql_catalog.isValidColumn(column_id)
+          if not is_valid_column:
+            invalid_column_list.append(column_id)
+          return is_valid_column
+        sql_catalog.parseSearchText(query, search_key='FullTextKey', is_valid=isValidColumnOrRaise)
+
+        if invalid_column_list:
+          response.setStatus(400)
+          result_dict["_debug"] = 'Invalid column name: %s' % str(invalid_column_list)
+          return result_dict
         catalog_kw["full_text"] = query
 
       if selection_domain is not None:
@@ -1776,12 +1859,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       for k, v in catalog_kw.items():
         REQUEST.set(k, v)
       search_result_iterable = callable_list_method(**catalog_kw)
-
-    # Cast to list if only one element is provided
-    if select_list is None:
-      select_list = []
-    elif same_type(select_list, ""):
-      select_list = [select_list]
 
     # extract form field definition into `editable_field_dict`
     editable_field_dict = {}
@@ -1963,25 +2040,29 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           url_parameter_dict = None
           if select in url_column_dict:
             # Check if we get URL parameters using listbox field `url_columns`
-            try:
-              # XXX call on aq_base?
-              url_column_method = getattr(brain, url_column_dict[select])
-              # Result of `url_column_method` must be a dictionary in the format
-              # {'command': <command_name, ex: 'raw', 'push_history'>,
-              #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
-              url_parameter_dict = url_column_method(url_dict=True,
-                                                     brain=brain,
-                                                     selection=catalog_kw['selection'],
-                                                     selection_name=catalog_kw['selection_name'],
-                                                     column_id=select)
-            except AttributeError:
-              # In case the URL method is invalid or empty, we expect to have no link
-              # for the column to maintain compatibility with old UI, hence we create
-              # an empty url_parameter_dict for these cases.
-              url_parameter_dict = {}
-              if url_column_dict[select]:
+            url_parameter_dict = {}
+            url_column_method_id = url_column_dict[select]
+            if url_column_method_id:
+              try:
+                url_column_method = getattr(brain, url_column_method_id)
+              except AttributeError:
+                # In case the URL method is invalid or empty, we expect to have no link
+                # for the column to maintain compatibility with old UI, hence we create
+                # an empty url_parameter_dict for these cases.
                 log("Invalid URL method {!s} on column {}".format(url_column_dict[select], select), level=800)
-
+              else:
+                # Result of `url_column_method` must be a dictionary in the format
+                # {'command': <command_name, ex: 'raw', 'push_history'>,
+                #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
+                url_parameter_dict = url_column_method(url_dict=True,
+                                                      brain=brain,
+                                                      selection=catalog_kw['selection'],
+                                                      selection_name=catalog_kw['selection_name'],
+                                                      column_id=select)
+                if url_parameter_dict is None:
+                  # url method want to disable URL in xhtml
+                  # Keep compatibility with this simple case
+                  url_parameter_dict = {}
           else:
             if not is_getListItemUrlDict_calculated:
               # XXX If only available on brains, maybe better to call on aq_self

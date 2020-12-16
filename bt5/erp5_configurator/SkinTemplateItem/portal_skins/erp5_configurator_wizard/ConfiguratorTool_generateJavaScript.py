@@ -1,6 +1,5 @@
 REQUEST = context.REQUEST
 active_process_id = REQUEST.get('active_process_id', None)
-erp5_site_id = context.getPortalObject().getId()
 
 js_string = """
     // Initialisation
@@ -24,7 +23,7 @@ js_string = """
     }
 
     function checkClientInstallation() {
-       time_out = window.setTimeout( "checkClientInstallation()", 5000 );
+       time_out = window.setTimeout( "checkClientInstallation()", 10000 );
        var xhr_object = null;
        xhr_object = getNewXMLHTTP();
        xhr_object.onreadystatechange = function()

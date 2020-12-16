@@ -19,6 +19,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>solver/portal_solvers/Accept Solver</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -31,6 +39,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Specialise Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value> <string>specialise</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

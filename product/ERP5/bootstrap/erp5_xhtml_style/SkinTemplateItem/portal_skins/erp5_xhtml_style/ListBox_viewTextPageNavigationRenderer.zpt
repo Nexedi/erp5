@@ -6,9 +6,11 @@
 
   <!-- Non gadget mode -->
   <tal:block tal:condition="not: is_gadget_mode">
-    <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/first_previous_page_navigation" />
-    <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/text_link_page_navigation" />
-    <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/next_last_page_navigation" />
+    <tal:block tal:define="selection_key here/getSelectionKey;">
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/first_previous_page_navigation" />
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/text_link_page_navigation" />
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/next_last_page_navigation" />
+    </tal:block>
   </tal:block>
 
   <!-- Gadget mode -->

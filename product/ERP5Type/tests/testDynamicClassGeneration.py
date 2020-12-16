@@ -226,9 +226,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # a new interface
     class IForTest(Interface):
       pass
+    self.assertFalse('IForTest' in self.portal.portal_types.getInterfaceTypeList())
     from Products.ERP5Type import interfaces
     interfaces.IForTest = IForTest
-
+    self.assertTrue('IForTest' in self.portal.portal_types.getInterfaceTypeList())
 
     # one new type
     dummy_type = types_tool.newContent('InterfaceTestType',
@@ -375,6 +376,25 @@ class TestPortalTypeClass(ERP5TypeTestCase):
                if workflow_history_dict['action'] == 'validate' ]),
       validate_date_list)
     self.assertEqual(person.getValidateTransitionDate(), validate_date_list[-1])
+
+  def testNoPortalTypeAccessorGeneratedOnPartiallyGeneratedPortalTypeClass(self):
+    """
+    Test for `is_partially_generated` ({lazy_class,portal_type_class}.py):
+    Portal Type accessors must not be generated on a partially loaded Portal
+    Type class (eg "inner" class)
+    """
+    from Products.ERP5Type.dynamic.lazy_class import PortalTypeMetaClass
+    PortalTypeMetaClass_generatePortalTypeAccessors = PortalTypeMetaClass.generatePortalTypeAccessors
+    def generatePortalTypeAccessors(cls, *args, **kw):
+      assert len(cls.__bases__) > 2
+      return PortalTypeMetaClass_generatePortalTypeAccessors(cls, *args, **kw)
+    try:
+      PortalTypeMetaClass.generatePortalTypeAccessors = generatePortalTypeAccessors
+      self.portal.portal_types.resetDynamicDocuments()
+      import erp5.portal_type
+      getattr(erp5.portal_type, 'Document Component').loadClass()
+    finally:
+      PortalTypeMetaClass.generatePortalTypeAccessors = PortalTypeMetaClass_generatePortalTypeAccessors
 
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
@@ -1409,18 +1429,18 @@ def assertResetCalled(*args, **kwargs):
 
   return reset_performed
 
-import abc
-
 from Products.ERP5Type.mixin.component import ComponentMixin
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from App.config import getConfiguration
+from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
 
-class _TestZodbComponent(SecurityTestCase):
+class TestZodbModuleComponent(SecurityTestCase):
   """
-  Abstract class which defined convenient methods used by any Component Test
-  and tests ran for all Component Test classes
+  Tests for ZODB Module Component (base class of all other Component
+  classes)
   """
-  __metaclass__ = abc.ABCMeta
+  _portal_type = 'Module Component'
+  _document_class = ModuleComponent
 
   def getBusinessTemplateList(self):
     return ('erp5_base',)
@@ -1435,8 +1455,10 @@ class _TestZodbComponent(SecurityTestCase):
   def _generateReference(self, base_name):
     return base_name
 
-  def _getValidSourceCode(self, class_name):
-    raise NotImplementedError
+  def _getValidSourceCode(self, *_):
+    return '''def foobar(*args, **kwargs):
+  return 'Anything'
+'''
 
   def _newComponent(self, reference, text_content=None, version='erp5', id_=None):
     """
@@ -2232,12 +2254,24 @@ class FooBar(ValidationFailed):
 
 # Transforms for Zope which should ideally be upstream'ed
 from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, imPermissionRole, _what_not_even_god_should_do # pylint: disable=unused-import
+
+# Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
+# Shared.DC was not considered a namespace package
+from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
             module2_with_version=imported_module2_with_version)) +
       component.getTextContent())
-    self.tic()
+
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace},
+      must_not_be_in_cache_set={'%s.erp5_version' % namespace,
+                                imported_module1,
+                                imported_module1_with_version,
+                                imported_module2,
+                                imported_module2_with_version})
+    component.checkSourceCode()
     self._assertAstroidCacheContent(
       must_be_in_cache_set={'%s' % namespace,
                             '%s.erp5_version' % namespace},
@@ -2245,6 +2279,8 @@ from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, i
                                 imported_module1_with_version,
                                 imported_module2,
                                 imported_module2_with_version})
+
+    self.tic()
     self.assertEqual(component.getValidationState(), 'modified')
     self.assertEqual(
       component.getTextContentErrorMessageList(),
@@ -2283,9 +2319,8 @@ from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, i
     self.assertEqual(imported_component1.getValidationState(), 'validated')
     self.assertEqual(imported_component2.getValidationState(), 'validated')
 
-    # 2) Then modify the main one so that it automatically 'validate'
-    component.setTextContent(component.getTextContent() + '\n')
-    self.tic()
+    message_list = component.checkSourceCode()
+    self.assertEqual(message_list, [])
     self._assertAstroidCacheContent(
       must_be_in_cache_set={'%s' % namespace,
                             '%s.erp5_version' % namespace,
@@ -2294,6 +2329,17 @@ from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, i
                             imported_module2,
                             imported_module2_with_version},
       must_not_be_in_cache_set=set())
+
+    # 2) Then modify the main one so that it automatically 'validate'
+    component.setTextContent(component.getTextContent() + '\n')
+    self.tic()
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace},
+      must_not_be_in_cache_set={'%s.erp5_version' % namespace,
+                                imported_module1,
+                                imported_module1_with_version,
+                                imported_module2,
+                                imported_module2_with_version})
     self.assertEqual(component.getValidationState(), 'validated')
     self.assertEqual(component.getTextContentErrorMessageList(), [])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
@@ -2314,10 +2360,70 @@ undefined()
     self.assertEqual(
       component.getTextContentErrorMessageList(),
       ["E:  2,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
-       imported_module2,
+       imported_module2_with_version,
        "E:  3,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
        imported_module2_with_version])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+  def testPylintAstroidModuleGeneratedOnce(self):
+    imported_reference = self._generateReference('TestPylintAstroidModuleGeneratedOnceImported')
+    imported_component = self._newComponent(imported_reference)
+    self.portal.portal_workflow.doActionFor(imported_component, 'validate_action')
+    imported_component.setTextContent(imported_component.getTextContent() + """
+def hoge():
+  return 'OK'
+""")
+    self.tic()
+    self.assertEqual(imported_component.getValidationState(), 'validated')
+    self.assertEqual(imported_component.getTextContentErrorMessageList(), [])
+    self.assertEqual(imported_component.getTextContentWarningMessageList(), [])
+
+    priority_tuple = self.portal.getVersionPriorityList()
+    try:
+      self.portal.setVersionPriorityList(('bar | 42.0',) + priority_tuple)
+      self.tic()
+
+      imported_module_with_bar_version = self._getComponentFullModuleName(
+        imported_reference, version='erp5')
+      imported_bar_component = self._newComponent(imported_reference, version='bar')
+      self.portal.portal_workflow.doActionFor(imported_bar_component, 'validate_action')
+      imported_bar_component.setTextContent(imported_component.getTextContent())
+      self.tic()
+      self.assertEqual(imported_bar_component.getValidationState(), 'validated')
+      self.assertEqual(imported_bar_component.getTextContentErrorMessageList(), [])
+      self.assertEqual(imported_bar_component.getTextContentWarningMessageList(), [])
+
+      reference = self._generateReference('TestPylintAstroidModuleGeneratedOnce')
+      component = self._newComponent(reference)
+      component.setTextContent(component.getTextContent() + """
+from %(namespace)s import %(reference)s
+from %(namespace)s.bar_version import %(reference)s
+from %(namespace)s.erp5_version import %(reference)s
+
+# To avoid 'unused-import' warning...
+%(reference)s.hoge()
+""" % dict(namespace=self._document_class._getDynamicModuleNamespace(),
+           reference=imported_reference))
+
+      component.checkSourceCode()
+      from astroid.builder import MANAGER
+      imported_module = self._getComponentFullModuleName(imported_reference)
+      self.assertEqual(
+        MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='bar')],
+        MANAGER.astroid_cache[imported_module])
+      self.assertNotEqual(
+        MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='erp5')],
+        MANAGER.astroid_cache[imported_module])
+
+      self.portal.portal_workflow.doActionFor(component, 'validate_action')
+      self.tic()
+      self.assertEqual(component.getValidationState(), 'validated')
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+    finally:
+      self.portal.setVersionPriorityList(priority_tuple)
+      self.tic()
 
   def testPylintNamedtupleUnicodeLiteralsRegression(self):
     # regression for a bug with our pylint patches on guess encoding
@@ -2449,18 +2555,13 @@ return 'OK'
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
-class TestZodbExtensionComponent(_TestZodbComponent):
+class TestZodbExtensionComponent(TestZodbModuleComponent):
   """
   Tests specific to ZODB Extension Component (previously defined in bt5 and
   installed on the filesystem in $INSTANCE_HOME/Extensions)
   """
   _portal_type = 'Extension Component'
   _document_class = ExtensionComponent
-
-  def _getValidSourceCode(self, *_):
-    return '''def foobar(*args, **kwargs):
-  return 'Anything'
-'''
 
   def testExternalMethod(self):
     """
@@ -2551,25 +2652,11 @@ def foobar(self, a, b="portal_type"):
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
-class TestZodbDocumentComponent(_TestZodbComponent):
+class _TestZodbDocumentComponentMixin(TestZodbModuleComponent):
   """
-  Tests specific to ZODB Document Component. This is only for Document
-  previously defined in bt5 and installed on the filesystem in
-  $INSTANCE_HOME/Document. Later on, Product Documents will also be migrated
+  Common to all Component class inheriting from Document Component (so
+  Interface, Tool and Mixin)
   """
-  _portal_type = 'Document Component'
-  _document_class = DocumentComponent
-
-  def _getValidSourceCode(self, class_name):
-    return '''from erp5.component.document.Person import Person
-
-class %sAnything:
-  pass
-
-class %s(Person):
-  pass
-''' % (class_name, class_name)
-
   def testAtLeastOneClassNamedAfterReference(self):
     component = self._newComponent(
       self._generateReference('TestClassNamedAfterReference'))
@@ -2590,109 +2677,6 @@ class DifferentFromReference(Person):
         mapping={'reference': component.getReference()})])
     self.assertEqual(component.getTextContentErrorMessageList(), [])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
-
-  def testAssignToPortalTypeClass(self):
-    """
-    Create a new Document Component inheriting from Person Document and try to
-    assign it to Person Portal Type, then create a new Person and check
-    whether it has been successfully added to its Portal Type class bases and
-    that the newly-defined function on ZODB Component can be called as well as
-    methods from Person Document
-    """
-    ## Create an Interface assigned to the test ZODB Component to check that
-    ## only resetting Portal Type classes do not have any side-effect on
-    ## Interfaces defined on ZODB Components
-    from zope.interface import Interface
-    class ITestPortalType(Interface):
-      """Anything"""
-      def foo():
-        """Anything"""
-    from types import ModuleType
-    interface_module = ModuleType('ITestPortalType')
-    interface_module.ITestPortalType = ITestPortalType
-    sys.modules['ITestPortalType'] = interface_module
-
-    self.failIfModuleImportable('TestPortalType')
-
-    # Create a new Document Component inheriting from Person Document which
-    # defines only one additional method (meaningful to make sure that the
-    # class (and not the module) has been added to the class when the
-    # TypeClass is changed)
-    test_component = self._newComponent(
-      'TestPortalType',
-      """
-from erp5.component.document.Person import Person
-
-from ITestPortalType import ITestPortalType
-import zope.interface
-
-class TestPortalType(Person):
-  def test42(self):
-    return 42
-
-  zope.interface.implements(ITestPortalType)
-  def foo(self):
-    pass
-""")
-    test_component.validate()
-    self.tic()
-
-    # As TestPortalType Document Component has been validated, it should now
-    # be available
-    self.assertModuleImportable('TestPortalType', reset=False)
-    self.assertTrue(ITestPortalType.implementedBy(self._module.TestPortalType.TestPortalType))
-
-    self._component_tool.reset(force=True,
-                               reset_portal_type_at_transaction_boundary=True)
-
-    person_type = self.portal.portal_types.Person
-    person_type_class = person_type.getTypeClass()
-    self.assertEqual(person_type_class, 'Person')
-
-    # Create a new Person
-    person_module = self.portal.person_module
-    person = person_module.newContent(id='Foo Bar', portal_type='Person')
-    from erp5.component.document.Person import Person as PersonDocument
-    self.assertTrue(PersonDocument in person.__class__.mro())
-
-    # There is no reason that TestPortalType Document Component has been
-    # assigned to a Person
-    self.failIfHasAttribute(person, 'test42')
-    self.failIfHasAttribute(self._module, 'TestPortalType')
-    self.assertFalse(ITestPortalType.providedBy(person))
-    self.assertFalse(ITestPortalType.implementedBy(person.__class__))
-    for klass in person.__class__.mro():
-      self.assertNotEqual(klass.__name__, 'TestPortalType')
-
-    def _check():
-      self.assertHasAttribute(person, 'test42')
-      self.assertEqual(person.test42(), 42)
-
-      # The Portal Type class should not be in ghost state by now as we tried
-      # to access test42() defined in TestPortalType Document Component
-      self.assertHasAttribute(self._module, 'TestPortalType')
-      self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
-      from erp5.component.document.Person import Person as PersonDocument
-      self.assertTrue(PersonDocument in person.__class__.mro())
-      self.assertTrue(ITestPortalType.providedBy(person))
-      self.assertTrue(ITestPortalType.implementedBy(person.__class__))
-
-    # Reset Portal Type classes to ghost to make sure that everything is reset
-    self._component_tool.reset(force=True,
-                               reset_portal_type_at_transaction_boundary=False)
-    # TestPortalType must be available in type class list
-    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
-    try:
-      person_type.setTypeClass('TestPortalType')
-      self.commit()
-      _check()
-
-      self.portal.portal_types.resetDynamicDocuments()
-      _check()
-
-    finally:
-      person_type.setTypeClass('Person')
-      self.commit()
 
   def testImportFromAnotherComponent(self):
     """
@@ -2817,9 +2801,273 @@ class TestGC(XMLObject):
        'gc: collectable <Implements 0x%x>\n' % Implements_id],
       sorted(found_line_list))
 
+class TestZodbDocumentComponent(_TestZodbDocumentComponentMixin):
+  """
+  Tests specific to ZODB Document Component. This is only for Document
+  previously defined in bt5 and installed on the filesystem in
+  $INSTANCE_HOME/Document. Later on, Product Documents will also be migrated
+  """
+  _portal_type = 'Document Component'
+  _document_class = DocumentComponent
+
+  def _getValidSourceCode(self, class_name):
+    return '''from erp5.component.document.Person import Person
+
+class %sAnything:
+  pass
+
+class %s(Person):
+  pass
+''' % (class_name, class_name)
+
+  def testAssignToPortalTypeClass(self):
+    """
+    Create a new Document Component inheriting from Person Document and try to
+    assign it to Person Portal Type, then create a new Person and check
+    whether it has been successfully added to its Portal Type class bases and
+    that the newly-defined function on ZODB Component can be called as well as
+    methods from Person Document
+    """
+    ## Create an Interface assigned to the test ZODB Component to check that
+    ## only resetting Portal Type classes do not have any side-effect on
+    ## Interfaces defined on ZODB Components
+    from zope.interface import Interface
+    class ITestPortalType(Interface):
+      """Anything"""
+      def foo():
+        """Anything"""
+    from types import ModuleType
+    interface_module = ModuleType('ITestPortalType')
+    interface_module.ITestPortalType = ITestPortalType
+    sys.modules['ITestPortalType'] = interface_module
+
+    self.failIfModuleImportable('TestPortalType')
+
+    # Create a new Document Component inheriting from Person Document which
+    # defines only one additional method (meaningful to make sure that the
+    # class (and not the module) has been added to the class when the
+    # TypeClass is changed)
+    test_component = self._newComponent(
+      'TestPortalType',
+      """
+from erp5.component.document.Person import Person
+
+from ITestPortalType import ITestPortalType
+import zope.interface
+
+class TestPortalType(Person):
+  def test42(self):
+    return 42
+
+  zope.interface.implements(ITestPortalType)
+  def foo(self):
+    pass
+""")
+    test_component.validate()
+    self.tic()
+
+    # As TestPortalType Document Component has been validated, it should now
+    # be available
+    self.assertModuleImportable('TestPortalType', reset=False)
+    self.assertTrue(ITestPortalType.implementedBy(self._module.TestPortalType.TestPortalType))
+
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
+
+    person_type = self.portal.portal_types.Person
+    person_type_class = person_type.getTypeClass()
+    self.assertEqual(person_type_class, 'Person')
+
+    # Create a new Person
+    person_module = self.portal.person_module
+    person = person_module.newContent(id='Foo Bar', portal_type='Person')
+    from erp5.component.document.Person import Person as PersonDocument
+    self.assertTrue(PersonDocument in person.__class__.mro())
+
+    # There is no reason that TestPortalType Document Component has been
+    # assigned to a Person
+    self.failIfHasAttribute(person, 'test42')
+    self.failIfHasAttribute(self._module, 'TestPortalType')
+    self.assertFalse(ITestPortalType.providedBy(person))
+    self.assertFalse(ITestPortalType.implementedBy(person.__class__))
+    for klass in person.__class__.mro():
+      self.assertNotEqual(klass.__name__, 'TestPortalType')
+
+    def _check():
+      self.assertHasAttribute(person, 'test42')
+      self.assertEqual(person.test42(), 42)
+
+      # The Portal Type class should not be in ghost state by now as we tried
+      # to access test42() defined in TestPortalType Document Component
+      self.assertHasAttribute(self._module, 'TestPortalType')
+      self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
+      from erp5.component.document.Person import Person as PersonDocument
+      self.assertTrue(PersonDocument in person.__class__.mro())
+      self.assertTrue(ITestPortalType.providedBy(person))
+      self.assertTrue(ITestPortalType.implementedBy(person.__class__))
+
+    # Reset Portal Type classes to ghost to make sure that everything is reset
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=False)
+    # TestPortalType must be available in type class list
+    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
+    try:
+      person_type.setTypeClass('TestPortalType')
+      self.commit()
+      _check()
+
+      self.portal.portal_types.resetDynamicDocuments()
+      _check()
+
+    finally:
+      person_type.setTypeClass('Person')
+      self.commit()
+
+  def testProductsERP5DocumentCompatibility(self):
+    """Check that document class also exist in its original namespace (source_reference)
+
+    Document Component that were moved from file system Products/*/Document needs
+    to be still importable from their initial location, as there might be classes
+    in the database of these instances.
+
+    There is no such test for Mixin/Interface/Tool because the code is the
+    same for all of them (component_package.py).
+    """
+    self.failIfModuleImportable('TestProductsERP5DocumentCompatibility')
+
+    test_component = self._newComponent(
+        'TestProductsERP5DocumentCompatibility',
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5DocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5Document Compatibility'
+  test_attribute = 'TestProductsERP5DocumentCompatibility'
+"""
+    )
+    test_component.setSourceReference('Products.ERP5.Document.TestProductsERP5DocumentCompatibility')
+    test_component.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestProductsERP5DocumentCompatibility')
+
+    from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertEqual(TestProductsERP5DocumentCompatibility.test_attribute, 'TestProductsERP5DocumentCompatibility')
+
+    # this also exist in Products.ERP5Type.Document
+    from Products.ERP5Type.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility as TestProductsERP5DocumentCompatibility_from_ProductsERP5Type  # pylint:disable=import-error,no-name-in-module
+    self.assertIs(TestProductsERP5DocumentCompatibility_from_ProductsERP5Type, TestProductsERP5DocumentCompatibility)
+
+    # another component can also import the migrated component from its original name
+    test_component_importing = self._newComponent(
+        'TestComponentImporting',
+        """\
+from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility
+class TestComponentImporting(TestProductsERP5DocumentCompatibility):
+  pass
+"""
+    )
+    test_component_importing.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestComponentImporting')
+    from erp5.component.document.TestComponentImporting import TestComponentImporting  # pylint:disable=import-error,no-name-in-module
+
+    from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertTrue(issubclass(TestComponentImporting, TestProductsERP5DocumentCompatibility))
+
+    test_component.invalidate()
+    self.tic()
+
+    # after invalidating the component, the legacy modules are no longer importable
+    with self.assertRaises(ImportError):
+      from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    with self.assertRaises(ImportError):
+      from Products.ERP5Type.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+
+  def testProductsERP5TypeDocumentCompatibility(self):
+    """Check that document class also exist in Products.ERP5Type.Document namespace
+    for compatibility.
+
+    We also check that this module is properly reloaded when a document component
+    is modified.
+    """
+    self.failIfModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+
+    test_component = self._newComponent(
+        'TestProductsERP5TypeDocumentCompatibility',
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5TypeDocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5TypeDocument Compatibility'
+  generation = 1
+"""
+    )
+    test_component.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+
+    from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 1)
+
+    test_component.setTextContent(
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5TypeDocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5TypeDocument Compatibility'
+  generation = 2
+""")
+    self.tic()
+    self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+    from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 2)
+
+from Products.ERP5Type.Core.ToolComponent import ToolComponent
+
+class TestZodbToolComponent(_TestZodbDocumentComponentMixin):
+  """
+  Tests specific to ZODB Tool Component
+  """
+  _portal_type = 'Tool Component'
+  _document_class = ToolComponent
+
+  def _getValidSourceCode(self, class_name):
+    return '''from Products.ERP5Type.Tool.BaseTool import BaseTool
+class %(class_name)s(BaseTool):
+  id = 'portal_%(class_name)s'
+  portal_type = 'Delivery Tool'
+  meta_type = 'ERP5 %(meta_type)s'
+
+from Products.ERP5Type.Globals import InitializeClass
+InitializeClass(%(class_name)s)
+''' % dict(class_name=class_name,
+           meta_type=''.join([(c if c.islower() else ' ' + c)
+                              for c in class_name]).strip())
+
+  def testHookAfterLoad(self):
+    component = self._newComponent('TestHookAfterLoadTool')
+    self.tic()
+    response = self.publish(
+      '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
+      'ERP5TypeTestCase:')
+    self.assertEqual(response.getStatus(), 200)
+    self.assertFalse('ERP5 Test Hook After Load Tool' in response.getBody())
+
+    component.validate()
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.checkConsistency(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    response = self.publish(
+      '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
+      'ERP5TypeTestCase:')
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue('ERP5 Test Hook After Load Tool' in response.getBody())
+
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
-class TestZodbTestComponent(_TestZodbComponent):
+class TestZodbTestComponent(TestZodbModuleComponent):
   """
   Tests specific to ZODB Test Component (known as Live Tests, and previously
   defined in bt5 and installed in $INSTANCE_HOME/test)
@@ -2948,29 +3196,46 @@ class Test(ERP5TypeTestCase):
     import erp5.portal_type
     name = self._testMethodName
     types_tool = self.portal.portal_types
-    ptype = types_tool.newContent(name, type_class="File")
+    ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
     file = ptype.constructInstance(self.portal, name, data="foo")
-    self.assertEqual(file.size, 3)
+    file_uid = file.getUid()
+    self.assertEqual(file.size, len("foo"))
     self.commit()
     try:
       self.portal._p_jar.cacheMinimize()
       del file
       delattr(erp5.portal_type, name)
+
+      # Simulate a portal type using a non existing class.
+      # Instances of this portal type are broken and can not be modified.
       ptype.setTypeClass(name)
       self.commit()
       file = self.portal.__dict__[name]
-      self.assertTrue(isinstance(file, InitGhostBase))
+      self.assertIsInstance(file, InitGhostBase)
       # Check that the class is unghosted before resolving __setattr__
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
-      self.assertTrue(isinstance(file, ERP5BaseBroken))
-      self.assertEqual(file.size, 3)
+      self.assertIsInstance(file, ERP5BaseBroken)
+      self.assertEqual(file.size, len("foo"))
+
+      # Now if we repair the portal type definition, instances will
+      # no longer be broken and be modifiable again.
+      ptype.setTypeClass("File")
+      self.commit()
+
+      file = self.portal[name]
+      self.assertNotIsInstance(file, ERP5BaseBroken)
+      self.assertEqual(file.getUid(), file_uid)
+      self.assertEqual(file.getData(), "foo")
+      file.setData("something else")
+      self.assertEqual(file.getData(), "something else")
+      self.assertNotIn("__Broken_state__", file.__dict__)
     finally:
       self.portal._delObject(name)
       types_tool._delObject(name)
       self.commit()
 
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
-class TestZodbInterfaceComponent(TestZodbDocumentComponent):
+class TestZodbInterfaceComponent(_TestZodbDocumentComponentMixin):
   """
   Tests specific to ZODB Interface Component.
   """
@@ -3035,6 +3300,7 @@ class %s(Interface):
     methods from Person Document
     """
     import erp5.portal_type
+    import erp5.accessor_holder
     person_type = self.portal.portal_types.Person
     person_type_class = erp5.portal_type.Person
 
@@ -3042,6 +3308,8 @@ class %s(Interface):
     self.tic()
     self.failIfModuleImportable('ITestPortalType')
     self.assertFalse('ITestPortalType' in person_type.getInterfaceTypeList())
+    self.failIfHasAttribute(erp5.accessor_holder.BaseAccessorHolder,
+                            'providesITestPortalType')
 
     component.validate()
     self.assertModuleImportable('ITestPortalType')
@@ -3052,6 +3320,16 @@ class %s(Interface):
     person_type_class.loadClass()
     implemented_by_list = list(implementedBy(person_type_class))
     self.assertFalse(ITestPortalType in implemented_by_list)
+    self.assertHasAttribute(erp5.accessor_holder.BaseAccessorHolder,
+                            'providesITestPortalType')
+    self.assertHasAttribute(person_type_class, 'providesITestPortalType')
+    new_person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertFalse('providesITestPortalType' in person_type_class.__dict__)
+    self.assertFalse(new_person.providesITestPortalType())
+    self.assertTrue('providesITestPortalType' in person_type_class.__dict__)
+    # Called again to check the alias created on erp5.portal_type.Person on
+    # the first call of providesITestPortalType() (optimization)
+    self.assertFalse(new_person.providesITestPortalType())
     person_original_interface_type_list = list(person_type.getTypeInterfaceList())
     try:
       person_type.setTypeInterfaceList(person_original_interface_type_list +
@@ -3063,9 +3341,15 @@ class %s(Interface):
       implemented_by_list = list(implementedBy(person_type_class))
       self.assertTrue(ITestPortalType in implemented_by_list)
 
+      self.assertFalse('providesITestPortalType' in person_type_class.__dict__)
+      self.assertTrue(new_person.providesITestPortalType())
+      self.assertTrue('providesITestPortalType' in person_type_class.__dict__)
+      self.assertTrue(new_person.providesITestPortalType())
+
     finally:
       person_type.setTypeInterfaceList(person_original_interface_type_list)
       self.commit()
+      self.assertFalse(new_person.providesITestPortalType())
 
 from Products.ERP5Type.Core.MixinComponent import MixinComponent
 class TestZodbMixinComponent(TestZodbInterfaceComponent):
@@ -3128,13 +3412,70 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       person_type.setTypeMixinList(person_original_mixin_type_list)
       self.commit()
 
+
+class TestZodbDocumentComponentReload(ERP5TypeTestCase):
+  def getBusinessTemplateList(self):
+    return (
+      'erp5_core',
+      'erp5_base',
+      'erp5_pdm',
+      'erp5_simulation',
+      'erp5_trade',
+    )
+
+  def _setBusinessProcessComponentTextContent(self, value):
+    component = self.portal.portal_components['document.erp5.BusinessProcess']
+    component.setTextContent(value)
+    self.tic()
+
+  def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
+    component = self.portal.portal_components['document.erp5.BusinessProcess']
+    component_original_text_content = component.getTextContent()
+
+    # Use try/finally to restore the content of
+    # document.erp5.BusinessProcess as using addCleanup function here raises
+    # with :
+    #   ConnectionStateError: Shouldn't load state for
+    #   Products.DCWorkflow.Scripts.Scripts 0x099ad38a68606074
+    #   when the connection is closed
+    try:
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content + """
+  def getVersion(self):
+    return 1
+        """
+      )
+
+      movement = self.portal.newContent(portal_type='Movement')
+      composed_movement = movement.asComposedDocument()
+      self.assertEqual(composed_movement.getVersion(), 1)
+
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content + """
+  def getVersion(self):
+    return 2
+        """
+      )
+
+      composed_movement = movement.asComposedDocument()
+      self.assertEqual(composed_movement.getVersion(), 2)
+
+    finally:
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content
+      )
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
+  suite.addTest(unittest.makeSuite(TestZodbModuleComponent))
   suite.addTest(unittest.makeSuite(TestZodbExtensionComponent))
   suite.addTest(unittest.makeSuite(TestZodbDocumentComponent))
+  suite.addTest(unittest.makeSuite(TestZodbToolComponent))
   suite.addTest(unittest.makeSuite(TestZodbTestComponent))
   suite.addTest(unittest.makeSuite(TestZodbInterfaceComponent))
   suite.addTest(unittest.makeSuite(TestZodbMixinComponent))
+  suite.addTest(unittest.makeSuite(TestZodbDocumentComponentReload))
   return suite

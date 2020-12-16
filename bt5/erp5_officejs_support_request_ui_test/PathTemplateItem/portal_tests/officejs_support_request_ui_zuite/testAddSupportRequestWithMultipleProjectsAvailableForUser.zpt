@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test adding a support request for users who have access to multiple projects</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_second_project" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>test</td>
+</tr>
+
+<!-- When there's more than one project, no project is selected by default -->
+<tr>
+  <td>assertSelectedLabel</td>
+  <td>field_your_project</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="field_your_project"]/option[text() = "RobotMaking"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="field_your_project"]/option[text() = "Second Project"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>select</td>
+  <td>field_your_project</td>
+  <td>RobotMaking</td>
+</tr>
+<!-- for RobotMaking project, RequireAssistant is allowed, but BugReport is not -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="field_your_resource"]/option[text() = "RequireAssistant"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//select[@name="field_your_resource"]/option[text() = "BugReport"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>field_your_project</td>
+  <td>Second Project</td>
+</tr>
+<!-- for Second Project project, everything is -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="field_your_resource"]/option[text() = "BugReport"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="field_your_resource"]/option[text() = "RequireAssistant"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>field_your_resource</td>
+  <td>FeatureRequire</td>
+</tr>
+
+<tal:block tal:define="text_content string:Post test">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'New Support Request created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope="field_my_source_project_title"]//p</td>
+  <td>Second Project</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope="field_my_resource"]//p</td>
+  <td>FeatureRequire</td>
+  <td></td>
+</tr>
+</tbody></table>
+  </body>
+</html>

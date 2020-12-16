@@ -2,7 +2,6 @@
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
 """
-from Products.ERP5Type.Log import log
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
@@ -129,10 +128,6 @@ for field in form.get_fields():
 
 if len(listbox_id_list):
   can_redirect = 0
-  # Warn if there are more than one listbox in form ...
-  if len(listbox_id_list) > 1:
-    log('Base_callDialogMethod', 'There are %s listboxes in form %s.' % (len(listbox_id_list), form.id))
-  # ... but handle them anyway.
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]

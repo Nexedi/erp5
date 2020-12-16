@@ -73,6 +73,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>your_modification_date</string>
+                        <string>my_validation_state</string>
+                        <string>my_image</string>
                       </list>
                     </value>
                 </item>

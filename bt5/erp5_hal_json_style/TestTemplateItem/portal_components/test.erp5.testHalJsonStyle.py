@@ -381,6 +381,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['_debug'], "root")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -454,6 +457,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['traverse']['name'], "Traverse")
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['default_view'], "view")
     self.assertEqual(result_dict['_debug'], "root")
 
@@ -530,6 +536,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['_debug'], "traverse")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -604,7 +613,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
     self.assertEqual(result_dict['_links']['action_object_jio_jump']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_jio_jump']['title'], "Queries")
@@ -627,6 +636,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
     self.assertEqual(result_dict['_debug'], "traverse")
 
     # Check embedded form rendering
@@ -961,7 +973,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
     self.assertEqual(result_dict['_links']['action_object_jio_jump']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld01ldGFkYXRhIn0=" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_jio_jump']['title'], "Queries")
@@ -1408,7 +1420,13 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   @changeSkin('Hal')
   def test_getHateoas_query_param(self):
     fake_request = do_fake_request("GET")
-    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", query="ANIMPOSSIBLECOUSCOUSVALUEFOOTOFINDINDATA")
+
+    # we want a query that will never match any document, but if we have it as a string literal in
+    # the test, because the test code is also a document, it would be returned by the query, so we
+    # build a query a bit dynamically
+    query = "ANIMPOSSIBLECOUSCOUSVALUE" + "FOOTOFINDINDATA"
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", query=query)
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
@@ -1418,13 +1436,41 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_debug'], "search")
     self.assertEqual(result_dict['_limit'], 10)
-    self.assertEqual(result_dict['_query'], "ANIMPOSSIBLECOUSCOUSVALUEFOOTOFINDINDATA")
+    self.assertEqual(result_dict['_query'], query)
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
     # No count if not in the listbox context currently
     self.assertEqual(result_dict['_embedded'].get('count', None), None)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listCatalog', '*args, **kwargs', "return []")
+  @changeSkin('Hal')
+  def test_getHateoas_query_param_reject_unknown_column(self, **kw):
+    """Check that listbox line calculation modify the selection
+    """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    selection_tool = self.portal.portal_selections
+    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_tool.setSelectionFor(selection_name, Selection(selection_name))
+
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query='bar:"foo"'
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 400)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_debug'], "Invalid column name: ['bar', 'bar']")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1461,9 +1507,9 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_group_by_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search",
-                                                                         select_list=['count(*)'],
+                                                                         select_list='count(*)',
                                                                          query='portal_type:"Base Category"',
-                                                                         group_by=["portal_type"])
+                                                                         group_by="portal_type")
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
@@ -1476,7 +1522,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], 'portal_type:"Base Category"')
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], ['count(*)'])
-    self.assertEqual(result_dict['_group_by'], ["portal_type"])
+    self.assertEqual(result_dict['_group_by'], "portal_type")
     self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
@@ -1673,7 +1719,6 @@ return '%s/Base_viewMetadata?reset:int=1' % context.getRelativeUrl()
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_different_view(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['modification_date | Base_getUrl',])
 
@@ -1723,7 +1768,6 @@ return url
 """)
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_absolute_url_with_field_rendering(self):
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['modification_date | Base_getUrl',])
 
@@ -1768,7 +1812,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_absolute_url_without_field_rendering(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title | Base_getUrl',])
 
@@ -1810,7 +1853,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_no_url(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title|',])
 
@@ -1841,6 +1883,79 @@ return url
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_listbox_check_url_column_no_url_None(self):
+    # variation of test_getHateoasDocument_listbox_check_url_column_no_url here the
+    # "no url" is done by setting `None` in TALES expression, instead of '' that get
+    # set by formulator `key | value` syntax.
+    self._makeDocument()
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(
+        dict(url_columns='python: [("title", None), ]'))
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+                  REQUEST=fake_request,
+                  mode="search",
+                  list_method='contentValues',
+                  relative_url='foo_module',
+                  select_list=['id', 'title', 'creation_date', 'modification_date'],
+                  form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
+    result_dict = json.loads(result)
+
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+
+    # Test the URL value
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value'], {})
+
+    # Test if the value of the column is with right key
+    self.assertTrue(result_dict['_embedded']['contents'][0]['title']['default'])
+
+    # Reset the url_columns of the listbox
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(dict(url_columns=''))
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_getUrl', 'url_dict=False, *args, **kwargs', """
+return None
+""")
+  @changeSkin('Hal')
+  def test_getHateoasDocument_listbox_check_url_column_returning_None(self):
+    # variation of test_getHateoasDocument_listbox_check_url_column_no_url here the
+    # "no url" is done by setting `None` in TALES expression, instead of '' that get
+    # set by formulator `key | value` syntax.
+    self._makeDocument()
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(
+        dict(url_columns='python: [("title", "Base_getUrl"), ]'))
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+                  REQUEST=fake_request,
+                  mode="search",
+                  list_method='contentValues',
+                  relative_url='foo_module',
+                  select_list=['id', 'title', 'creation_date', 'modification_date'],
+                  form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
+    result_dict = json.loads(result)
+
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+
+    # Test the URL value
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value'], {})
+
+    # Test if the value of the column is with right key
+    self.assertTrue(result_dict['_embedded']['contents'][0]['title']['default'])
+
+    # Reset the url_columns of the listbox
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(dict(url_columns=''))
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
   @simulate('Base_getUrl', 'url_dict=False, *args, **kwargs', """
 url =  "https://officejs.com"
 if url_dict:
@@ -1855,7 +1970,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_option_parameters(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title | Base_getUrl',])
 
@@ -2157,7 +2271,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       REQUEST=fake_request,
       mode="search",
       local_roles=["Manager"],
-      query='bar:"foo"',
+      query='id:"foo"',
       list_method='Test_listCatalog',
       select_list=['title', 'uid'],
       selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}),
@@ -2176,7 +2290,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEquals(
       selection.getParams(), {
         'local_roles': ['Manager'],
-        'full_text': 'bar:"foo"',
+        'full_text': 'id:"foo"',
         'ignore_unknown_columns': True,
         'portal_type': ['Foo'],
         'limit': 1000

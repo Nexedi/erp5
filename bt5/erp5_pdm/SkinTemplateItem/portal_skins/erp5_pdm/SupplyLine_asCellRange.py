@@ -42,11 +42,11 @@ for base_category_list in base_category_list_list:
   if matrixbox:
     # XXX matrixbox is right_display (not as listfield) 
     # => invert display and value in item
-    cell_range.append(map(lambda x: (x[1], x[0]),
+    cell_range.append([(x[1], x[0]) for x in
                           context.getVariationRangeCategoryItemList(
                                  base_category_list=base_category_list,
                                  display_base_category=display_base_category,
-                                 sort_id='id')))
+                                 sort_id='id')])
   else:
     cell_range.append(
               context.getVariationRangeCategoryList(

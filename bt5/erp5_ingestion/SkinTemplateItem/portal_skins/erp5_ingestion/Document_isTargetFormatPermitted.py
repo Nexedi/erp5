@@ -1,3 +1,5 @@
+# This script uses file= argument
+# pylint: disable=redefined-builtin
 """
 This script provides a facility to permit conversion by format.
 """
@@ -25,7 +27,7 @@ if format in ('html', 'stripped-html', 'text', 'txt', 'pdf', 'png', 'jpg', 'gif'
 if format.endswith('pdf'):
   return True
 if format.endswith('html'):
- return True
+  return True
 ##
 ## # All other formats are prohibitted
 return False

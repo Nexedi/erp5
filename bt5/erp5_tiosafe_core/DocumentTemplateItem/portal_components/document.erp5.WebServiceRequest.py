@@ -28,12 +28,12 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5TioSafe.Utils import EchoDictTarget, NewEchoDictTarget
+from erp5.component.module.TioSafeUtils import EchoDictTarget, NewEchoDictTarget
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from App.Extensions import getBrain
 from lxml import etree
 from zLOG import LOG, ERROR, INFO
-from Products.ERP5Type.Tool.WebServiceTool import ConnectionError
+from erp5.component.tool.WebServiceTool import ConnectionError
 from Products.ERP5Type.Cache import CachingMethod
 
 ID_SEPARATOR="-"

@@ -83,35 +83,37 @@ class RecordablePropertyMetaClass(ExtensionClass):
     def getterWrapper(accessor_name, property_name, property_getter):
       dictionary['security'].declareProtected(Permissions.AccessContentsInformation,
                                               accessor_name)
+      if property_name in dictionary['_recorded_property_name_set']:
+        def getter(self, validated_only=False):
+          """
+          When validated_only is True, then returns the property recorded if
+          the Component has been modified but there was an error upon
+          consistency checking
+          """
+          if validated_only:
+            try:
+              return self.getRecordedProperty(property_name)
+            # AttributeError when this property has never been recorded before
+            # (_recorded_property_dict) and KeyError if the property has been
+            # recorded before but is not anymore
+            except (AttributeError, KeyError):
+              pass
 
-      def getter(self, validated_only=False):
-        """
-        When validated_only is True, then returns the property recorded if
-        the Component has been modified but there was an error upon
-        consistency checking
-        """
-        if validated_only:
-          try:
-            return self.getRecordedProperty(property_name)
-          # AttributeError when this property has never been recorded before
-          # (_recorded_property_dict) and KeyError if the property has been
-          # recorded before but is not anymore
-          except (AttributeError, KeyError):
-            pass
-
-        return property_getter(self)
+          return property_getter(self)
+      else:
+        getter = property_getter
 
       getter.__name__ = accessor_name
       return getter
 
     for (property_name,
-         property_getter) in dictionary['_recorded_property_name_getter_dict'].iteritems():
-      setter_name = '_set' + convertToUpperCase(property_name)
-      dictionary[setter_name] = setterWrapper(setter_name, property_name)
-
+         property_getter) in dictionary['_property_name_getter_dict'].iteritems():
       getter_name = 'get' + convertToUpperCase(property_name)
       dictionary[getter_name] = getterWrapper(getter_name, property_name,
                                               property_getter)
+      if property_name in dictionary['_recorded_property_name_set']:
+        setter_name = '_set' + convertToUpperCase(property_name)
+        dictionary[setter_name] = setterWrapper(setter_name, property_name)
 
     # docstring required for publishing any object
     dictionary['__doc__'] = metacls.__doc__
@@ -163,7 +165,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                      'TextDocument',
                      'Component')
 
-  _recorded_property_name_getter_dict = {
+  _recorded_property_name_set = {'reference',
+                                 'version',
+                                 'text_content'}
+
+  _property_name_getter_dict = {
     'reference': BaseAccessor.Getter('getReference',
                                      'reference',
                                      'string',
@@ -178,7 +184,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     'description': BaseAccessor.Getter('getDescription',
                                        'description',
                                        'string',
-                                       default='')
+                                       default=''),
+    'source_reference': BaseAccessor.Getter('getSourceReference',
+	                                    'source_reference',
+	                                    'string',
+		                            storage_id='default_source_reference'),
     }
 
   _message_invalid_id = "ID is invalid, should be '${id_prefix}.VERSION.REFERENCE'"
@@ -298,7 +308,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     reference, version and text_content
     """
     if not self.checkConsistency():
-      for property_name in self._recorded_property_name_getter_dict:
+      for property_name in self._recorded_property_name_set:
         self.clearRecordedProperty(property_name)
 
       self.validate()
@@ -376,7 +386,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
         for line in f:
           for (filesystem_module,
                zodb_module) in filesystem_zodb_module_mapping_set:
-            if line.startswith("from " + filesystem_module):
+            if line.startswith("from " + filesystem_module + " "):
               line = line.replace(filesystem_module, zodb_module, 1)
               break
 

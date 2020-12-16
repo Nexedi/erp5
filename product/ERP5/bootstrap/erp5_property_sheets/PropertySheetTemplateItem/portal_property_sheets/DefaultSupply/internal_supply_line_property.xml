@@ -105,6 +105,7 @@
                 <string>max_flow</string>
                 <string>min_stock</string>
                 <string>max_stock</string>
+                <string>default_link_url_string</string>
               </tuple>
             </value>
         </item>

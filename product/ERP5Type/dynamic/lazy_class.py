@@ -347,7 +347,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     site = getSite()
     with aq_method_lock:
       try:
-        class_definition = generatePortalTypeClass(site, portal_type)
+        is_partially_generated, class_definition = generatePortalTypeClass(site, portal_type)
       except AttributeError:
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not access Portal Type Object for type %r"
@@ -356,6 +356,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         portal_type_category_list = []
         attribute_dict = dict(_categories=[], constraints=[])
         interface_list = []
+        is_partially_generated = True
       else:
         base_tuple, portal_type_category_list, \
           interface_list, attribute_dict = class_definition
@@ -376,10 +377,11 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       for interface in interface_list:
         classImplements(klass, interface)
 
-      # skip this during the early Base Type / Types Tool generation
-      # because they dont have accessors, and will mess up
-      # workflow methods. We KNOW that we will re-load this type anyway
-      if len(base_tuple) > 1:
+      # Skip this during the early Base Type/Types Tool generation because
+      # they dont have accessors and will mess up workflow methods (base_tuple
+      # being either `(klass,)` or `(klass, GetAcquireLocalRolesMixIn)`). We
+      # KNOW that we will re-load this type anyway.
+      if not is_partially_generated:
         klass.generatePortalTypeAccessors(site, portal_type_category_list)
         # need to set %s__roles__ for generated methods
         cls.setupSecurity()

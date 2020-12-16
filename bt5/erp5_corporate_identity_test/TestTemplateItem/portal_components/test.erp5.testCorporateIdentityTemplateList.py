@@ -90,6 +90,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     preference = self.getDefaultSystemPreference()
     if preference.getPreferenceState() != "global":
       preference.enable()
+    if self.portal.portal_preferences.default_site_preference.getPreferenceState() != "global":
+      self.portal.portal_preferences.default_site_preference.enable()
     self.tic()
 
   def createTestEvent(self, target_language, source_relative_url, destination_relative_url):
@@ -238,7 +240,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
       self.tic()
     else:
-      test_page = getattr(self.portal.web_page_module, id1)
+      test_page = getattr(self.portal.web_page_module, id1, None) or getattr(self.portal.document_module, id1)
 
     pdf_kw = dict(
       reference=test_page.getReference(),
@@ -252,7 +254,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       getattr(test_page, kw.get("test_method")),
       **kw
     )
-
+    self.login()
     image_source_pdf_doc.setData(pdf_data)
     _, bmp = image_source_pdf_doc.convert("bmp", frame=kw.get("page_number"))
 
@@ -380,6 +382,30 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
     )
 
+  def test_pdfPresentationOdpToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_presentation_odp",
+      "template_test_presentaion_odp_slide_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        test_method="Presentation_viewAsSlideshow",
+        format="pdf"
+      )
+    )
+
+  def test_pdfPresentationPptxToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_presentation_pptx",
+      "template_test_presentaion_pptx_slide_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        test_method="Presentation_viewAsSlideshow",
+        format="pdf"
+      )
+    )
+
   @changeSkin('Slide')
   def test_pdfSlideShow(self):
     """
@@ -392,7 +418,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_001_en_html",
       "template_test_slideshow_input_slide_0_001_en_bmp",
-      "template_test_slideshow_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         use_skin="Slide",
@@ -401,6 +427,64 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
     )
 
+  @changeSkin('Slide')
+  def test_pdfConvertToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_convert_to_slideview",
+      "template_test_convert_to_slideview_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=2,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
+
+  @changeSkin('Slide')
+  def test_pdfAddLastSlide(self):
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_slide_last_slide_relative_url='web_page_module/template_test_last_slide_html'
+    )
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_convert_to_slideview",
+      "template_test_last_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=4,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_slide_last_slide_relative_url=''
+    )
+    self.tic()
+
+  @changeSkin('Slide')
+  def test_pdfSlideShowForAnonymous(self):
+    """
+      Test for anonymous:
+      - Web Page as Slideshow
+      - without follow up
+      - without contributor
+      - export as pdf
+    """
+    self.logout()
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_organisation_logo_in_slide_view",
+      "template_test_slideshow_for_anonymous_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
   @changeSkin('Slide')
   def test_pdfSlideshowNotes(self):
     """
@@ -412,7 +496,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_001_en_html",
       "template_test_slideshow_input_slide_6_004_en_bmp",
-      "template_test_slideshow_input_004_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=6,
         display_note=1,
@@ -434,7 +518,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_input_slide_0_002_en_bmp",
-      "template_test_slideshow_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         use_skin="Slide",
@@ -457,7 +541,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
   #  self.runPdfTestPattern(
   #    "template_test_slideshow_input_002_en_html",
   #    ["template_test_slideshow_input_slide_4_003_en_bmp"],
-  #    "template_test_slideshow_input_003_en_pdf",
+  #    "template_test_image_source_pdf",
   #    **dict(
   #      page_number=[4],
   #      override_source_organisation_title="Couscous",
@@ -480,7 +564,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_input_slide_0_003_en_bmp",
-      "template_test_slideshow_input_003_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         override_source_organisation_title="Couscous",
@@ -503,7 +587,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_input_slide_0_003_en_bmp",
-      "template_test_slideshow_input_003_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         override_source_organisation_title="Couscous",
@@ -526,7 +610,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_003_de_html",
       "template_test_slideshow_input_slide_7_005_de_bmp",
-      "template_test_slideshow_input_005_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=7,
         display_note=1,
@@ -550,7 +634,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_letter_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -569,7 +654,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_letter_output_expected_002_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -594,7 +680,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -630,12 +717,13 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_001_en_html",
       "template_test_letter_input_page_0_001_en_bmp",
-      "template_test_letter_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -652,12 +740,13 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_002_en_html",
       "template_test_letter_input_page_0_002_en_bmp",
-      "template_test_letter_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -673,7 +762,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_003_en_html",
       "template_test_letter_input_page_0_003_en_bmp",
-      "template_test_letter_input_003_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLetter",
@@ -685,9 +774,277 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionRight(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at right
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_right_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionRightWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at right
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_right_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionLeft(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at left
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_left_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionLeftWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at left
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_left_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveRightRecipient(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above right recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_right_recipient_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveRightRecipientWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above right recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_right_recipient_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveLeftRecipient(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above left recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_left_recipient_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveLeftRecipientWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above left recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_left_recipient_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterHeaderMarginToTop(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above left recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_header_margin_to_top",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        letter_header_margin_to_top = 35,
+        destination_position_padding_left = '150px',
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterThemeLogo(self):
+    """
+      Test:
+      - Event as Letter
+      - export as pdf with Theme Logo
+    """
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_default_logo_prefix='Template.Test.Theme.Logo.',
+    )
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_theme_logo",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_default_logo_prefix='',
+    )
+    self.tic()
 
   @changeSkin('Letter')
   def test_pdfLetterEventOverrideSenderRecipientOrganisation(self):
@@ -700,7 +1057,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       None,
       "template_test_letter_input_page_0_005_en_bmp",
-      "template_test_letter_input_005_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="Letter_send",
@@ -712,7 +1069,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_relative_url="organisation_module/template_test_organisation",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -727,7 +1085,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       None,
       "template_test_letter_input_page_0_006_en_bmp",
-      "template_test_letter_input_006_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="Letter_send",
@@ -739,7 +1097,30 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_relative_url="person_module/template_test_no_member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterNotDisplayHead(self):
+    """
+      Test:
+      - Web Page as Letter
+      - override date (needed to match output files)
+      - test multi-page letter with hidden header on first page
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_004_de_html",
+      "template_test_letter_not_display_header_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        display_head=0,
+        use_skin="Letter"
       )
     )
 
@@ -755,7 +1136,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_004_de_html",
       "template_test_letter_input_page_1_004_de_bmp",
-      "template_test_letter_input_004_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=1,
         test_method="WebPage_exportAsLetter",
@@ -777,11 +1158,12 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_001_en_html",
       "template_test_letter_input_page_0_001_en_bmp",
-      "template_test_letter_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_printAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -798,7 +1180,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -818,7 +1201,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_source_person_title="Test Recipient",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -835,7 +1219,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_003_de_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -850,12 +1235,13 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_1_001_en_bmp",
-      "template_test_leaflet_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=1,
         format="pdf",
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -870,7 +1256,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_0_002_en_bmp",
-      "template_test_leaflet_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
@@ -878,7 +1264,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Leaflet",
         override_source_organisation_title="Test Association",
         override_source_person_title="Test Recipient",
-        override_leaflet_header_title="Couscous"
+        override_leaflet_header_title="Couscous",
+        display_side=1
       )
     )
 
@@ -893,12 +1280,33 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_002_de_html",
       "template_test_leaflet_input_page_0_003_de_bmp",
-      "template_test_leaflet_input_003_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
         use_skin="Leaflet",
-        format="pdf"
+        format="pdf",
+        display_side=1
+      )
+    )
+
+  @changeSkin('Leaflet')
+  def test_pdfLeafletNotDisplaySideColumn(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_001_en_html",
+      "template_test_leaflet_not_display_side_column_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet",
+        format="pdf",
+        display_side=0
       )
     )
 
@@ -912,11 +1320,12 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_1_001_en_bmp",
-      "template_test_leaflet_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=1,
         test_method="WebPage_printAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -940,7 +1349,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
-  def testhtmlBookAllOptions(self):
+  def test_htmlBookAllOptions(self):
     """
       Test:
       - Web Page as Book
@@ -985,6 +1394,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         override_revision=1,
+        include_content_table=1,
         lang="de"
       )
     )
@@ -1020,19 +1430,20 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_4_001_en_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=4,
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
   # XXX change to a single pdf from which pics are generated!
   @changeSkin('Book')
-  def testpdfBookAllOptions(self):
+  def test_pdfBookAllOptions(self):
     """
       Test:
       - Web Page as Book
@@ -1042,7 +1453,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_4_002_en_bmp",
-      "template_test_book_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=4,
         format="pdf",
@@ -1067,7 +1478,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   # duplicate, just for page 5
   @changeSkin('Book')
-  def testpdfBookAllOptionsDupe(self):
+  def test_pdfBookAllOptionsDupe(self):
     """
       Test:
       - Web Page as Book
@@ -1077,7 +1488,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_5_002_en_bmp",
-      "template_test_book_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=5,
         format="pdf",
@@ -1102,7 +1513,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   # duplicate, just for page 10
   @changeSkin('Book')
-  def testpdfBookAllOptionsDoubleDupe(self):
+  def test_pdfBookAllOptionsDoubleDupe(self):
     """
       Test:
       - Web Page as Book
@@ -1112,7 +1523,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_10_002_en_bmp",
-      "template_test_book_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=10,
         format="pdf",
@@ -1146,13 +1557,14 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_002_de_html",
       "template_test_book_input_page_1_003_de_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         page_number=1,
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
@@ -1168,13 +1580,52 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_003_en_html",
       "template_test_book_input_page_7_004_en_bmp",
-      "template_test_book_input_004_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=7,
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBookReferenceTableUnescape(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_reference_table_unescape_html",
+      "template_test_book_reference_table_unescape_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_content_table=1,
+        include_reference_table = 1
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBookEmbedReport(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_embed_reportdocument_html",
+      "template_test_book_embed_report_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=2,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_content_table=1,
+        include_report_content = 1
       )
     )
 
@@ -1189,13 +1640,14 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_002_de_html",
       "template_test_book_input_page_1_003_de_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         use_skin="Book",
         test_method="WebPage_printAsBook",
         page_number=1,
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
@@ -1248,7 +1700,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_release_input_001_en_html",
       "template_test_release_input_page_0_001_en_bmp",
-      "template_test_release_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         format="pdf",
@@ -1268,7 +1720,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_release_input_002_de_html",
       "template_test_release_input_page_0_002_de_bmp",
-      "template_test_release_input_002_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsRelease",
@@ -1290,7 +1742,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_release_input_001_en_html",
       "template_test_release_input_page_0_001_en_bmp",
-      "template_test_release_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_printAsRelease",

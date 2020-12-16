@@ -13,13 +13,12 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=search</td>
   <td></td>
 </tr>
 
 <!-- Wait for gadget to be loaded -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- Enter a search query to store the state -->
 <tal:block tal:define="parsed_query python: '';
@@ -27,39 +26,25 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
 
-<!-- Go to the module page -->
+<!-- Go to another page -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/open_menu_panel" />
 <tr>
   <td>click</td>
   <td>//div[@data-gadget-scope='panel']//a[text()='Modules']</td>
   <td></td>
 </tr>
-
-<!-- Wait for gadget to be loaded -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']</td>
-  <td></td>
-</tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos']</td>
-  <td></td>
-</tr>
+<!-- Go to the search page -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/open_menu_panel" />
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos']</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Search' and contains(@href, '#!display_stored_state')]</td>
   <td></td>
 </tr>
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Foo Module</td>
-  <td></td>
-</tr>
+<!-- Wait for gadget to be loaded -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- Wait for gadget to be loaded -->
 <tal:block tal:define="parsed_query python: '';

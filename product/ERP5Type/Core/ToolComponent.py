@@ -33,6 +33,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
 import zope.interface
+import re
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.interfaces.component import IComponent
 
 from Products.CMFCore import utils
@@ -49,6 +51,24 @@ class ToolComponent(DocumentComponent):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  _message_meta_type_invalid = "'meta_type' class property must be '${meta_type}'"
+  def checkConsistency(self, *args, **kw):
+    """
+    """
+    error_list = super(ToolComponent, self).checkConsistency(*args ,**kw)
+    if not error_list:
+      expected_meta_type = 'ERP5 ' + ''.join([(c if c.islower() else ' ' + c)
+                                              for c in self.getReference()]).strip()
+      if re.search(r'^\s*meta_type\s*=\s*[\'"]%s[\'"]\s*$' % expected_meta_type,
+                   self.getTextContent(), re.MULTILINE) is None:
+        error_list.append(ConsistencyMessage(
+          self,
+          self.getRelativeUrl(),
+          message=self._message_meta_type_invalid,
+          mapping={'meta_type': expected_meta_type}))
+
+    return error_list
+
   def _hookAfterLoad(self, module_obj):
     """
     Register Tool so that it can be added in ZMI through manage_addToolForm.
@@ -56,7 +76,7 @@ class ToolComponent(DocumentComponent):
     For FS Tools, this is done during Product initialize() by
     Products.CMFCore.utils.ToolInit.
     """
-    tool_class = getattr(module_obj, self.getReference())
+    tool_class = getattr(module_obj, self.getReference(validated_only=True))
 
     # Should we really use ERP5 Product and not ERP5Type considering that ERP5
     # may be gone at some point? Or the other way around? For now, all tools

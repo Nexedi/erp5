@@ -43,7 +43,7 @@ document_classes = updateGlobals( this_module, globals(),
 # Define object classes and tools
 import Form, FSForm, ListBox, ReportBox, MatrixBox
 from Tool import SelectionTool
-import OOoChart, PDFTemplate, Report, PDFForm, ParallelListField
+import OOoChart, PDFTemplate, Report, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
 import CaptchaField
@@ -55,7 +55,7 @@ from Products.CMFCore.utils import registerIcon
 
 
 object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate,
-                   Report.ERP5Report, PDFForm.PDFForm)
+                   Report.ERP5Report)
 portal_tools = ( SelectionTool.SelectionTool, PreferenceTool.PreferenceTool )
 content_classes = ( )
 content_constructors = ()

@@ -1,5 +1,4 @@
 Component Individual Variation | view
-Component Module | converted_inventory_report
 Component Module | view
 Component | internal_price_view
 Component | inventory_chart
@@ -9,7 +8,9 @@ Component | purchase_price_view
 Component | sale_price_view
 Component | view
 Component | view_measure
+Component | view_movement_history
 Component | view_stock
+Component | view_stock_jio
 Internal Supply Line | additional_price
 Internal Supply Line | base_price
 Internal Supply Line | discount_ratio
@@ -33,8 +34,8 @@ Measure | view
 Organisation | jump_to_internal_supply
 Organisation | jump_to_purchase_supply
 Organisation | jump_to_sale_supply
+Product Individual Variation | image_list
 Product Individual Variation | view
-Product Module | converted_inventory_report
 Product Module | transformed_inventory_report
 Product Module | view
 Product | internal_price_view
@@ -50,6 +51,7 @@ Product | view_measure
 Product | view_movement_history
 Product | view_quantities
 Product | view_stock
+Product | view_stock_jio
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
 Purchase Supply Line | discount_ratio
@@ -94,7 +96,6 @@ Sale Supply Module | view
 Sale Supply | view
 Sale Supply | view_profile
 Service Individual Variation | view
-Service Module | converted_inventory_report
 Service Module | view
 Service | internal_price_view
 Service | jump_to_related_supply_line

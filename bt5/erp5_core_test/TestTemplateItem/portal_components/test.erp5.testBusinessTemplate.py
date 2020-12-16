@@ -31,10 +31,8 @@ import unittest
 import logging
 from unittest import expectedFailure, skip
 
-from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
-from OFS.SimpleItem import SimpleItem
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
@@ -213,7 +211,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       Get a business template at portal_templates
     """
     template_tool = self.getTemplateTool()
-    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
+    for bt in template_tool.objectValues(filter={'portal_type': 'Business Template'}):
       if bt.getTitle() == title:
         return bt
     return None
@@ -2336,7 +2334,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # will be reset:
     expected_local_roles = {
       'ac': ['Manager'],
-      getSecurityManager().getUser().getId(): ['Owner'],
+      'System Processes': ['Owner'],
       'group_function': ['Auditor']
     }
     p = self.getPortal()
@@ -2641,7 +2639,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
-    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method':'install'}
+    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method': 'install'}
     import_bt.install(object_to_update=object_to_update)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, **kw):
@@ -2822,8 +2820,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                  'template_portal_type_allowed_content_type_list',
                  'template_portal_type_hidden_content_type_list',
                  'template_portal_type_property_sheet_list',
-                 'template_portal_type_base_category_list'):
-          continue
+                 'template_portal_type_base_category_list',
+                 # test_20_checkUpdateTool recreates portal_simulation
+                 'template_tool_component_id_list',
+                 'template_keep_path_list',
+                 'template_tool_id_list'):
+        continue
       if prop_type == 'text' or prop_type == 'string':
         prop_dict[pid] = ''
       elif prop_type == 'int':
@@ -3142,7 +3144,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
-        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+      self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
     skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
                                                                  id=python_script_id)
@@ -3391,7 +3393,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
   # tests
   def test_Title(self):
     """Tests the Title of the Template Tool."""
-    self.assertEqual('Template Tool', self.getTemplateTool().Title())
+    self.assertEqual('Business Templates', self.getTemplateTool().Title())
 
   def test_01_checkNewSite(self):
     """Test Check New Site"""
@@ -5137,6 +5139,56 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_tool_update(self):
+    self.portal.newContent(
+        id='dummy_tool',
+        portal_type="Alarm Tool")
+
+    # export and install a first version
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt_%s' % self.id(),
+        template_tool_id_list=('dummy_tool', ))
+    self.tic()
+    bt.build()
+    self.tic()
+    self.portal.manage_delObjects(ids=['dummy_tool'])
+    self.commit()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.tic()
+
+    # build a new version of this business template, where the tool export some
+    # configuration (as some plain object attributes). In this case, we expect
+    # that updating the business template will set this configuration on the tool.
+    self.portal.dummy_tool._some_configuration = "saved in business template"
+    bt.build()
+    self.tic()
+    # undo the change in title
+    del self.portal.dummy_tool._some_configuration
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    try:
+      self.assertEqual(self.portal.dummy_tool._some_configuration, "saved in business template")
+    finally:
+      new_bt.uninstall()
+      self.assertIsNone(self.portal._getOb('dummy_tool', None))
+
   def test_21_CategoryIncludeSubobjects(self):
     """Test Category includes subobjects"""
     sequence_list = SequenceList()
@@ -6288,62 +6340,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """)
     sequence_list.play(self)
 
-  def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
-    # This test does too much since we don't modify objects anymore during
-    # download. Objects are cleaned up during installation, which does not
-    # require any specific action about garbage collection or pickle cache.
-    from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
-    portal = self.portal
-    BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
-    object_id_list = 'old_file', 'some_file'
-    marker_list = []
-    def removeProperties(self, obj, export):
-      # Check it works if the object is modified during install.
-      if obj.id in object_id_list:
-        obj.int_index = marker_list.pop()
-      return obj
-    SimpleItem_getCopy = SimpleItem._getCopy
-    import Products.ERP5.tests
-    try:
-      BaseTemplateItem.removeProperties = removeProperties
-      SimpleItem._getCopy = lambda *args: self.fail()
-      template_tool = portal.portal_templates
-      bt_path = os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-                             'test_data',
-                             'test_167_InstanceAndRelatedClassDefinedInSameBT')
-      # create a previously existing instance of the overriden document type
-      File = portal.portal_types.getPortalTypeClass('File')
-      portal._setObject('another_file', File('another_file'))
-      self.tic()
-      # logged errors could keep a reference to a traceback having a reference
-      # to 'another_file' object
-      self.logged = []
-      # check its class has not yet been overriden
-      self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
-      for i in (0, 1):
-        marker_list += [i] * len(object_id_list)
-        gc.disable()
-        bt = template_tool.download(bt_path)
-        assert marker_list
-        if i:
-          self.tic()
-        bt.install(force=1)
-        assert not marker_list
-        gc.enable()
-        for id in object_id_list:
-          self.assertEqual(getattr(portal, id).int_index, i)
-        self.tic()
-    finally:
-      BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
-      SimpleItem._getCopy = SimpleItem_getCopy
-      gc.enable()
-    # check the previously existing instance now behaves as the overriden class
-    self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
-    # test uninstall is effective
-    self.uninstallBusinessTemplate('test_167_InstanceAndRelatedClassDefinedInSameBT')
-    # check both File instances no longer behave like being overriden
-    self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
-
   def test_168_CheckPortalTypeAndPathInSameBusinessTemplate(self, change_broken_object=False):
     """
     Make sure we can define a portal type and instance of that portal type
@@ -6382,6 +6378,45 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     if change_broken_object:
       self.assertEqual("FooBar", getattr(foo_in_portal, "title"))
     self.uninstallBusinessTemplate('test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
+
+  def test_legacy_products_erp5_document_compatibility(self):
+    """Check we can import a business template referencing classes from
+    Products.ERP5Type.Document namespace and that the classes are migrated
+    """
+    import Products.ERP5.tests
+    bt_path = os.path.join(
+        os.path.dirname(Products.ERP5.tests.__file__),
+        'test_data',
+        'BusinessTemplate_test_legacy_products_erp5_document_compatibility')
+    bt = self.portal.portal_templates.download(bt_path)
+    bt.install()
+    self.tic()
+
+    # when loaded, the legacy classes have been updated to use
+    # erp5.portal_type namespace
+    self.assertEqual(
+        str(self.portal.person_module.test_person.__class__),
+        "<class 'erp5.portal_type.Person'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_address.__class__),
+        "<class 'erp5.portal_type.Address'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_career.__class__),
+        "<class 'erp5.portal_type.Career'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_email.__class__),
+        "<class 'erp5.portal_type.Email'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_fax.__class__),
+        "<class 'erp5.portal_type.Fax'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_telephone.__class__),
+        "<class 'erp5.portal_type.Telephone'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_link.__class__),
+        "<class 'erp5.portal_type.Link'>")
+
+    self.uninstallBusinessTemplate('BusinessTemplate_test_legacy_products_erp5_document_compatibility')
 
   def test_169_CheckPortalTypeAndPathInSameBusinessTemplateAndBrokenObjectModification(self):
     """
@@ -6574,7 +6609,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       shutil.rmtree(export_dir)
 
-    new_bt.install(force=0, object_to_update={'dummy_type_provider':'remove'})
+    new_bt.install(force=0, object_to_update={'dummy_type_provider': 'remove'})
     self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
     self.assertNotIn('dummy_type_provider', types_tool.type_provider_list)
 
@@ -6858,6 +6893,86 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'test_document': ('Removed but should be kept', 'Path')},
        new_bt.preinstall())
 
+  def test_update_business_template_with_category_having_subcategory_tree_modified(self):
+    """Non regression test for a case where some categories in a subtrees are added and
+    some are removed.
+
+    Updating from:
+
+        portal_categories/test_category/modified
+        portal_categories/test_category/modified/container_in_which_child_is_added
+        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified/removed
+
+    to:
+
+        portal_categories/test_category/modified   <-- this will be modified
+        portal_categories/test_category/modified/container_in_which_child_is_added
+        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified/container_in_which_child_is_added/added
+
+    was causing when test_category was added both as a base category and as paths.
+
+    This was the cause of KeyError when updating erp5_accounting_l10n_fr
+    """
+    portal_categories = self.portal.portal_categories
+    if 'test_category' in portal_categories.objectIds():
+      portal_categories.manage_delObjects(['test_category'])
+    base_category = portal_categories.newContent(portal_type='Base Category', id='test_category')
+
+    parent_category = base_category.newContent(portal_type='Category', id='modified')
+    parent_category.newContent(portal_type='Category', id='container_in_which_child_is_added')
+    parent_category.newContent(portal_type='Category', id='removed')
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='child_kept')
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/test_category/**'
+      ),
+      template_base_category_list=['test_category'],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      new_business_template_version_1 = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # Apply the changes and build a second version of business template
+    parent_category.setTitle('modified')
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='added')
+    parent_category.manage_delObjects(['removed'])
+
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_categories.manage_delObjects(['test_category'])
+      self.tic()
+      new_business_template_version_1.install()
+      self.tic()
+      portal_categories.test_category.modified.container_in_which_child_is_added.setTitle(
+          'This path should not be reinstalled during update'
+      )
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+        download_url='file://%s' % export_dir
+      )
+    finally:
+      shutil.rmtree(export_dir)
+    self.tic()
+    self.assertEqual(
+      'This path should not be reinstalled during update',
+      portal_categories.test_category.modified.container_in_which_child_is_added.getTitle())
+
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
     """Tests for `template_keep_path_list` feature for the special case of catalog methods
     """
@@ -6912,6 +7027,60 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'portal_catalog/erp5_mysql_innodb/z_fake_method':
          ('Removed but should be kept', 'CatalogMethod')},
        new_bt.preinstall())
+
+  def test_update_business_template_with_broken_objects(self):
+    """Edge case test for a folder containing broken objects being updated.
+
+    In this scenario, a document containing random broken objects that are
+    not part of business template is being installed. The broken objects
+    are kept and do not prevent installing the business template.
+    """
+    types_tool = self.portal.portal_types
+    types_tool.newContent('Geek Object', 'Base Type', type_class='Person')
+
+    types_tool.newContent(
+        'Geek Module',
+        'Base Type',
+        type_class='Folder',
+        type_filter_content_type=1,
+        type_allowed_content_type_list=('Geek Object',),
+    )
+
+    self.portal.newContent(portal_type='Geek Module', id='geek_module')
+    module_content = self.portal.geek_module.newContent(
+        portal_type='Geek Object',
+        id='1',
+        title='kept',
+    )
+    module_content_uid = module_content.getUid()
+    self.tic()
+
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_path_list=['geek_module'])
+    self.tic()
+    bt.build()
+    self.tic()
+
+    types_tool['Geek Object'].setTypeClass(' not exists - broken')
+    self.tic()
+    self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+          url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    new_bt.install()
+
+    # our broken document is still here and its properties have been kept
+    self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
+    self.assertEqual(module_content_uid, self.portal.geek_module['1'].uid)
+    self.assertEqual('kept', self.portal.geek_module['1'].title)
 
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()

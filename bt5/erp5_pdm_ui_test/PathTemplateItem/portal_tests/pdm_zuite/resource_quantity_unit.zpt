@@ -1,0 +1,71 @@
+<html>
+<head><title>Test setting quantity unit</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test setting quantity unit
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft&delivery_type=Internal">
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>assertSelected</td>
+  <td>//select[@name="subfield_field_my_quantity_unit_list_default:list"]</td>
+  <td>label=Unit/Piece</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//select[@name="subfield_field_my_quantity_unit_list_default:list"]/option[@disabled and text()="Mass"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>xpath=(//select[@name="subfield_field_my_quantity_unit_list_default:list"])[2]/option[@disabled and text()="Mass"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>xpath=(//select[@name="subfield_field_my_quantity_unit_list_default:list"])[2]</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>xpath=(//select[@name="subfield_field_my_quantity_unit_list_default:list"])[2]</td>
+  <td>label=Mass/Ton</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//select[@name="subfield_field_my_quantity_unit_list_default:list"]</td>
+  <td>label=Unit/Piece</td>
+</tr>
+
+<tr>
+  <td>assertSelected</td>
+  <td>xpath=(//select[@name="subfield_field_my_quantity_unit_list_default:list"])[2]</td>
+  <td>label=Mass/Ton</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>xpath=(//select[@name="subfield_field_my_quantity_unit_list_default:list"])[3]</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

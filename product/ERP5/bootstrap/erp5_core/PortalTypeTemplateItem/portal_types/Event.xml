@@ -16,7 +16,7 @@
             <key> <string>description</string> </key>
             <value> <string>The purpose of an Event object is to keep track of the interface between the ERP and third parties.\n
 \n
-This portal type is an abstract portal type, so that newTempEvent calls can succeed; one should never have to use this portal type for persistent objects.</string> </value>
+This portal type is an abstract portal type, so that Event temp_objects can be created; one should never have to use this portal type for persistent objects.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

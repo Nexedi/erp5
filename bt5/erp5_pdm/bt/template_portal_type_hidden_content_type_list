@@ -4,6 +4,7 @@ Component | Purchase Supply Line
 Component | Sale Supply Line
 Component | Supply Line
 Internal Supply Line | Internal Supply Cell
+Internal Supply Line | Link
 Internal Supply Line | Predicate
 Internal Supply | Supply Line
 Measure | Measure Cell
@@ -12,9 +13,11 @@ Product | Internal Supply Line
 Product | Purchase Supply Line
 Product | Sale Supply Line
 Product | Supply Line
+Purchase Supply Line | Link
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply | Supply Line
+Sale Supply Line | Link
 Sale Supply Line | Predicate
 Sale Supply Line | Sale Supply Cell
 Sale Supply | Supply Line
@@ -22,6 +25,7 @@ Service | Internal Supply Line
 Service | Purchase Supply Line
 Service | Sale Supply Line
 Service | Supply Line
+Supply Line | Link
 Supply Line | Predicate
 Supply Line | Supply Cell
 Transformation Operation | Transformation Operation Cell

@@ -43,8 +43,6 @@ from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from Products.ERP5.Tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
-
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -743,7 +741,7 @@ class TestInventory(InventoryAPITestCase):
     # sum([0.1] * 10) != 1.0 but this is not a problem here
     getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
     self._makeMovement( quantity=1, price=1 )
-    for i in range(10):
+    for _ in range(10):
       self._makeMovement( quantity=-0.1, price=1 )
     self.assertInventoryEquals(0, precision=2, node_uid=self.node.getUid())
     self.assertEqual(0, getInventoryAssetPrice(precision=2,
@@ -1011,8 +1009,8 @@ class TestInventoryList(InventoryAPITestCase):
     getInventoryList = self.getSimulationTool().getInventoryList
     self.section.setGroup('level1')
     self.other_section.setGroup('level1')
-    m1 = self._makeMovement(quantity=2)
-    m2 = self._makeMovement(destination_section_value=self.other_section, quantity=3)
+    self._makeMovement(quantity=2)
+    self._makeMovement(destination_section_value=self.other_section, quantity=3)
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       section_category='group/level1',
@@ -1028,8 +1026,8 @@ class TestInventoryList(InventoryAPITestCase):
     getInventoryList = self.getSimulationTool().getInventoryList
     self.section.setGroup('level1')
     self.other_section.setGroup('level1')
-    m1 = self._makeMovement(quantity=2)
-    m2 = self._makeMovement(destination_section_value=self.other_section, quantity=3)
+    self._makeMovement(quantity=2)
+    self._makeMovement(destination_section_value=self.other_section, quantity=3)
 
     inventory_list = getInventoryList(node_uid=self.node.getUid(),
                                       section_category='group/level1',
@@ -1414,8 +1412,8 @@ class TestInventoryList(InventoryAPITestCase):
                          #source_payment_value=self.payment_node,
                          #destination_payment_value=self.other_payment_node,
                          simulation_state=simulation_state)
-    def checkInventory(line=0, type='Current', destination=0, source=0, quantity=None):
-      method = getattr(self.getSimulationTool(),'get%sInventoryList' % type)
+    def checkInventory(line=0, type_='Current', destination=0, source=0, quantity=None):
+      method = getattr(self.getSimulationTool(),'get%sInventoryList' % type_)
       if source:
         node_uid = self.node.getUid()
       if destination:
@@ -1426,24 +1424,24 @@ class TestInventoryList(InventoryAPITestCase):
         self.assertEqual(sum([x.total_quantity for x in inventory_list]),
                           quantity)
     makeMovement(quantity=1, simulation_state='ordered')
-    checkInventory(line=0, type='Current', destination=1)
-    checkInventory(line=0, type='Available', destination=1)
-    checkInventory(line=1, type='Future', source=1, quantity=-1)
-    checkInventory(line=1, type='Future', destination=1, quantity=1)
+    checkInventory(line=0, type_='Current', destination=1)
+    checkInventory(line=0, type_='Available', destination=1)
+    checkInventory(line=1, type_='Future', source=1, quantity=-1)
+    checkInventory(line=1, type_='Future', destination=1, quantity=1)
     makeMovement(quantity=3, simulation_state='confirmed')
-    checkInventory(line=0, type='Current', source=1)
-    checkInventory(line=0, type='Current', destination=1)
-    checkInventory(line=1, type='Available', source=1, quantity=-3)
-    checkInventory(line=0, type='Available', destination=1)
-    checkInventory(line=2, type='Future', source=1, quantity=-4)
-    checkInventory(line=2, type='Future', destination=1, quantity=4)
+    checkInventory(line=0, type_='Current', source=1)
+    checkInventory(line=0, type_='Current', destination=1)
+    checkInventory(line=1, type_='Available', source=1, quantity=-3)
+    checkInventory(line=0, type_='Available', destination=1)
+    checkInventory(line=2, type_='Future', source=1, quantity=-4)
+    checkInventory(line=2, type_='Future', destination=1, quantity=4)
     makeMovement(quantity=5, simulation_state='started')
-    checkInventory(line=1, type='Current', source=1, quantity=-5)
-    checkInventory(line=0, type='Current', destination=1)
-    checkInventory(line=2, type='Available', source=1, quantity=-8)
-    checkInventory(line=0, type='Available', destination=1)
-    checkInventory(line=3, type='Future', source=1, quantity=-9)
-    checkInventory(line=3, type='Future', destination=1, quantity=9)
+    checkInventory(line=1, type_='Current', source=1, quantity=-5)
+    checkInventory(line=0, type_='Current', destination=1)
+    checkInventory(line=2, type_='Available', source=1, quantity=-8)
+    checkInventory(line=0, type_='Available', destination=1)
+    checkInventory(line=3, type_='Future', source=1, quantity=-9)
+    checkInventory(line=3, type_='Future', destination=1, quantity=9)
 
   def test_node_selection_domain(self):
     self.node.setSite('site1')
@@ -1470,12 +1468,12 @@ class TestInventoryList(InventoryAPITestCase):
     getInventoryList = self.getSimulationTool().getInventoryList
     ledger_accounting_category = self.portal.portal_categories.ledger.accounting
     self.node.setGroup('level1')
-    movement1 = self._makeMovement(
+    self._makeMovement(
       ledger_value=ledger_accounting_category.general,
       destination_value=None,
       quantity=2,
     )
-    movement2 = self._makeMovement(
+    self._makeMovement(
       ledger_value=ledger_accounting_category.detailed,
       destination_value=None,
       source_value=self.node,
@@ -1799,9 +1797,9 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     start_date = DateTime(2001, 1, 1)
     stop_date = DateTime(2002, 2, 2)
-    mvt = self._makeMovement(quantity=100,
-                             start_date=start_date,
-                             stop_date=stop_date)
+    self._makeMovement(quantity=100,
+                       start_date=start_date,
+                       stop_date=stop_date)
     # start_date is for source
     self.assertEqual(start_date, getMovementHistoryList(
                             section_uid=self.mirror_section.getUid())[0].date)
@@ -1829,10 +1827,9 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def testResource(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    mvt = self._makeMovement(quantity=100)
+    self._makeMovement(quantity=100)
     another_resource = self._makeResource()
-    another_mvt = self._makeMovement(quantity=3,
-                                     resource_value=another_resource)
+    self._makeMovement(quantity=3, resource_value=another_resource)
     # we can query resource directly by uid
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),
@@ -1853,7 +1850,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
   def testSectionCategory(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self.section.setGroup('level1/level2')
-    mvt = self._makeMovement(quantity=100)
+    self._makeMovement(quantity=100)
 
     # for section category, both exact category or any parent category works
     # section_category can also be a list.
@@ -1877,7 +1874,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # it is currently invalid to pass the same category twice to inventory API
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self.section.setGroup('level1/level2')
-    mvt = self._makeMovement(quantity=100)
+    self._makeMovement(quantity=100)
     movement_history_list = getMovementHistoryList(
                               section_category=['group/level1',
                                                 'group/level1/level2'])
@@ -1889,7 +1886,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self.section.setGroup('level1/level2')
     self.node.setGroup('level1')
-    mvt = self._makeMovement(quantity=100)
+    self._makeMovement(quantity=100)
 
     valid_category_list = [ 'group/level1',
                            ['group/level1', 'group/anotherlevel'],
@@ -1925,8 +1922,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     ledger = self.portal.portal_categories.ledger
 
-    mvt = self._makeMovement(quantity=100, ledger="accounting/general")
-    another_mvt = self._makeMovement(quantity=50, ledger="accounting/detailed")
+    self._makeMovement(quantity=100, ledger="accounting/general")
+    self._makeMovement(quantity=50, ledger="accounting/detailed")
 
     # first ledger
     mvt_history_list = getMovementHistoryList(
@@ -2131,7 +2128,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def test_Limit(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for q in range(6):
+    for _ in range(6):
       self._makeMovement(quantity=1)
     self.assertEqual(3, len(getMovementHistoryList(limit=3)))
     self.assertEqual(4, len(getMovementHistoryList(limit=(1, 4))))
@@ -2280,11 +2277,11 @@ class TestMovementHistoryList(InventoryAPITestCase):
   def testSameNodeDifferentDates(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     date = DateTime()
-    mvt = self._makeMovement( quantity=2,
-                              start_date=date,
-                              stop_date=date+1,
-                              source_value=self.node,
-                              destination_value=self.node )
+    self._makeMovement(quantity=2,
+                       start_date=date,
+                       stop_date=date+1,
+                       source_value=self.node,
+                       destination_value=self.node )
 
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),)
@@ -2293,10 +2290,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def testSameNodeSameDates(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    mvt = self._makeMovement( quantity=2,
-                              start_date=DateTime(),
-                              source_value=self.node,
-                              destination_value=self.node )
+    self._makeMovement(quantity=2,
+                       start_date=DateTime(),
+                       source_value=self.node,
+                       destination_value=self.node)
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),)
     self.assertEqual(2, len(mvt_history_list))
@@ -2304,12 +2301,12 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def testSameNodeSameDatesSameSections(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    mvt = self._makeMovement( quantity=2,
-                              start_date=DateTime(),
-                              source_value=self.node,
-                              destination_value=self.node,
-                              source_section_value=self.section,
-                              destination_section_value=self.section,)
+    self._makeMovement(quantity=2,
+                       start_date=DateTime(),
+                       source_value=self.node,
+                       destination_value=self.node,
+                       source_section_value=self.section,
+                       destination_section_value=self.section)
     # For now, if you want to get movements from same node, same dates, same
     # sections, you have to pass ignore_group_by=True to ignore default
     # grouping.
@@ -2383,8 +2380,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def test_OmitAssetIncreaseDecrease(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    m1 = self._makeMovement(quantity=1, price=-1)
-    m2 = self._makeMovement(quantity=-1, price=-1)
+    self._makeMovement(quantity=1, price=-1)
+    self._makeMovement(quantity=-1, price=-1)
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
                                               omit_asset_increase=1)
     self.assertEqual(1, len(mvt_history_list))
@@ -2521,10 +2518,10 @@ class TestMovementHistoryList(InventoryAPITestCase):
     m2 = delivery.newContent(portal_type='Dummy Movement', quantity=1,
                              price=2, resource_value=self.resource,
                              start_date=DateTime(2010, 1, 1))
-    m3 = delivery.newContent(portal_type='Dummy Movement', quantity=1,
-                             price=7, resource_value=self.other_resource,
-                             start_date=DateTime(2010, 1, 2))
-    self.commit();
+    delivery.newContent(portal_type='Dummy Movement', quantity=1,
+                        price=7, resource_value=self.other_resource,
+                        start_date=DateTime(2010, 1, 2))
+    self.commit()
     self.tic()
     # sanity check, our fake movements are all created in the same delivery,
     # and have a valid explanation uid
@@ -2585,12 +2582,12 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     ledger_accounting_category = self.portal.portal_categories.ledger.accounting
     self.node.setGroup('level1')
-    movement1 = self._makeMovement(
+    self._makeMovement(
       ledger_value=ledger_accounting_category.general,
       destination_value=None,
       quantity=2,
     )
-    movement2 = self._makeMovement(
+    self._makeMovement(
       ledger_value=ledger_accounting_category.detailed,
       destination_value=None,
       source_value=self.node,
@@ -2844,9 +2841,6 @@ class TestTrackingList(InventoryAPITestCase):
     item_a = data_dict['item_a']
     item_b = data_dict['item_b']
     node_b = data_dict['node_b']
-    movement_a = data_dict['movement_a']
-    movement_b = data_dict['movement_b']
-    movement_c = data_dict['movement_c']
 
     getTrackingList = self.portal.portal_simulation.getTrackingList
     path_list = [i.path for i in getTrackingList(
@@ -2913,6 +2907,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     min_lag = cache_lag / 2
     self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
     self.CACHE_DATE = cache_date = now - min_lag
+    from erp5.component.tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
     self.LAST_CACHED_MOVEMENT_DATE = last_cached_movement_date = \
       cache_date - MYSQL_MIN_DATETIME_RESOLUTION
     # First movement, won't be into cache
@@ -3527,9 +3522,9 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Create an old movement
     INVENTORY_QUANTITY_4 = 100
     INVENTORY_DATE_4 = self.NOW - 3 * self.CACHE_LAG
-    movement = self._makeMovement(quantity=INVENTORY_QUANTITY_4,
-                                  start_date=INVENTORY_DATE_4,
-                                  simulation_state='delivered')
+    self._makeMovement(quantity=INVENTORY_QUANTITY_4,
+                       start_date=INVENTORY_DATE_4,
+                       simulation_state='delivered')
     # Get inventory in past so that cache is filled
     inventory_kw={'node_uid': self.node_uid,
                   "to_date" : self.NOW - 2 * self.CACHE_LAG,}
@@ -3593,7 +3588,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Create a new movement, indexation should not fail
     INVENTORY_QUANTITY_4 = 5000
     INVENTORY_DATE_4 = self.CACHE_DATE
-    movement = self._makeMovement(
+    self._makeMovement(
       quantity=INVENTORY_QUANTITY_4,
       start_date=INVENTORY_DATE_4,
       simulation_state='delivered',
@@ -3879,16 +3874,6 @@ class TestUnitConversion(BaseTestUnitConversion):
 
     self.assertEqual(13 * .056 - 2 * .043,
                       self.convertedSimulation('mass/nutr/lipid'))
-
-    def testInventoryNoMetricType(self):
-      """
-      providing only the quantity_unit argument should also work,
-      and the standard metric type is used
-      """
-      self.assertEqual((11 * 123 - 789) / 1e6,
-                        self.getSimulationTool().getInventory(
-                           node_uid=self.node.getUid(),
-                           quantity_unit="mass/t"))
 
 class TestUnitConversionDefinition(BaseTestUnitConversion):
   QUANTITY_UNIT_DICT = {

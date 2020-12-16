@@ -1,55 +1,53 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, RSVP, Handlebars*/
-(function (window, document, rJS, RSVP, Handlebars) {
+/*global window, rJS, domsugar*/
+(function (window, rJS, domsugar) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    template_element = gadget_klass.__template_element,
-    sort_item_template = Handlebars.compile(template_element
-                         .getElementById("sort-item-template")
-                         .innerHTML),
-    sort_template = Handlebars.compile(template_element
-                         .getElementById("sort-template")
-                         .innerHTML);
-
-  Handlebars.registerHelper('equal', function (left_value, right_value, options) {
-    if (arguments.length < 3) {
-      throw new Error("Handlebars Helper equal needs 2 parameters");
-    }
-    if (left_value !== right_value) {
-      return options.inverse(this);
-    }
-    return options.fn(this);
-  });
-
-
-  function createSortItemTemplate(gadget, sort_value) {
-    var sort_column_list = gadget.state.sort_column_list,
-      sort_value_list = sort_value || [],
-      option_list = [],
+  function createSortItemTemplate(sort_value_list, sort_column_list, ascending_text, descending_text) {
+    var dom_column_option_list = [],
+      option_dict,
       is_selected = false,
       i;
 
     for (i = 0; i < sort_column_list.length; i += 1) {
       is_selected = is_selected || (sort_value_list[0] === sort_column_list[i][0]);
-      option_list.push({
-        text: sort_column_list[i][1],
+      option_dict = {
         value: sort_column_list[i][0],
-        selected: sort_value_list[0] === sort_column_list[i][0]
-      });
+        // Used to be translated
+        text: sort_column_list[i][1]
+      };
+      if (sort_value_list[0] === sort_column_list[i][0]) {
+        option_dict.selected = "selected";
+      }
+      dom_column_option_list.push(domsugar('option', option_dict));
     }
-    if (!is_selected && (sort_value !== undefined)) {
-      option_list.push({
+
+    if (!is_selected && (sort_value_list.length !== 0)) {
+      dom_column_option_list.push(domsugar('option', {
         text: sort_value_list[0],
         value: sort_value_list[0],
         selected: true
-      });
+      }));
     }
 
-    return gadget.translateHtml(sort_item_template({
-      option: option_list,
-      operator: sort_value_list[1]
-    }));
+    return domsugar('div', [
+      domsugar('button', {type: 'submit', class: 'ui-icon ui-icon-minus'}),
+      domsugar('div', {class: 'sort_item ui-controlgroup-controls'}, [
+        domsugar('select', dom_column_option_list),
+        domsugar('select', [
+          domsugar('option', {
+            value: 'ascending',
+            text: ascending_text,
+            selected: (sort_value_list[1] === 'ascending')
+          }),
+          domsugar('option', {
+            value: 'descending',
+            text: descending_text,
+            selected: (sort_value_list[1] === 'descending')
+          })
+        ])
+      ])
+    ]);
   }
 
   /* Valid sort item is a tuple of (column-name, ordering) */
@@ -58,47 +56,79 @@
            (sort_item[1] === 'ascending' || sort_item[1] === 'descending');
   }
 
-  gadget_klass
+  rJS(window)
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("trigger", "trigger")
 
     .onStateChange(function onStateChange() {
-      var gadget = this,
-        div = document.createElement("div"),
-        container = gadget.element.querySelector(".container");
+      var gadget = this;
 
-      return gadget.translateHtml(sort_template())
-        .push(function (translated_html) {
-
-          div.innerHTML = translated_html;
-
-          return RSVP.all(gadget.state.sort_list
+      return gadget.getTranslationList([
+        'Submit',
+        'Sort Editor',
+        'Close',
+        'Add Criteria',
+        'Reset',
+        'ascending',
+        'descending'
+      ])
+        .push(function (translation_list) {
+          var sort_dom_list = gadget.state.sort_list
             .filter(isValidSortItem)
             .map(function (sort_item) {
-              return createSortItemTemplate(gadget, sort_item);
-            })
-            );
-        })
-        .push(function (result_list) {
-          var i,
-            subdiv,
-            filter_item_container = div.querySelector('.sort_item_container');
+              return createSortItemTemplate(
+                sort_item,
+                gadget.state.sort_column_list,
+                translation_list[5],
+                translation_list[6]
+              );
+            });
 
-          for (i = 0; i < result_list.length; i += 1) {
-            subdiv = document.createElement("div");
-            subdiv.innerHTML = result_list[i];
-            filter_item_container.appendChild(subdiv);
-          }
+          domsugar(gadget.element.querySelector(".container"), [
+            domsugar('div', [
+              domsugar('div', {'data-role': 'header', 'class': 'ui-header'}, [
+                domsugar('div', {class: 'ui-btn-right'}, [
+                  domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                    domsugar('button', {
+                      type: 'submit',
+                      class: 'ui-btn-icon-left ui-icon-check',
+                      text: translation_list[0]
+                    })
+                  ])
+                ]),
+                domsugar('h1', {text: translation_list[1]}),
+                domsugar('div', {class: 'ui-btn-left'}, [
+                  domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                    domsugar('button', {
+                      type: 'submit',
+                      class: 'close ui-btn-icon-left ui-icon-times',
+                      text: translation_list[2]
+                    })
+                  ])
+                ])
+              ]),
+              domsugar('section', [
+                domsugar('div', {class: 'sort_item_container'},
+                         sort_dom_list),
+                domsugar('button', {
+                  class: 'plus ui-icon-plus ui-btn-icon-left',
+                  text: translation_list[3]
+                }),
+                domsugar('button', {
+                  class: 'trash ui-icon-trash-o ui-btn-icon-left',
+                  text: translation_list[4]
+                })
 
-          while (container.firstChild) {
-            container.removeChild(container.firstChild);
-          }
-          container.appendChild(div);
+              ])
+            ])
+          ]);
+
         });
+
     })
 
     .declareMethod('render', function render(options) {
@@ -110,15 +140,11 @@
     })
 
     .onEvent('click', function click(evt) {
-      var gadget = this,
-        container;
+      var gadget = this;
 
       if (evt.target.classList.contains('trash')) {
         evt.preventDefault();
-        container = gadget.element.querySelector(".sort_item_container");
-        while (container.firstChild) {
-          container.removeChild(container.firstChild);
-        }
+        domsugar(gadget.element.querySelector(".sort_item_container"), []);
       }
 
       if (evt.target.classList.contains('close')) {
@@ -128,12 +154,21 @@
 
       if (evt.target.classList.contains('plus')) {
         evt.preventDefault();
-        return createSortItemTemplate(gadget)
-          .push(function (template) {
-            var tmp = document.createElement("div");
-            container = gadget.element.querySelector(".sort_item_container");
-            tmp.innerHTML = template;
-            container.appendChild(tmp);
+        return gadget.getTranslationList([
+          'ascending',
+          'descending'
+        ])
+          .push(function (translation_list) {
+            return gadget.element.querySelector(".sort_item_container")
+                                 .appendChild(
+                createSortItemTemplate(
+                  [],
+                  gadget.state.sort_column_list,
+                  translation_list[0],
+                  translation_list[1]
+                )
+              );
+
           });
       }
 
@@ -170,4 +205,4 @@
       }, true);
     });
 
-}(window, document, rJS, RSVP, Handlebars));
+}(window, rJS, domsugar));

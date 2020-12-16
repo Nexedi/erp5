@@ -1,12 +1,28 @@
+// Update web app manifest so that it can be installable
 {
-      "short_name": "Smart Assistant",
-      "name": "OfficeJS Smart Assistant",
-      "description": "Assist you with using an ERP",
-      "icons": [{
-        "src": "officejs_smart_assistant_icon.png",
-        "sizes": "any",
-        "type": "image/png"
-      }],
-      "start_url": "../../",
-      "display": "standalone"
+    "short_name": "Smart Assistant",
+    "name": "OfficeJS Smart Assistant",
+    "description": "Assist you with using an ERP",
+    "icons": [{
+      "src": "officejs_smart_assistant_icon.png",
+      "sizes": "any",
+      "type": "image/png"
+    }],
+    "start_url": "../",
+    "theme_color": "#333",
+    "background_color": "#333",
+    "display": "standalone",
+    "scope": "../",
+    // web share target API
+    "share_target": {
+        "action": "./postData",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "files": [{
+              "name": "file",
+              "accept": ["*/*"]
+            }]
+        }
+    }
 }

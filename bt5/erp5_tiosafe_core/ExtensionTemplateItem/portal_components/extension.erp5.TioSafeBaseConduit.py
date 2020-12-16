@@ -28,11 +28,11 @@
 #
 ##############################################################################
 
-from Products.ERP5SyncML.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST, \
+from erp5.component.module.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST, \
     XUPDATE_DEL, XUPDATE_UPDATE
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from zLOG import LOG, INFO
-from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+from erp5.component.module.ERP5Conduit import ERP5Conduit
 from lxml import etree
 from copy import deepcopy
 parser = etree.XMLParser(remove_blank_text=True)

@@ -43,10 +43,10 @@ class TrashTool(BaseTool):
   """
     TrashTool contains objects removed/replaced during installation of business templates.
   """
-  title = 'Trash Tool'
   id = 'portal_trash'
   meta_type = 'ERP5 Trash Tool'
   portal_type = 'Trash Tool'
+  title = 'Trash Bins'
   allowed_types = ('ERP5 Trash Bin',)
 
   # Declarative Security
@@ -56,9 +56,10 @@ class TrashTool(BaseTool):
   manage_overview = DTMLFile( 'explainTrashTool', _dtmldir )
 
   security.declarePrivate('backupObject')
-  def backupObject(self, trashbin, container_path, object_id, save, **kw):
+  def backupObject(self, trashbin, container_path, object_id, save, keep_subobjects=False):
     """
       Backup an object in a trash bin
+
     """
 #     LOG('Trash : backup object', 0, str((container_path, object_id)))
     if save:
@@ -80,64 +81,60 @@ class TrashTool(BaseTool):
       # backup the object
       # here we choose export/import to copy because cut/paste
       # do too many things and check for what we want to do
-      obj = None
-      if object_id not in backup_object_container.objectIds():
-        # export object
-        object_path = container_path + [object_id]
-        obj = self.unrestrictedTraverse(object_path, None)
-        if obj is not None:
-          connection = obj._p_jar
-          o = obj
-          while connection is None:
-            o = o.aq_parent
-            connection=o._p_jar
-          if obj._p_oid is None:
-            LOG("Trash Tool backupObject", WARNING,
-                "Trying to backup uncommitted object %s" % object_path)
-            return {}
-          if isinstance(obj, Broken):
-            LOG("Trash Tool backupObject", WARNING,
-                "Can't backup broken object %s" % object_path)
-            klass = obj.__class__
-            if klass.__module__[:27] in ('Products.ERP5Type.Document.',
-                                         'erp5.portal_type'):
-              # meta_type is required so that a broken object
-              # can be removed properly from a BTreeFolder2
-              # (unfortunately, we can only guess it)
-              klass.meta_type = 'ERP5' + re.subn('(?=[A-Z])', ' ',
-                                                 klass.__name__)[0]
-            return {}
-          copy = connection.exportFile(obj._p_oid)
-          # import object in trash
-          connection = backup_object_container._p_jar
-          o = backup_object_container
-          while connection is None:
-            o = o.aq_parent
-            connection=o._p_jar
-          copy.seek(0)
-          try:
-            backup = connection.importFile(copy)
-            backup.isIndexable = ConstantGetter('isIndexable', value=False)
-            # the isIndexable setting above avoids the recursion of
-            # manage_afterAdd on
-            # Products.ERP5Type.CopySupport.CopySupport.manage_afterAdd()
-            # but not on event subscribers, so we need to suppress_events,
-            # otherwise subobjects will be reindexed
-            backup_object_container._setObject(object_id, backup,
-                                               suppress_events=True)
-          except (AttributeError, ImportError):
-            # XXX we can go here due to formulator because attribute
-            # field_added doesn't not exists on parent if it is a Trash
-            # Folder and not a Form, or a module for the old object is
-            # already removed, and we cannot backup the object
-            LOG("Trash Tool backupObject", WARNING,
-                "Can't backup object %s" % object_path)
-            return {}
+      object_path = container_path + [object_id]
+      obj = self.unrestrictedTraverse(object_path, None)
+      if obj is not None:
+        connection = obj._p_jar
+        o = obj
+        while connection is None:
+          o = o.aq_parent
+          connection=o._p_jar
+        if obj._p_oid is None:
+          LOG("Trash Tool backupObject", WARNING,
+              "Trying to backup uncommitted object %s" % object_path)
+          return {}
+        if isinstance(obj, Broken):
+          LOG("Trash Tool backupObject", WARNING,
+              "Can't backup broken object %s" % object_path)
+          klass = obj.__class__
+          if klass.__module__[:27] in ('Products.ERP5Type.Document.',
+                                        'erp5.portal_type'):
+            # meta_type is required so that a broken object
+            # can be removed properly from a BTreeFolder2
+            # (unfortunately, we can only guess it)
+            klass.meta_type = 'ERP5' + re.subn('(?=[A-Z])', ' ',
+                                                klass.__name__)[0]
+          return {}
+        copy = connection.exportFile(obj._p_oid)
+        # import object in trash
+        connection = backup_object_container._p_jar
+        o = backup_object_container
+        while connection is None:
+          o = o.aq_parent
+          connection=o._p_jar
+        copy.seek(0)
+        try:
+          backup = connection.importFile(copy)
+          backup.isIndexable = ConstantGetter('isIndexable', value=False)
+          # the isIndexable setting above avoids the recursion of
+          # manage_afterAdd on
+          # Products.ERP5Type.CopySupport.CopySupport.manage_afterAdd()
+          # but not on event subscribers, so we need to suppress_events,
+          # otherwise subobjects will be reindexed
+          backup_object_container._setObject(object_id, backup,
+                                              suppress_events=True)
+        except (AttributeError, ImportError):
+          # XXX we can go here due to formulator because attribute
+          # field_added doesn't not exists on parent if it is a Trash
+          # Folder and not a Form, or a module for the old object is
+          # already removed, and we cannot backup the object
+          LOG("Trash Tool backupObject", WARNING,
+              "Can't backup object %s" % object_path)
+          return {}
 
-    keep_sub = kw.get('keep_subobjects', 0)
     subobjects_dict = {}
 
-    if not keep_sub:
+    if not keep_subobjects:
       # export subobjects
       if save:
         obj = backup_object_container._getOb(object_id, None)

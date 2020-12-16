@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>from_url, to_url, subject, body, content_type, attachment_list=[], embedded_file_list=[], extra_header_dict=None</string> </value>
+            <value> <string>from_url, to_url, subject, body, content_type, attachment_list=(), embedded_file_list=(), extra_header_dict=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

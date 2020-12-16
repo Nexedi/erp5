@@ -2,6 +2,7 @@ Container Line | Container Cell
 Internal Order Line | Internal Order Cell
 Internal Packing List Line | Internal Packing List Cell
 Inventory Line | Inventory Cell
+Preference | Purchase Order
 Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
 Purchase Packing List Line | Purchase Packing List Cell

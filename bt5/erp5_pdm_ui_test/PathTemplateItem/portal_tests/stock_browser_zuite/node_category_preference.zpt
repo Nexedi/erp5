@@ -1,0 +1,31 @@
+<html>
+<head><title>Test stock browser with node category preference</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test stock browser with node category preference
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=stopped;
+                   set_node_category_preference python: True">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
+<!-- }}} -->
+
+<!-- Check destination -->
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
+                       select_node_category python:False;
+                       inventory_list_count python: 1;
+                       current_inventory python: 1.0;
+                       available_inventory python: 1.0;
+                       future_inventory python: 1.0;
+                       ">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
+<!-- vim: syntax=html foldmethod=marker -->

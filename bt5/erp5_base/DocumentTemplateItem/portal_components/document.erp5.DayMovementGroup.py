@@ -27,7 +27,7 @@
 ##############################################################################
 
 from erp5.component.document.MovementGroup import MovementGroup
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 from DateTime import DateTime
 
 class DayMovementGroup(MovementGroup):

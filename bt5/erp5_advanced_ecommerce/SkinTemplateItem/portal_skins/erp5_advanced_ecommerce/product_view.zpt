@@ -1,0 +1,164 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+                   Vincent Pelletier <vincent@nexedi.com>
+                   Christophe Dumez <christophe@nexedi.com>
+                   Jean-Paul Smets <jp@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</tal:block>
+<tal:block metal:define-macro="master">
+  <tal:block metal:use-macro="here/view_main/macros/master">
+    <tal:block metal:fill-slot="main"
+           tal:define="editable_mode python: True;
+                       dummy python: request.set('editable_mode', editable_mode);
+                       field_render nocall: here/field_render/macros/field_render">
+      <div id="product_detail">
+        <div class="detail_left">
+          <div class="image_box">
+            <tal:block tal:define="field nocall:form/my_default_image_absolute_url">
+              <tal:block metal:use-macro="field_render" />
+            </tal:block>
+            <div class="selection_box" tal:define="image_list here/Resource_getImageValueList">
+              <tal:block tal:repeat="resource_image image_list" tal:condition="python:len(image_list) > 1">
+                <div class="image_selection" tal:define="resource_image_url resource_image/absolute_url;
+                                                         resource_image_id resource_image/getId">
+                  <a href="" tal:attributes="href python:here.Resource_getVariationAndImageUrl(resource_image_id)">
+                    <img src="" tal:attributes="src string:${resource_image_url}?format=jpg&display=micro"/>
+                  </a>
+                </div>
+              </tal:block>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+        <div class="detail_right">
+          <div class="product_from">
+            <tal:block tal:define="field nocall:form/my_title">
+              <tal:block metal:use-macro="field_render" />
+            </tal:block>
+          </div>
+          <tal:block tal:define="has_supply_discount python: here.getDefaultSaleSupplyLineBasePrice() > here.Resource_getShopPrice()">
+            <tal:block tal:condition="has_supply_discount">
+              <span class="bnprice">
+                <tal:block tal:define="field nocall:form/my_price">
+                  <tal:block metal:use-macro="field_render" />
+                </tal:block>
+              </span>
+              <div class="clear"></div>
+              <span class="obprice">
+                <tal:block tal:define="field nocall:form/my_old_price">
+                  <tal:block metal:use-macro="field_render" />
+                </tal:block>
+              </span>
+            </tal:block>
+            <tal:block tal:condition="python: not has_supply_discount">
+              <span class="bprice">
+                <tal:block tal:define="field nocall:form/my_price">
+                  <tal:block metal:use-macro="field_render" />
+                </tal:block>
+              </span>
+            </tal:block>
+
+            </tal:block>
+          <div class="clear"></div>
+          <div class="choice_box">
+
+            <tal:block tal:define="field nocall:form/variation_box">
+              <tal:block metal:use-macro="field_render" />
+            </tal:block>
+
+            <div class="clear"></div>
+            <br/>
+            <tal:block tal:define="is_unavailable python: here.Resource_getInventoryStatus(request.get('variation', None)) == 'UNAVAILABLE'">
+              <tal:block tal:define="field nocall:form/your_buy_quantity"
+                         tal:condition="python: not is_unavailable">
+                <tal:block metal:use-macro="field_render" />
+              </tal:block>
+
+              <tal:block tal:define="field nocall:form/inventory_status">
+                <tal:block metal:use-macro="field_render" />
+              </tal:block>
+
+              <div class="clear"></div>
+              <div class="resource_button">
+               <tal:block tal:define="field nocall:form/submit"
+                          tal:condition="python: not is_unavailable">
+                 <tal:block metal:use-macro="field_render" />
+               </tal:block>
+               <tal:block tal:define="field nocall:form/checkout"
+                          tal:condition="python: not is_unavailable">
+                 <tal:block metal:use-macro="field_render" />
+               </tal:block>
+              </div>
+
+             </tal:block>
+            <div class="clear"></div>
+            <br/>
+
+          </div>
+          <div id="tabs">
+            <div class="tab_header">
+              <ul>
+                <li><a href="#tabs-1">Description</a></li>
+                <li><a href="#tabs-2">Delivery</a></li>
+                <li><a href="#tabs-3">Return</a></li>
+                <li><a href="#tabs-4" class="last">Payment</a></li>
+              </ul>
+              <div class="clear"></div>
+            </div>
+            <div class="tab_content" id="tabs-1">
+              <tal:block tal:define="field nocall:form/automated_description">
+                <tal:block metal:use-macro="field_render" />
+              </tal:block>
+            </div>
+            <tal:block tal:condition="python: here.getSiteDeliveryMessageTemplate()">
+              <div class="tab_content" id="tabs-2"
+                   tal:content="structure python:here.getDocumentValue(here.getSiteDeliveryMessageTemplate()).asStrippedHTML()">
+                Livraison
+              </div>
+            </tal:block>
+            <tal:block tal:condition="python: here.getSiteReturnMessageTemplate()">
+              <div class="tab_content" id="tabs-3"
+                   tal:content="structure python:here.getDocumentValue(here.getSiteReturnMessageTemplate()).asStrippedHTML()">
+                Retour
+              </div>
+            </tal:block>
+            <tal:block tal:condition="python: here.getSitePaymentMessageTemplate()">
+              <div class="tab_content" id="tabs-4"
+                   tal:content="structure python:here.getDocumentValue(here.getSitePaymentMessageTemplate()).asStrippedHTML()">
+                Paiement
+              </div>
+            </tal:block>
+          <script>
+          $(function() {
+            $("#tabs ul a").each(function() {
+              $(this).attr("href", location.href.toString()+$(this).attr("href"));
+            });
+           $("#tabs").tabs()
+          });
+          </script>
+
+          </div>
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+    </tal:block>
+  </tal:block>
+</tal:block>

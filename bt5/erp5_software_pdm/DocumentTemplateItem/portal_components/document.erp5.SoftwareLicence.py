@@ -29,8 +29,8 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Item import Item
-from Products.ERP5.Document.TextDocument import TextDocument
+from erp5.component.document.Item import Item
+from erp5.component.document.TextDocument import TextDocument
 
 class SoftwareLicence(TextDocument, Item):
     """

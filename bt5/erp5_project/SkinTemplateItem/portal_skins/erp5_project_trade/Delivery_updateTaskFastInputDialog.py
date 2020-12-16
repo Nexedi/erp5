@@ -35,7 +35,6 @@ project_search_dict = {}
 portal = context.getPortalObject()
 for line in line_list:
   line_dict = {}
-  line_id = "%s" % line.getUid()
   #line_dict['listbox_key'] = "%s" % line_id
   key = zfill(i,3)
   for property_name in ('title', 'quantity_unit_title', 'quantity',
@@ -83,7 +82,7 @@ if len(validation_errors):
 if create and len(validation_errors) == 0:
   for line in listbox:
     delivery_line = portal.restrictedTraverse(line['relative_url'])
-    task = portal.task_module.newContent(
+    portal.task_module.newContent(
               title=delivery_line.getTitle(),
               source_project=line['source_project_relative_url'],
               source=delivery_line.getSourceTrade(),

@@ -108,7 +108,6 @@ def erp5_package_transform(node):
     # Cannot call string_build() as this would be called again and again
     erp5_package_node = nodes.Module('erp5', None)
     erp5_package_node.package = True
-    erp5_package_node._absolute_import_activated = True
     return erp5_package_node
 MANAGER.register_transform(nodes.Module,
                            erp5_package_transform,
@@ -126,17 +125,17 @@ def _buildAstroidModuleFromComponentModuleName(modname):
             obj = getattr(component_tool,
                           component_id.replace('_version', '', 1))
         except AttributeError:
-            raise AstroidBuildingException
+            raise AstroidBuildingException()
         if obj.getValidationState() in ('modified', 'validated'):
             component_obj = obj
         else:
-            raise AstroidBuildingException
+            raise AstroidBuildingException()
 
     else:
         try:
             package, reference = component_id.split('.', 1)
         except ValueError:
-            raise AstroidBuildingException
+            raise AstroidBuildingException()
         for version in portal.getVersionPriorityNameList():
             try:
                 obj = getattr(component_tool,
@@ -145,11 +144,17 @@ def _buildAstroidModuleFromComponentModuleName(modname):
                 continue
 
             if obj.getValidationState() in ('modified', 'validated'):
-                component_obj = obj
-                break
+                version_modname = 'erp5.component.%s.%s_version.%s' % (package,
+                                                                       version,
+                                                                       reference)
+                module = MANAGER.astroid_cache.get(
+                    version_modname,
+                    _buildAstroidModuleFromComponentModuleName(version_modname))
+                MANAGER.astroid_cache[modname] = module
+                return module
 
     if component_obj is None:
-        raise AstroidBuildingException
+        raise AstroidBuildingException()
 
     # module_build() could also be used but this requires importing
     # the ZODB Component and also monkey-patch it to support PEP-302
@@ -161,7 +166,7 @@ def _buildAstroidModuleFromComponentModuleName(modname):
 
 def fail_hook_erp5_component(modname):
     if not modname.startswith('erp5.'):
-        raise AstroidBuildingException
+        raise AstroidBuildingException()
 
     if (modname in ('erp5.portal_type',
                     'erp5.component',
@@ -179,7 +184,6 @@ def fail_hook_erp5_component(modname):
     else:
         module = _buildAstroidModuleFromComponentModuleName(modname)
 
-    module._absolute_import_activated = True
     return module
 MANAGER.register_failed_import_hook(fail_hook_erp5_component)
 
@@ -206,23 +210,54 @@ def _getattr(self, name, *args, **kw):
         except AttributeError:
             raise e
 
-        # XXX: What about int, str or bool not having __module__?
+        # REQUEST object (or any object non acquisition-wrapped)
+        if (isinstance(attr, str) and
+            attr == '<Special Object Used to Force Acquisition>'):
+            raise e
+
         try:
             origin_module_name = attr.__module__
         except AttributeError:
-            raise e
-        if self.name == origin_module_name:
-            raise
+            from astroid import nodes
+            if isinstance(attr, dict):
+                ast = nodes.Dict(attr)
+            elif isinstance(attr, list):
+                ast = nodes.List(attr)
+            elif isinstance(attr, tuple):
+                ast = nodes.Tuple(attr)
+            elif isinstance(attr, set):
+                ast = nodes.Set(attr)
+            else:
+                try:
+                    ast = nodes.Const(attr)
+                except Exception:
+                    raise e
+        else:
+            if self.name == origin_module_name:
+                raise
 
-        # ast_from_class() actually works for any attribute of a Module
-        try:
-            ast = MANAGER.ast_from_class(attr)
-        except AstroidBuildingException:
-            raise e
+            # ast_from_class() actually works for any attribute of a Module
+            try:
+                ast = MANAGER.ast_from_class(attr)
+            except AstroidBuildingException:
+                raise e
 
         self.locals[name] = [ast]
         return [ast]
 Module.getattr = _getattr
+
+if sys.version_info < (2, 8):
+    from astroid.node_classes import From
+    def _absolute_import_activated(self):
+        if (self.name.startswith('checkPythonSourceCode') or
+            self.name.startswith('erp5')):
+            return True
+        for stmt in self.locals.get('absolute_import', ()):
+            if isinstance(stmt, From) and stmt.modname == '__future__':
+                return True
+        return False
+    from logilab.common.decorators import cachedproperty
+    Module._absolute_import_activated = cachedproperty(_absolute_import_activated)
 
 from astroid import register_module_extender
 def AccessControl_PermissionRole_transform():
@@ -252,6 +287,67 @@ _what_not_even_god_should_do = []
 ''')
 register_module_extender(MANAGER, 'AccessControl.PermissionRole',
                          AccessControl_PermissionRole_transform)
+
+## Package dynamically extending the namespace of their modules with C
+## extension symbols
+# astroid/brain/ added dynamically to sys.path by astroid __init__
+from py2gi import _gi_build_stub as build_stub
+def _register_module_extender_from_live_module(module_name, module):
+    def transform():
+        return AstroidBuilder(MANAGER).string_build(build_stub(module))
+    register_module_extender(MANAGER, module_name, transform)
+
+# No name 'OOBTree' in module 'BTrees.OOBTree' (no-name-in-module)
+#
+# When the corresponding C Extension (BTrees._Foo) is available, update
+# BTrees.Foo namespace from the C extension, otherwise use Python definitions
+# by dropping the `Py` suffix in BTrees.Foo symbols.
+import BTrees
+import inspect
+for module_name, module in inspect.getmembers(BTrees, inspect.ismodule):
+    if module_name[0] != '_':
+        continue
+    try:
+        extended_module = BTrees.__dict__[module_name[1:]]
+    except KeyError:
+        continue
+    else:
+        _register_module_extender_from_live_module(extended_module.__name__,
+                                                   module)
+
+# No name 'ElementMaker' in module 'lxml.builder' (no-name-in-module)
+#
+# imp.load_dynamic() on .so file
+import lxml
+import os
+for filename in os.listdir(os.path.dirname(lxml.__file__)):
+    if filename.endswith('.so'):
+        module_name = 'lxml.' + filename[:-3]
+        _register_module_extender_from_live_module(
+            module_name,
+            __import__(module_name, fromlist=[module_name], level=0))
+
+# Properly search for namespace packages: original astroid (as of 1.3.8) only
+# checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
+# Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
+# in Zope2) as Shared (rather than Shared.DC) is considered...
+from astroid import modutils
+modutils__module_file = modutils._module_file
+def _module_file(modpath, path=None):
+    if modutils.pkg_resources is not None:
+        i = len(modpath) - 1
+        while i > 0:
+            package = '.'.join(modpath[0:i])
+            if (package in modutils.pkg_resources._namespace_packages and
+                    package in sys.modules):
+                modpath = modpath[i:]
+                path = sys.modules[package].__path__
+                break
+
+            i -= 1
+
+    return modutils__module_file(modpath, path)
+modutils._module_file = _module_file
 
 if sys.modules['isort'] is None:
     del sys.modules['isort']

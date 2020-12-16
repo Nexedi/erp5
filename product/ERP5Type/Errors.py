@@ -18,15 +18,6 @@ class DeferredCatalogError(Exception):
         self.field_id = context.getRelativeUrl()
 
 
-class SSHConnectionError(Exception):
-  def __init__(self, message):
-    Exception.__init__(self, message)
-    self.message = message
-
-  def __str__(self):
-    return self.message
-
-
 class UnsupportedWorkflowMethod(WorkflowException):
 
   def __init__(self, instance, workflow_id, transition_id):
@@ -48,7 +39,6 @@ class SimulationError(Exception):pass
 
 
 allow_class(DeferredCatalogError)
-allow_class(SSHConnectionError)
 allow_class(ImmobilisationValidityError)
 allow_class(ImmobilisationCalculationError)
 allow_class(WorkflowException)

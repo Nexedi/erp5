@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Path import Path
+from erp5.component.document.Path import Path
 
 class Supply(Path, XMLObject):
   """A Supply defines precise pricing and shipping conditions between

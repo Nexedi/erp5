@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts74276931.87</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>browserconfig.xml</string> </value>
         </item>
@@ -21,10 +17,6 @@
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>113</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

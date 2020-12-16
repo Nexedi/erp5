@@ -40,16 +40,10 @@ target_business_templates = (
   'erp5_pdm',
   'erp5_trade',
 
-  'erp5_pdf_editor',
   'erp5_accounting',
   'erp5_invoicing',
 
   'erp5_apparel',
-
-##   'erp5_banking_core',
-##   'erp5_banking_cash',
-##   'erp5_banking_check',
-##   'erp5_banking_inventory',
 
   'erp5_budget',
   'erp5_public_accounting_budget',

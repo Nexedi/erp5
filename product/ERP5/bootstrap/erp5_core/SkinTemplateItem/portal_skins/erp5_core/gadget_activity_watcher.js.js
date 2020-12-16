@@ -1,19 +1,37 @@
-/*global window, rJS, RSVP, Handlebars, jIO, console */
+/*global window, rJS, RSVP, domsugar, jIO, console */
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (rJS, jIO, Handlebars, RSVP, window) {
+(function (rJS, jIO, domsugar, RSVP, window) {
   "use strict";
-  var gk = rJS(window),
-    data_source = gk.__template_element.getElementById('getData').innerHTML,
-    get_data_template = Handlebars.compile(data_source);
-  function putMessageType(data, messagetype, string) {
+
+  function putMessageType(data, messagetype, string, array) {
     var i;
     if (data[string] && data[string].line_list) {
       for (i = 0; i < data[string].line_list.length; i += 1) {
-        data[string].line_list[i].messagetype = messagetype;
+        array.push(domsugar('tr', [
+          domsugar('td', {text: messagetype}),
+          domsugar('td', {text: data[string].line_list[i].count}),
+          domsugar('td', {text: data[string].line_list[i].method_id}),
+          domsugar('td', {text: data[string].line_list[i].node}),
+          domsugar('td', {text: data[string].line_list[i].min_pri}),
+          domsugar('td', {text: data[string].line_list[i].max_pri})
+        ]));
       }
-      return data[string].line_list;
     }
-    return '';
+  }
+
+  function putMessageType2(data, messagetype, string, array) {
+    var i;
+    if (data[string] && data[string].line_list) {
+      for (i = 0; i < data[string].line_list.length; i += 1) {
+        array.push(domsugar('tr', [
+          domsugar('td', {text: messagetype}),
+          domsugar('td', {text: data[string].line_list[i].pri}),
+          domsugar('td', {text: data[string].line_list[i].min}),
+          domsugar('td', {text: data[string].line_list[i].avg}),
+          domsugar('td', {text: data[string].line_list[i].max})
+        ]));
+      }
+    }
   }
 
   rJS(window)
@@ -42,15 +60,40 @@
           );
         })
         .push(function (evt) {
-          var data = JSON.parse(evt.target.response);
-          form_gadget.element.querySelector(".activity_watcher_gadget")
-                             .innerHTML = get_data_template({
-              time: new Date().toTimeString(),
-              messageList1: putMessageType(data, 'dict', 'SQLDict'),
-              messageList2: putMessageType(data, 'queue', 'SQLQueue'),
-              messagePri1: putMessageType(data, 'dict', 'SQLDict2'),
-              messagePri2: putMessageType(data, 'queue', 'SQLQueue2')
-            });
+          var data = JSON.parse(evt.target.response),
+            tbody1_content_list = [],
+            tbody2_content_list = [];
+          putMessageType(data, 'dict', 'SQLDict', tbody1_content_list);
+          putMessageType(data, 'queue', 'SQLQueue', tbody1_content_list);
+          putMessageType2(data, 'dict', 'SQLDict2', tbody2_content_list);
+          putMessageType2(data, 'queue', 'SQLQueue2', tbody2_content_list);
+          domsugar(form_gadget.element.querySelector(".activity_watcher_gadget"), [
+            'Date : ',
+            new Date().toTimeString(),
+
+            domsugar('table', [
+              domsugar('thead', [domsugar('tr', [
+                domsugar('th', {text: 'Type'}),
+                domsugar('th', {text: 'Count'}),
+                domsugar('th', {text: 'Method Id'}),
+                domsugar('th', {text: 'Processing Node'}),
+                domsugar('th', {text: 'Min pri'}),
+                domsugar('th', {text: 'Max pri'})
+              ])]),
+              domsugar('tbody', tbody1_content_list)
+            ]),
+
+            domsugar('table', [
+              domsugar('thead', [domsugar('tr', [
+                domsugar('th', {text: 'Type'}),
+                domsugar('th', {text: 'Priority'}),
+                domsugar('th', {text: 'Min'}),
+                domsugar('th', {text: 'Avg'}),
+                domsugar('th', {text: 'Max'})
+              ])]),
+              domsugar('tbody', tbody2_content_list)
+            ])
+          ]);
 
         }, function (error) {
           //Exception is raised if network is lost for some reasons,
@@ -61,4 +104,4 @@
         });
 
     }, 1000);
-}(rJS, jIO, Handlebars, RSVP, window));
+}(rJS, jIO, domsugar, RSVP, window));

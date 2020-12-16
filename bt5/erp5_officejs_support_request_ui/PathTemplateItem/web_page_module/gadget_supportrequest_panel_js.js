@@ -27,8 +27,10 @@
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
@@ -189,10 +191,14 @@
                   href: result_list[i + workflow_list.length]
                 });
               }
-              gadget.element.querySelector("dl").innerHTML = panel_template_body_desktop({
-                workflow_list: result_workflow_list,
-                view_list: result_view_list
-              });
+              return gadget.translateHtml(
+                panel_template_body_desktop({
+                  workflow_list: result_workflow_list,
+                  view_list: result_view_list
+                })
+              ).push(function (my_translated_or_plain_html) {
+                gadget.element.querySelector("dl").innerHTML = my_translated_or_plain_html;
+              })
             });
         }
       }
@@ -260,7 +266,12 @@
         });
 
     }, false, true)
-
+    .onEvent('click', function (evt) {
+      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
+          (evt.target.tagName === 'BUTTON')) {
+        return this.toggle();
+      }
+    }, false, false)
     .onEvent('blur', function (evt) {
       // XXX Horrible hack to clear the search when focus is lost
       // This does not follow renderJS design, as a gadget should not touch

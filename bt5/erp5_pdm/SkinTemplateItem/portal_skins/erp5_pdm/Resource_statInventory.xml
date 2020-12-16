@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>node_category=None, section_category=None, quantity_unit=None, metric_type=None, selection_domain=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -1,30 +1,29 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, domsugar */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, domsugar) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-      template_element = gadget_klass.__template_element,
-      result_list_template = Handlebars.compile(
-        template_element
-        .getElementById("result-list-template")
-        .innerHTML
-      );
-
-  gadget_klass
+  rJS(window)
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
-    .declareMethod('render', function (options) {
-      var gadget = this,
-          result_inner_html = "";
+    .declareMethod('render', function () {
+      var gadget = this;
 
-      return gadget.getUrlFor({command: 'display_erp5_action', options: {jio_key: "foo_module", page: "empty_mass_action"}})
+      return gadget.getUrlFor({
+        command: 'display_erp5_action',
+        options: {jio_key: "foo_module", page: "empty_mass_action"}
+      })
         .push(function (link) {
-          gadget.element.querySelector(".result-block").innerHTML = result_list_template({
-            "i": 0,
-            "link": link
-          });
+          domsugar(
+            gadget.element.querySelector(".result-block"),
+            [
+              domsugar('p', {class: 'result-0'}, [
+                "Test 0",
+                domsugar('a', {href: link, text: "Link 0"})
+              ])
+            ]
+          );
         });
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, domsugar));

@@ -36,9 +36,10 @@ if context.getParentValue().getPortalType() in (
 
 #backwards compatibility
 mapped_value_property_list = context.getMappedValuePropertyList()
-if not 'priced_quantity' in mapped_value_property_list:
-  mapped_value_property_list.append('priced_quantity')
-  context.setMappedValuePropertyList(mapped_value_property_list)
+for mapped_property in ('priced_quantity', 'quantity_unit'):
+  if not mapped_property in mapped_value_property_list:
+    mapped_value_property_list.append(mapped_property)
+    context.setMappedValuePropertyList(mapped_value_property_list)
 
 return context.generatePredicate(membership_criterion_base_category_list = base_category_tuple,
                                                  criterion_property_list = ('start_date',))

@@ -509,10 +509,12 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
 
       if portal_type == 'Interface Component':
-        # Interface inherits from InterfaceClass:
+        # __init__ method from base class %r is not called
+        args.append('--disable=W0231')
+        ## Interface inherits from InterfaceClass:
         # Inheriting 'Interface', which is not a class. (inherit-non-class)
         args.append('--disable=E0239')
-        # Interfaces methods may have no arguments:
+        ## Interfaces methods may have no arguments:
         # Method has no argument (no-method-argument)
         args.append('--disable=E0211')
         # Method should have "self" as first argument (no-self-argument)
@@ -719,15 +721,15 @@ def registerBaseCategories(property_sheet):
     base_category_dict[bc] = 1
 
 def importLocalInterface(module_id, path = None, is_erp5_type=False):
-  def provides(class_id):
-    # Create interface getter
-    accessor_name = 'provides' + class_id
-    setattr(BaseClass, accessor_name, lambda self: self.provides(class_id))
-    BaseClass.security.declarePublic(accessor_name)
+  """
+  Import filesystem Interface and add it to Products.ERP5Type.interfaces,
+  only meaningful for filesystem Interface as they can all be loaded at
+  ERP5 startup.
+
+  Corresponding providesI<class_id> accessor is added to BaseAccessorHolder.
+  """
   class_id = "I" + convertToUpperCase(module_id)
-  if is_erp5_type:
-    provides(class_id)
-  else:
+  if not is_erp5_type:
     if path is None:
       instance_home = getConfiguration().instancehome
       path = os.path.join(instance_home, "interfaces")
@@ -740,7 +742,6 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
     for k, v in module.__dict__.iteritems():
       if type(v) is InterfaceClass and v is not Interface:
         setattr(interfaces, k, v)
-        provides(class_id)
 
 def importLocalConstraint(class_id, path = None):
   import Products.ERP5Type.Constraint
@@ -991,6 +992,11 @@ def importLocalDocument(class_id, path=None, class_path=None):
     assert path is None
     module_path = class_path.rsplit('.', 1)[0]
     module = __import__(module_path, {}, {}, (module_path,))
+    try:
+      klass = getattr(module, class_id)
+    except AttributeError:
+      assert hasattr(module, 'kept_for_backward_compatibility_only')
+      return
   else:
     # local document in INSTANCE_HOME/Document/
     # (created by ClassTool?)
@@ -1019,12 +1025,12 @@ def importLocalDocument(class_id, path=None, class_path=None):
   setattr(Products.ERP5Type.Document, class_id, module)
 
   ### newTempFoo
-  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-  klass = getattr(module, class_id)
-  temp_type = ERP5TypeInformation(klass.portal_type)
-  temp_document_constructor = temp_type.constructTempInstance
-
   temp_document_constructor_name = "newTemp%s" % class_id
+  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+  temp_document_constructor = deprecated(
+    ('newTemp*(self, ID) will be removed, use self.newContent('
+     'temp_object=True, id=ID, portal_type=...)'))(
+      ERP5TypeInformation(klass.portal_type).constructTempInstance)
   setattr(Products.ERP5Type.Document,
           temp_document_constructor_name,
           temp_document_constructor)
@@ -1648,7 +1654,7 @@ def legacyNormalizeUrl(url, base_url=None):
   """this method does normalisation itself.
   The result is less reliable but better than nothing
   """
-  from Products.ERP5.mixin.url import no_host_protocol_list
+  from erp5.component.mixin.UrlMixin import no_host_protocol_list
   # remove anchors
   # http://www.example.com/page.html#ll -> http://www.example.com/page.html
   url = re_cleanup_anchors.sub('', url)

@@ -28,11 +28,20 @@
 ##############################################################################
 import unittest
 
+from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
 class TestRenderJSAccountingReport(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "renderjs_ui_accounting_report_zuite"
+
+  def afterSetUp(self):
+    # change ownership of the preference
+    self.portal.portal_preferences.accounting_zuite_preference.changeOwnership(
+      getSecurityManager().getUser(),
+      True,
+    )
+    super(TestRenderJSAccountingReport, self).afterSetUp()
 
   def getBusinessTemplateList(self):
     return (

@@ -1,0 +1,5 @@
+Contains sample of rules and builders to be used in simulation tests.
+
+These rules are configured to detect all divergences (but solvers are not really configured)
+
+Rules will not work as it is because it lacks of categories.

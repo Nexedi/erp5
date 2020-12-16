@@ -6,7 +6,7 @@ style = request.get('your_portal_skin',
 
 item_list = [('', '')]
 
-from Products.ERP5.Document.Document import ConversionError
+from erp5.component.document.Document import ConversionError
 
 try:
   if style == 'ODS':

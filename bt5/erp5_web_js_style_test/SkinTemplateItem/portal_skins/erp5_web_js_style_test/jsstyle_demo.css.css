@@ -1,0 +1,8 @@
+body, a {
+  background-color: black;
+  color: white;
+}
+body {max-width: 40em;}
+label {display: block;}
+input:not([type=submit]):not([type=file]) {width: 100%;}
+textarea {height: 15em;width: 100%;}

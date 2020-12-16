@@ -27,11 +27,11 @@ if context.getSubordination():
     function_value = subordination_value.getFunctionValue()
     if function_value is not None:
       result.extend(getattr(function_value, category_child_item_list_method_id)(
-                    filter_node=1, local_sort_id=local_sort_id_list))
+                    local_sort_id=local_sort_id_list, disable_node=True))
 
 result.extend(getattr(
          portal.portal_categories.function,
          category_child_item_list_method_id)(
-              filter_node=1, local_sort_id=local_sort_id_list))
+              local_sort_id=local_sort_id_list, disable_node=True))
 
 return result

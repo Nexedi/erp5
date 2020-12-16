@@ -22,6 +22,7 @@ Currency | validation_workflow
 Delivery Type | base_type_interaction_workflow
 Delivery Type | dynamic_class_generation_interaction_workflow
 ERP5 Login | edit_workflow
+ERP5 Login | login_interaction_workflow
 ERP5 Login | login_validation_workflow
 Email | coordinate_interaction_workflow
 Email | edit_workflow

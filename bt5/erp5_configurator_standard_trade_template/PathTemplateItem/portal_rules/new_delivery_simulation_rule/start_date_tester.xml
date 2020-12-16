@@ -39,7 +39,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>solver/portal_solvers/Unify Solver</string>
+                <string>solver/portal_solvers/Automatic Accept Solver</string>
               </tuple>
             </value>
         </item>
@@ -63,11 +63,7 @@
         </item>
         <item>
             <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>start_date</string>
-              </tuple>
-            </value>
+            <value> <string>start_date</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

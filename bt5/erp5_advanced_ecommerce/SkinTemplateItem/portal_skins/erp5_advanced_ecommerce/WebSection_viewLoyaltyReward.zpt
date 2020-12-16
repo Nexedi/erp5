@@ -1,0 +1,16 @@
+<tal:block tal:define="enable_reward_discount python: request.get('loyalty_reward', '') == 'enable';">
+  <div class="promotional_information" tal:condition="python: here.ERP5Site_getAuthenticatedMemberPersonValue() and here.getSiteLoyaltyExplanationTemplate()">
+   <tal:block tal:condition="python: here.ERP5Site_getAuthenticatedMemberPersonValue().Person_getTotalLoyaltyPoint() >= 0">
+     <span i18n:translate="" i18n:domain="ui">You should overwrite this page template.</span>
+     <br />
+      <a tal:condition="python: enable_reward_discount"
+        href="WebSection_disableLoyaltyReward" i18n:translate="" i18n:domain="ui">
+        (Click to Disable Discount for now.)
+      </a>
+      <a tal:condition="python: not enable_reward_discount"
+        href="WebSection_enableLoyaltyReward" i18n:translate="" i18n:domain="ui">
+        (Click to Enable Your Discount)
+      </a>
+    </tal:block>
+  </div>
+</tal:block>

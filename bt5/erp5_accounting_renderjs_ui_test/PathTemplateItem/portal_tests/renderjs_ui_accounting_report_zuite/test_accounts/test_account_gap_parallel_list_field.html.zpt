@@ -1,0 +1,103 @@
+<html>
+<head><title>Test for Account GAP Parallel listfield</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Account GAP Parallel listfield.
+</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/account_module</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_your_select_action']</td>
+  <td>label=Account</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Object created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Dummy Account for UI Test</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_my_account_type</td>
+  <td>label=Asset</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>GAP - Another Standards</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>label=1 - Equity Accounts</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>my_country/my_accounting_standards/1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td>label=1 - Dummy Account</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>my_country/my_accounting_standards/1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td>another_country/another_standards/1</td>
+</tr>
+
+<!-- check also non editable mode -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_my_country/my_accounting_standards</td>
+  <td>my_country/my_accounting_standards/1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>subfield_field_my_gap_list_another_country/another_standards</td>
+  <td>another_country/another_standards/1</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

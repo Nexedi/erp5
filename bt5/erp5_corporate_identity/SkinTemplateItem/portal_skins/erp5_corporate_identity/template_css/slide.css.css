@@ -18,7 +18,7 @@
   font-size: .7em;
 }
 .ci-slideshow section table {
-  font-size: smaller;
+  font-size: .7em;
 }
 html .ci-slideshow pre,
 html .ci-slideshow code {
@@ -146,7 +146,7 @@ html .ci-slideshow .ci-slideshow-header h2 {
 }
 html .ci-slideshow h1 {
   margin-top: -.5em;
-  text-transform: capitalize;
+  /*text-transform: capitalize; we have a list of closed-class words which should be written in lowercase */
   text-align: center;
 }
 

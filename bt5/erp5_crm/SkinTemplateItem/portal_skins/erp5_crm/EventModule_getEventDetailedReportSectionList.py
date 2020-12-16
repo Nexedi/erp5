@@ -1,7 +1,5 @@
 from Products.ERP5Form.Report import ReportSection
-result=[]
-request = context.REQUEST
-
+result = []
 selection_columns = [('ticket_title', 'Title')]
 selection_columns.append(('ticket_type', 'Module'))
 selection_columns.append(('resource','Type'))

@@ -11,7 +11,6 @@ for property_id in tester.getTestedPropertyList():
     value = movement.getProperty(property_id)
     if value not in value_list:
       value_list.append(value)
-    simulation_movement_list = movement.getDeliveryRelatedValueList()
     value = simulation_movement.getProperty(property_id)
     if value not in value_list:
       value_list.append(value)

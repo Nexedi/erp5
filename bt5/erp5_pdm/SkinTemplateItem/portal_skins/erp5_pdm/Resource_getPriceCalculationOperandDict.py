@@ -1,5 +1,4 @@
-from math import log
-
+# coding: utf-8
 result = context.getPriceParameterDict(context=movement, **kw)
 
 # Calculate
@@ -78,7 +77,22 @@ unit_base_price *= 1 + result["surcharge_ratio"]
 
 # Divide by the priced quantity
 priced_quantity = result['priced_quantity']
-if priced_quantity:
+# If this priced quantity is in a different quantity unit from the
+# resource's default quantity unit, we have to convert this quantity
+# to the resource quantity unit.
+# For example, if we have a resource managed in Kilogram and we have
+# a supply line saying that the price for 250 Grams is 100€, we adjust this
+# priced quantity to be 0.25 (Kilogram)
+supply_line_quantity_unit = next(iter(result.get('quantity_unit', ())), None)
+resource_default_quantity_unit = context.getDefaultQuantityUnit()
+if resource_default_quantity_unit != supply_line_quantity_unit:
+  priced_quantity = context.convertQuantity(
+      priced_quantity or 1,
+      supply_line_quantity_unit,
+      resource_default_quantity_unit,
+      movement.getVariationCategoryList()
+  )
+if priced_quantity and priced_quantity != 1:
   unit_base_price /= priced_quantity
 
 result["price"] = unit_base_price

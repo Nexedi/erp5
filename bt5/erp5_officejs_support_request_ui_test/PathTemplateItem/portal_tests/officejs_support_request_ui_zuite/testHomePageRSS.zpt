@@ -21,18 +21,44 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n="[value]Generate RSS"]</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@data-i18n="[value]Generate RSS"]</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value="RSS Link"]</td>
+  <td>//a[contains(text(), "Actions")]</td>
   <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(text(), "Actions")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "Generate RSS")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(text(), "Generate RSS")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[contains(text(), "Copy to Clipboard")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="text_field"]/input</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss</td>
 </tr>
 <!--
 Firefox RSS compatibility issue:
@@ -52,7 +78,7 @@ didn't start with "https://", Selenium test will automatically add
 resources. So we can't use the "view_source" in selenium tests to see plain RSS.
 
 In order to avoid Firefox open RSS in its own way. We need to set the content type
-as palin "text/plain" instead the "application/rss+xml". So we introduced 
+as palin "text/plain" instead the "application/rss+xml". So we introduced
 "Zuite_callMethodAsPlainText" to change the "content-type" and call
 "SupportRequestModule_viewLastSupportRequestListAsRss" again. Then the Firefox
 will open the RSS as plain text.

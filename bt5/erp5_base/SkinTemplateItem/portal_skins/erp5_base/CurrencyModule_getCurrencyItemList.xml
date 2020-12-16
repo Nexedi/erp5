@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_empty=1, validation_state=(\'validated\', \'draft\')</string> </value>
+            <value> <string>include_empty=1, validation_state=(\'validated\', \'published\')</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

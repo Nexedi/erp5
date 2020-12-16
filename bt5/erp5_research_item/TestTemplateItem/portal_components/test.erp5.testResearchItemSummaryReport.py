@@ -26,7 +26,7 @@
 ##############################################################################
 
 from DateTime import DateTime
-from Products.ERP5.tests.testTaskReporting import TestTaskReportingMixin
+from erp5.component.test.testTaskReporting import TestTaskReportingMixin
 
 class TestResearchItemSummaryReport(TestTaskReportingMixin):
   """

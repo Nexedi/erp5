@@ -63,8 +63,8 @@ def changeObjectClass(self, object_id, new_class):
 def updateBalanceTransactionClass(self):
   """Update Balance Transactions new indexing that occured around r16371
   """
-  from Products.ERP5Type.Document.BalanceTransaction import BalanceTransaction
-  from Products.ERP5Type.Document.BalanceTransactionLine\
+  from erp5.component.document.BalanceTransaction import BalanceTransaction
+  from erp5.component.document.BalanceTransactionLine\
                   import BalanceTransactionLine
 
   def reverseSourceAndDestination(self):

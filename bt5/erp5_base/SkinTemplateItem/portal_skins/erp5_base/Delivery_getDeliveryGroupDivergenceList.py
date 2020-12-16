@@ -10,14 +10,14 @@ for divergence in divergence_list:
   prop = divergence.getProperty('tested_property')
   if prop in (None, '') or divergence.getCollectOrderGroup() != 'delivery':
     continue
-  message, candidate_list, value_list, decision_title_list, prevision_title_list = candidate_dict.get(prop, ['', [], [], [], []])
+  _, candidate_list, value_list, decision_title_list, prevision_title_list = candidate_dict.get(prop, ['', [], [], [], []])
   decision_value = divergence.getProperty('decision_value')
   decision_title = divergence.getProperty('decision_title', decision_value)
   prevision_value = divergence.getProperty('prevision_value')
   prevision_title = divergence.getProperty('prevision_title', prevision_value)
   object_relative_url = divergence.getProperty('object_relative_url')
   simulation_movement_url = divergence.getProperty('simulation_movement').getRelativeUrl()
-  object = portal_object.restrictedTraverse(object_relative_url)
+  document = portal_object.restrictedTraverse(object_relative_url)
   if decision_value not in value_list:
     candidate_list.append((decision_title, object_relative_url))
     value_list.append(decision_value)
@@ -32,11 +32,11 @@ for divergence in divergence_list:
 
 for prop, candidate_list in candidate_dict.items():
   uid = 'new_%s' % prop
-  object = context
+  document = context
 
   o = newTempBase(context.getParentValue(), context.getId(), uid, uid=uid,
                   message=candidate_list[0],
-                  object_title=object.getTranslatedTitle(),
+                  object_title=document.getTranslatedTitle(),
                   decision_title=', '.join([str(x) for x in candidate_list[3]]),
                   prevision_title=', '.join([str(x) for x in candidate_list[4]]),
                   candidate_list=[(context.Base_translateString('Do nothing'), 'ignore')]+candidate_list[1])

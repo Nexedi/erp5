@@ -10,7 +10,7 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
                      stdout=PIPE,
                      stderr=PIPE,
                      close_fds=True)
-    output, error = process.communicate(input=data)
+    output, _ = process.communicate(input=data)
   elif barcode_type == 'ean13':
     from hubarcode.ean13 import EAN13Encoder 
     encoder = EAN13Encoder(data)

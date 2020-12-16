@@ -20,7 +20,7 @@ if person_value.getDefaultEmailText('') in ('', None):
 
 tag = 'active-report-%s' % random.randint(0, 1000)
 priority = 2
-format = request.get('format', '')
+format_ = request.get('format', '')
 skin_name = request['deferred_portal_skin']
 
 # save request parameters (after calling the report_method which may tweak the
@@ -29,14 +29,19 @@ request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 localizer_language = portal.Localizer.get_selected_language()
 
-context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
-  priority=priority).Base_computeReportSection(
+context.activate(
+    activity="SQLQueue",
+    node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
+    tag=tag,
+    after_tag=after_tag,
+    priority=priority,
+).Base_computeReportSection(
     form=form.getId(), 
     request_other=request_other, 
     user_name=user.getId(),
     tag=tag,
     skin_name=skin_name, 
-    format=format,
+    format=format_,
     priority=priority,
     localizer_language=localizer_language,
     **kw)

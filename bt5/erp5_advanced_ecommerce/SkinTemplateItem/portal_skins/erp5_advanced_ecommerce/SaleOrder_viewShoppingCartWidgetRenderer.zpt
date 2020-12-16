@@ -1,0 +1,82 @@
+<!--  We must change the way we get the currency on sale order -->
+<table>
+  <tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;
+                         shopping_cart_item_list here/SaleOrder_getShoppingCartItemList;
+                         web_site here/getWebSiteValue;
+                         empty_cart here/SaleOrder_isShoppingCartEmpty;
+                         discount shopping_cart/SaleOrder_getTotalDiscount;
+                         currency web_site/WebSite_getShoppingCartDefaultCurrency;
+                         currency_symbol python: context.getPortalObject().restrictedTraverse(shopping_cart.getPriceCurrency()).getShortTitle();
+                         total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True, discount=True);">
+
+  <tr tal:repeat="order_line shopping_cart_item_list">
+    <td tal:define="resource python: web_site.restrictedTraverse(order_line.getResource());
+                    quantity python: int(order_line.getQuantity());
+                    price order_line/getPrice;
+                    variation_dict python: order_line.DeliveryLine_getVarationDict();
+                    variation python: variation_dict.pop('variation', None);
+                    variation_title python: variation_dict.pop('variation_title', None);
+                    option_title python: getattr(order_line, 'get%sTitle' % resource.getVariationBaseCategory().title())() if resource.getVariationBaseCategory() else ''"
+                    class="cart_top">
+
+          <div class="cart_left cart_item_name">
+            <span><span tal:replace="quantity"/> x </span>
+            <a tal:condition="python: variation" class="articlelink" href="" tal:attributes="href python: '%s/%s?variation=%s' % (resource.absolute_url(), 'Resource_viewAsShop', variation);">
+              <span tal:content="resource/getTitle"/>
+            </a>
+            <a tal:condition="python: not variation" class="articlelink" href="" tal:attributes="href python: '%s/%s' % (resource.absolute_url(), 'Resource_viewAsShop');">
+              <span tal:content="resource/getTitle"/>
+            </a>
+            <br tal:condition="variation_title | option_title"/>
+            <span tal:content="variation_title" tal:condition="variation_title"/>
+            <span tal:content="option_title" tal:condition="option_title"/>
+          </div>
+          <div class="cart_right">
+            <span>
+              <span tal:replace="python: (price or 0)*(quantity or 0)"/> <span tal:replace="currency_symbol"/>
+            </span>
+          </div>
+    </td>
+  </tr>
+
+  <tal:block tal:condition = "empty_cart">
+      <tr><td>
+        <p class="article">
+          <span tal:replace="python: here.Base_translateString('Your shopping cart is empty.')"/>
+        </p>
+      </td></tr>
+   </tal:block>
+
+  <tal:block tal:condition = "python: not empty_cart and discount < 0">
+    <tr><td class="cart_middle">
+        <div class="cart_left">
+          <span tal:replace="python: here.Base_translateString('Discount')"/>
+        </div>
+        <div class="cart_right">
+          <span tal:replace="discount"/> <span tal:replace="currency_symbol"/>
+        </div>
+    </td></tr>
+  </tal:block>
+
+  <tal:block tal:condition = "not: empty_cart">
+    <tr><td class="cart_middle">
+        <div class="cart_left">
+          <span tal:replace="python: here.Base_translateString('Total')"/>
+        </div>
+        <div class="cart_right">
+          <span tal:replace="total_price"/>
+        </div>
+    </td></tr>
+    <tr>
+        <td class="cart_bottom">
+           <div class="cart_left">
+             <a class="articlelink"
+                tal:attributes="href python: '%s/%s' % (web_site.absolute_url(), web_site.getLayoutProperty('ecommerce_cart_section_id', ''))">
+                <span tal:replace="python: here.Base_translateString('Edit / Checkout')"/>
+             </a>
+           </div>
+        </td>
+    </tr>
+  </tal:block>
+  </tal:block>
+</table>

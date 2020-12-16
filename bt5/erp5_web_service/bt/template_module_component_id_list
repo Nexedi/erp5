@@ -1,0 +1,5 @@
+module.erp5.SFTPConnection
+module.erp5.SOAPConnection
+module.erp5.SOAPWSDLConnection
+module.erp5.SQLConnection
+module.erp5.XMLRPCConnection

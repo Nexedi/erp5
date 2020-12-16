@@ -10,7 +10,7 @@
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
-        <h1><span i18n:domain="ui" i18n:translate="">Recover your account</span></h1>
+        <h1><span i18n:domain="ui" i18n:translate="">Recover your Account</span></h1>
       </div>
     </div>
 
@@ -27,21 +27,29 @@
         <article>
 
           <section>
-            <form method="post" tal:attributes="action python: context.absolute_url()">
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="">Login</label>
-                <div><input autofocus type="text" name="user_login" value="" required=""></div>
-              </div>
-              <br/>
-              <div class="ui-field-contain">
-                <label></label>
-                <div><input type="submit" value="Validate" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/></div>
-              </div>
+            <form method="post" tal:attributes="action python: context.absolute_url()" class="field_container">
+              <section class="ui-content-header-plain">
+                <h3 class="ui-content-title ui-body-c">
+                    <span class="ui-icon ui-icon-custom ui-icon-life-ring"></span>
+                    <tal:block  i18n:domain="ui" i18n:translate="">Recover your Account</tal:block>
+                </h3>
+              </section>
+              <div>
+                <div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="">Username</label>
+                    <div><input autofocus type="text" name="user_login" value="" required=""></div>
+                  </div>
+                  <div class="dialog_button_container">
+                    <input type="submit" value="Recover your Account" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
+                  </div>
 
-              <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
-              <input tal:condition="exists: request/came_from"
-                     type="hidden" name="came_from"
-                     tal:attributes="value request/came_from" />
+                  <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
+                  <input tal:condition="exists: request/came_from"
+                        type="hidden" name="came_from"
+                        tal:attributes="value request/came_from" />
+                </div>
+              </div>
             </form>
            </section>
         </article>

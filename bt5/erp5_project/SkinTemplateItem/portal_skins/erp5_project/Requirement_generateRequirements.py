@@ -95,7 +95,7 @@ for key in clean_requirements_key_list:
   sub_requirement_int_index = 0
   for second_level in clean_requirements[key]:
     sub_requirement_int_index += 10
-    new_2nd_requirement = new_1st_requirement.newContent( portal_type = requirement_type
+    new_1st_requirement.newContent( portal_type = requirement_type
                                                 , title       = second_level['title']
                                                 , description = second_level['description']
                                                 , int_index   = sub_requirement_int_index
