@@ -1240,8 +1240,7 @@ def renderFormDefinition(form, response_dict):
     response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
     response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
       form_relative_url,
-      form.action
-    )
+      form.action)
 
 
 def statusLevelToString(level):
@@ -1531,6 +1530,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           extra_param_json['form_id'] = current_action['view_id'] \
             if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
             else last_form_id
+
           erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
                 "root_url": site_root.absolute_url(),
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
@@ -1553,7 +1553,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "Edit Portal Type ${portal_type_name}",
             mapping={
               "portal_type_name": traversed_document.getTranslatedPortalType()
-            }),
+            })
         })
 
       if preferred_html_style_developer_mode and erp5_action_key == "object_jio_raw":
@@ -1563,8 +1563,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               'href': "%s/manage_properties" % workflow.absolute_url_path(),
               'name': "jump_to_%s" % workflow.id,
               'icon': None,
-              'title': workflow.title
-            })
+              'title': workflow.title})
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
