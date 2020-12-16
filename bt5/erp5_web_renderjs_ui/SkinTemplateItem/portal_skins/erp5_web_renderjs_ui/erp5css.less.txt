@@ -2122,7 +2122,13 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] {
 **********************************************/
 .edit-form, .edit-form-action, .edit-field, .translate-title, .translate-description {
   margin-left: @half-margin-size;
+  color: @black;
 }
+
+.translate-description {
+  border: @border;
+}
+
 /**********************************************
 * Icons
 **********************************************/
