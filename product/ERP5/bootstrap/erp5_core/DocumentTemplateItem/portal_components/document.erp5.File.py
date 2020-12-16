@@ -34,7 +34,7 @@ from erp5.component.document.Document import Document, VALID_TEXT_FORMAT_LIST
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
 from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
-from Products.CMFDefault.File import File as CMFFile
+from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
 
 def _unpackData(data):
@@ -46,7 +46,7 @@ def _unpackData(data):
 
 _MARKER = object()
 
-class File(Document, CMFFile):
+class File(Document, OFS_File):
   """
       A File can contain raw data which can be uploaded and downloaded.
       It is the root class of Image, OOoDocument (ERP5OOo product),
@@ -110,8 +110,14 @@ class File(Document, CMFFile):
         filename = kw.get('filename')
       if filename:
         self._setFilename(filename)
-      if self._isNotEmpty(file_object):
-        self._setFile(file_object, precondition=precondition)
+      if file_object is not None:
+        # XXX: Rather than doing nothing if empty, consider changing:
+        #      - _update_image_info to clear metadata
+        #      - interactions to do nothing (or else?)
+        file_object.seek(0, 2)
+        if file_object.tell():
+          file_object.seek(0)
+          self._setFile(file_object)
     Base._edit(self, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
@@ -138,11 +144,15 @@ class File(Document, CMFFile):
     return None
 
   def _setFile(self, data, precondition=None):
-    if data is not None and self.hasData() and \
-      str(data.read()) == str(self.getData()):
-      # Same data as previous, no need to change it's content
+    if data is None:
       return
-    CMFFile._edit(self, precondition=precondition, file=data)
+    if str(data.read()) == (self.hasData() and str(self.getData())):
+      # Same data as previous, no need to change its content
+      return
+
+    if data.tell():
+      data.seek(0)
+      self.manage_upload(data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
   def setFile(self, data, precondition=None):
@@ -176,11 +186,16 @@ class File(Document, CMFFile):
       return str(data)
 
   # DAV Support
-  PUT = CMFFile.PUT
+  security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+  def PUT(self, REQUEST, RESPONSE):
+    """from Products.CMFDefault.File"""
+    OFS_File.PUT(self, REQUEST, RESPONSE)
+    self.reindexObject()
+
   security.declareProtected(Permissions.FTPAccess, 'manage_FTPstat',
                                                    'manage_FTPlist')
-  manage_FTPlist = CMFFile.manage_FTPlist
-  manage_FTPstat = CMFFile.manage_FTPstat
+  manage_FTPlist = OFS_File.manage_FTPlist
+  manage_FTPstat = OFS_File.manage_FTPstat
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
   def getMimeTypeAndContent(self):
