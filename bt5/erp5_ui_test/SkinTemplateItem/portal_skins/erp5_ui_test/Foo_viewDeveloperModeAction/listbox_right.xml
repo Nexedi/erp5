@@ -508,6 +508,10 @@
                     <value> <string>slider</string> </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
+                </item>
+                <item>
                     <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -547,7 +551,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>foo_listbox_selection</string> </value>
+                    <value> <string>foo_listbox_right_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
