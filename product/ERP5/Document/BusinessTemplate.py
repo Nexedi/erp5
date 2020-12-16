@@ -91,6 +91,7 @@ from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
+import six
 if six.PY2:
   from urllib import quote, unquote
 else:
