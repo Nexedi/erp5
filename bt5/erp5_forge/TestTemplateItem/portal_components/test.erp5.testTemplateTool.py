@@ -34,6 +34,7 @@ import random
 import tempfile
 from xml.dom.minidom import getDOMImplementation
 from App.config import getConfiguration
+from Products.CMFCore.ActionsTool import ActionsTool
 
 from Products.ERP5.Document.BusinessTemplate import \
     BusinessTemplateMissingDependency
