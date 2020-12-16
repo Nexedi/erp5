@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>my_preferred_html_style_disabled</string>
+                        <string>my_preferred_html_style_allowed_user_id_list</string>
                       </list>
                     </value>
                 </item>
