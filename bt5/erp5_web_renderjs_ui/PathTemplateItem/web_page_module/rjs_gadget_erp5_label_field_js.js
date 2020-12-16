@@ -75,16 +75,12 @@
   }
 
   function addDeveloperAction(class_name,
-      title_href, title, icon_src, root_element) {
+      title_href, title, root_element) {
     var field_href = domsugar("a", {
       "class": class_name,
       href: title_href,
       title: title
-    }, [
-      domsugar("img", {
-        src: icon_src
-      })
-    ]);
+    });
     if (root_element.constructor === HTMLLabelElement) {
       root_element.appendChild(field_href);
     } else {
@@ -241,10 +237,9 @@
                 if (field_json.hasOwnProperty('edit_field_href') &&
                     !current_field) {
                   addDeveloperAction(
-                    "edit-field",
+                    "edit-field ui-icon-edit ui-btn-icon-left",
                     field_json.edit_field_href,
                     "Edit this field",
-                    field_json.edit_field_icon,
                     root_element
                   );
                 } else if (!field_json.hasOwnProperty('edit_field_href') &&
@@ -255,10 +250,9 @@
                 if (field_json.hasOwnProperty('translate_title_href') &&
                     !current_field) {
                   addDeveloperAction(
-                    "translate-title",
+                    "translate-title ui-icon-language ui-btn-icon-left",
                     field_json.translate_title_href,
                     "Translate this field title",
-                    field_json.translate_title_icon,
                     root_element
                   );
                 } else if (!field_json.hasOwnProperty('translate_title_href') &&
@@ -269,10 +263,9 @@
                 if (field_json.hasOwnProperty('translate_description_href') &&
                     !current_field) {
                   addDeveloperAction(
-                    "translate-description",
+                    "translate-description ui-icon-language ui-btn-icon-left",
                     field_json.translate_description_href,
                     "Translate this field description",
-                    field_json.translate_description_icon,
                     root_element
                   );
                 } else if (!field_json.hasOwnProperty('translate_description_href') &&

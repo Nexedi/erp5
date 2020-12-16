@@ -113,16 +113,12 @@
   }
 
   function addDeveloperAction(class_name,
-      title_href, title, icon_src) {
+      title_href, title) {
     return domsugar("a", {
       "class": class_name,
       href: title_href,
       title: title
-    }, [
-      domsugar("img", {
-        src: icon_src
-      })
-    ]);
+    });
   }
 
 
@@ -251,10 +247,9 @@
           if (form_definition.hasOwnProperty("edit_form_href") &&
               !current_field) {
             field_href = addDeveloperAction(
-              "edit-form",
+              "edit-form ui-icon-edit ui-btn-icon-left",
               form_definition.edit_form_href,
-              "Edit this form",
-              form_definition.edit_form_icon
+              "Edit this form"
             );
             form_gadget.element.insertBefore(field_href, dom_element);
           } else if (!form_definition.hasOwnProperty("edit_form_href") &&
@@ -266,10 +261,9 @@
           if (form_definition.hasOwnProperty("edit_form_action_href") &&
               !current_field) {
             field_href = addDeveloperAction(
-              "edit-form-action",
+              "edit-form-action ui-icon-external-link ui-btn-icon-left",
               form_definition.edit_form_action_href,
-              "Edit this form's action",
-              form_definition.edit_form_action_icon
+              "Edit this form's action"
             );
             form_gadget.element.insertBefore(field_href, dom_element);
           } else if (!form_definition.hasOwnProperty("edit_form_action_href") &&
