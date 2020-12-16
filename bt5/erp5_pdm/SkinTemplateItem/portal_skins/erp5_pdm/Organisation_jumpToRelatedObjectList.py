@@ -25,22 +25,24 @@ related_object_list = context.getRelatedValueList(
   portal_type=portal_type)
 
 if not related_object_list:
-  message = portal.Base_translateString('No ${portal_type} related.',
-                                        mapping={'portal_type': portal_type})
-
-  return context.Base_redirect(keep_items=dict(portal_status_message=message))
+  return context.Base_redirect(form_id, keep_items=dict(
+    portal_status_message=portal.Base_translateString(
+    'No %s Related' % portal_type,
+    default=portal.Base_translateString('No ${portal_type} related.',
+                             mapping={'portal_type': portal.Base_translateString(portal_type)}))))
 
 elif len(related_object_list) == 1:
   related_object = related_object_list[0]
-  message = portal.Base_translateString(
-    '${this_portal_type} related to ${that_portal_type}: ${that_title}.',
-    mapping={"this_portal_type": related_object.getTranslatedPortalType(),
-             "that_portal_type": context.getTranslatedPortalType(),
-             "that_title": context.getTitleOrId()})
-
-  return related_object.Base_redirect(
-    keep_items=dict(reset=1,
-                    portal_status_message=message))
+  return related_object.Base_redirect(keep_items=dict(
+      reset=1,
+      portal_status_message=portal.Base_translateString(
+      # first, try to get a full translated message with portal types
+      "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),
+       # if not found, fallback to generic translation
+      default=portal.Base_translateString('${this_portal_type} related to ${that_portal_type} : ${that_title}.',
+        mapping={"this_portal_type": related_object.getTranslatedPortalType(),
+                 "that_portal_type": context.getTranslatedPortalType(),
+                 "that_title": context.getTitleOrId()}))))
 
 else:
   # XXX: Use POST rather than GET because of GET URL length limitation?

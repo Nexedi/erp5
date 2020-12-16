@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(\'function\')</string> </value>
+            <value> <string>context/BusinessConfiguration_getFunctionTitleItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -29,11 +29,6 @@
 
 from Products.CMFCore.utils import getToolByName 
 from Products import PluggableAuthService
-try:
-  from Products.ERP5Wizard.PAS.ERP5RemoteUserManager import ERP5RemoteUserManager
-except  ImportError:
-  #Wizard tool can not be present
-  ERP5RemoteUserManager = None
 
 PluggableAuthServiceTool = PluggableAuthService.PluggableAuthService.PluggableAuthService
 IUserEnumerationPlugin = PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin
@@ -57,23 +52,3 @@ def isLocalLoginAvailable(self, login):
   if isinstance(acl_users,PluggableAuthServiceTool):
     return not acl_users.searchUsers(login=login, exact_match=True)
   return None
-
-def isSingleSignOnEnable(self):
-  """
-  Check that a ERP5 Remote User manager is present as authentication plugin
-  """
-  if ERP5RemoteUserManager is None:
-    return False
-  
-  portal = self.getPortalObject()
-  acl_users = getToolByName(portal, 'acl_users')
-
-  if isinstance(acl_users,PluggableAuthServiceTool):
-     #List plugin which make authentication
-    plugin_list = acl_users.plugins.listPlugins(IAuthenticationPlugin)
-    for plugin_name, plugin_value in plugin_list:
-      #Try to find an ERP5RemoteUserManager
-      if isinstance(plugin_value,ERP5RemoteUserManager):
-        #SSO is enable
-        return True
-  return False

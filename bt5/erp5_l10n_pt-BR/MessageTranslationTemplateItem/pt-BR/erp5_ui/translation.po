@@ -6483,6 +6483,9 @@ msgstr "Utilize este estado para fechar a conta. Nenhuma transação pode ser de
 msgid "User"
 msgstr "Usuário"
 
+msgid "Username"
+msgstr "Usuário"
+
 msgid "User ${user} does not exist."
 msgstr "Usuário ${user} não existe."
 

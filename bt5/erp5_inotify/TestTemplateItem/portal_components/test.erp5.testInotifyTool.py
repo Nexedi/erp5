@@ -33,7 +33,7 @@ from Products.ERP5.ERP5Site import addERP5Tool
 
 class TestInotifyTool(ERP5TypeTestCase):
   def test_inotify(self):
-    from Products.ERP5.Tool.InotifyTool import IN_CREATE, IN_MODIFY, IN_DELETE
+    from erp5.component.tool.InotifyTool import IN_CREATE, IN_MODIFY, IN_DELETE
     addERP5Tool(self.portal, 'portal_inotify', 'Inotify Tool')
     inotify_tool = self.portal.portal_inotify
     for inotify in inotify_tool.objectValues():

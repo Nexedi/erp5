@@ -2,6 +2,7 @@
  <portal_type id="Project">
   <item>File</item>
   <item>Image</item>
+  <item>Link</item>
   <item>Project Line</item>
   <item>Project Milestone</item>
  </portal_type>

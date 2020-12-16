@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import mock
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
@@ -96,21 +97,38 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEqual("title", p.getTitle())
 
   # title & first_name, last_name
-  def testEmptyTitleFallbackOnId(self):
+  def testEmptyTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getTitle())
 
-  def testEmptyTranslatedTitleFallbackOnId(self):
+  def testEmptyTranslatedTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getTranslatedTitle())
 
-  def testEmptyCompactTitleFallbackOnId(self):
+  def testEmptyCompactTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getCompactTitle())
 
-  def testEmptyCompactTranslatedTitleFallbackOnId(self):
+  def testEmptyCompactTranslatedTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getCompactTranslatedTitle())
+
+  def testEmptyTitleFallbackOnId(self):
+    # in the now rare event of a person without user id, the fallback is still to the id.
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getTitle())
+
+  def testEmptyTranslatedTitleFallbackOnId(self):
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getTranslatedTitle())
+
+  def testEmptyCompactTitleFallbackOnId(self):
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getCompactTitle())
+
+  def testEmptyCompactTranslatedTitleFallbackOnId(self):
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getCompactTranslatedTitle())
 
   def testEmptyTitleFallbackOnReference(self):
     p = self._makeOne(reference='reference')
@@ -208,6 +226,18 @@ class TestPerson(ERP5TypeTestCase):
     p.setFirstName('bob')
     self.assertTrue(p.hasTitle())
 
+  def testCreatingPersonDoesNotModifyPersonModule(self):
+    # creating a first entry in the module modifies the module, so make sure we have at least one.
+    self.portal.person_module.newContent()
+    self.tic()
+    self.assertFalse(self.portal.person_module._p_changed)
+
+    # use an id generator which does not modify the module
+    with mock.patch.object(self.portal.person_module.__class__, 'generateNewId', return_value=self.id()):
+      person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertTrue(person.getUserId())
+    self.assertFalse(self.portal.person_module._p_changed)
+
   def testSetPasswordSecurity(self):
     p = self._makeOne(id='person')
     p.manage_permission(Permissions.SetOwnPassword, [], 0)
@@ -227,6 +257,17 @@ class TestPerson(ERP5TypeTestCase):
     p.manage_permission(Permissions.SetOwnPassword, ['Anonymous'], 0)
     p.setPassword('secret')
     self.assertTrue(p.getPassword())
+
+  def testSetUserIdSecurity(self):
+    # Changing an already set user id needs "manage users" permissions,
+    # but setting an initial user id does not.
+    p = self._makeOne(user_id=None)
+    p.manage_permission(Permissions.ManageUsers, [], 0)
+    p.setUserId('initial_user_id')
+    self.tic()
+    self.assertRaises(Unauthorized, p.setUserId, 'something_else')
+    self.abort()
+    self.assertRaises(Unauthorized, p.edit, user_id='something_else')
 
   def testPasswordFormat(self):
     p = self._makeOne(id='person')

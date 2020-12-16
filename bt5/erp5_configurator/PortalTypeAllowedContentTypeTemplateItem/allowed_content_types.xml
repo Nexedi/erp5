@@ -44,7 +44,6 @@
   <item>Solver Configurator Item</item>
   <item>Standard BT5 Configurator Item</item>
   <item>System Preference Configurator Item</item>
-  <item>Workflow Security Configurator Item</item>
  </portal_type>
  <portal_type id="Organisation Configurator Item">
   <item>Address</item>

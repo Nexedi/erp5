@@ -1,6 +1,7 @@
 """Returns info about a test result, a mapping containing:
 
   test_suite_relative_url: relative url of test suite
+  retry_test_pattern: the pattern for test result lines which can be restarted
   repository_dict: for each test suite repository, keyed by buildout section id:
      revision: commit sha
      repository_url: git url of the repository
@@ -53,5 +54,6 @@ if REQUEST:
 
 return {
     'test_suite_relative_url': test_suite.getRelativeUrl(),
+    'retry_test_pattern': test_suite.getRetryTestPattern(),
     'repository_dict': repository_dict,
 }

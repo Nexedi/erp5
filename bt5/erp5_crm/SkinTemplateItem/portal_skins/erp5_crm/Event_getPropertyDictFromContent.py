@@ -45,7 +45,7 @@ subject = content_information.get('Subject', '')
 body = context.asText()
 portal_type = None
 for text in (subject, body):
-  portal_type, matched_value = context.Base_findPortalTypeNameAndMatchedValueForEvent(text)
+  portal_type, _ = context.Base_findPortalTypeNameAndMatchedValueForEvent(text)
   if portal_type is not None:
     break
 

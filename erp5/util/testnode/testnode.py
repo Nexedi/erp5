@@ -28,6 +28,7 @@ import os
 import json
 import time
 import logging
+from six.moves.urllib.parse import urljoin
 from contextlib import contextmanager
 from slapos.slap.slap import ConnectionError
 from . import logger, log_formatter
@@ -41,8 +42,6 @@ from .Utils import deunicodeData
 from .Utils import rmtree
 from .. import taskdistribution
 
-MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
-                  # httd
 MAX_TEMP_TIME = 0.01 # time in days we should keep temp files
 
 PROFILE_PATH_KEY = 'profile_path'
@@ -54,14 +53,13 @@ test_type_registry = {
 
 class TestNode(object):
 
-  def __init__(self, config, max_log_time=MAX_LOG_TIME,
-               max_temp_time=MAX_TEMP_TIME):
+  def __init__(self, config, max_temp_time=MAX_TEMP_TIME):
     self.config = config or {}
     self.process_manager = ProcessManager()
     self.working_directory = config['working_directory']
     self.node_test_suite_dict = {}
     self.file_handler = None
-    self.max_log_time = max_log_time
+    self.max_log_time = float(config.get('keep_log_days', 15))
     self.max_temp_time = max_temp_time
     self.url_access = "https://[0::0]:0123" # Ipv6 + port of the node
 
@@ -192,6 +190,7 @@ shared = true
     finally:
       logger.propagate = True
       logger.removeHandler(handler)
+      handler.close()
 
   def checkRevision(self, test_result, node_test_suite):
     if node_test_suite.revision == test_result.revision:
@@ -344,8 +343,8 @@ shared = true
               self.cleanUp() # XXX not a good place to do that
               continue
             with self.suiteLog(node_test_suite) as suite_log_folder_name:
-              test_result.reportStatus('LOG url', "%s/%s" % (
-                config.get('httpd_url'), suite_log_folder_name), '')
+              test_result.reportStatus(
+                  'LOG url', urljoin(config['log_frontend_url'], suite_log_folder_name), '')
               git_gc_auto = self.checkRevision(test_result, node_test_suite)
               node_test_suite.edit(test_result=test_result)
               # get cluster configuration for this test suite, this is needed to

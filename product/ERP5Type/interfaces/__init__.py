@@ -2,7 +2,6 @@
 # XXX/FIXME: tried to work without explicit definition of all interfaces (this
 # file empty) but failed to do so
 from consistency_message import IConsistencyMessage
-from divergence_message import IDivergenceMessage
 from object_message import IObjectMessage
 from action_provider import IAction, IActionContainer
 from cache_plugin import ICachePlugin

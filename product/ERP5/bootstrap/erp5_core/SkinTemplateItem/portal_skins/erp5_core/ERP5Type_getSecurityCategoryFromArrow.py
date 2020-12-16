@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 log("ERP5Type_getSecurityCategoryFromArrow is deprecated, "
     "use ERP5Type_getSecurityCategoryFromContent instead")
 

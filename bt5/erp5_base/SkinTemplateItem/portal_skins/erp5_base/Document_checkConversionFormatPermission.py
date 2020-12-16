@@ -1,3 +1,5 @@
+# this script has an `format` argument
+# pylint: disable=redefined-builtin
 """
 This script provides a facility to permit conversion by format.
 """

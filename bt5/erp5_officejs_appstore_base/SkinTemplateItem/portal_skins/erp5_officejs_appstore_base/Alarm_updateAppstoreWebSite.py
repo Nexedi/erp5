@@ -16,7 +16,10 @@ for software_product in software_product_list:
   if manifest_url is not None:
     manifest = portal.portal_catalog.getResultValue(reference=version + '/' + manifest_url)
     if manifest is not None:
-      data = json.loads(manifest.getData())
+      try:
+        data = json.loads(manifest.getData())
+      except ValueError:
+        continue
       src_icon = data['icons'][0]['src']
       logo = portal.portal_catalog.getResultValue(reference='%' + src_icon, version=version, portal_type='File')
       if logo is not None:

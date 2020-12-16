@@ -10,11 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
                 <string>columns</string>
+                <string>count_method</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -77,25 +78,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Original Poster</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -104,8 +86,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
+                          <string>source_title</string>
+                          <string>Author</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>DiscussionThread_getDiscussionPostCount</string>
+                          <string>Responses</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -113,6 +103,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -151,6 +145,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>discussion_module_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>DESC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

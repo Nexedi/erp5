@@ -31,7 +31,7 @@ for listitem in listbox :
 
 with ImmediateReindexContextManager() as immediate_reindex_context_manager:
   # we build 'container_count' containers
-  for container_number in range(container_count):
+  for _ in range(container_count):
 
     new_container_id = 'c'+str(next_container_number)
     # we use container_type to know which are the resource (and variation)

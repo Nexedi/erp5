@@ -28,7 +28,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerUrlList
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
+from erp5.component.module.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
 
 class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):

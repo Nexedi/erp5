@@ -1,8 +1,0 @@
-erp5_mysql_innodb/z0_drop_birth_detail
-erp5_mysql_innodb/z0_drop_egov
-erp5_mysql_innodb/z_catalog_birth_detail_list
-erp5_mysql_innodb/z_catalog_egov_list
-erp5_mysql_innodb/z_create_birth_detail
-erp5_mysql_innodb/z_create_egov
-erp5_mysql_innodb/z_uncatalog_birth_detail
-erp5_mysql_innodb/z_uncatalog_egov

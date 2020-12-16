@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 from Products.ERP5Type import Permissions
 
@@ -36,19 +37,11 @@ def getLegacyCallableIdItemList(self):
       ('WebSection_getPermanentURLForView', 'getPermanentURL'),
     )
 
-# Define acceptable prefix list for skin folder items
-skin_prefix_list = None
+
+@transactional_cached(key_method=lambda *args, **kw: None)
 def getSkinPrefixList(self):
+  """Return the list of acceptable prefixes for skins.
   """
-  Return the list of acceptable prefix. Cache the result.
-
-  TODO: make the cache more efficient (read-only transaction
-  cache)
-  """
-  global skin_prefix_list
-  if skin_prefix_list:
-    return skin_prefix_list
-
   portal = self.getPortalObject()
 
   # Add portal types prefix
@@ -59,26 +52,24 @@ def getSkinPrefixList(self):
     skin_prefix_list.append(portal_prefix)
 
   # Add document classes prefix
-  skin_prefix_list.extend(self.portal_types.getDocumentTypeList())
+  skin_prefix_list.extend(portal_types.getDocumentTypeList())
 
   # Add mixins prefix
-  skin_prefix_list.extend(self.portal_types.getMixinTypeList())
+  skin_prefix_list.extend(portal_types.getMixinTypeList())
 
-  # Add interfaces prefix
-  skin_prefix_list.extend(self.portal_types.getInterfaceTypeList())
-  # XXX getInterfaceTypeList seems empty ... keep this low-level way for now.
-  from Products.ERP5Type import interfaces
-  for interface_name in interfaces.__dict__.keys():
-    if interface_name.startswith('I'):
-      skin_prefix_list.append(interface_name[1:])
-      # XXX do we really add with the I prefix ?
-      skin_prefix_list.append(interface_name)
+  # Add interfaces prefix, without the I prefix
+  skin_prefix_list.extend([x[1:] for x in portal_types.getInterfaceTypeList()])
 
   # Add other prefix
   skin_prefix_list.extend((
     'ERP5Type',
     'Module',
-    'Brain', # Catalog brains
+    
+    # Catalog brains
+    'Brain',
+    'InventoryListBrain',
+    'TrackingListBrain',
+    'MovementHistoryListBrain',
 
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
@@ -124,6 +115,77 @@ ignored_skin_id_set = {
   'PortalType_addAction',
   'PortalType_deleteAction',
   'RelationFieldZuite_CommonTemplate',
+  'Field_getDescription',
+  'ERP5XhtmlStyle_redirect',
+  'connectorCPS.py',
+  'connectorERP5',
+  'connectorPlone.py',
+  'resolveUid',
+  'IndividualVariation_init',
+  'QuantityUnitConversion_getQuantityUnitList',
+  'ResourceModule_getSelection',
+  'DeliveryModule_getDeliveryLineList',
+  'DeliveryModule_getDeliveryLineReportSectionList',
+  'DeliveryModule_getMovementPortalTypeItemList',
+  'DeliveryModule_getShipmentDeliveryList',
+  'DeliveryModule_getShipmentLineData',
+  'DeliveryModule_getShipmentLineList',
+  'DeliveryModule_getShipmentReportSectionList',
+  'OrderModule_activateGetOrderStatList',
+  'OrderModule_deleteAutoPlannedOrderList',
+  'OrderModule_filterOrderStatResul',
+  'OrderModule_getOrderReport',
+  'OrderModule_getOrderReportParameterDict',
+  'OrderModule_getOrderReportSectionList',
+  'OrderModule_getOrderStatList',
+  'OrderModule_launchOrderReport',
+  'OrderModule_processOrderStat',
+  'OrderModule_statOrderStatList',
+  'PackingListContent_updateAfterEdit',
+  'PackingListModule_getPackingListReport',
+  'Builder_selectAutoPlannedOrderList',
+  'Builder_updateManufacturingOrderAfterBuild',
+  'ManufacturingOrderBuilder_selectSimulationMovement',
+  'ProductionDelivery_copyOrderProperties',
+  'ProductionDelivery_generateReference',
+  'ProductionDelivery_getFutureInventoryList',
+  'ProductionDelivery_getSimulationStateColorText',
+  'CurrencyExchange_getExchangeRateList',
+  'ERP5Folder_getUnrestrictedContentTypeList',
+  'FCKeditor_getDocumentList',
+  'FCKeditor_getDocumentListQuery',
+  'FCKeditor_getImageList',
+  'FCKeditor_getSetReferenceUrl',
+  'Credential_accept',
+  'Credential_checkConsistency',
+  'Credential_copyRegistredInformation',
+  'Credential_updatePersonPassword',
+  'InvoiceTransaction_postGeneration',
+  'InvoiceTransaction_postTransactionLineGeneration',
+  'InvoiceTransaction_selectDelivery',
+  'InvoiceTransaction_selectInvoiceMovement',
+  'PurchaseInvoice_selectTradeModelMovementList',
+  'SaleInvoice_selectTradeModelMovementList',
+  'SaleInvoiceTransaction_selectTaskReportMovement',
+  'TaskListOverviewGadget_setPreferences',
+  'TaskListsGadgetListbox_getLineCss',
+  'InventoryModule_reindexMovementList',
+  'DeliveryModule_mergeDeliveryList',
+  'ERP5VCS_doCreateJavaScriptDiff.js',
+  'ERP5VCS_doCreateJavaScriptStatus.js',
+  'PdmZuite_CommonTemplate',
+  'PdmZuite_checkStockBrowser',
+  'PdmZuite_createDelivery',
+  'PdmZuite_deleteData',
+  'PdmZuite_reset',
+  'PdmZuite_CommonTemplateForRenderjsUi',
+  'PdmZuite_checkStockBrowserForRenderjsUi',
+  'AdvancedInvoiceTransaction_postTransactionLineGeneration',
+  'InvoiceTransaction_jumpToOrder',
+  'InvoiceTransaction_jumpToPackingList',
+  'TaskDistributorAlarm_optimize',
+  'TestDocument_optimize',
+  'TestResultAlarm_restartStuckTestResult',
 }
 
 # Generic method to check consistency of a skin item

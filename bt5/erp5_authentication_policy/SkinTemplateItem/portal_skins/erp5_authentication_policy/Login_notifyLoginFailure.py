@@ -1,7 +1,6 @@
 """
   File a failed authentication attempt.
 """
-from DateTime import DateTime
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences
 

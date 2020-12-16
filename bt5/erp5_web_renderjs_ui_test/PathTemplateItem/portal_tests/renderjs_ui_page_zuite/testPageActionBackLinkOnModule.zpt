@@ -19,12 +19,12 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
-<tal:block tal:define="search_query python: 'foo:&#34;bar&#34; AND barfoo'">
+<tal:block tal:define="search_query python: 'title:&#34;bar&#34; AND barfoo'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
-<tal:block tal:define="parsed_query python: 'foo:&nbsp; &#34;bar&#34;';
+<tal:block tal:define="parsed_query python: 'title:&nbsp; &#34;bar&#34;';
                        search_query python: 'barfoo'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
 </tal:block>
@@ -42,19 +42,19 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>Foo Module</td>
+  <td>Foos</td>
   <td></td>
 </tr>
 
 <!-- Generate back link -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!cancel_dialog_with_history')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foos' and contains(@href, '#!cancel_dialog_with_history')]</td>
   <td></td>
 </tr>
 
 <!-- Follow back link -->
-<tal:block tal:define="click_configuration python: {'text': 'Foo Module'}">
+<tal:block tal:define="click_configuration python: {'text': 'Foos'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -69,7 +69,7 @@
   <td>Foos</td>
   <td></td>
 </tr>
-<tal:block tal:define="parsed_query python: 'foo:&nbsp; &#34;bar&#34;';
+<tal:block tal:define="parsed_query python: 'title:&nbsp; &#34;bar&#34;';
                        search_query python: 'barfoo'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
 </tal:block>

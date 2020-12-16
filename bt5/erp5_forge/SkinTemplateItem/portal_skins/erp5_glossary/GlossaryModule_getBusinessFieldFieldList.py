@@ -1,7 +1,5 @@
 from Products.ERP5Type.Document import newTempBase
 
-result = []
-
 portal_catalog = context.portal_catalog
 portal_skins = context.portal_skins
 

@@ -3,7 +3,6 @@
   read_document_lines to False. Otherwise, it displays on 
   the fast input all documents lines already added
 """
-from Products.ERP5Type.Document import newTempBase
 request = context.REQUEST
 portal = context.getPortalObject()
 trade_document = context
@@ -123,35 +122,35 @@ empty_line_cpt = 1 # this counter is used so that we always add a fix
 i = len_line_list + 1
 if read_document_lines is False:
   while empty_line_cpt <= lines_num:
-     while i in used_id:
-       # do not used an id from previously generated lines
-       i+=1
-     # Retrieve values set by the update script
-     resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)
-     resource_title = getattr(request,"field_listbox_title_new_%s"%i,None)
-     reference = getattr(request,"field_listbox_reference_new_%s"%i,None)
+    while i in used_id:
+      # do not used an id from previously generated lines
+      i+=1
+    # Retrieve values set by the update script
+    resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)
+    resource_title = getattr(request,"field_listbox_title_new_%s"%i,None)
+    reference = getattr(request,"field_listbox_reference_new_%s"%i,None)
 
-     obj=trade_document.newContent(portal_type=line_portal_type,
+    obj=trade_document.newContent(portal_type=line_portal_type,
                                    id = i,
                                    uid="new_%s" % i,
                                    temp_object=1,
                                    reference=None, # otherwise it is acquired on parent
                                    is_indexable=0,)
 
-     used_id_append(i)
-     # Set values inputted by user
-     if resource_title not in ('',None):
-       empty_line_cpt -= 1
-       obj.edit(resource_title=resource_title)
-     if reference not in ('',None):
-       empty_line_cpt -= 1
-       obj.edit(reference=reference)
+    used_id_append(i)
+    # Set values inputted by user
+    if resource_title not in ('',None):
+      empty_line_cpt -= 1
+      obj.edit(resource_title=resource_title)
+    if reference not in ('',None):
+      empty_line_cpt -= 1
+      obj.edit(reference=reference)
      # if a resource is selected, use it
-     if resource_relative_url not in ('',None):
-       empty_line_cpt -= 1
-       resource = portal.restrictedTraverse(resource_relative_url)
-       obj.setResourceValue(resource)
-     empty_line_cpt += 1
-     result_append(obj)
+    if resource_relative_url not in ('',None):
+      empty_line_cpt -= 1
+      resource = portal.restrictedTraverse(resource_relative_url)
+      obj.setResourceValue(resource)
+    empty_line_cpt += 1
+    result_append(obj)
 
 return result

@@ -759,6 +759,7 @@ class WorkflowHistoryList(NewWorkflowHistoryList):
     stack = [self]
     while True:
       stack.append(bucket)
+      bucket._p_activate()
       assert bucket.__class__ is WorkflowHistoryList, bucket.__class__
       bucket.__class__ = NewWorkflowHistoryList
       bucket = bucket._prev

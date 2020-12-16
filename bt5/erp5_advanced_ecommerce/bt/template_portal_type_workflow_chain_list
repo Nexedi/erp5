@@ -1,0 +1,4 @@
+Sale Trade Condition | -validation_workflow
+Sale Trade Condition | commerce_validation_workflow
+Service | -validation_workflow
+Service | commerce_validation_workflow

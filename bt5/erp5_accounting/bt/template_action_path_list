@@ -5,6 +5,7 @@ Account Type Constraint | view
 Account | grouping_reference_fast_input
 Account | jump_active_accounting_pref
 Account | jump_to_accounting
+Account | jump_to_transaction_list
 Account | transaction_list
 Account | view
 Accounting Period | create_secondary_periods
@@ -47,6 +48,7 @@ Accounting Transaction | create_reversal
 Accounting Transaction | destination_asset
 Accounting Transaction | details
 Accounting Transaction | document_list
+Accounting Transaction | jump_to_document
 Accounting Transaction | profile_view
 Accounting Transaction | source_asset
 Accounting Transaction | view
@@ -55,6 +57,7 @@ Balance Transaction | add_accounting_transaction_line
 Balance Transaction | destination_asset
 Balance Transaction | view
 Bank Account | jump_active_accounting_pref
+Bank Account | jump_to_transactions
 Bank Account | transactions
 Cash Register | jump_active_accounting_pref
 Cash Register | transactions
@@ -73,9 +76,9 @@ Internal Invoice Transaction | destination_view
 Internal Invoice Transaction | detail
 Internal Invoice Transaction | document_list
 Internal Invoice Transaction | jump_related_payment
+Internal Invoice Transaction | jump_to_document
 Internal Invoice Transaction | source_asset
 Internal Invoice Transaction | view
-Invoice Root Simulation Rule | view
 Organisation | account_statement_export
 Organisation | account_statement_report
 Organisation | general_ledger_export
@@ -83,6 +86,7 @@ Organisation | general_ledger_report
 Organisation | grouping_reference_fast_input
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
+Organisation | jump_to_transactions
 Organisation | transactions
 Payment Simulation Rule | view
 Payment Transaction | add_accounting_transaction_line
@@ -94,6 +98,7 @@ Payment Transaction | destination_asset
 Payment Transaction | destination_view
 Payment Transaction | details
 Payment Transaction | document_list
+Payment Transaction | jump_to_document
 Payment Transaction | profile_view_destination
 Payment Transaction | profile_view_source
 Payment Transaction | related_invoice
@@ -105,6 +110,7 @@ Person | general_ledger_export
 Person | general_ledger_report
 Person | grouping_reference_fast_input
 Person | jump_to_accounting
+Person | jump_to_transactions
 Person | transactions
 Preference | view_accounting
 Purchase Invoice Transaction Line | destination_view
@@ -120,6 +126,7 @@ Purchase Invoice Transaction | destination_view
 Purchase Invoice Transaction | detail
 Purchase Invoice Transaction | document_list
 Purchase Invoice Transaction | jump_related_payment
+Purchase Invoice Transaction | jump_to_document
 Purchase Invoice Transaction | profile_view
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | source_view
@@ -134,6 +141,7 @@ Sale Invoice Transaction | create_reversal
 Sale Invoice Transaction | destination_asset
 Sale Invoice Transaction | detail
 Sale Invoice Transaction | document_list
+Sale Invoice Transaction | jump_to_document
 Sale Invoice Transaction | jump_to_related_payment
 Sale Invoice Transaction | profile_view
 Sale Invoice Transaction | source_asset

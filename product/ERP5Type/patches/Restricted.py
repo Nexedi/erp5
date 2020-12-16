@@ -11,14 +11,30 @@
 #
 ##############################################################################
 
+import copy
 import sys
+import types
 
 from RestrictedPython.RestrictionMutator import RestrictionMutator
+_MARKER = []
+def checkNameLax(self, node, name=_MARKER):
+  """Verifies that a name being assigned is safe.
 
-# Unsafe attributes on protected objects are already disallowed at execution
-# and we don't want to maintain a duplicated list of exceptions.
-RestrictionMutator.checkName = RestrictionMutator.checkAttrName = \
-    lambda *args, **kw: None
+  In ERP5 we are much more lax that than in Zope's original restricted
+  python and allow to using names starting with _, because we rely on
+  runtime checks to prevent access to forbidden attributes from objects.
+
+  We don't allow defining attributes ending with __roles__ though.
+  """
+  if name is _MARKER:
+    # we use same implementation for checkName and checkAttrName which access
+    # the name in different ways ( see RestrictionMutator 3.6.0 )
+    name = node.attrname
+  if name.endswith('__roles__'):
+    self.error(node, '"%s" is an invalid variable name because '
+                     'it ends with "__roles__".' % name)
+
+RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire
@@ -79,36 +95,48 @@ def allow_class_attribute(klass, access=1):
   assert(inspect.isclass(klass))
   _safe_class_attribute_dict[klass] = access
 
-def _check_type_access(name, v):
+
+class TypeAccessChecker:
+  """Check Access for class instances (whose type() is `type`).
   """
-    Create a method which checks the access if the context type is <type 'type'>s.
+  def __call__(self, name, v):
+    """
+    Create a callable which checks the access if the context type is <type 'type'>s.
     Since the 'type' can be any types of classes, we support the three ways
     defined in AccessControl/SimpleObjectPolicies.  We implement this
     as "a method which returing a method" because we can not know what is the
     type until it is actually called. So the three ways are simulated the
-    returning method inide this method.
-  """
-  def factory(inst, name):
+    function returned by this method.
     """
-     Check function used with ContainerAssetions checked by cAccessControl.
-    """
-    access = _safe_class_attribute_dict.get(inst, 0)
-    # The next 'dict' only checks the access configuration type
-    if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
-      pass
-    elif isinstance(access, dict) and callable(access.get(name, 0)):
-      guarded_method = access.get(name)
-      return guarded_method(inst, name)
-    elif callable(access):
-      # Only check whether the access configuration raise error or not
-      access(inst, name)
-    else:
-      # fallback to default security
-      aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
-    return v
-  return factory
+    def factory(inst, name):
+      """
+      Check function used with ContainerAssertions checked by cAccessControl.
+      """
+      access = _safe_class_attribute_dict.get(inst, 0)
+      # The next 'dict' only checks the access configuration type
+      if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
+        pass
+      elif isinstance(access, dict) and callable(access.get(name, 0)):
+        guarded_method = access.get(name)
+        return guarded_method(inst, name)
+      elif callable(access):
+        # Only check whether the access configuration raise error or not
+        access(inst, name)
+      else:
+        # fallback to default security
+        aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
+      return v
+    return factory
 
-ContainerAssertions[type] = _check_type_access
+  def __nonzero__(self):
+    # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
+    # thinking it's a simple type, but we don't want this for type, because
+    # type(x) is type for classes, being trueish would skip security check on
+    # classes.
+    return False
+
+ContainerAssertions[type] = TypeAccessChecker()
+
 
 class SafeIterItems(SafeIter):
 
@@ -133,6 +161,9 @@ safe_builtins['sorted'] = guarded_sorted
 def guarded_reversed(seq):
     return SafeIter(reversed(seq))
 safe_builtins['reversed'] = guarded_reversed
+ContainerAssertions[reversed] = 1
+# listreverseiterator is a special type, returned by list.__reversed__
+ContainerAssertions[type(reversed([]))] = 1
 
 def guarded_enumerate(seq, start=0):
     return NullIter(enumerate(guarded_iter(seq), start=start))
@@ -175,11 +206,16 @@ ContainerAssertions[set] = _check_access_wrapper(set, _set_white_dict)
 
 ContainerAssertions[frozenset] = 1
 
+ContainerAssertions[types.GeneratorType] = 1
+
 from collections import OrderedDict
 ModuleSecurityInfo('collections').declarePublic('OrderedDict')
 
 from collections import defaultdict
 ModuleSecurityInfo('collections').declarePublic('defaultdict')
+
+from collections import Counter
+ModuleSecurityInfo('collections').declarePublic('Counter')
 
 from AccessControl.ZopeGuards import _dict_white_list
 
@@ -194,6 +230,14 @@ full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
 OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+
+_counter_white_list = copy.copy(_dict_white_list)
+_counter_white_list['most_common'] = 1
+ContainerAssertions[Counter] = _check_access_wrapper(Counter, _counter_white_list)
+Counter.__guarded_setitem__ = dict.__setitem__
+Counter.__guarded_delitem__ = dict.__delitem__
+
+ModuleSecurityInfo('collections').declarePublic('namedtuple')
 
 # given as example in Products.PythonScripts.module_access_examples
 allow_module('base64')
@@ -214,15 +258,16 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-import cStringIO, io, StringIO
-f_cStringIO = cStringIO.StringIO()
-f_StringIO = StringIO.StringIO()
-allow_module('cStringIO')
-allow_module('io')
 allow_module('StringIO')
-allow_type(type(f_cStringIO))
+import StringIO
+StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
+allow_module('cStringIO')
+import cStringIO
+allow_type(cStringIO.InputType)
+allow_type(cStringIO.OutputType)
+allow_module('io')
+import io
 allow_type(io.BytesIO)
-allow_type(type(f_StringIO))
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
@@ -288,6 +333,7 @@ ModuleSecurityInfo('email.mime.text').declarePublic('MIMEText')
 MNAME_MAP = {
   'zipfile': 'Products.ERP5Type.ZipFile',
   'calendar': 'Products.ERP5Type.Calendar',
+  'collections': 'Products.ERP5Type.Collections',
 }
 for alias, real in MNAME_MAP.items():
   assert '.' not in alias, alias # TODO: support this
@@ -349,4 +395,87 @@ del member_id, member
 
 from random import SystemRandom
 allow_type(SystemRandom)
+from random import Random
+allow_type(Random)
 ModuleSecurityInfo('os').declarePublic('urandom')
+
+#
+# backport from wendelin
+#
+# we neeed to allow access to numpy's internal types
+import pandas as pd
+import numpy as np
+allow_module('numpy')
+allow_module('numpy.lib.recfunctions')
+for dtype in ('int8', 'int16', 'int32', 'int64', \
+              'uint8', 'uint16', 'uint32', 'uint64', \
+              'float16', 'float32', 'float64', \
+              'complex64', 'complex128'):
+  z = np.array([0,], dtype = dtype)
+  allow_type(type(z[0]))
+  allow_type(type(z))
+
+  sz = np.array([(0,)], dtype = [('f0', dtype)])
+  allow_type(type(sz[0]))
+  allow_type(type(sz))
+
+  rz = np.rec.array(np.array([(0,)], dtype = [('f0', dtype)]))
+  allow_type(type(rz[0]))
+  allow_type(type(rz))
+
+allow_type(np.timedelta64)
+allow_type(type(np.c_))
+allow_type(type(np.dtype('int16')))
+
+allow_module('pandas')
+
+allow_type(pd.Series)
+allow_type(pd.Timestamp)
+allow_type(pd.DatetimeIndex)
+# XXX: pd.DataFrame has its own security thus disable until we can fully integrate it
+#allow_type(pd.DataFrame)
+allow_type(pd.MultiIndex)
+allow_type(pd.indexes.range.RangeIndex)
+allow_type(pd.indexes.numeric.Int64Index)
+allow_type(pd.core.groupby.DataFrameGroupBy)
+allow_type(pd.core.groupby.SeriesGroupBy)
+allow_class(pd.DataFrame)
+
+def restrictedMethod(s,name):
+  def dummyMethod(*args, **kw):
+    raise Unauthorized(name)
+  return dummyMethod
+
+# Note: These black_list methods are for pandas 0.19.2
+series_black_list = ['to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                     'to_sql', 'to_msgpack']
+series_black_list_dict = {m: restrictedMethod for m in series_black_list}
+ContainerAssertions[pd.Series] = _check_access_wrapper(pd.Series,
+                                                       series_black_list_dict)
+
+pandas_black_list = ['read_csv', 'read_json', 'read_pickle', 'read_hdf', 'read_fwf',
+                     'read_excel', 'read_html', 'read_msgpack',
+                     'read_gbq', 'read_sas', 'read_stata']
+ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
+
+dataframe_black_list = ['to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                        'to_excel', 'to_html', 'to_sql', 'to_msgpack',
+                        'to_latex', 'to_gbq', 'to_stata']
+dataframe_black_list_dict = {m: restrictedMethod for m in dataframe_black_list}
+ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
+                                      pd.DataFrame, dataframe_black_list_dict)
+
+# Modify 'safetype' dict in full_write_guard function
+# of RestrictedPython (closure) directly to allow
+# write access to ndarray and pandas DataFrame.
+from RestrictedPython.Guards import full_write_guard
+full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.DataFrame] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Series] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True

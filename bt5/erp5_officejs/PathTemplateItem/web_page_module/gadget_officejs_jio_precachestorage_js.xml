@@ -1,0 +1,2195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>jio_precachestorage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_jio_precachestorage_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>temp_conversion_data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>38523:10:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>6d92b08c57451fe56e259d45810f88b1</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); return;\n
+} relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass>
+                                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                                </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595422948.22</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4107</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:11:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>1fabf9df462dea34848441d3d4daa899</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); /*if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); return;\n
+}*/ relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595423244.32</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4111</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:12:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>c02ffe9e559c0a43248a59542a58a84a</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log("PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); /*if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); return;\n
+}*/ relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595423354.37</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4251</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:13:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>c02ffe9e559c0a43248a59542a58a84a</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log("PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); /*if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); return;\n
+}*/ relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595423379.38</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4251</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:16:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>4d6dde34ce2deaa0d8a8fc5c9689468c</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log("PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response status:", response.target.status); console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); }\n
+relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595424321.7</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4319</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:17:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>4d6dde34ce2deaa0d8a8fc5c9689468c</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log("PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response status:", response.target.status); console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); }\n
+relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595424331.61</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4319</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:18:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>4d6dde34ce2deaa0d8a8fc5c9689468c</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log("PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+manifest jio.ajax response status:", response.target.status); console.log("PS -\n
+manifest jio.ajax response:", response); console.log("PS - getting url list to\n
+cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); }\n
+relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595425037.76</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4319</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:1:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>b66770759d79d36b81b01a29da8df869</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { var storage = this, url;\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { var base_manifest_text\n
+= response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { if (error.target.status === 404 && !error.message) { error.message =\n
+"Couldn\'t get the precache manifest \'" + storage._precache_manifest_script +\n
+"\'"; } throw error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }\n
+(window, jIO, RSVP, Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1592599432.23</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3571</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:21:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>1e98750c537ea3c65668e8174c51cbbd</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log(" PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log(" PS -\n
+manifest jio.ajax response status:", response.target.status); console.log(" PS\n
+- manifest jio.ajax response:", response); console.log(" PS - getting url list\n
+to cache from manifest:", storage._precache_manifest_script); var\n
+base_manifest_text = response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log(" PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log(" PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log(" MANIFEST HEADER RESPONSE IS NULL!!"); }\n
+relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1596046468.41</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4326</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:22:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>5ae638e6f40b867d686df9be633c84d9</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log(" PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { var base_manifest_text\n
+= response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log(" PS - manifest jio.ajax response:", response);\n
+console.log(" PS - manifest jio.ajax response status:",\n
+response.target.status); console.log(" PS - getting url list to cache from\n
+manifest:", storage._precache_manifest_script); console.log(" PS - manifest\n
+ETag header response:", response.target.getResponseHeader("ETag")); console.log\n
+(" PS - HASH generated from text manifest and ETag:", hash); if\n
+(response.target.getResponseHeader("ETag") === null) { console.log(" MANIFEST\n
+HEADER RESPONSE IS NULL!!"); } relative_url_list = Object.keys(JSON.parse\n
+(base_manifest_text)); storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1596047133.96</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4327</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:23:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>5ae638e6f40b867d686df9be633c84d9</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log(" PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { var base_manifest_text\n
+= response.target.responseText, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text + response.target .getResponseHeader\n
+("ETag")); console.log(" PS - manifest jio.ajax response:", response);\n
+console.log(" PS - manifest jio.ajax response status:",\n
+response.target.status); console.log(" PS - getting url list to cache from\n
+manifest:", storage._precache_manifest_script); console.log(" PS - manifest\n
+ETag header response:", response.target.getResponseHeader("ETag")); console.log\n
+(" PS - HASH generated from text manifest and ETag:", hash); if\n
+(response.target.getResponseHeader("ETag") === null) { console.log(" MANIFEST\n
+HEADER RESPONSE IS NULL!!"); } relative_url_list = Object.keys(JSON.parse\n
+(base_manifest_text)); storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1596048004.69</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4327</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:28:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>6f1b866298e808a8d96eefbefbceb275</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+console.log(" PS - Calling jio.ajax to URL: ", new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url))); return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { var base_manifest_text\n
+= response.target.responseText, manifest_dict, relative_url_list, i, hash =\n
+rusha.digestFromString(base_manifest_text);/* + response.target\n
+.getResponseHeader("ETag")); console.log(" PS - manifest jio.ajax response:",\n
+response); console.log(" PS - manifest jio.ajax response status:",\n
+response.target.status); console.log(" PS - getting url list to cache from\n
+manifest", storage._precache_manifest_script); console.log(" PS - ETag header\n
+response: ", response.target.getResponseHeader("ETag")); console.log(" PS -\n
+HASH generated from ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log(" MANIFEST HEADER RESPONSE IS NULL!!"); }*/\n
+console.log(" PS - HASH from precache response content:", hash); manifest_dict\n
+= JSON.parse(base_manifest_text); var key, manifest_dict_keys = Object.keys\n
+(manifest_dict); for (i = 0; i < manifest_dict_keys.length; i += 1) { if (!\n
+manifest_dict_keys[i].startsWith(\'precache_modification_date\')) {\n
+relative_url_list.append(); } } //relative_url_list = Object.keys\n
+(manifest_dict); storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { console.log("PS - manifest jio.ajax failed:", error); if\n
+(error.target.status === 404 && !error.message) { error.message = "Couldn\'t get\n
+the precache manifest \'" + storage._precache_manifest_script + "\'"; } throw\n
+error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }(window, jIO, RSVP,\n
+Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1596210469.79</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>4634</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:4:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>e67b93e3c1421aaf04604bec528f422f</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+getting url list to cache from manifest:", storage._precache_manifest_script);\n
+var base_manifest_text = response.target.responseText, relative_url_list, i,\n
+hash = rusha.digestFromString(base_manifest_text + response.target\n
+.getResponseHeader("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (!hash) { console.log("MANIFEST HASH\n
+IS NULL!!"); } relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { if (error.target.status === 404 && !error.message) { error.message =\n
+"Couldn\'t get the precache manifest \'" + storage._precache_manifest_script +\n
+"\'"; } throw error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }\n
+(window, jIO, RSVP, Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595359105.64</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3929</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:5:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>b7cc5e8d8136f16ede6ca094908cc3da</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+getting url list to cache from manifest:", storage._precache_manifest_script);\n
+var base_manifest_text = response.target.responseText, relative_url_list, i,\n
+hash = rusha.digestFromString(base_manifest_text + response.target\n
+.getResponseHeader("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (hash === null) { console.log\n
+("MANIFEST HASH IS NULL!!"); } relative_url_list = Object.keys(JSON.parse\n
+(base_manifest_text)); storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { if (error.target.status === 404 && !error.message) { error.message =\n
+"Couldn\'t get the precache manifest \'" + storage._precache_manifest_script +\n
+"\'"; } throw error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }\n
+(window, jIO, RSVP, Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595360059.46</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3939</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:6:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>1e3be3c3e23b2240e13a3215a65f1932</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+getting url list to cache from manifest:", storage._precache_manifest_script);\n
+var base_manifest_text = response.target.responseText, relative_url_list, i,\n
+hash = rusha.digestFromString(base_manifest_text + response.target\n
+.getResponseHeader("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (hash === null) { console.log\n
+("MANIFEST HASH IS NULL!!"); return; } relative_url_list = Object.keys\n
+(JSON.parse(base_manifest_text)); storage._relative_url_list.push\n
+(storage._version); storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { if (error.target.status === 404 && !error.message) { error.message =\n
+"Couldn\'t get the precache manifest \'" + storage._precache_manifest_script +\n
+"\'"; } throw error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }\n
+(window, jIO, RSVP, Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595360074.37</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3948</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:7:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>49a2b4bea4161615aff122311283d65d</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+getting url list to cache from manifest:", storage._precache_manifest_script);\n
+var base_manifest_text = response.target.responseText, relative_url_list, i,\n
+hash = rusha.digestFromString(base_manifest_text + response.target\n
+.getResponseHeader("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HASH IS NULL!!"); }\n
+relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { if (error.target.status === 404 && !error.message) { error.message =\n
+"Couldn\'t get the precache manifest \'" + storage._precache_manifest_script +\n
+"\'"; } throw error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }\n
+(window, jIO, RSVP, Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595360872.54</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3975</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>38523:9:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>50d14270df28926aac8ea50beb9fe125</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent:2, maxlen: 80, nomen: true */ /*global jIO, RSVP, window,\n
+Rusha, Blob, URL, console */ (function (window, jIO, RSVP, Rusha, Blob, URL,\n
+console) { "use strict"; var rusha = new Rusha(); function PreCacheStorage\n
+(spec) { this._precache_manifest_script = spec.manifest; this._take_installer =\n
+spec.take_installer || false; this._origin_url = spec.origin_url !== undefined\n
+? spec.origin_url : window.location.href; this._version = spec.version || "";\n
+this._prefix = spec.prefix || "./"; this._documents = {}; // Harcoded here,\n
+find a better way. if (this._take_installer) { this._relative_url_list = [\n
+this._prefix, this._prefix + "gadget_officejs_bootloader.js", this._prefix +\n
+"gadget_officejs_bootloader.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.html", this._prefix +\n
+"gadget_officejs_bootloader_presentation.js", this._prefix +\n
+"gadget_officejs_bootloader_presentation.css", this._prefix +\n
+"gadget_officejs_bootloader_serviceworker.js", this._prefix +\n
+"gadget_erp5_nojqm.css", this._prefix + "officejs_logo.png", this._prefix +\n
+"jio_precachestorage.js" ]; } else { this._relative_url_list = [this._prefix +\n
+"/"]; } if (this._take_installer) { this._version = \'app/\'; } this._version =\n
+this._prefix + this._version; } PreCacheStorage.prototype.get = function (id) {\n
+if (this._documents.hasOwnProperty(id)) { return this._documents[id]; } throw\n
+new jIO.util.jIOError(\'can not find document : \' + id, 404); };\n
+PreCacheStorage.prototype.hasCapacity = function () { return true; };\n
+PreCacheStorage.prototype.getAttachment = function (origin_url, relative_url) {\n
+return new RSVP.Queue() .push(function () { return jIO.util.ajax({ type: "GET",\n
+url: new URL(relative_url, origin_url), dataType: "blob" }); }) .push(function\n
+(result) { return result.target.response; }); };\n
+PreCacheStorage.prototype.allAttachments = function (id) { if (id ===\n
+this._origin_url) { var result = {}, i, len = this._relative_url_list.length;\n
+for (i = 0; i < len; i += 1) { result[this._relative_url_list[i]] = {}; }\n
+return result; } return []; }; PreCacheStorage.prototype.buildQuery = function\n
+() { var result = [], id; for (id in this._documents) { if\n
+(this._documents.hasOwnProperty(id)) { result.push({ \'id\': id, \'value\':\n
+this._documents[id], \'doc\': this._documents[id] }); } } return result; };\n
+PreCacheStorage.prototype.repair = function () { console.log("PRECACHE STORAGE\n
+REPAIR"); var storage = this, url; return new RSVP.Queue() .push(function () {\n
+return jIO.util.ajax({ type: "GET", url: new URL\n
+(storage._precache_manifest_script, new URL(storage._version,\n
+storage._origin_url)) }); }) .push(function (response) { console.log("PS -\n
+getting url list to cache from manifest:", storage._precache_manifest_script);\n
+var base_manifest_text = response.target.responseText, relative_url_list, i,\n
+hash = rusha.digestFromString(base_manifest_text + response.target\n
+.getResponseHeader("ETag")); console.log("PS - manifest ETag header response:",\n
+response.target.getResponseHeader("ETag")); console.log("PS - HASH generated\n
+from text manifest and ETag:", hash); if (response.target.getResponseHeader\n
+("ETag") === null) { console.log("MANIFEST HEADER RESPONSE IS NULL!!"); return;\n
+} relative_url_list = Object.keys(JSON.parse(base_manifest_text));\n
+storage._relative_url_list.push(storage._version);\n
+storage._relative_url_list.push(storage._version +\n
+storage._precache_manifest_script); storage._documents[storage._origin_url] =\n
+{\'hash\': hash}; for (i = 0; i < relative_url_list.length; i += 1) { url =\n
+relative_url_list[i]; if (url.includes(\'?\')) { throw new Error("It is not allow\n
+to cache urls with parameters." + " url: " + url); }\n
+storage._relative_url_list.push( storage._version + url ); } }, function\n
+(error) { if (error.target.status === 404 && !error.message) { error.message =\n
+"Couldn\'t get the precache manifest \'" + storage._precache_manifest_script +\n
+"\'"; } throw error; }); }; jIO.addStorage(\'precache\', PreCacheStorage); }\n
+(window, jIO, RSVP, Rusha, Blob, URL, console));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1595361012.7</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3994</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jio_precachestorage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish_alive</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1586165638.67</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>985.40632.28887.119</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1596211717.28</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>detect_converted_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>converted</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1586165299.65</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

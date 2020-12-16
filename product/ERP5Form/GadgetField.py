@@ -6,6 +6,7 @@ from zLOG import LOG, ERROR
 from cStringIO import StringIO
 from json import dumps
 from Acquisition import aq_base
+from urlparse import urljoin
 
 class GadgetWidget(Widget.Widget):
   """
@@ -40,9 +41,15 @@ class GadgetWidget(Widget.Widget):
     return self.render_view(field, value, REQUEST, render_prefix, key)
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None, key=None):
+    gadget_url = field.get_value('gadget_url')
+    if gadget_url:
+      gadget_component = field.restrictedTraverse(gadget_url, None)
+      if gadget_component is not None:
+        gadget_url = gadget_component.absolute_url()
     kw = {
       'data-gadget-sandbox': field.get_value('js_sandbox'),
-      'data-gadget-url': field.get_value('gadget_url'),
+      # Duplicate the absolute url logic of xhtml style
+      'data-gadget-url': gadget_url,
       'data-gadget-value': value,
       'data-gadget-renderjs-extra': dumps(dict(field.get_value('renderjs_extra')))
     }

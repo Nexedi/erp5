@@ -90,6 +90,9 @@ class TestInvalidationBug(ERP5TypeTestCase):
     self.assertEqual(result_list[-2], None)  # ZODB
     self.assertEqual(result_list[-1], [1,1]) # activity tables last
 
+  # TODO: - skip this test for ZEO>=5 because it's covered upstream
+  #         (and later remove it)
+  #       - in slapos.git, enable server_sync in zope.conf
   def testLateInvalidationFromZEO(self):
     ### Check unit test is run properly
     from ZEO.ClientStorage import ClientStorage
@@ -185,7 +188,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
       skin_folder.manage_delObjects(ids=['create_script'])
     skin = createZODBPythonScript(skin_folder, 'create_script', '**kw',
         """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 id_list = []
 for x in xrange(0, 1):
   organisation = context.newContent()

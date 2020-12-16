@@ -38,10 +38,11 @@ from cStringIO import StringIO
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
+import Products.ERP5
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
-from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document, ConversionError,\
+from erp5.component.document.File import File
+from erp5.component.document.Document import Document, ConversionError,\
                      VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
                      DEFAULT_DISPLAY_ID_LIST, _MARKER
 from os.path import splitext
@@ -49,12 +50,12 @@ from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from zLOG import LOG, WARNING
 
-from Products.ERP5Type.ImageUtil import transformUrlToDataURI
+from erp5.component.module.ImageUtil import transformUrlToDataURI
 
 # import mixin
-from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
 
-def getDefaultImageQuality(portal, format=None):
+def getDefaultImageQuality(portal, format=None):  # pylint: disable=redefined-builtin
   preference_tool = portal.portal_preferences
   return preference_tool.getPreferredImageQuality()
 
@@ -173,7 +174,10 @@ class Image(TextConvertableMixin, File, OFSImage):
     return self.height
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
-  def getContentType(self, default=_MARKER):
+  def getContentType(  # pylint: disable=arguments-differ
+      self,
+      default=_MARKER,
+    ):
     """Original photo content_type."""
     self._upgradeImage()
     if self.hasData() and not self.hasContentType():
@@ -208,8 +212,13 @@ class Image(TextConvertableMixin, File, OFSImage):
     return links
 
   security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
-  def displayMap(self, exclude=None, format=None, quality=_MARKER,\
-                                                              resolution=None):
+  def displayMap(
+      self,
+      exclude=None,
+      format=None,  # pylint: disable=redefined-builtin
+      quality=_MARKER,
+      resolution=None,
+  ):
     """Return list of displays with size info."""
     displays = []
     if quality is _MARKER:
@@ -236,7 +245,7 @@ class Image(TextConvertableMixin, File, OFSImage):
 
 
   security.declarePrivate('_convertToText')
-  def _convertToText(self, format):
+  def _convertToText(self, format):  # pylint: disable=redefined-builtin
     """
     Convert the image to text with portaltransforms
     """
@@ -258,7 +267,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     return mime_type, result
 
   # Conversion API
-  def _convert(self, format, **kw):
+  def _convert(self, format, **kw):  # pylint: disable=redefined-builtin
     """
     Implementation of conversion for Image files
     """
@@ -319,10 +328,20 @@ class Image(TextConvertableMixin, File, OFSImage):
   # Photo processing
   #
 
-  def _resize(self, quality, width, height, format, resolution, frame, crop=False):
+  def _resize(
+      self,
+      quality,
+      width,
+      height,
+      format,  # pylint: disable=redefined-builtin
+      resolution,
+      frame,
+      crop=False,
+  ):
     """Resize and resample photo."""
-    icc_profile = os.path.join(os.path.dirname(__file__),
-                               '..', 'misc', 'sRGB.icc')
+    # https://github.com/saucecontrol/Compact-ICC-Profiles
+    icc_profile = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                               'misc', 'sRGB-v2-magic.icc')
     parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8',
                       '-profile', icc_profile]
     if crop :
@@ -376,7 +395,15 @@ class Image(TextConvertableMixin, File, OFSImage):
       return StringIO(image)
     raise ConversionError('Image conversion failed (%s).' % err)
 
-  def _getDisplayData(self, format, quality, resolution, frame, image_size, crop):
+  def _getDisplayData(
+      self,
+      format,  # pylint: disable=redefined-builtin
+      quality,
+      resolution,
+      frame,
+      image_size,
+      crop,
+  ):
     """Return raw photo data for given display."""
     if crop:
       width, height = image_size
@@ -389,13 +416,19 @@ class Image(TextConvertableMixin, File, OFSImage):
       return self.getData()
     return self._resize(quality, width, height, format, resolution, frame, crop)
 
-  def _makeDisplayPhoto(self, format=None, quality=_MARKER,
-                                 resolution=None, frame=None, image_size=None,
-                                 crop=False):
+  def _makeDisplayPhoto(
+      self,
+      format=None,  # pylint: disable=redefined-builtin
+      quality=_MARKER,
+      resolution=None,
+      frame=None,
+      image_size=None,
+      crop=False,
+  ):
     """Create given display."""
     if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
-    width, height = image_size
+    width, height = image_size  # pylint: disable=unpacking-non-sequence
     base, ext = splitext(self.id)
     id_ = '%s_%s_%s.%s'% (base, width, height, ext,)
     image = OFSImage(id_, self.getTitle(),
@@ -453,7 +486,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     self._update_image_info()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultImageQuality')
-  def getDefaultImageQuality(self, format=None):
+  def getDefaultImageQuality(self, format=None):  # pylint: disable=redefined-builtin
     """
     Get default image quality for a format.
     """

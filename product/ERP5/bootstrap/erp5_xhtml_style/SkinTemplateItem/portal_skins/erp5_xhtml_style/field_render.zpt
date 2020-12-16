@@ -4,7 +4,7 @@
   <tal:block metal:define-macro="field_render">
     <tal:block tal:condition="python: field.meta_type != 'HiddenStringField'"
                tal:define="field_id     field/id;
-               value        python: request.get(field_id, None);
+               value        python: request.get(field_id);
                render_prefix render_prefix | nothing;
                key_prefix key_prefix | nothing;
                field_errors python: request.get('field_errors', {});

@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Solver Type" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>automatic_solver</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>delivery_solver/portal_solvers/FIFO Delivery Solver</string>
+                <string>conflicting_solver/portal_solvers/Accept Solver</string>
+                <string>conflicting_solver/portal_solvers/Adopt Solver</string>
+                <string>conflicting_solver/portal_solvers/Quantity Cancel Solver</string>
+                <string>conflicting_solver/portal_solvers/Quantity Split Move Solver</string>
+                <string>conflicting_solver/portal_solvers/Quantity Split Solver</string>
+                <string>conflicting_solver/portal_solvers/Simple Quantity Split Solver</string>
+                <string>conflicting_solver/portal_solvers/Trade Model Solver</string>
+                <string>conflicting_solver/portal_solvers/Unify Solver</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>GenericSolver_viewConfigurationFormBox</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_groupable</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>configuration_property_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The Accept Solver solves the divergence by accepting the decision and updating a simulation movement.</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addAcceptSolver</string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>target_solver</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Automatic Accept Solver</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>line_exclusive</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>line_groupable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Solver Type</string> </value>
+        </item>
+        <item>
+            <key> <string>process_exclusive</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>solver_action_title</string> </key>
+            <value> <string>Accept new value automatically</string> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value>
+              <tuple>
+                <string>aggregate</string>
+                <string>base_application</string>
+                <string>base_contribution</string>
+                <string>delivery_mode</string>
+                <string>description</string>
+                <string>destination</string>
+                <string>destination_account</string>
+                <string>destination_administration</string>
+                <string>destination_decision</string>
+                <string>destination_function</string>
+                <string>destination_payment</string>
+                <string>destination_project</string>
+                <string>destination_section</string>
+                <string>incoterm</string>
+                <string>ledger</string>
+                <string>price</string>
+                <string>price_currency</string>
+                <string>resource</string>
+                <string>source</string>
+                <string>source_account</string>
+                <string>source_administration</string>
+                <string>source_decision</string>
+                <string>source_function</string>
+                <string>source_payment</string>
+                <string>source_project</string>
+                <string>source_section</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>use</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>AcceptSolver</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

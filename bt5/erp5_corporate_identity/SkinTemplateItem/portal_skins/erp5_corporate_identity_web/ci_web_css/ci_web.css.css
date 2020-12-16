@@ -16,9 +16,9 @@ fieldset {
 .ci-web .ci-web-page-content h2,
 .ci-web .ci-web-page-content h3,
 .ci-web .ci-web-page-banner h1,
-.ci-web .ci-web-page-banner h2, 
+.ci-web .ci-web-page-banner h2,
 .ci-web .ci-web-page-banner h3,
-.ci-web details, 
+.ci-web details,
 .ci-web menu,
 .ci-web .ci-web-page-banner .breadcrumb a,
 .ci-web .ci-web-page-banner .widget {
@@ -112,7 +112,7 @@ fieldset {
   font-weight: bold;
 }
 @media(max-width: 45em) {
-  
+
   .ci-web .ci-web-header-bar-logo-left span {
     display: block;
     width: auto;
@@ -146,7 +146,51 @@ fieldset {
   -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
   -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
   box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
+  display: flex;
 }
+
+.ci-web .ci-web-header-bar-navigation-left {
+  flex:1;
+}
+
+ul.ci-web-header-menu-lang{
+  position: absolute;
+	right: 3px;
+	z-index: 666;
+  background: rgb(235,235,235);
+  width: 53px;
+  height: 28px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+ul.ci-web-header-menu-lang:hover {
+	height: auto;
+	cursor: pointer;
+}
+
+
+ul.ci-web-header-menu-lang li a {
+	display: inline-block;
+	width: 23px;
+	height: 28px;
+	padding: 0 0 0 30px;
+	font-size: 12px;
+	line-height: 30px;
+	text-transform: uppercase;
+	background: url(../img/flag-fr.png) no-repeat 7px 9px;
+}
+
+ul.ci-web-header-menu-lang li.fr a { background-image: url(../img/flag-fr.png); }
+ul.ci-web-header-menu-lang li.de a { background-image: url(../img/flag-de.png); }
+ul.ci-web-header-menu-lang li.en a { background-image: url(../img/flag-gb.png); }
+ul.ci-web-header-menu-lang li.pt a { background-image: url(../img/flag-pt.png); }
+ul.ci-web-header-menu-lang li.zh a { background-image: url(../img/flag-zh.png); }
+ul.ci-web-header-menu-lang li.ja a { background-image: url(../img/flag-ja.png);}
+
+ul.ci-web-header-menu-lang li a:hover { background-color: rgb(215,215,215); }
+ul.ci-web-header-menu-lang li a.selected:hover { background-color: rgba(0,0,0,0); }
 
 /* ==== site-banner === */
 .ci-web-page-banner {
@@ -197,25 +241,39 @@ ci-web-header-bar-search-right
   margin-top: .5em;
 }
 .ci-web .ci-web-page-content table {
-  border-collapse: collapse;
+  margin: auto;
   border: 1px solid #808080;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 .ci-web .ci-web-page-content table thead {
   background: #F0F0F0;
 }
 .ci-web .ci-web-page-content table thead th,
 .ci-web .ci-web-page-content table thead td {
-  padding: 1em .25em;
+  /* padding: 1em .25em; */
+  padding: 1em 0.5em;
+  border-bottom: 1px solid;
 }
 .ci-web .ci-web-page-content table tbody th,
 .ci-web .ci-web-page-content table tbody td {
-  padding: 0 .25em;
+  /* padding: 0 .25em; */
+  padding: .25em 0.5em;
+  border-bottom: 1px solid;
 }
+.ci-web .ci-web-page-content table tbody tr:last-child th,
+.ci-web .ci-web-page-content table  tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
 .ci-web .ci-web-page-content img {
   width: 100%;
 }
+/* As header h* and link a use the same color,
+   keep the underline to differenciate links */
 .ci-web .ci-web-page-content a {
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 /* prevent inline code elements to break page width */
@@ -245,6 +303,12 @@ ci-web-header-bar-search-right
   .ci-web .ci-web-page-content tr { 
 		display: block; 
 	}
+  .ci-web .ci-web-page-content table thead th,
+  .ci-web .ci-web-page-content table thead td,
+  .ci-web .ci-web-page-content table tbody th,
+  .ci-web .ci-web-page-content table tbody td {
+    border-bottom: 0 none;
+  }
 	.ci-web .ci-web-page-content thead tr { 
 		position: absolute !important;
   	height: 1px;

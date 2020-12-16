@@ -91,6 +91,7 @@
                         <string>my_title</string>
                         <string>my_duration</string>
                         <string>my_parent_int_index</string>
+                        <string>my_source_title</string>
                         <string>your_hide_expected_failure</string>
                       </list>
                     </value>
@@ -103,6 +104,7 @@
                         <string>my_failures</string>
                         <string>my_errors</string>
                         <string>my_skips</string>
+                        <string>my_test_result_retry_count</string>
                         <string>my_string_index</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>

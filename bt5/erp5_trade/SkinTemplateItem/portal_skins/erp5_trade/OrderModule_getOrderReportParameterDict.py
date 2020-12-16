@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import getIntervalListBetweenDates
+from erp5.component.module.DateUtils import getIntervalListBetweenDates
 from DateTime import DateTime
 
 request = container.REQUEST

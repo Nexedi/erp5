@@ -29,7 +29,6 @@
 import hashlib
 import json
 import validictory
-from Products.ERP5Type.Document import newTempFile
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
@@ -71,7 +70,7 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
                          follow_up_uid=data_set.getUid(),
                          validation_state='published')]
 
-    temp_file = newTempFile(self, '%s.txt' % key)
+    temp_file = self.newContent(temp_object=True, portal_type='File', id='%s.txt' % key)
     temp_file.setData(json.dumps(document_list))
     temp_file.setContentType('application/json')
     return temp_file.getObject()

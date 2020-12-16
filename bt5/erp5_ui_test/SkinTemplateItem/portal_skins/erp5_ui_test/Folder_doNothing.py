@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 log("Folder method received dialog_id, form_id, uids and {!s}".format(kwargs.keys()))
 

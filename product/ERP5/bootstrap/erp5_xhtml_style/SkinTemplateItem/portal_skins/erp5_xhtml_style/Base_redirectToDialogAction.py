@@ -1,3 +1,5 @@
+# pylint: disable=redefined-builtin
+# this script uses format argument
 if '?' in dialog_action_url:
   dialog_action_url = '%s&form_id=%s' % (dialog_action_url, form_id)
 else:

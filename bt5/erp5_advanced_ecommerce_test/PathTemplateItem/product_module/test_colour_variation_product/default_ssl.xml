@@ -1,0 +1,355 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Sale Supply Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_price</string> </key>
+            <value> <float>149.95</float> </value>
+        </item>
+        <item>
+            <key> <string>base_price_per_slice</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>base_unit_price</string> </key>
+            <value> <float>0.01</float> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>resource/product_module/test_colour_variation_product</string>
+                <string>price_currency/currency_module/test_eur</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_ssl</string> </value>
+        </item>
+        <item>
+            <key> <string>index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>mapped_value_property_list</string> </key>
+            <value>
+              <tuple>
+                <string>base_price</string>
+                <string>additional_price</string>
+                <string>discount_ratio</string>
+                <string>exclusive_discount_ratio</string>
+                <string>surcharge_ratio</string>
+                <string>variable_additional_price</string>
+                <string>non_discountable_additional_price</string>
+                <string>priced_quantity</string>
+                <string>base_unit_price</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>p_variation_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>colour</string>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Sale Supply Line</string> </value>
+        </item>
+        <item>
+            <key> <string>price</string> </key>
+            <value> <float>0.0</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity_step</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>path</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <int>0</int> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <int>1</int> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>982.7924.54262.64733</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1583311574.44</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="11" aka="AAAAAAAAAAs=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>colour/blue</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>colour/red</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="12" aka="AAAAAAAAAAw=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>variation/product_module/test_colour_variation_product/12</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

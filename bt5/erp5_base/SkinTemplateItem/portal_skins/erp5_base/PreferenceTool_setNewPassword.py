@@ -14,4 +14,4 @@ else:
   context.portal_caches.clearCache(('erp5_content_short',))
   context.logout()
   return context.Base_redirect()
-return context.Base_redirect(dialog_id, keep_items={'portal_status_message': msg})
+return context.Base_redirect(dialog_id, keep_items={'portal_status_message': msg, 'portal_status_level': 'error'})

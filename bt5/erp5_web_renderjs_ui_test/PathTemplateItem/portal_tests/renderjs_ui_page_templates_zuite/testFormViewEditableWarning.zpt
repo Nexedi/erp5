@@ -16,16 +16,12 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
   <td></td>
 </tr>
 
@@ -79,8 +75,10 @@
   <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit' and contains(@class, 'ui-icon-check')]</td>
   <td></td>
 </tr>

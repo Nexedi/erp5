@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -36,24 +35,24 @@ from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document, \
+from erp5.component.document.File import File
+from erp5.component.document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from Products.ERP5Type.Utils import fill_args_from_request
 
 # Mixin Import
-from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
-from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
+from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
 from erp5.component.mixin.OOoDocumentExtensibleTraversableMixin import OOoDocumentExtensibleTraversableMixin
 
 EMBEDDED_FORMAT = '_embedded'
 
-from Products.ERP5.Document.Document import DocumentConversionServerProxy
+from erp5.component.document.Document import DocumentConversionServerProxy
 # Backward compatibility only
-from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT # pylint: disable=unused-import
-from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY # pylint: disable=unused-import
-from Products.ERP5.Document.Document import global_server_proxy_uri_failure_time # pylint: disable=unused-import
-from Products.ERP5.Document.Document import enc, dec
+from erp5.component.document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT # pylint: disable=unused-import
+from erp5.component.document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY # pylint: disable=unused-import
+from erp5.component.document.Document import global_server_proxy_uri_failure_time # pylint: disable=unused-import
+from erp5.component.document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
@@ -190,7 +189,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
 
     return cached_getTargetFormatItemList(self.getBaseContentType())
 
-  def _getConversionFromProxyServer(self, format):
+  def _getConversionFromProxyServer(self, format): #  pylint: disable=redefined-builtin
     """
       Communicates with server to convert a file
     """
@@ -226,7 +225,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  def _convert(self, format, frame=0, **kw):
+  def _convert(self, format, frame=0, **kw): #  pylint: disable=redefined-builtin
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
@@ -346,8 +345,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     if zip_file is None:
       format_list = [x for x in self.getTargetFormatList()
                                 if x.startswith('html') or x.endswith('html')]
-      format = format_list[0]
-      mime, data = self._getConversionFromProxyServer(format)
+      mime, data = self._getConversionFromProxyServer(format_list[0])
       archive_file = cStringIO.StringIO()
       archive_file.write(str(data))
       zip_file = zipfile.ZipFile(archive_file)

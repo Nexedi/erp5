@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 # this script is no longer needed.
 log('Category_getSortedCategoryChildValueList', 'use getCategoryChildValueList method')
 

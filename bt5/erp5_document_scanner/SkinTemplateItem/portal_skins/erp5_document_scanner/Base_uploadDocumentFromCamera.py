@@ -5,9 +5,9 @@ class StringIOWithFileName(StringIO):
     kw.get("title") or DateTime().strftime('%d-%m-%Y_%Hh%M'))
 
 portal = context.getPortalObject()
-active_process = portal.restrictedTraverse(active_process_url)
+active_process = portal.restrictedTraverse(str(active_process_url))
 
-pdf_data_list = context.Base_getTempImageList(active_process)
+pdf_data_list = context.Base_getTempImageList(active_process, image_list)
 pdf_data = context.ERP5Site_mergePDFList(pdf_data_list=pdf_data_list)
 file_object = StringIOWithFileName(pdf_data)
 
@@ -18,13 +18,6 @@ doc = context.Base_contribute(file=file_object,
                               **kw)
 
 if publication_state == "shared":
-  action_list = ["share",]
+  doc.share()
 elif publication_state == "released":
-  action_list = ["share", "release"]
-else:
-  action_list = []
-
-for action in action_list:
-  getattr(doc, action)()
-
-context.Base_removeActiveProcessFromActivityTool(active_process)
+  doc.release()

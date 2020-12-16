@@ -15,8 +15,8 @@ html {
 .ci-slideshow-handout .ci-slideshow-handout-header {
   font-size: 42px;
 }
-.ci-slideshow h1 ~ *:not(h2),
-.ci-slideshow h2 ~ *:not(h2) {
+.ci-slideshow h1 ~ *:not(h2):not(table),
+.ci-slideshow h2 ~ *:not(h2):not(table) {
   font-size: 28px;
 }
 .ci-slideshow h1 ~ table {
@@ -183,7 +183,7 @@ section {
 /* content */
 .ci-slideshow h1 {
   text-align: center;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 }
 .ci-slideshow section {
   display: table;
@@ -264,14 +264,15 @@ html .ci-slideshow p code {
   padding: 0 !important;
 }
 .ci-slideshow section img {
-  /* used to be width: 80%, Cedric width: 70%;*/
-  width: 57%;
+  /* used to be width: 80%, Cedric asked 70%;*/
+  /* long time width: 57%; */
 }
 .ci-slideshow section h1 + img,
 .ci-slideshow section h1 + h2 + img {
   display: block;
   margin: 0 auto;
 }
+
 /* object fit does not work in wkhtmltopdf, find workaround
 html .ci-slideshow img {
   border: 0 none;
@@ -301,6 +302,41 @@ html .ci-slideshow section img + img:last-child {
   padding: 10px;
 }
 
+/* tables */
+table {
+  margin-top: 24px !important;
+}
+table * {
+  font-size: 16px !important;
+}
+.ci-slideshow table,
+.ci-slideshow-handout table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 0 none;
+}
+.ci-slideshow table tr,
+.ci-slideshow-handout table tr {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+.ci-slidesho table tr td,
+.ci-slideshow-handout table tr td,
+.ci-slidesho table tr th,
+.ci-slideshow-handout table tr th {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  text-align: left;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border-bottom: 1px solid;
+}
 /* notes header */
 .ci-slideshow-handout .ci-slideshow-handout-header {
   text-align: center;
@@ -453,6 +489,9 @@ html .ci-slideshow section img + img:last-child {
 .ci-slideshow-handout section * {
   font-size: 10mm;
 }
+.ci-slideshow-handout h1 {
+  text-align: center;
+}
 .ci-slideshow-handout h1,
 .ci-slideshow-handout section h2,
 .ci-slideshow-handout .ci-slideshow-handout-header {
@@ -488,6 +527,7 @@ html .ci-slideshow section img + img:last-child {
 .ci-slideshow-handout section h1 ~ ul {
   text-align: left;
   display: inline-block;
+  margin-top: 24px !important;
 }
 .ci-slideshow-handout section ul {
   margin-top: 0;

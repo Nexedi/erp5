@@ -1,5 +1,4 @@
 portal = context.getPortalObject()
-hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())
 
 def getSubstitutionMappingDict():
   destination = event_value.getDestinationValue()

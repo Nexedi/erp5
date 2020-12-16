@@ -15,6 +15,7 @@
   );
 
   gadget_klass
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -30,7 +31,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            gadget.getDeclaredGadget("unsplash"),
+            //gadget.getDeclaredGadget("unsplash"),
             gadget.updateHeader({
               page_title: 'Free Software Publisher Directory'
             })
@@ -41,8 +42,8 @@
             gadget.jio_allDocs({
               select_list: ['category_list'],
               query: 'portal_type:"software"'
-            }),
-            my_response_list[0].render()
+            })
+            //my_response_list[0].render()
           ]);
         })
         .push(function (my_response_list) {
@@ -72,19 +73,33 @@
               select_list: [
                 'title',
                 'publisher',
-                'logo'
+                'logo',
+                'uid'
               ],
               query: 'category_list:"%' + category + '%" AND portal_type:"software"'
             })
             .push(function (softwares) {
-              softwares.data.rows.map(function (sw) {
-                // XXX hardcoded page and view
-                sw.value.href = "#/" + sw.id + "?page=afs_software&view=view";
-              });
-              return {
-                category: category,
-                softwares: softwares.data.rows
-              };
+              return new RSVP.Queue()
+                .push(function () {
+                  return RSVP.all(softwares.data.rows.map(function (sw) {
+                    return gadget.getUrlFor({command: "display", options: {
+                        jio_key: sw.value.uid,
+                        page: "afs_software",
+                        view: "view"
+                      }
+                    })
+                      .push(function (href) {
+                        //sw.value.href = "#!/" + sw.value.uid + "?page=afs_software&view=view";
+                        sw.value.href = href;
+                      });
+                  }));
+                })
+                .push(function () {
+                  return {
+                    category: category,
+                    softwares: softwares.data.rows
+                  };
+                });
             });
           });
 

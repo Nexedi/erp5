@@ -12,7 +12,6 @@
               <list>
                 <string>description</string>
                 <string>title</string>
-                <string>default</string>
               </list>
             </value>
         </item>
@@ -55,10 +54,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -70,6 +67,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -101,22 +102,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.isStaticLanguageSelection() * \'checked\'</string> </value>
         </item>
       </dictionary>
     </pickle>

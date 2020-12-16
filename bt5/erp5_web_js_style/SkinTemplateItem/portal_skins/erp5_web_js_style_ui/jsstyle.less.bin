@@ -1,0 +1,63 @@
+.flattenNav() {
+  background-color: #DDD;
+
+  // Put the title and the first list on the same line
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  // Increase header size
+  min-height: 2.5em;
+  align-items: center;
+
+  > a {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  ul {
+    margin: 0;
+  }
+  ul, li, a {
+    padding: 0;
+    display: flex;
+    flex: 1;
+    &:not(:first-child) {
+      padding: 0 1em;
+    }
+  }
+}
+
+body {
+  display: grid;
+  grid-template-raws: repeat(3, 1fr); 
+
+  > nav#sitemap {
+    grid-row: 1;
+
+    .flattenNav();
+  }
+
+  main {
+    grid-row: 2;
+
+    fieldset {
+      border: none;
+      > div {
+        display: flex;
+        flex-flow: row nowrap;
+        > label {
+          margin-right: 1em;
+          font-weight: bold;
+          min-width: 10%;
+        }
+      }
+    }
+  }
+
+  > nav#language {
+    grid-row: 3;
+
+    .flattenNav();
+  }
+}

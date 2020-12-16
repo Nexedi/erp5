@@ -40,10 +40,6 @@ from base64 import b64encode
 blank = ''
 pref = context.getPortalObject().portal_preferences
 
-# ------------------ HTML cleanup/converter methods ----------------------------
-def translateText(snip):
-  return book_localiser.erp5_ui.gettext(snip, lang=book_language).encode('UTF-8').strip()
-
 # -------------------------- Setup ---------------------------------------------
 book = context
 book_format = kw.get('format') or 'html'
@@ -51,7 +47,7 @@ book_download = int(kw.get('document_download') or 0)
 book_save = int(kw.get('document_save') or 0)
 book_display_svg = kw.get('display_svg') or 'png'
 
-book_include_content_table = int(kw.get('include_content_table') or 1)
+book_include_content_table = int(kw.get('include_content_table') or 0)
 book_include_history_table = int(kw.get('include_history_table') or 0)
 book_include_reference_table = int(kw.get('include_reference_table') or 0)
 book_include_linked_content = int(kw.get('include_linked_content') or 0)
@@ -69,7 +65,6 @@ override_logo_reference = kw.get('override_logo_reference')
 override_batch_mode = kw.get('batch_mode')
 
 # -------------------------- Document Parameters  ------------------------------
-book_localiser = book.getPortalObject().Localizer
 book_relative_url = book.getRelativeUrl()
 book_prefix = pref.getPreferredCorporateIdentityTemplateBookDocumentPrefix() or "Book."
 book_rendering_fix = book.WebPage_getPdfOutputRenderingFix() or blank
@@ -90,20 +85,18 @@ book_title = html_quote(override_document_title) if override_document_title else
 if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
-# backcompat
-book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
-
 # override for tests
 if override_batch_mode:
   book_modification_date = DateTime("1976-11-04")
   book_revision = "1"
 
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
-if book_language and book_language != blank:
+if book_language:
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
 else:
   book_language = blank
-if book_reference is None:
+
+if not book_reference:
   book_reference = book_prefix + book_title.replace(" ", ".")
 book_full_reference = '-'.join([book_reference, book_version, book_language])
 
@@ -139,11 +132,11 @@ if book_include_history_table:
   book_version_list = []
   book_distribution_list = []
 
-# old generate book
+# old generate book, this embed link like <a href="Template.Test.Book.Embeddable.Document">This link should be embedded</a>
 if book_include_linked_content:
   book_content = book.WebPage_embedLinkedDocumentList(doc_content=book_content)
 
-# embed reports
+# embed reports, link like <a href="project_module/1234?report=bam>, which has report=
 if book_include_report_content:
   book_report_css_list = pref.getPreferredCorporateIdentityTemplateReportCssList() or []
   book_report_js_list = pref.getPreferredCorporateIdentityTemplateReportJsList() or []
@@ -156,19 +149,19 @@ if book_include_reference_table:
   image_link_list = book.WebPage_createImageOverview(book_content)
   for referenced_document in book_link_list.get("reference_list", []):
     book_reference_list.append(referenced_document.get("item"))
-    book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"))
+    book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"),1)
   for applicable_document in book_link_list.get("applicable_list", []):
     book_applicable_document_list.append(applicable_document.get("item"))
-    book_content = book_content.replace(applicable_document.get("input"), applicable_document.get("output"))
+    book_content = book_content.replace(applicable_document.get("input"), applicable_document.get("output"),1)
   for abbreviation in book_link_list.get("abbreviation_list", []):
     book_abbreviation_list.append(abbreviation.get("item"))
-    book_content = book_content.replace(abbreviation.get("input"), abbreviation.get("output"))
+    book_content = book_content.replace(abbreviation.get("input"), abbreviation.get("output"),1)
   for figure in image_link_list.get("figure_list", []):
     book_image_list.append(figure.get("item"))
-    book_content = book_content.replace(figure.get("input"), figure.get("output"))
+    book_content = book_content.replace(figure.get("input"), figure.get("output"), 1)
   for table in table_link_list.get("table_list", []):
     book_table_list.append(table.get("item"))
-    book_content = book_content.replace(table.get("input"), table.get("output"))
+    book_content = book_content.replace(table.get("input"), table.get("output"), 1)
 
   # in order for the reference tables to be in the table of content, they must
   # be added beforehand to content
@@ -196,6 +189,7 @@ if book_include_reference_table:
   #  book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
   #else:
   #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+  book_references = book.Base_unescape(book_references)
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
 else:
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
@@ -203,7 +197,7 @@ else:
 # table of content has to be created manually to run over everything that
 # should be indexed in the toc
 if book_include_content_table:
-  book_translated_toc_title = translateText("Table of Contents")
+  book_translated_toc_title = context.Base_translateString("Table of Contents", lang=book_language)
   if book_format == "pdf":
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
       book_toc_title=book_translated_toc_title,
@@ -273,11 +267,10 @@ if book_format == "html" or book_format == "mhtml":
       doc_html_file=book_output
     )
 
-  if book_format == "mhtml":
-    return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
+  return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
-if book_format == "pdf":
+elif book_format == "pdf":
   book_cover = book.WebPage_createBookCover(
     book_theme=book_theme.get("theme"),
     book_title=book_title,

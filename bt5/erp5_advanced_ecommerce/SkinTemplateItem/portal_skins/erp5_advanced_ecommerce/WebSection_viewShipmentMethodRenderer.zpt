@@ -1,0 +1,37 @@
+<tal:block tal:define="web_site here/getWebSiteValue;
+                       currency web_site/WebSite_getShoppingCartDefaultCurrency; 
+                       currency_reference currency/getReference; 
+                       available_shipping_resource_list web_site/SaleOrder_getAvailableShippingResourceList;
+                       shipping_category_list here/portal_categories/product_line/shipping/objectValues">
+
+  <tal:block tal:repeat="category shipping_category_list">
+    <div class="shipment_category_item_title">
+      <span i18n:translate="" i18n:domain="content"
+            tal:content="category/getTitle"> Title </span>
+    </div>
+    <div class="shipment_category_item_description">
+      <span i18n:translate="" i18n:domain="content"
+            tal:content="category/getDescription"> Description </span>
+    </div>
+    <tal:block tal:repeat="resource available_shipping_resource_list">
+      <tal:block tal:condition="python: (resource.Resource_getShopPrice() is not None) and resource.getProductLineValue() == category">
+        <div class="shipment_method_item">
+          <input type="radio" tal:attributes="value resource/getRelativeUrl"
+                 name="field_my_shipping_method">
+            <div class="shipment_method_item_title">
+              <span i18n:translate="" i18n:domain="content" 
+                    tal:content="resource/getTitle"> Title </span>
+            </div>
+            <div class="shipment_method_item_price">
+              <span i18n:translate="" i18n:domain="content" 
+                    tal:content="python: '%.2f %s'% (resource.Resource_getShopPrice(), currency_reference)"> Price </span>
+            </div>
+            <div class="shipment_method_item_description">
+              <span i18n:translate="" i18n:domain="content" 
+                    tal:content="resource/getDescription"> Description </span>
+            </div>
+        </div>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

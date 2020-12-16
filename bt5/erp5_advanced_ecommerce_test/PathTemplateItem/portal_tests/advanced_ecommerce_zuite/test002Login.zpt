@@ -1,0 +1,232 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Login</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Login</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Person_invalidatePreviousPerson</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="header_login"]//a[text()='login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Password</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="traditional_subscribe"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="Register New User"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_reference"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_password"]</td>
+  <td>1</td>
+</tr>
+
+ <tr>
+  <td>type</td>
+  <td>//input[@name="field_your_password_confirm"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_first_name"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_last_name"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_default_email_text"]</td>
+  <td>1@info.com</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_default_telephone_text"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//textarea[@name="field_your_default_address_street_address"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_default_address_city"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_your_default_address_zip_code"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_your_default_address_region"]</td>
+  <td>label=Afghanistan</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Register New User"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Your account was successfully created</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//legend[text()="My Account"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "My Orders")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "My Account")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "Logout")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(text(),"My Account")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="Save"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_first_name"]</td>
+  <td>XYZ</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Save"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Your personal informations are now updated</td>
+  <td></td>
+</tr>
+
+<!-- You are logged as XYZ 1 -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[contains(text(), "XYZ 1")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(text(), "My Orders")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>0 records</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(text(), "Logout")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>You have been logged out</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//a[contains(text(),"My Account")]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

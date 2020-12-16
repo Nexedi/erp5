@@ -43,7 +43,8 @@ class Renderer(Filter):
   def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
                      display_method = None, sort_method = None, filter_method = None,
-                     filter_node=0, filter_leave=0,
+                     filter_node=0, disable_node=0,
+                     filter_leave=0, disable_leave=0,
                      is_right_display = 0, translate_display = 0,
                      translatation_domain = None, display_base_category = 0,
                      base_category = None, base = 1,
@@ -58,7 +59,11 @@ class Renderer(Filter):
 
     - *filter_node*: do not keep node categories
 
+    - *disable_node*: return node categories as disabled (ie. None instead of their relative URL)
+
     - *filter_leave*: do not keep leave categories
+
+    - *disable_leave*: return leave categories as disabled (ie. None instead of their relative URL)
 
     - *sort_id*: the id of the attribute to "call" to calculate the value used for sorting.
                 Sorting is only applied to default ItemList items.
@@ -99,7 +104,8 @@ class Renderer(Filter):
     """
     Filter.__init__(self, spec=spec, filter=filter,
                     portal_type=portal_type, filter_method=filter_method,
-                    filter_node=filter_node, filter_leave=filter_leave)
+                    filter_node=filter_node and not disable_node,
+                    filter_leave=filter_leave and not disable_leave)
     self.display_id = display_id
     self.sort_id = sort_id
     self.display_method = display_method
@@ -111,6 +117,8 @@ class Renderer(Filter):
     self.base_category = base_category
     self.base = base
     self.display_none_category = display_none_category
+    self.disable_node = disable_node
+    self.disable_leave = disable_leave
 
   def getObjectList(self, value_list):
     new_value_list = []
@@ -221,6 +229,11 @@ class Renderer(Filter):
             bc = value.getBaseCategoryValue()
             bc_title = getattr(bc, base_category_display_method_id)()
             label = '%s/%s' % (bc_title, label)
+
+      if self.disable_node and self._isNode(value):
+        url = None
+      if self.disable_leave and not self._isNode(value):
+        url = None
 
       if self.is_right_display:
         item = [url, label]

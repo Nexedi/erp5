@@ -1,10 +1,12 @@
 Solver Process | Accept Solver
 Solver Process | Adopt Solver
+Solver Process | Automatic Accept Solver
 Solver Process | FIFO Delivery Solver
 Solver Process | LIFO Delivery Solver
 Solver Process | Minimise Price Delivery Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Split Move Solver
 Solver Process | Quantity Split Solver
+Solver Process | Simple Quantity Split Solver
 Solver Process | Trade Model Solver
 Solver Process | Unify Solver

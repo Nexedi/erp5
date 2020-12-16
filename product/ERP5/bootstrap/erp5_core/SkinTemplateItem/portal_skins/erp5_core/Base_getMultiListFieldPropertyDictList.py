@@ -10,7 +10,15 @@ maximum_list_size = 5
 for item in item_list:
   # Get value of the item
   item_value = item[int(not is_right_display)]
-  # Hash key from item_value
+
+  # Hash key from item_value (the relative_url), so that different base categories
+  # appear as multiple multi list fields.
+  # The item_list can contain entries with None as relative_url, like when using
+  # disable_node option of CMFCategory. This case is not supported by this script,
+  # because heuristics to put the None entry in one or another subfield group
+  # are not implemented here.
+  if item_value is None:
+    continue
   item_split = item_value.split('/')
   item_key = '/'.join(item_split[:split_depth])
   base_category = item_split[0]

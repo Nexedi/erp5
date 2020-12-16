@@ -1,0 +1,61 @@
+div[data-gadget-url$="slideeditor.gadget.html"] > .document_table button:disabled {
+  color: #999999;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list {
+  display: flex;
+  flex-wrap: wrap;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section {
+  flex: 0 1 auto;
+  width: 9em;
+  height: 9em;
+  overflow: hidden;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+  padding: 0.5em;
+  margin-right: 2em;
+  margin-bottom: 2em;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section[data-slide-index] {
+  cursor: move;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.drag {
+  opacity: 0.4;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.over {
+  border-style: dashed;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section > img {
+  width: 8em;
+  height: 8em;
+  object-fit: cover;
+  position: relative;
+  top: -2em;
+  z-index: 1;
+  border-radius: 0.325em;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section > h1 {
+  text-align: center;
+  padding-top: 2.5em;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section button {
+  padding: 3pt;
+  float: right;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  background-color: #FFFFFF;
+  width: 2em;
+  height: 2em;
+  overflow: hidden;
+  text-indent: -9999px;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section button:first-of-type {
+  float: left;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section button::before {
+  float: left;
+  text-indent: 0;
+}

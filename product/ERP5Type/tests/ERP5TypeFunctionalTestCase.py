@@ -35,6 +35,7 @@ import re
 import subprocess
 import shutil
 import transaction
+import logging
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -45,6 +46,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+logger = logging.getLogger(__name__)
 
 # selenium workaround for localhost / 127.0.0.1 resolution
 # ------
@@ -124,8 +127,10 @@ class Xvfb(Process):
         (xvfb_bin, '-fbdir' , self.fbdir, display,
         '-screen', '0', '1280x1024x24'),
         stdout=null, stderr=null, close_fds=True)
-      # try to check if X screen is available
-      time.sleep(5)
+      # XXX We don't have any easy way to wait for Xvfb server to be available
+      # for now we wait for a few seconds and if Xvfb process is still running,
+      # we assume it's OK.
+      time.sleep(20)
       return
       # XXX xdpyinfo is not installed yet. Is this checking really needed ?
       # If it is required, we have to make xdpyinfo available as part of
@@ -149,8 +154,8 @@ class Xvfb(Process):
     else:
       raise EnvironmentError("All displays locked : %r" % (self.display_list,))
 
-    print 'Xvfb : %d' % self.process.pid
-    print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
+    logger.debug('Xvfb : %d', self.process.pid)
+    logger.debug('Take screenshots using xwud -in %s/Xvfb_screen0', self.fbdir)
 
 class FunctionalTestRunner:
 
@@ -188,8 +193,7 @@ class FunctionalTestRunner:
     xvfb = Xvfb(self.instance_home)
     try:
       if not (debug and os.getenv('DISPLAY')):
-        print("\nSet 'erp5_debug_mode' environment variable to 1"
-              " to use your existing display instead of Xvfb.")
+        logger.debug("You can set 'erp5_debug_mode' environment variable to 1 to use your existing display instead of Xvfb.")
         xvfb.run()
       capabilities = webdriver.common.desired_capabilities \
         .DesiredCapabilities.FIREFOX.copy()
@@ -207,6 +211,20 @@ class FunctionalTestRunner:
         kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
+      logger.info("Running with browser: %s", browser)
+      logger.info("Reported user agent: %s", browser.execute_script("return navigator.userAgent"))
+      logger.info(
+          "Reported screen information: %s",
+          browser.execute_script(
+              '''
+              return JSON.stringify({
+                  'screen.width': window.screen.width,
+                  'screen.height': window.screen.height,
+                  'screen.pixelDepth': window.screen.pixelDepth,
+                  'innerWidth': window.innerWidth,
+                  'innerHeight': window.innerHeight
+                })'''))
+
       browser.get(self._getTestBaseURL() + '/login_form')
       login_field = WebDriverWait(browser, 10).until(
         EC.presence_of_element_located((By.NAME, '__ac_name')),
@@ -297,13 +315,13 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(ERP5TypeFunctionalTestCase, self).afterSetUp()
-    # create browser_id_manager
     self.setTimeZoneToUTC()
+    # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
     self.commit()
     self.setSystemPreference()
-    # non-recursive results clean of portal_tests/ or portal_tests/``run_only`` 
+    # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()

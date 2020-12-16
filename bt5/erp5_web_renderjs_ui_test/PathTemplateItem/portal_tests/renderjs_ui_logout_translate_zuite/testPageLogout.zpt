@@ -59,7 +59,12 @@
 
  <tr>
   <td>verifyTextPresent</td>
-  <td>denglu</td>
+  <td>turu jëfandikookat</td>
+  <td></td>
+</tr>
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@value="denglu"]</td>
   <td></td>
 </tr>
 
@@ -82,21 +87,21 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value="yanzhen"]</td>
+  <td>//input[@value="tëjju barabu këllu jëfandikookat"]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//input[@value="yanzhen"]</td>
+  <td>//input[@value="tëjju barabu këllu jëfandikookat"]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyTextPresent</td>
-  <td>denglu</td>
+  <td>turu jëfandikookat</td>
   <td></td>
 </tr>
 

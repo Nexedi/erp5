@@ -36,6 +36,7 @@ elif code is not None:
     method = getattr(context, "ERP5Site_createGoogleUserToOAuth", None)
     if method is not None:
       method(user_reference, user_dict)
-    return response.redirect(request.get("came_from") or context.absolute_url())
+    # XXX for ERP5JS web sites without a rewrite rule, we make sure there's a trailing /
+    return response.redirect(request.get("came_from") or context.absolute_url() + '/')
 
 return handleError('')

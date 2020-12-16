@@ -1,5 +1,3 @@
-from Products.ERP5Type.Utils import UpperCase
-
 portal_categories = context.portal_categories
 portal_preferences = context.portal_preferences
 method_id = portal_preferences.getPreference('preferred_category_child_item_list_method_id', 'getCategoryChildCompactLogicalPathItemList')

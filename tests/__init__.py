@@ -9,10 +9,10 @@ HERE = os.path.dirname(__file__)
 class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
-                          'ERP5eGovSecurity', 'ERP5Form',
-                          'ERP5OOo', 'ERP5Security', 'ERP5SyncML', 'ERP5Type',
-                          'ERP5Wizard', 'Formulator', 'ERP5Workflow',
-                          'ERP5Configurator','HBTreeFolder2', 'MailTemplates', 
+                          'ERP5Form',
+                          'ERP5OOo', 'ERP5Security', 'ERP5Type',
+                          'Formulator', 'ERP5Workflow',
+                          'HBTreeFolder2', 'MailTemplates',
                           'PortalTransforms', 'TimerService', 'ZLDAPConnection', 
                           'ZLDAPMethods', 'ZMySQLDA', 'ZSQLCatalog', 'Zelenium')
 
@@ -48,10 +48,6 @@ class _ERP5(ERP5TypeTestSuite):
       # don't test 3rd party products
       if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
         continue
-      # ERP5TioSafe is disabled for now because it requires external programs
-      # such as php and it has not been updated for Zope >= 2.12
-      if product == 'ERP5TioSafe':
-        continue
       test_list.append(test_case)
     return test_list
 
@@ -80,15 +76,7 @@ class ERP5(_ERP5):
                    or full_test_case)
 
       # skip some tests
-      if test_case.find('Performance') > 0 \
-         or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
-                          # tests reading selenium tables from erp5.com
-                          # not maintained
-                          'testERP5eGov',
-                          'testAccounting_l10n_fr_m9',
-                          # Not a test
-                          'testERP5SyncMLMixin'
-         ):
+      if test_case.find('Performance') > 0:
         continue
       test_list.append(full_test_case)
     return test_list
@@ -100,8 +88,46 @@ class ERP5(_ERP5):
       if not status_dict['status_code']:
         status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
-    if test.startswith('testFunctional'):
+    elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
+    elif test == 'testUpgradeInstanceWithOldDataFs':
+      old_data_path = None
+      for path in sys.path:
+        if path.endswith('/erp5-bin'):
+          old_data_path = os.path.join(path, 'test_data', test)
+          if not os.path.isdir(old_data_path):
+            return dict(
+              status_code=-1,
+              test_count=1,
+              failure_count=1,
+              stderr='%s does not exist or is not a directory' % old_data_path)
+
+          break
+      else:
+        return dict(
+          status_code=-1,
+          test_count=1,
+          failure_count=1,
+          stderr='erp5-bin repository not found in %s' % '\n'.join(sys.path))
+
+      instance_home = (self.instance and 'unit_test.%u' % self.instance
+                       or 'unit_test')
+
+      import shutil
+      shutil.rmtree(instance_home, ignore_errors=True)
+
+      os.makedirs(os.path.join(instance_home, 'var'))
+      shutil.copyfile(os.path.join(old_data_path, 'Data.fs'),
+                      os.path.join(instance_home, 'var', 'Data.fs'))
+      shutil.copyfile(os.path.join(old_data_path, 'dump.sql'),
+                      os.path.join(instance_home, 'dump.sql'))
+
+      return self.runUnitTest(
+          '--load',
+          '--portal_id=erp5',
+          '--enable_full_indexing=portal_types,portal_property_sheets',
+          full_test)
+
     return super(ERP5, self).run(full_test)
 
   def _updateFunctionalTestResponse(self, status_dict):
@@ -193,3 +219,20 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
 
+  def getLogDirectoryPath(self, *args, **kw):
+    log_directory = os.path.join(
+        self.log_directory,
+        '{}-{}'.format(args[-1] , kw['TESTED_BUSINESS_TEMPLATE']))
+    os.mkdir(log_directory)
+    return log_directory
+
+
+class RJS_Only(_ERP5):
+  def getTestList(self):
+    rjs_officejs_bt_list = ["erp5_officejs_",
+                            "renderjs_ui_test",
+                            "erp5_monaco_editor_ui_test",
+                            "erp5_travel_expense_ui_test",
+                            "erp5_gadget_interface_validator_ui_test",
+                            "erp5_hal_json_style"]
+    return [test for test in self._getAllTestList() if any(test.find(bt)>-1 for bt in rjs_officejs_bt_list)]

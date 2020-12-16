@@ -56,10 +56,10 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
       group=computer_category_list)
     self.assertEqual(computer.getPropertyList('group'),
       computer_category_list)
-    result = computer.Computer_applyComputerModel()
+    result = computer.Computer_applyComputerModel(batch_mode=1)
     self.assertEqual(computer.getPropertyList('group'),
       computer_category_list)
-    self.assertTrue(result)
+    self.assertFalse(result)
 
   def test_apply_model_filled_computer_forced(self):
     computer_category_list = ['oink']

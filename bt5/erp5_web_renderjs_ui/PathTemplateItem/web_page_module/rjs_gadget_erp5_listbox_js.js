@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, console*/
-(function (window, document, rJS, URI, RSVP, console) {
+/*global window, document, rJS, URI, RSVP, isEmpty, console*/
+(function (window, document, rJS, URI, RSVP, isEmpty, console) {
   "use strict";
 
   var variable = {},
@@ -881,7 +881,8 @@
 
       /* Function `fetchLineContent` calls changeState({"allDocs_result": JIO.allDocs()})
          so this if gets re-evaluated later with allDocs_result defined. */
-      if (gadget.state.allDocs_result === undefined) {
+      if (modification_dict.hasOwnProperty('render_timestamp') &&
+          (gadget.state.allDocs_result === undefined)) {
         // Trigger line content calculation
         result_queue
           .push(function () {
@@ -963,7 +964,8 @@
                 for (i = 0; i < counter; i += 1) {
                   cell_list = [];
                   for (j = 0; j < column_list.length; j += 1) {
-                    value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
+                    value = allDocs_result.data.rows[i].value[column_list[j][0]];
+                    value = isEmpty(value) ? '' : value;
                      //url column
                     // get url value
                     if (value.url_value) {
@@ -1421,4 +1423,4 @@
       return;
     });
 
-}(window, document, rJS, URI, RSVP, console));
+}(window, document, rJS, URI, RSVP, isEmpty, console));

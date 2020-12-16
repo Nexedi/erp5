@@ -62,6 +62,7 @@ STRICT_METHOD_NAME = 'strict_'
 STRICT_METHOD_NAME_LEN = len(STRICT_METHOD_NAME)
 PARENT_METHOD_NAME = 'parent_'
 PARENT_METHOD_NAME_LEN = len(PARENT_METHOD_NAME)
+TRANSLATED_METHOD_NAME = '_translated_'
 RELATED_DYNAMIC_METHOD_NAME = '_related'
 # Negative as it's used as a slice end offset
 RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
@@ -294,8 +295,19 @@ class IndexableObjectWrapper(object):
 class RelatedBaseCategory(Method):
     """A Dynamic Method to act as a related key.
     """
-    def __init__(self, id, strict_membership=0, related=0, query_table_column='uid'):
+    def __init__(
+        self,
+        id,
+        strict_membership=0,
+        related=0,
+        query_table_column='uid',
+        translated=False,
+        content_translation_property_name=None,
+    ):
       self._id = id
+      self._translated = translated
+      if translated:
+        self._id = id.split(TRANSLATED_METHOD_NAME)[0]
       if self._id == IGNORE_BASE_CATEGORY_UID:
         base_category_sql = ''
       else:
@@ -327,6 +339,21 @@ class RelatedBaseCategory(Method):
           'query_table_side': query_table_side,
           'query_table_column': query_table_column
       }
+      if translated:
+        self._template = """\
+%(base_category)s%(strict)s%%(content_translation)s.property_name = "%(content_translation_property_name)s"
+AND %(base_category)s%(strict)s%%(content_translation)s.content_language in ("%%(localizer_language)s", "")
+AND %(base_category)s%(strict)s%%(content_translation)s.uid = %%(category_table)s.%(foreign_side)s
+%%(RELATED_QUERY_SEPARATOR)s
+%%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
+          'base_category': base_category_sql,
+          'strict': strict,
+          'foreign_side': foreign_side,
+          'query_table_side': query_table_side,
+          'query_table_column': query_table_column,
+          'content_translation_property_name': content_translation_property_name,
+      }
+
       self._monotable_template = """\
 %(base_category)s%(strict)s%%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
           'base_category': base_category_sql,
@@ -349,6 +376,9 @@ class RelatedBaseCategory(Method):
         # one invocation to the next.
         format_dict['base_category_uid'] = instance.getPortalObject().portal_categories.\
           _getOb(self._id).getUid()
+      if self._translated:
+        format_dict["content_translation"] = table_1
+        format_dict["localizer_language"] = instance.getPortalObject().Localizer.get_selected_language()
       return (
         self._monotable_template if table_1 is None else self._template
       ) % format_dict
@@ -1039,13 +1069,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       by looking at the category tree.
 
       Syntax:
-        [[predicate_][strict_][parent_]_]<base category id>__[related__]<column id>
+        [[predicate_][strict_][parent_]_]<base category id>__[related__][translated__]<column id>
       "predicate": Use predicate_category as relation table, otherwise category table.
       "strict": Match only strict relation members, otherwise match non-strict too.
       "parent": Search for documents whose parent have described relation, otherwise search for their immediate relations.
       <base_category_id>: The id of an existing Base Category document, or "any" to not restrict by relation type.
       "related": Search for reverse relationships, otherwise search for direct relationships.
-      <column_id>: The name of the column to compare values against.
+      "translated": Lookup for property <column_id> in content_translation table,
+      instead of looking it up as a catalog column.
+      <column_id>: The name of the column (or translated property) to compare values against.
 
       Old syntax is supported for backward-compatibility, but will not receive
       further extensions:
@@ -1062,12 +1094,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if '__' in key:
           split_key = key.split('__')
           column_id = split_key.pop()
-          if 'catalog' not in column_map.get(column_id, ()):
-            continue
           base_category_id = split_key.pop()
           related = base_category_id == 'related'
           if related:
             base_category_id = split_key.pop()
+          translated = base_category_id == 'translated'
+          if translated:
+            base_category_id = split_key.pop()
+          elif 'catalog' not in column_map.get(column_id, ()):
+            continue
+
           if split_key:
             flag_string, = split_key
             flag_list = flag_string.split('_')
@@ -1084,6 +1120,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           # BBB: legacy related key format
           default_string = 'default_'
           related_string = 'related_'
+          translated = False
           prefix = key
           if prefix.startswith(default_string):
             prefix = prefix[len(default_string):]
@@ -1117,13 +1154,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         related_key_list.append(
           key + ' | ' +
           ('predicate_' if flag_bitmap & DYNAMIC_RELATED_KEY_FLAG_PREDICATE else '') + 'category' +
-          ('' if is_uid else ',catalog') +
+          ('' if is_uid else (',content_translation' if translated else ',catalog')) +
           '/' +
-          column_id +
+          ('translated_text' if translated else column_id) +
           '/' + DYNAMIC_METHOD_NAME +
           (STRICT_METHOD_NAME if flag_bitmap & DYNAMIC_RELATED_KEY_FLAG_STRICT else '') +
           (PARENT_METHOD_NAME if flag_bitmap & DYNAMIC_RELATED_KEY_FLAG_PARENT else '') +
           base_category_id +
+          ((TRANSLATED_METHOD_NAME + column_id) if translated else '') +
           (RELATED_DYNAMIC_METHOD_NAME if related else '')
         )
       return related_key_list
@@ -1264,6 +1302,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if base_name.startswith(PARENT_METHOD_NAME):
           base_name = base_name[PARENT_METHOD_NAME_LEN:]
           kw['query_table_column'] = 'parent_uid'
+        if TRANSLATED_METHOD_NAME in base_name:
+          base_name, content_translation_property_name = base_name.split(TRANSLATED_METHOD_NAME, 1)
+          kw['translated'] = True
+          kw['content_translation_property_name'] = content_translation_property_name
+          if '"' in content_translation_property_name:
+            # prevent values which would generate invalid queries
+            return None
+
         method = RelatedBaseCategory(base_name, **kw)
         setattr(self.__class__, name, method)
         # This getattr has 2 purposes:
@@ -1369,7 +1415,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       method_list_by_connection_id = defaultdict(list)
       for method_id in catalog.sql_clear_catalog:
         method = catalog[method_id]
-        method_list_by_connection_id[method.connection_id].append(method)
+        if hasattr(aq_base(method), 'connection_id'):
+          method_list_by_connection_id[method.connection_id].append(method)
 
       # Because we cannot select on deferred connections, _upgradeSchema
       # cannot be used on SQL methods using a deferred connection.

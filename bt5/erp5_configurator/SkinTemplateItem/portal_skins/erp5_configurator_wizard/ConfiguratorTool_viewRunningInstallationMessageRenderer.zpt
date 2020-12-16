@@ -1,25 +1,5 @@
-<tal:block tal:define="percentage options/percentage;
-                       coefficient python: 4;">
+<div>
+  <img src="loading.gif"/>
+</div>
 
-  <div style="width:400px; 
-              height:25px; 
-              background-color:lightgray;
-              border:1px solid black;">
-    <div tal:attributes="style python: 'text-align:right;;
-                                        height: 25px;; 
-                                        background-color:#f09400;; 
-                                        width: %spx;;' %(coefficient*percentage)">
-      <div style="height:20px; 
-                  padding-top: 5px; 
-                  padding-right: 3px; 
-                  font-weight:bold;"
-           tal:condition="python: int(percentage) != 0">
-        <span tal:content="percentage"/>%
-      </div>
-    </div>
-  </div>
-
-  <tal:block 
-     tal:replace="structure python: here.ConfiguratorTool_viewPatienceMessageRenderer()"/>
-
-</tal:block>
+<tal:block tal:replace="structure python: here.ConfiguratorTool_viewPatienceMessageRenderer()"/>

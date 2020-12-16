@@ -47,7 +47,7 @@ class IEncryptedPassword(Interface):
     Check if the password value is acceptable - i.e. follows site rules.
     """
 
-  def setEncodedPassword(value, format='default'):
+  def setEncodedPassword(value, format='default'): # pylint: disable=redefined-builtin
     """
     Set an already encoded password.
     """

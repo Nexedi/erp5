@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Loyalty Transaction</type>
+  <workflow>edit_workflow, loyalty_transaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Loyalty Transaction Line</type>
+  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Loyalty Transaction Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+</workflow_chain>

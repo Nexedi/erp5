@@ -1,3 +1,5 @@
-module.erp5.TransformImageToPcx
+module.erp5.ImageUtil
 module.erp5.TransformImageToBmp
+module.erp5.TransformImageToPcx
 module.erp5.TransformLib
+module.erp5.XMLUtils

@@ -10,7 +10,7 @@ kw = {}
 try:
   workflow_tool = context.portal_workflow
   workflow = getattr(workflow_tool, action['workflow_id'])
-except:
+except AttributeError:
   return {}
 
 # If this is a worklist action, read the worklist definition

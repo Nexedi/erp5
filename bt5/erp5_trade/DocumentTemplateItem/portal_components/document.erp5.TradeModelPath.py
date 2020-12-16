@@ -32,8 +32,10 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.Path import Path
-from Products.ERP5.ExplanationCache import _getExplanationCache
+from erp5.component.document.Path import Path
+from erp5.component.module.ExplanationCache import _getExplanationCache
+from erp5.component.interface.ITradeModelPath import ITradeModelPath
+from erp5.component.interface.IArrowBase import IArrowBase
 
 import zope.interface
 
@@ -93,8 +95,8 @@ class TradeModelPath(Path):
 
   # Declarative interfaces
   zope.interface.implements(interfaces.ICategoryAccessProvider,
-                            interfaces.IArrowBase,
-                            interfaces.ITradeModelPath,
+                            IArrowBase,
+                            ITradeModelPath,
                             interfaces.IPredicate,
                             )
 
@@ -159,28 +161,48 @@ class TradeModelPath(Path):
   # XXX-JPS UNkonwn ?
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getArrowCategoryDict')
-  def getArrowCategoryDict(self, context=None, **kw): # XXX-JPS do we need it in API ?
+  def getArrowCategoryDict(self, context=None, **kw):  # XXX-JPS do we need it in API ?
     # This method returns the dict like
     # {base_category_id:[category value url list], ...}
     # for all Arrow base categories.
     # Each category values are self's category values (if exist) or
-    # dynamically computed values (if not exist).
+    # dynamically computed values (if not exist), but on trade model path
+    # we can also configure if we want the script to define **all** categories,
+    # which means that if script does not return some categories they are not
+    # set on the resulting movement, even if they were set on the input movement.
     result = {}
     dynamic_category_list = self._getDynamicCategoryList(context)
-    for base_category in self.getSourceArrowBaseCategoryList() +\
-            self.getDestinationArrowBaseCategoryList():
-      category_url_list = self._getAcquiredCategoryMembershipList(
-        base_category, **kw)
-      if len(category_url_list) == 0 and len(dynamic_category_list) > 0:
-        category_url_list = self._filterCategoryList(dynamic_category_list,
-                                                     base_category, **kw)
-      if len(category_url_list) > 0:
-        result[base_category] = category_url_list
+    for base_category_list, script_replace_category in (
+        (self.getSourceArrowBaseCategoryList(),
+         self.getSourceMethodReplaceCategory()),
+        (self.getDestinationArrowBaseCategoryList(),
+         self.getDestinationMethodReplaceCategory()),
+    ):
+      for base_category in base_category_list:
+        if script_replace_category and context is not None:
+          result[base_category] = self._filterCategoryList(
+              dynamic_category_list, base_category, **kw)
+        else:
+          category_url_list = super(TradeModelPath, self)._getAcquiredCategoryMembershipList(
+              base_category, **kw)
+          if context is not None and not category_url_list:
+            category_url_list = self._filterCategoryList(
+                dynamic_category_list, base_category, **kw)
+          if category_url_list:
+            result[base_category] = category_url_list
     return result
 
-  def _filterCategoryList(self, category_list, category, spec=(),
-                          filter=None, portal_type=(), base=0,
-                          keep_default=1, checked_permission=None):
+  def _filterCategoryList(
+      self,
+      category_list,
+      category,
+      spec=(),
+      filter=None, # pylint: disable=redefined-builtin
+      portal_type=(),
+      base=0,
+      keep_default=1,
+      checked_permission=None,
+  ):
     """
       XXX - implementation missing
       TBD - look at CategoryTool._buildFilter for inspiration

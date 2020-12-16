@@ -64,13 +64,12 @@ if download or not use_activity:
         if not from_url:
           raise ValueError('Preferred Event Sender Email not configured')
 
-    # Return-Path
+    # Return-Path (TODO)
     if reply_url is None:
       reply_url = portal.portal_preferences.getPreferredEventSenderEmail()
-    additional_headers = None
+    additional_headers = None # pylint: disable=unused-variable
     if reply_url:
       additional_headers = {'Return-Path':reply_url}
-
     content_type = context.getContentType()
 
     mail_message = context.Base_createMailMessageAsString(

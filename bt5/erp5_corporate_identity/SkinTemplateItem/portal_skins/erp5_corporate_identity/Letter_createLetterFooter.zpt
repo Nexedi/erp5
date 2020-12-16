@@ -99,26 +99,46 @@ Creates the Letter footer section.
 	          <td>
 	            <div>
 	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Address</span><span tal:content="letter_source_company"></span>
-	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="letter_source_address"></span>
+                <tal:block tal:repeat="address python: letter_source_address.split('\n')">
+	                <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="address"></span>
+                </tal:block>
 	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="python: ''.join([letter_source_postal_code, ' ', letter_source_city])"></span>
 	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="letter_source_country"></span>
 	            </div>
 	          </td>
 	          <td>
 	            <div>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Telephone</span><span tal:content="letter_source_phone"></span>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Telefax</span><span tal:content="letter_source_fax"></span>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Email</span><span tal:content="letter_source_mail"></span>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Web Address</span><span tal:content="letter_source_website"></span>
+                <tal:block tal:condition=letter_source_phone>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Telephone</span><span tal:content="letter_source_phone"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_fax>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Telefax</span><span tal:content="letter_source_fax"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_mail>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Email</span><span tal:content="letter_source_mail"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_website>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Web Address</span><span tal:content="letter_source_website"></span>
+                </tal:block>
 	            </div>
 	          </td>
 	          <td>
 	            <div>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Bank Account</span><span tal:content="letter_source_bank"></span>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">BIC</span><span tal:content="letter_source_bic"></span>
-	              <span class="ci-letter-footer-title"i18n:translate="" i18n:domain="erp5_ui">IBAN</span><span tal:content="letter_source_iban"></span>
-                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">VAT ID</span><span tal:content="letter_source_vat"></span>
-	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Siren</span><span tal:content="letter_source_corporate_registration"></span>
+                <tal:block tal:condition=letter_source_bank>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Bank Account</span><span tal:content="letter_source_bank"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_bic>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">BIC</span><span tal:content="letter_source_bic"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_iban>
+	                <span class="ci-letter-footer-title"i18n:translate="" i18n:domain="erp5_ui">IBAN</span><span tal:content="letter_source_iban"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_vat>
+                  <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">VAT ID</span><span tal:content="letter_source_vat"></span>
+                </tal:block>
+                <tal:block tal:condition=letter_source_corporate_registration>
+	                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Siren</span><span tal:content="letter_source_corporate_registration"></span>
+                </tal:block>
 	            </div>
 	          </td>
           </tr>

@@ -35,23 +35,16 @@ from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
-from Products.PythonScripts.Utility import allow_class
 from AccessControl import ModuleSecurityInfo
-
-import MovementGroup
-allow_class(MovementGroup)
 
 from Products.ERP5Type.Globals import package_home
 product_path = package_home( globals() )
 
 # Define object classes and tools
-from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
-                 TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
-                 TrashTool, ContributionTool, NotificationTool, PasswordTool,\
-                 GadgetTool, ContributionRegistryTool, IntrospectionTool,\
-                 AcknowledgementTool, SolverTool, SolverProcessTool,\
-                 UrlRegistryTool, InterfaceTool,\
-                 CertificateAuthorityTool, InotifyTool, TaskDistributionTool
+from Tool import CategoryTool, IdTool, TemplateTool,\
+                 AlarmTool,\
+                 TrashTool,\
+                 SolverTool
 import ERP5Site
 from Document import PythonScript, SQLMethod
 object_classes = ( ERP5Site.ERP5Site,
@@ -59,30 +52,11 @@ object_classes = ( ERP5Site.ERP5Site,
                    SQLMethod.SQLMethod,
                  )
 portal_tools = ( CategoryTool.CategoryTool,
-                 SimulationTool.SimulationTool,
-                 RuleTool.RuleTool,
                  IdTool.IdTool,
                  TemplateTool.TemplateTool,
                  AlarmTool.AlarmTool,
-                 DomainTool.DomainTool,
-                 TestTool.TestTool,
-                 OrderTool.OrderTool,
-                 DeliveryTool.DeliveryTool,
                  TrashTool.TrashTool,
-                 PasswordTool.PasswordTool,
-                 ContributionTool.ContributionTool,
-                 NotificationTool.NotificationTool,
-                 GadgetTool.GadgetTool,
-                 ContributionRegistryTool.ContributionRegistryTool,
-                 IntrospectionTool.IntrospectionTool,
-                 AcknowledgementTool.AcknowledgementTool,
                  SolverTool.SolverTool,
-                 SolverProcessTool.SolverProcessTool,
-                 UrlRegistryTool.UrlRegistryTool,
-                 CertificateAuthorityTool.CertificateAuthorityTool,
-                 InotifyTool.InotifyTool,
-                 TaskDistributionTool.TaskDistributionTool,
-                 InterfaceTool.InterfaceTool,
                 )
 content_classes = ()
 content_constructors = ()

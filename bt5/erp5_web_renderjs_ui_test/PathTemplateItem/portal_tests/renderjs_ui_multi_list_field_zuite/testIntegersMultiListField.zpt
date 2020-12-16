@@ -50,19 +50,26 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Go to test form -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_dummy_multilist_field_report_view" />
 
 <tr><td cellspan="3">The option 1 must be selected</td></tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[contains(@data-gadget-url, "gadget_erp5_field_multilist.html")]/div[1]//option[@value="0" and @selected="selected"]</td>
   <td></td>
 </tr>
 
 <!-- Run test form & check -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Action succeeded.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>repr [0]</td>

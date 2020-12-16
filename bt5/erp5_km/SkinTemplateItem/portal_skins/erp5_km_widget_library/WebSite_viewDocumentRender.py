@@ -1,8 +1,6 @@
 """
 Returns a document by its reference in a gadget.
 """
-
-request = context.REQUEST
 portal = context.getPortalObject()
 
 if box_relative_url:

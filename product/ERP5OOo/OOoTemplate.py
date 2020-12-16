@@ -53,8 +53,7 @@ try:
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
-from Products.ERP5.Document.Document import ConversionError
-
+from Products.Formulator.Widget import convert_to_xml_compatible_string
 from lxml import etree
 from lxml.etree import Element
 
@@ -95,11 +94,12 @@ def add_and_edit(self, id, REQUEST):
     u = "%s/%s" % (u, quote(id))
   REQUEST.RESPONSE.redirect(u+'/manage_main')
 
+
 class OOoTemplateStringIO(FasterStringIO):
   def write(self, s):
-    if type(s) == unicode:
-      s = s.encode('utf-8')
-    FasterStringIO.write(self, s)
+    return FasterStringIO.write(
+        self,
+        convert_to_xml_compatible_string(s).encode('utf-8'))
 
 from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
 
@@ -476,8 +476,7 @@ class OOoTemplate(ZopePageTemplate):
     # And render page template
     doc_xml = ZopePageTemplate.pt_render(self, source=source,
                                          extra_context=extra_context)
-    if isinstance(doc_xml, unicode):
-      doc_xml = doc_xml.encode('utf-8')
+    doc_xml = convert_to_xml_compatible_string(doc_xml).encode('utf-8')
 
     # Replace the includes
     (doc_xml,attachments_dict) = self.renderIncludes(here, doc_xml,

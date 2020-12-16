@@ -251,6 +251,10 @@ class Message(BaseMessage):
       group_method_id = 'portal_activities/dummyGroupMethod/' + self.method_id
     return group_method_id + '\0' + get('group_id', '')
 
+  def getGroupMethodCost(self):
+    # Meaningless if called on a non-grouped message
+    return self.activity_kw.get('group_method_cost', .01)
+
   def _getObject(self, activity_tool):
     obj = activity_tool.getPhysicalRoot()
     for id in self.object_path[1:]:
@@ -368,6 +372,9 @@ class Message(BaseMessage):
 
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
+    if not activity_tool.activity_failure_mail_notification:
+      return
+
     portal = activity_tool.getPortalObject()
     user_email = portal.getProperty('email_to_address',
                        portal.getProperty('email_from_address'))
@@ -628,6 +635,7 @@ class ActivityTool (BaseTool):
     id = 'portal_activities'
     meta_type = 'CMF Activity Tool'
     portal_type = 'Activity Tool'
+    title = 'Activities'
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
 
@@ -649,7 +657,7 @@ class ActivityTool (BaseTool):
     manage_overview = DTMLFile( 'dtml/explainActivityTool', globals() )
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageLoadBalancing' )
-    manageLoadBalancing = DTMLFile( 'dtml/manageLoadBalancing', globals() )
+    manageLoadBalancing = DTMLFile( 'dtml/manageLoadBalancing', globals(), _getCurrentNode=getCurrentNode)
 
     distributingNode = ''
     _nodes = ()
@@ -658,6 +666,7 @@ class ActivityTool (BaseTool):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
+    activity_failure_mail_notification = True
     cancel_and_invoke_links_hidden = False
 
     # Filter content (ZMI))
@@ -775,6 +784,32 @@ class ActivityTool (BaseTool):
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
           url += urllib.quote('Tracking log disabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'isActivityMailNotificationEnabled')
+    def isActivityMailNotificationEnabled(self):
+      return self.activity_failure_mail_notification
+
+    security.declareProtected(Permissions.manage_properties, 'manage_enableMailNotification')
+    def manage_enableMailNotification(self, REQUEST=None, RESPONSE=None):
+        """
+          Enable mail notification when activity fails.
+        """
+        self.activity_failure_mail_notification = True
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Mail notification enabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'manage_disableMailNotification')
+    def manage_disableMailNotification(self, REQUEST=None, RESPONSE=None):
+        """
+          Disable mail notification when activity fails.
+        """
+        self.activity_failure_mail_notification = False
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Mail notification disabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'isActivityTimingLoggingEnabled')

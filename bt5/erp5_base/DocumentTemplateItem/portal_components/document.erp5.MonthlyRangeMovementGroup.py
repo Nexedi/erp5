@@ -27,7 +27,8 @@
 ##############################################################################
 
 from erp5.component.document.MovementGroup import MovementGroup
-from Products.ERP5Type.DateUtils import atTheEndOfPeriod
+from DateTime import DateTime
+from erp5.component.module.DateUtils import atTheEndOfPeriod
 
 
 class MonthlyRangeMovementGroup(MovementGroup):
@@ -48,7 +49,9 @@ class MonthlyRangeMovementGroup(MovementGroup):
     for property_name in self.getTestedPropertyList() or ('start_date', 'stop_date'):
       date = movement.getProperty(property_name, None)
       if date is not None:
-        end_of_month = atTheEndOfPeriod(date, 'month')-1
+        # wrap atTheEndOfPeriod value with DateTime(value..strftime('%Y/%m/%d')) so that
+        # it returns a value with an appropriate time offset at that date.
+        end_of_month = DateTime((atTheEndOfPeriod(date, 'month')-0.5).strftime('%Y/%m/%d'))
         property_dict[property_name] = end_of_month
     return property_dict
 

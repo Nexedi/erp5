@@ -71,7 +71,7 @@ def mkProxy(self):
   sp = xmlrpclib.ServerProxy('http://%s:%d' % (adr,nr), allow_none=True)
   return sp
 
-def generateFile(self, name, data, format):
+def generateFile(self, name, data, format):  # pylint: disable=redefined-builtin
   sp = mkProxy(self)
   kw = sp.run_generate(name, data, None, format)
   res = base64.decodestring(kw['data'])
@@ -92,7 +92,7 @@ def getLastWorkflowDate(self, state_name='simulation_state', state=('released','
   or JP says "there is an API for it" and we trash this one'''
   if not hasattr(self, 'workflow_history'):
     return None
-  for name,wflow in self.workflow_history.items():
+  for wflow in self.workflow_history.values():
     if wflow is None or len(wflow) == 0: continue # empty history
     if wflow[0].get(state_name) is None: continue # not the right one
     for i in range(len(wflow)):
@@ -110,7 +110,7 @@ def findAddress(txt):
   """
   find email address in a string
   """
-  validchars='0-9A-Za-z.\-_'
+  validchars = r'0-9A-Za-z.\-_'
   r=re.compile('[%s]+@[%s]+' % (validchars,validchars))
   m=r.search(txt)
   return m and m.group()
@@ -121,7 +121,7 @@ def extractParams(txt):
   We assume that parameters are given as lines of the format:
   name:value
   """
-  r=re.compile('^([\w_]+):([\w_/]+)$')
+  r = re.compile(r'^([\w_]+):([\w_/]+)$')
   res=[]
   for line in txt.split():
     found=r.findall(line.strip())

@@ -3,7 +3,7 @@ template_tool = context.getPortalObject().portal_templates
 if template_tool.getDiffFilterScriptList():
   DiffFile = template_tool.getFilteredDiff
 else:
-  from Products.ERP5Type.DiffUtils import DiffFile
+  from erp5.component.module.DiffUtils import DiffFile
 
 print '<div style="color: black">'
 

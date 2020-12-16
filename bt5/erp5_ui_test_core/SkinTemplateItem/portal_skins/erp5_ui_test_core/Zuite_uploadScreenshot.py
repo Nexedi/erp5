@@ -1,7 +1,7 @@
 """
   Upload a screenshot taken by the test to ERP5
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 data_uri = context.REQUEST.form.get('data_uri', 'default')
 

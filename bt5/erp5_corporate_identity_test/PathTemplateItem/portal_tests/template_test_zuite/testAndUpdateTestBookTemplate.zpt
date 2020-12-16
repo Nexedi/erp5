@@ -157,13 +157,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -428,13 +423,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -758,13 +748,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -1026,13 +1011,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -1207,12 +1187,6 @@ Note:
       <td></td>
     </tr>
 
-    <!-- CASE 1 (pdf) - template_test_book_input_001_en_pdf -->
-    <tr>
-      <td>echo</td>
-      <td>CASE 1 (pdf) => template_test_book_input_001_en_pdf</td>
-      <td></td>
-    </tr>
     <tr>
       <td>open</td>
       <td>${base_url}/web_page_module/</td>
@@ -1259,13 +1233,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -1376,12 +1345,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Book</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>001</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1390,12 +1354,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Book</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Book')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1434,7 +1398,7 @@ Note:
       </tr>
       <tr>
         <td>storeEval</td>
-        <td>function ajax(url, param) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("POST", url, true); xhr.responseType = param.dataType || ""; if (typeof param.headers === 'object' &amp;&amp; param.headers !== null) { for (k in param.headers) { if (param.headers.hasOwnProperty(k)) { xhr.setRequestHeader(k, param.headers[k]); } } } xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); if (typeof param.xhrFields === 'object' &amp;&amp; param.xhrFields !== null) { for (k in param.xhrFields) { if (param.xhrFields.hasOwnProperty(k)) { xhr[k] = param.xhrFields[k]; } } } xhr.send(param.data); }, function() { xhr.abort(); }); } var form_data = new FormData(); form_data.append("field_my_file", storedVars["pdf_dump"], "Template.Test.Book-001-en.pdf"); form_data.append("form_id", "File_view");  x = ajax(storedVars["url"].split("?")[0] + "/Base_edit", {"xhrFields": {"with_credentials": true}, "data": form_data});</td>
+        <td>function ajax(url, param) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("POST", url, true); xhr.responseType = param.dataType || ""; if (typeof param.headers === 'object' &amp;&amp; param.headers !== null) { for (k in param.headers) { if (param.headers.hasOwnProperty(k)) { xhr.setRequestHeader(k, param.headers[k]); } } } xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); if (typeof param.xhrFields === 'object' &amp;&amp; param.xhrFields !== null) { for (k in param.xhrFields) { if (param.xhrFields.hasOwnProperty(k)) { xhr[k] = param.xhrFields[k]; } } } xhr.send(param.data); }, function() { xhr.abort(); }); } var form_data = new FormData(); form_data.append("field_my_file", storedVars["pdf_dump"], "Template.Test.Image.Source.pdf"); form_data.append("form_id", "File_view");  x = ajax(storedVars["url"].split("?")[0] + "/Base_edit", {"xhrFields": {"with_credentials": true}, "data": form_data});</td>
         <td>promise</td>
       </tr>
       <tr>
@@ -1480,12 +1444,6 @@ Note:
       </tr>
     </tal:block>
 
-    <!-- CASE 2 (pdf) - template_test_book_input_002_en_pdf -->
-    <tr>
-      <td>echo</td>
-      <td>CASE 2 (pdf) => template_test_book_input_002_en_pdf</td>
-      <td></td>
-    </tr>
     <tr>
       <td>open</td>
       <td>${base_url}/web_page_module/</td>
@@ -1532,13 +1490,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -1710,12 +1663,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Book</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>002</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1724,12 +1672,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Book</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Book')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1837,12 +1785,7 @@ Note:
         <td></td>
       </tr>
     </tal:block>
-    <!-- CASE 3 (pdf) - template_test_book_input_003_de_pdf -->
-    <tr>
-      <td>echo</td>
-      <td>CASE 3 (pdf) => template_test_book_input_003_de_pdf</td>
-      <td></td>
-    </tr>
+
     <tr>
       <td>open</td>
       <td>${base_url}/web_page_module/</td>
@@ -1889,13 +1832,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -2001,12 +1939,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Book</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>003</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -2015,12 +1948,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Book</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Book')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -2105,12 +2038,7 @@ Note:
         <td></td>
       </tr>
     </tal:block>
-    <!-- CASE 4 (pdf) - template_test_book_input_004_en_pdf -->
-    <tr>
-      <td>echo</td>
-      <td>CASE 4 (pdf) => template_test_book_input_004_en_pdf</td>
-      <td></td>
-    </tr>
+
     <tr>
       <td>open</td>
       <td>${base_url}/web_page_module/</td>
@@ -2157,13 +2085,8 @@ Note:
       <td></td>
     </tr>
     <tr>
-      <td>click</td>
+      <td>clickAndWait</td>
       <td>//button[@class="import_export"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Export Slideshow</td>
       <td></td>
     </tr>
     <tr>
@@ -2269,12 +2192,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Book</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>003</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -2283,12 +2201,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Book</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Book')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>

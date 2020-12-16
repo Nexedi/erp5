@@ -3,7 +3,6 @@
 """
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import Query
-from Products.ERP5Type.Document import newTempBase
 
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences

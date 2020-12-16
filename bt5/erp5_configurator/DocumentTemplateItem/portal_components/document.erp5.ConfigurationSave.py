@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Path import Path
+from erp5.component.document.Path import Path
 
 class ConfigurationSave(Path):
   """ This class is the base class for all template items. """

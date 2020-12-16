@@ -29,7 +29,7 @@
 import unittest
 import SOAPpy
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5.Document.SOAPBinding import SOAPBinding
+from erp5.component.document.SOAPBinding import SOAPBinding
 from spyne.service import ServiceBase
 from spyne.decorator import srpc
 from spyne.model.complex import Iterable

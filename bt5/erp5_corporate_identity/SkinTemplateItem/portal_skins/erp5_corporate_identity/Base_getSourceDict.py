@@ -15,7 +15,6 @@ blank = ''
 from Products.PythonScripts.standard import html_quote
 
 # -------------------------------  Set Source ----------------------------------
-source_logo_url = None
 source_organisation = None
 pref = context.getPortalObject().portal_preferences
 default_bank_account_relative_url=pref.getPreferredCorporateIdentityTemplateDefaultBankAccountRelativeUrl()
@@ -26,40 +25,43 @@ if source is None:
   source_person = None
   source_person_list = []
   source_organisation_list = []
-  source_set = None
 
-  # source person => override => contributor => source_decision
-  if override_source_person_title is not None or override_source_person_title == blank:
+  # override => author(contributor) => source_decision
+  if override_source_person_title:
     source_person_list = context.Base_getTemplateProxyParameter(parameter="override_person", source_data=override_source_person_title)
-  if len(source_person_list) == 0:
+  if not source_person_list:
     source_person_list = context.Base_getTemplateProxyParameter(parameter="author", source_data=None) or []
-  if len(source_person_list) == 0 and getattr(context, 'getSourceDecisionValue', None) is not None:
+  if not source_person_list and getattr(context, 'getSourceDecisionValue', None):
     source_person_candidate = context.getSourceDecisionValue()
     if source_person_candidate and source_person_candidate.getPortalType() == "Person":
       source_person_list = [source_person_candidate]
-  if len(source_person_list) > 0:
+  if source_person_list:
     source_person = source_person_list[0]
     contributor_title_string = ', '.join(x.get("name", blank) for x in source_person_list)
 
   # source organisation
   # order: override => follow-up => default_organisation_uid => default_company_relative_url => source_person career subordinate => source decision
-  if override_source_organisation_title is not None or override_source_organisation_title == blank:
+  # override
+  if override_source_organisation_title:
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation", source_data=override_source_organisation_title)
-  if len(source_organisation_list) == 0:
+  if not source_organisation_list:
+    # follow up
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None) or []
-  if len(source_organisation_list) == 0 and default_company_relative_url:
+  if not source_organisation_list and default_company_relative_url:
+    # default company
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation_relative_url", source_data=default_company_relative_url) or []
-  if len(source_organisation_list) == 0 and source_person is not None:
-    for organisation_candidate in source_person_list:
-      organisation_candidate_list = context.Base_getTemplateProxyParameter(parameter="source", source_data=organisation_candidate.get("uid")) or []
-      if len(organisation_candidate_list) > 0:
+  if not source_organisation_list and source_person_list:
+    for source_person in source_person_list:
+      # person 's Career Subordination Value
+      organisation_candidate_list = context.Base_getTemplateProxyParameter(parameter="source", source_data=source_person.get("uid")) or []
+      if organisation_candidate_list:
         source_organisation_list = organisation_candidate_list
         break
-  if len(source_organisation_list) == 0 and getattr(context, 'getSourceDecisionValue', None) is not None:
+  if not source_organisation_list and getattr(context, 'getSourceDecisionValue', None):
     source_organisation_candidate = context.getSourceDecisionValue()
     if source_organisation_candidate and source_organisation_candidate.getPortalType() == "Organisation":
       source_organisation_list = [source_organisation_candidate]
-  if len(source_organisation_list) > 0:
+  if source_organisation_list:
     source_organisation = source_organisation_list[0]
 
   source = {}
@@ -75,7 +77,7 @@ else:
 # override specific bank account (no default to pick correct one if multiple exist)
 if default_bank_account_relative_url is not None:
   override_bank_account_list = context.Base_getTemplateProxyParameter(parameter="bank", source_data=default_bank_account_relative_url) or []
-  if len(override_bank_account_list) > 0:
+  if override_bank_account_list:
     override_bank_account = override_bank_account_list[0]
     source["bank"] = override_bank_account.get("bank")
     source["bic"] = override_bank_account.get("bic")
@@ -102,14 +104,16 @@ if source.get("corporate_registration_code") is blank:
 # XXX images stored on organisation (as do images in skin folders)
 if override_logo_reference:
   source_logo_url = html_quote(override_logo_reference) + "?format=png"
-  source_set = True
-if source_logo_url is None:
+else:
   source_logo_url = source.get("logo_url", blank)
-if source_logo_url != blank and source_set is None:
-  # XXX: test environment fails if url with parameters are supplied
-  source_logo_url = source_logo_url + "?format=png"
-if source_logo_url == blank and theme_logo_url is not None:
-  source_logo_url = theme_logo_url
+  if source_logo_url != blank:
+    # XXX: test environment fails if url with parameters are supplied
+    source_logo_url = source_logo_url + "?format=png"
+    #logo_url is organisation default image, which is not accessible for anounymous
+    source["enhanced_logo_data_url"] = source.get("logo_data_url")
+  elif theme_logo_url is not None:
+    source_logo_url = theme_logo_url
+
 source["enhanced_logo_url"] = source_logo_url
 
 return source

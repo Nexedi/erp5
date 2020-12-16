@@ -214,7 +214,7 @@ class Git(WorkingCopy):
       for stat in out.next().splitlines():
         stat, path = stat.split()[4:]
         stat_dict[path] = stat
-      # Emulate svn output for compatibility with Products.ERP5Type.DiffUtils
+      # Emulate svn output for compatibility with erp5.component.module.DiffUtils
       template = 'Index: %%s\n%s%%s\n' % ('=' * 67)
       for diff in out:
         path = diff[:diff.index(' ')]

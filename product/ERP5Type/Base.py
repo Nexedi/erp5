@@ -61,7 +61,6 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import interfaces
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
@@ -74,7 +73,6 @@ from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBu
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from Accessor import WorkflowState
-from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 
@@ -87,6 +85,7 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
 from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
+from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -705,11 +704,13 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       else:
         method.registerTransitionAlways(portal_type, wf_id, tr_id)
 
-class Base( CopyContainer,
+class Base(
+            ResponseHeaderGenerator,
+            CopyContainer,
+            PropertyManager,
             PortalContent,
             ActiveObject,
             OFS.History.Historical,
-            PropertyManager,
             PropertyTranslatableBuiltInDictMixIn,
             JSONRepresentableMixin,
             ):
@@ -748,11 +749,6 @@ class Base( CopyContainer,
   isDocument = ConstantGetter('isDocument', value=False)
   isTempDocument = ConstantGetter('isTempDocument', value=False)
 
-  # Dynamic method acquisition system (code generation)
-  aq_method_generated = set()
-  aq_method_generating = []
-  aq_portal_type = {}
-  aq_related_generated = 0
   # These sets are generated when dynamically making a portal type class to
   # short-cut guarded_getattr in edit/getProperty. For classes that are not
   # dynamically generated from portal type, we always check security.
@@ -796,17 +792,34 @@ class Base( CopyContainer,
     self.reindexObject()
 
   security.declarePublic('provides')
+  @classmethod
   def provides(cls, interface_name):
     """
-    Check if the current class provides a particular interface from ERP5Type's
-    interfaces registry
+    Check if the current class provides a particular interface from Interface
+    Components and fallback on ERP5Type's interfaces registry
     """
-    interface = getattr(interfaces, interface_name, None)
-    if interface is not None:
-      return interface.implementedBy(cls)
-    return False
-  provides = classmethod(CachingMethod(provides, 'Base.provides',
-                                       cache_factory='erp5_ui_long'))
+    from Products.ERP5Type.dynamic.portal_type_class import _importComponentClass
+    import erp5.component.interface
+    interface = _importComponentClass(erp5.component.interface, interface_name)
+    if interface is None:
+      try:
+        interface = getattr(interfaces, interface_name)
+      except AttributeError:
+        # provides() is public (DoS)
+        return False
+
+    return_value = interface.implementedBy(cls)
+    # XXX: All classes should already be 'erp5.portal_type'...
+    if cls.__module__ == 'erp5.portal_type':
+      # provides() is usually called through providesI<interface_name>() and
+      # not directly, so optimize this common use case
+      #
+      # XXX:
+      # - Optimize provides() too?
+      # - Create PortalTypeClassCachingMethod() if caching to erp5.portal_type.XXX
+      #   is useful elsewhere?
+      setattr(cls, 'provides' + interface_name, lambda _: return_value)
+    return return_value
 
   def _aq_key(self):
     return (self.portal_type, self.__class__)
@@ -2525,7 +2538,7 @@ class Base( CopyContainer,
   # CMF 2.x. They use aliases and Zope3 style views now and make pretty sure
   # not to let zpublisher reach this value.
   index_html = None
-  # By the Way, Products.ERP5.Document.File and .Image define their own
+  # By the Way, erp5.component.document.File and .Image define their own
   # index_html to make sure this value here is not used so that they're
   # downloadable by their naked URL.
 
@@ -3071,18 +3084,7 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
   def skinSuper(self, skin, id):
-    if id[:1] != '_' and id[:3] != 'aq_':
-      skin_info = SKINDATA.get(thread.get_ident())
-      if skin_info is not None:
-        portal = self.getPortalObject()
-        _, skin_selection_name, _, _ = skin_info
-        object = skinResolve(portal, (skin_selection_name, skin), id)
-        if object is not None:
-          # First wrap at the portal to set the owner of the executing script.
-          # This mimics the usual way to get an object from skin folders,
-          # and it's required when 'object' is an script with proxy roles.
-          return object.__of__(portal).__of__(self)
-    raise AttributeError(id)
+    return self.getPortalObject().skinSuper(skin, id).__of__(self)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'get_local_permissions')
@@ -3171,12 +3173,13 @@ class Base( CopyContainer,
   def log(self, *args, **kw):
     """Put a log message
 
-    See the warning in Products.ERP5Type.Log.log
+    See the warning in erp5.component.module.Log.log
     Catchall parameters also make this method not publishable to avoid DoS.
     """
     warnings.warn("The usage of Base.log is deprecated.\n"
-                  "Please use Products.ERP5Type.Log.log instead.",
+                  "Please use erp5.component.module.Log.log instead.",
                   DeprecationWarning)
+    from erp5.component.module.Log import log as unrestrictedLog
     unrestrictedLog(*args, **kw)
 
   # Dublin Core Emulation for CMF interoperatibility
@@ -3222,7 +3225,7 @@ class Base( CopyContainer,
         try:
           return min(history[0]['time']
             for history in history_list.itervalues()
-            if history)
+            if history and 'time' in history[0])
         except ValueError:
           pass
     if getattr(aq_base(self), 'creation_date', None):
@@ -3520,7 +3523,11 @@ class Base( CopyContainer,
     return new_document
 
   def _postCopy(self, container, op=0):
-    super(Base, self)._postCopy(container, op=op)
+    # Note: "super" cannot be used here, as this method gets stolen by
+    # ERP5Type.Core.Folder, which also inherits from CopyContainer before
+    # inheriting from ourselves, in which case "super" ends up calling the
+    # OFS.CopySupport method, which we do not want.
+    CopyContainer._postCopy(self, container, op)
     if op == 0: # copy (not cut)
       # We are the copy of another document (either cloned or copy/pasted),
       # forget id generator state.

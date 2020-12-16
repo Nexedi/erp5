@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format=None, display_source_address=None, display_head=None, display_svg=None, batch_mode=False, document_download=None, document_save=None, override_source_organisation_title=None,override_source_person_title=None,override_destination_organisation_title=None,override_destination_person_title=None,override_date=None,**kw</string> </value>
+            <value> <string>format=None, display_head=None, display_svg=None, batch_mode=False, document_download=None, document_save=None, override_source_organisation_title=None,override_source_person_title=None,override_destination_organisation_title=None,override_destination_person_title=None,override_date=None,destination_position_in_letter=\'right\', display_sender_company_above_recipient=0,destination_position_padding_left=\'100px\',**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

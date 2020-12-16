@@ -55,18 +55,7 @@ if not login.hasPassword():
       password = context.Person_generatePassword()
       login.setPassword(password)
 
-  # create a global account
-  if context.ERP5Site_isSingleSignOnEnable():
-    #The master manage encoded password and clear password
-    person.Person_createNewGlobalUserAccount(password=password)
-    person.Person_validateGlobalUserAccount()
-
   if login.getValidationState() == 'draft':
     login.validate()
-else:
-  #Person has an already an account
-  if context.ERP5Site_isSingleSignOnEnable():
-    #Check assignment for the current instance
-    person.Person_validateGlobalUserAccount()
 
 return reference, password

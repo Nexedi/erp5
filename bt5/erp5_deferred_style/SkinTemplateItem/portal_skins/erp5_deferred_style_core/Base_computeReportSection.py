@@ -1,3 +1,4 @@
+# pylint: disable=redefined-builtin
 portal = context.getPortalObject()
 
 form = context.restrictedTraverse(form)
@@ -28,6 +29,7 @@ for idx, report_section in enumerate(report_section_list):
   else:
     doc = context
   doc.activate(activity='SQLQueue',
+               node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
                active_process=active_process,
                tag=tag,
                priority=priority,
@@ -42,7 +44,12 @@ if activity_context == portal:
   # portal is not an active object
   activity_context = portal.portal_simulation
 
-activity_context.activate(activity='SQLQueue', after_tag=tag, priority=priority).Base_report(
+activity_context.activate(
+    activity='SQLQueue',
+    node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
+    after_tag=tag,
+    priority=priority,
+).Base_report(
            active_process_url=active_process.getRelativeUrl(),
            skin_name=skin_name,
            localizer_language=localizer_language,

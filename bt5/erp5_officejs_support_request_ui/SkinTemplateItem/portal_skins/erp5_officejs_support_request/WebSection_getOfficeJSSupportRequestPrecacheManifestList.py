@@ -1,0 +1,32 @@
+url_list = [
+  'handlebars.js',
+  'gadget_supportrequest_header.html',
+  'gadget_supportrequest_header.js',
+  'gadget_erp5_page_homepage.css',
+  'gadget_erp5_page_homepage.html',
+  'gadget_erp5_page_homepage.js',
+  'gadget_erp5_page_supportrequest_preference.html',
+  'gadget_erp5_page_supportrequest_preference.js',
+  'gadget_erp5_page_support_request_fast_view_dialog.html',
+  'gadget_erp5_page_support_request_fast_view_dialog.js',
+  'gadget_erp5_pt_form_list_sr.html',
+  'gadget_erp5_pt_form_list_sr.js',
+  'gadget_erp5_pt_form_view_discussable.css',
+  'gadget_erp5_pt_form_view_discussable.html',
+  'gadget_erp5_pt_form_view_discussable.js',
+  'gadget_field_graph_echarts.html',
+  'gadget_field_graph_echarts.js',
+  'gadget_supportrequest_page_worklist.html',
+  'gadget_supportrequest_page_worklist.js',
+  'gadget_supportrequest_panel.html',
+  'gadget_supportrequest_panel.js',
+  # Echarts. Should probably be a separated script
+  'unsafe/gadget_field_graph_echarts.html/',
+  'unsafe/gadget_field_graph_echarts.html/rsvp.js',
+  'unsafe/gadget_field_graph_echarts.html/renderjs.js',
+  'unsafe/gadget_field_graph_echarts.html/echarts-all.js',
+  'unsafe/gadget_field_graph_echarts.html/gadget_global.js',
+  'unsafe/gadget_field_graph_echarts.html/unsafe/gadget_field_graph_echarts.js',
+]
+
+return url_list

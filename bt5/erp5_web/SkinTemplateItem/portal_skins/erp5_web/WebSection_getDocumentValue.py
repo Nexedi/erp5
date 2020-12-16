@@ -3,8 +3,16 @@
    fix acquisition issues within the _aq_dynamic
    lookup from WebSection class.
 """
+if not name:
+  # Catalog does not search empty reference.
+  # Skip the query in such case.
+  return None
+
 if portal is None:
   portal = context.getPortalObject()
+
+kw['limit'] = 1
+
 document_list = portal.portal_catalog.getDocumentValueList(
   reference=name,
   language=language,

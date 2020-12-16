@@ -163,60 +163,64 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1519378166.4</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-            <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1519378166.4</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
       <tuple>
@@ -243,7 +247,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.33997.15609.22101</string> </value>
+                <value> <string>977.57825.44431.51217</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -261,7 +265,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1522420879.36</float>
+                        <float>1566303568.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,59 +279,63 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1519376697.26</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>detect_converted_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>converted</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1519376697.26</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>

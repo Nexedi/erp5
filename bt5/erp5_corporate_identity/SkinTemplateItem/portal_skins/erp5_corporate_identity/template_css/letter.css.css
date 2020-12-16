@@ -124,6 +124,13 @@ html{
   line-height: 20px;
 }
 
+.ci-letter .ci-letter-destination div.ci-letter-sender-company-above-recipient{
+  font-size: small;
+  border-bottom: 1px solid black;
+  display: inline-block;
+  margin-left: -1mm;
+}
+
 /* === adress-right === */
 .ci-letter .ci-letter-head-right table tr td:nth-child(1) {
   width: 50%;

@@ -1,5 +1,4 @@
 request = context.REQUEST
-portal = context.getPortalObject()
 
 # FIXME: this is a workaround, because if listbox is present in request.form, 
 #   editable fields will be empty when re-displaying the dialog.

@@ -23,7 +23,7 @@ if content_type == 'text/html':
 else:
   mail_template = context.Event_viewMimeMessage
 
-attachment_list = attachment_list[:]
+attachment_list = list(attachment_list)
 for embedded_file in embedded_file_list:
   mime_type, content = embedded_file.getMimeTypeAndContent()
   name = embedded_file.getFilename()

@@ -71,9 +71,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -104,7 +102,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>test_result_js/gadget_erp5_test_result_performance_graph.html</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -125,19 +123,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.TestResult_getPerformanceGraphGadgetConfigurationDict()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:field.restrictedTraverse(\'test_result_js/gadget_erp5_test_result_performance_graph.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>

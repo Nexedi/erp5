@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Purchase Packing List Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>resource/product_module/test_normal_product</string>
+                <string>quantity_unit/unit/piece</string>
+                <string>use/trade/sale</string>
+                <string>base_contribution/base_amount/taxable</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Purchase Packing List Line</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>3.0</float> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

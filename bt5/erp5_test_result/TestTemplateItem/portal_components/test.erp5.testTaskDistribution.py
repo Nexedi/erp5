@@ -7,9 +7,9 @@ import responses
 import httplib
 
 
-class TestTaskDistribution(ERP5TypeTestCase):
+class TaskDistributionTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
-    self.portal = portal = self.getPortalObject()
+    portal = self.portal
     self.test_node_module = self.portal.getDefaultModule(portal_type = 'Test Node Module')
     self.test_suite_module = self.portal.getDefaultModule(portal_type = 'Test Suite Module')
     self.test_result_module = self.portal.getDefaultModule(portal_type = 'Test Result Module')
@@ -83,8 +83,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
     original_performance_class._getTestNodeModule = self._original_getTestNodeModule
     original_performance_class._getTestSuiteModule = self._original_getTestSuiteModule
 
-
-
   def _createTestNode(self, quantity=1, reference_correction=0,
                       specialise_value=None):
     if specialise_value is None:
@@ -133,7 +131,76 @@ class TestTaskDistribution(ERP5TypeTestCase):
                         )
       test_suite.validate()
       test_suite_list.append(test_suite)
-    return test_suite_list 
+    return test_suite_list
+
+  def _callOptimizeAlarm(self):
+    self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
+    self.tic()
+
+  def _callRestartStuckTestResultAlarm(self):
+    self.portal.portal_alarms.test_result_alarm_restarted_stuck_test_result.activeSense()
+    self.tic()
+
+  def processTest(self, test_title, revision, start_count=2, stop_count=2,
+                  node_title='Node0'):
+    """start_count: number of test line to start
+       stop_count: number of test line to stop
+    """
+    status_dict = {}
+    test_result_path, revision = self._createTestResult(revision=revision,
+      test_list=['testFoo', 'testBar'], test_title=test_title, node_title=node_title)
+    if start_count:
+      line_url, test = self.distributor.startUnitTest(test_result_path,
+                                                      node_title=node_title)
+    if start_count == 2:
+      next_line_url, next_test = self.distributor.startUnitTest(test_result_path,
+                                                                node_title=node_title)
+      self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
+    if stop_count:
+      self.distributor.stopUnitTest(line_url, status_dict, node_title=node_title)
+    if stop_count == 2:
+      self.tool.stopUnitTest(next_line_url, status_dict, node_title=node_title)
+    test_result = self.portal.restrictedTraverse(test_result_path)
+    self.assertEqual(test_result.getSimulationState(), "started")
+    self.tic()
+    if stop_count == 2:
+      self.assertEquals(test_result.getSimulationState(), "stopped")
+    else:
+      self.assertEquals(test_result.getSimulationState(), "started")
+
+  def _cleanupTestResult(self):
+    self.tic()
+    cleanup_state_list = ['started', 'stopped']
+    test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %" OR "Default Test Suite"',
+               simulation_state=cleanup_state_list)
+    for test_result in test_list:
+      if test_result.getSimulationState() in cleanup_state_list:
+        test_result.cancel()
+        test_result.setTitle('previous test')
+    self.tic()
+
+  def _createTestResult(self, revision="r0=a,r1=a", node_title='Node0',
+                              test_list=None, tic=1, allow_restart=False,
+                              test_title=None, distributor=None):
+    if test_title is None:
+      test_title = self.default_test_title
+    if distributor is None:
+      distributor = self.distributor
+    result =  distributor.createTestResult(
+                               "", revision, test_list or [], allow_restart,
+                               test_title=test_title, node_title=node_title)
+    # we commit, since usually we have a remote call only doing this
+    (self.tic if tic else self.commit)()
+    return result
+
+  def checkTestResultLine(self, test_result, expected):
+    line_list = test_result.objectValues(portal_type="Test Result Line")
+    found_list = [(x.getTitle(), x.getSimulationState()) for x in line_list]
+    found_list.sort(key=lambda x: x[0])
+    self.assertEqual(expected, found_list)
+
+
+class TestTaskDistribution(TaskDistributionTestCase):
 
   def test_01_createTestNode(self):
     test_node = self._createTestNode()[0]
@@ -198,14 +265,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.portal.portal_workflow.doActionFor(test_suite_clone, 'validate_action')
     self.assertEqual('validated', test_suite_clone.getValidationState())
 
-  def _callOptimizeAlarm(self):
-    self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
-    self.tic()
-
-  def _callRestartStuckTestResultAlarm(self):
-    self.portal.portal_alarms.test_result_alarm_restarted_stuck_test_result.activeSense()
-    self.tic()
-
   def test_subscribeNode_ReturnValue(self):
     config = self.distributor.subscribeNode('COMP-X', 'QPK')
     config = json.loads(config)
@@ -261,33 +320,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
                     [('COMP32-Node1',set([u'B0'])), ('COMP32-Node2',set([u'B1']))],
                     [('COMP32-Node1',set([u'B1'])), ('COMP32-Node2',set([u'B0']))]],
                     "%r" % ([config1, config2],))
-
-  def processTest(self, test_title, revision, start_count=2, stop_count=2,
-                  node_title='Node0'):
-    """start_count: number of test line to start
-       stop_count: number of test line to stop
-    """
-    status_dict = {}
-    test_result_path, revision = self._createTestResult(revision=revision,
-      test_list=['testFoo', 'testBar'], test_title=test_title, node_title=node_title)
-    if start_count:
-      line_url, test = self.distributor.startUnitTest(test_result_path,
-                                                      node_title=node_title)
-    if start_count == 2:
-      next_line_url, next_test = self.distributor.startUnitTest(test_result_path,
-                                                                node_title=node_title)
-      self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
-    if stop_count:
-      self.distributor.stopUnitTest(line_url, status_dict, node_title=node_title)
-    if stop_count == 2:
-      self.tool.stopUnitTest(next_line_url, status_dict, node_title=node_title)
-    test_result = self.portal.restrictedTraverse(test_result_path)
-    self.assertEqual(test_result.getSimulationState(), "started")
-    self.tic()
-    if stop_count == 2:
-      self.assertEquals(test_result.getSimulationState(), "stopped")
-    else:
-      self.assertEquals(test_result.getSimulationState(), "started")
 
   def test_04b_startTestSuiteOrder(self):
     """
@@ -377,7 +409,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
       config_list = json.loads(self.distributor.startTestSuite(
                              title=title))
       return ["%s" % x["test_suite_title"] for x in config_list]
-    now = DateTime()
     def affectTestSuite(node_title, test_suite_list):
       test_node, = self.test_node_module.searchFolder(title=node_title)
       test_node = test_node.getObject()
@@ -398,6 +429,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
       affectTestSuite("COMP9-Node1", [test_suite_3])
       # process some test to have old test result in database
       self.processTest("test suite 1", "r0=a", node_title="COMP0-Node1")
+      now = DateTime()
       self.pinDateTime(now + 1.0/86400)
       self.processTest("test suite 2", "r0=a", node_title="COMP1-Node1")
       self.pinDateTime(now + 2.0/86400)
@@ -498,36 +530,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
     finally:
       self.unpinDateTime()
 
-  def _cleanupTestResult(self):
-    self.tic()
-    cleanup_state_list = ['started', 'stopped']
-    test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %" OR "Default Test Suite"',
-               simulation_state=cleanup_state_list)
-    for test_result in test_list:
-      if test_result.getSimulationState() in cleanup_state_list:
-        test_result.cancel()
-        test_result.setTitle('previous test')
-    self.tic()
-
-  def _createTestResult(self, revision="r0=a,r1=a", node_title='Node0',
-                              test_list=None, tic=1, allow_restart=False,
-                              test_title=None, distributor=None):
-    if test_title is None:
-      test_title = self.default_test_title
-    if distributor is None:
-      distributor = self.distributor
-    result =  distributor.createTestResult(
-                               "", revision, test_list or [], allow_restart,
-                               test_title=test_title, node_title=node_title)
-    # we commit, since usually we have a remote call only doing this
-    (self.tic if tic else self.commit)()
-    return result
-
   def test_05_createTestResult(self):
     """
     We will check the method createTestResult of distributor
     """
-    self._createTestNode()
+    test_node, = self._createTestNode() # pylint:disable=unbalanced-tuple-unpacking
     self.tic()
     test_result_path, revision = self._createTestResult()
     self.assertEqual("r0=a,r1=a", revision)
@@ -551,7 +558,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(2, len(line_list))
     self.assertEqual(set(['testFoo', 'testBar']), set([x.getTitle() for x
                       in line_list]))
-    line_url, _ = self.tool.startUnitTest(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path, node_title=test_node.getTitle())
+    # when node_title is passed to startUnitTest, we have a relation from test result line
+    # to test node
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    self.assertEqual(test_result_line.getSourceValue(), test_node)
     result = self._createTestResult(test_list=['testFoo', 'testBar'])
     self.assertEqual((test_result_path, revision), result)
     self.tool.startUnitTest(test_result_path)
@@ -674,12 +685,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(
         ['testFailing', 'testSlow', 'testFast'],
         [self.tool.startUnitTest(test_result_path)[1] for _ in range(3)])
-
-  def checkTestResultLine(self, test_result, expected):
-    line_list = test_result.objectValues(portal_type="Test Result Line")
-    found_list = [(x.getTitle(), x.getSimulationState()) for x in line_list]
-    found_list.sort(key=lambda x: x[0])
-    self.assertEqual(expected, found_list)
 
   def test_06b_restartStuckTest(self):
     """
@@ -1416,6 +1421,167 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self._createTestResult(test_title='Periodicity Disabled Test Suite')
     self.assertEqual(None, test_suite.getAlarmDate())
 
+class TestRetryUnknownTest(TaskDistributionTestCase):
+  """Test how failed tests can be automatically retried.
+  """
+
+  def afterSetUp(self):
+    super(TestRetryUnknownTest, self).afterSetUp()
+    self.test_suite, = self.test_suite_module.objectValues()
+    self._createTestNode()
+    self.tic()
+
+  def test_unknown_test_with_zero_test_not_retried_by_default(self):
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 0,
+        'error_count': 0,
+        'failure_count': 0,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(test_result_line.getStringIndex(), 'UNKNOWN')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+
+  def test_unknown_test_without_status_not_retried_by_default(self):
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {}
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(test_result_line.getStringIndex(), 'UNKNOWN')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+
+class TestRetryFailedTest(TaskDistributionTestCase):
+  """Test how failed tests can be automatically retried.
+  """
+
+  def afterSetUp(self):
+    super(TestRetryFailedTest, self).afterSetUp()
+    self.test_suite, = self.test_suite_module.objectValues()
+    self._createTestNode()
+    self.tic()
+
+  def test_failed_test_not_retried_by_default(self):
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(test_result_line.getStringIndex(), 'FAILED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+
+  def test_failed_retried_once_then_fail(self):
+    self.test_suite.setRetryTestPattern('testF.*')
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # test failed, but it will be retried
+    self.assertEqual(test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(test_result_line.getSimulationState(), 'draft')
+    # if it fails again ...
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # ... the test result will be fail.
+    self.assertEqual(test_result_line.getStringIndex(), 'FAILED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getProperty('errors'), 2)
+    self.assertEqual(test_result.getProperty('failures'), 3)
+    self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
+
+  def test_failed_retried_once_then_pass(self):
+    self.test_suite.setRetryTestPattern('testF.*')
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # test failed, but it will be retried
+    self.assertEqual(test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(test_result_line.getSimulationState(), 'draft')
+    # if it succeed next time ...
+    status_dict['error_count'] = 0
+    status_dict['failure_count'] = 0
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # ... the test result will be successful.
+    self.assertEqual(test_result_line.getStringIndex(), 'PASSED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'PASS')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
+
+  def test_retried_retry_count_acquisition(self):
+    # non regression test, test_result_retry_count should not be acquired
+    # from test result on test result lines that were not retried.
+    self.test_suite.setRetryTestPattern('test.*')
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', 'testBar' ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    retried_test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(retried_test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(retried_test_result_line.getSimulationState(), 'draft')
+    status_dict['error_count'] = 0
+    status_dict['failure_count'] = 0
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(retried_test_result_line.getStringIndex(), 'PASSED')
+    self.assertEqual(retried_test_result_line.getSimulationState(), 'stopped')
+
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    not_retried_test_result_line = self.portal.restrictedTraverse(line_url)
+    self.assertNotEqual(retried_test_result_line, not_retried_test_result_line)
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(not_retried_test_result_line.getStringIndex(), 'PASSED')
+    self.assertEqual(not_retried_test_result_line.getSimulationState(), 'stopped')
+
+    self.assertEqual(test_result.getStringIndex(), 'PASS')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
+    self.assertEqual(retried_test_result_line.getProperty('test_result_retry_count'), 1)
+    self.assertEqual(not_retried_test_result_line.getProperty('test_result_retry_count'), 0)
+
 
 class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
   """Tests for Gitlab commits annotations.
@@ -1547,6 +1713,17 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.stop()
       self.tic()
 
+  def test_stop_test_build_failure(self):
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.fail()
+      self.tic()
+
   def test_TestResult_getTestSuiteData(self):
     """test for TestResult_getTestSuiteData helper script
     """
@@ -1567,6 +1744,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
                 "test_result_line_pattern": None,
             },
         },
+        "retry_test_pattern": None,
         "test_suite_relative_url": self.test_suite.getRelativeUrl()
       },
       self.test_result.TestResult_getTestSuiteData())
@@ -1709,3 +1887,13 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.start()
       self.tic()
 
+  def test_start_test_tolerate_errors(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+          responses.POST,
+          self.post_commit_status_url,
+          json={"message": 'Cannot transition status via :run from :running (Reason(s): Status cannot transition via "run")'},
+          status=httplib.BAD_REQUEST,
+      )
+      self.test_result.start()
+      self.tic()

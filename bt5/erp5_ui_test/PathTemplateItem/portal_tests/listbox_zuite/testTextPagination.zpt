@@ -1,0 +1,64 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Text Pagination</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Text Pagination</td></tr>
+</thead><tbody>
+
+
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_page_navigation_template=ListBox_viewTextPageNavigationRenderer</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="listbox-header-box"]//a[@class="selected" and @title="Page 1"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="listbox-header-box"]//a[@title="Page 2"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@class="listbox-header-box"]//a[@class="selected" and @title="Page 1"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="listbox-header-box"]//a[@class="selected" and @title="Page 2"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

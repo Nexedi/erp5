@@ -30,6 +30,7 @@
 import os
 import inspect
 import transaction
+from ZODB import Connection
 
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
@@ -59,7 +60,7 @@ ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
   for acquire_local_role in (False, True)
 }
 
-def _importClass(classpath):
+def _importFilesystemClass(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
     module = __import__(module_path, {}, {}, (module_path,))
@@ -72,6 +73,19 @@ def _importClass(classpath):
     return klass
   except StandardError:
     raise ImportError('Could not import document class ' + classpath)
+
+def _importComponentClass(component_package, name):
+  module = component_package.find_load_module(name)
+  klass = None
+  if module is not None:
+    try:
+      klass = getattr(module, name)
+    except AttributeError:
+      LOG("ERP5Type.dynamic", WARNING,
+          "Could not get class '%s' in Component module %r, fallback on filesystem" %
+          (name, module))
+
+  return klass
 
 # Loading Cache Factory portal type would generate the accessor holder
 # for Cache Factory, itself defined with Standard Property thus
@@ -129,6 +143,10 @@ def generatePortalTypeClass(site, portal_type_name):
                         _categories=[],
                         constraints=[])
 
+  # When only the inner portal type class is loaded (ERP5Site initial
+  # installation, recursive loads, bootstrap)
+  is_partially_generated = False
+
   if portal_type_name in core_portal_type_class_dict:
     if not core_portal_type_class_dict[portal_type_name]['generating']:
       # Loading the (full) outer portal type class
@@ -136,7 +154,7 @@ def generatePortalTypeClass(site, portal_type_name):
     else:
       # Loading the inner portal type class without any mixin,
       # interface or Property Sheet
-      klass = _importClass(document_class_registry.get(
+      klass = _importFilesystemClass(document_class_registry.get(
         core_portal_type_class_dict[portal_type_name]['type_class']))
 
       # LOG("ERP5Type.dynamic", INFO,
@@ -144,7 +162,8 @@ def generatePortalTypeClass(site, portal_type_name):
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
-      return ((klass,), [], [], attribute_dict)
+      is_partially_generated = True
+      return is_partially_generated, ((klass,), [], [], attribute_dict)
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
@@ -184,13 +203,11 @@ def generatePortalTypeClass(site, portal_type_name):
       # Only happen when portal_types is empty (e.g. when creating a
       # new ERP5Site)
       type_class = core_portal_type_class_dict[portal_type_name]['type_class']
+      is_partially_generated = True
     else:
-      # Try to figure out a coresponding document class from the
-      # document side.  This can happen when calling newTempAmount for
-      # instance:
-      #  Amount has no corresponding Base Type and will never have one
-      #  But the semantic of newTempXXX requires us to create an
-      #  object using the Amount Document, so we promptly do it:
+      # Missing Portal Type. This should not happen (all ERP5 object *must*
+      # have a Portal Type and newTempXXX being deprecated) but try anyway to
+      # figure out a coresponding Document class.
       type_class = portal_type_name.replace(' ', '')
 
     mixin_list = []
@@ -212,23 +229,15 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      module = None
       if portal_type_name.endswith('Tool'):
         import erp5.component.tool
-        module = erp5.component.tool.find_load_module(type_class)
+        klass = _importComponentClass(erp5.component.tool, type_class)
 
       # Tool Component was introduced recently and some Tool have already been
       # migrated as Document Component
-      if module is None:
+      if klass is None:
         import erp5.component.document
-        module = erp5.component.document.find_load_module(type_class)
-      if module is not None:
-        try:
-          klass = getattr(module, type_class)
-        except AttributeError:
-          LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module %r, fallback on filesystem" %
-              (type_class, module))
+        klass = _importComponentClass(erp5.component.document, type_class)
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
@@ -239,7 +248,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   if klass is None:
     try:
-      klass = _importClass(type_class_path)
+      klass = _importFilesystemClass(type_class_path)
     except ImportError:
       error_msg = 'Could not import %s of Portal Type %s' % (type_class,
                                                              portal_type_name)
@@ -271,6 +280,8 @@ def generatePortalTypeClass(site, portal_type_name):
       attribute_dict['_categories'] = list(base_category_set)
     finally:
       property_sheet_generating_portal_type_set.remove(portal_type_name)
+  else:
+    is_partially_generated = True
 
   # LOG("ERP5Type.dynamic", INFO,
   #     "Filled accessor holder list for portal_type %s (%s)" % \
@@ -285,18 +296,9 @@ def generatePortalTypeClass(site, portal_type_name):
     # registry like there used to be with FS.
     import erp5.component.mixin
     for mixin in mixin_list:
-      mixin_module = erp5.component.mixin.find_load_module(mixin)
-      mixin_class = None
-      if mixin_module is not None:
-        try:
-          mixin_class = getattr(mixin_module, mixin)
-        except AttributeError:
-          LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module %r, fallback on filesystem" %
-              (mixin, mixin_module))
-
+      mixin_class = _importComponentClass(erp5.component.mixin, mixin)
       if mixin_class is None:
-        mixin_class = _importClass(mixin_class_registry[mixin])
+        mixin_class = _importFilesystemClass(mixin_class_registry[mixin])
 
       mixin_class_list.append(mixin_class)
 
@@ -319,16 +321,7 @@ def generatePortalTypeClass(site, portal_type_name):
     import erp5.component.interface
     from Products.ERP5Type import interfaces as filesystem_interfaces
     for interface in interface_list:
-      interface_module = erp5.component.interface.find_load_module(interface)
-      interface_class = None
-      if interface_module is not None:
-        try:
-          interface_class = getattr(interface_module, interface)
-        except AttributeError:
-          LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module %r, fallback on filesystem" %
-              (interface, interface_module))
-
+      interface_class = _importComponentClass(erp5.component.interface, interface)
       if interface_class is None:
         interface_class = getattr(filesystem_interfaces, interface)
 
@@ -356,10 +349,10 @@ def generatePortalTypeClass(site, portal_type_name):
   #    "Portal type %s loaded with bases %s" \
   #        % (portal_type_name, repr(base_class_list)))
 
-  return (tuple(base_class_list),
-          portal_type_category_list,
-          interface_class_list,
-          attribute_dict)
+  return is_partially_generated, (tuple(base_class_list),
+                                  portal_type_category_list,
+                                  interface_class_list,
+                                  attribute_dict)
 
 def loadTempPortalTypeClass(portal_type_name):
   """
@@ -402,6 +395,24 @@ def synchronizeDynamicModules(context, force=False):
       # up to date, nothing to do
       return
     last_sync = cookie
+
+  # Flush the entire ZODB.Connections pickle cache on next opening
+  # (transaction beginning), for all connections.
+  # There may be instances of the classes which are being reloaded in the
+  # cache, and the code change may cause incompatible instance property
+  # layouts. A very visible example is if the class does not exist prior to
+  # the reload: if any instance was loaded, it is loaded as an instance of
+  # the Broken class, which has a __setstate__ method which mangles
+  # instance's properties. Then, post-reload the class cannot expect to
+  # handle an instance with such property mangling, and will start behaving
+  # in undefined ways.
+  # Strictly, this issue also applies to any non-persistent instance of any
+  # class defined in (or affected by) anything being reloaded. But as these
+  # instances have not been made persistent, there is no guarantee that they
+  # can be reloaded in any way.
+  # Emptying the ZODB cache is the last thing short of restarting the whole
+  # process.
+  Connection.resetCaches()
 
   import erp5
   with aq_method_lock:

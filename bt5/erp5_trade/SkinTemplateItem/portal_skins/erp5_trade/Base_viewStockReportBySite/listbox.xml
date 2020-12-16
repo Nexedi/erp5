@@ -145,6 +145,10 @@
                           <string>aggregate_quantity_list</string>
                           <string>Item Quantity List</string>
                         </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Inventory Value</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -199,7 +203,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\', \'Aggregated Items\')] or [])</string> </value>
+            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\', \'Aggregated Items\')] or []) + (context.REQUEST.form.get("inventory_valuation_method") and [(\'total_price\', \'Inventory Value\')] or [])</string> </value>
         </item>
       </dictionary>
     </pickle>

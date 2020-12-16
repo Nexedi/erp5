@@ -89,6 +89,7 @@ class TypesTool(TypeProvider):
   id = 'portal_types'
   meta_type = 'ERP5 Types Tool'
   portal_type = 'Types Tool'
+  title = 'Portal Types'
   allowed_types = ()
 
   zope.interface.implements(ITypesTool)
@@ -274,9 +275,11 @@ class TypesTool(TypeProvider):
     Return a list of class names that can be used as Interfaces
     """
     from Products.ERP5Type import interfaces
+    from zope.interface.interface import InterfaceClass
     return self._getTypeList(
       'Interface Component',
-      [name for name, _ in inspect.getmembers(interfaces, inspect.isclass)])
+      [name for name, _ in inspect.getmembers(interfaces,
+                                              lambda x: isinstance(x, InterfaceClass))])
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'resetDynamicDocumentsOnceAtTransactionBoundary')

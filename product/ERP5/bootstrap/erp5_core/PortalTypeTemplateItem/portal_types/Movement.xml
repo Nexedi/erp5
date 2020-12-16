@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This portal type is an abstract portal type, so that newTempMovement calls can succeed; one should never have to use this portal type for persistent objects.</string> </value>
+            <value> <string>This portal type is an abstract portal type, so that Movement temp_objects can be created; one should never have to use this portal type for persistent objects.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -34,7 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.interface.IWatermarkable import IWatermarkable
 from erp5.component.document.Image import Image
-from Products.ERP5.Document.Document import ConversionError
+from erp5.component.document.Document import ConversionError
 from subprocess import Popen, PIPE
 from zLOG import LOG, INFO, PROBLEM
 import errno
@@ -115,7 +115,7 @@ class PDFDocument(Image):
       return outputStream.getvalue()
 
   # Conversion API
-  def _convert(self, format, **kw):
+  def _convert(self, format, **kw):  # pylint: disable=redefined-builtin
     """
     Implementation of conversion for PDF files
     """
@@ -164,7 +164,7 @@ class PDFDocument(Image):
     raise NotImplementedError
 
   security.declarePrivate('_convertToText')
-  def _convertToText(self):
+  def _convertToText(self, format='txt'):  # pylint: disable=redefined-builtin
     """
       Convert the PDF text content to text with pdftotext
     """
@@ -346,9 +346,9 @@ class PDFDocument(Image):
     self._content_information = result
     return result.copy()
 
-  def _setFile(self, data):
+  def _setFile(self, *args, **kw):
     try:
       del self._content_information
     except (AttributeError, KeyError):
       pass
-    Image._setFile(self, data)
+    Image._setFile(self, *args, **kw)

@@ -141,6 +141,29 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
     self.query("INSERT INTO X VALUES ()")
     self.assertEqual((123,), self.query("SELECT a FROM X")[1][0])
 
+  def test_change_column_comment(self):
+    self.check_upgrade_schema(
+        dedent(
+            """\
+      CREATE TABLE `X` (
+        `a` int(11) NOT NULL COMMENT 'old comment'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""),
+        dedent(
+            """\
+      CREATE TABLE `X` (
+        `a` int(11) NOT NULL COMMENT 'new comment'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""))
+    self.assertEqual(
+        ('a', 'new comment'),
+        self.query(
+            dedent(
+                """\
+                SELECT COLUMN_NAME, COLUMN_COMMENT
+                FROM information_schema.COLUMNS
+                WHERE TABLE_NAME='X'
+                """))[1][0],
+    )
+
   def test_add_index(self):
     self.check_upgrade_schema(
         dedent(
@@ -192,3 +215,49 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         table_name='table')
     self.query(
         "SELECT `alter`, `and` FROM `table` USE INDEX (`use`)")
+
+  def test_change_table_engine(self):
+    self.check_upgrade_schema(
+        dedent(
+            """\
+            CREATE TABLE `X` (
+              `a` int(11) DEFAULT NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8"""),
+        dedent(
+            """\
+            CREATE TABLE `X` (
+              `a` int(11) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""))
+    self.assertEqual(
+        ('X', 'InnoDB'),
+        self.query(
+            dedent(
+                """\
+                SELECT TABLE_NAME, ENGINE
+                FROM information_schema.TABLES
+                WHERE TABLE_NAME='X'
+                """))[1][0],
+    )
+
+  def test_change_table_comment(self):
+    self.check_upgrade_schema(
+        dedent(
+            """\
+            CREATE TABLE `X` (
+              `a` int(11) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='old comment'"""),
+        dedent(
+            """\
+            CREATE TABLE `X` (
+              `a` int(11) DEFAULT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='new comment'"""))
+    self.assertEqual(
+        ('X', 'new comment'),
+        self.query(
+            dedent(
+                """\
+                SELECT TABLE_NAME, TABLE_COMMENT
+                FROM information_schema.TABLES
+                WHERE TABLE_NAME='X'
+                """))[1][0],
+    )

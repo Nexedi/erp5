@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import addToDate, getNumberOfDayInMonth
+from erp5.component.module.DateUtils import addToDate, getNumberOfDayInMonth
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \

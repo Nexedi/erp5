@@ -1,0 +1,87 @@
+<!--
+this selenium test is executed at first. so other tests are executed by anonymous user
+-->
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Logout</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Logout</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/portal_skins/erp5_advanced_ecommerce/advanced_ecommerce_layout/product_list/manage_main</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_lines"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_lines"]</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value='Save Changes']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Preference_initialisation</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/ERP5Site_createSuperUser</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Base_validateRule</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

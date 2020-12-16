@@ -159,7 +159,7 @@
 
    $.ajax({type: 'GET',
            async: false,
-           url: 'Component_getErrorWarningMessageDictAsJson',
+           url: 'ComponentMixin_getErrorWarningMessageDictAsJson',
            success: getErrorWarningMessageDictHandler});
  }
 
@@ -651,7 +651,7 @@
   $.ajax({type: 'GET',
          async: true,
          dataType: 'json',
-         url: 'Component_getTextContentHistoryRevisionDictListAsJSON',
+         url: 'ComponentMixin_getTextContentHistoryRevisionDictListAsJSON',
          success: successHandler});
  }
 

@@ -1,6 +1,6 @@
 from ZODB.POSException import ConflictError
-from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5Type.Log import log
+from erp5.component.document.Document import ConversionError
+from erp5.component.module.Log import log
 
 message = None
 try:
@@ -11,8 +11,6 @@ except ConversionError, e:
   message = 'Conversion Error: %s' % (str(e) or 'undefined.')
 except Exception, e:
   message = 'Problem: %s' % (repr(e) or 'undefined.')
-except:
-  message = 'Problem: unknown'
 
 # reach here, then exception was raised, message must be logged in workflow
 # do not simply raise but rather change external processing state

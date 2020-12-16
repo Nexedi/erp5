@@ -1,3 +1,4 @@
+from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 """Copy subscription information to the related organisation"""
 
 context.Credential_checkConsistency(['Organisation'])
@@ -19,5 +20,5 @@ context.Credential_copyRegistredInformation(organisation, organisation_mapping)
 #Try to validate
 try:
   organisation.validate()
-except:
+except UnsupportedWorkflowMethod:
   pass

@@ -1,7 +1,17 @@
 mimetypes_registry
+portal_acknowledgements
 portal_callables
 portal_contribution_registry
+portal_deliveries
 portal_diff
+portal_domains
+portal_ids
+portal_introspections
 portal_notifications
+portal_orders
+portal_password
+portal_rules
 portal_sessions
+portal_simulation
+portal_tests
 portal_transforms

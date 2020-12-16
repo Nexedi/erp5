@@ -1,4 +1,3 @@
-request = context.REQUEST
 consumption_list = context.getSpecialiseValueList()
 # convert string to float 
 reference_quantity = float( reference_quantity )

@@ -60,9 +60,9 @@ def getRoles(self, _transactional_variable_pool=local()):
     tv = TransactionalVariable()
     _transactional_variable_pool.instance = tv
   try:
-    extra_role_tuple = tv['user_extra_role_tuple']
+    extra_role_tuple = tv[('user_extra_role_tuple', self.getId())]
   except KeyError:
-    tv['user_extra_role_tuple'] = extra_role_tuple = (
+    tv[('user_extra_role_tuple', self.getId())] = extra_role_tuple = (
       (DEVELOPER_ROLE_ID, )
       if self.getId() in getattr(
         getattr(

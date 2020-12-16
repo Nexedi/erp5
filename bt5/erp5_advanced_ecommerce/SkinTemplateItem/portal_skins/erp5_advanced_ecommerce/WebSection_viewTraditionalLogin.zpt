@@ -1,0 +1,58 @@
+<tal:block tal:define="login_come_from_url python: request.get('field_your_login_come_from_url', None) or request.get('came_from', None) or '..';
+                       dummy python: request.set('came_from', login_come_from_url);
+                       is_shopping_cart python:request.get('is_shopping_cart', 0);
+                       is_loyalty_section python: request.get('is_loyalty_section', 0);">
+
+  <p tal:condition="is_shopping_cart" i18n:translate="" i18n:domain="ui"> 
+     Before we can proceed to payment, please login or create a new user.
+  </p>
+
+  <p tal:condition="is_loyalty_section" i18n:translate="" i18n:domain="ui"> 
+     Before access loyalty area, please login.
+  </p>
+<p class="clear"></p>
+<div class="traditional_login">
+   <div class="login_side">
+     <span class="group_title" i18n:translate="" i18n:domain="ui"> Login </span>
+     <div class="field">
+         <label class="required" i18n:translate="" i18n:domain="ui">Username</label>
+         <input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get('__ac_name') or ''" />
+         <p class="clear"></p>
+      </div>
+      <div class="field">
+         <label i18n:translate="" i18n:domain="ui">Password</label>
+         <input type="password" name="__ac_password" id="password" />
+         <p class="clear"></p>
+      </div>
+      <div class="field">
+        <input type="hidden" name="is_loyalty_section"
+               tal:condition="is_loyalty_section"
+               tal:attributes="value is_loyalty_section" />
+        <input type="hidden" name="is_shopping_cart"
+               tal:condition="is_shopping_cart"
+               tal:attributes="value is_shopping_cart" />
+        <input tal:condition="exists: request/came_from"
+               type="hidden" name="came_from"
+               tal:attributes="value request/came_from" />
+        <input type="hidden" name="__ac_persistent" value="1"/>
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+         <div class="input">
+           <input type="submit" value="Login" class="ecommerce_submit"
+                       tal:attributes="name python: 'WebSite_login:method'"
+                       i18n:attributes="value" i18n:domain="ui" />
+         </div>
+        <p class="clear"></p>
+      </div>
+   </div>
+   <div class="subscribe_side">
+     <span class="group_title" i18n:translate="" i18n:domain="ui"> Subscribe </span>
+     <p class="clear"></p>
+     <a tal:attributes="href python: here.getWebSiteValue().absolute_url()+'/WebSite_viewRegistrationDialog?is_shopping_cart:int=%s&is_loyalty_section:int=%s&came_from=%s' % (is_shopping_cart,is_loyalty_section, login_come_from_url);
+                        class string:traditional_subscribe">
+       <span tal:replace="python: here.Base_translateString('I want to create an account')"/>
+     </a>
+   </div>
+</div>
+</tal:block>

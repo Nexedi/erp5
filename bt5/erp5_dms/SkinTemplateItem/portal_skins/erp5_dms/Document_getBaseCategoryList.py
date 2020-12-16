@@ -10,8 +10,8 @@ nr_of_types = len(type_list)
 
 basecatdict = {}
 
-for type in type_list:
-  type_base_cat_list = context.portal_types[type].getInstanceBaseCategoryList()
+for type_info in type_list:
+  type_base_cat_list = context.portal_types[type_info].getInstanceBaseCategoryList()
   for base_cat in type_base_cat_list:
     basecatdict[base_cat] = basecatdict.setdefault(base_cat, 0)+1
 

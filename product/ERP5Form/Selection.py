@@ -37,7 +37,6 @@ from hashlib import md5
 
 # Put a try in front XXX
 from Products.CMFCategory.Category import Category
-from Products.ERP5.Document.Domain import Domain
 
 from zLOG import LOG
 

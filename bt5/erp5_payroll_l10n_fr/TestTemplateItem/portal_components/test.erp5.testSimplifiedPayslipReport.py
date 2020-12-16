@@ -108,18 +108,18 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     "currency": "€",
     "amount_of_remuneration_evolution":  2250 * 0.022 - 2305.53 * 0.017,
     "income_tax_dict": {'employee_price': -0.051, 'employee_total_price': -117.58, 'base': 2305.535},
-    "total_pay_by_employer": 9854.25,
+    "total_pay_by_employer": 9854.24,
     "total_contribution_relief": 468.88
     }
     payslip_content = test_pay_sheet_transaction.PaySheetTransaction_getPayslipData()
     for key, value in expected_payslip_content.iteritems():
-      self.assertEquals(value, payslip_content[key])
+      self.assertAlmostEquals(value, payslip_content[key])
 
     expected_non_contribution_dict_list= [
       {'title': 'AMOUNT NON SUBJECT TO CONTRIBUTION', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
-      {'title': 'Remboursement transport en commun', 'base': 14.0, 'employee_price': 1.0, 'employee_total_price': 14.0, 'employer_price': None, 'employer_total_price': None},
-      {'title': 'Plvt cheques vacances', 'base': -44.0, 'employee_price': 1.0, 'employee_total_price': -44.0, 'employer_price': None, 'employer_total_price': None},
-      {'title': 'Remboursement internet', 'base': 0.0, 'employee_price': None, 'employee_total_price': None, 'employer_price': None, 'employer_total_price': None},
+      {'title': 'Remboursement transport en commun', 'base': 14.0, 'employee_price': None, 'employee_total_price': 14.0, 'employer_price': None, 'employer_total_price': None},
+      {'title': 'Plvt cheques vacances', 'base': -44.0, 'employee_price': None, 'employee_total_price': -44.0, 'employer_price': None, 'employer_total_price': None},
+      {'title': 'Remboursement internet', 'base': 0.0, 'employee_price': None, 'employee_total_price': 0.0, 'employer_price': None, 'employer_total_price': None},
       {'title': 'Tickets restaurant', 'base': -3.2, 'employee_price': 4.0, 'employee_total_price': -12.8, 'employer_price': 4.0, 'employer_total_price': -19.2},
       {'title': 'TOTAL AMOUNTS NON SUBJECT TO CONTRIBUTIONS', 'base': 0, 'employee_price': 0, 'employee_total_price': -42.8, 'employer_price': 0, 'employer_total_price': -19.2}
     ]
@@ -151,16 +151,16 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
       {'title': 'Retraite complementaire IRNEO TA', 'base': 2250.0, 'employee_price': -0.031, 'employee_total_price': -69.75, 'employer_price': -0.0465, 'employer_total_price': -104.63},
       {'title': 'AGFF TA', 'base': 2250.0, 'employee_price': -0.008, 'employee_total_price': -18.0, 'employer_price': -0.012, 'employer_total_price': -27.0},
       {'title': 'Assurance vieillesse deplafonnée', 'base': 2250.0, 'employee_price': -0.003, 'employee_total_price': -6.75, 'employer_price': -0.018, 'employer_total_price': -40.5},
-      {'title': 'FAMILY-SOCAL SECURITY', 'base': 2250.0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.0345, 'employer_total_price': -77.63},
+      {'title': 'FAMILY-SOCAL SECURITY', 'base': 2250.0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.0345, 'employer_total_price': -77.625},
       {'title': 'UNEMPLOYMENT INSURANCE', 'base': 2250.0, 'employee_price': -0.02424, 'employee_total_price': -54.54, 'employer_price': -0.04336, 'employer_total_price': -97.56},
-      {'title': 'OTHER EMPLOYER CONTRIBUTIONS', 'base': 94.91, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.08, 'employer_total_price': -7.59},
+      {'title': 'OTHER EMPLOYER CONTRIBUTIONS', 'base': 94.91, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.08, 'employer_total_price': -7.5927999999999995},
       {'title': 'OTHER EMPLOYER CONTRIBUTIONS', 'base': 2250.0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': -0.024, 'employer_total_price': -54.0},
       {'title': 'CSG NON TAXABLE TO INCOME TAX', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
       {'title': 'CSG non deductible', 'base': 2305.53, 'employee_price': -0.029, 'employee_total_price': -66.86, 'employer_price': None, 'employer_total_price': None},
       {'title': 'CSG/CRDS TAXABLE TO INCOME TAX', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
       {'title': 'CSG/CRDS imposible a impot sur le  revenu', 'base': 2305.53, 'employee_price': -0.029, 'employee_total_price': -66.86, 'employer_price': None, 'employer_total_price': None},
       {'title': 'CONTRIBUTION RELIEF', 'base': 468.88, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 1.0, 'employer_total_price': 468.88},
-      {'title': 'TOTAL CONTRIBUTIONS', 'base': 0, 'employee_price': 0, 'employee_total_price': -499.87, 'employer_price': 0, 'employer_total_price': -585.05}
+      {'title': 'TOTAL CONTRIBUTIONS', 'base': 0, 'employee_price': 0, 'employee_total_price': -499.87, 'employer_price': 0, 'employer_total_price': -585.04}
     ]
 
     contribution_dict_list = payslip_content['contribution_dict_list']

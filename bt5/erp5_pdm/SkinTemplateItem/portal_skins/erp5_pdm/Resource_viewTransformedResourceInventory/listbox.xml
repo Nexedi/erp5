@@ -366,7 +366,7 @@
                       <list>
                         <tuple>
                           <string>node_title</string>
-                          <string>Site or Warehouse</string>
+                          <string>Warehouse</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>

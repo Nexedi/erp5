@@ -56,9 +56,9 @@ lines_list = bug.searchFolder(portal_type='Bug Line', sort_on=(("id", "DESC"),),
 bug_message_list.extend(lines_list)
 message_count = len(bug_message_list)+1
 for message in bug_message_list:
-    message_count -= 1
-    text = message.asText()
-    body += """
+  message_count -= 1
+  text = message.asText()
+  body += """
 ++++++ Message #%s submitted by %s on %s ++++++
 %s
 """ % (message_count, message.getSourceTitle(''),

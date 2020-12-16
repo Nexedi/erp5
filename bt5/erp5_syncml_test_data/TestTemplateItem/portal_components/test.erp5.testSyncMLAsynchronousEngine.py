@@ -26,7 +26,7 @@
 ##############################################################################
 
 
-from Products.ERP5SyncML.tests.testERP5SyncMLMixin import TestERP5SyncMLMixin
+from erp5.component.module.testERP5SyncMLMixin import TestERP5SyncMLMixin
 
 
 class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):

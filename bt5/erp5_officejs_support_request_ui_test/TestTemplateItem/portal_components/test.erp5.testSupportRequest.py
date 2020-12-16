@@ -94,6 +94,39 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
 
 
 class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
+
+  def test_existing_portal_type_action_to_support_request(self):
+    view_categorie_list = ["object_view", "object_jio_view",
+                           "object_web_view", "object_jio_search"]
+    portal_type_list = [
+      p for p in self.portal.getPortalDocumentTypeList() \
+      if p not in ("Sound", "Video", "Web Page", 'Video', 'Web Illustration',
+                   'Web Manifest', 'Web Page', 'Web Script', 'Web Style',
+                   'Web Table', 'Notebook')]
+    # Should not happens but we never know
+    assert portal_type_list, portal_type_list
+
+    for portal_type_str in portal_type_list:
+      portal_type = self.portal.portal_types[portal_type_str]
+      action_list = portal_type.objectValues(portal_type="Action Information")
+      filtered_action_list = [action.getReference() \
+        for action in sorted(action_list, key=lambda x: x.getFloatIndex()) \
+        if action.getActionType() in view_categorie_list
+      ]
+      self.assertTrue(any(a in ("preview", "web_view") for a in filtered_action_list),
+                     "missing preview or web_view in {} {}".format(portal_type_str, filtered_action_list))
+
+    for portal_type_str in ["Support Request", "Support Request Module"]:
+      portal_type = self.portal.portal_types[portal_type_str]
+      action_list = portal_type.objectValues(portal_type="Action Information")
+      filtered_action_list = [action.getReference() \
+        for action in sorted(action_list, key=lambda x: x.getFloatIndex()) \
+        if action.getActionType() in view_categorie_list
+      ]
+      self.assertIn("officejs_support_request_view",
+                    filtered_action_list,
+                    "missing officejs_support_request_view in {}".format(portal_type_str))
+
   def test_submit_support_request(self):
     self.getWebSite().SupportRequestModule_createSupportRequest(
         description='<b>Help !!!</b>',
@@ -461,15 +494,14 @@ class TestSupportRequestRSSSOneEvent(SupportRequestRSSTestCase, DefaultTestRSSMi
     self._checkRSS(response)
 
   def test_RSS_with_token(self):
-    response = self.publish(
-        "%s/support_request_module/SupportRequestModule_generateRSSLinkAsJson" % self.getWebSite().getPath(),
-        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
-    restricted_access_url = json.loads(response.getBody())['restricted_access_url']
-    # make it relative url
+    self.login(self.user.getUserId())
+    # get rss link url
+    self.getWebSite().support_request_module.SupportRequestModule_generateRSSLinkUrl()
+    restricted_access_url = self.portal.REQUEST.form["your_rss_url"]
     parsed_url = urlparse.urlparse(restricted_access_url)
     restricted_access_url = restricted_access_url.replace(
         '%s://%s' % (parsed_url.scheme, parsed_url.netloc), '', 1)
-    # and check it (this time the request is not basic-authenticated)
+    # and check it
     self._checkRSS(self.publish(restricted_access_url))
 
 

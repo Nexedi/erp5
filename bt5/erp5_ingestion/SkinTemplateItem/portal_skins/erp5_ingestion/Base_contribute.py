@@ -1,3 +1,5 @@
+# This script uses file= argument
+# pylint: disable=redefined-builtin
 """
   Use to contribute file to ERP5.
 """

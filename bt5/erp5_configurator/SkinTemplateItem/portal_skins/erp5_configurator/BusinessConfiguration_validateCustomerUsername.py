@@ -8,9 +8,9 @@ for reference in reference_list:
 portal = context.getPortalObject()
 reference = editor
 
-# check this is a not a reference from acl_user
+# check this is a not a reference from acl_users
 if portal.acl_users.searchUsers(login=reference, exact_match=True):
-    return 0
+  return 0
 
 # first check if a Business Configuration has not already "reserved" it
 # through a Person Configuration Item which when build will create a real

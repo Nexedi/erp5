@@ -36,10 +36,6 @@
   <workflow>edit_workflow, internal_invoice_transaction_simulation_workflow</workflow>
  </chain>
  <chain>
-  <type>Invoice Root Simulation Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
   <type>Payment Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>

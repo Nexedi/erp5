@@ -1,6 +1,8 @@
 Bar Module | multi_form_dialog
 Bar Module | view
+Bar | jump_to_form
 Bar | jump_to_related_bar
+Bar | jump_to_self
 Bar | list
 Bar | performance
 Bar | view
@@ -16,6 +18,7 @@ Foo Module | do_nothing_report_jio
 Foo Module | empty_mass_action
 Foo Module | list
 Foo Module | list_ui
+Foo Module | other_context_action
 Foo Module | search
 Foo Module | sort_on
 Foo Module | view
@@ -35,6 +38,8 @@ Foo | select_bar
 Foo | view
 Foo | view_action_title
 Foo | view_crash_on_save
+Foo | view_dialog_with_only_update
+Foo | view_dialog_with_validation_error
 Foo | view_duration_field
 Foo | view_formbox
 Foo | view_formbox_dialog
@@ -44,6 +49,7 @@ Foo | view_listbox
 Foo | view_multiple_listbox
 Foo | view_onlyjio
 Foo | view_onlyxhtml
+Foo | view_parallel_list_field
 Foo | view_planning
 Foo | view_print_dialog
 Foo | view_printout_form

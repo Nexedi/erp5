@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.File import File, _MARKER
+from erp5.component.document.File import File, _MARKER
 from ZPublisher import HTTPRangeSupport
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.CMFCore.utils import _checkConditionalGET

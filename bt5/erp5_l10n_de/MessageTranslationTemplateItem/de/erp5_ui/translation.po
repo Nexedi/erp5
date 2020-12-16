@@ -722,9 +722,6 @@ msgstr "Kontoschlüssel"
 msgid "Bank Account Number"
 msgstr "Kontonummer"
 
-msgid "Bank Account TItle"
-msgstr "Kontotitel"
-
 msgid "Bank Account Title"
 msgstr "Kontotitel"
 
@@ -6246,8 +6243,8 @@ msgstr "Ansichten"
 msgid "Visit"
 msgstr "Besuch"
 
-msgid "Volume (m&#179;)"
-msgstr "Volumen (m&#179;)"
+msgid "Volume (m³)"
+msgstr "Volumen (m³)"
 
 msgid "Warning"
 msgstr "Warnung"

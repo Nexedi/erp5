@@ -1,7 +1,0 @@
-<module>
- <id>oxatis_test_module</id>
- <permission_list>
- </permission_list>
- <portal_type>Oxatis Test Module</portal_type>
- <title>Oxatis Tests</title>
-</module>

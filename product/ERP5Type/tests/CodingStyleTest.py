@@ -43,12 +43,12 @@ class CodingStyleTest(CodingStyleTestCase, testXHTML.TestXHTMLMixin):
   """
 
   def getBusinessTemplateList(self):
-    # install erp5_administration to check with tools from erp5_administration
+    # install erp5_upgrader for CodingStyleTestCase.test_run_upgrader
     # XXX also install erp5_full_text_myisam_catalog to workaround missing test
     # dependencies and the fact that test dependencies are not checked
     # recursively.
     return (
-        'erp5_administration',
+        'erp5_upgrader',
         'erp5_full_text_myisam_catalog',
         self.tested_business_template)
 
@@ -89,6 +89,17 @@ def test_suite():
   suite = unittest.TestSuite()
   tested_business_template = os.environ['TESTED_BUSINESS_TEMPLATE']
 
+  if tested_business_template == 'erp5_invoicing':
+    from Testing import ZopeTestCase
+    ZopeTestCase._print(
+      '\nDo nothing: Invoice Line container is defined in '
+      'erp5_{simplified,advanced}_invoicing so you should run those instead\n')
+    return suite
+  tested_business_template_list = [tested_business_template]
+  if tested_business_template in ('erp5_simplified_invoicing',
+                                    'erp5_advanced_invoicing'):
+    tested_business_template_list.append('erp5_invoicing')
+
   testclass = type(
       'CodingStyleTest %s' % tested_business_template,
       (CodingStyleTest,),
@@ -102,7 +113,16 @@ def test_suite():
   testXHTML.addTestMethodDynamically(
       testclass,
       testXHTML.validator,
-      (tested_business_template,),
+      tested_business_template_list,
+      expected_failure_list=(
+          # this view needs VCS preference set (this test suite does not support
+          # setting preferences, but this might be a way to fix this).
+          'test_erp5_forge_Business_Template_BusinessTemplate_viewVcsStatus',
+          # this view only works when solver decision has a relation to a solver.
+          # One way to fix this would be to allow a custom "init script" to be called
+          # on a portal type.
+          'test_erp5_simulation_Solver_Decision_SolverDecision_viewConfiguration',
+      ),
   )
 
   # required to create content in portal_components

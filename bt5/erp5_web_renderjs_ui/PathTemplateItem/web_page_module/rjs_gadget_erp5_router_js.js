@@ -26,6 +26,8 @@
     COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE = "display_dialog_with_history",
     // Display the cancellable url (or the current doc default) + the history
     COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE = "cancel_dialog_with_history",
+    // Display an action on the jio document + the history
+    COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION = "display_erp5_action_with_history",
     // Store the jio key for the person document of the user
     COMMAND_LOGIN = "login",
     // Display a raw string URL
@@ -52,6 +54,8 @@
     COMMAND_HISTORY_PREVIOUS = "history_previous",
     // Store the current document in history and display the next one
     COMMAND_PUSH_HISTORY = "push_history",
+    // Store the current document in history and display the next one latest state stored
+    COMMAND_PUSH_HISTORY_STORED_STATE = "push_history_stored_state",
     // Change UI language
     COMMAND_CHANGE_LANGUAGE = "change_language",
     VALID_URL_COMMAND_DICT = {},
@@ -65,6 +69,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_CANCEL_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ERP5_ACTION] = null;
@@ -75,6 +80,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;
   VALID_URL_COMMAND_DICT[COMMAND_HISTORY_PREVIOUS] = null;
   VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_LOGIN] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RAW] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RELOAD] = null;
@@ -284,7 +290,7 @@
     var hash = getDisplayUrlFor(jio_key, options),
       queue;
     /*jslint regexp: true*/
-    if (jio_key && /^[^\/]+_module\/[^\/]+$/.test(jio_key)) {
+    if (jio_key && (/^[^\/]+_module\/[^\/]+$/.test(jio_key) || /^portal_[^\/]+\/[^\/]+$/.test(jio_key))) {
       /*jslint regexp: false*/
       // This only work for remote access to ERP5...
       queue = gadget.props.jio_navigation_gadget.put(jio_key, {
@@ -388,11 +394,10 @@
     );
   }
 
-  function execDisplayERP5ActionCommand(gadget, options) {
-    return gadget.jio_getAttachment(options.jio_key, 'links')
+  function execDisplayERP5ActionCommand(gadget, previous_options, next_options, keep_history) {
+    return gadget.jio_getAttachment(next_options.jio_key, 'links')
       .push(function (document_view) {
-        var action, action_data, action_url, i, j, new_options;
-
+        var action, action_data, i, j, new_options;
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
           if (document_view._links.hasOwnProperty(action)) {
@@ -401,22 +406,20 @@
             }
             for (j = 0;  j < document_view._links[action].length; j = j + 1) {
               action_data = document_view._links[action][j];
-              if (action_data.name === options.page) {
+              if (action_data.name === next_options.page) {
                 new_options = {
-                  jio_key: options.jio_key,
+                  jio_key: next_options.jio_key,
                   view: action_data.href
                 };
-                copyStickyParameterDict(options, new_options);
-                action_url = getDisplayUrlFor(
-                  options.jio_key,
-                  new_options
-                );
-                return synchronousChangeState(action_url);
+                if (keep_history) {
+                  return execPushHistoryCommand(gadget, previous_options, new_options);
+                }
+                return execDisplayCommand(gadget, new_options);
               }
             }
           }
         }
-        throw new Error('Action not found: ' + options.name);
+        throw new Error('Action not found: ' + next_options.name);
       });
   }
 
@@ -433,7 +436,6 @@
     }
 
     display_url = getDisplayUrlFor(jio_key, options);
-
     // Only keep state for the default view
     // otherwise, user will never be able to reset it with the filter panel
     // Do not store state for module subdocument, to not pollute the IDB size
@@ -486,10 +488,9 @@
       });
   }
 
-  function execPushHistoryCommand(gadget, previous_options, next_options) {
+  function execPushHistoryCommand(gadget, previous_options, next_options, drop_options, use_stored_state) {
     var jio_key = next_options.jio_key,
       history_options;
-    delete next_options.jio_key;
     if (previous_options.hasOwnProperty('cancel')) {
       history_options = JSON.parse(previous_options.cancel);
       history_options.selection = previous_options.selection;
@@ -502,8 +503,16 @@
     return addHistory(gadget, history_options)
       .push(function (id) {
         next_options.history = id;
+        if (use_stored_state === true) {
+          return execDisplayStoredStateCommand(gadget, next_options, drop_options);
+        }
+        delete next_options.jio_key;
         return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
       });
+  }
+
+  function execPushHistoryStoredStateCommand(gadget, previous_options, next_options, drop_options) {
+    return execPushHistoryCommand(gadget, previous_options, next_options, drop_options, true);
   }
 
   function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options, create_cancel_url) {
@@ -645,13 +654,15 @@
         var parent_link = erp5_document._links.parent,
           uri,
           options = {};
+        copyStickyParameterDict(previous_options, options);
         if (parent_link !== undefined) {
           uri = new URI(parent_link.href);
-          copyStickyParameterDict(previous_options, options);
           options.jio_key = uri.segment(2);
           // When redirecting to parent, always try to restore the state
           return execDisplayStoredStateCommand(gadget, options);
         }
+        // If no parent, return to the home page
+        return gadget.redirect({command: 'display', options: options});
       }, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
             (error.status_code === 404)) {
@@ -891,6 +902,9 @@
     if (command_options.path === COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE) {
       return execKeepHistoryAndCancelDialogCommand(gadget, previous_options);
     }
+    if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION) {
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options, true);
+    }
     if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {
       return execDisplayStoredStateCommand(gadget, next_options, drop_options);
     }
@@ -901,7 +915,7 @@
       return execChangeCommand(previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_DISPLAY_ERP5_ACTION) {
-      return execDisplayERP5ActionCommand(gadget, next_options);
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options);
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);
@@ -920,6 +934,9 @@
     }
     if (command_options.path === COMMAND_PUSH_HISTORY) {
       return execPushHistoryCommand(gadget, previous_options, next_options);
+    }
+    if (command_options.path === COMMAND_PUSH_HISTORY_STORED_STATE) {
+      return execPushHistoryStoredStateCommand(gadget, previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_LOGIN) {
       return execLoginCommand(gadget, previous_options, next_options);

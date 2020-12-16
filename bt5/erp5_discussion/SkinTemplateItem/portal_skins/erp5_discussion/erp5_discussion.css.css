@@ -46,6 +46,7 @@ a.discussion-post-title{
   margin-top: 10px;
   margin-bottom: 10px;
   color: black;
+  word-break: break-word;
 }
 
 

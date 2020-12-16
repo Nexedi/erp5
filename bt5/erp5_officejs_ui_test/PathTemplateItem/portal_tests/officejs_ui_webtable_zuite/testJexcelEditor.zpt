@@ -1,0 +1,177 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Jexcel UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Initialize and skip app installation -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_web_table_editor/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Skip</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Skip</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+<!-- Wait for spreadsheet to be rendered by the gadget -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='spreadsheet']</td>
+  <td></td>
+</tr>
+<!-- Verify maximize button is present -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[contains(@class, 'ui-icon-expand ui-btn-icon-notext')]</td>
+  <td></td>
+</tr>
+<!-- Verify editor has been maximized -->
+<tr>
+  <td>click</td>
+  <td>//button[contains(@class, 'ui-icon-expand ui-btn-icon-notext')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'editor-maximize')]</td>
+  <td></td>
+</tr>
+<!-- Verify searchbar is present -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'jexcel_filter')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'jexcel_filter')]</td>
+  <td></td>
+</tr>
+<!-- Verify toolbar is present -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'jexcel_toolbar')]</td>
+  <td></td>
+</tr>
+<!-- Verify body is present, draggable and resizable -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tbody[contains(@class, 'draggable resizable')]</td>
+  <td></td>
+</tr>
+<!-- Add table -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//i[@title='Add table']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//i[@title='Add table']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-spreadsheet='1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-spreadsheet='1']</td>
+  <td>Table 2</td>
+</tr>
+<!-- Delete Sheet -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-spreadsheet='0']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//i[@title='Delete table']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//i[@title='Delete table']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertConfirmation</td>
+  <td>Delete this table ?</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-spreadsheet='1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-spreadsheet='0']</td>
+  <td>Table 1</td>
+</tr>
+</tbody>
+</table>

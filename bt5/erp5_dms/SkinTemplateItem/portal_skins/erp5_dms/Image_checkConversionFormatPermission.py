@@ -1,3 +1,5 @@
+# this script has an `format` argument
+# pylint: disable=redefined-builtin
 if format in ('svg',):
   image_pixels = context.getHeight()* context.getWidth()
   max_pixels = 128*128 # default thumbnail size

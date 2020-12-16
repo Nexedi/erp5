@@ -29,7 +29,7 @@ from cStringIO import StringIO
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.BTreeData import BTreeData
+from erp5.component.module.BTreeData import BTreeData
 
 
 # like Testing.makerequest, but

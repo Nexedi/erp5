@@ -286,7 +286,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     # XXX This is a temporary implementation:
     # Calling a webservice must be done through a WebServiceMethod
     # and a WebServiceConnection
-    from Products.ERP5.Document.Document import DocumentConversionServerProxy, enc, dec
+    from erp5.component.document.Document import DocumentConversionServerProxy, enc, dec
     server_proxy = DocumentConversionServerProxy(self)
     extension = guess_extension(content_type).strip('.')
     printout = dec(server_proxy.convertFile(enc(printout),

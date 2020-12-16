@@ -34,12 +34,12 @@
 <!-- Generate links to module -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
   <td></td>
 </tr>
 
@@ -47,7 +47,7 @@
 <!-- Header has a link to the previous history entry -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
   <td></td>
 </tr>
 <tr>
@@ -57,7 +57,7 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Foo Module</td>
+  <td>Foos</td>
   <td></td>
 </tr>
 

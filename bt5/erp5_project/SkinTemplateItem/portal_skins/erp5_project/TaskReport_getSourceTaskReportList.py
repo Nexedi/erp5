@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 log('task_list','starting')
 task_module = context.getDefaultModule('Task Report')
 log('task_list','next1')

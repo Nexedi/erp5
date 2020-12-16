@@ -1,5 +1,5 @@
-from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5Type.Log import log
+from erp5.component.document.Document import ConversionError
+from erp5.component.module.Log import log
 from ZODB.POSException import ConflictError
 from xmlrpclib import Fault
 from socket import error as SocketError
@@ -19,8 +19,6 @@ if context.getExternalProcessingState() not in ('converted', 'empty'):
     message = 'Socket Error: %s' % (repr(e) or 'undefined.')
   except Exception, e:
     message = 'Problem: %s' % (repr(e) or 'undefined.')
-  except:
-    message = 'Problem: unknown'
   # reach here, then exception was raised, message must be logged in workflow
   # do not simply raise but rather change external processing state
   # so user will see something is wrong 

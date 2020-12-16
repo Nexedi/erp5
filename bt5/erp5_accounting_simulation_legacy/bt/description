@@ -1,3 +1,0 @@
-Legacy simulation used in erp5_accounting.
-
-Instead of accounting rule cell, just use business process and set accounts as source / destination on business links

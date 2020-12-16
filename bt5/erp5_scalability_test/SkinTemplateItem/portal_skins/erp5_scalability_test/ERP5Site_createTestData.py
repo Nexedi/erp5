@@ -59,6 +59,5 @@ try:
     )
     user.validate()
 except Exception as e:
-  status_code = 1
   error_message = str(e)
   raise e

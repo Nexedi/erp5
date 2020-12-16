@@ -29,7 +29,7 @@ def addDialogIfNeeded(url):
 
   # try to get format parameter if exists
   parameter_kw = {}
-  format = ''
+  target_format = ''
   if len(action_list) > 1:
     parameter_list = action.split('?')[1]
     parameter_tuple_list = [tuple(tuple_parameter.split('=')) for tuple_parameter in parameter_list.split('&')]
@@ -44,13 +44,13 @@ def addDialogIfNeeded(url):
       base_content_type = form.getProperty('content_type')
     if parameter_kw.has_key('format'):
       # if format is passed in action url: remove it
-      format = parameter_kw.pop('format')
+      target_format = parameter_kw.pop('format')
       action = '%s?%s' % (action_id, '&'.join(['='.join(tuple_parameter) for tuple_parameter in parameter_kw.items()]))
     url = '%s/Base_viewOOoPrintDialog?dialog_action_url=%s&base_content_type=%s&field_your_format=%s' % (
                  context.absolute_url(),
                  url_quote('%s/%s' % (absolute_url, action)),
                  url_quote(base_content_type),
-                 url_quote(format))
+                 url_quote(target_format))
   elif not (hasattr(form, 'pt') and form.pt == 'form_dialog'):
     url = '%s/Base_viewIntermediatePrintDialog?dialog_action_url=%s' % (
                  context.absolute_url(), url_quote('%s/%s' % (absolute_url, action)))

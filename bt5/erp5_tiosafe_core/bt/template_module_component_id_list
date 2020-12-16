@@ -1,0 +1,11 @@
+module.erp5.AccountERP5IntegrationConduit
+module.erp5.AccountingERP5IntegrationConduit
+module.erp5.ERP5NodeConduit
+module.erp5.ERP5PaymentTransactionConduit
+module.erp5.ERP5ResourceConduit
+module.erp5.ERP5TransactionConduit
+module.erp5.OrganisationERP5IntegrationConduit
+module.erp5.TioSafeBaseConduit
+module.erp5.TioSafeNodeConduit
+module.erp5.TioSafeResourceConduit
+module.erp5.TioSafeUtils

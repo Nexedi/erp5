@@ -101,15 +101,12 @@
         try {
           result = callback(evt);
         } catch (e) {
-          result = RSVP.reject(e);
+          result = reject(e);
         }
 
-        callback_promise = result;
-        new RSVP.Queue()
-          .push(function () {
-            return result;
-          })
-          .push(undefined, function (error) {
+        callback_promise = new RSVP.Queue(result)
+          .push(undefined, function handleEventCallbackError(error) {
+            // Prevent rejecting the loop, if the result cancelled itself
             if (!(error instanceof RSVP.CancellationError)) {
               canceller();
               reject(error);

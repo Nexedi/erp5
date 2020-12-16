@@ -35,6 +35,7 @@ import imp
 import collections
 
 from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type import product_path as ERP5Type_product_path
 from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
@@ -109,11 +110,21 @@ class ComponentDynamicPackage(ModuleType):
     perhaps because the Finder of another Component Package could do it or
     because this is a filesystem module...
     """
-    # Ignore imports with a path which are filesystem-only and any
-    # absolute imports which does not start with this package prefix,
-    # None there means that "normal" sys.path will be used
-    if path or not fullname.startswith(self._namespace_prefix):
-      return None
+    import erp5.component
+
+    # ZODB Components
+    if not path:
+      if not fullname.startswith(self._namespace_prefix):
+        return None
+    # FS import backward compatibility
+    else:
+      try:
+        fullname = erp5.component.filesystem_import_dict[fullname]
+      except (TypeError, KeyError):
+        return None
+      else:
+        if not fullname.startswith(self._namespace_prefix):
+          return None
 
     import_lock_held = True
     try:
@@ -123,6 +134,26 @@ class ComponentDynamicPackage(ModuleType):
 
     try:
       site = getSite()
+
+      if erp5.component.filesystem_import_dict is None:
+        filesystem_import_dict = {}
+        try:
+          component_tool = aq_base(site.portal_components)
+        except AttributeError:
+          # For old sites, just use FS Documents...
+          return None
+        else:
+          for component in component_tool.objectValues():
+            if component.getValidationState() == 'validated':
+              component_module_name = '%s.%s' % (component._getDynamicModuleNamespace(),
+                                                 component.getReference())
+              if component.getSourceReference() is not None:
+                filesystem_import_dict[component.getSourceReference()] = component_module_name
+
+              if component.getPortalType() == 'Document Component':
+                filesystem_import_dict[('Products.ERP5Type.Document.' +
+                                        component.getReference())] = component_module_name
+          erp5.component.filesystem_import_dict = filesystem_import_dict
 
       # __import__ will first try a relative import, for example
       # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
@@ -139,13 +170,7 @@ class ComponentDynamicPackage(ModuleType):
         id_ = "%s.%s.%s" % (self._id_prefix, version, name)
         # aq_base() because this should not go up to ERP5Site and trigger
         # side-effects, after all this only check for existence...
-        try:
-          component_tool = aq_base(site.portal_components)
-        except AttributeError:
-          # For old sites, just use FS Documents...
-          return None
-
-        component = getattr(component_tool, id_, None)
+        component = getattr(aq_base(site.portal_components), id_, None)
         if component is None or component.getValidationState() not in ('modified',
                                                                        'validated'):
           return None
@@ -161,12 +186,7 @@ class ComponentDynamicPackage(ModuleType):
 
       # name=REFERENCE
       else:
-        try:
-          component_tool = aq_base(site.portal_components)
-        except AttributeError:
-          # For old sites, just use FS Documents...
-          return None
-
+        component_tool = aq_base(site.portal_components)
         for version in site.getVersionPriorityNameList():
           id_ = "%s.%s.%s" % (self._id_prefix, version, name)
           component = getattr(component_tool, id_, None)
@@ -219,6 +239,14 @@ class ComponentDynamicPackage(ModuleType):
     module for any reason...
     """
     site = getSite()
+
+    if fullname.startswith('Products.'):
+      module_fullname_filesystem = fullname
+      import erp5.component
+      fullname = erp5.component.filesystem_import_dict[module_fullname_filesystem]
+    else:
+      module_fullname_filesystem = None
+
     name = fullname[len(self._namespace_prefix):]
 
     # if only Version package (erp5.component.XXX.VERSION_version) is
@@ -268,6 +296,9 @@ class ComponentDynamicPackage(ModuleType):
         setattr(self, name, module)
         sys.modules[module_fullname_alias] = module
         MNAME_MAP[module_fullname_alias] = module.__name__
+        if module_fullname_filesystem:
+          sys.modules[module_fullname_filesystem] = module
+          MNAME_MAP[module_fullname_filesystem] = module.__name__
         return module
 
     component = getattr(site.portal_components, component_id)
@@ -288,6 +319,8 @@ class ComponentDynamicPackage(ModuleType):
       sys.modules[module_fullname] = module
       if module_fullname_alias:
         sys.modules[module_fullname_alias] = module
+      if module_fullname_filesystem:
+        sys.modules[module_fullname_filesystem] = module
 
       # This must be set for imports at least (see PEP 302)
       module.__file__ = '<' + relative_url + '>'
@@ -308,6 +341,8 @@ class ComponentDynamicPackage(ModuleType):
         del sys.modules[module_fullname]
         if module_fullname_alias:
           del sys.modules[module_fullname_alias]
+        if module_fullname_filesystem:
+          del sys.modules[module_fullname_filesystem]
 
         raise ImportError(
           "%s: cannot load Component %s (%s)" % (fullname, name, error)), \
@@ -319,6 +354,8 @@ class ComponentDynamicPackage(ModuleType):
       if module_fullname_alias:
         setattr(self, name, module)
         MNAME_MAP[module_fullname_alias] = module_fullname
+        if module_fullname_filesystem:
+          MNAME_MAP[module_fullname_filesystem] = module.__name__
 
       import erp5.component
       erp5.component.ref_manager.add_module(module)
@@ -408,9 +445,13 @@ class ComponentDynamicPackage(ModuleType):
         for k in modsec_dict.keys():
           if k.startswith(self._namespace):
             del modsec_dict[k]
-      for k in MNAME_MAP.keys():
-        if k.startswith(self._namespace):
+      for k, v in MNAME_MAP.items():
+        if v.startswith(self._namespace):
           del MNAME_MAP[k]
+
+          # Products import compatibility (module_fullname_filesystem)
+          if k.startswith('Products.'):
+            del sys.modules[k]
 
     for name, module in package.__dict__.items():
       if name[0] == '_' or not isinstance(module, ModuleType):
@@ -428,14 +469,6 @@ class ComponentDynamicPackage(ModuleType):
       del sys.modules[module_name]
 
       delattr(package, name)
-
-      # Clear pylint cache
-      try:
-        from astroid.builder import MANAGER
-      except ImportError:
-        pass
-      else:
-        MANAGER.astroid_cache.pop(module_name, None)
 
 class ToolComponentDynamicPackage(ComponentDynamicPackage):
   def reset(self, *args, **kw):

@@ -75,6 +75,7 @@ Organisation Module | view
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
+Organisation | jump_to_document
 Organisation | jump_to_persons
 Organisation | view
 Parent Delivery Property Movement Group | view
@@ -84,6 +85,7 @@ Person | assignment
 Person | details
 Person | document_view
 Person | financial_view
+Person | jump_to_document
 Person | person_detailed_report
 Person | terminate_career
 Person | view

@@ -1,0 +1,84 @@
+div.jexcel_formula img{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+input.jexcel_formula {
+  margin-left: 2px;
+  width: calc(100% - 77px);
+  position:sticky;
+  top:0px;
+  z-index:0;
+  display: inline-block;
+}
+
+div.jexcel-filter > * {
+  display: inline-block;
+}
+
+input.cell_input {
+  display: inline-block;
+  width: 35px;
+}
+
+input.jexcel_search {
+  width: 40px;
+}
+
+.jexcel_toolbar select.minimize {
+  width: 90px;
+}
+
+td {
+  cursor: cell;
+}
+
+div.jexcel_toolbar div.jcolor-content td {
+  cursor: crosshair;
+}
+
+input.readonly {
+  cursor: not-allowed;
+}
+
+body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
+  position : absolute;
+  bottom: 0;
+}
+
+.add_delete {
+  position : absolute;
+  bottom : 3px;
+  right : 10px;
+}
+
+.add_delete > i {
+  cursor : pointer;
+  margin-left : 10px;
+}
+
+.jexcel_tab.jexcel_container.fullscreen.with-toolbar {
+  position: absolute;
+  top: 0;
+}
+
+.jexcel_tabs .jexcel_tab_link, .jexcel_filter > div {
+  font-family: arial;
+}
+
+.jexcel_tab_link.selected {
+  cursor: alias;
+}
+
+:focus {
+  outline: none;
+}
+
+@media (max-width: 1150px){
+  div.jexcel_filter {
+    display: none;
+  }
+}

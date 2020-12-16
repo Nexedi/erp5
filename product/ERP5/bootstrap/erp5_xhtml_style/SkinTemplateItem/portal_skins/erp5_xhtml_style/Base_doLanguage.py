@@ -1,3 +1,6 @@
+# pylint: disable=redefined-builtin
+# select_language is a builtin because of Localizer add in builtins and pylint uses it as it runs in same process as ERP5.
+# https://lab.nexedi.com/nexedi/erp5/blob/52146f5e3abf538c056a1ab2ffd124757c4825d6/product/Localizer/itools/i18n/accept.py#L163
 import re
 
 try:
@@ -14,7 +17,8 @@ if website is not None and website.isStaticLanguageSelection():
     re.escape(root_website_url),
     '|'.join('/' + re.escape(x) for x in root_website.getAvailableLanguageList()))
   referer_url = context.REQUEST.HTTP_REFERER
-  if referer_url:
+  topmost_url_document = context.Base_getURLTopmostDocumentValue()
+  if referer_url and topmost_url_document.isURLAncestorOf(referer_url):
     if select_language == default_language:
       redirect_url = re.sub(website_url_pattern, root_website_url + r'\1', referer_url)
     else:

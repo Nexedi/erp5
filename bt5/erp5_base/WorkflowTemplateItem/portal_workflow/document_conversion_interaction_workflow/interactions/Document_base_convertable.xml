@@ -59,6 +59,7 @@
               <list>
                 <string>_setFile</string>
                 <string>_setData</string>
+                <string>update_data</string>
               </list>
             </value>
         </item>

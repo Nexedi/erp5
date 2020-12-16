@@ -322,14 +322,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
   <td></td>
 </tr>
 

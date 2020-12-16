@@ -1,1 +1,0 @@
-return context.Baobab_getAccountForSite(context.Baobab_getMainAgencyForSite(site))

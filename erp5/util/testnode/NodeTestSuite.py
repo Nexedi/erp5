@@ -75,9 +75,9 @@ class NodeTestSuite(SlapOSInstance):
     while 1:
       log_folder_name = '%s-%s' % (self.reference,
         ''.join(random.choice(alphabets) for i in range(10)))
-      log_folder_path = os.path.join(self.log_directory, log_folder_name)
+      self.log_folder_path = os.path.join(self.log_directory, log_folder_name)
       try:
-        os.makedirs(log_folder_path)
+        os.makedirs(self.log_folder_path)
       except OSError as e:
         if e.errno != errno.EEXIST:
           raise
@@ -85,8 +85,8 @@ class NodeTestSuite(SlapOSInstance):
         break
     # XXX copy the whole content of the log viewer app
     for fname in glob.glob(os.path.join(os.path.dirname(__file__), 'js-logtail', '*')):
-      shutil.copy(fname, log_folder_path)
-    self.suite_log_path = os.path.join(log_folder_path, 'suite.log')
+      shutil.copy(fname, self.log_folder_path)
+    self.suite_log_path = os.path.join(self.log_folder_path, 'suite.log')
     return self.suite_log_path, log_folder_name
 
   @property

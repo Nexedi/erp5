@@ -147,7 +147,7 @@ CREATE TABLE %s (
   `uid` BIGINT UNSIGNED NOT NULL,
   `date` DATETIME(6) NOT NULL,
   `path` VARCHAR(255) NOT NULL,
-  `active_process_uid` INT UNSIGNED NULL,
+  `active_process_uid` BIGINT UNSIGNED NULL,
   `method_id` VARCHAR(255) NOT NULL,
   `processing_node` SMALLINT NOT NULL DEFAULT -1,
   `priority` TINYINT NOT NULL DEFAULT 0,
@@ -555,7 +555,7 @@ CREATE TABLE %s (
         group_method_id = m.line.group_method_id
         if group_method_id[0] != '\0':
           # Count the number of objects to prevent too many objects.
-          cost = m.activity_kw.get('group_method_cost', .01)
+          cost = m.getGroupMethodCost()
           assert 0 < cost <= 1, (self.sql_table, uid)
           count = m.getObjectCount(activity_tool)
           # this is heuristic (messages with same group_method_id
@@ -584,7 +584,7 @@ CREATE TABLE %s (
                 continue
               uid_to_duplicate_uid_list_dict[uid] = uid_list
               cost += m.getObjectCount(activity_tool) * \
-                      m.activity_kw.get('group_method_cost', .01)
+                      m.getGroupMethodCost()
               message_list.append(m)
               if cost >= 1:
                 # Unreserve extra messages as soon as possible.
@@ -631,7 +631,10 @@ CREATE TABLE %s (
         method = activity_tool.invokeGroup
         args = (group_method_id, message_list, self.__class__.__name__,
                 hasattr(self, 'generateMessageUID'))
-        activity_runtime_environment = ActivityRuntimeEnvironment(None)
+        activity_runtime_environment = ActivityRuntimeEnvironment(
+          None,
+          priority=min(x.line.priority for x in message_list),
+        )
       else:
         method = activity_tool.invoke
         message, = message_list

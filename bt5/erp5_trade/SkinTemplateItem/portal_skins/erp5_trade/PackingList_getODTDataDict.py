@@ -9,7 +9,7 @@ def getSourceReference(line):
   for predicate in predicate_list:
     source_reference = predicate.getSourceReference()
     if source_reference:
-     return source_reference
+      return source_reference
   return ''
 
 def getSubLineList(obj):

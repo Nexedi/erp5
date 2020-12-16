@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.coordinate
+erp5.component.interface.ICoordinate
 """
 
 from zope.interface import Interface

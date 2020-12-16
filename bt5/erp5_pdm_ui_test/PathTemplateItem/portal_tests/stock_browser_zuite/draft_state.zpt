@@ -10,19 +10,19 @@ Test stock browser for draft state
 <tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft">
 
 <!-- Setup {{{ -->
-<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
 <!-- }}} -->
 
 <!-- Check source -->
-<tal:block tal:define="link_title python: 'erp5_pdm_ui_test_source_site';
-                       movement_count python: 0;">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
+                       inventory_list_count python: 0;">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
 </tal:block>
 
 <!-- Check destination -->
-<tal:block tal:define="link_title python: 'erp5_pdm_ui_test_destination_site';
-                       movement_count python: 0;">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
+                       inventory_list_count python: 0;">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
 </tal:block>
 
 

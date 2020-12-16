@@ -1,3 +1,5 @@
+# this script has an `format` argument
+# pylint: disable=redefined-builtin
 """
   This script returns a standard file name, build from reference, version and
   language (this is only the base part of the name, the extension should be appended

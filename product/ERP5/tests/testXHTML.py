@@ -51,6 +51,8 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS',
+                                            'erp5_discussion/DiscusionThread_viewContentListAsRSS',
+                                            'erp5_discussion/WebSection_viewLatestDiscussionPostListAsRSS',
                                             'erp5_core/Base_viewHistoricalComparisonDiff',
                                             'erp5_diff/ERP5Site_viewDiffTwoObjectDialog',]
   JSL_IGNORE_FILE_LIST = (
@@ -422,24 +424,20 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_pdm',
       'erp5_trade',
 
-      'erp5_pdf_editor',
       'erp5_accounting',
       'erp5_invoicing',
 
       'erp5_apparel',
 
-##    'erp5_banking_core',
-##    'erp5_banking_cash',
-##    'erp5_banking_check',
-##    'erp5_banking_inventory',
-
       'erp5_budget',
       'erp5_public_accounting_budget',
 
+      'erp5_project',
+
       'erp5_consulting',
 
-      'erp5_ingestion',
       'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_ingestion',
       'erp5_crm',
       'erp5_interface_post',
 
@@ -461,9 +459,8 @@ class TestXHTML(TestXHTMLMixin):
 
       'erp5_mrp',
 
+      'erp5_open_trade',
       'erp5_payroll',
-
-      'erp5_project',
 
       'erp5_calendar',
 
@@ -810,10 +807,6 @@ def test_suite():
           # One way to fix this would be to allow a custom "init script" to be called
           # on a portal type.
           'test_erp5_simulation_Solver_Decision_SolverDecision_viewConfiguration',
-          # there's no container accepting delivery cell, but delivery cell has
-          # an interaction workflow which assumes delivery cell is contained in
-          # a delivery.
-          'test_erp5_trade_Delivery_Cell_DeliveryCell_view',
       ))
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))

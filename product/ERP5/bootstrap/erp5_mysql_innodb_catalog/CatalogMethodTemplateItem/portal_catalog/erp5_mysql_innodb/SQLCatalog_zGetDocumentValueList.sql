@@ -65,8 +65,6 @@
 
   <dtml-if "query['limit_expression']">
     LIMIT <dtml-var "query['limit_expression']">
-  <dtml-else>
-    LIMIT 1000
   </dtml-if>
 
   <dtml-if "'derived_merge' in optimizer_switch_key_list">

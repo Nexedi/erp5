@@ -31,17 +31,20 @@ import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
-from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
-from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager, \
+  newSecurityManager, setSecurityManager
+from AccessControl.User import nobody
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ZSQLMethods.SQL import SQL
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
                                     importLocalDocument, \
@@ -67,7 +70,6 @@ from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5.Document.File import File
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from OFS.Image import Pdata
@@ -141,7 +143,6 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Mixin Component":     ("py",   0, "text_content"),
   "Module Component":    ("py",   0, "text_content"),
   "PDF":                 ("pdf",  0, "data"),
-  "PDFForm":             ("pdf",  0, "data"),
   "PyData Script":       ("py",   0, "_body"),
   "Python Script":       ("py",   0, "_body"),
   "PythonScript":        ("py",   0, "_body"),
@@ -646,9 +647,6 @@ class BaseTemplateItem(Implicit, Persistent):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
-    if classname == 'PDFForm':
-      if not obj.getProperty('business_template_include_content', 1):
-        obj.deletePdfContent()
     return obj
 
   def getTemplateTypeName(self):
@@ -693,7 +691,11 @@ class BaseTemplateItem(Implicit, Persistent):
         key = stack.pop()
         try:
           value = container[key]
-        except KeyError:
+        # AttributeError if the container changed type and is not a container
+        # anymore (no __getitem__ attribute).
+        # KeyError if the container is still a container but somehow lost the
+        # subobject we are trying to backup.
+        except (AttributeError, KeyError):
           LOG('BusinessTemplate', WARNING,
               'Could not access object %s' % (path,))
           if default is _MARKER:
@@ -1183,6 +1185,16 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
+  def onReplaceObject(self, obj):
+    """
+      Installation hook.
+      Called when installation process determined that object to install is
+      to replace an existing object on current site (it's not new).
+      `obj` parameter is the replaced object in its acquisition context.
+      Can be overridden by subclasses.
+    """
+    pass
+
   def setSafeReindexationMode(self, context):
     """
       Postpone indexations after unindexations.
@@ -1295,7 +1307,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       if uid is None:
         return 0
       else:
-        document.uid = uid
+        if getattr(aq_base(document), 'uid', None) != uid:
+          document.uid = uid
         return 1
     groups = {}
     old_groups = {}
@@ -1363,7 +1376,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         old_obj = container._getOb(object_id, None)
         object_existed = old_obj is not None
         if object_existed:
-          if context.isKeepObject(path) and force:
+          if context.isKeepObject(path) and path not in update_dict:
             # do nothing if the object is specified in keep list in
             # force mode.
             continue
@@ -1408,11 +1421,11 @@ class ObjectTemplateItem(BaseTemplateItem):
           groups[path] = deepcopy(obj.groups)
         # copy the object
         if (getattr(aq_base(obj), '_mt_index', None) is not None and
-            obj._count() == 0):
-          # some btrees were exported in a corrupted state. They're empty but
-          # their metadata-index (._mt_index) contains entries which in
+            obj._count() != len(obj._mt_index.keys())):
+          # Some btrees were exported in a corrupted state.
+          # Their meta_type-index (._mt_index) contains entries which in
           # Zope 2.12 are used for .objectIds(), .objectValues() and
-          # .objectItems(). In these cases, force the
+          # .objectItems(). In these cases, recreate index.
           LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
               'Cleaning corrupted BTreeFolder2 object at %r.' % (path,))
           obj._initBTrees()
@@ -1425,6 +1438,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         if not object_existed:
           # A new object was added, call the hook
           self.onNewObject(obj)
+        else:
+          self.onReplaceObject(obj)
 
         # mark a business template installation so in 'PortalType_afterClone' scripts
         # we can implement logical for reseting or not attributes (i.e reference).
@@ -1512,7 +1527,11 @@ class ObjectTemplateItem(BaseTemplateItem):
           container.getParentValue().updateCache()
         elif obj.__class__.__name__ in ('File', 'Image'):
           if "data" in obj.__dict__:
-            File._setData.__func__(obj, obj.data)
+            # XXX Calling obj._setData() would call Interaction Workflow such
+            # as document_conversion_interaction_workflow which would update
+            # mime_type too...
+            from Products.ERP5Type.patches.OFSFile import _setData
+            _setData(obj, obj.data)
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
@@ -1559,7 +1578,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
             continue
           widget_in_form = 0
-          for group_id, group_value_list in new_groups_dict.iteritems():
+          for group_value_list in new_groups_dict.values():
             if widget_id in group_value_list:
               widget_in_form = 1
               break
@@ -1715,7 +1734,7 @@ class PathTemplateItem(ObjectTemplateItem):
     if len(id_list) == 0:
       return ['/'.join(relative_url_list)]
     id = id_list[0]
-    if re.search('[\*\?\[\]]', id) is None:
+    if re.search(r'[\*\?\[\]]', id) is None:
       # If the id has no meta character, do not have to check all objects.
       obj = folder._getOb(id, None)
       if obj is None:
@@ -1772,7 +1791,7 @@ class PathTemplateItem(ObjectTemplateItem):
       # Ignore any object without PortalType (non-ERP5 objects)
       try:
         portal_type = aq_base(obj).getPortalType()
-      except Exception, e:
+      except Exception:
         pass
       else:
         if portal_type not in p.portal_types:
@@ -1802,11 +1821,50 @@ class PathTemplateItem(ObjectTemplateItem):
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
-  and tools, because tools may not be backed up."""
+  and tools, because tools may not be backed up.
+
+  We also have an exception for tools that were historically not managed in business
+  template but created by ERP5Generator at site creation. We don't update these tools
+  if they are already present, because they contain lots of sub-documents and are in
+  broken state before update (because their class was also moved to portal_components at
+  the same time). XXX The semantics of Tool vs Module are not really clear here - we
+  are also considering using ModuleTemplateItem for these.
+  """
+  # Tools that were managed by ERP5Generator
+  _legacy_tool_id_list = set((
+      'portal_rules',
+      'portal_simulation',
+      'portal_deliveries',
+      'portal_orders',
+      'portal_ids',
+      'portal_domains',
+      'portal_tests',
+      'portal_password',
+      'portal_introspections',
+      'portal_acknowledgements',
+  ))
+
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):
     """Fake as if a trashbin is not available."""
-    return PathTemplateItem._backupObject(self, action, None, container_path,
+    return super(ToolTemplateItem, self)._backupObject(action, None, container_path,
                                           object_id, **kw)
+
+  def preinstall(self, context, installed_item, **kw):
+    """Don't install/update the tool if it's a legacy tool that was never updated.
+    """
+    object_dict = super(ToolTemplateItem, self).preinstall(context, installed_item, **kw)
+    portal_base = aq_base(context.getPortalObject())
+
+    for path, (action, type_name) in object_dict.items():
+      obj = getattr(portal_base, path, None)
+      if obj is not None and path in self._legacy_tool_id_list:
+        if action == 'New':
+          del object_dict[path]
+        elif action == 'Modified':
+          object_dict[path] = 'Modified but should be kept', type_name
+        elif action == 'Removed':
+          object_dict[path] = 'Removed but should be kept', type_name
+    return object_dict
 
   def install(self, context, trashbin, **kw):
     """ When we install a tool that is a type provider not
@@ -1948,6 +2006,17 @@ class CategoryTemplateItem(ObjectTemplateItem):
     if self._installed_new_category:
       # reset accessors if we installed a new category
       self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
+
+  def install(self, context, trashbin, **kw):
+    # Only update base categories, the category they contain will be installed/updated
+    # as PathTemplateItem.install
+    kw['object_to_update'] = {
+        path: action
+        for (path, action) in kw['object_to_update'].items()
+        if path.split('/')[:-1] == ['portal_categories'] or path in self._objects
+    }
+    return super(CategoryTemplateItem, self).install(context, trashbin, **kw)
+
 
 class SkinTemplateItem(ObjectTemplateItem):
 
@@ -4247,6 +4316,10 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 
+  def onNewObject(self, _):
+    self._do_reset = True
+  onReplaceObject = onNewObject
+
   def afterInstall(self):
     """
     Reset component on the fly, because it is possible that those components
@@ -4259,7 +4332,8 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     This reset is called at most 3 times in one business template
     installation. (for Document, Test, Extension)
     """
-    self.portal_components.reset(force=True)
+    if getattr(self, '_do_reset', False):
+      self.portal_components.reset(force=True)
 
   def afterUninstall(self):
     self.portal_components.reset(force=True,
@@ -5473,10 +5547,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
       site.portal_caches.clearAllCache()
 
     security.declareProtected(Permissions.ManagePortal, 'install')
-    install = _install
+    def install(self, *args, **kw):
+      # switch to nobody temporarily so that unrestricted _install
+      # is always invoked by system user.
+      sm = getSecurityManager()
+      newSecurityManager(None, nobody)
+      try:
+        with super_user():
+          return self._install(*args, **kw)
+      finally:
+        # Restore the original user.
+        setSecurityManager(sm)
 
     security.declareProtected(Permissions.ManagePortal, 'reinstall')
-    reinstall = _install
+    reinstall = install
 
     security.declareProtected(Permissions.ManagePortal, 'trash')
     def trash(self, new_bt, **kw):
@@ -5998,6 +6082,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
+      from erp5.component.module.DiffUtils import DiffFile
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
     security.declareProtected(Permissions.ManagePortal, 'diffObject')
@@ -6375,11 +6460,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return
 
     def _getWorkingCopyPathList(self):
-      working_copy_list = self.getPortalObject().portal_preferences.getPreferredWorkingCopyList([])
-      if not working_copy_list:
-        raise RuntimeError("No 'Working Copies' set in Preferences")
+      preference_tool = self.getPortalObject().portal_preferences
+      working_copy_path_list = []
+      for p in preference_tool.getPreferredWorkingCopyList([]):
+        path = os.path.realpath(p)
+        if os.path.isdir(path):
+          working_copy_path_list.append(path)
+        else:
+          LOG('BusinessTemplate', WARNING,
+              "%s: Invalid Preferences Working Copy (realpath=%s)" % (p, path))
 
-      return [ os.path.realpath(p) for p in working_copy_list ]
+      if not working_copy_path_list:
+        raise RuntimeError("No 'Working Copies' set in Preferences or "
+                           "non-existent directory")
+
+      return working_copy_path_list
 
     def _checkFilesystemModulePath(self,
                                    module_obj,
@@ -6437,18 +6532,310 @@ Business Template is a set of definitions, such as skins, portal types and categ
               error=True)
           continue
 
-        for cls in (tuple(zope.interface.implementedBy(portal_type_cls)) +
-                    portal_type_cls.mro()):
+        for i, cls in enumerate((portal_type_cls.mro() +
+                                 tuple(zope.interface.implementedBy(portal_type_cls)))):
           if cls in seen_cls_set:
             continue
-          seen_cls_set.add(cls)
-
           cls_module_filepath = self._checkFilesystemModulePath(
             inspect.getmodule(cls),
             working_copy_path_list)
           if cls_module_filepath is not None:
             cls_module_name = cls.__module__
+            if '.Document.' in cls_module_name or '.Tool.' in cls_module_name:
+              if i != 1:
+                continue
+
             yield cls.__name__, cls.__module__, cls_module_filepath
+
+          seen_cls_set.add(cls)
+
+    _migrate_exception_set = set([
+      ## Bootstrap
+      'Products.ERP5.ERP5Defaults',
+      'Products.ERP5Type.mixin.response_header_generator',
+      'Products.ERP5.ERP5Site',
+      'Products.ERP5Type.XMLObject',
+      'Products.ERP5Type.ImmediateReindexContextManager',
+      'Products.ERP5Type.Message',
+      'Products.ERP5Type.CopySupport',
+      'Products.ERP5Type.interfaces.json_representable',
+      'Products.ERP5Type.mixin.json_representable',
+      'Products.ERP5Type.XMLExportImport',
+      'Products.ERP5Type.mixin.property_translatable',
+      'Products.ERP5Type.Error',
+      'Products.ERP5Type.Errors',
+      'Products.ERP5Type.interfaces.category_access_provider',
+      'Products.ERP5Type.interfaces.value_access_provider',
+      'Products.ERP5Type.interfaces.property_translatable',
+      'Products.ERP5Type.mixin.property_translatable.py',
+      'Products.ERP5Type.Base',
+      'Products.ERP5Type.Tool.BaseTool',
+      'Products.ERP5Type.interfaces.local_role_generator',
+      'Products.ERP5Type.interfaces.local_role_assignor',
+      'Products.ERP5Type.interfaces.action',
+      'Products.ERP5Type.interfaces.action_container',
+      'Products.ERP5Type.ERP5Type',
+      'Products.ERP5.mixin.expression',
+      'Products.ERP5.Document.SQLMethod',
+      'Products.ERP5Type.Globals',
+      'Products.ERP5Type.TransactionalVariable',
+      'Products.ERP5Type.UnrestrictedMethod',
+      'Products.ERP5Type.ConflictFree',
+      'Products.ERP5Type.Workflow',
+      'Products.ERP5Workflow.Document.State',
+      'Products.ERP5Workflow.Document.Variable',
+      'Products.ERP5Workflow.Document.Workflow',
+      'Products.ERP5Workflow.Document.Worklist',
+      'Products.ERP5Type.TranslationProviderBase',
+      'Products.ERP5.Interaction',
+      'Products.ERP5.InteractionWorkflow',
+      'Products.ERP5Catalog.Document.ERP5Catalog',
+      'Products.ERP5Catalog.CatalogTool',
+      'Products.ERP5Catalog.Tool.ERP5CatalogTool',
+      # Dynamic classes
+      'Products.ERP5.interfaces.property_recordable',
+      'Products.ERP5.mixin.property_recordable',
+      'Products.ERP5Type.mixin.temporary',
+      'Products.ERP5Type.mixin.component',
+      'Products.ERP5Type.mixin.constraint',
+      'Products.ERP5Type.mixin.text_content_history',
+      'Products.ERP5Type.id_as_reference',
+      'Products.ERP5Type.interfaces.component',
+      'Products.ERP5Type.interfaces.type_provider',
+      'Products.ERP5Type.interfaces.types_tool',
+      'Products.ERP5Type.interfaces.object_message',
+      'Products.ERP5Type.ObjectMessage',
+      'Products.ERP5Type.interfaces.consistency_message',
+      'Products.ERP5Type.ConsistencyMessage',
+      'Products.ERP5Type.Tool.ComponentTool',
+      'Products.ERP5Type.Tool.PropertySheetTool',
+      'Products.ERP5Type.tests.testDynamicClassGeneration',
+      # ID generation
+      'Products.ERP5.interfaces.id_generator',
+      'Products.ERP5.Document.IdGenerator',
+      'Products.ERP5.Document.SQLNonContinuousIncreasingIdGenerator',
+      'Products.ERP5.Document.ZODBContinuousIncreasingIdGenerator',
+      'Products.ERP5.interfaces.id_tool',
+      'Products.ERP5.Tool.IdTool',
+      # Business Template
+      'Products.ERP5.Document.TrashBin',
+      'Products.ERP5.Tool.TrashTool',
+      'Products.ERP5.Document.PythonScript',
+      'Products.ERP5.Document.BusinessTemplate',
+      'Products.ERP5.Tool.TemplateTool',
+      'Products.ERP5.genbt5list',
+      # Categories
+      'Products.ERP5.Tool.CategoryTool',
+      'Products.ERP5.Document.BaseCategory',
+      'Products.ERP5.interfaces.node',
+      'Products.ERP5.Document.Node',
+      'Products.ERP5.Document.MetaNode',
+      'Products.ERP5Type.mixin.matrix',
+      'Products.ERP5Type.XMLMatrix',
+      'Products.ERP5.interfaces.variated',
+      'Products.ERP5.interfaces.variation_range',
+      'Products.ERP5.mixin.variated',
+      'Products.ERP5.Document.Resource',
+      'Products.ERP5.Document.MetaResource',
+      'Products.ERP5.Document.Category',
+      # XXX: To split up maybe?
+      'Products.ERP5Type.Utils',
+      # Cache Tool
+      'Products.ERP5Type.interfaces.cache_plugin',
+      'Products.ERP5Type.mixin.cache_provider',
+      'Products.ERP5Type.Cache',
+      'Products.ERP5Type.CachePlugins.BaseCache',
+      'Products.ERP5Type.CachePlugins.DistributedRamCache',
+      'Products.ERP5Type.CachePlugins.DummyCache',
+      'Products.ERP5Type.CachePlugins.RamCache',
+      'Products.ERP5Type.Tool.CacheTool',
+      ## Securities: Not ERP5 objects, Zope-specific
+      'Products.ERP5Security.ERP5AccessTokenExtractionPlugin',
+      'Products.ERP5Security.ERP5BearerExtractionPlugin',
+      'Products.ERP5Security.ERP5DumbHTTPExtractionPlugin',
+      'Products.ERP5Security.ERP5ExternalAuthenticationPlugin',
+      'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin',
+      'Products.ERP5Security.ERP5GroupManager',
+      'Products.ERP5Security.ERP5KeyAuthPlugin',
+      'Products.ERP5Security.ERP5LoginUserManager',
+      'Products.ERP5Security.ERP5RoleManager',
+      'Products.ERP5Security.ERP5UserFactory',
+      'Products.ERP5Security.ERP5UserManager',
+      'Products.ERP5Security.tests.testERP5Security',
+      ## Upgrader
+      'Products.ERP5.mixin.timer_service',
+      'Products.ERP5.Tool.AlarmTool',
+      'Products.ERP5.mixin.periodicity',
+      'Products.ERP5.Document.Alarm',
+      'Products.ERP5Type.tests.testUpgradeInstanceWithOldDataFs',
+      # Any Constraints may be used by upgrader, right?
+      'Products.ERP5.interfaces.predicate',
+      'Products.ERP5Type.Core.Predicate',
+      'Products.ERP5Type.interfaces.constraint',
+      'Products.ERP5Type.mixin.constraint',
+      'Products.ERP5.Document.AttributeBlacklistedConstraint',
+      'Products.ERP5.Document.AttributeUnicityConstraint',
+      'Products.ERP5.Document.CategoryAcquiredMembershipStateConstraint',
+      'Products.ERP5.Document.CategoryMembershipStateConstraint',
+      'Products.ERP5.Document.CategoryRelatedMembershipStateConstraint',
+      'Products.ERP5.Document.StringAttributeMatchConstraint',
+      # Upgrader requires access to UI so this cannot be migrated:
+      # * arnau-RD-Components-PreferenceTool-Preference
+      # * arnau-RD-Components-ERP5Form-SelectionTool-MemcachedTool
+      # * arnau-RD-Components-ERP5Form-ERP5Report
+      'Products.ERP5Form.Document.Preference',
+      'Products.ERP5Form.PreferenceTool',
+      'Products.ERP5Form.Form',
+      'Products.ERP5Type.Tool.MemcachedTool',
+      'Products.ERP5Form.Tool.SelectionTool',
+      ## TypeProvider
+      'Products.ERP5.Tool.SolverTool',
+      'Products.ERP5.interfaces.delivery_solver_factory',
+      ## ERP5TypeInformation
+      'Products.ERP5.Document.DeliveryTypeInformation',
+      'Products.ERP5.Document.SolverTypeInformation',
+      'Products.ERP5Form.Document.PreferenceType',
+      ## Unit Tests
+      'Products.ERP5Type.tests.custom_zodb',
+      'Products.ERP5Type.tests.ERP5TypeFunctionalTestCase',
+      'Products.ERP5Type.tests.ProcessingNodeTestCase',
+      'Products.ERP5Type.tests.ERP5TypeLiveTestCase',
+      'Products.ERP5Type.tests.ERP5TypeTestCase',
+      'Products.ERP5Type.tests.ERP5TypeTestSuite',
+      'Products.ERP5Type.tests.runTestSuite',
+      'Products.ERP5Type.tests.runUnitTest',
+      'Products.ERP5Type.tests.SecurityTestCase',
+      'Products.ERP5Type.tests.Sequence',
+      'Products.ERP5Type.CodingStyle',
+      'Products.ERP5Type.tests.CodingStyleTest',
+      'Products.ERP5Type.tests.CodingStyleTestCase',
+      # Install all/many bt5s
+      'Products.ERP5.tests.testSpellChecking',
+      'Products.ERP5.tests.testTranslation',
+      'Products.ERP5.tests.utils',
+      'Products.ERP5Type.tests.utils',
+      'Products.ERP5.tests.testXHTML',
+      'Products.ERP5.tests.testSecurity',
+      'Products.ERP5Type.tests.testERP5NamingConvention',
+      'Products.ERP5Type.tests.testFunctionalCore',
+      'Products.ERP5.tests.testBusinessTemplateTwoFileExport',
+      'Products.ERP5.tests.testInvalidationBug',
+      # Used here and there but require erp5_stock_cache (however we may not
+      # want Unit Tests to run with this bt5 installed?)
+      'Products.ERP5.tests.testInventoryAPI',
+      # Custom setUp
+      'Products.ERP5.tests.testERP5Site',
+      # Used by FS tests
+      'Products.ERP5Type.tests.ui_dump_test',
+      # Tests for deprecated aq_{dynamic,reset}
+      'Products.ERP5Type.tests.testERP5Type',
+      ## Classes which are not actual ERP5 objects and we do not handle that
+      ## in ZODB Components (IOW it should be a Portal Type as class) and
+      ## according to jp, this is not needed as everything should be Portal
+      ## Type as classes...
+      'Products.ERP5Form.AudioField',
+      'Products.ERP5Form.CaptchaField',
+      'Products.ERP5Form.CaptchasDotNet',
+      'Products.ERP5Form.DurationField',
+      'Products.ERP5Form.EditorField',
+      'Products.ERP5Form.FormBox',
+      'Products.ERP5Form.FSForm',
+      'Products.ERP5Form.GadgetField',
+      'Products.ERP5Form.HoneypotField',
+      'Products.ERP5Form.HyperLinkField',
+      'Products.ERP5Form.ImageField',
+      'Products.ERP5Form.InputButtonField',
+      'Products.ERP5Form.ListBox',
+      'Products.ERP5Form.MatrixBox',
+      'Products.ERP5Form.MultiLinkField',
+      'Products.ERP5Form.MultiRelationField',
+      'Products.ERP5Form.OOoChart',
+      'Products.ERP5Form.ParallelListField',
+      'Products.ERP5Form.PDFParser',
+      'Products.ERP5Form.PDFTemplate',
+      'Products.ERP5Form.Permissions',
+      'Products.ERP5Form.PlanningBox',
+      'Products.ERP5Form.POSBox',
+      'Products.ERP5Form.ProxyField',
+      'Products.ERP5Form.RelationField',
+      'Products.ERP5Form.ReportBox',
+      'Products.ERP5Form.Selection',
+      'Products.ERP5Form.VideoField',
+      'Products.ERP5Form.ZGDChart',
+      'Products.ERP5Form.ZPyChart',
+      'Products.ERP5.Document.WebSection',
+      'Products.ERP5.Document.WebSite',
+      # ERP5 Objects use Interaction Workflows...
+      'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
+      ## No need to migrate
+      'Products.ERP5Type.PsycoWrapper',
+      'Products.ERP5.tests.extractMessageCatalog',
+      'Products.ERP5.tests.erp5_url_checker',
+      'Products.ERP5Type.tests._testSQLBench',
+      'Products.ERP5Type.tests._testPystone',
+      # Deprecated and used only in SimulationTool._solveMovementOrDelivery()
+      'Products.ERP5.DeliverySolver.Copy',
+      'Products.ERP5.DeliverySolver.DeliverySolver',
+      'Products.ERP5.DeliverySolver.Distribute',
+      'Products.ERP5.TargetSolver.Copy',
+      'Products.ERP5.TargetSolver.CopyAndPropagate',
+      'Products.ERP5.TargetSolver.CopyToTarget',
+      'Products.ERP5.TargetSolver.ProfitAndLoss',
+      'Products.ERP5.TargetSolver.Reduce',
+      'Products.ERP5.TargetSolver.ResourceBackpropagation',
+      'Products.ERP5.TargetSolver.SplitAndDefer',
+      'Products.ERP5.TargetSolver.SplitQuantity',
+      'Products.ERP5.TargetSolver.TargetSolver',
+      'Products.ERP5.TargetSolver.TransformationSourcingCopyToTarget',
+      # Backward compatibility
+      'Products.ERP5.Tool.Category',
+      'Products.ERP5.interfaces.legacy_document_proxy',
+      'Products.ERP5.interfaces.legacy_extensible_traversable',
+      'Products.ERP5Type.JSON',
+      'Products.ERP5Type.JSONEncoder',
+      'Products.ERP5Type.Log',
+      'Products.ERP5.Variated',
+      'Products.ERP5Form.Report',
+      # Monkey patches or used by monkey patches ; Restricted Python
+      'Products.ERP5Type.Calendar',
+      'Products.ERP5Type.Collections',
+      'Products.ERP5Type.Timeout',
+      'Products.ERP5Type.ZipFile',
+      'Products.ERP5Type.ZopePatch',
+      'Products.ERP5Type.tests.backportUnittest',
+      # Replaced by Interaction Workflow for ERP5 object
+      'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
+      'Products.ERP5.Interactor.PortalTypeClassInteractor',
+      'Products.ERP5Type.Interactor.Interactor',
+      # For Filesystem modules only
+      'Products.ERP5Type.InitGenerator',
+      # ERP5OOo: Going towards HTML and requiring quite a lot of work (for
+      # example still not using Portal Type as Classes for FormPrintout and
+      # OOoTemplate) which is likely to break things, so leave it as it
+      # is. See arnau-RD-Components-ERP5OOo.
+      'Products.ERP5OOo.OOoUtils',
+      'Products.ERP5OOo.FormPrintout',
+      'Products.ERP5OOo.OOoTemplate',
+      'Products.ERP5OOo.transforms.odt_to_pdf',
+      'Products.ERP5OOo.transforms.odt_to_doc',
+      'Products.ERP5OOo.transforms.html_to_odt',
+      'Products.ERP5OOo.transforms.oood_commandtransform',
+      'Products.ERP5OOo.transforms.odt_to_xml',
+      'Products.ERP5OOo.tests.TestFormPrintoutMixin',
+      'Products.ERP5OOo.tests.testOOoImport',
+      'Products.ERP5OOo.tests.test_document.TEST-en-002',
+      'Products.ERP5OOo.tests.testOOoStyle',
+      'Products.ERP5OOo.tests.testOOoBatchMode',
+      'Products.ERP5OOo.tests.testOOoParser',
+      'Products.ERP5OOo.tests.testDeferredStyle',
+      'Products.ERP5OOo.tests.testFormPrintoutAsODG',
+      'Products.ERP5OOo.tests.testIngestionWithFlare',
+      'Products.ERP5OOo.tests.utils',
+      'Products.ERP5OOo.tests.testOOoStyleWithFlare',
+      'Products.ERP5OOo.tests.testFormPrintoutAsODT',
+      'Products.ERP5OOo.tests.testIngestion',
+      'Products.ERP5OOo.tests.testOOoDynamicStyle',
+    ])
 
     security.declareProtected(Permissions.ManagePortal,
                               'getMigratableSourceCodeFromFilesystemList')
@@ -6528,11 +6915,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if (product_name[0] == '_' or
             # Returned by inspect.getmembers()
             product_name == 'this_module' or
-            product_name in (
-              # Probably going to be migrated but at the end and should not be
-              # done for now (especially ActiveObject and HBTreeFolder2
-              # classes found in the MRO of most classes)
-              'CMFActivity', 'HBTreeFolder2')):
+            # Only Portal Type as classes can be migrated and this excludes all non-ERP5 Products
+            not product_name.startswith('ERP5')):
           continue
 
         product_base_path = self._checkFilesystemModulePath(
@@ -6542,41 +6926,25 @@ Business Template is a set of definitions, such as skins, portal types and categ
           continue
 
         seen_module_set = set()
-        # 'Module Component': Only handle Product top-level modules
-        for name, obj in inspect.getmembers(product_obj):
-          if (name[0] == '_' or
-              name in ('this_module', 'Permissions') or
-              obj is product_obj or
-              # Base cannot be migrated (InitGhostBase)
-              (product_name == 'ERP5Type' and name == 'Base')):
+        # Module Components
+        for submodule_filepath in (glob.glob(product_obj.__path__[0] + '/*.py') +
+                                   glob.glob(product_obj.__path__[0] + '/*/*.py')):
+          directory = submodule_filepath.rsplit('/', 2)[-2]
+          if directory in ('Document', 'Core', 'interfaces', 'mixin', 'Tool',
+                           'tests', 'PropertySheet', 'patches', 'Extensions',
+                           'bin', 'scripts', 'help', 'Accessor', 'Constraint',
+                           'docs', 'dynamic'):
             continue
 
-          if inspect.ismodule(obj):
-            source_reference = obj.__name__
-            submodule_name = name
+          submodule_name = os.path.splitext(os.path.basename(submodule_filepath))[0]
+          if directory != product_name:
+            source_reference = "%s.%s.%s" % (product_obj.__name__, directory, submodule_name)
           else:
-            try:
-              source_reference = obj.__module__
-            except AttributeError:
-              continue
-            try:
-              submodule_name = source_reference.rsplit('.', 1)[1]
-            except IndexError:
-              continue
-
-          if (source_reference == product_obj.__name__ or
-              not source_reference.startswith(product_obj.__name__) or
-              source_reference in seen_module_set):
-            continue
-          seen_module_set.add(source_reference)
-
-          try:
-            submodule_filepath = inspect.getsourcefile(obj)
-          except TypeError:
-            # No file, builtin?
-            continue
-
-          if submodule_filepath and submodule_filepath.rsplit('/', 1)[0] == product_base_path:
+            source_reference = "%s.%s" % (product_obj.__name__, submodule_name)
+          if (submodule_name not in ('__init__', 'Permissions') and
+              source_reference not in self._migrate_exception_set and
+              source_reference not in seen_module_set):
+            seen_module_set.add(source_reference)
             migrate = submodule_filepath in portal_type_module_filepath_set
             obj = __newTempComponent(portal_type='Module Component',
                                      reference=submodule_name,
@@ -6597,10 +6965,38 @@ Business Template is a set of definitions, such as skins, portal types and categ
             if subsubmodule_name == '__init__':
               continue
 
-            subsubmodule_portal_type = component_portal_type
             source_reference = "%s.%s" % (submodule_name, subsubmodule_name)
+            if source_reference in self._migrate_exception_set:
+              continue
+
+            subsubmodule_portal_type = component_portal_type
             migrate = filepath in portal_type_module_filepath_set
-            if component_portal_type == 'Test Component':
+            if component_portal_type in ('Document Component',
+                                         'Tool Component'):
+              try:
+                klass = getattr(
+                  __import__(source_reference, {}, {}, [source_reference]),
+                  subsubmodule_name)
+              except ImportError, e:
+                LOG("BusinessTemplate", WARNING,
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e),
+                    error=True)
+                continue
+              except AttributeError, e:
+                LOG("BusinessTemplate", WARNING,
+                    "Skipping %s: Cannot get class %s (%s)" %
+                    (filepath, subsubmodule_name, e))
+                continue
+
+              from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+              from Products.ERP5Type.Tool.TypesTool import TypeProvider
+              if issubclass(klass, (ERP5TypeInformation,
+                                    TypeProvider)):
+                # Skip for now as all portal_types/* must be able to be loaded
+                # to generate Workflow methods...
+                continue
+
+            elif component_portal_type == 'Test Component':
               # For non test classes (Mixin, utils...)
               if not subsubmodule_name.startswith('test'):
                 subsubmodule_portal_type = 'Module Component'
@@ -6613,7 +7009,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 interface_module = __import__(source_reference, {}, {}, source_reference)
               except ImportError, e:
                 LOG("BusinessTemplate", WARNING,
-                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e),
+                    error=True)
                 continue
 
               from zope.interface.interface import InterfaceClass
@@ -6641,7 +7038,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 mixin_module = __import__(source_reference, {}, {}, source_reference)
               except ImportError, e:
                 LOG("BusinessTemplate", WARNING,
-                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e),
+                    error=True)
                 continue
 
               mixin_class_name = None
@@ -6659,6 +7057,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                     mixin_class_name = m.__name__
 
               if mixin_class_name is None:
+                LOG("BusinessTemplate", WARNING,
+                    "%s: No mixin class defined or incorrectly named?" % filepath)
                 continue
 
               subsubmodule_name = mixin_class_name
@@ -6687,7 +7087,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                               'migrateSourceCodeFromFilesystem')
     def migrateSourceCodeFromFilesystem(self,
                                         version,
-                                        **kw):
+                                        list_selection_name=None):
       """
       Migrate the given components from filesystem to ZODB by calling the
       appropriate importFromFilesystem according to the destination Portal
@@ -6696,7 +7096,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       portal = self.getPortalObject()
       component_tool = portal.portal_components
       failed_import_dict = {}
-      list_selection_name = kw.get('list_selection_name')
       migrated_product_module_set = set()
 
       template_module_component_id_set = set(self.getTemplateModuleComponentIdList())

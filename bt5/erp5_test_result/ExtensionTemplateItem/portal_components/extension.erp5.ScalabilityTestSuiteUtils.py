@@ -31,12 +31,12 @@ import json
 def getGeneratedConfigurationList(self, *args, **kw):
   document_list = []
   template = jinja2.Template(self.getClusterConfiguration())
-  max = len(self.getGraphCoordinate())
+  max_ = len(self.getGraphCoordinate())
   max_comp = 100
   #max = self.getNumberConfiguration()
   comp_list_view = [ "COMP-%i" %(x) for x in range(0,max_comp) ]
 
-  for count in xrange(1, max+1):
+  for count in xrange(1, max_+1):
     template_vars = { "count" : count, "comp" : comp_list_view }
     output_text = template.render(template_vars)
     description = json.dumps(json.loads(output_text), sort_keys=True, indent=4, separators=(',', ': '))
@@ -73,12 +73,12 @@ def generateConfigurationList(self, test_suite_title):
   def _isInMyDictOrListRec(my_container, my_value):
     def _isInMyDictOrList(current_container):
       if current_container == my_value :
-          return True
-      elif type(current_container) == type({}):
-        for k,v in current_container.items():
-          if _isInMyDictOrList(current_container[k]) :
+        return True
+      elif isinstance(current_container, dict):
+        for v in current_container.values():
+          if _isInMyDictOrList(v) :
             return True
-      elif type(current_container) == type([]):
+      elif isinstance(current_container, list):
         for sub_container in current_container:
           if _isInMyDictOrList(sub_container) :
             return True
@@ -97,8 +97,6 @@ def generateConfigurationList(self, test_suite_title):
   lll = portal_task_distribution.searchFolder(title=test_suite.getSpecialiseTitle())
   distributor_uid = lll[0].getUid()
   cluster_configuration = test_suite.getClusterConfiguration()
-  cluster_constraint = test_suite.getClusterConstraint()
-  #number_configuration = test_suite.getNumberConfiguration()
   number_configuration = len(test_suite.getGraphCoordinate())
   randomized_path = test_suite.getRandomizedPath()
   # Get testnodes available for this distributor
@@ -134,8 +132,8 @@ def generateConfigurationList(self, test_suite_title):
     return_dict['launchable'] = True
     return_dict['configuration_list'] = configuration_list_json
     return_dict['launcher_nodes_computer_guid'] = launcher_nodes_computer_guid
-  except:
-    return_dict['error_message'] = 'Bad json cluster_configuration ?'
+  except Exception as e:
+    return_dict['error_message'] = 'Bad json cluster_configuration. %s' % str(e)
     _unvalidateConfig(return_dict)
 
   # If the number of available nodes is lower than

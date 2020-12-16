@@ -45,7 +45,6 @@ from zope.globalrequest import setRequest
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.management import endInteraction
 from zope.security.management import newInteraction
-from Zope2.App.startup import validated_hook
 from ZPublisher import pubevents, Retry
 from ZPublisher.HTTPResponse import HTTPResponse
 from ZPublisher.HTTPRequest import HTTPRequest
@@ -214,7 +213,8 @@ def get_module_info(module_name='Zope2'):
         app = getattr(module, 'bobo_application', module)
         realm = _DEFAULT_REALM if _DEFAULT_REALM is not None else module_name
         error_hook = getattr(module,'zpublisher_exception_hook', None)
-        _MODULES[module_name] = info = (app, realm, _DEFAULT_DEBUG_MODE, error_hook)
+        validated_hook = getattr(module,'zpublisher_validated_hook', None)
+        _MODULES[module_name] = info = (app, realm, _DEFAULT_DEBUG_MODE, validated_hook, error_hook)
     return info
 
 
@@ -342,7 +342,7 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
 
 def publish(request, module_info):
     with getPublisherDeadlineValue(request):
-        obj, realm, debug_mode = module_info
+        obj, realm, debug_mode, validated_hook = module_info
 
         request.processInputs()
         response = request.response
@@ -381,12 +381,12 @@ def publish(request, module_info):
 
 @contextmanager
 def load_app(module_info):
-    app_wrapper, realm, debug_mode = module_info
+    app_wrapper, realm, debug_mode, validated_hook = module_info
     # Loads the 'OFS.Application' from ZODB.
     app = app_wrapper()
 
     try:
-        yield (app, realm, debug_mode)
+        yield (app, realm, debug_mode, validated_hook)
     finally:
         if transaction.manager._txn is not None:
             # Only abort a transaction, if one exists. Otherwise the
@@ -403,7 +403,7 @@ def publish_module(environ, start_response,
                    _request_factory=HTTPRequest,
                    _module_name='Zope2'):
     module_info = get_module_info(_module_name)
-    module_info, err_hook = module_info[:3], module_info[3]
+    module_info, err_hook = module_info[:4], module_info[4]
     result = ()
 
     path_info = environ.get('PATH_INFO')

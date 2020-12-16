@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Address" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>city</string> </key>
+            <value> <string>Test City</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_address</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Address</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>street_address</string> </key>
+            <value> <string>Test Drive 123</string> </value>
+        </item>
+        <item>
+            <key> <string>zip_code</string> </key>
+            <value> <string>12345</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

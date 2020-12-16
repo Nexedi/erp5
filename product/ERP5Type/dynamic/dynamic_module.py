@@ -120,6 +120,9 @@ class ComponentPackageType(PackageType):
   the top level, otherwise a module being relied upon may have a
   different API after reset, thus it may fail...
   """
+  # 'Products.ERP5.Document.Person' => 'erp5.component.document.Person'
+  filesystem_import_dict = None
+
   def __init__(self, *args, **kwargs):
     super(ComponentPackageType, self).__init__(*args, **kwargs)
     self.ref_manager = RefManager()

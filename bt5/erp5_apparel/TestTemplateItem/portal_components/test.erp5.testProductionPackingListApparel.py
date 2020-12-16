@@ -32,7 +32,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.testProductionOrderApparel import TestProductionOrderApparelMixin
-from Products.ERP5.tests.testProductionPackingList import TestProductionDelivery
+from erp5.component.test.testProductionPackingList import TestProductionDelivery
 
 class TestProductionDeliveryApparel(TestProductionOrderApparelMixin,
     TestProductionDelivery, ERP5TypeTestCase):

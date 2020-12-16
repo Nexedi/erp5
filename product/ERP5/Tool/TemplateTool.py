@@ -39,7 +39,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type import Permissions
@@ -98,9 +97,9 @@ class TemplateTool (BaseTool):
         - save
     """
     id = 'portal_templates'
-    title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
+    title = 'Business Templates'
     allowed_types = ('ERP5 Business Template', )
 
     # This stores information on repositories.
@@ -543,6 +542,7 @@ class TemplateTool (BaseTool):
       """
       Filter the diff using python scripts
       """
+      from erp5.component.module.DiffUtils import DiffFile
       diff_file_object = DiffFile(diff)
       diff_block_list = diff_file_object.getModifiedBlockList()
       if diff_block_list:
@@ -563,6 +563,7 @@ class TemplateTool (BaseTool):
         This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
+      from erp5.component.module.DiffUtils import DiffFile
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
     security.declareProtected(Permissions.ManagePortal, 'diffObject')
@@ -987,7 +988,6 @@ class TemplateTool (BaseTool):
          update_only: return only bt that needs to be updated
          template_list: only returns bt within the given list
       """
-      from Products.ERP5Type.Document import newTempBusinessTemplate
       result_list = []
       template_set = None
       if template_list is not None:
@@ -1051,13 +1051,16 @@ class TemplateTool (BaseTool):
           installed_revision = ''
           version_state = 'new'
         uid = self.encodeRepositoryBusinessTemplateUid(repository, id)
-        obj = newTempBusinessTemplate(self, 'temp_' + uid,
-                                      version_state = version_state,
-                                      version_state_title=version_state.title(),
-                                      filename = filename,
-                                      installed_version = installed_version,
-                                      installed_revision = installed_revision,
-                                      repository = repository, **property_dict)
+        obj = self.newContent(temp_object=True,
+                              portal_type='Business Template',
+                              id='temp_' + uid,
+                              version_state=version_state,
+                              version_state_title=version_state.title(),
+                              filename=filename,
+                              installed_version=installed_version,
+                              installed_revision=installed_revision,
+                              repository=repository,
+                              **property_dict)
         obj.setUid(uid)
         result_list.append(obj)
       result_list.sort(key=lambda x: x.getTitle())
@@ -1427,6 +1430,7 @@ class TemplateTool (BaseTool):
       # make sure that we updated information on repository
       self.updateRepositoryBusinessTemplateList(self.getRepositoryList())
       # do upgrade
+      is_something_changed = False
       message_list = []
       deprecated_reinstall_set = deprecated_reinstall_set or set()
       def append(message):
@@ -1447,8 +1451,9 @@ class TemplateTool (BaseTool):
         for bt in to_remove_bt5_list:
           if bt.title in keep_bt5_id_set:
             continue
+          is_something_changed = True
           append("Uninstall business template %s" % bt.title)
-          if not(dry_run):
+          if not dry_run:
             # XXX Here is missing parameters to really remove stuff
             bt.uninstall()
       update_bt5_list = self.getRepositoryBusinessTemplateList(
@@ -1459,13 +1464,17 @@ class TemplateTool (BaseTool):
         if (not(reinstall) and bt5.version_state == 'present') or \
             bt5.title in keep_bt5_id_set:
           continue
+        is_something_changed = True
         append("Update %s business template in state %s%s" % \
           (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
-        if not(dry_run):
+        if not dry_run:
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
           self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall,
                                              update_catalog=update_catalog)
-
+      if is_something_changed:
+        append("Update translation table")
+        if not dry_run:
+          self.ERP5Site_updateTranslationTable()
       return message_list
 
 InitializeClass(TemplateTool)

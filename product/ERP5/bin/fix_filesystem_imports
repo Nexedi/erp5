@@ -1,0 +1,127 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""
+This script fixes imports in existing code of a customer Git repository
+(filesystem Python modules to ZODB Components):
+  ./fix_filesystem_imports ERP5_GIT_REPOSITORY_PATH TARGET_PATH
+"""
+
+import subprocess
+import re
+import sys
+
+SEARCH_COMMAND = (
+  r"git grep -A1 '<string>default_source_reference</string>' -- '**/portal_components/*.xml' | "
+  r"sed -rn 's#^(bt5|product/ERP5/bootstrap)/##g;s#.*/([^.]*)\.([^.]*)\.([^.]*)\.xml-[ ]*<value> <string>(Products\.[^<]*)</string> </value>$#\2.component.\1.\3 \4#p' | "
+  r"sort")
+
+def ProductsToComponentModule(target_path, filesystem_module_list, sed_regex_list):
+  try:
+    filepath_list = subprocess.check_output(
+      r"git grep -lzE '%s' -- ':^**/portal_components/*.xml'" %
+      '|'.join(filesystem_module_list),
+      shell=True,
+      cwd=target_path).split('\x00')
+  except subprocess.CalledProcessError:
+    # Nothing to do
+    return
+
+  print "=> Products.PRODUCT_NAME.TYPE.Foo -> erp5.component.TYPE.Foo"
+  sed_regex = ';'.join(sed_regex_list)
+  for filepath in filepath_list:
+    if filepath:
+      if filepath.endswith('.py'):
+        subprocess.call(r"sed -i '%s' '%s'" % (sed_regex, filepath),
+                        shell=True, cwd=target_path)
+      else:
+        print >>sys.stderr, ("WARNING: Not fixing name in %s: Not a Python file "
+                             "(object not migrated to PortalTypeClass?)" % filepath)
+
+IMPORT_FORMAT = 'from erp5.component.interface.%(interface_name)s import %(interface_name)s\n'
+def ERP5TypeInterfacesToInterfaceComponent(target_path, interface_name_list):
+  assert interface_name_list
+  # XXX: Could be more clever but seems fast enough on erp5.git...
+  print """=> from Products.ERP5Type import interfaces
+    zope.interface.implements(interfaces.IFoo)
+    ->
+    from erp5.component.interface.IFoo import IFoo
+    zope.interface.implements(IFoo)"""
+  interface_re = r'interfaces\.(?P<interface_name>%s)(?![a-zA-Z])' % '|'.join(interface_name_list)
+  for filepath in subprocess.check_output(
+      r"git grep -lzE '%s' -- '*.py'" % '|'.join(interface_name_list),
+      shell=True,
+      cwd=target_path).split('\x00'):
+    if not filepath:
+      continue
+
+    interface_import_set = set()
+    def replace_interface(match_obj):
+      group_dict = match_obj.groupdict()
+      interface_import_set.add(IMPORT_FORMAT % group_dict)
+      return group_dict['interface_name']
+    line_list = []
+    insert_import_index = None
+    with open(filepath) as f:
+      line_index = 0
+      for line in f:
+        # Comments and empty lines at the beggining of the file
+        if insert_import_index is None:
+          line_list.append(line)
+          l = line.lstrip()
+          if l and l[0] != '#':
+            insert_import_index = line_index
+          line_index += 1
+        else:
+          line_list.append(re.sub(interface_re, replace_interface, line))
+
+    assert insert_import_index is not None
+    with open(filepath, 'w') as f:
+      f.write(''.join(line_list[:insert_import_index] +
+                      sorted(interface_import_set) +
+                      line_list[insert_import_index:]))
+
+def main():
+  if len(sys.argv) < 2:
+    print >>sys.stderr, "%s ERP5_GIT_REPOSITORY_PATH [TARGET_PATH]" % sys.argv[0]
+    sys.exit(1)
+
+  try:
+    erp5_path, target_path = sys.argv[1], sys.argv[2]
+  except IndexError:
+    erp5_path = target_path = sys.argv[1]
+
+  filesystem_module_list = []
+  sed_regex_list = []
+  interface_name_list = []
+  print "==> search command: %s" % SEARCH_COMMAND
+  def __append(filesystem_module, component_module):
+    filesystem_module_list.append(filesystem_module)
+    sed_regex_list.append(r"s#%s\>#%s#g" % (filesystem_module, component_module))
+  for line in subprocess.check_output(SEARCH_COMMAND,
+                                      shell=True,
+                                      cwd=erp5_path).split('\n'):
+    if line:
+      component_module, filesystem_module = line.split(' ')
+      filesystem_module = filesystem_module.replace('.', r'\.')
+      __append(filesystem_module, component_module)
+      if r'\.Document\.' in filesystem_module:
+        filesystem_module_ERP5Type_alias = re.sub(r'^Products\\\.[^.]+',
+                                                  r'Products\.ERP5Type',
+                                                  filesystem_module,
+                                                  count=1)
+        __append(filesystem_module_ERP5Type_alias, component_module)
+
+      if r'\.interfaces\.' in filesystem_module:
+        interface_name_list.append(component_module.split('.interface.')[-1])
+
+  if filesystem_module_list:
+    ProductsToComponentModule(target_path,
+                              filesystem_module_list,
+                              sed_regex_list)
+
+  if interface_name_list:
+    ERP5TypeInterfacesToInterfaceComponent(target_path,
+                                           interface_name_list)
+
+if __name__ == '__main__':
+  main()

@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title tal:content="template/title">Support Request Panel Translation</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Support Request Panel Translation</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/fr/</td>
+  <td></td>
+</tr>
+<!-- hack to display Views&Decisions on panel for small screen-->
+<tr>
+  <td>getEval</td>
+  <td>window.matchMedia = function () {return {matches:true}}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//tr/td[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="document_table"]//tr/td[1]/a</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//a[contains(@class, "ui-icon-home")]</td>
+  <td>Accueil</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//a[contains(@class, "ui-icon-life-ring")]</td>
+  <td>Demandes d'assistance</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//a[contains(@class, "ui-icon-sliders")]</td>
+  <td>Préférences</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//a[contains(@class, "ui-icon-power-off")]</td>
+  <td>Déconnexion</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, "panel")]//dt[contains(@class, "ui-icon-eye")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//dt[contains(@class, "ui-icon-eye")]</td>
+  <td>Vues</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//dl/dd[1]</td>
+  <td>Général</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//dl/dd[2]</td>
+  <td>Historique</td>
+</tr>
+
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@class, "panel")]//dt[contains(@class, "ui-icon-cogs")]</td>
+  <td>Décisions</td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@class, "panel")]//dl/dd/a[text() = "Clôturer le ticket"]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+  </body>
+</html>

@@ -290,6 +290,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -330,7 +340,7 @@
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
-            <value> <string>ojs_controller</string> </value>
+            <value> <string>ojs_local_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -338,11 +348,13 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojs_notebook_list</string> </value>
+            <value> <string>ojs_local_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>../hateoas/</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
@@ -350,15 +362,23 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_ojs_jio.html</string> </value>
+            <value> <string>gadget_ojs_local_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_notebook.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_erp5_ojs_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_precache_manifest_script_list</string> </key>
+            <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
+WebSection_getCodeMirrorPrecacheManifestList\n
+WebSection_getNotebookEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -384,7 +404,9 @@
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value> <string>gadget_officejs_notebook.json</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -464,7 +486,7 @@
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -565,116 +587,124 @@
   </record>
   <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1524553218.22</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-            <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1524553218.22</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>embedded</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
   <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>973.33482.4166.8669</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1549887971.4</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>987.46563.1005.57053</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1604344587.21</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>

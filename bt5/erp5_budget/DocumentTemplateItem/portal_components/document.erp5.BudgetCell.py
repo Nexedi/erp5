@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.MetaNode import MetaNode
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
 
 class BudgetCell(Predicate, MetaNode, Movement):
   """ Budget Cell defines a cell of budget.

@@ -10,18 +10,28 @@
   ///////////////////////////////
   function calculateSynchronousPageTitle(gadget, erp5_document) {
     var title = erp5_document.title,
-      portal_type = erp5_document._links.type.name;
-    if (/ Module$/.test(erp5_document._links.type.href)) {
-      return portal_type;
+      portal_type = erp5_document._links.type.name,
+      is_module = / (Module|Tool)$/.test(erp5_document._links.type.href),
+      traversed_document_jio_key;
+
+    if (erp5_document._links.hasOwnProperty('traversed_document')) {
+      traversed_document_jio_key = erp5_document._links.traversed_document.name;
     }
-    if (erp5_document.hasOwnProperty('_embedded') &&
+
+    if ((!is_module) &&
+        erp5_document.hasOwnProperty('_embedded') &&
         erp5_document._embedded.hasOwnProperty('_view') &&
         erp5_document._embedded._view.hasOwnProperty('_links') &&
-        erp5_document._embedded._view._links.hasOwnProperty('traversed_document')) {
+        erp5_document._embedded._view._links.hasOwnProperty('traversed_document') &&
+        traversed_document_jio_key === erp5_document._embedded._view._links.traversed_document.name) {
       // When refreshing the page (after Base_edit), only the form content is recalculated
       // and erp5_document.title may contain the old title value.
       // Get the title value from the calculated form if possible
+      // No need to do this for module, which do not use Base_edit
       title = erp5_document._embedded._view._links.traversed_document.title;
+    }
+    if (is_module) {
+      return title;
     }
     return portal_type + ': ' + title;
   }
@@ -114,7 +124,7 @@
           page: "action",
           view: view
         }},
-        {command: 'display', options: {}},
+        {command: 'history_previous'},
         {command: 'display_dialog_with_history', options: {
           jio_key: jio_key,
           page: "export",

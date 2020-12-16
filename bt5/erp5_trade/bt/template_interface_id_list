@@ -1,0 +1,9 @@
+interface.erp5.IBuildableBusinessLinkProcess
+interface.erp5.IBusinessLink
+interface.erp5.IBusinessLinkProcess
+interface.erp5.IBusinessProcessUnionProvider
+interface.erp5.ISimulationMovementProcess
+interface.erp5.ITradeModelPath
+interface.erp5.ITradeModelPathProcess
+interface.erp5.ITradePhaseProcess
+interface.erp5.ITradeStateProcess

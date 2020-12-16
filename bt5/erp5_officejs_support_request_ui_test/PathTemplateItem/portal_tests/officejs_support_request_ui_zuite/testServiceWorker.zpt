@@ -1,0 +1,70 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td colspan="3"><b tal:content="python: 'Clone web site'"></b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="python: '${base_url}/web_site_module/erp5_officejs_support_request_ui?ignore_layout:int=1&editable_mode:int=1'"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Created Clone Web Site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeValue</td>
+  <td>name=field_my_id</td>
+  <td>install_url</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${install_url}/#/?page=test_service_worker</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Has SW: false</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

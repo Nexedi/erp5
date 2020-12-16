@@ -12,7 +12,7 @@ There are runtime values hidden in every dialog form (injected by getHateoas Scr
   extra_param_json - JSON serialized extra parameters for the dialog script
 """
 
-from Products.ERP5Type.Log import log, WARNING
+from erp5.component.module.Log import log, WARNING
 from Products.Formulator.Errors import FormValidationError
 import json
 

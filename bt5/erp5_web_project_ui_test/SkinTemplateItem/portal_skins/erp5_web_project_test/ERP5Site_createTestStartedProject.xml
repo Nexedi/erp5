@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>home_page=False</string> </value>
+            <value> <string>home_page=False, create_project_documents=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

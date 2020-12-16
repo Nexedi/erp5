@@ -275,7 +275,7 @@
                 </item>
                 <item>
                     <key> <string>view_separator</string> </key>
-                    <value> <string> </string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

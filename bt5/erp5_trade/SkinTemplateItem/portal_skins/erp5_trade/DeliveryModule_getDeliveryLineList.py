@@ -1,6 +1,5 @@
 from Products.PythonScripts.standard import Object
 line_list = []
-request = context.REQUEST
 portal = context.getPortalObject()
 
 # XXX use a larger limit

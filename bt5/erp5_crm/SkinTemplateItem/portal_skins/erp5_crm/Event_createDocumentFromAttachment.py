@@ -8,7 +8,7 @@ if dms_module is not None:
     # index is numeric and comes with uid 
     attachment_index = int(uid.split('index_')[-1])
     attachment_info = [i for i in attachment_info_list if i['index'] == attachment_index][0]
-    file = context.getAttachmentData(index=attachment_index)
+    file_ = context.getAttachmentData(index=attachment_index)
     document = dms_module.newContent(follow_up=context.getFollowUp(),
                                      portal_type = line['content_type'],
                                      description = line['description'],
@@ -17,7 +17,7 @@ if dms_module is not None:
                                      language = line['language'],
                                      reference= line['reference'],
                                      title = line['title'])
-    document.edit(source_reference=attachment_info['file_name'], file=file)
+    document.edit(source_reference=attachment_info['file_name'], file=file_)
 
 if len(uids) == 1:
   message = Base_translateString('${portal_type} created successfully.',

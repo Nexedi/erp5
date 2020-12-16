@@ -6,7 +6,7 @@
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -30,8 +30,8 @@ from AccessControl import ClassSecurityInfo
 from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.XMLObject import XMLObject
+
 
 class Login(XMLObject, LoginAccountProviderMixin, EncryptedPasswordMixin):
   meta_type = 'ERP5 Login'

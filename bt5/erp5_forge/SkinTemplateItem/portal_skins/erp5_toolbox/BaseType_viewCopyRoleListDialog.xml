@@ -96,6 +96,7 @@
                         <string>your_portal_type_group_list</string>
                         <string>your_portal_type_list</string>
                         <string>your_remove_existing_roles</string>
+                        <string>your_update_local_roles</string>
                       </list>
                     </value>
                 </item>

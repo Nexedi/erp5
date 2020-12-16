@@ -26,9 +26,8 @@
 
         <div id="client_installation_status"
              style="background-color: #FFFFFF; 
-                    padding: 0.5em;
-                    border-top: 1px solid #000000; 
-                    width: 480px;">
+                    padding: 0.5em;"
+                    tal:content="structure here/ConfiguratorTool_viewRunningInstallationMessageRenderer">
           Loading ...
         </div>
       </div>

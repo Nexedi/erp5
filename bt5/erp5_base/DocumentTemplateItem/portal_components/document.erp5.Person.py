@@ -1,4 +1,3 @@
-
 ##############################################################################
 #
 # Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -37,6 +36,8 @@ from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from erp5.component.mixin.ERP5UserMixin import ERP5UserMixin
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
 try:
   from Products import PluggableAuthService
@@ -46,9 +47,18 @@ else:
   from Products.ERP5Security.ERP5UserManager import ERP5UserManager
   from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 
-class UserExistsError(ValidationFailed):
+
+class UserExistsError(
+    ValidationFailed,
+    # to workaround pylint's false positive:
+    #   Exception doesn't inherit from standard "Exception" class (nonstandard-exception)
+    # because it cannot import ValidationFailed (which is set by a monkey patch), we also
+    # inherit from Exception.
+    Exception,
+  ):
   def __init__(self, user_id):
     super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
+
 
 class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMixin):
   """
@@ -91,7 +101,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitle')
-  def getTitle(self, **kw):
+  def getTitle(self, **kw):  # pylint: disable=super-on-old-class
     """
     Returns the title if it exists or a combination of
     first name, middle name and last name
@@ -105,7 +115,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTranslatedTitle')
-  def getTranslatedTitle(self, **kw):
+  def getTranslatedTitle(self, **kw):  # pylint: disable=super-on-old-class
     """
     Returns the title if it exists or a combination of
     first name, middle name and last name
@@ -130,7 +140,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
         self.hasMiddleName() or \
         self._baseHasTitle()
 
-  def __checkUserIdAvailability(self, pas_plugin_class, user_id=None, login=None):
+  def __checkUserIdAvailability(self, pas_plugin_class, user_id=None, login=None, check_concurrent_execution=True):
     # Encode reference to hex to prevent uppercase/lowercase conflict in
     # activity table (when calling countMessageWithTag)
     if user_id:
@@ -155,12 +165,15 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
             exact_match=True,
           )
         ):
-          raise UserExistsError(user_id)
+          raise UserExistsError(user_id or login)
       else:
         # PAS is used, without expected enumeration plugin: property has no
         # effect on user enumeration, skip checks.
         # XXX: what if desired plugin becomes active later ?
         return
+
+    if not check_concurrent_execution:
+      return
     # Check that there is no reindexation related to reference indexation
     if self.getPortalObject().portal_activities.countMessageWithTag(tag):
       raise UserExistsError(user_id)
@@ -205,13 +218,63 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
       - we want to prevent duplicated user ids, but only when
         PAS _AND_ ERP5LoginUserManager are used
     """
-    if value != self.getUserId():
+    existing_user_id = self.getUserId()
+    if value != existing_user_id:
       if value:
         self.__checkUserIdAvailability(
           pas_plugin_class=ERP5LoginUserManager,
           user_id=value,
         )
+      if existing_user_id and not _checkPermission(Permissions.ManageUsers, self):
+        raise AccessControl_Unauthorized('setUserId')
       self._baseSetUserId(value)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'initUserId')
+  def initUserId(self):
+    """Initialize user id.
+
+    ERP5 guarantees unicity of user id when setUserId is called, but this
+    comes at the expense of performance, because two transactions are not
+    allowed to change any user id at a time.
+    This implementation uses an id generator which already guarantees the
+    unicity of generated values, so when using this method we can trust
+    ourselves and don't need setUserId to check unicity of the user id
+    we are generating with other concurrent generations.
+    We ignore the risk that another concurrent transaction might be modifying
+    a user with a conflicting user id (using another method than initUserId)
+    and only check we are not generating an user id that would already be
+    used before, in case some user ids were already set by other methods than
+    initUserId - the most probable case being migration of persons created
+    before introduction of user id and ERP5 Logins.
+
+    If user id are really important in a project(which is very unlikely), this
+    method can be customized in a type based method named Person_initUserId
+    """
+    method = self.getTypeBasedMethod('initUserId')
+    if method is not None:
+      return method()
+    if not self.hasUserId():
+      portal = self.getPortalObject()
+      user_id = 'P%i' % portal.portal_ids.generateNewId(
+          id_group='user_id',
+          id_generator='non_continuous_integer_increasing',
+      )
+      self.__checkUserIdAvailability(
+          pas_plugin_class=ERP5LoginUserManager,
+          user_id=user_id,
+          check_concurrent_execution=False
+      )
+      # until migration from ERP5UserManager -> ERP5UserManager is completed
+      # we want to make sure we are not generating a user id that was used
+      # as a reference of a not yet migrated person, otherwise we'll have a
+      # duplicate when this person will be migrated.
+      self.__checkUserIdAvailability(
+          pas_plugin_class=ERP5UserManager,
+          login=user_id,
+          check_concurrent_execution=False
+      )
+      self._baseSetUserId(user_id)
+      self.reindexObject()
 
   # Time management
   security.declareProtected(Permissions.AccessContentsInformation,

@@ -1,0 +1,120 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Front Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Front Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example/WebSection_viewAdvancedECommerceThemeConfiguration?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_site_message_template"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_site_message_template"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="save"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Data updated</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/logout" />
+
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@class="site_warning_message"]</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example/WebSection_viewAdvancedECommerceThemeConfiguration?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_site_message_template"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_site_message_template"]</td>
+  <td>test_site_warning</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="save"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Data updated</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/logout" />
+
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="site_warning_message"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>test site warning message</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

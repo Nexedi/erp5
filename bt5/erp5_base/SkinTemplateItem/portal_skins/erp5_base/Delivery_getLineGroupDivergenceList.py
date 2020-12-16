@@ -17,11 +17,11 @@ for divergence in divergence_list:
   uid = 'new_%s&%s' % (simulation_movement_url,
                        divergence.getProperty('tested_property'))
 
-  object = portal_object.restrictedTraverse(object_relative_url)
-  o = newTempBase(object.getParentValue(), object.getId(), uid=uid,
+  document = portal_object.restrictedTraverse(object_relative_url)
+  o = newTempBase(document.getParentValue(), document.getId(), uid=uid,
                   message=str(divergence.getTranslatedMessage()),
-                  object_portal_type=object.getTranslatedPortalType(),
-                  object_title=object.getTranslatedTitle(),
+                  object_portal_type=document.getTranslatedPortalType(),
+                  object_title=document.getTranslatedTitle(),
                   prevision_title=prevision_title,
                   decision_title=decision_title,
                   candidate_list=[(context.Base_translateString('Do nothing'), 'ignore'),

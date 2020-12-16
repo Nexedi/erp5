@@ -3,9 +3,8 @@ This script is called to generate references for all requirements
 """
 
 translateString = context.Base_translateString
-request = context.REQUEST
-current_type = context.getPortalType()
-if not reference: reference='R'
+if not reference:
+  reference='R'
 
 def generateReference(prefix, order, portal_type):
   for order_line in order.contentValues(portal_type=portal_type, checked_permission='View', sort_on='int_index'):

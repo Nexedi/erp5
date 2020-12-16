@@ -1,4 +1,4 @@
-#from Products.ERP5Type.Log import log
+#from erp5.component.module.Log import log
 request = context.REQUEST
 object_path = request.get('object_path')
 if object_path is None:

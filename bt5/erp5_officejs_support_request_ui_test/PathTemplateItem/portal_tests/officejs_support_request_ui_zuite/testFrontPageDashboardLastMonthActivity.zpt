@@ -64,7 +64,7 @@
 
 <!--
 
-In the last month, we have 4 Opened and 3 Submitted. The pie shows submitted on the right
+In the last month, we have 3 Opened and 2 Submitted. The pie shows submitted on the right
 and opened on the left.
 
     0                  x                    100%
@@ -142,7 +142,7 @@ and compare real click with simulated clicks.
     <td>relative=top</td><td></td></tr>
 <tr><td>waitForText</td>
     <td>//h1[contains(text(), "Recent Updates")]</td>
-    <td>Recent Updates (3)</td></tr> <!-- FIXME: this should be 2 here. 123dsfa	is not "last month" -->
+    <td>Recent Updates (2)</td></tr>
 <tr><td>waitForText</td>
     <td>//h1[contains(text(), "Recent Updates")]/../..//td[1]/a</td>
     <td>Yesterday - RobotMaking - Submitted</td></tr>
@@ -150,6 +150,9 @@ and compare real click with simulated clicks.
 <!-- reset filter is now enabled -->
 <tr><td>waitForElementPresent</td>
     <td>//input[@data-i18n="[value]Reset Filter" and not(@disabled)]</td><td></td></tr>
+<tr><td>assertTextNotPresent</td>
+    <td>123dsfa</td>
+    <td></td></tr>
 
 <tr><td>click</td>
     <td>//input[@data-i18n="[value]Reset Filter"]</td><td></td></tr>

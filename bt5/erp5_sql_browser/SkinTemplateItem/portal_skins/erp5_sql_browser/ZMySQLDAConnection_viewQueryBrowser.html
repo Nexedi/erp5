@@ -29,16 +29,6 @@
     <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>
     <script type="text/javascript" src="pivottable/c3_renderers.js"></script>
 
-    <!-- monaco editor from erp5_monaco_editor bt -->
-    <script>
-      /*
-       This is understood by our build of monaco-editor
-       https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
-      */
-      window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
-    </script>
-    <script src="monaco-editor/app.bundle.min.js"></script>
-
     <style>
       body {font-family: Verdana;}
       .c3-line {stroke-width: 3px;}
@@ -107,6 +97,7 @@
 
         $(function() {
           
+          let editor_backup = document.querySelector("textarea[name='editor_backup']");
           editor = monaco.editor.create(
             document.querySelector('#query'),
             {
@@ -118,6 +109,14 @@
             editor.getModel(),
             "sql"
           );
+          document.addEventListener('readystatechange', () => {
+            if (document.readyState === 'complete') {
+              editor.getModel().setValue(editor_backup.value);
+            }
+          });
+          editor.getModel().onDidChangeContent(event => {
+            editor_backup.value = editor.getValue();
+          });
           editor.addAction({
             id: 'execute-query',
             label: 'Execute Query',
@@ -200,7 +199,20 @@
     <div style="display: none">
       <pre id="config_json"></pre>
     </div>
+    <div style="display: none">
+      <textarea name="editor_backup"></textarea>
+    </div>
 
   </body>
+
+  <!-- monaco editor from erp5_monaco_editor bt -->
+  <script>
+    /*
+      This is understood by our build of monaco-editor
+      https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
+    */
+    window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
+  </script>
+  <script src="monaco-editor/app.bundle.min.js"></script>
 
 </html>

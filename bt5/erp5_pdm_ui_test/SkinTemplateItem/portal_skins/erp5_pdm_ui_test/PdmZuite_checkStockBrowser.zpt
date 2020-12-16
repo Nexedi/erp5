@@ -1,21 +1,105 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="init" tal:define="base_url python: '/' + here.getPortalObject().getId()">
 
-    <!-- Click on + link -->
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
     <tr>
       <td>clickAndWait</td>
-      <td tal:content='string://button[@value="site/${link_title}.0"]'>link=node</td>
+      <td>//button[@name="Base_doReport:method"]</td>
       <td></td>
     </tr>
+  </tal:block>
+
+  <!-- Internal macro to apply filter in dialog. -->
+  <tal:block metal:define-macro="_set_dialog_parameters">
+    <tal:block tal:condition="select_node_category">
+      <!-- Select node category in dialog -->
+      <tr>
+        <td>select</td>
+        <td>//select[@name="field_your_node_category"]</td>
+        <td tal:content='node_category'></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>Base_showUpdateDialog:method</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tal:block tal:condition="not: select_node_category">
+      <tr>
+        <td>assertSelected</td>
+        <td>//select[@name="field_your_node_category"]</td>
+        <td tal:content='node_category'></td>
+      </tr>
+    </tal:block>
+
+    <tal:block tal:condition="quantity_unit">
+      <!-- Select quantity unit in dialog -->
+      <tr>
+        <td>select</td>
+        <td>//select[@name="field_your_quantity_unit"]</td>
+        <td tal:content='quantity_unit'></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>Base_showUpdateDialog:method</td>
+        <td></td>
+      </tr>
+    </tal:block>
+
+    <tal:block tal:condition="metric_type">
+      <!-- Select metric type in dialog -->
+      <tr>
+        <td>select</td>
+        <td>//select[@name="field_your_metric_type"]</td>
+        <td tal:content='metric_type'></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>Base_showUpdateDialog:method</td>
+        <td></td>
+      </tr>
+    </tal:block>
+
+  </tal:block>
+
+  <!--
+    Macro to check inventory displayed in stock browser.
+
+    This selects the node category and check each of the current, available and future
+    inventory match. Then for each value, it will click to "drill down" and check that the
+    movement history list show the expected number of lines.
+
+    Required parameters:
+      - node_category: the label of the node category to select in the dialog
+      - inventory_list_count: the number of "invenvory list" lines expected in the first dialog.
+      - current_inventory: the quantity for the current inventory
+      - available_inventory: the quantity for the available inventory
+      - future_inventory: the quantity for the future inventory
+
+    Optional parameters:
+      - select_node_category: if True (the default) the node category will be selected
+      - quantity_unit: the label of the quantity unit to select in dialog, to enable
+        quantity unit conversion
+      - metric_type: the label of the metric type to select in dialog, to enable
+        metric type conversion
+  -->
+  <tal:block
+    metal:define-macro="check_inventory"
+    tal:define="base_url python: '/' + here.getPortalObject().getId();
+                select_node_category select_node_category | python: True;
+                quantity_unit quantity_unit | python: False;
+                metric_type metric_type | python: False;">
+
+    <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/_set_dialog_parameters" />
 
     <!-- Check inventory -->
     <tr>
       <td>verifyText</td>
       <td>//span[@class="listbox-current-page-total-number"]</td>
-      <td tal:content="python: '%s records' % movement_count">number of record(s)</td>
+      <td tal:content="python: '%s records' % inventory_list_count">number of record(s)</td>
     </tr>
-    <tal:block tal:condition="python: movement_count != 0">
+    <tal:block tal:condition="python: inventory_list_count != 0">
 
       <!-- Check that inventory and movement list are consistent -->
       <tal:block tal:repeat="inventory_tuple python: [(current_inventory, 3),
@@ -39,17 +123,29 @@
           <td tal:content="python: '//tr[@class=\'listbox-data-line-0 DataA\']/td[%s]/a[1]' % inventory_tuple[1]">link</td>
           <td></td>
         </tr>
-        <tr>
+
+        <!-- we expect to have one movement, except if the inventory was 0, then we should have 0 movements. -->
+        <tr tal:condition="python: inventory_tuple[0]">
           <td>verifyText</td>
           <td>//span[@class="listbox-current-page-total-number"]</td>
-          <td tal:content="python: '%s records' % int(abs(inventory_tuple[0]))">number of movement(s)</td>
+          <td>1 records</td>
         </tr>
+        <tr tal:condition="python: not inventory_tuple[0]">
+          <td>verifyText</td>
+          <td>//span[@class="listbox-current-page-total-number"]</td>
+          <td>0 records</td>
+        </tr>
+
         <!-- Go back to inventory view -->
         <tr>
           <td>clickAndWait</td>
           <td>//a[@class="listbox_title"]</td>
           <td></td>
         </tr>
+
+        <!-- apply dialog parameters again -->
+        <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/_set_dialog_parameters" />
+
       </tal:block>
     </tal:block>
   </tal:block>

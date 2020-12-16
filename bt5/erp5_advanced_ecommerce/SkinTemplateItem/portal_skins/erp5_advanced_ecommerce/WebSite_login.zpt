@@ -1,0 +1,29 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"
+             tal:define="dummy here/setupCurrentSkin;" />
+  <tal:block tal:define="response request/RESPONSE;
+             mtool here/portal_membership;
+             isAnon mtool/isAnonymousUser|nothing;">
+    <tal:block tal:condition="isAnon">
+      <tal:block tal:define="dummy python: response.expireCookie('__ac', path='/');
+                 url python: '%s/login_form?portal_status_message=%s&amp;is_traditional_login:int=1' % (here.absolute_url(), here.Base_translateString('Login and/or password is incorrect.'));
+                 url python: request.get('came_from') and  '%s&amp;came_from=%s' % (url, request['came_from']) or url;
+                 url python: request.get('is_shopping_cart') and  '%s&amp;is_shopping_cart:int=%s' % (url, request.get('is_shopping_cart', 0)) or url;
+                 url python: request.get('is_loyalty_section') and  '%s&amp;is_loyalty_section:int=%s' % (url, request.get('is_loyalty_section', 0)) or url;
+                 dummy python: response.redirect(url);" />
+    </tal:block>
+    <tal:block tal:condition="not: isAnon">
+      <tal:block tal:define="came_from python: request.get('came_from') or request.get('field_came_from') or here.getPermanentURL(here);">
+        <tal:block tal:condition="python: request.get('is_shopping_cart', 0)"
+                   tal:define="final_came_from python: '%s?portal_status_message=%s' % (came_from, here.Base_translateString('Thank you for update your information, now you can proceed to payment.'));">
+           <tal:block tal:define="dummy python: response.redirect(final_came_from);" />
+        </tal:block>
+        <tal:block tal:condition="python: not request.get('is_shopping_cart', 0)">
+           <tal:block tal:define="dummy python: response.redirect(came_from);" />
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

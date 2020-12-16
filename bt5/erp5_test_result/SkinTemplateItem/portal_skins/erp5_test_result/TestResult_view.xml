@@ -107,6 +107,7 @@
                         <string>my_failures</string>
                         <string>my_errors</string>
                         <string>my_skips</string>
+                        <string>my_test_result_retry_count</string>
                         <string>my_string_index</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>

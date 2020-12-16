@@ -2,6 +2,10 @@
 This script is supposed to be the common denominator for invoice reversing operations.
 Instead of extending it, call it from project-specific script and edit returned document (or its lines).
 """
+
+if activate_kw is None:
+  activate_kw = {}
+
 def recursiveCopyLine(to_document, from_document):
   newContent = to_document.newContent
   for line in from_document.objectValues(portal_type='Invoice Line'):
@@ -17,20 +21,15 @@ def recursiveCopyLine(to_document, from_document):
     recursiveCopyLine(reverse_line, line)
     newCell = reverse_line.newContent
     for cell in line.objectValues(portal_type='Invoice Cell'):
-      raise NotImplementedError
-      newCell(
-        # TODO: what properties ?
-        portal_type=cell.getPortalType(),
-        category_list=cell.getCategoryList(),
-      )
+      raise NotImplementedError("NotImplemented: Should do something with %s and %s" % (cell, newCell))
 
-portal = context.getPortalObject()
 reverse_invoice = context.getParentValue().newContent(
   portal_type=context.getPortalType(),
   created_by_builder=1, # tell init script to not create lines
   # Copy over all Arrow-ish relations
   # XXX: it would be cleaner to query property sheet definition and check it applies to context
   category_list=[x for x in context.getCategoryList() if x.startswith('source') or x.startswith('destination')],
+  activate_kw=activate_kw,
 )
 # Separate edit to have stable outcome WRT category_list
 reverse_invoice.edit(

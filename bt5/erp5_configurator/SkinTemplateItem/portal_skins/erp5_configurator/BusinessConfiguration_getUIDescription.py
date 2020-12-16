@@ -19,7 +19,7 @@ while state not in previous_state_list:
     break
 
   if transition.getTransitionFormId() not in (None, ""):
-     result.append({'state' : state.getTitle(), 
+    result.append({'state' : state.getTitle(),
                     'description' : state.getDescription(),
                     'title': state.getTitle()})
 

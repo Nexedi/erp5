@@ -122,7 +122,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Country</string> </value>
+                    <value> <string>Region</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -151,7 +151,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(\'region\')</string> </value>
+            <value> <string>context/BusinessConfiguration_getRegionTitleItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,9 +1,6 @@
 from Products.ERP5Type.Document import newTempBase
 
-result = []
-
 portal_catalog = context.portal_catalog
-portal_skins = context.portal_skins
 
 def get_term_list(reference):
   reference = reference.rsplit(' Module', 1)[0]
@@ -26,7 +23,7 @@ for reference in portal_type_list:
   field_description = portal_type.description
   if len(term_list) == 1 and \
      term_list[0].getDescription() == field_description:
-   continue
+    continue
 
   line = newTempBase(context, 'tmp_glossary_field_%s' %  c)
   line.edit(field_path=reference,

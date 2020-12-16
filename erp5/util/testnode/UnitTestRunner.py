@@ -27,8 +27,10 @@
 import os
 import glob
 import json
+import logging
+
 from . import logger
-from .ProcessManager import SubprocessError
+from .ProcessManager import SubprocessError, format_command
 from .SlapOSControler import SlapOSControler
 from .Utils import createFolder
 from slapos.grid.utils import md5digest
@@ -141,12 +143,19 @@ class UnitTestRunner(object):
     invocation_list += (run_test_suite_path,
       '--master_url', portal_url,
       '--revision', node_test_suite.revision,
+      '--test_node_title', config['test_node_title'],
       '--test_suite', node_test_suite.test_suite,
       '--test_suite_title', node_test_suite.test_suite_title)
     soft = config['slapos_directory'] + '/soft/'
     software_list = [soft + md5digest(x) for x in config['software_list']]
     PATH = os.getenv('PATH', '')
     PATH = ':'.join(x + '/bin' for x in software_list) + (PATH and ':' + PATH)
+    SLAPOS_TEST_SHARED_PART_LIST = os.pathsep.join(
+        self._getSlapOSControler(
+            node_test_suite.working_directory,
+            True
+        ).shared_part_list)
+    SLAPOS_TEST_LOG_DIRECTORY = node_test_suite.log_folder_path
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
     def path(name, compat): # BBB
@@ -160,11 +169,8 @@ class UnitTestRunner(object):
         ('--node_quantity', lambda: config['node_quantity']),
         ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
         ('--project_title', lambda: node_test_suite.project_title),
-        ('--shared_part_list', lambda: os.pathsep.join(
-            self._getSlapOSControler(
-                node_test_suite.working_directory,
-                True
-            ).shared_part_list)),
+        ('--shared_part_list', lambda: SLAPOS_TEST_SHARED_PART_LIST),
+        ('--log_directory', lambda: SLAPOS_TEST_LOG_DIRECTORY),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
@@ -179,9 +185,24 @@ class UnitTestRunner(object):
     # result. We only do cleanup if the test runner itself is not able
     # to run.
     createFolder(node_test_suite.test_suite_directory, clean=True)
+
+    # Log the actual command with root logger
+    root_logger = logging.getLogger()
+    root_logger.info(
+        "Running test suite with: %s",
+        format_command(*invocation_list, PATH=PATH))
+
+    def hide_distributor_url(s):
+      # type: (bytes) -> bytes
+      return s.replace(portal_url.encode('utf-8'), b'$DISTRIBUTOR_URL')
+
     self.testnode.process_manager.spawn(*invocation_list, PATH=PATH,
+                          SLAPOS_TEST_SHARED_PART_LIST=SLAPOS_TEST_SHARED_PART_LIST,
+                          SLAPOS_TEST_LOG_DIRECTORY=SLAPOS_TEST_LOG_DIRECTORY,
                           cwd=node_test_suite.test_suite_directory,
-                          log_prefix='runTestSuite', get_output=False)
+                          log_prefix='runTestSuite',
+                          output_replacers=(hide_distributor_url,),
+                          get_output=False)
 
   def getRelativePathUsage(self):
     """

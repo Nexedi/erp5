@@ -7,7 +7,6 @@ if REQUEST is not None:
   return None
 
 from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
-from Products.ERP5Type.Utils import sleep
 
 context.Credential_checkConsistency(['Person'])
 person = context.getDestinationDecisionValue(portal_type="Person")

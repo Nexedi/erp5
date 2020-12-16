@@ -13,28 +13,12 @@
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
-    <script src="handlebars.js" type="text/javascript"></script>
+    <script src="domsugar.js" type="text/javascript"></script>
     <script src="jiodev.js" type="text/javascript"></script>
 
     <!-- custom script -->
     <script src="gadget_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_page_worklist.js" type="text/javascript"></script>
-
-    <!-- XXX must set theme here! -->
-    <script id="table-template" type="text/x-handlebars-template">
-      {{#if document_list }}
-      <ul class="document-listview">
-        {{#each document_list}}
-          <li class="ui-li-has-count"><a href="{{link}}">{{title}} <span class="ui-li-count">{{count}}</span></a></li>
-        {{/each}}
-      </ul>
-      {{else}}
-      <div class="worklist-empty">
-        <h2>{{empty_text}}</h2>
-        <img src="gadget_erp5_worklist_empty.svg?format=svg">
-        </div>
-      {{/if}}
-    </script>
 
   </head>
   <body>

@@ -64,8 +64,10 @@ while count > 0 and len(trade_condition_list) == 0:
       tested_base_category_list=tested_base_category_list[:count],
       sort_method=sort_method)
 
-if len(trade_condition_list ) == 0:
-  message = Base_translateString('No trade condition.')
+keep_items = {}
+if len(trade_condition_list ) == 0 :
+  keep_items['portal_status_message'] = Base_translateString('No trade condition.')
+  keep_items['portal_status_level'] = 'error'
 else :
   # if more than one trade condition is found, simply apply the first one
   trade_condition=trade_condition_list[0].getObject()
@@ -75,8 +77,7 @@ else :
   if hasattr(order, 'getReceivedDate') and order.getReceivedDate() is None:
     context.setReceivedDate(DateTime())
 
-  message = Base_translateString('Order updated.')
+  keep_items['portal_status_message'] = Base_translateString('Order updated.')
 
 if not batch_mode:
-  return context.Base_redirect(form_id,
-          keep_items=dict(portal_status_message=message))
+  return context.Base_redirect(form_id, keep_items=keep_items)

@@ -4,7 +4,7 @@
 # TODO: handle Svn SSL/login exceptions, preferably reusing vcs_dialog(_error)
 # TODO: Git support
 
-from Products.ERP5Type.DiffUtils import DiffFile
+from erp5.component.module.DiffUtils import DiffFile
 
 request = context.REQUEST
 try:

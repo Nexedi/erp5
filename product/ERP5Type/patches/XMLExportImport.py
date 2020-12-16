@@ -14,6 +14,8 @@
 
 # Make sure the xml export will be ordered
 
+from functools import partial
+from inspect import getargspec
 from ZODB.utils import u64, p64
 from Shared.DC.xml import ppml
 from base64 import encodestring
@@ -102,14 +104,14 @@ def exportXML(jar, oid, file=None):
     # can have values that have a shorter representation in 'repr' instead of
     # 'base64' (see ppml.convert) and ppml.String does not support this.
     load = jar._storage.load
+    if 'version' in getargspec(load).args: # BBB: ZODB<5 (TmpStore)
+        load = partial(load, version='')
     pickle_dict = {oid: None}
     max_cache = [1e7] # do not cache more than 10MB of pickle data
     def getReorderedPickle(oid):
         p = pickle_dict[oid]
         if p is None:
-            # Versions are ignored, but some 'load()' implementations require them
-            # FIXME: remove "''" when TmpStore.load() on ZODB stops asking for it.
-            p = load(oid, '')[0]
+            p = load(oid)[0]
             p = reorderPickle(jar, p)[1]
             if len(p) < max_cache[0]:
                 max_cache[0] -= len(p)

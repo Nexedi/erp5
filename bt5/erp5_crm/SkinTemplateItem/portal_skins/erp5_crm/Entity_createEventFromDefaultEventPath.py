@@ -15,7 +15,7 @@ notification_message = portal.notification_message_module.NotificationTool_getDo
   language=language)
 assert notification_message is not None, "%s not found." % resource_reference
 
-event = context.Base_addEvent(title='',
+context.Base_addEvent(title='',
   direction='outgoing',
   portal_type=event_portal_type,
   resource=notification_message.getSpecialise(),

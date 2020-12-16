@@ -1,0 +1,92 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page Front</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Page Tab Link List</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/BarModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/bar_module</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Title 0'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="click_configuration python: {'text': 'Related Self'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<!-- One loader for the form jump dialog submission -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<!-- Another loader for loading the final page -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Jumping to my history'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bar: Title 0' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Bar Validation Workflow </td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Related Self' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+
+<!-- Check the history link -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bar: Title 0' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bars' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

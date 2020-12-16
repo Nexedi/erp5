@@ -1,7 +1,10 @@
+#  this API uses format= as argument
+# pylint: disable=redefined-builtin
+
 # We wants to get data in order to do a nice summary of items inside the order
 # This report will mainly usefull when the same resource is ordered on many
 # different lines
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 if target_language:
   container.REQUEST['AcceptLanguage'].set(target_language, 10)
 
@@ -14,14 +17,11 @@ error_kw = {}
 default_quantity_unit = None
 default_quantity_unit_title = ''
 resource_dict = {}
-summary_quantity_dict = {}
 object_list = []
 untranslatable_column_list = [] # We should not translate some columns
 full_total_price = 0
 worker_column_list = []
 source_trade_dict = {}
-
-context_relative_url = context.getRelativeUrl()
 
 def sortMovement(a, b):
   return cmp(a.getRelativeUrl(), b.getRelativeUrl())
@@ -120,7 +120,10 @@ if error is None:
 if error is not None:
   previous_skin_selection = container.REQUEST.get('previous_skin_selection', None)
   context.getPortalObject().changeSkin(previous_skin_selection)
-  return context.Base_redirect('view', keep_items={'portal_status_message': context.Base_translateString(error, mapping=error_kw)})
+  return context.Base_redirect('view', keep_items={
+      'portal_status_message': context.Base_translateString(error, mapping=error_kw),
+      'portal_status_level': 'error',
+  })
 
 # Add a line for unit titles
 for source_trade in source_trade_dict:

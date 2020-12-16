@@ -17,3 +17,12 @@ portal_transforms/**
 portal_types/Applied Rule/view
 portal_types/Simulation Movement/view
 portal_types/Simulation Tool/view
+portal_rules
+portal_simulation
+portal_deliveries
+portal_orders
+portal_domains
+portal_tests
+portal_password
+portal_introspections
+portal_acknowledgements

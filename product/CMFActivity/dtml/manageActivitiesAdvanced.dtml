@@ -65,6 +65,28 @@
     Those traces are logged and mailed when an activity fails (as part of regular activity failure mails).</p>
   </td>
 </tr>
+<tr class="section-bar">
+  <td colspan="3" align="left">
+  <div class="form-label">
+  Notification options
+  </div>
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+    Mail Notification
+  </td>
+  <td>
+    <dtml-if isActivityMailNotificationEnabled>
+    <input class="form-element" type="submit" name="manage_disableMailNotification:method" value=" Disable ">
+    <dtml-else>
+    <input class="form-element" type="submit" name="manage_enableMailNotification:method" value=" Enable ">
+    </dtml-if>
+  </td>
+  <td>
+    <p class="form-help">Notify by mail whenever an activity fails.</p>
+  </td>
+</tr>
 </table>
 </form>
 <table width="100%" cellspacing="0" cellpadding="2" border="0">

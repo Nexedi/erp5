@@ -16,7 +16,11 @@ report_section_to_group_list=[
 
 contribution_line_list = []
 no_contribution_line_list = []
-income_tax_dict = {}
+income_tax_dict = {
+  'base': 0,
+  'employee_price': 0,
+  'employee_total_price': 0
+}
 csg_base = 0
 total_contribution_relief = 0
 
@@ -62,8 +66,13 @@ def groupSameReportSectionLine(line_to_group_list):
       tmp2_base_dict[new_key]['base'] = tmp2_base_dict[new_key]['base'] + value['base']
       tmp2_base_dict[new_key]['employer_total_price'] = tmp2_base_dict[new_key]['employer_total_price'] + value['employer_total_price']
       tmp2_base_dict[new_key]['employee_total_price'] = tmp2_base_dict[new_key]['employee_total_price'] + value['employee_total_price']
-
-  return tmp2_base_dict.values()
+  new_value_list = []
+  # recalculate for rounding issue
+  for value_dict in tmp2_base_dict.values():
+    value_dict['employer_total_price'] = value_dict['base'] * value_dict['employer_price']
+    value_dict['employee_total_price'] = value_dict['base'] * value_dict['employee_price']
+    new_value_list.append(value_dict)
+  return new_value_list
 
 
 
@@ -113,6 +122,7 @@ def getReportSectionDictList(line_dict_list):
     new_line_dict_list += groupSameReportSectionLine(line_to_group_list)
   return new_line_dict_list, employer_total_price, employee_total_price
 
+non_contribution_share_total_price = 0
 # split line list to differents categories
 for line_dict in line_dict_list:
   added_to_list = False
@@ -128,11 +138,14 @@ for line_dict in line_dict_list:
         }
       else:
         if base_contribution == contribution_relief:
-          total_contribution_relief += line_dict['employer_total_price']
+          total_contribution_relief += (line_dict['base'] * line_dict['employer_price']) #line_dict['employer_total_price']
         elif base_contribution in (csg_crds_taxable_to_income_tax, csg_non_taxable_to_income_tax):
           csg_base = line_dict['base']
         line_dict['report_section'] = base_contribution
         if base_contribution == non_subject_amount:
+          if (line_dict['employee_total_price'] is None) and (line_dict['employer_total_price'] is None):
+            line_dict['employee_total_price'] = line_dict['base']
+            non_contribution_share_total_price += line_dict['base']
           no_contribution_line_list.append(line_dict)
         else:
           contribution_line_list.append(line_dict)
@@ -143,6 +156,20 @@ for line_dict in line_dict_list:
     contribution_line_list.append(line_dict)
 
 contribution_dict_list, contribution_employer_total_price, contribution_employee_total_price = getReportSectionDictList(contribution_line_list)
+# fix rounding issue
+contribution_employee_total_price = context.PaySheetTransaction_getMovementTotalPriceFromCategory(
+  no_base_contribution=True,
+  include_empty_contribution=False,
+  excluded_reference_list=['ticket_restaurant', 'versement_interessement_pee', 'impot_revenu'],
+  contribution_share='contribution_share/employee'
+)
+contribution_employer_total_price = context.PaySheetTransaction_getMovementTotalPriceFromCategory(
+  no_base_contribution=True,
+  include_empty_contribution=False,
+  excluded_reference_list=['ticket_restaurant',],
+  contribution_share='contribution_share/employer'
+)
+
 if len(contribution_dict_list):
   contribution_dict_list.append(
     getFakeLineDictForNewSection(
@@ -165,9 +192,10 @@ if len(non_contribution_dict_list):
 gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/%s"%gross_category)
 
 # Set contribution_share to 'True' so it will return all movement with 0 contribution share
+
 total_pay_by_employer = context.PaySheetTransaction_getMovementTotalPriceFromCategory(
   base_contribution='base_contribution/base_amount/payroll/report/salary/net',
-  contribution_share='True') - contribution_employer_total_price - non_contribution_employer_total_price
+  contribution_share='True') - contribution_employer_total_price - non_contribution_employer_total_price - non_contribution_share_total_price
 
 
 net_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(

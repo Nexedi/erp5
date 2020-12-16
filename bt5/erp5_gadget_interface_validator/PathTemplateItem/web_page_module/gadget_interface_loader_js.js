@@ -1,12 +1,18 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-/*global rJS, window*/
-(function (window, rJS) {
+/*global rJS, window, document*/
+(function (window, rJS, document) {
   "use strict";
 
   rJS(window)
     .declareMethod("declareGadgetToCheck", function (url) {
-      return this.declareGadget(url, {
-        scope: 'gadget_to_check'
+      var div = document.createElement('div'),
+        gadget = this;
+      this.element.innerHTML = '';
+      this.element.appendChild(div);
+      return gadget.declareGadget(url, {
+        scope: 'gadget_to_check',
+        sandbox: 'iframe',
+        element: div
       })
         .push(function () {
           // Do not return the loaded gadget.
@@ -29,4 +35,4 @@
         });
     });
 
-}(window, rJS));
+}(window, rJS, document));

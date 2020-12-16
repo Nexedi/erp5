@@ -27,9 +27,7 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.updateHeader({
-            page_title: "Software List"
-          });
+          return gadget.updateHeader({page_title: "Software List"});
         })
         .push(function () {
           return gadget.getDeclaredGadget("form_list");

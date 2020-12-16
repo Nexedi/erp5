@@ -1,6 +1,41 @@
 Changes
 =======
 
+0.4.69 (2020-10-29)
+-------------------
+
+  * erp5.util.testnode:
+
+    - propagate test_node_title to runTestSuite
+    - pass arguments as environment variables
+    - advertise log URL with log_frontend_url
+
+
+0.4.68 (2020-05-22)
+-------------------
+
+  * erp5.util.taskdistribution:
+
+    - fix DummyTaskDistributor API to be able to run tests locally
+
+
+  * erp5.util.testnode:
+
+    - fix upgrader when HEAD is a merge commit
+    - don't log distributor URL
+
+
+0.4.67 (2020-04-27)
+-------------------
+
+  * erp5.util:
+
+    - testnode: pass --log_directory to runTestSuite
+    - EggTestSuite: support --log_directory
+    - testnode: include a link to snapshot dir in log viewer
+    - testnode: don't crash log viewer app on network error
+    - testnode: make the number of days to keep log configurable
+
 0.4.66 (2020-01-30)
 -------------------
 

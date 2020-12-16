@@ -526,8 +526,7 @@ class DB(TM):
 
     def _getTableSchema(self, name,
             create_lstrip = re.compile(r"[^(]+\(\s*").sub,
-            create_rmatch = re.compile(r"(.*\S)\s*\)[^)]+\s"
-              "(DEFAULT(\s+(CHARSET|COLLATE)=\S+)+).*$", re.DOTALL).match,
+            create_rmatch = re.compile(r"(.*\S)\s*\)\s*(.*)$", re.DOTALL).match,
             create_split  = re.compile(r",\n\s*").split,
             column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
             ):

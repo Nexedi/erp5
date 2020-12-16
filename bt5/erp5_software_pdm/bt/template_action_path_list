@@ -15,6 +15,7 @@ Software Publication Module | view
 Software Publication | clone_ticket_and_event_list
 Software Publication | create_new_file
 Software Publication | document_list
+Software Publication | jump_to_document
 Software Publication | new_event
 Software Publication | view
 Software Publication | view_event_list

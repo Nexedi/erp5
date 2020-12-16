@@ -1,0 +1,8 @@
+test.erp5.testBPMCore
+test.erp5.testComplexTradeModelLineUseCase
+test.erp5.testDeliveryBuilderToSupportMultipleLines
+test.erp5.testInvoice
+test.erp5.testSimulationPerformance
+test.erp5.testTradeCondition
+test.erp5.testTradeModelLine
+test.erp5.testTradeModelLinePurchase

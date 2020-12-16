@@ -8,6 +8,8 @@ Internal Supply | edit_workflow
 Internal Supply | validation_workflow
 Measure | conversion_interaction_workflow
 Measure | edit_workflow
+Product Individual Variation | edit_workflow
+Product Individual Variation | visibility_workflow
 Product | edit_workflow
 Product | validation_workflow
 Purchase Supply Cell | supply_cell_interaction_workflow

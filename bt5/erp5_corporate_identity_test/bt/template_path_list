@@ -9,6 +9,9 @@ portal_categories/function/company
 portal_categories/function/company/executive
 portal_categories/group/template*
 portal_tests/template_test_zuite
-portal_tests/template_test_zuite/testAndUpdateTest*
+portal_tests/template_test_zuite/*
+product_module/template_test_product
+sale_opportunity_module/template_test_*
 support_request_module/template_test_*
 web_page_module/template_test_*
+web_site_module/template_test_web_site

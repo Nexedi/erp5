@@ -67,8 +67,8 @@ iban_code = ''.join([str(letter_code_dict.get(x, x))
                 for x in bban + country_code + checksum])
 
 try:
-    iban_int = int(iban_code)
+  iban_int = int(iban_code)
 except ValueError:
-    return False
+  return False
 
 return iban_int % 97 == 1

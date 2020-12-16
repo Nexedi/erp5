@@ -33,7 +33,11 @@ class ERP5FSForm(FSObject, ERP5Form):
 
     def _createZODBClone(self):
         """Create a ZODB (editable) equivalent of this object."""
-        obj = ERP5Form(self.getId(), self.title)
+        type_info = self.getPortalObject().portal_types.getTypeInfo('ERP5 Form')
+        obj = type_info.constructInstance(container=self,
+                                          temp_object=True,
+                                          id=self.getId(),
+                                          title=self.title).aq_base
         obj.set_xml(self.get_xml())
         return obj
 

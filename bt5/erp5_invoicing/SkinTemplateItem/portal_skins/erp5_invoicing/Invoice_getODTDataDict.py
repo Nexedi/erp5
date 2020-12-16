@@ -7,7 +7,7 @@ def getSourceReference(line):
   for predicate in predicate_list:
     source_reference = predicate.getSourceReference()
     if source_reference:
-     return source_reference
+      return source_reference
   return ''
 
 def getDestinationReference(line):
@@ -19,7 +19,7 @@ def getDestinationReference(line):
   for predicate in predicate_list:
     destination_reference = predicate.getDestinationReference()
     if destination_reference:
-     return destination_reference
+      return destination_reference
   return ''
 
 #if context.getPortalType() in context.getPortalSaleTypeList():

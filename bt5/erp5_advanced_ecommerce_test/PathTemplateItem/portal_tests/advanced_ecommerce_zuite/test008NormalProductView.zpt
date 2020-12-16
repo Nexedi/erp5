@@ -1,0 +1,91 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Front Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Front Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_normal_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[contains(text(), "140")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//ul[contains(@class, "Individual_variation")]</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//select[@name="field_variation_box_your_category"]//field_variation_box_your_category//option</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@class="selection_box"]//img</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@id="tabs"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Description</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Delivery</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Return</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Payment</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

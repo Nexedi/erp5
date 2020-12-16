@@ -6,7 +6,6 @@
   var warmup_gadget_done = false,
     warmup_list = [
       'gadget_erp5_label_field.html',
-      'gadget_translation.html',
       'gadget_erp5_header.html',
       'gadget_erp5_ojs_panel.html',
       'gadget_html5_input.html',

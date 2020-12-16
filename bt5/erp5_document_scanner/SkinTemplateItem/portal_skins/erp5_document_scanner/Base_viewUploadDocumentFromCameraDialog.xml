@@ -95,7 +95,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_active_process_url</string>
                         <string>your_document_scanner_gadget</string>
                       </list>
                     </value>

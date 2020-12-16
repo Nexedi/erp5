@@ -92,11 +92,8 @@ class CodingStyleTestCase(ERP5TypeTestCase):
   def test_PythonSourceCode(self):
     """test python script from the tested business templates.
 
-    reuses BusinessTemplate_getPythonSourceCodeMessageList from erp5_administration
+    reuses BusinessTemplate_getPythonSourceCodeMessageList
     """
-    if 'erp5_administration' not in self.getBusinessTemplateList():
-      self.skipTest('erp5_administration needs be installed to check python source code')
-
     self.maxDiff = None
     for business_template in self.portal.portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():
@@ -125,3 +122,32 @@ class CodingStyleTestCase(ERP5TypeTestCase):
 
       self.maxDiff = None
       self.assertEqual(existing_files, new_files)
+
+  def test_run_upgrader(self):
+    # Check that pre and post upgrade do not raise problems.
+    # We dont check upgrade step, because upgrader by default want to
+    # uninstall business templates.
+    self.portal.portal_alarms.upgrader_check_pre_upgrade.activeSense(fixit=True)
+    self.tic()
+    self.portal.portal_alarms.upgrader_check_pre_upgrade.activeSense()
+    self.tic()
+    self.assertFalse(
+        self.portal.portal_alarms.upgrader_check_pre_upgrade.sense(),
+        [
+            '\n'.join(x.detail) for x in self.portal.portal_alarms
+            .upgrader_check_post_upgrade.Alarm_getReportResultList()
+        ],
+    )
+
+    self.portal.portal_alarms.upgrader_check_post_upgrade.activeSense(
+        fixit=True)
+    self.tic()
+    self.portal.portal_alarms.upgrader_check_post_upgrade.activeSense()
+    self.tic()
+    self.assertFalse(
+        self.portal.portal_alarms.upgrader_check_post_upgrade.sense(),
+        [
+            '\n'.join(x.detail) for x in self.portal.portal_alarms
+            .upgrader_check_post_upgrade.Alarm_getReportResultList()
+        ],
+    )

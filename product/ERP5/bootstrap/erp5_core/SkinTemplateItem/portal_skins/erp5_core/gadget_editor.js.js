@@ -1,8 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, FileReader, Blob,
-lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
-(function (window, rJS, RSVP, document, FileReader, Blob,
-            lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue) {
+/*global window, rJS, RSVP, document, FileReader, Blob*/
+(function (window, rJS, RSVP, document, FileReader, Blob) {
   "use strict";
 
   var editor_dict = {
@@ -15,7 +13,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"},
     "notebook_editor": {"url": "gadget_notebook.html"},
-    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"}
+    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"},
+    "jexcel" : {"url": "jexcel.gadget.html"}
   };
 
 
@@ -38,14 +37,18 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         this.element.classList.toggle('editor-maximize');
       }
       return this.triggerMaximize.apply(this, param_list)
-        .push(function () {
+        .push(undefined, function () {
           if (gadget.element.classList.contains('editor-maximize')) {
             gadget.element.classList.remove('editor-maximize');
           }
         });
     })
-    .declareMethod('render', function (options) {
 
+    .declareMethod('render', function (options) {
+      return this.renderAsynchronously(options);
+    })
+
+    .declareJob('renderAsynchronously', function (options) {
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
@@ -53,6 +56,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
+          //run value is used to make jsmd viewer available in editable mode
+          //this is temporary until the viewer becomes editable
+          run: options.run || false,
           key: options.key,
           // Force calling subfield render
           // as user may have modified the input value
@@ -62,16 +68,12 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     })
 
     .onStateChange(function (modification_dict) {
-      return this.renderAsynchronously(modification_dict);
-    })
-
-    .declareJob('renderAsynchronously', function (modification_dict) {
       var element = this.element,
         gadget = this,
         url,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
-        queue = lockGadgetInQueue(gadget)();
+        queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
           (modification_dict.hasOwnProperty('editor')) || 
@@ -117,7 +119,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           queue
             .push(function () {
               var url = editor_dict[gadget.state.editor].url;
-              if (gadget.state.editable && (gadget.state.editor === 'jsmd_editor')) {
+              if (gadget.state.editor === 'jsmd_editor' &&
+                !gadget.state.run &&
+                gadget.state.editable) {
                 url = editor_dict.codemirror.url;
               }
               return gadget.declareGadget(
@@ -179,8 +183,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }
-      return queue
-        .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
+      return queue;
     })
 
     .declareMethod('getContent', function () {
@@ -189,14 +192,10 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         result;
       if (this.state.editable &&
           editor_dict.hasOwnProperty(gadget.state.editor)) {
-        return lockGadgetInQueue(gadget)()
-          .push(function () {
-            return gadget.getDeclaredGadget('editor');
-          })
+        return gadget.getDeclaredGadget('editor')
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
-          })
-          .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
+          });
           /*
           .push(function (result) {
             var value = result[context.state.key] || '';
@@ -215,12 +214,11 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         return result;
       }
       return {};
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
       // XXX How to implement this for editors?
       return true;
     });
 
-}(window, rJS, RSVP, document, FileReader, Blob,
-  lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue));
+}(window, rJS, RSVP, document, FileReader, Blob));

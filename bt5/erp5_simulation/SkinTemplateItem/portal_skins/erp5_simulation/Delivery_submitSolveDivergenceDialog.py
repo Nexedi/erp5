@@ -28,15 +28,15 @@ for listbox_dict in listbox:
   listbox_key = listbox_dict['listbox_key']
   line = [x for x in line_list if x.getPath() == listbox_key][0]
   uid = line.getUid()
-  for property in ('solver', 'solver_configuration', 'delivery_solver', 'comment',):
-    value = listbox_dict.get(property, None)
-    key = 'field_listbox_%s_%s' % (property, uid)
+  for prop in ('solver', 'solver_configuration', 'delivery_solver', 'comment',):
+    value = listbox_dict.get(prop, None)
+    key = 'field_listbox_%s_%s' % (prop, uid)
     request.form[key] = request.other[key] = value
-    if property == 'solver_configuration':
+    if prop == 'solver_configuration':
       if value is not None:
         line.updateConfiguration(**value.as_dict())
     else:
-      line.setProperty(property, value)
+      line.setProperty(prop, value)
 
 # if divergence solving is already ongoing and will be fixed by activities
 if line is None:

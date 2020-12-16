@@ -8,6 +8,10 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
+  <type>Automatic Accept Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
   <type>Production Reduction Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
@@ -17,6 +21,10 @@
  </chain>
  <chain>
   <type>Quantity Split Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Simple Quantity Split Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>

@@ -25,6 +25,13 @@ if password_event_list:
     password_lifetime_expire_warning_duration = portal_preferences.getPreferredPasswordLifetimeExpireWarningDuration()
     if password_lifetime_expire_warning_duration and now > expire_date - password_lifetime_expire_warning_duration * ONE_HOUR:
       expire_date_warning = expire_date
+else:
+  # No Password Event found means user doesn't yet change password
+  # Force user to change it if authentication policy is configured
+  if portal.portal_preferences.getPreferredMaxPasswordLifetimeDuration() is not None:
+    if context.getPassword():
+      is_password_expired = True
+
 request = portal.REQUEST
 request.set('is_user_account_password_expired', is_password_expired)
 request.set('is_user_account_password_expired_expire_date', expire_date_warning)

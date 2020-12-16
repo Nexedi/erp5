@@ -27,6 +27,9 @@
 
 import uuid
 import mock
+import lxml
+import urlparse
+import httplib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
@@ -89,8 +92,7 @@ def getUserEntry(access_token):
   }
 
 
-class TestGoogleLogin(ERP5TypeTestCase):
-
+class GoogleLoginTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
@@ -123,6 +125,8 @@ class TestGoogleLogin(ERP5TypeTestCase):
     self.tic()
     self.logout()
 
+
+class TestGoogleLogin(GoogleLoginTestCase):
   def test_redirect(self):
     """
       Check URL generate to redirect to Google
@@ -185,6 +189,9 @@ class TestGoogleLogin(ERP5TypeTestCase):
     user_id, login = self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials)
     self.assertEqual(person.getUserId(), user_id)
     self.assertEqual(getUserId(None), login)
+
+    self.login(user_id)
+    self.assertEqual(self.portal.Base_getUserCaption(), login)
 
   def test_auth_cookie(self):
     request = self.portal.REQUEST
@@ -279,7 +286,9 @@ return credential_request
 
     google_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")["value"]
     self.assertEqual("b01533abb684a658dc71c81da4e67546", google_hash)
-    self.assertEqual(self.portal.absolute_url(), response)
+    absolute_url = self.portal.absolute_url()
+    self.assertNotEqual(absolute_url[-1], '/')
+    self.assertEqual(absolute_url + '/', response)
     cache_dict = self.portal.Base_getBearerToken(google_hash, "google_server_auth_token_cache_factory")
     self.assertEqual(CLIENT_ID, cache_dict["client_id"])
     self.assertEqual(ACCESS_TOKEN, cache_dict["access_token"])
@@ -300,3 +309,30 @@ return credential_request
     person = credential_request.getDestinationDecisionValue()
     google_login = person.objectValues(portal_types="Google Login")[0]
     self.assertEqual(getUserId(None), google_login.getReference())
+
+  def test_logout(self):
+    resp = self.publish(self.portal.getId() + '/logout')
+    self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
+
+
+class TestERP5JSGoogleLogin(GoogleLoginTestCase):
+  def _getWebSite(self):
+    return self.portal.web_site_module.renderjs_runner
+
+  def test_login_form(self):
+    resp = self.publish(self._getWebSite().getPath() + '/login_form')
+    tree = lxml.etree.fromstring(resp.getBody(), parser=lxml.etree.HTMLParser())
+    google_login_link, = [
+        img.getparent().attrib['href']
+        for img in tree.findall('.//a/img')
+        if img.attrib['alt'] == 'Sign in with Google'
+    ]
+    self.assertIn('/ERP5Site_redirectToGoogleLoginPage', google_login_link)
+    resp = self.publish(urlparse.urlparse(google_login_link).path)
+    # this request redirects to google
+    self.assertEqual(resp.getStatus(), httplib.FOUND)
+    self.assertIn('google.com', resp.getHeader('Location'))
+
+  def test_logout(self):
+    resp = self.publish(self._getWebSite().getPath() + '/WebSite_logout')
+    self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')

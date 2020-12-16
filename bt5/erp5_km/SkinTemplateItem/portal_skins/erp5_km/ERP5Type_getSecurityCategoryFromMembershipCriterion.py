@@ -12,16 +12,16 @@ The parameters are
   base_category_list -- list of acceptable base categories
                         (used to filter part of the criteria)
   user_name          -- the user identifier (not used)
-  object             -- object which we want to assign roles to
+  obj                -- object which we want to assign roles to
   portal_type        -- portal type of object
 """
 
 category_list = []
 
-if object is None:
+if obj is None:
   return []
 
-criterion_list = object.getMembershipCriterionCategoryList()
+criterion_list = obj.getMembershipCriterionCategoryList()
 for criterion in criterion_list:
   id_list = criterion.split('/')
   base_category = id_list[0]

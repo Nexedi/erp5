@@ -252,16 +252,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_manifest_url</string> </value>
                   </item>
                   <item>
@@ -413,7 +403,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer.appcache</string> </value>
+            <value> <string>WebSection_getPrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -459,7 +449,7 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -478,10 +468,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -646,61 +632,65 @@
   </record>
   <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>973.33482.4166.8669</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1549644511.76</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>979.3226.30420.13465</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1587472029.55</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>

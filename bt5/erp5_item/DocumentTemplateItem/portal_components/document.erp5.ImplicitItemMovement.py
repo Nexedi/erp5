@@ -5,7 +5,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
+from erp5.component.document.DeliveryLine import DeliveryLine
 
 class ImplicitItemMovement(DeliveryLine):
 
