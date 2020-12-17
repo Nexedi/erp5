@@ -5,7 +5,7 @@ try:
 except NotAWorkingCopyError:
   from ZTUtils import make_query
   from zExceptions import Redirect
-  dialog = context.BusinessTemplate_viewCreateWorkingCopy
+  dialog = context.BusinessTemplate_viewCreateWorkingCopyDialog
   context_url = context.absolute_url_path()
   query_string = make_query(
     cancel_url=context_url,
