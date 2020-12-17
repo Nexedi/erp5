@@ -37,7 +37,7 @@ if commit_dict['changelog'].strip():
 else:
   from Products.ERP5Type.Message import translateString
   error_msg = "Please set a ChangeLog message."
-  return context.Base_renderForm('BusinessTemplate_viewVcsChangelog', keep_items={
+  return context.Base_renderForm('BusinessTemplate_viewVcsChangelogDialog', keep_items={
     'portal_status_message': translateString(error_msg),
     'cancel_url': context.absolute_url() +
       '/BusinessTemplate_viewVcsStatus?do_extract:int=0'
