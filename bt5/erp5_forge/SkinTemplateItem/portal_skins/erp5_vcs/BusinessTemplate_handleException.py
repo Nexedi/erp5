@@ -7,15 +7,15 @@ try:
 except SubversionSSLTrustError, e:
   message = 'SSL Certificate was not recognized'
   kw = dict(trust_dict=e.getTrustDict())
-  method = 'BusinessTemplate_viewSvnSSLTrust'
+  method = 'BusinessTemplate_viewSvnSSLTrustDialog'
 except SubversionLoginError, e:
   message = 'Server needs authentication, no cookie found'
   kw = dict(realm=e.getRealm(), username=context.getVcsTool().getPreferredUsername())
-  method = 'BusinessTemplate_viewSvnLogin'
+  method = 'BusinessTemplate_viewSvnLoginDialog'
 except GitLoginError, e:
   message = str(e)
   kw = dict(remote_url=context.getVcsTool().getRemoteUrl())
-  method = 'BusinessTemplate_viewGitLogin'
+  method = 'BusinessTemplate_viewGitLoginDialog'
 
 commit_dict['caller'] = caller
 # Always propage all information throught formulator hidden field

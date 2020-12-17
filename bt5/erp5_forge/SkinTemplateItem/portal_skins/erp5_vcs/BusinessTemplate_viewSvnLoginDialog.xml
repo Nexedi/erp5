@@ -67,7 +67,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -90,16 +89,10 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>remote_url</string>
+                        <string>realm_txt</string>
                         <string>your_user</string>
                         <string>your_password</string>
                         <string>your_auth</string>
@@ -117,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewGitLogin</string> </value>
+            <value> <string>BusinessTemplate_viewSvnLoginDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

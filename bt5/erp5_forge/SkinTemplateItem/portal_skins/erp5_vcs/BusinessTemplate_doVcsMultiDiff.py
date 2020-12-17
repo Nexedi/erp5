@@ -13,7 +13,7 @@ try:
   rev2, rev1 = revision_list
 except (KeyError, ValueError):
   request.set('portal_status_message', 'You must select TWO revisions.')
-  return context.BusinessTemplate_viewVcsLog()
+  return context.BusinessTemplate_viewVcsLogDialog()
 
 vcs_tool = context.getVcsTool()
 diff = vcs_tool.getHeader(added)
