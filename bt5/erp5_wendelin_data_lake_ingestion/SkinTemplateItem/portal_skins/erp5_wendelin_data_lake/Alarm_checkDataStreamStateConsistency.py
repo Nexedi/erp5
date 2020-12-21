@@ -8,5 +8,5 @@ for data_set in context.portal_catalog(portal_type = "Data Set",
                              aggregate_uid = data_set.getUid())
   for data_ingestion_line in data_ingestion_line_list:
     data_stream = data_ingestion_line.getAggregateValue(portal_type = "Data Stream")
-    if data_stream.getValidationState() == "validated":
+    if data_stream and data_stream.getValidationState() == "validated":
       data_stream.publish()
