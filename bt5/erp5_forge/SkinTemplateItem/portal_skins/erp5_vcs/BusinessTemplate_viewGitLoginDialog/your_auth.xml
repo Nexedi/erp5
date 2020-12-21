@@ -83,11 +83,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>remote_url</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BusinessTemplate_viewGitLogin</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
