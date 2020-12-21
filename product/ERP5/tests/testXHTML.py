@@ -79,6 +79,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'require.min.js',
         'rsvp.js',
         'wz_dragdrop.js',
+        'gadget_vcs_status.js',  # XXX because jsl is buggy
         )
   JSL_IGNORE_SKIN_LIST = (
         'erp5_code_mirror',
