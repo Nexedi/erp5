@@ -11,12 +11,13 @@
             <value>
               <list>
                 <string>editable</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_id</string> </value>
+            <value> <string>my_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -69,11 +70,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_id</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Type</string> </value>
                 </item>
               </dictionary>
             </value>
