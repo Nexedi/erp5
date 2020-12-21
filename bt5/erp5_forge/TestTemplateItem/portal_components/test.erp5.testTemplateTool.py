@@ -140,7 +140,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertEqual(len(test_web.getRevision()), 28)
 
-  def test_updateBusinessTemplateFromUrl_simple(self):
+  def test_00_updateBusinessTemplateFromUrl_simple(self):
     """
      Test updateBusinessTemplateFromUrl method
 
