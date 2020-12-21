@@ -3260,12 +3260,6 @@ class Base(
     if self._p_serial:
       return DateTime(self._p_mtime)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'modified')
-  def modified(self):
-    warnings.warn('modified is a deprecated alias to getModificationDate.',
-                  DeprecationWarning)
-    return self.getModificationDate()
-
   # Layout management
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
   def getApplicableLayout(self):
