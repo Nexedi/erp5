@@ -5,3 +5,4 @@ erp5_gadget_interface_validator
 erp5_accounting
 erp5_test_result
 erp5_web_renderjs_ui_test_core
+erp5_authentication_policy
