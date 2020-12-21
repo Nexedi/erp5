@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import re
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
