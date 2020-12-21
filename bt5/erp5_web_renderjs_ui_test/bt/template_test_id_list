@@ -27,3 +27,4 @@ test.erp5.testRJSPortalType
 test.erp5.testRJSUpgrader
 test.erp5.testFunctionalRJSServiceWorker
 test.erp5.testFunctionalRJSParallelListField
+test.erp5.testFunctionalAuthenticationPolicy
