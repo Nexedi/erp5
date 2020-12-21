@@ -35,11 +35,15 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>BusinessTemplate_doCreateWorkingCopy</string> </value>
+            <value> <string>BusinessTemplate_doVcsMultiDiff</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This business template currently does not exist in any repository. Select one of the Working Copies below and an empty business template will be created in it.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -59,10 +63,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -73,27 +76,25 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>your_repository</string>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
+                      <list>
+                        <string>listbox_message</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -101,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewCreateWorkingCopy</string> </value>
+            <value> <string>BusinessTemplate_viewVcsLogDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -125,7 +126,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Select a Repository</string> </value>
+            <value> <string>View Diff between Revisions</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

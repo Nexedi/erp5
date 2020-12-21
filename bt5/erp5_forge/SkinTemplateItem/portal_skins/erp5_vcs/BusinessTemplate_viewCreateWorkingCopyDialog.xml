@@ -35,11 +35,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>BusinessTemplate_doVcsCommit</string> </value>
+            <value> <string>BusinessTemplate_doCreateWorkingCopy</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>This business template currently does not exist in any repository. Select one of the Working Copies below and an empty business template will be created in it.</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -59,7 +59,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>left</string>
+                <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -68,16 +71,29 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>your_push</string>
-                        <string>your_changelog</string>
-                        <string>reminder</string>
-                        <string>added_files</string>
-                        <string>modified_files</string>
-                        <string>removed_files</string>
+                        <string>your_repository</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -85,7 +101,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewVcsChangelog</string> </value>
+            <value> <string>BusinessTemplate_viewCreateWorkingCopyDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -97,7 +113,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>vcs_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -109,7 +125,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Commit</string> </value>
+            <value> <string>Select a Repository</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

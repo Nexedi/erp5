@@ -339,7 +339,7 @@ return '''
     function log(){
       //hide popup
       document.getElementById('menudiv').style.display = "none";
-      open('BusinessTemplate_viewVcsLog?added='+tree.getSelectedItemId(), '_self');
+      open('BusinessTemplate_viewVcsLogDialog?added='+tree.getSelectedItemId(), '_self');
     }
 
    function treeTaller(){

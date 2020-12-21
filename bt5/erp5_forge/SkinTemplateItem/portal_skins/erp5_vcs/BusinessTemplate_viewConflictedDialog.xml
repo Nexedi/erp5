@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewConflicted</string> </value>
+            <value> <string>BusinessTemplate_viewConflictedDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

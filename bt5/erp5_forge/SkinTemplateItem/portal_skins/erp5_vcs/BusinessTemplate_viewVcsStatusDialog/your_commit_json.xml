@@ -10,15 +10,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
-                <string>editable</string>
+                <string>gadget_url</string>
+                <string>renderjs_extra</string>
                 <string>title</string>
+                <string>validator_field_id</string>
+                <string>validator_form_id</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>modified_files</string> </value>
+            <value> <string>your_commit_json</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -43,10 +45,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -54,12 +52,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
@@ -69,7 +61,25 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>gadget_url</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -80,30 +90,34 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_lines_field</string> </value>
+                    <value> <string>my_gadget_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>gadget_url</string> </key>
+                    <value> <string>gadget_vcs_status.html</string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Modified Files</string> </value>
+                    <value> <string>Gadget</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string>my_core_mode_text_content_validator</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -119,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.modified</string> </value>
+            <value> <string>python: [(\'default_push\', preferences.getPreferredVcsPushMode() and not here.getVcsTool().getAheadCount()), (\'default_changelog\', "{}: ".format(context.getTitle())), (\'diff_url\', \'%s/BusinessTemplate_doVcsDiffAsJson\' % here.absolute_url()), (\'get_tree_url\', \'%s/tree.xml\' % here.absolute_url()), (\'remote_url\', here.getVcsTool().getRemoteUrl()), (\'remote_comment\', here.getVcsTool().getRemoteComment())]</string> </value>
         </item>
       </dictionary>
     </pickle>
