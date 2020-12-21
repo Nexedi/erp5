@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Event_viewDocumentFastInputList</string> </value>
+            <value> <string>string:${object_url}/Event_viewDocumentFastInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
