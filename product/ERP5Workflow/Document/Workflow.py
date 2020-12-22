@@ -28,6 +28,7 @@
 
 import os
 import sys
+import warnings
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
@@ -794,7 +795,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     moved_exc = None
     validation_exc = None
     tool = self.getParentValue()
-    script_context = None
     object_context = None
 
     state_var = self.getStateVariable()
@@ -826,14 +826,12 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         if sci is None:
           sci = StateChangeInfo(document, self, former_status, tdef, old_state,
                                 new_state, form_kw)
-        if script_context is None:
-          script_context = self._asScriptContext()
         for script in script_value_list:
           # Pass lots of info to the script in a single parameter.
           if script.getPortalType() != 'Workflow Script':
             raise NotImplementedError ('Unsupported Script %s for state %s' %
                                        (script.id, old_state_reference))
-          script = getattr(script_context, script.id)
+          script = getattr(self, script.id)
           try:
             script(sci)  # May throw an exception.
           except ValidationFailed, validation_exc:
@@ -940,9 +938,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
           else:
             # Pass lots of info to the script in a single parameter.
             if script.getPortalType() == 'Workflow Script':
-              if script_context is None:
-                script_context = self._asScriptContext()
-              script = getattr(script_context, script.id)
+              script = getattr(self, script.id)
               script(sci)  # May throw an exception.
 
     # Return the new state object.
@@ -1406,29 +1402,20 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
           acquired_permission_set.remove(permission)
           state.setAcquirePermissionList(list(acquired_permission_set))
 
-  def _asScriptContext(self):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSourceValue')
+  def getSourceValue(self):
     """
-      change the context given to the script by adding foo for script_foo to the
-      context dict in order to be able to call the script using its reference
-      (= not prefixed by script_) from another workflow script
-
-      historically, __getattr__ method of Workflow class was overriden for
-      the same purpose, but it was heavyweight: doing a lot of useless
-      operations (each time, it was checking for script_foo, even if foo was a
-      transition, state, ...)
-
-      TODO-ARNAU: Should it be cached somewhere?
+    returns the source object
     """
-    script_context = self.asContext()
-    # asContext creates a temporary object and temporary object's "activate"
-    # method code is: "return self". This means that the script is not put in
-    # the activity queue as expected but it is instead directly executed. To fix
-    # this, we override the temporary object's "activate" method with the one of
-    # the original object.
-    script_context.activate = self.activate
-    for script in self.objectValues(portal_type="Workflow Script"):
-      setattr(script_context, script.getReference(), script)
-    return script_context
+    # this function is redefined here for performance reasons:
+    # avoiding the usage of categories speeds up workflow *a lot*
+    source_path_list = [path for path in self.getCategoryList()
+                        if path.startswith('source/')]
+    if source_path_list:
+      source_id = source_path_list[0].split('/')[-1]
+      return self._getOb(source_id)
+    return None
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'scripts')
@@ -1447,17 +1434,55 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       script_dict[script.getId()] = script
     return script_dict
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceValue')
-  def getSourceValue(self):
+from Products.ERP5Workflow import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+  def __getattr__(self, name):
+    '''
+    TODO-arnau: Not efficient. Another possible implementation:
+
+      Create a "ScriptContext" (_asScriptContext()) before executing Scripts
+      but this has the following problem (besides of the fact that this is
+      ONLY for backward compatibility and should be dropped once all projects
+      have been migrated):
+        1. Workflow Script called and a ScriptContext is created to be able to call scripts not having SCRIPT_PREFIX.
+        2. That script calls a Workflow Script from another Workflow.
+        => This will fail as ScriptContext is only created for the Workflow.
+
+  def _asScriptContext(self):
     """
-    returns the source object
+      change the context given to the script by adding foo for script_foo to the
+      context dict in order to be able to call the script using its reference
+      (= not prefixed by script_) from another workflow script
+
+      historically, __getattr__ method of Workflow class was overriden for
+      the same purpose, but it was heavyweight: doing a lot of useless
+      operations (each time, it was checking for script_foo, even if foo was a
+      transition, state, ...)
     """
-    # this function is redefined here for performance reasons:
-    # avoiding the usage of categories speeds up workflow *a lot*
-    source_path_list = [path for path in self.getCategoryList()
-                        if path.startswith('source/')]
-    if source_path_list:
-      source_id = source_path_list[0].split('/')[-1]
-      return self._getOb(source_id)
-    return None
+    script_context = self.asContext()
+    # asContext creates a temporary object and temporary object's "activate"
+    # method code is: "return self". This means that the script is not put in
+    # the activity queue as expected but it is instead directly executed. To fix
+    # this, we override the temporary object's "activate" method with the one of
+    # the original object.
+    script_context.activate = self.activate
+    for script in self.objectValues(portal_type="Workflow Script"):
+      setattr(script_context, script.getReference(), script)
+    return script_context
+
+    '''
+    if name[0] == '_': # Optimization (Folder.__getattr__)
+      raise AttributeError(name)
+    try:
+      return super(Workflow, self).__getattr__(name)
+    except AttributeError:
+      if name.startswith(SCRIPT_PREFIX):
+        raise
+      prefixed_name = SCRIPT_PREFIX + name
+      if not hasattr(aq_base(self), prefixed_name):
+        raise
+      warnings.warn(
+        "%r: Script calling %s instead of %s" % (self, name, prefixed_name),
+        DeprecationWarning)
+      return self._getOb(prefixed_name)
+  Workflow.__getattr__ = __getattr__
