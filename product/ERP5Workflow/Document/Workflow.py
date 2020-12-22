@@ -1436,12 +1436,15 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   @deprecated
   def scripts(self):
     """
-    Backward compatibility with DC Workflow to avoid modifying existing Python
-    Script code
+    Backward compatibility with DC Workflow to avoid modifying existing
+    Workflow Scripts code
     """
     script_dict = {}
     for script in self.objectValues(portal_type="Workflow Script"):
+      # wf.scripts['foobar']
       script_dict[script.getReference()] = script
+      # another_workflow_with_the_same_script_id.scripts[script.getId()]
+      script_dict[script.getId()] = script
     return script_dict
 
   security.declareProtected(Permissions.AccessContentsInformation,
