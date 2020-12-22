@@ -23,10 +23,6 @@
             <value> <string>%(content_url)s/Event_viewCreateTicketWorkflowActionDialog?workflow_action=create_ticket_action</string> </value>
         </item>
         <item>
-            <key> <string>after_script_name</string> </key>
-            <value> <string>create_ticket</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Disabled action.</string> </value>
         </item>
