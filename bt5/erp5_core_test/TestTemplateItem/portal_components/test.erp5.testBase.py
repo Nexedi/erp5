@@ -937,8 +937,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     organisation_type = portal.portal_types.getTypeInfo(portal_type)
     organisation_initial_workflow_list = organisation_type.getTypeWorkflowList()
     organisation_type.setTypeWorkflowList(
-      organisation_initial_workflow_list + [non_existent_worlflow_id])
-    pw.manage_delObjects([non_existent_worlflow_id])
+      organisation_initial_workflow_list + [dummy_workflow_id])
+    pw.manage_delObjects([dummy_worlflow_id])
 
     self.commit()
 
