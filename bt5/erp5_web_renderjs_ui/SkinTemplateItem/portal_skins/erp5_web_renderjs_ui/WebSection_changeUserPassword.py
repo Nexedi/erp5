@@ -22,7 +22,7 @@ assert password_key
 validation_message_list = portal.portal_password.analyzePassword(password, password_key)
 
 if validation_message_list:
-  message = u' '.join([str(x) for x in validation_message_list])
+  message = ' '.join([str(x) for x in validation_message_list])
   return response.redirect(
     "%s&portal_status_message=%s" % (
       new_url,
