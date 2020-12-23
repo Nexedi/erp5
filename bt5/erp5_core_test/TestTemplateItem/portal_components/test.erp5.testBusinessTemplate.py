@@ -6899,17 +6899,17 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     Updating from:
 
-        portal_categories/test_category/modified
-        portal_categories/test_category/modified/container_in_which_child_is_added
-        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
-        portal_categories/test_category/modified/removed
+        portal_categories/test_category/modified_category
+        portal_categories/test_category/modified_category/container_in_which_child_is_added
+        portal_categories/test_category/modified_category/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified_category/removed
 
     to:
 
-        portal_categories/test_category/modified   <-- this will be modified
-        portal_categories/test_category/modified/container_in_which_child_is_added
-        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
-        portal_categories/test_category/modified/container_in_which_child_is_added/added
+        portal_categories/test_category/modified_category   <-- this will be modified
+        portal_categories/test_category/modified_category/container_in_which_child_is_added
+        portal_categories/test_category/modified_category/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified_category/container_in_which_child_is_added/added
 
     was causing when test_category was added both as a base category and as paths.
 
@@ -6920,7 +6920,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       portal_categories.manage_delObjects(['test_category'])
     base_category = portal_categories.newContent(portal_type='Base Category', id='test_category')
 
-    parent_category = base_category.newContent(portal_type='Category', id='modified')
+    parent_category = base_category.newContent(portal_type='Category', id='modified_category')
     parent_category.newContent(portal_type='Category', id='container_in_which_child_is_added')
     parent_category.newContent(portal_type='Category', id='removed')
     parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='child_kept')
@@ -6945,7 +6945,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       shutil.rmtree(export_dir)
 
     # Apply the changes and build a second version of business template
-    parent_category.setTitle('modified')
+    parent_category.setTitle('modified_category')
     parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='added')
     parent_category.manage_delObjects(['removed'])
 
@@ -6959,7 +6959,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.tic()
       new_business_template_version_1.install()
       self.tic()
-      portal_categories.test_category.modified.container_in_which_child_is_added.setTitle(
+      portal_categories.test_category.modified_category.container_in_which_child_is_added.setTitle(
           'This path should not be reinstalled during update'
       )
       self.tic()
@@ -6971,7 +6971,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.tic()
     self.assertEqual(
       'This path should not be reinstalled during update',
-      portal_categories.test_category.modified.container_in_which_child_is_added.getTitle())
+      portal_categories.test_category.modified_category.container_in_which_child_is_added.getTitle())
 
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
     """Tests for `template_keep_path_list` feature for the special case of catalog methods
