@@ -770,6 +770,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
 
+        from ZPublisher.Publish import Request
+        assert 'close' not in Request.__dict__
+        Request.close = lambda self: None
+
         # Save current security manager
         sm = getSecurityManager()
 
@@ -826,7 +830,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           # request.
           if extra:
             for k, v in extra.items(): request[k] = v
-
           publish_module_standard('Zope2',
                          request=request,
                          response=response,
@@ -835,6 +838,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                          debug=not handle_errors,
                         )
         finally:
+          del Request.close
           if user:
             PAS._extractUserIds = orig_extractUserIds
           # Restore security manager
