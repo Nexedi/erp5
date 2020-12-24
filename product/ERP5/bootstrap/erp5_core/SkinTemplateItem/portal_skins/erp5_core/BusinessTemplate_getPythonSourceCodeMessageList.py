@@ -66,9 +66,17 @@ def checkPythonScript(script_instance, script_path):
 def checkComponent(component_instance):
   """Check a component, adding messages to global `line_list`
   """
+  component_relative_url = component_instance.getRelativeUrl()
+  for consistency_message in component_instance.checkConsistency():
+    line_list.append(
+      Message(
+        location=component_relative_url,
+        message=str(consistency_message),
+        edit_url=component_relative_url,
+        jio_key=component_relative_url,),)
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
         {'code': unicode(component_instance.getTextContent(), 'utf8')}))['annotations']:
-    annotation['component_path'] = component_instance.getRelativeUrl()
+    annotation['component_path'] = component_relative_url
     line_list.append(
       Message(
         location="{component_path}:{row}:{column}".format(**annotation),
