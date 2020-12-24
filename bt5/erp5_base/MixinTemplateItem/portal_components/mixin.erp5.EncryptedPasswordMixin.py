@@ -71,7 +71,7 @@ class EncryptedPasswordMixin:
       # not a policy so basically all passwords are accceptable
       return True
     if not self.isPasswordValid(value):
-      raise ValueError("Password value doest not comply with password policy")
+      raise ValueError("Password does not comply with password policy")
 
   def checkUserCanChangePassword(self):
     if not _checkPermission(Permissions.SetOwnPassword, self):
