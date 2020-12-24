@@ -66,6 +66,8 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
             'erp5_code_mirror',
             'erp5_multimedia',
             'erp5_smart_assistant',
+            'erp5_notebook',
+            'erp5_run_my_doc',
             'erp5_officejs',
             'erp5_configurator_standard_trade_template',
             'erp5_upgrader')
