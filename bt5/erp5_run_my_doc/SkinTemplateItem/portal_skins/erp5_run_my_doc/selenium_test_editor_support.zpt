@@ -3,14 +3,9 @@
 
   <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/jquery/ui/css/erp5-theme/jquery-ui.css">
   <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/test_editor.css">
-  <script language="javascript" tal:attributes="src string:${portal_url}/test_editor.js"></script>
-  <script language="javascript" tal:attributes="src string:${portal_url}/erp5_run_my_docs.js"></script>
+  <script tal:attributes="src string:${portal_url}/test_editor.js"></script>
+  <script tal:attributes="src string:${portal_url}/erp5_run_my_docs.js"></script>
   <table id="test_table">
-    <col class='action_column' />
-    <col class='action_column' />
-    <col/>
-    <col/>
-    <col/>
     <thead>
     </thead>
     <tbody id="list">
