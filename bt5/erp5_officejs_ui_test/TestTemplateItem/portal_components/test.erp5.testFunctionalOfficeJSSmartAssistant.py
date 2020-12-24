@@ -36,6 +36,7 @@ class TestOfficejSUISmartAssistant(ERP5TypeFunctionalTestCase):
 
   def getBusinessTemplateList(self):
     return (
+      'erp5_travel_expense',
       'erp5_officejs',
       'erp5_officejs_ui_test',
       'erp5_ui_test_core',
