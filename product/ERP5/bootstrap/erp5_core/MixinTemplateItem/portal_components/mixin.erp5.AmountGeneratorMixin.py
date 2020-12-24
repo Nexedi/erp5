@@ -150,17 +150,16 @@ class BaseAmountDict(Implicit):
     return value
 
   def _getGeneratedAmountQuantity(self, base_amount, variation_category_list):
-    amount_generator_line = self.aq_base._amount_generator_line
     try:
-      method = self._cache[(amount_generator_line, base_amount)]
+      method = self._cache[base_amount]
     except KeyError:
-      method = amount_generator_line._getTypeBasedMethod(
+      method = self.aq_base._amount_generator_line._getTypeBasedMethod(
         'getBaseAmountQuantityMethod')
       if method is not None:
         method = method(base_amount)
       if method is None:
-        method = amount_generator_line.getBaseAmountQuantity
-      self._cache[(amount_generator_line, base_amount)] = method
+        method = self.aq_base._amount_generator_line.getBaseAmountQuantity
+      self._cache[base_amount] = method
     if variation_category_list:
       kw = dict(self._method_kw,
                 variation_category_list=variation_category_list)
