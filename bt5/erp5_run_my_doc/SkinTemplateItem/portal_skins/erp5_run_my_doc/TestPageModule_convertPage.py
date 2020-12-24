@@ -26,4 +26,6 @@ for uid in uids:
                          obj.manage_copyObjects(list(obj.objectIds())))
 
 return conv_obj_module.Base_redirect('', 
-        dict(portal_status_message=context.Base_translateString(str(counter) + " object(s) converted.")))
+    dict(portal_status_message=context.Base_translateString(
+        "${document_count} documents converted.",
+        mapping={'document_count': counter})))
