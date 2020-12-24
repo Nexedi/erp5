@@ -839,6 +839,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
             PAS._extractUserIds = orig_extractUserIds
           # Restore security manager
           setSecurityManager(sm)
+          # Restore site removed by closing of request
+          portal = self.app[self.getPortalName()]
+          setSite(portal)
+
+
 
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
