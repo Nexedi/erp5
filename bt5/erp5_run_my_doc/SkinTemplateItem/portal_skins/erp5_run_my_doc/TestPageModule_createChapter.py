@@ -1,10 +1,10 @@
+# pylint:disable=redefined-builtin
 """
   Adds a chapter in the listbox, and upload an image if necessary (it doesn't generate the html code corresponding to the text)
 """
 
 from Products.ERP5Type.Document import newTempBase
 
-translateString = context.Base_translateString
 portal_status_message = ""
 
 if image_caption in [None, ""]:
@@ -29,7 +29,7 @@ if slide_type in ['Illustration', 'Screenshot']:
     image_id = image_url
   else:
     image_id = test_page.TestPage_getNextImageID(chapter_title, slide_type)
-    image = test_page.TestPage_uploadImage(image_id, file, batch_mode=True, image_caption=image_caption)
+    test_page.TestPage_uploadImage(image_id, file, batch_mode=True, image_caption=image_caption)
 
 listbox.append(newTempBase(context.getPortalObject(),
                    '',
