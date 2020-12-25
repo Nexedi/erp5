@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_viewRunSeleniumTest</string> </value>
+            <value> <string>TestPage_viewRunSeleniumTestDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -115,7 +115,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>TestPage_viewRunSeleniumTest</string> </value>
+            <value> <string>TestPage_viewRunSeleniumTestDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
