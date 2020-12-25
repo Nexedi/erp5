@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_viewUpdateReport</string> </value>
+            <value> <string>TestPage_viewUpdateReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestPage_viewUpdateReport</string> </value>
+            <value> <string>TestPage_viewUpdateReportDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
