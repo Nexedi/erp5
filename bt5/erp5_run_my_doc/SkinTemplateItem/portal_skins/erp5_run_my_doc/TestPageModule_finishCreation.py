@@ -9,7 +9,7 @@ context.TestPageModule_createChapter(chapter_title, slide_type, image_url, image
 
 portal_status_message = ""
 
-session = context.ERP5RunMyDocs_acquireSession()
+session = context.ERP5Site_acquireRunMyDocsSession()
 test_page = context.restrictedTraverse(session['test_page_path'])
 listbox = session['listbox']
 title = session['title']
