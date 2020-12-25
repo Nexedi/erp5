@@ -67,7 +67,7 @@ for chapter in listbox[1:]:
   <test>"""
     if first:
       text_content +="""
-    <span metal:use-macro="container/ERP5RunMyDocs_initTest/macros/init_test_environment" style="display:none;"> init</span>"""
+    <span metal:use-macro="container/ERP5Site_initRunMyDocsTest/macros/init_test_environment" style="display:none;"> init</span>"""
       first = False
 
     text_content +="""
