@@ -15,7 +15,7 @@ portal_status_message = translateString("%s created. You can now add your first 
 page = context.newContent(portal_type=portal_type,
                           title = title)
 
-session = context.ERP5RunMyDocs_acquireSession()
+session = context.ERP5Site_acquireRunMyDocsSession()
 session['title'] = title
 session['author'] = author
 session['author_mail'] = author_mail
