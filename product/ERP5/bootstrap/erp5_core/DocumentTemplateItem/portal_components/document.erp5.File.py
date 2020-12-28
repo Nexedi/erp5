@@ -36,6 +36,7 @@ from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
+from cStringIO import StringIO
 
 def _unpackData(data):
   """
@@ -110,11 +111,18 @@ class File(Document, OFS_File):
         filename = kw.get('filename')
       if filename:
         self._setFilename(filename)
-      if file_object is not None:
+      if file_object: # may be ''
+        if isinstance(file_object, str):
+          file_object = StringIO(file_object)
         # XXX: Rather than doing nothing if empty, consider changing:
         #      - _update_image_info to clear metadata
         #      - interactions to do nothing (or else?)
-        file_object.seek(0, 2)
+        try:
+          file_object.seek(0, 2)
+        except:
+          import ipdb
+          ipdb.set_trace()
+          raise
         if file_object.tell():
           file_object.seek(0)
           self._setFile(file_object)
