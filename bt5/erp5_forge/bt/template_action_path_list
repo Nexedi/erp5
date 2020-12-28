@@ -44,3 +44,4 @@ Template Tool | migrate_business_template_list
 Template Tool | search_portal_type
 Types Tool | role_information_list_view
 portal_actions | generate_pot_file
+portal_actions | view_console
