@@ -17,7 +17,8 @@
       return data;
     })
     .declareService(function () {
-      var gadget = this;
+      var gadget = this,
+        output = gadget.element.querySelector("output");
       function formSubmit(evt) {
         var input_value = evt.target.querySelector("input").value;
         return gadget.notifySubmitting()
@@ -31,15 +32,18 @@
             });
           })
           .push(function (response) {
-            console.log(response);
-            var content_type = response.target.getResponseHeader("Content-Type"),
-              output = gadget.element.querySelector("output");
+            var content_type = response.target.getResponseHeader("Content-Type");
             if (content_type.indexOf("text/html") !== -1) {
               output.innerHTML = response.target.responseText;
             } else {
               output.value = response.target.responseText;
             }
             return gadget.notifySubmitted();
+          }, function (error) {
+            if (error.target.status === 404) {
+              output.innerText = "404 Not Found";
+            }
+            output.innerText = "Unexpected error. Please debug";
           });
       }
       return loopEventListener(
