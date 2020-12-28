@@ -23,6 +23,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
 from zExceptions import Forbidden
+from cStringIO import StringIO
 
 security = ModuleSecurityInfo(__name__)
 
@@ -76,7 +77,7 @@ class TextContent:
       headers = self.parseHeadersFromText(body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
-      headers['file'] = body
+      headers['file'] = StringIO(body)
       self._edit(**headers)
     except ResourceLockedError:
       transaction.abort()

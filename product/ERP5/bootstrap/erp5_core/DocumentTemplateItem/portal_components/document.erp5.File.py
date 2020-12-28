@@ -36,6 +36,7 @@ from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
+from cStringIO import StringIO
 
 def _unpackData(data):
   """
@@ -146,9 +147,12 @@ class File(Document, OFS_File):
   def _setFile(self, data, precondition=None):
     if data is None:
       return
-    if str(data.read()) == (self.hasData() and str(self.getData())):
-      # Same data as previous, no need to change its content
-      return
+    if self.hasData():
+      if str(data.read()) == str(self.getData()):
+        # Same data as previous, no need to change its content
+        return
+    else:
+      data.seek(0, 2)
 
     if data.tell():
       data.seek(0)
