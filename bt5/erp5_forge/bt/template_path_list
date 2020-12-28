@@ -1,2 +1,4 @@
 portal_categories/business_field/*
 portal_domains/state_bug_domain
+web_page_module/gadget_erp5_console_html
+web_page_module/gadget_erp5_console_js
