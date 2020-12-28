@@ -11,10 +11,9 @@
       });
     })
     .declareMethod('getContent', function getContent() {
-      var data = {
+      return {
         "your_command_line": this.element.querySelector("input").value
       };
-      return data;
     })
     .declareService(function () {
       var gadget = this,
