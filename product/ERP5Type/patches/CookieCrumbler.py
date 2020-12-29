@@ -343,11 +343,11 @@ if 1:
                 return url
         return None
 
-CookieCrumbler.__call__ = __call__
-CookieCrumbler._cleanupResponse = _cleanupResponse
-CookieCrumbler.unauthorized = unauthorized
-CookieCrumbler._unauthorized = _unauthorized
-CookieCrumbler.getUnauthorizedURL = getUnauthorizedURL
+    CookieCrumbler.__call__ = __call__
+    CookieCrumbler._cleanupResponse = _cleanupResponse
+    CookieCrumbler.unauthorized = unauthorized
+    CookieCrumbler._unauthorized = _unauthorized
+    CookieCrumbler.getUnauthorizedURL = getUnauthorizedURL
 
 ###
 
