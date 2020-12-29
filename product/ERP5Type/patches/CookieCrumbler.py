@@ -212,17 +212,17 @@ class ResponseCleanup:
         #
         # No errors of any sort may propagate, and we don't care *what*
         # they are, even to log them.
-        try: 
+        try:
             del self.resp.unauthorized
-        except: 
+        except Exception:
             pass
-        try: 
+        try:
             del self.resp._unauthorized
-        except: 
+        except Exception:
             pass
         try:
             del self.resp
-        except:
+        except Exception:
             pass
 
 
@@ -272,9 +272,9 @@ if 1:
         # No errors of any sort may propagate, and we don't care *what*
         # they are, even to log them.
         try: del resp.unauthorized
-        except: pass
+        except Exception: pass
         try: del resp._unauthorized
-        except: pass
+        except Exception: pass
         return resp
 
     security.declarePrivate('unauthorized')
@@ -343,11 +343,11 @@ if 1:
                 return url
         return None
 
-CookieCrumbler.__call__ = __call__
-CookieCrumbler._cleanupResponse = _cleanupResponse
-CookieCrumbler.unauthorized = unauthorized
-CookieCrumbler._unauthorized = _unauthorized
-CookieCrumbler.getUnauthorizedURL = getUnauthorizedURL
+    CookieCrumbler.__call__ = __call__
+    CookieCrumbler._cleanupResponse = _cleanupResponse
+    CookieCrumbler.unauthorized = unauthorized
+    CookieCrumbler._unauthorized = _unauthorized
+    CookieCrumbler.getUnauthorizedURL = getUnauthorizedURL
 
 ###
 
