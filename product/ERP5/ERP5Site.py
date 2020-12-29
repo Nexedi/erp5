@@ -354,7 +354,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   def _registerMissingTools(self):
     from Products.CMFCore import interfaces, utils
     tool_id_list = ("portal_skins", "portal_types", "portal_membership",
-                    "portal_url", "portal_workflow")
+                    "portal_url", "portal_workflow", "caching_policy_manager")
     if (None in map(self.get, tool_id_list) or not
         TransactionalResource.registerOnce(__name__, 'site_manager', self.id)):
       return
