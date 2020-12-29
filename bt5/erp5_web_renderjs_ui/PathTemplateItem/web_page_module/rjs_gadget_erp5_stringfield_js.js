@@ -17,7 +17,7 @@
           id: field_json.key,
           name: field_json.key,
           error_text: field_json.error_text,
-          title: field_json.title,
+          title: field_json.description,
           hidden: field_json.hidden,
           trim: true,
           // Force calling subfield render

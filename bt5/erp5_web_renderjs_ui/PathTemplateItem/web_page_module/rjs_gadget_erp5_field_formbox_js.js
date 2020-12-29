@@ -28,7 +28,7 @@
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           hidden: field_json.hidden,
           view: field_json.view,
           // field_json._embedded is HATEOASed subobj specs included in FormBox
