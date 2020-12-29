@@ -23,7 +23,7 @@
         editable: field_json.editable,
         id: field_json.key,
         name: field_json.key,
-        title: field_json.title,
+        title: field_json.description,
         error_text: field_json.error_text,
         hidden: field_json.hidden,
         // Force calling subfield render

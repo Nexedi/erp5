@@ -53,7 +53,7 @@
           catalog_index: field_json.catalog_index,
           allow_jump: field_json.allow_jump,
           required: field_json.required,
-          title: field_json.title,
+          title: field_json.description,
           key: field_json.key,
           view: field_json.view,
           search_view: field_json.search_view,

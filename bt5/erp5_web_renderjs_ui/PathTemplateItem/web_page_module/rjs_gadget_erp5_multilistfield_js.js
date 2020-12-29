@@ -43,7 +43,7 @@
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           key: field_json.key,
           sub_select_key: field_json.sub_select_key,
           sub_input_key: field_json.sub_input_key,
