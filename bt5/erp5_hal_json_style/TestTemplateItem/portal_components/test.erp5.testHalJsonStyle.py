@@ -81,9 +81,9 @@ def createIndexedDocument(quantity=1):
   def decorator(func):
     def wrapped(self, *args, **kwargs):
       wipeFolder(self.portal.foo_module)
-      if quantity <= 1:
+      if quantity == 1:
         kwargs.update(document=self._makeDocument())
-      else:
+      elif quantity > 1:
         kwargs.update(document_list=[self._makeDocument() for _ in range(quantity)])
       self.portal.portal_caches.clearAllCache()
       self.tic()
@@ -2331,6 +2331,31 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
 
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], selection_name)
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['checked_uid_list'], [9876, 1234])
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @createIndexedDocument(quantity=1)
+  @changeSkin('Hal')
+  def test_getHateoas_property_corrupted_encoding(self, document):
+    # this sequence of bytes does not encode to UTF-8
+    document.setTitle('\xe9\xcf\xf3\xaf')
+    # self.tic()
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query='uid:"%s"' % document.getUid(),
+      select_list=['title'],
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['contents'][0]["title"], u'\ufffd\ufffd\ufffd')
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
