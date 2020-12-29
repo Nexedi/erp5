@@ -64,7 +64,7 @@
           id: field_json.key,
           name: field_json.key,
           key: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           error_text: field_json.error_text,
           timezone_style: field_json.timezone_style,
           date_only: field_json.date_only,
