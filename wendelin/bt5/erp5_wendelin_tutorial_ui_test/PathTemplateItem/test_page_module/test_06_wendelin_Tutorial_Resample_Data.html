@@ -1,0 +1,2835 @@
+<section>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
+      </tr>
+      <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_setUpPersonTest</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td></td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create Data Operation</li>
+	<li>Configure Variation For Data Product</li>
+	<li>Create Data Product</li>
+	<li>Create Transformation Script</li>
+	<li>Create Data Transformation</li>
+	<li>See Data Analysis</li>
+	<li>See&nbsp;Data Array</li>
+</ul>
+
+<details open="">
+<p>&nbsp;</p>
+
+<p>This tutorial teaches how to create more&nbsp;sophisticated Data Transformation -&nbsp;resampling.&nbsp;</p>
+
+<p>Before doing this tutorial make sure you read and completed the following tutorial and have data in your wendelin instance:</p>
+
+<ul>
+	<li><a href="wendelin-Tutorial.Transform.Data">HowTo Transform&nbsp;Data</a>&nbsp;</li>
+</ul>
+
+<p>The general&nbsp;pipeline&nbsp;is exactly the same as in the previous tutorial.</p>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Operation</h1>
+<img alt="" src="wendelin-Data.Operation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Open your Wendelin dashboard.&nbsp;</p>
+
+<p>In Modules click on Data Operations Module</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Data Operation</h1>
+<img alt="" src="wendelin-Data.Operation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Add</strong> to add a new Data Operation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Data Operation</h1>
+<img alt="" src="wendelin-Data.Operation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click <strong>Proceed</strong> to continue.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill the Form</h1>
+<img alt="" src="wendelin-Data.Resampling.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form to create Data Operation.</p>
+
+<p><strong>Title&nbsp;</strong>-&nbsp; we name it&nbsp;<strong>Resample Raw Array All</strong></p>
+
+<p><strong>Reference&nbsp;</strong>&nbsp;-&nbsp;<strong>data-operation-resample-raw-array-all&nbsp;</strong></p>
+
+<p><strong>Script ID&nbsp;</strong>-&nbsp;<strong>DataAnalysisLine_resampleRawArrayAll</strong>:&nbsp;this script will do all the magic. It doesn&#39;t exist yet, we will create it later in this tutorial.&nbsp;</p>
+
+<p>At the don&#39;t forget to Save the changes.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Validate</h1>
+<img alt="" src="wendelin-Data.Resampling.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Validate on left side panel to validate Data Operation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Confirm Validation</h1>
+<img alt="" src="wendelin-Data.Resampling.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click <strong>Proceed</strong> to confirm validation.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_operation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_operation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resample Raw Array All</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>data-operation-resample-raw-array-all</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_version"]</td>
+        <td>001</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_script_id"]</td>
+        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section>
+<h1>Data Product Variation</h1>
+<img alt="" src="wendelin-Data.Resampling.System.Pref.Screenshot?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Before creating Data Product we want to add a variation of Data product called Resolution.&nbsp;</p>
+
+<p>Navigate to page called Portal Preferences by clicking on&nbsp;<strong>Preferences&nbsp;</strong>on the left side panel.&nbsp;&nbsp;</p>
+
+<p>It will redirect you to a page called&nbsp;<strong>Default Site Preferences.&nbsp;</strong></p>
+
+<p>Click on the&nbsp;<strong>Preference: Default Site Preferences&nbsp;</strong>on the top of the page.&nbsp;</p>
+
+<p>&nbsp;</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Data Product Variation</h1>
+<img alt="" src="wendelin-Data.Resampling.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>From the list of preferences click on&nbsp;<b>Default System Preferences.</b></p>
+
+<p>&nbsp;</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Wendelin Preferences</h1>
+<img alt="" src="wendelin-Data.Resampling.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>On the left side panel click on&nbsp;<strong>Wendelin.</strong></p>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Wendelin Preferences Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Then click on <strong>Editable</strong> on top panel to be able to make changes.</p>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Wendelin Preferences Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Once the page becomes editable, a field called <strong>Data Product Individual Variation</strong> will appear.</p>
+
+<p>From drop down list choose <strong>resolution</strong> and click on <strong>Save</strong> to save the changes.</p>
+</details>
+</section>
+
+<section>
+<h1>Data Product Variation Set</h1>
+<img alt="" src="wendelin-Data.Resampling.8?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>New variation for Data Product called resolution is set.</p>
+
+<p>Nest step is to create Data Product for the resampled data and see how we use this new variation.&nbsp;</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=preference')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=preference')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Preference: Default Site Preference"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Preference: Default Site Preference"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[2]//td[1]//a</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//div[@class='document_table']//table//tbody//tr[2]//td[1]//a</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'wendelin_preference')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'wendelin_preference')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_my_preferred_data_product_individual_variation_base_category_list"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_preferred_data_product_individual_variation_base_category_list"]</td>
+        <td>resolution</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section>
+<h1>Data Product</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.1.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Now we need to create a new Data Product which will the output Data Product of the Transformation.</p>
+</details>
+</section>
+
+<section>
+<h1>Create Data Product</h1>
+<img alt="" src="wendelin-Data.Resampling.9?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Create a new Data Product as described in <a href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a> tutorial with following values</p>
+
+<p>Title -&nbsp; <strong>Generic Interval Resampled Array</strong></p>
+
+<p>Quantity Unit -&nbsp; <strong>Unit/Piece</strong></p>
+
+<p>Reference -&nbsp;<strong>GENERIC-INTERVAL-RESAMPLED-ARRAY</strong></p>
+
+<p>Item Types</p>
+
+<ul>
+	<li><strong>Data Array</strong></li>
+</ul>
+
+<p>Use</p>
+
+<ul>
+	<li><strong>Big Data/Ingestion/Stream Ingestion</strong></li>
+</ul>
+
+<p>Individual Variation Base Categories</p>
+
+<ul>
+	<li><strong>resolution</strong></li>
+</ul>
+</details>
+
+<p>&nbsp;</p>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_product_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_product_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>GENERIC-INTERVAL-RESAMPLED-ARRAY</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_use_list_default:list"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_individual_variation_base_category_list"]</td>
+        <td>Resolution</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section>
+<h1>Create Data Product Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.10?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>After filling the form save the changes.</p>
+
+<p>As this Data Product will represent our resampled data we will add here Data Product Individual Variations to define the resamplings.</p>
+
+<p>For that, after saving the changes, click on Add button.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Create Data Product Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.11?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>For Document Type choose <strong>Product Individual Variation</strong> and click on Create Document.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Create Data Product Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.12?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Fill in the title - <strong>60 S</strong> - this means resampling data with 60 seconds resolution.</p>
+
+<p>Save the changes</p>
+
+<p>Repeat this process 3 more times for</p>
+
+<ul>
+	<li>300 S</li>
+	<li>3000 S</li>
+	<li>30000 S</li>
+</ul>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Create Data Product Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.13?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>It is ready!</p>
+
+<p>Don&#39;t forget to Validate the Data Product.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Product Individual Variation</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>60 S</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_base_category"]</td>
+        <td>Resolution</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Product Individual Variation</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>300 S</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_base_category"]</td>
+        <td>Resolution</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Product Individual Variation</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>3000 S</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_base_category"]</td>
+        <td>Resolution</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Product Individual Variation</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>30000 S</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_base_category"]</td>
+        <td>Resolution</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Product Individual Variation:')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Portal Callables</h1>
+<img alt="" src="wendelin-Data.Transformation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After Data Product is created and validated, navigate to page called Portal Callables by adding&nbsp;<strong>/#/portal_callables</strong>&nbsp;at the end of the URL of your wendelin instance.&nbsp;</p>
+
+<p>There we will create and store a python script that will resample data according to resolutions we defined.&nbsp;</p>
+
+<h1>&nbsp;</h1>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Transformation Script</h1>
+<img alt="" src="wendelin-Data.Transformation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Add button to add a new script.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Transformation Script Cont.</h1>
+<img alt="" src="wendelin-Data.Transformation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Choose Python Script as Document Type and click on Create Document to create an empty python script.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Resampling.14?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Define <strong>ID</strong>, <strong>Title</strong> and <strong>Reference</strong> of your script.</p>
+
+<p>We name it <strong>DataAnalysisLine_resampleRawArrayAll</strong> as we did in Data Operation.</p>
+
+<p>Next we define the parameters we will give to our script.&nbsp;</p>
+
+<p><strong>in_array&nbsp;</strong>- the input dictionary that contains Data Array where raw data is stored after the previous transformation.</p>
+
+<p><strong>out_array&nbsp;</strong>&nbsp;- the output Data Array where resampled data will be stored.&nbsp;</p>
+
+<p>At the end click <strong>Save</strong> to save the changes.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Transformation Script</h1>
+<img alt="" src="wendelin-Data.Resampling.15?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">The script we write in the textbox area at the bottom of the page.</details>
+</section>
+
+<section class="screenshot">
+<h1>Transformation Script Cont.</h1>
+
+<pre>
+<code>
+import numpy as np
+import pandas as pd
+
+out_array_list = out_array
+
+in_data_array = in_array[&quot;Data Array&quot;]
+progress_indicator = in_array[&quot;Progress Indicator&quot;]
+
+in_zbigarray = in_data_array.getArray()
+if in_zbigarray is None:
+  return
+
+if in_zbigarray.shape[0] == 0:
+  return
+
+# first fill array with lowest resolution
+default_data_array = out_array_list[0][&quot;Data Array&quot;]
+default_resolution = out_array_list[0][&quot;resolution&quot;]
+default_frequency = pd.to_timedelta(default_resolution)
+default_zbigarray = default_data_array.getArray()
+
+index = progress_indicator.getIntOffsetIndex()
+
+# convert data to DataFrame
+df = pd.DataFrame.from_records(in_zbigarray[index:].copy(), index=&#39;date&#39;)
+
+# ignore data before start date of output array
+if default_zbigarray is not None:
+  if default_zbigarray.shape[0] != 0:
+    df = df.loc[str(default_zbigarray[0][&#39;date&#39;]):]
+
+if len(df) == 0:
+  return
+
+# resample
+df = df.resample(default_resolution).agg([&#39;min&#39;,&#39;mean&#39;,&#39;max&#39;]).fillna(0)
+
+# rename columns from tuples like (&#39;x&#39;, &#39;min&#39;) to names like &#39;x_min&#39;
+df.columns = [&#39;%s%s&#39; % (a, &#39;_%s&#39; % b if b else &#39;&#39;) for a, b in df.columns]
+
+context.log(&quot;df.columns = &quot;, df.columns)
+
+# save date vector for later
+date_vector = df.index.values.copy()
+
+context.log(&quot;date_vector = &quot;, date_vector)
+
+# convert data back to ndarray
+default_data = df.to_records(convert_datetime64=False)
+# view as structured array
+
+# set date to zero where all values are 0
+mask_zero = (df==0).all(axis=1)
+default_data[&#39;date&#39;][mask_zero] = 0
+
+if default_zbigarray is None:
+  default_zbigarray = default_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)
+
+if default_zbigarray.shape[0] == 0:
+  default_zbigarray.append(default_data)
+
+else:
+  # calculate start and stop index of new data in output array
+  default_start_index = int((date_vector[0] - default_zbigarray[0][&#39;date&#39;]) / default_frequency)
+  default_stop_index = int((date_vector[-1] - default_zbigarray[0][&#39;date&#39;]) / default_frequency + 1)
+
+  # make sure data fits in
+  if default_stop_index &gt; default_zbigarray.shape[0]:
+    default_zbigarray.resize((default_stop_index,))
+
+  # fill holes in new data with values from old data
+  old_data = default_zbigarray[default_start_index:default_stop_index]
+  default_data[mask_zero ] = old_data[mask_zero]
+
+  # write new_data to zbigarray
+  default_zbigarray[default_start_index:default_stop_index] = default_data
+
+
+# now use data in first resolution array for all other arrays
+for out_array in out_array_list[1:]:
+  out_data_array = out_array[&quot;Data Array&quot;]
+  out_array_resolution = out_array[&quot;resolution&quot;]
+  out_zbigarray = out_data_array.getArray()
+  if out_zbigarray is None:
+    out_zbigarray = out_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)
+
+  if out_zbigarray.shape[0] == 0:
+    start_index = 0
+  else:
+    out_array_frequency = pd.to_timedelta(out_array_resolution)
+
+    new_stop_date = default_zbigarray[0][&#39;date&#39;] + default_zbigarray.shape[0] * default_frequency
+    old_stop_date = out_zbigarray[0][&#39;date&#39;] + out_zbigarray.shape[0] * out_array_frequency
+
+    start_date = old_stop_date - out_array_frequency
+    if old_stop_date &gt;= new_stop_date:
+      continue
+
+    # find row index in in_array from where to start resampling
+    start_index = int(max((start_date - default_zbigarray[0][&#39;date&#39;]) / default_frequency, 0))
+    # if we got data which has been already resampled, then we resample again and overwrite
+    start_index = min(start_index, default_start_index)
+
+  data = default_zbigarray[start_index:].copy()
+
+  # convert data to DataFrame and resample
+  df = pd.DataFrame.from_records(data, index=&#39;date&#39;)
+
+  # set our own date range index so that we can resample and keep 0-dates
+  resampling_start_date = default_zbigarray[0][&#39;date&#39;] + start_index * default_frequency
+  df.index = pd.date_range(start=resampling_start_date,
+                           periods=data.shape[0],
+                           freq=default_frequency)
+  df.index.name = &#39;date&#39;
+
+  # resample each column with appropriate aggregation method
+  aggregation_dict = {c: c.split(&#39;_&#39;)[-1] for c in df.columns}
+  df = df.resample(out_array_resolution).agg(aggregation_dict).fillna(0)
+
+  # save date vector for later
+  date_vector = df.index.values.copy()
+
+  # convert data back to ndarray
+  new_data = df.to_records(convert_datetime64=False)
+
+  # set date to zero where all values are 0
+  new_data[&#39;date&#39;][(df==0).all(axis=1)] = 0
+
+  if out_zbigarray.shape[0] == 0:
+    out_zbigarray.append(new_data)
+  else:
+    # calculate start and stop index of new data in output array
+    start_index = int((date_vector[0] - out_zbigarray[0][&#39;date&#39;]) / out_array_frequency)
+    stop_index = int((date_vector[-1] - out_zbigarray[0][&#39;date&#39;]) / out_array_frequency + 1)
+
+    # make sure data fits in
+    if stop_index &gt; out_zbigarray.shape[0]:
+      out_zbigarray.resize((stop_index,))
+
+    # write new_data to zbigarray
+    out_zbigarray[start_index:stop_index] = new_data
+
+progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
+
+</code>
+</pre>
+
+<details open="">
+<p>This script takes as an input data from Data Array and resamples it by given rules and writes it to new Data Arrays.</p>
+
+<p>Don&#39;t forget to save the changes after editing the script.&nbsp;</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Python Script</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_id"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_id"]</td>
+        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_parameter_signature"]</td>
+        <td>in_array={}, out_array=[]</td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>15000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
+        <td>
+import numpy as np
+import pandas as pd
+
+out_array_list = out_array
+
+in_data_array = in_array[&quot;Data Array&quot;]
+progress_indicator = in_array[&quot;Progress Indicator&quot;]
+
+in_zbigarray = in_data_array.getArray()
+if in_zbigarray is None:
+&nbsp; return
+
+if in_zbigarray.shape[0] == 0:
+&nbsp; return
+
+# first fill array with lowest resolution
+default_data_array = out_array_list[0][&quot;Data Array&quot;]
+default_resolution = out_array_list[0][&quot;resolution&quot;]
+default_frequency = pd.to_timedelta(default_resolution)
+default_zbigarray = default_data_array.getArray()
+
+index = progress_indicator.getIntOffsetIndex()
+
+# convert data to DataFrame
+df = pd.DataFrame.from_records(in_zbigarray[index:].copy(), index=&#39;date&#39;)
+
+# ignore data before start date of output array
+if default_zbigarray is not None:
+&nbsp; if default_zbigarray.shape[0] != 0:
+&nbsp; &nbsp; df = df.loc[str(default_zbigarray[0][&#39;date&#39;]):]
+
+if len(df) == 0:
+&nbsp; return
+
+# resample
+df = df.resample(default_resolution).agg([&#39;min&#39;,&#39;mean&#39;,&#39;max&#39;]).fillna(0)
+
+# rename columns from tuples like (&#39;x&#39;, &#39;min&#39;) to names like &#39;x_min&#39;
+df.columns = [&#39;%s%s&#39; % (a, &#39;_%s&#39; % b if b else &#39;&#39;) for a, b in df.columns]
+
+context.log(&quot;df.columns = &quot;, df.columns)
+
+# save date vector for later
+date_vector = df.index.values.copy()
+
+context.log(&quot;date_vector = &quot;, date_vector)
+
+# convert data back to ndarray
+default_data = df.to_records(convert_datetime64=False)
+# view as structured array
+
+# set date to zero where all values are 0
+mask_zero = (df==0).all(axis=1)
+default_data[&#39;date&#39;][mask_zero] = 0
+
+if default_zbigarray is None:
+&nbsp; default_zbigarray = default_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)
+
+if default_zbigarray.shape[0] == 0:
+&nbsp; default_zbigarray.append(default_data)
+
+else:
+  # calculate start and stop index of new data in output array
+&nbsp; default_start_index = int((date_vector[0] - default_zbigarray[0][&#39;date&#39;]) / default_frequency)
+&nbsp; default_stop_index = int((date_vector[-1] - default_zbigarray[0][&#39;date&#39;]) / default_frequency + 1)
+
+  # make sure data fits in
+&nbsp; if default_stop_index &gt; default_zbigarray.shape[0]:
+&nbsp; &nbsp; default_zbigarray.resize((default_stop_index,))
+
+  # fill holes in new data with values from old data
+&nbsp; old_data = default_zbigarray[default_start_index:default_stop_index]
+&nbsp; default_data[mask_zero ] = old_data[mask_zero]
+
+  # write new_data to zbigarray
+&nbsp; default_zbigarray[default_start_index:default_stop_index] = default_data
+
+
+# now use data in first resolution array for all other arrays
+for out_array in out_array_list[1:]:
+&nbsp; out_data_array = out_array[&quot;Data Array&quot;]
+&nbsp; out_array_resolution = out_array[&quot;resolution&quot;]
+&nbsp; out_zbigarray = out_data_array.getArray()
+&nbsp; if out_zbigarray is None:
+&nbsp; &nbsp; out_zbigarray = out_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)
+
+&nbsp; if out_zbigarray.shape[0] == 0:
+&nbsp; &nbsp; start_index = 0
+&nbsp; else:
+&nbsp; &nbsp; out_array_frequency = pd.to_timedelta(out_array_resolution)
+
+&nbsp; &nbsp; new_stop_date = default_zbigarray[0][&#39;date&#39;] + default_zbigarray.shape[0] * default_frequency
+&nbsp; &nbsp; old_stop_date = out_zbigarray[0][&#39;date&#39;] + out_zbigarray.shape[0] * out_array_frequency
+
+&nbsp; &nbsp; start_date = old_stop_date - out_array_frequency
+&nbsp; &nbsp; if old_stop_date &gt;= new_stop_date:
+&nbsp; &nbsp; &nbsp; continue
+
+    # find row index in in_array from where to start resampling
+&nbsp; &nbsp; start_index = int(max((start_date - default_zbigarray[0][&#39;date&#39;]) / default_frequency, 0))
+    # if we got data which has been already resampled, then we resample again and overwrite
+&nbsp; &nbsp; start_index = min(start_index, default_start_index)
+
+&nbsp; data = default_zbigarray[start_index:].copy()
+
+  # convert data to DataFrame and resample
+&nbsp; df = pd.DataFrame.from_records(data, index=&#39;date&#39;)
+
+  # set our own date range index so that we can resample and keep 0-dates
+&nbsp; resampling_start_date = default_zbigarray[0][&#39;date&#39;] + start_index * default_frequency
+&nbsp; df.index = pd.date_range(start=resampling_start_date,
+                           periods=data.shape[0],
+                           freq=default_frequency)
+&nbsp; df.index.name = &#39;date&#39;
+
+  # resample each column with appropriate aggregation method
+&nbsp; aggregation_dict = {c: c.split(&#39;_&#39;)[-1] for c in df.columns}
+&nbsp; df = df.resample(out_array_resolution).agg(aggregation_dict).fillna(0)
+
+  # save date vector for later
+&nbsp; date_vector = df.index.values.copy()
+
+  # convert data back to ndarray
+&nbsp; new_data = df.to_records(convert_datetime64=False)
+
+  # set date to zero where all values are 0
+&nbsp; new_data[&#39;date&#39;][(df==0).all(axis=1)] = 0
+
+&nbsp; if out_zbigarray.shape[0] == 0:
+&nbsp; &nbsp; out_zbigarray.append(new_data)
+&nbsp; else:
+    # calculate start and stop index of new data in output array
+&nbsp; &nbsp; start_index = int((date_vector[0] - out_zbigarray[0][&#39;date&#39;]) / out_array_frequency)
+&nbsp; &nbsp; stop_index = int((date_vector[-1] - out_zbigarray[0][&#39;date&#39;]) / out_array_frequency + 1)
+
+    # make sure data fits in
+&nbsp; &nbsp; if stop_index &gt; out_zbigarray.shape[0]:
+&nbsp; &nbsp; &nbsp; out_zbigarray.resize((stop_index,))
+
+    # write new_data to zbigarray
+&nbsp; &nbsp; out_zbigarray[start_index:stop_index] = new_data
+
+progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
+        </td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformations</h1>
+<img alt="" src="wendelin-Data.Transformation.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After your transformation script is ready, it&#39;s time to create Data Transformation.</p>
+
+<p>On Modules page click on Data Transformations.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Data Transformation</h1>
+<img alt="" src="wendelin-Data.Resampling.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Add to add a new Data Transformation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Data Transformation</h1>
+<img alt="" src="wendelin-Data.Transformation.9?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Create Document to continue.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Resampling.17?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Chose descriptive title and reference. For example</p>
+
+<p>Title : <strong>Resample Generic Interval Array</strong></p>
+
+<p>Reference : <strong>generic-interval-resample</strong></p>
+
+<p>For Initial Product we choose the Data Product we created in&nbsp;&nbsp;<a href="wendelin-Tutorial.Transform.Data">HowTo Transform&nbsp;Data</a>&nbsp;tutorial.</p>
+
+<p>At the end click Save to save the changes</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_transformation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_transformation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resample Generic Interval Array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>generic-interval-resample</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Environment Raw Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformation Lines</h1>
+<img alt="" src="wendelin-Data.Resampling.18?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on add button to add a Data Transformation Line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Operation Line</h1>
+<img alt="" src="wendelin-Data.Transformation.12?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Choose <strong>Data Transformation Operation Line&nbsp;</strong>for Document Type and click on Create Document.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Resampling.19?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form with followig values</p>
+
+<p>Title: <strong>Resample Raw Array</strong></p>
+
+<p>reference: <strong>data_operation</strong></p>
+
+<p>Data Operation: put the name of the Data operation that we created at the beginning of this tutorial - <strong>Resample Raw Array All</strong>.</p>
+
+<p>Trade Phase: <strong>Data/Subsample</strong>.</p>
+
+<p>Quantity: <strong>1</strong></p>
+
+<p>Quantity Unit: <strong>Unit/Piece</strong></p>
+
+<p>At the end click on Save to save the changes.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Back To Data Transformation</h1>
+<img alt="" src="wendelin-Data.Resampling.20?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Once needed fields are filled and saved go back to Data Transformations view by clicking on the upper panel.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resample Raw Array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>data_operation</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Resample Raw Array All</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Subsample</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformation Lines</h1>
+<img alt="" src="wendelin-Data.Resampling.21?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Add another Data Transformation Line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Transformation Line</h1>
+<img alt="" src="wendelin-Data.Transformation.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Now for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create Document</strong>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Resampling.22?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form with following values</p>
+
+<p>Title: <strong>Raw Array</strong></p>
+
+<p>Reference: <strong>in_array</strong></p>
+
+<p>Quantity:&nbsp;<strong>-1</strong></p>
+
+<p>Quantity Unit: <strong>Unit/Piece</strong></p>
+
+<p>Data Product: put the name of the Data Product that we created in <a href="wendelin-Tutorial.Transform.Data">HowTo Transform Data</a>&nbsp;tutorial - <strong>Environment Raw Array</strong></p>
+
+<p>After filling in the Data Product name click Save to save the intermediate changes.&nbsp;</p>
+
+<p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.23?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Continue filling the form as shown on the screenshot</p>
+
+<p>At the end don&#39;t forget to save the changes.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Raw Array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>in_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Environment Raw Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>-1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[2]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Progress Indicator</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Subsample</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Add Output Line</h1>
+<img alt="" src="wendelin-Data.Resampling.24?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Head back to Data Transformation and add one more Transformation line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Transformation Line</h1>
+<img alt="" src="wendelin-Data.Transformation.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Once again&nbsp;for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create Document</strong>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Resampling.25?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form with following values</p>
+
+<p>Title: <strong>Resampled Array (60 Seconds)</strong></p>
+
+<p>Reference: <strong>out_array</strong></p>
+
+<p>Data Product: put the name of the Data Product that we created earlier in this tutorial - <strong>Generic Interval Resampled Array</strong>.</p>
+
+<p>Quantity: <strong>1</strong></p>
+
+<p>Quantity Unit: <strong>Unit/Piece</strong></p>
+
+<p>Then click Save to save the intermediate changes.&nbsp;</p>
+
+<p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form Cont.</h1>
+<img alt="" src="wendelin-Data.Resampling.26?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Continue filling the form as shown on the screenshot</p>
+
+<p>Item Types: <strong>Data Array</strong></p>
+
+<p>Trade Phase: <strong>Data/Subsample</strong></p>
+
+<p>Use: <strong>Big Data/Ingestion/Stream Ingestion</strong></p>
+
+<p>Default Variation: <strong>Resolution/60 S</strong></p>
+
+<p>At the end don&#39;t forget to save the changes.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Important:&nbsp;</strong>Create 3 more Data Transformation resource lines with&nbsp;300S, 3000S and 30000S resolutions.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resampled Array (60 Seconds)</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>out_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Subsample</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_use"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td>Resolution/60 S</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      
+      
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resampled Array (300 Seconds)</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>out_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Subsample</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_use"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td>Resolution/300 S</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      
+      
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resampled Array (3000 Seconds)</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>out_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Subsample</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_use"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td>Resolution/3000 S</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      
+      
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resampled Array (30000 Seconds)</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>out_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Subsample</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_use"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td>Resolution/30000 S</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformation</h1>
+<img alt="" src="wendelin-Data.Resampling.27?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Head back to Data Transformation.</p>
+
+<p>Now you can see that we have 6 Data Transformation Lines.</p>
+
+<p>The first line defines what operation will be done.&nbsp;</p>
+
+<p>The second line defines on what the operation will be done - the input.</p>
+
+<p>Lines 3 to 6 define the output with different resolutions.</p>
+
+<p>The very&nbsp;last step is to validate the&nbsp;Data Transformation.&nbsp;</p>
+
+<p>Click on Validate on the left side panel to validate the Data Transformation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Confirm Validation</h1>
+<img alt="" src="wendelin-Data.Resampling.28?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Validate to confirm the Validation.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[2]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[3]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[4]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[5]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[6]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Analysis</h1>
+<img alt="" src="wendelin-Data.Transformation.25?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Go to <strong>Data Analyses </strong>module<strong>.</strong></p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Analysis</h1>
+<img alt="" src="wendelin-Data.Resampling.29?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After few minutes in Data Analysis Module a new Data Analysis called&nbsp;<strong>Resample Generic Interval Array&nbsp;</strong>will appear.&nbsp;</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>350000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_analysis_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_analysis_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Resample Generic Interval Array</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Array Module</h1>
+<img alt="" src="wendelin-Data.Transformation.27?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Go to Data Array Module to see the data.&nbsp;&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Array</h1>
+<img alt="" src="wendelin-Data.Resampling.30?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Here we can see 4 newly created Data Arrays with four different resolutions.</p>
+
+<p>Click on one of them to navigate to the array.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Array</h1>
+<img alt="" src="wendelin-Data.Resampling.31?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Preview</strong> to see the data.</p>
+
+<p>Note it might take few minutes (&lt;10) until data appears.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Array</h1>
+<img alt="" src="wendelin-Data.Resampling.32?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Data is here!</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>350000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_array_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_array_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Resample Generic Interval Array</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextNotPresent</td>
+        <td>None</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>

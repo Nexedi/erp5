@@ -1,0 +1,262 @@
+<section>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
+      </tr>
+      <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_setUpPersonTest</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Init Ok</td>
+        <td></td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create Data Product</li>
+</ul>
+
+<details open="">
+<p>&nbsp;</p>
+
+<p>This tutorial teaches how to create Data Product.</p>
+
+<p>Data Product represents the type of data.&nbsp;</p>
+
+<p>In this tutorial we will create a Data Product for&nbsp;incoming raw data from streaming hardware.&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Home</h1>
+<img alt="" src="wendelin-new.Interface.home.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Go to your wendelin instance homepage and click on Modules.</p>
+</details>
+</section>
+
+<section>
+<h1>Data Product</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.1.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>On the modules page click on Data Product.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Add</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.2.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Click on Add button.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Create Document</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.3.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Continue with clicking on Create Document.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Fill the Form</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.4.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Fill the form and click save.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Validate</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.5.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>After it is saved, click on Validate on the left side panel to validate the Data Product.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Confirm Valdation</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.7.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Click on Proceed&nbsp;to confirm the&nbsp;validation.</p>
+</details>
+
+<p>&nbsp;</p>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_product_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_product_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Sample Environment Raw Data</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>sample-environment-raw-data</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Stream</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[2]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Progress Indicator</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_use_list_default:list"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>

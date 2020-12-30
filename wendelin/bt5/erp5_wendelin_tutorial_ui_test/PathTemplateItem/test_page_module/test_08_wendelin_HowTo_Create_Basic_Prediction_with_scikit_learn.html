@@ -1,0 +1,2196 @@
+<section>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
+      </tr>
+      <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_setUpPersonTest</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td></td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create Data Operation</li>
+	<li>Create Data Product</li>
+	<li>Create Transformation Script</li>
+	<li>Create Data Transformation</li>
+	<li>See Data Analysis</li>
+	<li>See&nbsp;Data Array</li>
+	<li>Plot Data</li>
+</ul>
+
+<details>
+<p>&nbsp;</p>
+
+<p>This tutorial shows an example of Machine Learning with Wendelin.&nbsp;</p>
+
+<p>Based on data from previous tutorials we will predict air pressure from humidity using&nbsp;<a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html">Linear Regression by scikit-learn</a>&nbsp;and visualize results.&nbsp;</p>
+
+<p>Before doing this tutorial make sure you read and completed the following tutorials&nbsp;</p>
+
+<ul>
+	<li><a href="wendelin-Tutorial.Transform.Data">HowTo Transform&nbsp;Data</a>&nbsp;</li>
+	<li><a href="wendelin-Tutorial.Resample.Data">HowTo Resample Data</a></li>
+	<li><a href="wendelin-HowTo.Create.Notebook.with.Graphs">HowTo Create Notebook with Graphs</a></li>
+</ul>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Operation</h1>
+<img alt="" src="wendelin-Data.Operation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Open your Wendelin dashboard.&nbsp;</p>
+
+<p>In Modules click on Data Operations Module</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Data Operation</h1>
+<img alt="" src="wendelin-Data.Prediction.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Add</strong> to add a new Data Operation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Data Operation</h1>
+<img alt="" src="wendelin-Data.Operation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click <strong>Proceed</strong> to continue.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill the Form</h1>
+<img alt="" src="wendelin-Data.Prediction.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form to create Data Operation.</p>
+
+<p><strong>Title&nbsp;</strong>-&nbsp; we name it&nbsp;<strong>Predict Pressure</strong></p>
+
+<p><strong>Reference&nbsp;</strong>&nbsp;-&nbsp;<strong>data-operation-predict-pressure</strong></p>
+
+<p><strong>Script ID&nbsp;</strong>-&nbsp;<strong>DataAnalysisLine_predictPressureFromHumidity</strong>:&nbsp;this script will do all the magic. It doesn&#39;t exist yet, we will create it later in this tutorial.&nbsp;</p>
+
+<p>At the don&#39;t forget to Save the changes.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Validate</h1>
+<img alt="" src="wendelin-Data.Prediction.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Validate on left side panel to validate Data Operation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Confirm Validation</h1>
+<img alt="" src="wendelin-Data.Prediction.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click <strong>Validate</strong> to confirm validation.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_operation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_operation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Predict Pressure</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>data-operation-predict-pressure</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_version"]</td>
+        <td>001</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_script_id"]</td>
+        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Acquisition Unit</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section>
+<h1>Data Product</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Product.1.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Now we need to create a new Data Product which will the output Data Product of the Transformation.</p>
+</details>
+</section>
+
+<section>
+<h1>Create Data Product</h1>
+<img alt="" src="wendelin-Data.Prediction.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Create a new Data Product as described in <a href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a> tutorial with following values</p>
+
+<p>Title -&nbsp; <strong>Predicted Data Array</strong></p>
+
+<p>Quantity Unit -&nbsp; <strong>Unit/Piece</strong></p>
+
+<p>Reference -&nbsp;<strong>environment-predicted-array</strong></p>
+
+<p>Item Types</p>
+
+<ul>
+	<li><strong>Data Array</strong></li>
+</ul>
+
+<p>Use</p>
+
+<ul>
+	<li><strong>Big Data/Ingestion/Stream Ingestion</strong></li>
+</ul>
+
+<p>At the end don&#39;t forget to save the changes and <strong>Validate</strong>.</p>
+</details>
+
+<p>&nbsp;</p>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_product_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_product_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Predicted Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>environment-predicted-array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="subfield_field_my_use_list_default:list"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Portal Callables</h1>
+<img alt="" src="wendelin-Data.Prediction.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After Data Product is created and validated, navigate to page called Portal Callables by adding&nbsp;<strong>/#/portal_callables</strong>&nbsp;at the end of the URL of your wendelin instance.&nbsp;</p>
+
+<p>There we will create and store a the prediction script.&nbsp;&nbsp;</p>
+
+<h1>&nbsp;</h1>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Transformation Script</h1>
+<img alt="" src="wendelin-Data.Prediction.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Add button to add a new script.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Transformation Script Cont.</h1>
+<img alt="" src="wendelin-Data.Transformation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Choose Python Script as Document Type and click on Create Document to create an empty python script.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Prediction.8?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Define <strong>ID</strong>, <strong>Title</strong> and <strong>Reference</strong> of your script.</p>
+
+<p>We name it <strong>DataAnalysisLine_predictPressureFromHumidity</strong> as we did in Data Operation at the beginning of this tutorial.</p>
+
+<p>Next we define the parameters we will give to our script.&nbsp;</p>
+
+<p><strong>in_array&nbsp;</strong>- the input dictionary that contains Data Array where raw data is stored after the previous transformation.</p>
+
+<p><strong>out_array&nbsp;</strong>&nbsp;- the output Data Array where results of the prediction will be stored.&nbsp;</p>
+
+<p>At the end click <strong>Save</strong> to save the changes.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Transformation Script</h1>
+<img alt="" src="wendelin-Data.Prediction.9?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>The script we write in the textbox area at the bottom of the page.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Transformation Script Cont.</h1>
+
+<pre>
+<code>
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+def predict(zbigarray):
+
+&nbsp; humidity = zbigarray[:][&quot;humidity_mean&quot;]
+&nbsp; pressure = zbigarray[:][&quot;pressure_mean&quot;]
+
+&nbsp; humidity = humidity[humidity !=0 ]
+&nbsp; pressure = pressure[pressure !=0 ]
+
+&nbsp; humid_train, humid_test, pressure_train, pressure_test = train_test_split(humidity.reshape(-1,1), pressure.reshape(-1,1), test_size=0.2, random_state=0)
+
+&nbsp; regressor = LinearRegression()
+&nbsp; regressor.fit(humid_train, pressure_train) #training the algorithm
+
+&nbsp; pressure_pred = regressor.predict( zbigarray[:][&quot;humidity_mean&quot;].reshape(-1,1))
+
+&nbsp; df = pd.DataFrame({&#39;Date&#39;: zbigarray[:][&quot;date&quot;],&#39;Actual&#39;:zbigarray[:][&quot;pressure_mean&quot;], &#39;Predicted&#39;: pressure_pred.flatten()})
+
+&nbsp; return &nbsp;df
+
+
+out_data_array = out_array[&quot;Data Array&quot;]
+
+in_data_array = in_array[&quot;Data Array&quot;]
+
+in_zbigarray = in_data_array.getArray()
+if in_zbigarray is None:
+&nbsp; return
+
+if in_zbigarray.shape[0] == 0:
+&nbsp; return
+
+
+df = predict(in_zbigarray)
+
+ndarray = df.to_records(convert_datetime64=False)
+dtype = [(&#39;Date&#39;, &#39;&lt;M8[ns]&#39;),(&#39;Actual&#39;, &#39;&lt;f8&#39;), (&#39;Predicted&#39;, &#39;&lt;f8&#39;)]
+
+zbigarray = out_data_array.getArray()
+if zbigarray is None:
+&nbsp; zbigarray = out_data_array.initArray(shape=(0,), dtype=dtype)
+&nbsp; zbigarray.append(ndarray)
+else:
+&nbsp; start_index = len(zbigarray)
+&nbsp; array_len = &nbsp;len(ndarray)
+&nbsp; if start_index &lt; array_len:
+&nbsp; &nbsp; zbigarray.append(ndarray[start_index:])
+</code>
+</pre>
+
+<details open="">
+<p>This script takes as an input data from resampled&nbsp;Data Array, splits data into training and tests set.&nbsp;</p>
+
+<p>Then it learns on training set and predicts air pressure based on humidity.&nbsp;</p>
+
+<p>In output array it stored the true and predicted values.&nbsp;</p>
+
+<p>Don&#39;t forget to save the changes after editing the script.&nbsp;</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Python Script</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_id"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_id"]</td>
+        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_parameter_signature"]</td>
+        <td>in_array={}, out_array=[]</td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>15000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
+        <td>import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+def predict(zbigarray):
+
+&nbsp; humidity = zbigarray[:][&quot;humidity_mean&quot;]
+&nbsp; pressure = zbigarray[:][&quot;pressure_mean&quot;]
+
+&nbsp; humidity = humidity[humidity !=0 ]
+&nbsp; pressure = pressure[pressure !=0 ]
+
+&nbsp; humid_train, humid_test, pressure_train, pressure_test = train_test_split(humidity.reshape(-1,1), pressure.reshape(-1,1), test_size=0.2, random_state=0)
+
+&nbsp; regressor = LinearRegression()
+&nbsp; regressor.fit(humid_train, pressure_train) #training the algorithm
+
+&nbsp; pressure_pred = regressor.predict( zbigarray[:][&quot;humidity_mean&quot;].reshape(-1,1))
+
+&nbsp; df = pd.DataFrame({&#39;Date&#39;: zbigarray[:][&quot;date&quot;],&#39;Actual&#39;:zbigarray[:][&quot;pressure_mean&quot;], &#39;Predicted&#39;: pressure_pred.flatten()})
+
+&nbsp; return &nbsp;df
+
+
+out_data_array = out_array[&quot;Data Array&quot;]
+
+in_data_array = in_array[&quot;Data Array&quot;]
+
+in_zbigarray = in_data_array.getArray()
+if in_zbigarray is None:
+&nbsp; return
+
+if in_zbigarray.shape[0] == 0:
+&nbsp; return
+
+
+df = predict(in_zbigarray)
+
+ndarray = df.to_records(convert_datetime64=False)
+dtype = [(&#39;Date&#39;, &#39;&lt;M8[ns]&#39;),(&#39;Actual&#39;, &#39;&lt;f8&#39;), (&#39;Predicted&#39;, &#39;&lt;f8&#39;)]
+
+zbigarray = out_data_array.getArray()
+if zbigarray is None:
+&nbsp; zbigarray = out_data_array.initArray(shape=(0,), dtype=dtype)
+&nbsp; zbigarray.append(ndarray)
+else:
+&nbsp; start_index = len(zbigarray)
+&nbsp; array_len = &nbsp;len(ndarray)
+&nbsp; if start_index &lt; array_len:
+&nbsp; &nbsp; zbigarray.append(ndarray[start_index:])
+        </td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformations</h1>
+<img alt="" src="wendelin-Data.Transformation.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After your transformation script is ready, it&#39;s time to create Data Transformation.</p>
+
+<p>On Modules page click on Data Transformations.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Data Transformation</h1>
+<img alt="" src="wendelin-Data.Prediction.10?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Add to add a new Data Transformation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Data Transformation</h1>
+<img alt="" src="wendelin-Data.Transformation.9?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Create Document to continue.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Prediction.11?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Chose descriptive title and reference. For example</p>
+
+<p>Title : <strong>Predict Pressure</strong></p>
+
+<p>Reference : <strong>predict-environment-pressure-data</strong></p>
+
+<p>For Initial Product we choose the Data Product we created in&nbsp;&nbsp;<a href="wendelin-Tutorial.Resample.Data">HowTo Resample Data</a>&nbsp;tutorial, as we want to do the prediction on the resampled data.</p>
+
+<p>At the end click Save to save the changes</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form Cont.</h1>
+<img alt="" src="wendelin-Data.Prediction.11_2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After filling in the Initial Product and saving, values will appear in <strong>Initial Product Variation</strong> field.</p>
+
+<p>Choose <strong>Resolution/60 S</strong> as we want to use 60 seconds resampled data.</p>
+
+<p>At the end click Save to save the changes</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_transformation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_transformation_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Predict Pressure</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>predict-environment-pressure-data</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td>Resolution/60 S</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformation Lines</h1>
+<img alt="" src="wendelin-Data.Prediction.12?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on add button to add a Data Transformation Line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Operation Line</h1>
+<img alt="" src="wendelin-Data.Transformation.12?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Choose <strong>Data Transformation Operation Line&nbsp;</strong>for Document Type and click on Create Document.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Prediction.13?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form with followig values</p>
+
+<p>Title: <strong>Predict Pressure</strong></p>
+
+<p>reference: <strong>data_operation</strong></p>
+
+<p>Data Operation: put the name of the Data operation that we created at the beginning of this tutorial - <strong>Predict Pressure</strong></p>
+
+<p>Trade Phase: <strong>Data/Convert</strong></p>
+
+<p>Quantity: <strong>1</strong></p>
+
+<p>Quantity Unit: <strong>Unit/Piece</strong></p>
+
+<p>At the end click on Save to save the changes.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form Cont.</h1>
+<img alt="" src="wendelin-Data.Prediction.14?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After saving the changes a new field <strong>Item Types</strong> will appear.</p>
+
+<p>Choose <strong>Data Acquisition Unit</strong> for Item Types and save.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Predict Pressure</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>data_operation</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Predict Pressure</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Convert</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Acquisition Unit</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Back To Data Transformation</h1>
+<img alt="" src="wendelin-Data.Prediction.15?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Once needed fields are filled and saved go back to Data Transformations view by clicking on the upper panel.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformation Lines</h1>
+<img alt="" src="wendelin-Data.Prediction.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Add another Data Transformation Line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Transformation Line</h1>
+<img alt="" src="wendelin-Data.Prediction.17?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Now for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create Document</strong>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Prediction.18?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form with following values</p>
+
+<p>Title: <strong>Resampled Data</strong></p>
+
+<p>Reference: <strong>in_array</strong></p>
+
+<p>Data Product: put the name of the Data Product that we created in <a href="wendelin-Tutorial.Resample.Data">HowTo Resample Data</a>&nbsp;tutorial - <strong>Generic Interval Resampled Array</strong></p>
+
+<p>After filling in the Data Product name click Save to save the intermediate changes.&nbsp;</p>
+
+<p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form Cont.</h1>
+<img alt="" src="wendelin-Data.Prediction.19?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Continue filling the form as shown on the screenshot</p>
+
+<p>Item Types: <strong>Data Array</strong></p>
+
+<p>Trade Phase: <strong>Data/Convert</strong></p>
+
+<p>Default Variation: <strong>Resolution/60 S</strong></p>
+
+<p>Quantity: <strong>-1</strong></p>
+
+<p>Quantity Unit: <strong>Unit/Piece</strong></p>
+
+<p>At the end don&#39;t forget to save the changes.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Resampled Data</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>in_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Generic Interval Resampled Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>-1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Convert</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_variation_category_list"]</td>
+        <td>Resolution/60 S</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Add Output Line</h1>
+<img alt="" src="wendelin-Data.Prediction.20?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Head back to Data Transformation and add one more Transformation line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Transformation Line</h1>
+<img alt="" src="wendelin-Data.Prediction.17?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Again for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create Document</strong>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form</h1>
+<img alt="" src="wendelin-Data.Prediction.21?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill the form with following values</p>
+
+<p>Title: <strong>Predicted Data</strong></p>
+
+<p>Reference: <strong>out_array</strong></p>
+
+<p>Data Product: put the name of the Data Product that we created earlier in this tutorial - <strong>Predicted Data Array</strong>.</p>
+
+<p>Then click Save to save the intermediate changes.&nbsp;</p>
+
+<p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill The Form Cont.</h1>
+<img alt="" src="wendelin-Data.Prediction.22?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Continue filling the form as shown on the screenshot</p>
+
+<p>Item Types: <strong>Data Array</strong></p>
+
+<p>Trade Phase: <strong>Data/Convert</strong></p>
+
+<p>Use: <strong>Big Data/Ingestion/Stream Ingestion</strong></p>
+
+<p>Quantity: <strong>1</strong></p>
+
+<p>Quantity Unit: <strong>Unit/Piece</strong></p>
+
+<p>At the end don&#39;t forget to save the changes.</p>
+
+<p>&nbsp;</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_your_select_action"]</td>
+        <td>Data Transformation Resource Line</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Predicted Data</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>out_array</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_resource_title"]</td>
+        <td>Predicted Data Array</td>
+      </tr>
+      <tr>
+        <td>fireEvent</td>
+        <td>//input[@name='field_my_resource_title']</td>
+        <td>input</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_quantity_unit"]</td>
+        <td>Unit/Piece</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_quantity"]</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
+        <td>Data Array</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_trade_phase"]</td>
+        <td>Data/Convert</td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@id="field_my_use"]</td>
+        <td>Big Data/Ingestion/Stream Ingestion</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Transformation</h1>
+<img alt="" src="wendelin-Data.Prediction.23?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Head back to Data Transformation.</p>
+
+<p>Now you can see that we have 3 Data Transformation Lines.</p>
+
+<p>The first line defines what operation will be done.&nbsp;</p>
+
+<p>The second line defines on what the operation will be done - the input.</p>
+
+<p>The last line defines the output.</p>
+
+<p>The very&nbsp;last step is to validate the&nbsp;Data Transformation.&nbsp;</p>
+
+<p>Click on Validate on the left side panel to validate the Data Transformation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Confirm Validation</h1>
+<img alt="" src="wendelin-Data.Prediction.24?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on Validate to confirm the Validation.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[2]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr[3]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Analysis</h1>
+<img alt="" src="wendelin-Data.Transformation.25?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Go to <strong>Data Analyses </strong>module<strong>.</strong></p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Analysis</h1>
+<img alt="" src="wendelin-Data.Prediction.25?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After few minutes in Data Analysis Module a new Data Analysis called&nbsp;<strong>Predict Pressure&nbsp;</strong>will appear.&nbsp;</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>350000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_analysis_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_analysis_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Predict Pressure</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Data Array Module</h1>
+<img alt="" src="wendelin-Data.Transformation.27?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Go to Data Array Module to see the data.&nbsp;&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Array</h1>
+<img alt="" src="wendelin-Data.Prediction.26?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Here we can see the newly created Data Arrays with prediction results - <strong>Predict Pressure</strong>.</p>
+
+<p>Click on it to navigate to the array.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Array</h1>
+<img alt="" src="wendelin-Data.Prediction.27?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Preview</strong> to see the data.</p>
+
+<p>Note it might take few minutes (&lt;10) until data appears.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Array</h1>
+<img alt="" src="wendelin-Data.Prediction.28?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Data is here!</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>350000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_array_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_array_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Predict Pressure</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextNotPresent</td>
+        <td>None</td>
+        <td></td>
+      </tr>
+      <!--<tr>
+        <td>click</td>
+        <td>//div[@class='document_table']//table//tbody//tr//td[2]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>200000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'preview')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'preview')]</td>
+        <td></td>
+      </tr>-->
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Notebook Module</h1>
+<img alt="" src="wendelin-Data.Visualisation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>On Modules page click on <strong>Notebooks</strong>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Notebook</h1>
+<img alt="" src="wendelin-Data.Prediction.29?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Add</strong> to add a new Notebook.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Notebook</h1>
+<img alt="" src="wendelin-Data.Visualisation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Create Document</strong> to continue.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>5000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'key=notebook_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'key=notebook_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Notebook</h1>
+<img alt="" src="wendelin-Data.Prediction.30?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill in the Title.</p>
+
+<p>The visualisation code will be at the bottom text area.</p>
+
+<p>Notebook uses the same technology as&nbsp;<a href="https://alpha.iodide.io/">Iodide</a>.&nbsp;</p>
+
+<p>To learn more about programming in&nbsp;Iodide environment checkout&nbsp;<a href="https://alpha.iodide.io/">Iodide</a>&nbsp;homepage.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Visualisation Script</h1>
+
+<pre>
+<code>
+%% md
+# Prediction
+&lt;div class=&quot;prediction_plot_div&quot; id=&quot;prediction_plot_div&quot;/&gt;
+
+
+%% fetch
+js: jio.js
+js: ndarray_bundle.js
+js: wendelin.js
+js: https://cdn.plot.ly/plotly-latest.min.js
+
+
+%% js
+hateoas_url = &quot;https://softinst133633.host.vifib.net/erp5/web_site_module/renderjs_runner/hateoas/&quot;;
+jio = jIO.createJIO({
+&nbsp; type: &quot;erp5&quot;,
+&nbsp; url: hateoas_url,
+&nbsp; default_view_reference: &quot;view&quot;
+});
+
+gadget = {
+&nbsp; getSetting: function(property) {
+&nbsp; &nbsp; return new RSVP.Queue()
+&nbsp; &nbsp; &nbsp; .push(function () {
+&nbsp; &nbsp; &nbsp; &nbsp; if (property == &quot;hateoas_url&quot;) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return hateoas_url;
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; return;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; },
+&nbsp; jio_getAttachment: function(id, url, parameter_dict) {
+&nbsp; &nbsp; return jio.getAttachment(id, url, parameter_dict);
+&nbsp; },
+&nbsp; jio_get: function(id) {return jio.get(id);}
+}
+
+var prediction_label_list = [&quot;Date&quot;, &quot;Actual&quot;, &quot;Predicted&quot;];
+var prediction_graph = document.getElementById(&#39;prediction_plot_div&#39;);
+
+plot_prediction();
+
+function plot_prediction() {
+&nbsp; return getPredictionData()
+&nbsp; &nbsp; .push(function (data) {
+&nbsp; &nbsp; &nbsp; console.log(&quot;data&quot;)
+&nbsp; &nbsp; &nbsp; console.log(data)
+&nbsp; &nbsp; &nbsp; var layout = {barmode: &#39;stack&#39;,&#39;title&#39; :&#39;Predict Presure Based on Humidity&#39;};
+&nbsp; &nbsp; &nbsp; Plotly.plot(prediction_graph,data, layout);
+&nbsp; &nbsp; });
+}
+
+function getPredictionData(start_date, stop_date){
+&nbsp; function unpack(rows, key) {
+&nbsp; &nbsp; return rows.map(function(row) { return row[key]; });
+&nbsp; }
+
+&nbsp; array_id = &quot;data_array_module/90&quot;;
+&nbsp; prediction_graph_data=[];
+
+&nbsp; var start_index = 0;
+&nbsp; var stop_index = undefined;
+
+&nbsp; return jio.allDocs({
+&nbsp; &nbsp; query: &#39;portal_type:&quot;Data Analysis Line&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;title: &quot;Predicted Data&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;resource_reference:&quot;environment-predicted-array&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;simulation_state:&quot;started&quot;&#39;
+&nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; var data_analysis_line_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return jio.allDocs({
+&nbsp; &nbsp; &nbsp; &nbsp; query: &#39;portal_type:&quot;Data Array&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;aggregate_related_relative_url:&quot;&#39; + data_analysis_line_id +&#39;&quot;&#39;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, 0, 1);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_start_date = wendelin.convertFirstColToDate([[result.data[0]]])[0][0];
+&nbsp; &nbsp; &nbsp; if (start_index === undefined) {
+&nbsp; &nbsp; &nbsp; &nbsp; start_index = Math.max(0, Math.ceil((start_date - array_start_date) / (frequency*1000))),
+&nbsp; &nbsp; &nbsp; &nbsp; stop_index = Math.ceil((stop_date - array_start_date) / (frequency*1000));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, start_index, stop_index);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result) {
+&nbsp; &nbsp; &nbsp; for (i = 0; i &lt; prediction_label_list.length; i += 1) {
+&nbsp; &nbsp; &nbsp; &nbsp; prediction_graph_data = prediction_graph_data.concat(nj.unpack(result.pick( null, prediction_label_list[i])));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return prediction_graph_data
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result){
+&nbsp; &nbsp; &nbsp; var filtered_graph_data = [];
+&nbsp; &nbsp; &nbsp; for (var i=0; i&lt;result.length; i++) {
+&nbsp; &nbsp; &nbsp; &nbsp; if (result[i][0] != 0) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; filtered_graph_data.push(result[i]);
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.convertFirstColToDate(filtered_graph_data)
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (graph_data) {
+&nbsp; &nbsp; &nbsp; var actual_data = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Real&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, prediction_label_list.indexOf(&quot;Date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, prediction_label_list.indexOf(&quot;Actual&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#17BECF&#39;}
+&nbsp; &nbsp; &nbsp; };
+&nbsp; &nbsp; &nbsp; var predicted_data = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Predicted&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, prediction_label_list.indexOf(&quot;Date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, prediction_label_list.indexOf(&quot;Predicted&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#7F7F7F&#39;}
+&nbsp; &nbsp; &nbsp; };
+&nbsp; &nbsp; &nbsp; var data = [actual_data,predicted_data];
+&nbsp; &nbsp; &nbsp; return data
+&nbsp; &nbsp; });
+}</code>
+</pre>
+
+<details open="">
+<p>Copy/paste the code to your notebook and save the changes.&nbsp;</p>
+
+<p><strong>Note:&nbsp;</strong>you will need to provide the URL of your instance in the script.&nbsp;</p>
+
+<p>For that change the line :</p>
+
+<p>&nbsp;</p>
+
+<pre>
+<code>hateoas_url = &quot;https://softinstXXX.host.vifib.net/erp5/web_site_module/renderjs_runner/hateoas/&quot;;
+</code></pre>
+
+<p>&nbsp;</p>
+
+<p>The script will find automatically&nbsp;the Data Array with prediction results based on the Data Product&nbsp;and plot the data using&nbsp;<a href="https://plotly.com/">plotly library</a>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Notebook</h1>
+<img alt="" src="wendelin-Data.Prediction.31?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After writing the script and saving the changes click on the <strong>Editable</strong> checkbox to (uncheck it) on the left side panel to see the result.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Visualisation</h1>
+<img alt="" src="wendelin-Data.Prediction.32?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>If everything was done correctly you will see the plot of your data.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Predicted Data</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td>
+%% md
+# Prediction
+&lt;div class=&quot;prediction_plot_div&quot; id=&quot;prediction_plot_div&quot;/&gt;
+
+
+%% fetch
+js: jio.js
+js: ndarray_bundle.js
+js: wendelin.js
+js: https://cdn.plot.ly/plotly-latest.min.js
+
+
+%% js
+hateoas_url = &quot;${base_url_x}/web_site_module/renderjs_runner/hateoas/&quot;;
+jio = jIO.createJIO({
+&nbsp; type: &quot;erp5&quot;,
+&nbsp; url: hateoas_url,
+&nbsp; default_view_reference: &quot;view&quot;
+});
+
+gadget = {
+&nbsp; getSetting: function(property) {
+&nbsp; &nbsp; return new RSVP.Queue()
+&nbsp; &nbsp; &nbsp; .push(function () {
+&nbsp; &nbsp; &nbsp; &nbsp; if (property == &quot;hateoas_url&quot;) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return hateoas_url;
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; return;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; },
+&nbsp; jio_getAttachment: function(id, url, parameter_dict) {
+&nbsp; &nbsp; return jio.getAttachment(id, url, parameter_dict);
+&nbsp; },
+&nbsp; jio_get: function(id) {return jio.get(id);}
+}
+
+var prediction_label_list = [&quot;Date&quot;, &quot;Actual&quot;, &quot;Predicted&quot;];
+var prediction_graph = document.getElementById(&#39;prediction_plot_div&#39;);
+
+plot_prediction();
+
+function plot_prediction() {
+&nbsp; return getPredictionData()
+&nbsp; &nbsp; .push(function (data) {
+&nbsp; &nbsp; &nbsp; console.log(&quot;data&quot;)
+&nbsp; &nbsp; &nbsp; console.log(data)
+&nbsp; &nbsp; &nbsp; var layout = {barmode: &#39;stack&#39;,&#39;title&#39; :&#39;Predict Presure Based on Humidity&#39;};
+&nbsp; &nbsp; &nbsp; Plotly.plot(prediction_graph,data, layout);
+&nbsp; &nbsp; });
+}
+
+function getPredictionData(start_date, stop_date){
+&nbsp; function unpack(rows, key) {
+&nbsp; &nbsp; return rows.map(function(row) { return row[key]; });
+&nbsp; }
+
+&nbsp; array_id = &quot;data_array_module/90&quot;;
+&nbsp; prediction_graph_data=[];
+
+&nbsp; var start_index = 0;
+&nbsp; var stop_index = undefined;
+
+&nbsp; return jio.allDocs({
+&nbsp; &nbsp; query: &#39;portal_type:&quot;Data Analysis Line&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;title: &quot;Predicted Data&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;resource_reference:&quot;environment-predicted-array&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;simulation_state:&quot;started&quot;&#39;
+&nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; var data_analysis_line_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return jio.allDocs({
+&nbsp; &nbsp; &nbsp; &nbsp; query: &#39;portal_type:&quot;Data Array&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;aggregate_related_relative_url:&quot;&#39; + data_analysis_line_id +&#39;&quot;&#39;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, 0, 1);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_start_date = wendelin.convertFirstColToDate([[result.data[0]]])[0][0];
+&nbsp; &nbsp; &nbsp; if (start_index === undefined) {
+&nbsp; &nbsp; &nbsp; &nbsp; start_index = Math.max(0, Math.ceil((start_date - array_start_date) / (frequency*1000))),
+&nbsp; &nbsp; &nbsp; &nbsp; stop_index = Math.ceil((stop_date - array_start_date) / (frequency*1000));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, start_index, stop_index);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result) {
+&nbsp; &nbsp; &nbsp; for (i = 0; i &lt; prediction_label_list.length; i += 1) {
+&nbsp; &nbsp; &nbsp; &nbsp; prediction_graph_data = prediction_graph_data.concat(nj.unpack(result.pick( null, prediction_label_list[i])));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return prediction_graph_data
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result){
+&nbsp; &nbsp; &nbsp; var filtered_graph_data = [];
+&nbsp; &nbsp; &nbsp; for (var i=0; i&lt;result.length; i++) {
+&nbsp; &nbsp; &nbsp; &nbsp; if (result[i][0] != 0) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; filtered_graph_data.push(result[i]);
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.convertFirstColToDate(filtered_graph_data)
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (graph_data) {
+&nbsp; &nbsp; &nbsp; var actual_data = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Real&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, prediction_label_list.indexOf(&quot;Date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, prediction_label_list.indexOf(&quot;Actual&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#17BECF&#39;}
+&nbsp; &nbsp; &nbsp; };
+&nbsp; &nbsp; &nbsp; var predicted_data = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Predicted&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, prediction_label_list.indexOf(&quot;Date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, prediction_label_list.indexOf(&quot;Predicted&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#7F7F7F&#39;}
+&nbsp; &nbsp; &nbsp; };
+&nbsp; &nbsp; &nbsp; var data = [actual_data,predicted_data];
+&nbsp; &nbsp; &nbsp; return data
+&nbsp; &nbsp; });
+}
+        </td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>5000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable" and @type="checkbox"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>20000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementPresent</td>
+        <td>//div[@id="prediction_plot_div"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
