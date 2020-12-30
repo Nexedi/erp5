@@ -428,8 +428,11 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(
                   user_login='user-login', REQUEST=self.portal.REQUEST)
-    self.assertTrue("portal_status_message=User+user-login+does+not+have+an+email+"\
-        "address%2C+please+contact+site+administrator+directly" in str(ret))
+
+    # For security reasons, the message should always be the same
+    self.assertTrue("portal_status_message=An+email+has+been+sent+to+you." in str(ret))
+    # But no mail has been sent
+    self.stepCheckNoMailSent()
 
   def test_acquired_email_on_person(self):
     organisation = self.portal.organisation_module.newContent(
@@ -452,8 +455,11 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(
                   user_login='user-login', REQUEST=self.portal.REQUEST)
-    self.assertTrue("portal_status_message=User+user-login+does+not+have+an+email+"\
-        "address%2C+please+contact+site+administrator+directly" in str(ret))
+
+    # For security reasons, the message should always be the same
+    self.assertTrue("portal_status_message=An+email+has+been+sent+to+you." in str(ret))
+    # But no mail has been sent
+    self.stepCheckNoMailSent()
 
 def test_suite():
   suite = unittest.TestSuite()
