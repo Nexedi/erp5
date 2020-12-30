@@ -332,11 +332,9 @@
             if (portal_type_dict.history_previous_link) {
               header_dict.selection_url = url_list[2];
             }
-            /*
             if (portal_type_dict.has_more_views) {
               header_dict.tab_url = url_list[0];
             }
-            */
             header_dict.save_action = portal_type_dict.editable === 1;
             if (portal_type_dict.has_more_actions ||
                 portal_type_dict.has_more_views) {
