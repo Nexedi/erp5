@@ -7,4 +7,5 @@ return {
   dqe_resource_category.DefaultAddress: "Adresse facturation",
   dqe_resource_category.DeliveryAddress: "Adresse livraison",
   dqe_resource_category.OrganisationData: "Organisation",
+  dqe_resource_category.RelocationData: "Déménagement",
 }.get(context.getResourceValue(), '')
