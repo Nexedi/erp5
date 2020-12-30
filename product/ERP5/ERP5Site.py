@@ -355,12 +355,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     from Products.CMFCore import interfaces, utils
     tool_id_list = ("portal_skins", "portal_types", "portal_membership",
                     "portal_url", "portal_workflow", "caching_policy_manager")
-    if (None in map(self.get, tool_id_list) or not
-        TransactionalResource.registerOnce(__name__, 'site_manager', self.id)):
+    if not TransactionalResource.registerOnce(__name__, 'site_manager', self.id):
       return
     sm = self._components
     for tool_id in tool_id_list:
-      tool = self[tool_id]
+      tool = self.get(tool_id, None)
+      if tool is None:
+        continue
       tool_interface = utils._tool_interface_registry.get(tool_id)
       if tool_interface is not None:
         # Note: already registered tools will be either:
