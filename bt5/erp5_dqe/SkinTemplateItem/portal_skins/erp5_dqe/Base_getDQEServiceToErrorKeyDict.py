@@ -10,4 +10,5 @@ return {
   dqe_resource_category.DefaultAddress: 'DQECodeDetail',
   dqe_resource_category.DeliveryAddress: 'DQECodeDetail',
   dqe_resource_category.OrganisationData: 'DQE_status',
+  dqe_resource_category.RelocationData: 'RESULT',
 }

@@ -16,6 +16,7 @@ service_value_to_key_list_dict = {
   dqe_resource_category.DefaultAddress: ('Adresse', 'Pays'),
   dqe_resource_category.DeliveryAddress: ('Adresse', 'Pays'),
   dqe_resource_category.OrganisationData: ('Siret', ),
+  dqe_resource_category.RelocationData: ('Adresse', 'CodePostal', 'Ville', 'Complement', 'LieuDit'),
 }
 
 sent_value_list = []

@@ -123,3 +123,33 @@ class DQEDataValidatorClientConnector(XMLObject):
       archive_kw=archive_kw,
     )
     return response
+
+  def checkRelocation(
+    self,
+    first_name,
+    last_name,
+    address,
+    zip_code,
+    city,
+    service,
+    social_title='',
+    complement='',
+    lieu_dit='',
+    archive_kw=None,
+  ):
+    response = self.call(
+      'ESTOCADE',
+      service,
+      params={
+        'Nom': last_name,
+        'Prenom': first_name,
+        'Adresse': address,
+        'CodePostal': zip_code,
+        'Ville': city,
+        'Civilite': social_title,
+        'Complement': complement,
+        'LieuDit': lieu_dit,
+      },
+      archive_kw=archive_kw,
+    )
+    return response

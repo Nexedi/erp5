@@ -1,12 +1,6 @@
 resource_value = context.getResourceValue()
 if not resource_value.isMemberOf('http_exchange_resource/dqe'):
-  return ''
-response = context.getResponse()
-if response == 'TIMEOUT':
-  return 'Timeout'
-elif response == 'FAILURE':
-  return context.Base_translateString('Failure')
-
+  return {}
 response_dict = context.HTTPExchange_getDQEResponseDict()
 
 dqe_resource_category = context.getPortalObject().portal_categories.http_exchange_resource.dqe
@@ -18,8 +12,7 @@ if resource_value in (
   dqe_resource_category.DefaultAddress, dqe_resource_category.DeliveryAddress
 ):
   return response_dict.get('DQELibErreur', 'Inconnue').encode('utf-8')
-
-if resource_value == dqe_resource_category.DefaultEmail:
+elif resource_value == dqe_resource_category.DefaultEmail:
   return {
     '00': 'E-mail valide',
     '01': 'E-mail correct, mais le nom n’a pas pu être contrôlé',
@@ -35,7 +28,7 @@ if resource_value == dqe_resource_category.DefaultEmail:
   }.get(
     response_dict.get('IdError'), 'Inconnue'
   )
-if resource_value in (
+elif resource_value in (
   dqe_resource_category.DefaultTelephone, dqe_resource_category.MobileTelephone,
 ):
   return {
@@ -45,11 +38,15 @@ if resource_value in (
   }.get(
     response_dict.get('IdError'), 'Inconnue'
   )
-if resource_value == dqe_resource_category.OrganisationData:
+elif resource_value == dqe_resource_category.OrganisationData:
   return {
     'FOUND': 'Organisation trouvée ',
     'NOT FOUND': 'Organisation introuvable',
   }.get(
     response_dict.get('DQE_status', 'NOT FOUND'), 'Inconnue'
   )
+elif resource_value == dqe_resource_category.RelocationData:
+  if response_dict.get('RESULT', 'FALSE') == 'TRUE':
+    return 'Déménagée'
+  return 'Non déménagée'
 return ''
