@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
                 <string>gadget_url</string>
+                <string>renderjs_extra</string>
                 <string>title</string>
                 <string>validator_field_id</string>
                 <string>validator_form_id</string>
@@ -53,12 +53,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,6 +63,12 @@
                 <item>
                     <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -92,10 +92,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_gadget_field</string> </value>
                 </item>
@@ -106,6 +102,12 @@
                 <item>
                     <key> <string>gadget_url</string> </key>
                     <value> <string>gadget_erp5_console.html</string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -133,7 +135,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getConsoleDataAsJSON()</string> </value>
+            <value> <string>python: [(\'context_url\', context.absolute_url())]</string> </value>
         </item>
       </dictionary>
     </pickle>
