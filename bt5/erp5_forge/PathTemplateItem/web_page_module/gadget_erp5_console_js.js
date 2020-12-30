@@ -1,13 +1,14 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, rJS, jIO, loopEventListener, JSON, console */
-(function (window, rJS, jIO, loopEventListener, JSON) {
+/*global window, rJS, jIO, loopEventListener, console */
+(function (window, rJS, jIO, loopEventListener) {
   "use strict";
   rJS(window)
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+    .declareAcquiredMethod("displayErrorContent", "displayErrorContent")
     .declareMethod('render', function render(options) {
       return this.changeState({
-        context_url: JSON.parse(options.value).context_url
+        context_url: options.context_url.trim()
       });
     })
     .declareMethod('getContent', function getContent() {
@@ -44,4 +45,4 @@
           }
         });
     }, false, true);
-}(window, rJS, jIO, loopEventListener, JSON));
+}(window, rJS, jIO, loopEventListener));
