@@ -1,0 +1,653 @@
+<section>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
+      </tr>
+      <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_setUpPersonTest</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td></td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create Notebook</li>
+	<li>Visualise&nbsp;Data</li>
+</ul>
+
+<details open="">
+<p>&nbsp;</p>
+
+<p>This tutorial teaches how to visualise data.</p>
+
+<p>Before doing this tutorial make sure you read and completed the following tutorial and have data in your wendelin instance:</p>
+
+<ul>
+	<li><a href="wendelin-Tutorial.Transform.Data">HowTo Transform&nbsp;Data</a>&nbsp;</li>
+	<li><a href="wendelin-Tutorial.Resample.Data">HowTo Resample Data</a></li>
+</ul>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Notebook Module</h1>
+<img alt="" src="wendelin-Data.Visualisation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>On Modules page click on <strong>Notebooks</strong>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add Notebook</h1>
+<img alt="" src="wendelin-Data.Visualisation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Add</strong> to add a new Notebook.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create Notebook</h1>
+<img alt="" src="wendelin-Data.Visualisation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Click on <strong>Create Document</strong> to continue.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Notebook</h1>
+<img alt="" src="wendelin-Data.Visualisation.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Fill in the Title.</p>
+
+<p>The visualisation code will be at the bottom text area.</p>
+
+<p>Notebook uses the same technology as&nbsp;<a href="https://alpha.iodide.io/">Iodide</a>.&nbsp;</p>
+
+<p>To learn more about programming in&nbsp;Iodide environment checkout&nbsp;<a href="https://alpha.iodide.io/">Iodide</a>&nbsp;homepage.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Visualisation Script</h1>
+
+<pre>
+<code>
+%% md
+# Time Series
+&lt;div class=&quot;plot_div&quot; id=&quot;plot_div&quot;/&gt;
+
+
+%% fetch
+js: jio.js
+js: ndarray_bundle.js
+js: wendelin.js
+js: https://cdn.plot.ly/plotly-latest.min.js
+
+
+%% js
+hateoas_url = &quot;https://softinst133633.host.vifib.net/erp5/web_site_module/renderjs_runner/hateoas/&quot;;
+jio = jIO.createJIO({
+&nbsp; type: &quot;erp5&quot;,
+&nbsp; url: hateoas_url,
+&nbsp; default_view_reference: &quot;view&quot;
+});
+
+gadget = {
+&nbsp; getSetting: function(property) {
+&nbsp; &nbsp; return new RSVP.Queue()
+&nbsp; &nbsp; &nbsp; .push(function () {
+&nbsp; &nbsp; &nbsp; &nbsp; if (property == &quot;hateoas_url&quot;) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return hateoas_url;
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; return;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; },
+&nbsp; jio_getAttachment: function(id, url, parameter_dict) {
+&nbsp; &nbsp; return jio.getAttachment(id, url, parameter_dict);
+&nbsp; },
+&nbsp; jio_get: function(id) {return jio.get(id);}
+}
+
+var graph = document.getElementById(&#39;plot_div&#39;),
+&nbsp; graph_data = [],
+&nbsp; label_list = [&quot;date&quot;, &quot;humidity_min&quot;,&quot;humidity_mean&quot;,&quot;humidity_max&quot;, &quot;pressure_min&quot;,&quot;pressure_mean&quot;,&quot;pressure_max&quot;, &quot;temperature_min&quot;,&quot;temperature_mean&quot;, &quot;temperature_max&quot;];
+
+selectorOptions = {
+&nbsp; &nbsp; &quot;buttons&quot;: [{
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;day&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 1,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;day&#39;
+&nbsp; &nbsp; },/* {
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;day&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 7,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;week&#39;
+&nbsp; &nbsp; },*/ {
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;month&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 1,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;month&#39;
+&nbsp; &nbsp; }, {
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;year&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 1,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;year&#39;
+&nbsp; &nbsp; }],
+}
+
+
+function update_graph(start_date, stop_date){
+&nbsp; return getData(start_date, stop_date)
+&nbsp; &nbsp; .push(function (data) {
+&nbsp; &nbsp; &nbsp; return Plotly.react(graph,
+&nbsp; &nbsp; &nbsp; &nbsp; data,
+&nbsp; &nbsp; &nbsp; &nbsp; { &#39;title&#39; :&#39;Environmental Sensor Data&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;xaxis&#39;: {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;autorange&#39;: true,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;rangeselector&#39;: selectorOptions,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; );
+&nbsp; &nbsp; });
+}
+
+function unpack(rows, key) {
+&nbsp; return rows.map(function(row) { return row[key]; });
+}
+
+function getData(start_date, stop_date){
+&nbsp; var graph_data=[],
+&nbsp; &nbsp; ratio = screen.availWidth / 1024,
+&nbsp; &nbsp; interval,
+&nbsp; &nbsp; frequency,
+&nbsp; &nbsp; start_index,
+&nbsp; &nbsp; stop_index,
+&nbsp; &nbsp; array_id;
+
+&nbsp; &nbsp;if (stop_date === undefined) {
+&nbsp; &nbsp; &nbsp;frequency = 30000;
+&nbsp; &nbsp; &nbsp;start_index = 0;
+&nbsp; &nbsp; &nbsp;stop_index = 0;
+&nbsp; &nbsp;} else {
+&nbsp; &nbsp; interval = stop_date - start_date;
+&nbsp; &nbsp; if (interval &gt;= 1000 * 60 * 60 * 24 * 100 * ratio) {
+&nbsp; &nbsp; &nbsp; frequency = 30000;
+&nbsp; &nbsp; } else if (interval &gt;= 1000 * 60 * 60 * 24 * 28 * ratio) {
+&nbsp; &nbsp; &nbsp; frequency = 3000;
+&nbsp; &nbsp; } else if (interval &gt;= 1000 * 60 * 60 * 24 * 7 * ratio) {
+&nbsp; &nbsp; &nbsp; frequency = 300;
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; frequency = 60;
+&nbsp; &nbsp; }
+&nbsp; }
+&nbsp; return jio.allDocs({
+&nbsp; &nbsp; query: &#39;portal_type:&quot;Data Analysis Line&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;title: &quot;Resampled Array (&#39; + frequency + &#39; Seconds)&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;resource_reference:&quot;GENERIC-INTERVAL-RESAMPLED-ARRAY&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;parent_source_title:&quot;Sample Factory&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;simulation_state:&quot;started&quot;&#39;
+&nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; var data_analysis_line_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return jio.allDocs({
+&nbsp; &nbsp; &nbsp; &nbsp; query: &#39;portal_type:&quot;Data Array&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;aggregate_related_relative_url:&quot;&#39; + data_analysis_line_id +&#39;&quot;&#39;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, 0, 1);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_start_date = wendelin.convertFirstColToDate([[result.data[0]]])[0][0];
+&nbsp; &nbsp; &nbsp; if (start_index === undefined) {
+&nbsp; &nbsp; &nbsp; &nbsp; start_index = Math.max(0, Math.ceil((start_date - array_start_date) / (frequency*1000))),
+&nbsp; &nbsp; &nbsp; &nbsp; stop_index = Math.ceil((stop_date - array_start_date) / (frequency*1000));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, start_index, stop_index);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result) {
+&nbsp; &nbsp; &nbsp; for (i = 0; i &lt; label_list.length; i += 1) {
+&nbsp; &nbsp; &nbsp; &nbsp; graph_data = graph_data.concat(nj.unpack(result.pick( null, label_list[i])));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return graph_data
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result){
+&nbsp; &nbsp; &nbsp; var filtered_graph_data = [];
+&nbsp; &nbsp; &nbsp; for (var i=0; i&lt;result.length; i++) {
+&nbsp; &nbsp; &nbsp; &nbsp; if (result[i][0] != 0) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; filtered_graph_data.push(result[i]);
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.convertFirstColToDate(filtered_graph_data)
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (graph_data) {
+&nbsp; &nbsp; &nbsp; var humidity_trace = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Humidity(%)&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, label_list.indexOf(&quot;date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, label_list.indexOf(&quot;humidity_mean&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#17BECF&#39;}
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; var pressure_trace = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Pressure(Pa)&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, label_list.indexOf(&quot;date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, label_list.indexOf(&quot;pressure_mean&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#7F7F7F&#39;}
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; var temperature_trace = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Temperature(C&deg;)&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, label_list.indexOf(&quot;date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, label_list.indexOf(&quot;temperature_mean&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#FF0000&#39;}
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; var data = [humidity_trace,pressure_trace,temperature_trace];
+&nbsp; &nbsp; &nbsp; return data
+&nbsp; &nbsp; });
+}
+
+function plot () {
+&nbsp; return getData()
+&nbsp; &nbsp; .push(function (data) {
+&nbsp; &nbsp; &nbsp; Plotly.newPlot(
+&nbsp; &nbsp; &nbsp; &nbsp; graph,
+&nbsp; &nbsp; &nbsp; &nbsp; data,
+&nbsp; &nbsp; &nbsp; &nbsp; { &#39;title&#39; :&#39;Environmental Sensor Data&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;xaxis&#39;: {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;autorange&#39;: true,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;rangeselector&#39;: selectorOptions,}
+&nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; graph.on(&#39;plotly_relayout&#39;, function(eventdata) {
+&nbsp; &nbsp; &nbsp; &nbsp; var start_date = new Date(eventdata[&quot;xaxis.range[0]&quot;]),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; stop_date = new Date(eventdata[&quot;xaxis.range[1]&quot;]);
+
+&nbsp; &nbsp; &nbsp; &nbsp; return update_graph(start_date, stop_date);
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; });
+}
+plot();</code>
+</pre>
+
+<details open="">
+<p>Copy/paste the code to your notebook and save the changes.&nbsp;</p>
+
+<p><strong>Note:&nbsp;</strong>you will need to provide the URL of your instance in the script.&nbsp;</p>
+
+<p>For that change the line :</p>
+
+<pre>
+<code>hateoas_url = &quot;https://softinstXXX.host.vifib.net/erp5/web_site_module/renderjs_runner/hateoas/&quot;;
+</code></pre>
+
+<p>The script will find automatically find the resampled arrays based on the Data Product&nbsp;and plot the data using&nbsp;<a href="https://plotly.com/">plotly library</a>.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Notebook</h1>
+<img alt="" src="wendelin-Data.Visualisation.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>After writing the script and saving the changes click on the <strong>Editable</strong> checkbox to (uncheck it) on the left side panel to see the result.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Visualisation</h1>
+<img alt="" src="wendelin-Data.Visualisation.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>If everything was done correctly you will see the plot of your data.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>5000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'key=notebook_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'key=notebook_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Environment Data Graph</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td>%% md
+# Time Series
+&lt;div class=&quot;plot_div&quot; id=&quot;plot_div&quot;/&gt;
+
+
+%% fetch
+js: jio.js
+js: ndarray_bundle.js
+js: wendelin.js
+js: https://cdn.plot.ly/plotly-latest.min.js
+
+
+%% js
+hateoas_url = &quot;${base_url_x}/web_site_module/renderjs_runner/hateoas/&quot;;
+jio = jIO.createJIO({
+&nbsp; type: &quot;erp5&quot;,
+&nbsp; url: hateoas_url,
+&nbsp; default_view_reference: &quot;view&quot;
+});
+
+gadget = {
+&nbsp; getSetting: function(property) {
+&nbsp; &nbsp; return new RSVP.Queue()
+&nbsp; &nbsp; &nbsp; .push(function () {
+&nbsp; &nbsp; &nbsp; &nbsp; if (property == &quot;hateoas_url&quot;) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return hateoas_url;
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; return;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; },
+&nbsp; jio_getAttachment: function(id, url, parameter_dict) {
+&nbsp; &nbsp; return jio.getAttachment(id, url, parameter_dict);
+&nbsp; },
+&nbsp; jio_get: function(id) {return jio.get(id);}
+}
+
+var graph = document.getElementById(&#39;plot_div&#39;),
+&nbsp; graph_data = [],
+&nbsp; label_list = [&quot;date&quot;, &quot;humidity_min&quot;,&quot;humidity_mean&quot;,&quot;humidity_max&quot;, &quot;pressure_min&quot;,&quot;pressure_mean&quot;,&quot;pressure_max&quot;, &quot;temperature_min&quot;,&quot;temperature_mean&quot;, &quot;temperature_max&quot;];
+
+selectorOptions = {
+&nbsp; &nbsp; &quot;buttons&quot;: [{
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;day&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 1,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;day&#39;
+&nbsp; &nbsp; },/* {
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;day&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 7,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;week&#39;
+&nbsp; &nbsp; },*/ {
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;month&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 1,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;month&#39;
+&nbsp; &nbsp; }, {
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;step&quot;: &#39;year&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;stepmode&quot;: &#39;backward&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;count&quot;: 1,
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;label&quot;: &#39;year&#39;
+&nbsp; &nbsp; }],
+}
+
+
+function update_graph(start_date, stop_date){
+&nbsp; return getData(start_date, stop_date)
+&nbsp; &nbsp; .push(function (data) {
+&nbsp; &nbsp; &nbsp; return Plotly.react(graph,
+&nbsp; &nbsp; &nbsp; &nbsp; data,
+&nbsp; &nbsp; &nbsp; &nbsp; { &#39;title&#39; :&#39;Environmental Sensor Data&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;xaxis&#39;: {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;autorange&#39;: true,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;rangeselector&#39;: selectorOptions,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; );
+&nbsp; &nbsp; });
+}
+
+function unpack(rows, key) {
+&nbsp; return rows.map(function(row) { return row[key]; });
+}
+
+function getData(start_date, stop_date){
+&nbsp; var graph_data=[],
+&nbsp; &nbsp; ratio = screen.availWidth / 1024,
+&nbsp; &nbsp; interval,
+&nbsp; &nbsp; frequency,
+&nbsp; &nbsp; start_index,
+&nbsp; &nbsp; stop_index,
+&nbsp; &nbsp; array_id;
+
+&nbsp; &nbsp;if (stop_date === undefined) {
+&nbsp; &nbsp; &nbsp;frequency = 30000;
+&nbsp; &nbsp; &nbsp;start_index = 0;
+&nbsp; &nbsp; &nbsp;stop_index = 0;
+&nbsp; &nbsp;} else {
+&nbsp; &nbsp; interval = stop_date - start_date;
+&nbsp; &nbsp; if (interval &gt;= 1000 * 60 * 60 * 24 * 100 * ratio) {
+&nbsp; &nbsp; &nbsp; frequency = 30000;
+&nbsp; &nbsp; } else if (interval &gt;= 1000 * 60 * 60 * 24 * 28 * ratio) {
+&nbsp; &nbsp; &nbsp; frequency = 3000;
+&nbsp; &nbsp; } else if (interval &gt;= 1000 * 60 * 60 * 24 * 7 * ratio) {
+&nbsp; &nbsp; &nbsp; frequency = 300;
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; frequency = 60;
+&nbsp; &nbsp; }
+&nbsp; }
+&nbsp; return jio.allDocs({
+&nbsp; &nbsp; query: &#39;portal_type:&quot;Data Analysis Line&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;title: &quot;Resampled Array (&#39; + frequency + &#39; Seconds)&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;resource_reference:&quot;GENERIC-INTERVAL-RESAMPLED-ARRAY&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;parent_source_title:&quot;Sample Factory&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;simulation_state:&quot;started&quot;&#39;
+&nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; var data_analysis_line_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return jio.allDocs({
+&nbsp; &nbsp; &nbsp; &nbsp; query: &#39;portal_type:&quot;Data Array&quot; AND &#39; +
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&#39;aggregate_related_relative_url:&quot;&#39; + data_analysis_line_id +&#39;&quot;&#39;
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_id = result.data.rows[0].id;
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, 0, 1);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (result) {
+&nbsp; &nbsp; &nbsp; array_start_date = wendelin.convertFirstColToDate([[result.data[0]]])[0][0];
+&nbsp; &nbsp; &nbsp; if (start_index === undefined) {
+&nbsp; &nbsp; &nbsp; &nbsp; start_index = Math.max(0, Math.ceil((start_date - array_start_date) / (frequency*1000))),
+&nbsp; &nbsp; &nbsp; &nbsp; stop_index = Math.ceil((stop_date - array_start_date) / (frequency*1000));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.getArrayRawSlice(gadget, array_id, start_index, stop_index);
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result) {
+&nbsp; &nbsp; &nbsp; for (i = 0; i &lt; label_list.length; i += 1) {
+&nbsp; &nbsp; &nbsp; &nbsp; graph_data = graph_data.concat(nj.unpack(result.pick( null, label_list[i])));
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return graph_data
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function(result){
+&nbsp; &nbsp; &nbsp; var filtered_graph_data = [];
+&nbsp; &nbsp; &nbsp; for (var i=0; i&lt;result.length; i++) {
+&nbsp; &nbsp; &nbsp; &nbsp; if (result[i][0] != 0) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; filtered_graph_data.push(result[i]);
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; return wendelin.convertFirstColToDate(filtered_graph_data)
+&nbsp; &nbsp; })
+&nbsp; &nbsp; .push(function (graph_data) {
+&nbsp; &nbsp; &nbsp; var humidity_trace = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Humidity(%)&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, label_list.indexOf(&quot;date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, label_list.indexOf(&quot;humidity_mean&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#17BECF&#39;}
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; var pressure_trace = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Pressure(Pa)&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, label_list.indexOf(&quot;date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, label_list.indexOf(&quot;pressure_mean&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#7F7F7F&#39;}
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; var temperature_trace = {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; type: &quot;scattergl&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; mode: &quot;markers&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name: &#39;Temperature(C&deg;)&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x: unpack(graph_data, label_list.indexOf(&quot;date&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; y: unpack(graph_data, label_list.indexOf(&quot;temperature_mean&quot;)),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; line: {color: &#39;#FF0000&#39;}
+&nbsp; &nbsp; &nbsp; }
+
+&nbsp; &nbsp; &nbsp; var data = [humidity_trace,pressure_trace,temperature_trace];
+&nbsp; &nbsp; &nbsp; return data
+&nbsp; &nbsp; });
+}
+
+function plot () {
+&nbsp; return getData()
+&nbsp; &nbsp; .push(function (data) {
+&nbsp; &nbsp; &nbsp; Plotly.newPlot(
+&nbsp; &nbsp; &nbsp; &nbsp; graph,
+&nbsp; &nbsp; &nbsp; &nbsp; data,
+&nbsp; &nbsp; &nbsp; &nbsp; { &#39;title&#39; :&#39;Environmental Sensor Data&#39;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;xaxis&#39;: {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;autorange&#39;: true,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &#39;rangeselector&#39;: selectorOptions,}
+&nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; graph.on(&#39;plotly_relayout&#39;, function(eventdata) {
+&nbsp; &nbsp; &nbsp; &nbsp; var start_date = new Date(eventdata[&quot;xaxis.range[0]&quot;]),
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; stop_date = new Date(eventdata[&quot;xaxis.range[1]&quot;]);
+
+&nbsp; &nbsp; &nbsp; &nbsp; return update_graph(start_date, stop_date);
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; });
+}
+plot();
+        </td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>5000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable" and @type="checkbox"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>20000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementPresent</td>
+        <td>//div[@id="plot_div"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
