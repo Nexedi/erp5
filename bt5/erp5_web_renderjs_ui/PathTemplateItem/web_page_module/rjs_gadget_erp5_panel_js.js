@@ -67,6 +67,7 @@
         workflow_list,
         view_list,
         action_list,
+        clone_list,
         jump_list,
         i;
 
@@ -85,8 +86,8 @@
         view_list = ensureArray(erp5_document._links.action_object_view);
         action_list = ensureArray(erp5_document._links.action_object_jio_action)
           .concat(ensureArray(erp5_document._links.action_object_jio_button))
-          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input))
-          .concat(ensureArray(erp5_document._links.action_object_clone_action));
+          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
+        clone_list = ensureArray(erp5_document._links.action_object_clone_action);
         jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
 
         if (view === 'view') {
@@ -103,6 +104,9 @@
           for (i = 0; i < action_list.length; i += 1) {
             action_list[i].class_name = action_list[i].href === view ? 'active' : '';
           }
+          for (i = 0; i < clone_list.length; i += 1) {
+            clone_list[i].class_name = clone_list[i].href === view ? 'active' : '';
+          }
           for (i = 0; i < jump_list.length; i += 1) {
             jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
           }
@@ -112,6 +116,7 @@
         workflow_list = JSON.stringify(workflow_list);
         view_list = JSON.stringify(view_list);
         action_list = JSON.stringify(action_list);
+        clone_list = JSON.stringify(clone_list);
         jump_list = JSON.stringify(jump_list);
       }
       return context.getUrlParameter('editable')
@@ -122,6 +127,7 @@
             workflow_list: workflow_list,
             view_list: view_list,
             action_list: action_list,
+            clone_list: clone_list,
             jump_list: jump_list,
             global: true,
             jio_key: jio_key,
@@ -247,6 +253,7 @@
           modification_dict.hasOwnProperty("jump_view") ||
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("action_list") ||
+          modification_dict.hasOwnProperty("clone_list") ||
           modification_dict.hasOwnProperty("jump_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list"))) {
@@ -259,6 +266,7 @@
                 parameter_list = [],
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
+                clone_list = JSON.parse(gadget.state.clone_list),
                 jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
@@ -289,6 +297,16 @@
                   }
                 });
               }
+              for (i = 0; i < clone_list.length; i += 1) {
+                parameter_list.push({
+                  command: 'display_dialog_with_history',
+                  options: {
+                    jio_key: gadget.state.jio_key,
+                    view: clone_list[i].href,
+                    editable: true
+                  }
+                });
+              }
               for (i = 0; i < jump_list.length; i += 1) {
                 parameter_list.push({
                   command: 'display_dialog_with_history',
@@ -309,6 +327,7 @@
                 dl_fragment = document.createDocumentFragment(),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
+                clone_list = JSON.parse(gadget.state.clone_list),
                 jump_list = JSON.parse(gadget.state.jump_list);
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
@@ -319,12 +338,12 @@
                   workflow_list, result_list[0], view_list.length);
               }
               appendDt(dl_fragment, result_list[1][2], 'cogs',
-                       action_list, result_list[0],
+                       action_list.concat(clone_list), result_list[0],
                        view_list.length + workflow_list.length);
               appendDt(dl_fragment, result_list[1][3], 'plane',
                        jump_list, result_list[0],
                        view_list.length + workflow_list.length +
-                       action_list.length);
+                       action_list.length + clone_list.length);
 
               dl_element = gadget.element.querySelector("dl");
               while (dl_element.firstChild) {
