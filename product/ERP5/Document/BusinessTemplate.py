@@ -1869,6 +1869,7 @@ class ToolTemplateItem(PathTemplateItem):
   def install(self, context, trashbin, **kw):
     """ When we install a tool that is a type provider not
     registered on types tool, register it into the type provider.
+    We also need to register the tool on the site manager
     """
     PathTemplateItem.install(self, context, trashbin, **kw)
     portal = context.getPortalObject()
@@ -1879,6 +1880,8 @@ class ToolTemplateItem(PathTemplateItem):
           type_container_id not in types_tool.type_provider_list):
         types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
                                         (type_container_id,)
+    tool_id_list = list(set(self._objects.keys()) & set(portal._registry_tool_id_list))
+    portal._registerTools(tool_id_list)
 
   def uninstall(self, context, **kw):
     """ When we uninstall a tool, unregister it from the type provider. """
