@@ -351,26 +351,31 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
                            provided=ITranslationDomain,
                            name=alias)
 
+  _registry_tool_id_list = 'caching_policy_manager',
   def _registerMissingTools(self):
-    from Products.CMFCore import interfaces, utils
     tool_id_list = ("portal_skins", "portal_types", "portal_membership",
                     "portal_url", "portal_workflow")
     if (None in map(self.get, tool_id_list) or not
         TransactionalResource.registerOnce(__name__, 'site_manager', self.id)):
       return
-    sm = self._components
-    for tool_id in tool_id_list:
-      tool = self[tool_id]
-      tool_interface = utils._tool_interface_registry.get(tool_id)
-      if tool_interface is not None:
-        # Note: already registered tools will be either:
-        # - updated
-        # - registered again after being unregistered
-        sm.registerUtility(aq_base(tool), tool_interface)
+    self._registerTools(tool_id_list + self._registry_tool_id_list)
     def markRegistered(txn):
       global _missing_tools_registered
       _missing_tools_registered = self.id
     TransactionalResource(tpc_finish=markRegistered)
+
+  def _registerTools(self, tool_id_list):
+    from Products.CMFCore import interfaces, utils
+    sm = self._components
+    for tool_id in tool_id_list:
+      tool = self.get(tool_id, None)
+      if tool:
+        tool_interface = utils._tool_interface_registry.get(tool_id)
+        if tool_interface is not None:
+          # Note: already registered tools will be either:
+          # - updated
+          # - registered again after being unregistered
+          sm.registerUtility(aq_base(tool), tool_interface)
 
   # backward compatibility auto-migration
   def getSiteManager(self):
