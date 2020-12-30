@@ -38,9 +38,9 @@
           return gadget.notifySubmitted();
         }, function (error) {
           if (error.target.status === 404) {
-            output.innerText = "404 Not Found";
+            output.textContent = "404 Not Found";
           } else {
-            output.innerText = "Unexpected error. Please debug";
+            output.textContent = "Unexpected error. Please debug";
           }
         });
     }, false, true);
