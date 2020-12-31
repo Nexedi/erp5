@@ -2,7 +2,7 @@
 Security categories assigned from the Person who is set as the destination
 of the document (e.g. in Memo type).
 """
-from Products.ERP5Type.Log import log
+#from Products.ERP5Type.Log import log
 category_list = []
 
 for ob in object.getDestinationValueList():
@@ -15,8 +15,11 @@ for ob in object.getDestinationValueList():
     if category_value not in (None, ''):
       category_dict[base_category] = category_value
     else:
-      raise RuntimeError, "Error: '%s' property is required in order to update person security group"  % (base_category)
+      if base_category == 'site':
+        category_dict[base_category] = 'main/warehouse'
+      else:
+        raise RuntimeError, "Error: '%s' property is required in order to update person security group"  % (base_category)
   category_list.append(category_dict)
 
-log(category_list)
+#log(category_list)
 return category_list
