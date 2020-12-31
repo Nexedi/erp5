@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>current_project_uid=None, current_thread_path=None, created_project_count=0, created_thread_count=0, created_post_count=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
