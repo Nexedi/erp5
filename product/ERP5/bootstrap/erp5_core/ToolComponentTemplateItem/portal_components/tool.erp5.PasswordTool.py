@@ -110,6 +110,7 @@ class PasswordTool(BaseTool):
                                store_as_event=False,
                                expiration_date=None,
                                substitution_method_parameter_dict=None,
+                               came_from=None,
                                batch=False):
     """
     Create a random string and expiration date for request
@@ -126,6 +127,16 @@ class PasswordTool(BaseTool):
     substitution_method_parameter_dict -- additional substitution dict for
                                           creating an email.
     """
+    # If the portal type Credential Request exists, then this code should be called from a
+    # workflow interaction. If not, this method is called directly via a POST request.
+    # It seems that Zope allow(ed ?) a user to pass REQUEST=None via the URL, which make
+    # this condition not very robust, but anyway it wouldn't cause any harm (we would just
+    # loose some tracking) so it's acceptable.
+    credential_request_exists = getattr(
+      self.getPortalObject().portal_types, 'Credential Request', None
+    ) is not None
+    if credential_request_exists and REQUEST is not None:
+      raise RuntimeError("Password Recovery should be done via Credential Request")
     error_encountered = False
     msg = translateString("An email has been sent to you.")
     if REQUEST is None:
@@ -135,7 +146,9 @@ class PasswordTool(BaseTool):
       user_login = REQUEST["user_login"]
 
     site_url = self.getPortalObject().absolute_url()
-    if REQUEST and 'came_from' in REQUEST:
+    if came_from:
+      site_url = came_from
+    elif REQUEST and 'came_from' in REQUEST:
       site_url = REQUEST.came_from
 
     error_encountered = False
@@ -159,6 +172,11 @@ class PasswordTool(BaseTool):
       email_value = user_value.getDefaultEmailValue(
         checked_permission='Access content information')
       if email_value is None or not email_value.asText():
+        if credential_request_exists:
+          raise RuntimeError(
+            "User ${user} does not have an email address, "
+            "please contact site administrator directly".format(user=user_login)
+          )
         error_encountered = True
         LOG(
           'ERP5.PasswordTool', INFO,
