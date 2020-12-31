@@ -1,3 +1,82 @@
+project_count = 100
+thread_per_project_count = 100
+post_per_thread_amount = 97
+max_new_document = 100
+
+tag = 'POPULATE_FORUM'
+after_tag = tag + 'XXX'
+
+
+if (current_project_uid is None):
+  if (created_project_count < project_count):
+    created_project_count += 1
+    created_thread_count = 0
+    created_post_count = 0
+    # no project, create
+    project = context.project_module.newContent(
+      portal_type='Project',
+      title='Forum project %i' % created_project_count,
+      activate_kw={'tag': tag}
+    )
+    return context.activate(after_tag=after_tag).testromain(
+      current_project_uid=project.getUid(),
+      created_project_count=created_project_count
+    )
+  else:
+    return 'stopping'
+
+if (current_thread_path is None):
+  if (created_thread_count < thread_per_project_count):
+    created_thread_count += 1
+    thread = context.discussion_thread_module.newContent(
+      portal_type='Discussion Thread',
+      title='New Forum project %i discussion %i' % (created_project_count, created_thread_count),
+      follow_up_uid=current_project_uid,
+      activate_kw={'tag': tag}
+    )
+    thread.share()
+    return context.activate(after_tag=after_tag).testromain(
+      current_project_uid=current_project_uid,
+      current_thread_path=thread.getRelativeUrl(),
+      created_project_count=created_project_count,
+      created_thread_count=created_thread_count
+    )
+  else:
+    return context.activate(after_tag=after_tag).testromain(
+      created_project_count=created_project_count
+    )
+
+if (current_thread_path is not None):
+  if (created_post_count < post_per_thread_amount):
+    for i in range(max_new_document):
+      created_post_count += 1
+      thread = context.restrictedTraverse(current_thread_path)
+      post = thread.newContent(
+        portal_type='Discussion Post',
+        text_content="<p>Post %i</p><pre><code>def couscous:\n  return getTructruc()</code></pre><a href='https://www.nexedi.com'>Nexedi</a><img src='https://www.nexedi.com/img/nexedi-logo.png'></img><p>👍</p>" % created_post_count,
+        activate_kw={'tag': tag}
+      )
+      # post.share()
+    return context.activate(after_tag=after_tag).testromain(
+      current_project_uid=current_project_uid,
+      current_thread_path=current_thread_path,
+      created_project_count=created_project_count,
+      created_thread_count=created_thread_count,
+      created_post_count=created_post_count
+    )
+  else:
+    return context.activate(after_tag=after_tag).testromain(
+      current_project_uid=current_project_uid,
+      created_project_count=created_project_count,
+      created_thread_count=created_thread_count
+    )
+
+return "ok"
+
+
+context.setTitle("Prénom".decode("utf-8").encode("iso-8859-1"))
+return "ok"
+
 from AccessControl import getSecurityManager
 from pprint import pformat
 # vgetattr = context.test_vincent_getattr
