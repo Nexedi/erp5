@@ -13,16 +13,14 @@ if message_reference is None:
 notification_message = portal.NotificationTool_getDocumentValue(message_reference,
                                                                 context.getLanguage())
 
-context.REQUEST.set('came_from', context.getUrlString())
-
 if context.hasStopDate():
   kw = {'expiration_date':context.getStopDate()}
 else:
   kw = {}
 
 portal.portal_password.mailPasswordResetRequest(user_login=reference,
-                                                REQUEST=context.REQUEST,
                                                 notification_message=notification_message,
                                                 store_as_event=portal.portal_preferences.isPreferredStoreEvents(),
+                                                came_from=context.getUrlString(),
                                                 batch=True,
                                                 **kw)
