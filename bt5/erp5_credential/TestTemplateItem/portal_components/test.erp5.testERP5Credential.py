@@ -80,6 +80,13 @@ class TestERP5Credential(ERP5TypeTestCase):
       system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
       system_preference.enable()
+    # clear modules if necessary
+    module_list = (self.portal.getDefaultModule('Credential Request'),
+        self.portal.getDefaultModule('Credential Update'),
+        self.portal.getDefaultModule('Credential Recovery'),
+        self.portal.getDefaultModule('Person'))
+    for module in module_list:
+      module.manage_delObjects(list(module.objectIds()))
 
   @reindex
   def enableAlarm(self):
@@ -140,14 +147,6 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.login()
-    self.abort()
-    # clear modules if necessary
-    module_list = (self.portal.getDefaultModule('Credential Request'),
-        self.portal.getDefaultModule('Credential Update'),
-        self.portal.getDefaultModule('Credential Recovery'),
-        self.portal.getDefaultModule('Person'))
-    for module in module_list:
-      module.manage_delObjects(list(module.objectIds()))
     self.resetCredentialSystemPreference()
     self.tic()
     self.logout()
@@ -779,12 +778,15 @@ class TestERP5Credential(ERP5TypeTestCase):
     for line in body_message.splitlines():
       match_obj = re.search(rawstr, line)
       if match_obj is not None:
-        url = line[line.find('http:'):]
+        url = line[line.find('http'):]
     url = url.strip()
     self.assertNotEquals(url, None)
     self.publish(url)
     parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
-    self.assertTrue('reset_key' in parameters)
+    self.assertTrue(
+      'reset_key' in parameters,
+      'reset_key not found in mail message : %s' % body_message
+    )
     key = parameters['reset_key'][0]
     # before changing, check that the user exists with 'secret' password
     self._assertUserExists('barney-login', 'secret')
