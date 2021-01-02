@@ -686,6 +686,11 @@
     ) {
       return triggerMaximize(this, param_list[0]);
     })
+    .allowPublicAcquisition("displayErrorContent", function displayError(
+      param_list
+    ) {
+      return displayErrorContent(this, param_list[0]);
+    })
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -724,6 +729,7 @@
           })
           .push(function () {
             var element = gadget.props.content_element,
+              output = gadget.element.querySelector("output"),
               container = document.createElement("section"),
               paragraph,
               iframe,
@@ -768,7 +774,12 @@
             paragraph = document.createElement("pre");
             paragraph.appendChild(link);
             container.appendChild(paragraph);
-
+            // If we have an <output> element inside the gadget,
+            // we will append this element instead of replace the entire
+            // gadget content
+            if (output) {
+              element = output;
+            }
             // Remove the content
             while (element.firstChild) {
               element.removeChild(element.firstChild);
