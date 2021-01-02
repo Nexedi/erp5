@@ -687,6 +687,11 @@
     ) {
       return triggerMaximize(this, param_list[0]);
     })
+    .allowPublicAcquisition("displayErrorContent", function displayError(
+      param_list
+    ) {
+      return displayErrorContent(this, param_list[0]);
+    })
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
