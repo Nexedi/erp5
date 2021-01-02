@@ -1,10 +1,10 @@
 /*globals window, document, RSVP, rJS,
           URI, location, XMLHttpRequest, console, navigator, Event,
-          URL*/
+          URL, domsugar*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS,
            XMLHttpRequest, location, console, navigator, Event,
-           URL) {
+           URL, domsugar) {
   "use strict";
 
   var MAIN_SCOPE = "m",
@@ -561,7 +561,7 @@
         return route(this, 'translation_gadget', 'getTranslationList',
                      argument_list);
       })
-    .allowPublicAcquisition("getSelectedLanguage", function getSelectedLanguage() {
+    .allowPublicAcquisition("getSelectedLanguage", function selectLanguage() {
       return route(this, 'translation_gadget', 'getSelectedLanguage');
     })
 
@@ -617,9 +617,9 @@
     })
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
-                            function acquireRefreshHeaderAndPanel() {
-      return refreshHeaderAndPanel(this, true);
-    })
+      function acquireRefreshHeaderAndPanel() {
+        return refreshHeaderAndPanel(this, true);
+      })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
       return hideDesktopPanel(this, param_list[0]);
@@ -724,50 +724,43 @@
           })
           .push(function () {
             var element = gadget.props.content_element,
-              container = document.createElement("section"),
-              paragraph,
-              iframe,
-              link;
+              container;
 
-            paragraph = document.createElement("p");
-            paragraph.textContent =
-              'Please report this unhandled error to the support team, ' +
-              'and go back to the ';
-            link = document.createElement("a");
-            link.href = '#';
-            link.textContent = 'homepage';
-            paragraph.appendChild(link);
-            container.appendChild(paragraph);
-
-            container.appendChild(document.createElement("br"));
-
-            paragraph = document.createElement("p");
-            paragraph.textContent = 'Location: ';
-            link = document.createElement("a");
-            link.href = link.textContent = window.location.toString();
-            paragraph.appendChild(link);
-            container.appendChild(paragraph);
-
-            paragraph = document.createElement("p");
-            paragraph.textContent = 'User-agent: ' + navigator.userAgent;
-            container.appendChild(paragraph);
-
-            paragraph = document.createElement("p");
-            paragraph.textContent =
-              'Date: ' + new Date(Date.now()).toISOString();
-            container.appendChild(paragraph);
-
-            paragraph = document.createElement("p");
-            paragraph.textContent = 'Online: ' + navigator.onLine;
-            container.appendChild(paragraph);
-
-            container.appendChild(document.createElement("br"));
-
-            link = document.createElement("code");
-            link.textContent = gadget.state.error_text;
-            paragraph = document.createElement("pre");
-            paragraph.appendChild(link);
-            container.appendChild(paragraph);
+            container = domsugar("section", [
+              domsugar("p", {
+                "text": 'Please report this unhandled error to the support ' +
+                  'team, and go back to the '
+              }, [
+                domsugar("a", {
+                  "href": "#",
+                  "text": "homepage"
+                })
+              ]),
+              domsugar("br"),
+              domsugar("p", {
+                "text": 'Location: '
+              }, [
+                domsugar("a", {
+                  "href": window.location.toString(),
+                  "text": window.location.toString()
+                })
+              ]),
+              domsugar("p", {
+                "text": 'User-agent: ' + navigator.userAgent
+              }),
+              domsugar("p", {
+                "text": 'Date: ' + new Date(Date.now()).toISOString()
+              }),
+              domsugar("p", {
+                "text": 'Online: ' + navigator.onLine
+              }),
+              domsugar("br"),
+              domsugar("pre", [
+                domsugar("code", {
+                  "text": gadget.state.error_text
+                })
+              ])
+            ]);
 
             // Remove the content
             while (element.firstChild) {
@@ -777,9 +770,11 @@
 
             // make an iframe to display error page from XMLHttpRequest.
             if (gadget.state.request_error_text) {
-              iframe = document.createElement('iframe');
-              container.appendChild(iframe);
-              iframe.srcdoc = gadget.state.request_error_text;
+              container.appendChild(
+                domsugar('iframe', {
+                  "srcdoc": gadget.state.request_error_text
+                })
+              );
             }
 
             // reset gadget state
@@ -1008,4 +1003,4 @@
 
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator, Event, URL));
+  XMLHttpRequest, location, console, navigator, Event, URL, domsugar));
