@@ -30,7 +30,7 @@ import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from DateTime import DateTime
 import email, re
 from email.header import decode_header, make_header
@@ -1444,6 +1444,24 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual(cr.getDefaultAddressCity(), None)
     self.assertEqual(cr.getDefaultAddressRegion(), None)
 
+  def test_credential_recovery_cant_be_bypassed(self):
+    """ PasswordTool provides a basic functionality of credential recovery,
+    that is extended by Credential Recoveries. But if Credential Recovereries
+    exist (iow, the bt5 for this features is installed), PasswordTool should
+    not provide a way to bypass Credential Recoveries
+    """
+    sequence = Sequence()
+    self.stepCreatePerson(sequence)
+    self.tic()
+    with self.assertRaisesRegexp(
+      RuntimeError,
+      "Password Recovery should be done via Credential Request"
+    ):
+      self.portal.portal_password.mailPasswordResetRequest(
+        user_login=sequence['login_reference'],
+        REQUEST=self.app.REQUEST,
+        came_from="/",
+      )
 
 
 def test_suite():
