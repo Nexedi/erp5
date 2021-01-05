@@ -128,11 +128,10 @@
     return route(gadget, 'jio_gadget', method, param_list);
   }
 
-  function displayErrorContent(gadget, original_error) {
+  function buildErrorList(original_error) {
     var error_list = [original_error],
       i,
       error,
-      error_response,
       error_text = "";
 
     // Do not break the application in case of errors.
@@ -156,10 +155,6 @@
         }
       }
       if (error instanceof XMLHttpRequest) {
-        if ((error.getResponseHeader('Content-Type') || "")
-            .indexOf('text/') === 0) {
-          error_response = error.response;
-        }
         error = {
           message: error.toString(),
           readyState: error.readyState,
@@ -167,8 +162,8 @@
           statusText: error.statusText,
           response: error.response,
           responseUrl: error.responseUrl,
-          response_headers: (error.getAllResponseHeaders()
-                             ? error.getAllResponseHeaders().split('\r\n')
+          response_headers: (error.getAllResponseHeaders() ?
+                             error.getAllResponseHeaders().split('\r\n')
                              : null)
         };
       }
@@ -194,6 +189,13 @@
       }
       error_text += '---\n';
     }
+    return [error, error_text];
+  }
+
+  function displayErrorContent(gadget, original_error) {
+    var error_list = buildErrorList(original_error),
+      error = error_list[0],
+      error_text = error_list[1];
 
     console.error(original_error);
     if (original_error instanceof Error) {
@@ -203,8 +205,8 @@
       // Gadget has not yet been correctly initialized
       throw error;
     }
-    if (error_response && error_response.text) {
-      return error_response.text().then(
+    if (error.response && error.response.text) {
+      return error.response.text().then(
         function (request_error_text) {
           return gadget.changeState({
             error_text: error_text,
@@ -216,7 +218,7 @@
     }
     return gadget.changeState({
       error_text: error_text,
-      request_error_text: error_response,
+      request_error_text: error.response,
       url: undefined
     });
 
@@ -333,6 +335,44 @@
           return jio_gadget.put(gadget.state.setting_id, doc);
         }
       });
+  }
+
+  function buildErrorElement(error_text) {
+    return domsugar("section", [
+      domsugar("p", {
+        "text": 'Please report this unhandled error to the support ' +
+                'team, and go back to the '
+      }, [
+        domsugar("a", {
+          "href": "#",
+          "text": "homepage"
+        })
+      ]),
+      domsugar("br"),
+      domsugar("p", {
+        "text": 'Location: '
+      }, [
+        domsugar("a", {
+          "href": window.location.toString(),
+          "text": window.location.toString()
+        })
+      ]),
+      domsugar("p", {
+        "text": 'User-agent: ' + navigator.userAgent
+      }),
+      domsugar("p", {
+        "text": 'Date: ' + new Date(Date.now()).toISOString()
+      }),
+      domsugar("p", {
+        "text": 'Online: ' + navigator.onLine
+      }),
+      domsugar("br"),
+      domsugar("pre", [
+        domsugar("code", {
+          "text": error_text
+        })
+      ])
+    ]);
   }
 
   rJS(window)
@@ -687,11 +727,18 @@
     ) {
       return triggerMaximize(this, param_list[0]);
     })
-    .allowPublicAcquisition("displayErrorContent", function displayError(
+    .allowPublicAcquisition("buildErrorContent", function buildErrorContent(
       param_list
     ) {
-      return displayErrorContent(this, param_list[0]);
+      return buildErrorElement(param_list[0]);
     })
+    .allowPublicAcquisition("buildErrorAndErrorText",
+                            function buildErrorAndErrorText(
+      param_list
+    ) {
+      return buildErrorList(param_list[0]);
+    })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -730,43 +777,7 @@
           })
           .push(function () {
             var element = gadget.props.content_element,
-              container;
-
-            container = domsugar("section", [
-              domsugar("p", {
-                "text": 'Please report this unhandled error to the support ' +
-                  'team, and go back to the '
-              }, [
-                domsugar("a", {
-                  "href": "#",
-                  "text": "homepage"
-                })
-              ]),
-              domsugar("br"),
-              domsugar("p", {
-                "text": 'Location: '
-              }, [
-                domsugar("a", {
-                  "href": window.location.toString(),
-                  "text": window.location.toString()
-                })
-              ]),
-              domsugar("p", {
-                "text": 'User-agent: ' + navigator.userAgent
-              }),
-              domsugar("p", {
-                "text": 'Date: ' + new Date(Date.now()).toISOString()
-              }),
-              domsugar("p", {
-                "text": 'Online: ' + navigator.onLine
-              }),
-              domsugar("br"),
-              domsugar("pre", [
-                domsugar("code", {
-                  "text": gadget.state.error_text
-                })
-              ])
-            ]);
+              container = buildErrorContent(gadget, gadget.state.error_text);
 
             // Remove the content
             while (element.firstChild) {

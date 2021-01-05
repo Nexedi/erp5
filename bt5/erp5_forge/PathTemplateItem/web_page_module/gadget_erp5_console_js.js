@@ -5,7 +5,8 @@
   rJS(window)
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareAcquiredMethod("displayErrorContent", "displayErrorContent")
+    .declareAcquiredMethod("buildErrorContent", "buildErrorContent")
+    .declareAcquiredMethod("buildErrorAndErrorText", "buildErrorAndErrorText")
     .declareMethod('render', function render(options) {
       return this.changeState({
         context_url: options.context_url.trim()
@@ -36,8 +37,18 @@
           } else {
             output.value = response.target.responseText;
           }
-        }, function (error) {
-          return gadget.displayErrorContent(gadget, error);
+        })
+        .push(undefined, function (error) {
+          return gadget.buildErrorAndErrorText(error)
+            .push(function (error_list) {
+              return gadget.buildErrorContent(error_list[1]);
+            })
+            .push(function (container) {
+              while (output.firstChild) {
+                output.removeChild(output.firstChild);
+              }
+              output.appendChild(container);
+            });
         })
         .then(function () {
           return gadget.notifySubmitted();
