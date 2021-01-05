@@ -261,8 +261,8 @@ def generatePortalTypeClass(site, portal_type_name):
   accessor_holder_list = []
 
   if portal_type_name not in property_sheet_generating_portal_type_set:
-    # LOG("ERP5Type.dynamic", INFO,
-    #     "Filling accessor holder list for portal_type " + portal_type_name)
+    LOG("ERP5Type.dynamic", INFO,
+        "Filling accessor holder list for portal_type " + portal_type_name)
 
     property_sheet_generating_portal_type_set.add(portal_type_name)
     try:
@@ -383,7 +383,8 @@ def synchronizeDynamicModules(context, force=False):
     and send out an invalidation to other nodes
   """
   portal = context.getPortalObject()
-
+  from zLOG import LOG
+  LOG("AUREL", 300, "syncDynamicModule")
   global last_sync
   if force:
     # hard invalidation to force sync between nodes
@@ -426,6 +427,7 @@ def synchronizeDynamicModules(context, force=False):
     #      some changes that are required for the migration.
     if portal.id not in _bootstrapped and \
        TransactionalResource.registerOnce(__name__, 'bootstrap', portal.id):
+      LOG("AUREL", 300, "will check for migration")
       migrate = False
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
@@ -438,7 +440,7 @@ def synchronizeDynamicModules(context, force=False):
           # (only likely to happen on the first run ever)
           tool_id = tool_class.id
           tool = getattr(portal, tool_id, None)
-
+          LOG("tool", 300, "%r"%(tool,))
           if tool is None:
             if tool_class == ERP5CatalogTool:
               # Wait till we find that SQL Catalog Tool is installed
@@ -467,7 +469,7 @@ def synchronizeDynamicModules(context, force=False):
           portal.portal_activities.initialize()
         except AttributeError:
           pass # no Activity Tool yet
-
+        LOG("AUREL", 300, "fix MembershipTool")
         from Products.CMFCore.MembershipTool import MembershipTool
         tool = getattr(portal, "portal_membership", None)
         if tool and tool.__class__ is not MembershipTool:
