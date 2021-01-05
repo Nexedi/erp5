@@ -15,7 +15,7 @@
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           type: 'email',
           hidden: field_json.hidden,
           // Force calling subfield render

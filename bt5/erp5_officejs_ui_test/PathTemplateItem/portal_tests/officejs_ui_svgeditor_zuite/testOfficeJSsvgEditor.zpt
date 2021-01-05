@@ -87,32 +87,32 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title='Title']</td>
+  <td>//input[@name='title']</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//input[@title='Title']</td>
+  <td>//input[@name='title']</td>
   <td>${title}</td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//input[@title='Reference']</td>
+  <td>//input[@name='reference']</td>
   <td>${reference}</td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//input[@title='Version']</td>
+  <td>//input[@name='version']</td>
   <td>${version}</td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//input[@title='Language']</td>
+  <td>//input[@name='language']</td>
   <td>${language}</td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//textarea[@title='Description']</td>
+  <td>//textarea[@name='description']</td>
   <td>${description}</td>
 </tr>
 <tr>
@@ -158,31 +158,31 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//textarea[@title='Description']</td>
+  <td>//textarea[@name='description']</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='Title']</td>
+  <td>//input[@name='title']</td>
   <td>${title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='Reference']</td>
+  <td>//input[@name='reference']</td>
   <td>${reference}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='Version']</td>
+  <td>//input[@name='version']</td>
   <td>${version}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='Language']</td>
+  <td>//input[@name='language']</td>
   <td>${language}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//textarea[@title='Description']</td>
+  <td>//textarea[@name='description']</td>
   <td>${description}</td>
 </tr>

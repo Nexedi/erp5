@@ -80,14 +80,14 @@
 
 <tr>
   <td>type</td>
-  <td>//input[@title="Short Title"]</td>
+  <td>field_my_short_title</td>
   <td>test_clone</td>
 </tr>
 
 
 <tr>
   <td>check</td>
-  <td>//input[@title="Frozen"]</td>
+  <td>field_my_frozen</td>
   <td></td>
 </tr>
 
@@ -150,7 +150,7 @@
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='Frozen']</td>
+  <td>field_my_frozen</td>
   <td>on</td>
 </tr>
 
@@ -182,7 +182,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title="Short Title"]</td>
+  <td>field_my_short_title</td>
   <td></td>
 </tr>
 
@@ -190,7 +190,7 @@
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title="Short Title"]</td>
+  <td>field_my_short_title</td>
   <td>test_clone</td>
 </tr>
 
@@ -202,7 +202,7 @@
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='Frozen']</td>
+  <td>field_my_frozen</td>
   <td>on</td>
 </tr>
 

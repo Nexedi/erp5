@@ -2017,7 +2017,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           elif isinstance(default_field_value, datetime.date):
             default_field_value = formatdate(time.mktime(default_field_value.timetuple()))
 
-          contents_item[select] = default_field_value
+          contents_item[select] = ensureUTF8(default_field_value)
 
         else:
           # If the contents_item has field rendering in it, better is to add an
