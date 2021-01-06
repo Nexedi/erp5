@@ -31,6 +31,7 @@
 from functools import partial
 import unittest
 import urllib
+import urlparse
 from StringIO import StringIO
 import time
 import httplib
@@ -710,7 +711,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic='test-05:used_ALREADY_1234',
     )
     response = publish()
-    self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Account is blocked."))
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/login_form'.format(portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertEqual(redirect_url_params, [('portal_status_message', 'Account is blocked.')] )
 
     # test expire password message, first unblock it
     login.Login_unblockLogin()
@@ -718,7 +722,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
     response = publish()
-    self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Password is expired."))
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/login_form'.format(portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertEqual(redirect_url_params, [('portal_status_message', 'Password is expired.')] )
     self.assertTrue(login.isPasswordExpired())
 
     # test we're redirected to update password due to soon expire
@@ -727,9 +734,11 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
     response = publish()
-
-    self.assertTrue('Your password will expire' in response.getHeader("Location"))
-    self.assertTrue('You are advised to change it as soon as possible' in response.getHeader("Location"))
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/ERP5Site_viewNewPersonCredentialUpdateDialog'.format(portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qs(redirect_url.query)
+    self.assertIn('Your password will expire', redirect_url_params['portal_status_message'][0])
+    self.assertIn('You are advised to change it as soon as possible', redirect_url_params['portal_status_message'][0])
 
     # test proper login
     preference.setPreferredPasswordLifetimeExpireWarningDuration(12)
@@ -740,6 +749,18 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic='test-05:used_ALREADY_1234',
     )
     self.assertTrue('Welcome to ERP5' in response.getBody())
+
+    # test external redirection prevention
+    response = self.publish(
+      portal.absolute_url_path() + '/logged_in',
+      basic='test-05:used_ALREADY_1234',
+      stdin=StringIO(urllib.urlencode({'came_from': 'https://www.erp5.com'})),
+      request_method='POST',
+    )
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, portal.absolute_url_path())
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertEqual(redirect_url_params, [('portal_status_message', 'Redirection to an external site prevented.')] )
 
   def test_ExpireOldAuthenticationEventList(self):
     """
