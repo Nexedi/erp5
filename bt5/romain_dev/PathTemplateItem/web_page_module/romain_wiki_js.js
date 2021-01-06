@@ -145,7 +145,10 @@
         modification_dict.hasOwnProperty('first_render'),
         function (editor_gadget) {
           return getFirstDocumentValue(gadget, ['text_content'], {
-            reference: gadget.state.jio_key
+            reference: gadget.state.jio_key,
+            validation_state: ['shared', 'shared_alive',
+                               'release', 'release_alive',
+                               'published', 'published_alive']
           })
             .push(function (result_dict) {
               return rewriteHTMLPageContent(gadget, result_dict.text_content);
