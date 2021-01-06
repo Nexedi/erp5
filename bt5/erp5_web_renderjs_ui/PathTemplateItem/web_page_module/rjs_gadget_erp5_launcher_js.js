@@ -140,8 +140,8 @@
       // Gadget has not yet been correctly initialized
       throw error;
     }
-    if (error_response && error_response.text) {
-      return error_response.text().then(
+    if (error.response && error.response.text) {
+      return error.response.text().then(
         function (request_error_text) {
           return gadget.changeState({
             error_text: error_text,
@@ -153,7 +153,7 @@
     }
     return gadget.changeState({
       error_text: error_text,
-      request_error_text: error_response,
+      request_error_text: error.response,
       url: undefined
     });
 
@@ -624,6 +624,7 @@
     ) {
       return triggerMaximize(this, param_list[0]);
     })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
