@@ -23,17 +23,15 @@ assert password_key
 validation_message_list = portal.portal_password.analyzePassword(password, password_key)
 
 if validation_message_list:
-  message = ' '.join([translateString(x) for x in validation_message_list])
+  message = ' '.join([x for x in validation_message_list])
   return response.redirect(
     "%s&portal_status_message=%s" % (
       new_url,
       message)
   )
 
-next_url = portal.portal_password.changeUserPassword(password=password,
+return response.redirect(portal.portal_password.changeUserPassword(password=password,
                                                      password_confirmation=password_confirm,
                                                      password_key=password_key,
                                                      user_login=REQUEST.get('user_login', None),
-                                                     REQUEST=REQUEST)
-root_url = "%s/" % context.getWebSiteValue().absolute_url()
-return response.redirect("%s&came_from=%s" % (next_url, root_url))
+                                                     REQUEST=REQUEST))
