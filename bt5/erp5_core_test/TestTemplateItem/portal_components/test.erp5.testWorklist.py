@@ -175,9 +175,9 @@ class TestWorklist(ERP5TypeTestCase):
       worklist_value.setReference(worklist_id)
       # Configure new workflow:
       actbox_name='%s (%%(count)s)' % actbox_name
-      worklist_value.setActboxName(str(actbox_name))
-      worklist_value.setActboxUrl(str(actbox_url))
-      worklist_value.setActboxCategory(str('global'))
+      worklist_value.setActionName(str(actbox_name))
+      worklist_value.setAction(str(actbox_url))
+      worklist_value.setActionType('global')
 
       props={k if k.startswith('guard_') else 'variable_' + k: v
                for k, v in kw.iteritems()}
@@ -188,7 +188,7 @@ class TestWorklist(ERP5TypeTestCase):
       if 'variable_validation_state' in props:
         v = props.get('variable_validation_state', None)
         if v:
-          worklist_value.setMatchedValidationState('state_'+v)
+          worklist_value.setMatchedValidationState(v)
       if 'variable_' + self.int_catalogued_variable_id in props:
         variable_ref = self.int_catalogued_variable_id
         v = props.get('variable_'+self.int_catalogued_variable_id, None)
@@ -198,7 +198,7 @@ class TestWorklist(ERP5TypeTestCase):
           if variable_value is None:
             variable_value = worklist_value.newContent(portal_type='Worklist Variable')
             variable_value.setReference(variable_ref)
-          variable_value.setInitialValue(str(v))
+          variable_value.setVariableValue(str(v))
       # test04 related key
       if 'variable_region_uid' in props:
         v = props.get('variable_region_uid', None)
@@ -207,24 +207,23 @@ class TestWorklist(ERP5TypeTestCase):
           if variable_value is None:
             variable_value = worklist_value.newContent(portal_type='Worklist Variable')
             variable_value.setReference('region_uid')
-          variable_value.setDefaultExpr(v)
+          variable_value.setVariableExpressionText(v)
       if 'variable_base_category_id' in props:
         variable_value = worklist_value._getOb('variable_base_category_id', None)
         v = props.get('variable_base_category_id', None)
         if variable_value is None:
           variable_value = worklist_value.newContent(portal_type='Worklist Variable')
           variable_value.setReference('base_category_id')
-        variable_value.setInitialValue(v)
+        variable_value.setVariableValue(v)
       # Update guard configuration for view and guard value.
       if 'guard_roles' in props:
         v = props.get('guard_roles', '')
         if v:
-          worklist_value.setRoleList([ var.strip() for var in v.split(';') ])
+          worklist_value.setGuardRoleList([ var.strip() for var in v.split(';') ])
       if 'guard_expr' in props:
         v = props.get('guard_expr', '')
         if v:
-          worklist_value.setExpression(v)
-      worklist_value.getGuard()
+          worklist_value.setGuardExpression(v)
     else:
       worklists = workflow_value.worklists
       worklists.addWorklist(worklist_id)
