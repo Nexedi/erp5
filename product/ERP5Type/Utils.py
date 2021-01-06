@@ -38,6 +38,7 @@ import sys
 import inspect
 import persistent
 from hashlib import md5 as md5_new, sha1 as sha_new
+from zope.component import queryUtility
 from Products.ERP5Type.Globals import package_home
 from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
@@ -54,6 +55,7 @@ from Products.CMFCore import utils
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.interfaces import IMembershipTool
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
@@ -1271,7 +1273,7 @@ def createExpressionContext(object, portal=None):
         folder = aq_parent(aq_inner(folder))
 
   if portal is not None:
-    pm = getattr(portal, 'portal_membership', None)
+    pm = queryUtility(IMembershipTool)
     if pm is None or pm.isAnonymousUser():
       member = None
     else:
