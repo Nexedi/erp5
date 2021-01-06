@@ -1,12 +1,12 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, rJS, jIO, console */
-(function (window, rJS, jIO) {
+/*global window, rJS, jIO, console, convertOriginalErrorToErrorDataList,
+         buildErrorElementFromErrorText*/
+(function (window, rJS, jIO, convertOriginalErrorToErrorDataList,
+           buildErrorElementFromErrorText) {
   "use strict";
   rJS(window)
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareAcquiredMethod("buildErrorContent", "buildErrorContent")
-    .declareAcquiredMethod("buildErrorAndErrorText", "buildErrorAndErrorText")
     .declareMethod('render', function render(options) {
       return this.changeState({
         context_url: options.context_url.trim()
@@ -39,9 +39,9 @@
           }
         })
         .push(undefined, function (error) {
-          return gadget.buildErrorAndErrorText(error)
+          return convertOriginalErrorToErrorDataList(error)
             .push(function (error_list) {
-              return gadget.buildErrorContent(error_list[1]);
+              return buildErrorElementFromErrorText(error_list[1]);
             })
             .push(function (container) {
               while (output.firstChild) {
@@ -54,4 +54,5 @@
           return gadget.notifySubmitted();
         });
     }, false, true);
-}(window, rJS, jIO));
+}(window, rJS, jIO, convertOriginalErrorToErrorDataList,
+  buildErrorElementFromErrorText));
