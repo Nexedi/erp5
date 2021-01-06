@@ -1,10 +1,10 @@
-/*globals window, document, RSVP, rJS,
-          URI, location, XMLHttpRequest, console, navigator, Event,
-          URL, domsugar*/
+/*globals window, document, RSVP, rJS, URI, location, console,
+          convertOriginalErrorToErrorDataList, buildErrorElementFromErrorText,
+          navigator, URL, domsugar */
 /*jslint indent: 2, maxlen: 80*/
-(function (window, document, RSVP, rJS,
-           XMLHttpRequest, location, console, navigator, Event,
-           URL, domsugar) {
+(function (window, document, RSVP, rJS, location, console, navigator, URL,
+           convertOriginalErrorToErrorDataList, buildErrorElementFromErrorText,
+           domsugar) {
   "use strict";
 
   var MAIN_SCOPE = "m",
@@ -129,97 +129,36 @@
   }
 
   function displayErrorContent(gadget, original_error) {
-    var error_list = [original_error],
-      i,
-      error,
-      error_response,
-      error_text = "";
+    return convertOriginalErrorToErrorDataList(original_error)
+      .push(function (error_list) {
+        var error = error_list[0],
+            error_text = error_list[1];
 
-    // Do not break the application in case of errors.
-    // Display it to the user for now,
-    // and allow user to go back to the frontpage
-
-    // Add error handling stack
-    error_list.push(new Error('stopping ERP5JS'));
-
-    for (i = 0; i < error_list.length; i += 1) {
-      error = error_list[i];
-      if (error instanceof Event) {
-        error = {
-          string: error.toString(),
-          message: error.message,
-          type: error.type,
-          target: error.target
-        };
-        if (error.target !== undefined) {
-          error_list.splice(i + 1, 0, error.target);
+        console.error(original_error);
+        if (original_error instanceof Error) {
+          console.error(original_error.stack);
         }
-      }
-      if (error instanceof XMLHttpRequest) {
-        if ((error.getResponseHeader('Content-Type') || "")
-            .indexOf('text/') === 0) {
-          error_response = error.response;
+        if (gadget.props === undefined) {
+          // Gadget has not yet been correctly initialized
+          throw error;
         }
-        error = {
-          message: error.toString(),
-          readyState: error.readyState,
-          status: error.status,
-          statusText: error.statusText,
-          response: error.response,
-          responseUrl: error.responseUrl,
-          response_headers: (error.getAllResponseHeaders()
-                             ? error.getAllResponseHeaders().split('\r\n')
-                             : null)
-        };
-      }
-      if (error.constructor === Array ||
-          error.constructor === String ||
-          error.constructor === Object) {
-        try {
-          error = JSON.stringify(error, null, '  ');
-        } catch (ignore) {
+        if (error.response && error.response.text) {
+          return error.response.text().then(
+            function (request_error_text) {
+              return gadget.changeState({
+                error_text: error_text,
+                request_error_text: request_error_text,
+                url: undefined
+              });
+            }
+          );
         }
-      }
-
-      error_text += error.message || error;
-      error_text += '\n';
-
-      if (error.fileName !== undefined) {
-        error_text += 'File: ' +
-          error.fileName +
-          ': ' + error.lineNumber + '\n';
-      }
-      if (error.stack !== undefined) {
-        error_text += 'Stack: ' + error.stack + '\n';
-      }
-      error_text += '---\n';
-    }
-
-    console.error(original_error);
-    if (original_error instanceof Error) {
-      console.error(original_error.stack);
-    }
-    if (gadget.props === undefined) {
-      // Gadget has not yet been correctly initialized
-      throw error;
-    }
-    if (error_response && error_response.text) {
-      return error_response.text().then(
-        function (request_error_text) {
-          return gadget.changeState({
-            error_text: error_text,
-            request_error_text: request_error_text,
-            url: undefined
-          });
-        }
-      );
-    }
-    return gadget.changeState({
-      error_text: error_text,
-      request_error_text: error_response,
-      url: undefined
-    });
-
+        return gadget.changeState({
+          error_text: error_text,
+          request_error_text: error.response,
+          url: undefined
+        });
+      });
   }
 
   function displayError(gadget, error) {
@@ -687,6 +626,7 @@
     ) {
       return triggerMaximize(this, param_list[0]);
     })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -724,44 +664,13 @@
             return;
           })
           .push(function () {
-            var element = gadget.props.content_element,
-              container;
+            return buildErrorElementFromErrorText(
+              gadget.state.error_text
+            );
+          })
 
-            container = domsugar("section", [
-              domsugar("p", {
-                "text": 'Please report this unhandled error to the support ' +
-                  'team, and go back to the '
-              }, [
-                domsugar("a", {
-                  "href": "#",
-                  "text": "homepage"
-                })
-              ]),
-              domsugar("br"),
-              domsugar("p", {
-                "text": 'Location: '
-              }, [
-                domsugar("a", {
-                  "href": window.location.toString(),
-                  "text": window.location.toString()
-                })
-              ]),
-              domsugar("p", {
-                "text": 'User-agent: ' + navigator.userAgent
-              }),
-              domsugar("p", {
-                "text": 'Date: ' + new Date(Date.now()).toISOString()
-              }),
-              domsugar("p", {
-                "text": 'Online: ' + navigator.onLine
-              }),
-              domsugar("br"),
-              domsugar("pre", [
-                domsugar("code", {
-                  "text": gadget.state.error_text
-                })
-              ])
-            ]);
+          .push(function (container) {
+            var element = gadget.props.content_element;
 
             // Remove the content
             while (element.firstChild) {
@@ -1003,5 +912,6 @@
       });
 
 
-}(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator, Event, URL, domsugar));
+}(window, document, RSVP, rJS, location, console, navigator, URL,
+  convertOriginalErrorToErrorDataList, buildErrorElementFromErrorText,
+  domsugar));
