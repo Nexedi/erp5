@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>TestPage_testReport</string> </value>
+            <value> <string>TestPageModule_createChapter</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -74,13 +74,27 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_explanation</string>
+                        <string>your_title</string>
+                        <string>your_chapter_title</string>
+                        <string>your_slide_type</string>
+                        <string>your_image_explanation</string>
+                        <string>your_image_caption</string>
+                        <string>your_image_url</string>
+                        <string>your_file</string>
+                        <string>your_slide_content</string>
+                        <string>your_text_content</string>
+                        <string>your_tested</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -92,9 +106,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_format</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -108,7 +120,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_viewExportTestReport</string> </value>
+            <value> <string>TestPageModule_viewChapterCreationWizardDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -116,7 +128,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestPage_viewExportTestReport</string> </value>
+            <value> <string>TestPageModule_viewChapterCreationWizardDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -132,7 +144,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Export Test Report</string> </value>
+            <value> <string>Add one more Chapter</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -140,11 +152,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>TestPageModule_finishCreation</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Add this chapter and save Test Page</string> </value>
         </item>
       </dictionary>
     </pickle>

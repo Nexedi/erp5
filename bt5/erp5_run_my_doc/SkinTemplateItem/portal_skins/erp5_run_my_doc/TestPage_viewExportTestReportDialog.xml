@@ -35,11 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>TestPage_testReport</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -63,10 +59,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Page Properties)</string>
-                <string>right (Publication)</string>
+                <string>left</string>
+                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -77,9 +74,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -89,13 +84,21 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Page Properties)</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right (Publication)</string> </key>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>your_format</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -105,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_viewSlideShowWithGadget</string> </value>
+            <value> <string>TestPage_viewExportTestReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -113,7 +116,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestPage_viewSlideShowWithGadget</string> </value>
+            <value> <string>TestPage_viewExportTestReportDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -129,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Slideshow</string> </value>
+            <value> <string>Export Test Report</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
