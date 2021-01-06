@@ -1,0 +1,86 @@
+div[data-gadget-url$="gadget_thread_reader.html"] {
+  max-width: 50em;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol {
+  background-color: #FFFFFF;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol > li {
+  padding-bottom: 12pt;
+  /*
+      &:nth-child(even) {
+        background-color: rgba(230, 230, 230, 0.65);
+      }
+*/
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol > li > div.post_content {
+  display: inline-block;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol > li > div.post_content > time {
+  color: hsl(0, 0%, 42%);
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol > li > div.post_content > div {
+  margin-top: 6pt;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol > li > div.post_avatar {
+  display: inline-block;
+  margin-right: 6pt;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  border-radius: 50%;
+  background: #0E81C2;
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  vertical-align: top;
+  text-transform: uppercase;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > ol > li + li {
+  border-top: solid 1px #0E81C2;
+  padding-top: 6pt;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav {
+  display: flex;
+  padding-top: 6pt;
+  border-top: 2px solid rgba(0, 0, 0, 0.14902);
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav span {
+  opacity: 0.3;
+  flex: 2;
+  text-align: right;
+  float: right;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a {
+  padding: 6pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  background-color: #FFFFFF;
+  margin-right: 6pt;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a::before {
+  margin-right: 6pt;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a:hover,
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a:active {
+  background-color: #e0e0e0;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a:last-of-type {
+  margin-right: 0;
+}
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a:hover,
+div[data-gadget-url$="gadget_thread_reader.html"] > nav a:active {
+  background-color: #e0e0e0;
+}
+@media not screen and (min-width: 45em) {
+  div[data-gadget-url$="gadget_thread_reader.html"] > nav a {
+    overflow: hidden;
+    text-indent: -9999px;
+    white-space: nowrap;
+  }
+}
+@media not screen and (min-width: 45em) {
+  div[data-gadget-url$="gadget_thread_reader.html"] > nav a::before {
+    float: left;
+    text-indent: 6pt;
+  }
+}
