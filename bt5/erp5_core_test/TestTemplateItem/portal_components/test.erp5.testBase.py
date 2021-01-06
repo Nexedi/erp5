@@ -929,8 +929,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Add a non-existent workflow.
     pw = self.getWorkflowTool()
-    dummy_worlflow_id = 'never_existent_workflow'
-    addWorkflowByType(pw, 'erp5_workflow', dummy_worlflow_id)
+    dummy_workflow_id = 'never_existent_workflow'
+    addWorkflowByType(pw, 'erp5_workflow', dummy_workflow_id)
 
     self.commit()
 
@@ -938,7 +938,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     organisation_initial_workflow_list = organisation_type.getTypeWorkflowList()
     organisation_type.setTypeWorkflowList(
       organisation_initial_workflow_list + [dummy_workflow_id])
-    pw.manage_delObjects([dummy_worlflow_id])
+    pw.manage_delObjects([dummy_workflow_id])
 
     self.commit()
 
