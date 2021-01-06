@@ -1,10 +1,9 @@
-/*globals window, document, RSVP, rJS,
-          URI, location, XMLHttpRequest, console, navigator, Event,
-          URL, domsugar*/
+/*globals window, document, RSVP, rJS, URI, location, XMLHttpRequest, console,
+          navigator, Event, URL */
 /*jslint indent: 2, maxlen: 80*/
-(function (window, document, RSVP, rJS,
-           XMLHttpRequest, location, console, navigator, Event,
-           URL, domsugar) {
+(function (window, document, RSVP, rJS, XMLHttpRequest, location, console,
+           navigator, Event, URL, convertOriginalErrorToErrorDataList,
+           buildErrorElementFromErrorText) {
   "use strict";
 
   var MAIN_SCOPE = "m",
@@ -128,72 +127,8 @@
     return route(gadget, 'jio_gadget', method, param_list);
   }
 
-  function buildErrorList(original_error) {
-    var error_list = [original_error],
-      i,
-      error,
-      error_text = "";
-
-    // Do not break the application in case of errors.
-    // Display it to the user for now,
-    // and allow user to go back to the frontpage
-
-    // Add error handling stack
-    error_list.push(new Error('stopping ERP5JS'));
-
-    for (i = 0; i < error_list.length; i += 1) {
-      error = error_list[i];
-      if (error instanceof Event) {
-        error = {
-          string: error.toString(),
-          message: error.message,
-          type: error.type,
-          target: error.target
-        };
-        if (error.target !== undefined) {
-          error_list.splice(i + 1, 0, error.target);
-        }
-      }
-      if (error instanceof XMLHttpRequest) {
-        error = {
-          message: error.toString(),
-          readyState: error.readyState,
-          status: error.status,
-          statusText: error.statusText,
-          response: error.response,
-          responseUrl: error.responseUrl,
-          response_headers: (error.getAllResponseHeaders() ?
-                             error.getAllResponseHeaders().split('\r\n')
-                             : null)
-        };
-      }
-      if (error.constructor === Array ||
-          error.constructor === String ||
-          error.constructor === Object) {
-        try {
-          error = JSON.stringify(error, null, '  ');
-        } catch (ignore) {
-        }
-      }
-
-      error_text += error.message || error;
-      error_text += '\n';
-
-      if (error.fileName !== undefined) {
-        error_text += 'File: ' +
-          error.fileName +
-          ': ' + error.lineNumber + '\n';
-      }
-      if (error.stack !== undefined) {
-        error_text += 'Stack: ' + error.stack + '\n';
-      }
-      error_text += '---\n';
-    }
-    return [error, error_text];
-  }
-
   function displayErrorContent(gadget, original_error) {
-    var error_list = buildErrorList(original_error),
+    var error_list = convertOriginalErrorToErrorDataList(original_error),
       error = error_list[0],
       error_text = error_list[1];
 
@@ -727,18 +662,6 @@
     ) {
       return triggerMaximize(this, param_list[0]);
     })
-    .allowPublicAcquisition("buildErrorContent", function buildErrorContent(
-      param_list
-    ) {
-      return buildErrorElement(param_list[0]);
-    })
-    .allowPublicAcquisition("buildErrorAndErrorText",
-                            function buildErrorAndErrorText(
-      param_list
-    ) {
-      return buildErrorList(param_list[0]);
-    })
-
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -777,7 +700,9 @@
           })
           .push(function () {
             var element = gadget.props.content_element,
-              container = buildErrorContent(gadget, gadget.state.error_text);
+              container = buildErrorElementFromErrorText(
+                gadget.state.error_text
+              );
 
             // Remove the content
             while (element.firstChild) {
@@ -1020,4 +945,6 @@
 
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator, Event, URL, domsugar));
+  XMLHttpRequest, location, console, navigator, Event, URL,
+  convertOriginalErrorToErrorDataList,
+  buildErrorElementFromErrorText));
