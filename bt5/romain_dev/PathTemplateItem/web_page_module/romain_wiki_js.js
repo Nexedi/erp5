@@ -1,7 +1,7 @@
 /*global window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query,
-         console */
+         console, URL */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, continue:true */
-(function (window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query) {
+(function () {
   "use strict";
 
   var MAIN_SCOPE = 'child_scope';
@@ -72,7 +72,8 @@
     })
       .push(function (result) {
         if (result.data.rows.length === 0) {
-          throw new Error('Can find document matching ' + JSON.stringify(search_dict));
+          throw new Error('Can find document matching ' +
+                          JSON.stringify(search_dict));
         }
         return result.data.rows[0].value;
       });
@@ -102,7 +103,8 @@
     return gadget.getUrlForList(url_options_list)
       .push(function (result_list) {
         for (i = 0; i < to_modify_a_list.length; i += 1) {
-          to_modify_a_list[i].href = new URL(result_list[i], window.location.href).href;
+          to_modify_a_list[i].href = new URL(result_list[i],
+                                             window.location.href).href;
         }
         return container.innerHTML;
       });
@@ -171,4 +173,4 @@
       );
     });
 
-}(window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query));
+}());
