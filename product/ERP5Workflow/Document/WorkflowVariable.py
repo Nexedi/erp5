@@ -67,7 +67,7 @@ class WorkflowVariable(IdAsReferenceMixin("variable_", "prefix"), XMLObject,
     )
 
     def _setVariableExpression(self, expression):
-      if isinstance(expression, str) and expression != '':
+      if isinstance(expression, basestring) and expression:
         self.setVariableExpressionText(expression)
       elif isinstance(expression, Expression) and expression.text:
         self.variable_expression = expression

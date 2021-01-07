@@ -96,6 +96,7 @@ class GuardableMixin(object):
         return False
     return True
 
+  # Same as WorkflowVariable.variable_expression
   def _setGuardExpression(self, text):
     if text:
       self.guard_expression = Expression(text)
