@@ -357,11 +357,11 @@
         if (edge_data.name) {
             label = edge_data.name;
             if (edge_data.path) {
-                label = label.link(edge_data.path)
+                label = label.link(edge_data.path);
             }
         }
         if (edge_data.name_path_dict) {
-            var linked_name_list = []
+            var linked_name_list = [];
             for (var name in edge_data.name_path_dict) {
                 linked_name_list.push(name.link(edge_data.name_path_dict[name]));
             }

@@ -14,7 +14,7 @@ Can be used as a plain script, a node.js module or an AMD module.
 Script tag usage
 ----------------
 
-<script src=//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js>
+<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js">
 </script>
 
 // Sets Math.random to a PRNG initialized using the given explicit seed.
