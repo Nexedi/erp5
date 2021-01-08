@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5RunMyDocs_acquireSession</string> </value>
+            <value> <string>ERP5Site_acquireRunMyDocsSession</string> </value>
         </item>
       </dictionary>
     </pickle>

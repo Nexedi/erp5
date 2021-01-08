@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>TestPage_updateReport</string> </value>
+            <value> <string>TestPage_runSeleniumTest</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -59,11 +59,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
                 <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,36 +68,14 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
                       <list>
-                        <string>your_description</string>
-                        <string>your_zuite_id</string>
+                        <string>your_url</string>
+                        <string>your_user</string>
+                        <string>your_password</string>
+                        <string>selenium_test_content</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -109,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_viewUpdateReport</string> </value>
+            <value> <string>TestPage_viewRunSeleniumTestDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,7 +91,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestPage_viewUpdateReport</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -133,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update Report</string> </value>
+            <value> <string>Launch Selenium Test</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -141,7 +115,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>TestPage_viewRunSeleniumTestDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
