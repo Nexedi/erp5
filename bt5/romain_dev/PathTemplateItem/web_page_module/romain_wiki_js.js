@@ -1,10 +1,23 @@
 /*global window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query,
-         console, URL */
+         console, URL, Error */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, continue:true */
 (function () {
   "use strict";
 
-  var MAIN_SCOPE = 'child_scope';
+  var MAIN_SCOPE = 'child_scope',
+    document_reference_matching = /^[a-zA-Z0-9_.]+-.+/,
+    document_relative_url_matching = /^[a-z]+_module\/[a-zA-Z0-9_]+/;
+
+  function SearchError(message, status_code) {
+    if ((message !== undefined) && (typeof message !== "string")) {
+      throw new TypeError('You must pass a string.');
+    }
+    this.message = message || "Default Message";
+    this.status_code = status_code || 500;
+  }
+  SearchError.prototype = new Error();
+  SearchError.prototype.constructor = SearchError;
+
 
   function loadChildGadget(gadget, gadget_url, must_declare, callback) {
     var queue,
@@ -43,7 +56,6 @@
         value: value_list[i]
       }));
     }
-    console.log(query_list, key, value_list);
     if (value_list.len === 1) {
       return query_list[0];
     }
@@ -58,7 +70,6 @@
     var query_list = Object.entries(search_dict).map(function (tuple) {
       return createMultipleSimpleOrQuery(tuple[0], tuple[1]);
     });
-    console.log(query_list);
     return gadget.jio_allDocs({
       select_list: select_list,
       query: Query.objectToSearchText(
@@ -72,8 +83,10 @@
     })
       .push(function (result) {
         if (result.data.rows.length === 0) {
-          throw new Error('Can find document matching ' +
-                          JSON.stringify(search_dict));
+          throw new SearchError(
+            'Can find document matching ' + JSON.stringify(search_dict),
+            404
+          );
         }
         return result.data.rows[0].value;
       });
@@ -88,8 +101,8 @@
       href;
     for (i = 0; i < a_list.length; i += 1) {
       href = a_list[i].getAttribute('href');
-      if (!href.includes("/")) {
-        // XXX search for reference
+      if (document_reference_matching.test(href) && (!href.includes('/'))) {
+        // search for a document by reference reference
         to_modify_a_list.push(a_list[i]);
         url_options_list.push({
           command: 'push_history',
@@ -98,6 +111,19 @@
             jio_key: href
           }
         });
+      } else if (document_relative_url_matching.test(href) &&
+                 (!href.includes('view'))) {
+        // search for a document by reference reference
+        to_modify_a_list.push(a_list[i]);
+        url_options_list.push({
+          command: 'push_history',
+          options: {
+            jio_key: href
+          }
+        });
+      } else {
+        // Compatibility layer with previous site
+        a_list[i].href = new URL(href, 'https://www.erp5.com/group_section/');
       }
     }
     return gadget.getUrlForList(url_options_list)
@@ -120,6 +146,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("redirect", "redirect")
 
     .declareMethod('triggerSubmit', function () {
       return;
@@ -135,24 +162,26 @@
       return this.changeState({
         first_render: true,
         page: options.page,
-        jio_key: options.jio_key || 'TEST-Js.Style.Demo.Frontpage'
+        jio_key: options.jio_key || 'COUSCOUS.1' || 'NXD-Home.Page'
       });
     })
 
     .onStateChange(function (modification_dict) {
-      var gadget = this;
+      var gadget = this,
+        doc;
       return loadChildGadget(
         gadget,
         "gadget_editor.html",
         modification_dict.hasOwnProperty('first_render'),
         function (editor_gadget) {
-          return getFirstDocumentValue(gadget, ['text_content'], {
+          return getFirstDocumentValue(gadget, ['title', 'text_content'], {
             reference: gadget.state.jio_key,
             validation_state: ['shared', 'shared_alive',
-                               'release', 'release_alive',
+                               'released', 'released_alive',
                                'published', 'published_alive']
           })
             .push(function (result_dict) {
+              doc = result_dict;
               return rewriteHTMLPageContent(gadget, result_dict.text_content);
             })
             .push(function (text_content) {
@@ -164,10 +193,33 @@
               });
             })
             .push(function () {
+              return gadget.getUrlFor({command: 'history_previous'});
+            })
+            .push(function (url) {
               return gadget.updateHeader({
-                page_title: 'Wiki: ' + gadget.state.jio_key,
-                page_icon: 'puzzle-piece'
+                page_title: 'Wiki: ' + doc.title,
+                page_icon: 'puzzle-piece',
+                front_url: url
               });
+            })
+            .push(undefined, function (error) {
+              if ((error instanceof SearchError) &&
+                  (error.status_code === 404)) {
+                // redirect to a search, to allow people understanding
+                // why the list is broken
+                return gadget.redirect({
+                  command: "display_with_history",
+                  options: {
+                    page: "search",
+                    extended_search: Query.objectToSearchText(
+                      createMultipleSimpleOrQuery('reference',
+                                                  gadget.state.jio_key)
+                    )
+                  }
+                }, false);
+              }
+
+              throw error;
             });
         }
       );
