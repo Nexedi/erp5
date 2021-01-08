@@ -147,6 +147,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
 
     .declareMethod('triggerSubmit', function () {
       return;
@@ -162,7 +163,7 @@
       return this.changeState({
         first_render: true,
         page: options.page,
-        jio_key: options.jio_key || 'COUSCOUS.1' || 'NXD-Home.Page'
+        jio_key: options.jio_key || 'NXD-Home.Page'
       });
     })
 
@@ -174,12 +175,14 @@
         "gadget_editor.html",
         modification_dict.hasOwnProperty('first_render'),
         function (editor_gadget) {
-          return getFirstDocumentValue(gadget, ['title', 'text_content'], {
-            reference: gadget.state.jio_key,
-            validation_state: ['shared', 'shared_alive',
-                               'released', 'released_alive',
-                               'published', 'published_alive']
-          })
+          return getFirstDocumentValue(gadget,
+                                       ['relative_url', 'title',
+                                        'text_content'], {
+              reference: gadget.state.jio_key,
+              validation_state: ['shared', 'shared_alive',
+                                 'released', 'released_alive',
+                                 'published', 'published_alive']
+            })
             .push(function (result_dict) {
               doc = result_dict;
               return rewriteHTMLPageContent(gadget, result_dict.text_content);
@@ -193,13 +196,37 @@
               });
             })
             .push(function () {
-              return gadget.getUrlFor({command: 'history_previous'});
+              return gadget.getUrlForList([
+                {command: 'history_previous'},
+                {command: 'push_history', options: {
+                  jio_key: doc.relative_url,
+                  editable: true
+                }}
+              ]);
             })
-            .push(function (url) {
+            .push(function (url_list) {
               return gadget.updateHeader({
                 page_title: 'Wiki: ' + doc.title,
                 page_icon: 'puzzle-piece',
-                front_url: url
+                front_url: url_list[0],
+                edit_url: url_list[1]
+              });
+            })
+            .push(function () {
+              return gadget.updatePanel({
+                erp5_document: {
+                  '_links': {
+                    'action_object_view': [{
+                      "name": "view",
+                      "title": "View",
+                      "href": "view",
+                      "icon": null
+                    }]
+                  }
+                },
+                jio_key: doc.relative_url,
+                editable: true,
+                view: null
               });
             })
             .push(undefined, function (error) {
