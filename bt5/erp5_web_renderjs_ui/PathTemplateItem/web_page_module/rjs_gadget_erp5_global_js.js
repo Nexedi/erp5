@@ -303,6 +303,7 @@
         var error_list = [original_error],
           i,
           error,
+          error_response,
           error_text = "";
 
         // Do not break the application in case of errors.
@@ -326,6 +327,10 @@
             }
           }
           if (error instanceof XMLHttpRequest) {
+            if ((error.getResponseHeader('Content-Type') || "")
+                  .indexOf('text/') === 0) {
+              error_response = error.response;
+            }
             error = {
               message: error.toString(),
               readyState: error.readyState,
@@ -359,6 +364,9 @@
             error_text += 'Stack: ' + error.stack + '\n';
           }
           error_text += '---\n';
+        }
+        if (error_response && !error.response) {
+          error.response = error_response;
         }
         return [error, error_text];
       });
