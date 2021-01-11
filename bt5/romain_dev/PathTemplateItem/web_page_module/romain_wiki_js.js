@@ -121,6 +121,9 @@
             jio_key: href
           }
         });
+      } else if ((href.indexOf('#!') === 0) || (href.indexOf('#/') === 0)) {
+        // ERP5JS anchor links
+        a_list[i].href = new URL(href, window.location.href);
       } else {
         // Compatibility layer with previous site
         a_list[i].href = new URL(href, 'https://www.erp5.com/group_section/');
@@ -163,7 +166,7 @@
       return this.changeState({
         first_render: true,
         page: options.page,
-        jio_key: options.jio_key || 'NXD-Home.Page'
+        jio_key: options.jio_key || 'NXD-ERP5JS.Home.Page'
       });
     })
 
@@ -179,6 +182,7 @@
                                        ['relative_url', 'title',
                                         'text_content'], {
               reference: gadget.state.jio_key,
+              portal_type: 'Web Page',
               validation_state: ['shared', 'shared_alive',
                                  'released', 'released_alive',
                                  'published', 'published_alive']
@@ -198,9 +202,9 @@
             .push(function () {
               return gadget.getUrlForList([
                 {command: 'history_previous'},
-                {command: 'push_history', options: {
+                {command: 'display_erp5_action_with_history', options: {
                   jio_key: doc.relative_url,
-                  editable: true
+                  page: 'view_editor'
                 }}
               ]);
             })
@@ -212,6 +216,7 @@
                 edit_url: url_list[1]
               });
             })
+          /*
             .push(function () {
               return gadget.updatePanel({
                 erp5_document: {
@@ -229,6 +234,7 @@
                 view: null
               });
             })
+            */
             .push(undefined, function (error) {
               if ((error instanceof SearchError) &&
                   (error.status_code === 404)) {
