@@ -166,7 +166,9 @@
       return this.changeState({
         first_render: true,
         page: options.page,
-        jio_key: options.jio_key || 'NXD-ERP5JS.Home.Page'
+        jio_key: options.jio_key || 'NXD-ERP5JS.Home.Page',
+        // Force updating the content
+        render_timestamp: new Date().getTime()
       });
     })
 
