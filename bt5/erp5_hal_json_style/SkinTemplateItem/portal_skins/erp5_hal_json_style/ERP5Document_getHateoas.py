@@ -1497,8 +1497,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
     # Extract & modify action URLs
-    if preferred_html_style_developer_mode and 'object_jio_raw' not in erp5_action_dict:
-      erp5_action_dict["object_jio_raw"] = []
+    if preferred_html_style_developer_mode and 'object_development_mode_jump_raw' not in erp5_action_dict:
+      erp5_action_dict["object_development_mode_jump_raw"] = []
 
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
@@ -1516,7 +1516,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                               "object_list_action", "object_jio_jump")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
-            "_jio" in erp5_action_key):
+            "_jio" in erp5_action_key) and not erp5_action_key.endswith("_raw"):
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
@@ -1539,24 +1539,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
 
-      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_jump":
-        erp5_action_list.append({
-          "href": url_template_dict["traverse_generator"] % {
-          "root_url": site_root.absolute_url(),
-          "script_id": script.id,
-          "view": "Base_redirectToPortalTypeDocument",
-          "relative_url": getRealRelativeUrl(traversed_document)
-        },
-          'name': "jump_to_portal_type",
-          'icon': None,
-          'title': Base_translateString(
-            "Edit Portal Type ${portal_type_name}",
-            mapping={
-              "portal_type_name": traversed_document.getTranslatedPortalType()
-            })
-        })
-
-      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_raw":
+      if preferred_html_style_developer_mode and erp5_action_key == "object_development_mode_jump_raw":
         if portal.portal_workflow.Base_getSourceVisibility():
           for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
             erp5_action_list.append({
