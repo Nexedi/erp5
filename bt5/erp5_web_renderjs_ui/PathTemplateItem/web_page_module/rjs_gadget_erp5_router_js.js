@@ -649,6 +649,12 @@
       });
   }
 
+  function redirectToHomePage(gadget, previous_options) {
+    var options = {};
+    copyStickyParameterDict(previous_options, options);
+    return gadget.redirect({command: 'display', options: options});
+  }
+
   function redirectToParent(gadget, jio_key, previous_options) {
     return gadget.jio_getAttachment(jio_key, "links")
       .push(function (erp5_document) {
@@ -667,9 +673,7 @@
       }, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
             (error.status_code === 404)) {
-          var options = {};
-          copyStickyParameterDict(previous_options, options);
-          return gadget.redirect({command: 'display', options: options});
+          return redirectToHomePage(gadget, previous_options);
         }
         throw error;
       });
@@ -683,9 +687,10 @@
       queue =  new RSVP.Queue(),
       previous_id;
     if (history === undefined) {
-      if (jio_key !== undefined) {
-        return redirectToParent(gadget, jio_key, previous_options);
+      if (jio_key === undefined) {
+        return redirectToHomePage(gadget, previous_options);
       }
+      return redirectToParent(gadget, jio_key, previous_options);
     }
     // XXX XXX XXX
     if (previous_options.back_field) {
