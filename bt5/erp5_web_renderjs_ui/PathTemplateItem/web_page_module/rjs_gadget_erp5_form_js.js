@@ -241,36 +241,23 @@
               dom_element.removeChild(dom_element.firstChild);
             }
             dom_element.appendChild(parent_element);
+            if (form_definition.hasOwnProperty("edit_form_href")) {
+              field_href = addDeveloperAction(
+                "edit-form ui-icon-edit ui-btn-icon-left",
+                form_definition.edit_form_href,
+                "Edit this form"
+              );
+              form_gadget.element.insertBefore(field_href, dom_element);
+            }
+            if (form_definition.hasOwnProperty("edit_form_action_href")) {
+              field_href = addDeveloperAction(
+                "edit-form-action ui-icon-external-link ui-btn-icon-left",
+                form_definition.edit_form_action_href,
+                "Edit this form's action"
+              );
+              form_gadget.element.insertBefore(field_href, dom_element);
+            }
           }
-
-          current_field = form_gadget.element.querySelector(".edit-form");
-          if (form_definition.hasOwnProperty("edit_form_href") &&
-              !current_field) {
-            field_href = addDeveloperAction(
-              "edit-form ui-icon-edit ui-btn-icon-left",
-              form_definition.edit_form_href,
-              "Edit this form"
-            );
-            form_gadget.element.insertBefore(field_href, dom_element);
-          } else if (!form_definition.hasOwnProperty("edit_form_href") &&
-                     current_field) {
-            form_gadget.element.removeChild(current_field);
-          }
-
-          current_field = form_gadget.element.querySelector(".edit-form-action");
-          if (form_definition.hasOwnProperty("edit_form_action_href") &&
-              !current_field) {
-            field_href = addDeveloperAction(
-              "edit-form-action ui-icon-external-link ui-btn-icon-left",
-              form_definition.edit_form_action_href,
-              "Edit this form's action"
-            );
-            form_gadget.element.insertBefore(field_href, dom_element);
-          } else if (!form_definition.hasOwnProperty("edit_form_action_href") &&
-                     current_field) {
-            form_gadget.element.removeChild(current_field);
-          }
-
         });
     })
 

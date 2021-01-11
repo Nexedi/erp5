@@ -222,7 +222,8 @@
           }
           // make sure we have field_json and avoid
           // display developer action to listbox cells
-          if (field_json && !field_json.hasOwnProperty("column")) {
+          if (modification_dict.hasOwnProperty('first_call') &&
+              field_json && !field_json.hasOwnProperty("column")) {
             queue
               .push(function (field_gadget) {
                 var root_element,
@@ -233,45 +234,33 @@
                 } else {
                   root_element = field_gadget.element;
                 }
-                current_field = root_element.querySelector(".edit-field");
-                if (field_json.hasOwnProperty('edit_field_href') &&
-                    !current_field) {
+                if (field_json.hasOwnProperty('edit_field_href')) {
                   addDeveloperAction(
                     "edit-field ui-icon-edit ui-btn-icon-left",
                     field_json.edit_field_href,
                     "Edit this field",
                     root_element
                   );
-                } else if (!field_json.hasOwnProperty('edit_field_href') &&
-                           current_field) {
-                  root_element.removeChild(current_field);
                 }
-                current_field = root_element.querySelector(".translate-title");
-                if (field_json.hasOwnProperty('translate_title_href') &&
-                    !current_field) {
+
+                if (field_json.hasOwnProperty('translate_title_href')) {
                   addDeveloperAction(
                     "translate-title ui-icon-language ui-btn-icon-left",
                     field_json.translate_title_href,
                     "Translate this field title",
                     root_element
                   );
-                } else if (!field_json.hasOwnProperty('translate_title_href') &&
-                           current_field) {
-                  root_element.removeChild(current_field);
                 }
-                current_field = root_element.querySelector(".translate-description");
-                if (field_json.hasOwnProperty('translate_description_href') &&
-                    !current_field) {
+
+                if (field_json.hasOwnProperty('translate_description_href')) {
                   addDeveloperAction(
                     "translate-description ui-icon-language ui-btn-icon-left",
                     field_json.translate_description_href,
                     "Translate this field description",
                     root_element
                   );
-                } else if (!field_json.hasOwnProperty('translate_description_href') &&
-                           current_field) {
-                  root_element.removeChild(current_field);
                 }
+
                 return field_gadget;
               });
           }

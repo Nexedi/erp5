@@ -281,9 +281,7 @@
           ]);
         })
         .push(function (translated_title_list) {
-          var field_href,
-            form_definition = modification_dict.form_definition,
-            action_confirm = form_gadget.element.querySelector('input.dialogconfirm');
+          var action_confirm = form_gadget.element.querySelector('input.dialogconfirm');
           if (action_confirm !== null) {
             if (form_gadget.state.action_title) {
               action_confirm.value = form_gadget.state.action_title;
