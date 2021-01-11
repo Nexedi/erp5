@@ -52,7 +52,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//button[@name='Predicate_edit:method']</td>
+	<td>//button[@name='Base_edit:method']</td>
 	<td></td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//button[@name='Predicate_edit:method']</td>
+	<td>//button[@name='Base_edit:method']</td>
 	<td></td>
 </tr>
 <tr>

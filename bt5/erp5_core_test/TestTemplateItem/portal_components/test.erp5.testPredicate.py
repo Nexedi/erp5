@@ -35,7 +35,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager, newSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence
 
 REGION_FRANCE_PATH = 'region/europe/western_europe/france'
@@ -555,11 +555,12 @@ class TestPredicates(TestPredicateMixIn):
     predicate = self.createPredicate()
     predicate.setCriterionPropertyList(['quantity'])
     request = self.portal.REQUEST
+    request.AUTHENTICATED_USER = getSecurityManager().getUser()
     request.set(
       'listbox',
       {'quantity': {'max': '', 'identity': [], 'min': ''}},
     )
-    predicate.Predicate_edit('Predicate_view')
+    predicate.Base_edit('Predicate_view')
     self.assertEqual(predicate._identity_criterion, {'quantity': []})
     self.assertEqual(predicate._range_criterion, {})
     self.assertTrue(predicate.test(movement))
@@ -567,7 +568,7 @@ class TestPredicates(TestPredicateMixIn):
       'listbox',
       {'quantity': {'max': '', 'identity': [], 'min': 1.0}},
     )
-    predicate.Predicate_edit('Predicate_view')
+    predicate.Base_edit('Predicate_view')
     self.assertEqual(predicate._range_criterion, {'quantity': (1.0, None)})
     self.assertFalse(predicate.test(movement.asContext(quantity=0.5)))
     self.assertTrue(predicate.test(movement.asContext(quantity=1.0)))
@@ -575,7 +576,7 @@ class TestPredicates(TestPredicateMixIn):
       'listbox',
       {'quantity': {'max': 2.0, 'identity': [], 'min': ''}},
     )
-    predicate.Predicate_edit('Predicate_view')
+    predicate.Base_edit('Predicate_view')
     self.assertEqual(predicate._range_criterion, {'quantity': (None, 2.0)})
     self.assertFalse(predicate.test(movement.asContext(quantity=2.0)))
     self.assertTrue(predicate.test(movement.asContext(quantity=1.5)))
@@ -583,7 +584,7 @@ class TestPredicates(TestPredicateMixIn):
       'listbox',
       {'quantity': {'max': 2.0, 'identity': [], 'min': 1.0}},
     )
-    predicate.Predicate_edit('Predicate_view')
+    predicate.Base_edit('Predicate_view')
     self.assertEqual(predicate._range_criterion, {'quantity': (1.0, 2.0)})
     self.assertFalse(predicate.test(movement.asContext(quantity=0.5)))
     self.assertTrue(predicate.test(movement.asContext(quantity=1.0)))
