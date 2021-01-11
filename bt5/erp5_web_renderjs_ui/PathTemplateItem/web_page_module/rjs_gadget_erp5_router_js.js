@@ -411,6 +411,7 @@
                   jio_key: next_options.jio_key,
                   view: action_data.href
                 };
+                copyStickyParameterDict(previous_options, new_options);
                 if (keep_history) {
                   return execPushHistoryCommand(gadget, previous_options, new_options);
                 }
