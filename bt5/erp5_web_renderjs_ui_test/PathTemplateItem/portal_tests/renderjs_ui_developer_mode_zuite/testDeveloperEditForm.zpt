@@ -8,23 +8,12 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test Developer Edit Form</td></tr>
 </thead><tbody>
-<tal:block tal:define="is_listbox python: False;
-                       website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
+<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
@@ -34,11 +23,6 @@
 </tr>
 <!-- Check if save the page again will not create the links again -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
-  <td></td>
-</tr>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"][1]</td>

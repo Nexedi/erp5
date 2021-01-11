@@ -8,23 +8,18 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test Developer Edit Field</td></tr>
 </thead><tbody>
-<tal:block tal:define="is_listbox python: True;
-                       website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//label[@for="field_my_preferred_html_style_developper_mode"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_developper_mode/manage_main"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//label[@for="field_my_preferred_html_style_developper_mode"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_developper_mode/manage_main"]</td>
+  <td>//label/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_developper_mode/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//label[@for="field_my_preferred_html_style_developper_mode"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_developper_mode/manage_main"]</td>
+  <td>//label/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_developper_mode/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
