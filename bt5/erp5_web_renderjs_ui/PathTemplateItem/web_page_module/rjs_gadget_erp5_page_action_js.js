@@ -67,7 +67,7 @@
       return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
           erp5_document = jio_attachment;
-          raw_list = ensureArray(erp5_document._links.action_object_jio_raw);
+          raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
           var i,
             j,
@@ -98,6 +98,7 @@
               raw_list.push(erp5_document._links[i]);
             }
           }
+
           // Developer mode
           for (i = 0; i < raw_list.length; i += 1) {
             url_for_kw_list.push({
