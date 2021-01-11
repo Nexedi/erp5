@@ -114,7 +114,7 @@
       // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
       removePlugins: 'elementspath,scayt,wsc,toolbar,pastefromword,' +
                      'tableselection,uploadwidget,clipboard,pastetext,' +
-                     'widget,uploadimage',
+                     'widget,uploadimage,resize',
       startupShowBorders: false,
       startupOutlineBlocks: false,
       contentsCss: ''
