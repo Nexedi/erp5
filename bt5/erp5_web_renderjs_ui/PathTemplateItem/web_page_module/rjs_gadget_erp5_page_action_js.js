@@ -1,12 +1,13 @@
-/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, domsugar, calculatePageTitle,
+         console, mergeGlobalActionWithRawActionList */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, domsugar, calculatePageTitle,
+           mergeGlobalActionWithRawActionList) {
   "use strict";
 
   function generateSection(title, icon, view_list) {
     var i,
       dom_list = [];
-
     for (i = 0; i < view_list.length; i += 1) {
       dom_list.push(domsugar('li', [domsugar('a', {
         href: view_list[i].link,
@@ -59,54 +60,56 @@
     .onStateChange(function () {
       var gadget = this,
         erp5_document,
-        group_list,
-        raw_list;
+        group_list;
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
       return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
+          var  i, j,
+            url_for_kw_list = [],
+            url_mapping = mergeGlobalActionWithRawActionList(
+              gadget.state.jio_key,
+              gadget.state.view,
+              gadget.state.jump_view,
+              jio_attachment._links,
+              [
+                "action_workflow",
+                [
+                  "action_object_jio_action",
+                  "action_object_jio_button",
+                  "action_object_jio_fast_input"
+                ],
+                "action_object_clone_action",
+                "action_object_delete_action"
+              ],
+              {
+                "action_workflow": "display_with_history_and_cancel"
+              },
+              {
+                action_object_clone_action: true
+              }
+            );
           erp5_document = jio_attachment;
-          raw_list = ensureArray(erp5_document._links.action_object_jio_raw);
-
-          var i,
-            j,
-            url_for_kw_list = [];
 
           group_list = [
-            // Action list, editable, icon
-            ensureArray(erp5_document._links.action_workflow), undefined, 'random',
-            ensureArray(erp5_document._links.action_object_jio_action)
-              .concat(ensureArray(erp5_document._links.action_object_jio_button))
-              .concat(ensureArray(erp5_document._links.action_object_jio_fast_input)), undefined, 'gear',
-            ensureArray(erp5_document._links.action_object_clone_action), true, 'clone',
-            ensureArray(erp5_document._links.action_object_delete_action), undefined, 'trash-o'];
+            url_mapping.action_workflow, 'random',
+            url_mapping.action_object_jio_action, 'gear',
+            url_mapping.action_object_clone_action, 'clone',
+            url_mapping.action_object_delete_action, 'trash-o'
+          ];
 
-          for (i = 0; i < group_list.length; i += 3) {
+          for (i = 0; i < group_list.length; i += 2) {
             for (j = 0; j < group_list[i].length; j += 1) {
-              url_for_kw_list.push({command: 'display_with_history_and_cancel', options: {
-                jio_key: gadget.state.jio_key,
-                view: group_list[i][j].href,
-                editable: group_list[i + 1]
-              }});
+              url_for_kw_list.push(group_list[i][j]);
             }
-          }
-
-          // Developer mode
-          for (i = 0; i < raw_list.length; i += 1) {
-            url_for_kw_list.push({
-              command: 'raw',
-              options: {
-                url: raw_list[i].href
-              }
-            });
           }
 
           url_for_kw_list.push({command: 'cancel_dialog_with_history'});
 
           return RSVP.hash({
             url_list: gadget.getUrlForList(url_for_kw_list),
-            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete', 'Developer Mode']),
+            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete']),
             page_title: calculatePageTitle(gadget, erp5_document)
           });
         })
@@ -116,35 +119,22 @@
             j,
             k = 0,
             dom_list = [],
-            raw_action_list = [],
             link_list;
 
-          for (i = 0; i < group_list.length; i += 3) {
+          for (i = 0; i < group_list.length; i += 2) {
             link_list = [];
             for (j = 0; j < group_list[i].length; j += 1) {
               link_list.push({
-                title: group_list[i][j].title,
+                title: group_list[i][j].options.title,
                 link: result_dict.url_list[k]
               });
               k += 1;
             }
             dom_list.push(
-              generateSection(result_dict.translation_list[i / 3], group_list[i + 2], link_list)
+              generateSection(result_dict.translation_list[i / 2], group_list[i + 1], link_list)
             );
 
           }
-          for (i = 0; i < raw_list.length; i += 1) {
-            raw_action_list.push({
-              title: raw_list[i].title,
-              link: result_dict.url_list[k]
-            });
-            k += 1;
-          }
-
-          if (raw_action_list.length > 0) {
-            dom_list.push(generateSection(result_dict.translation_list[4], 'plane', raw_action_list));
-          }
-
           domsugar(gadget.element, dom_list);
 
           return gadget.updateHeader({
@@ -157,4 +147,5 @@
       return;
     });
 
-}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, domsugar, calculatePageTitle,
+  mergeGlobalActionWithRawActionList));
