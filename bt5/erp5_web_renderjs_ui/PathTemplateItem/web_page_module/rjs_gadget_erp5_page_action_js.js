@@ -92,6 +92,12 @@
             }
           }
 
+          // Move this code one place that can be shared
+          for (i in erp5_document._links) {
+            if (i.match(/.*_raw$/) && erp5_document._links[i].href) {
+              raw_list.push(erp5_document._links[i]);
+            }
+          }
           // Developer mode
           for (i = 0; i < raw_list.length; i += 1) {
             url_for_kw_list.push({
