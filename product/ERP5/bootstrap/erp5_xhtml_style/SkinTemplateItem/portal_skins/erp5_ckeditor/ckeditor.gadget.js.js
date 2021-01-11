@@ -109,11 +109,12 @@
       ]
     },
     READONLY_CONFIGURATION = {
-      toolbar: [],
       allowedContent: true,
       readOnly: true,
       // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
-      removePlugins: 'elementspath,scayt,wsc',
+      removePlugins: 'elementspath,scayt,wsc,toolbar,pastefromword,' +
+                     'tableselection,uploadwidget,clipboard,pastetext,' +
+                     'widget,uploadimage',
       startupShowBorders: false,
       startupOutlineBlocks: false,
       contentsCss: ''
