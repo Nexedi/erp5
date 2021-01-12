@@ -21,6 +21,7 @@
         state_dict = {
           field_list: field_json.subfield_list,
           previous_field_length: this.state.field_list.length,
+          editable: field_json.editable,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
@@ -59,8 +60,8 @@
           var sub_state;
           promise_list = [];
           for (i = 0; i < gadget.state.field_list.length; i += 1) {
-            sub_state = gadget.state.field_list[i];
-
+            sub_state = JSON.parse(JSON.stringify(gadget.state.field_list[i]));
+            sub_state.editable = gadget.state.editable;
             promise_list.push(gadget_list[i].render({
               field_json: sub_state,
               field_type: sub_state.field_type
