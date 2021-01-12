@@ -25,10 +25,7 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
-      return this.changeState(state_dict)
-        .push(function (error) {
-          return error;
-        });
+      return this.changeState(state_dict);
     })
 
     .onStateChange(function () {
