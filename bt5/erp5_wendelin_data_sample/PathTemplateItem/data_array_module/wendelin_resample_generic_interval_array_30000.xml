@@ -1,0 +1,698 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Data Array" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>array</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="_reconstruct" module="numpy.core.multiarray"/>
+                </klass>
+                <tuple>
+                  <global name="ndarray" module="numpy"/>
+                  <tuple>
+                    <int>0</int>
+                  </tuple>
+                  <string>b</string>
+                </tuple>
+                <state>
+                  <tuple>
+                    <int>1</int>
+                    <tuple>
+                      <int>177</int>
+                    </tuple>
+                    <object>
+                      <klass>
+                        <global id="1.1" name="dtype" module="numpy"/>
+                      </klass>
+                      <tuple>
+                        <string>V80</string>
+                        <int>0</int>
+                        <int>1</int>
+                      </tuple>
+                      <state>
+                        <tuple>
+                          <int>3</int>
+                          <string>|</string>
+                          <none/>
+                          <tuple>
+                            <string>date</string>
+                            <string>humidity_min</string>
+                            <string>humidity_mean</string>
+                            <string>humidity_max</string>
+                            <string>pressure_min</string>
+                            <string>pressure_mean</string>
+                            <string>pressure_max</string>
+                            <string>temperature_min</string>
+                            <string>temperature_mean</string>
+                            <string>temperature_max</string>
+                          </tuple>
+                          <dictionary>
+                            <item>
+                                <key> <string>date</string> </key>
+                                <value>
+                                  <tuple>
+                                    <object>
+                                      <klass> <reference id="1.1"/> </klass>
+                                      <tuple>
+                                        <string>M8</string>
+                                        <int>0</int>
+                                        <int>1</int>
+                                      </tuple>
+                                      <state>
+                                        <tuple>
+                                          <int>4</int>
+                                          <string encoding="cdata"><![CDATA[
+
+<
+
+]]></string>
+                                          <none/>
+                                          <none/>
+                                          <none/>
+                                          <int>-1</int>
+                                          <int>-1</int>
+                                          <int>0</int>
+                                          <tuple>
+                                            <dictionary/>
+                                            <tuple>
+                                              <string>ns</string>
+                                              <int>1</int>
+                                              <int>1</int>
+                                              <int>1</int>
+                                            </tuple>
+                                          </tuple>
+                                        </tuple>
+                                      </state>
+                                    </object>
+                                    <int>0</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>humidity_max</string> </key>
+                                <value>
+                                  <tuple>
+                                    <object id="1.2">
+                                      <klass> <reference id="1.1"/> </klass>
+                                      <tuple>
+                                        <string>f8</string>
+                                        <int>0</int>
+                                        <int>1</int>
+                                      </tuple>
+                                      <state>
+                                        <tuple>
+                                          <int>3</int>
+                                          <string encoding="cdata"><![CDATA[
+
+<
+
+]]></string>
+                                          <none/>
+                                          <none/>
+                                          <none/>
+                                          <int>-1</int>
+                                          <int>-1</int>
+                                          <int>0</int>
+                                        </tuple>
+                                      </state>
+                                    </object>
+                                    <int>24</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>humidity_mean</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>16</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>humidity_min</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>8</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>pressure_max</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>48</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>pressure_mean</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>40</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>pressure_min</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>32</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>temperature_max</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>72</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>temperature_mean</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>64</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>temperature_min</string> </key>
+                                <value>
+                                  <tuple>
+                                    <reference id="1.2"/>
+                                    <int>56</int>
+                                  </tuple>
+                                </value>
+                            </item>
+                          </dictionary>
+                          <int>80</int>
+                          <int>1</int>
+                          <int>16</int>
+                        </tuple>
+                      </state>
+                    </object>
+                    <int>0</int>
+                    <string encoding="base64">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
+yAiJrOWANkBxEc7Vp0Y3QPpKUF4MpDdA</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>Resample Generic Interval Array-sensor_1</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>wendelin_resample_generic_interval_array_30000</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Data Array</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Resample Generic Interval Array</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>989.23333.19044.2952</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1610728763.28</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>System Processes</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1605278161.46</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
