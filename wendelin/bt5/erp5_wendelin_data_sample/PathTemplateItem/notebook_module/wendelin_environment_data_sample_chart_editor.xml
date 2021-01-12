@@ -1,0 +1,725 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>environment_data_sample_chart_editor</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>wendelin_environment_data_sample_chart_editor</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% md\n
+<div class="plot_button_div" id="plot_button_div"></div>\n
+<div class="plot_div" id="plot_div"></div>\n
+\n
+%% fetch\n
+css: static/css/main.88fa11bf.css\n
+js: jio.js\n
+js: ndarray_bundle.js\n
+js: wendelin.js\n
+js: https://cdn.plot.ly/plotly-latest.min.js\n
+js: react.development.js\n
+js: react-dom.development.js\n
+js: static/js/main.8b730bc1.js\n
+\n
+%% js\n
+CHART_ID = "my_data_chart";\n
+hateoas_url = "https://softinstxxxxx.host.vifib.net/erp5/web_site_module/renderjs_runner/hateoas/";\n
+jio = jIO.createJIO({\n
+  type: "erp5",\n
+  url: hateoas_url,\n
+  default_view_reference: "view"\n
+});\n
+\n
+editor_jio = jIO.createJIO({\n
+  type: "indexeddb",\n
+  database: "graph_editor"\n
+});\n
+\n
+gadget = {\n
+  getSetting: function(property) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        if (property == "hateoas_url") {\n
+          return hateoas_url;\n
+        }\n
+        return;\n
+      });\n
+  },\n
+  jio_getAttachment: function(id, url, parameter_dict) {\n
+    return jio.getAttachment(id, url, parameter_dict);\n
+  },\n
+  jio_get: function(id) {return jio.get(id);}\n
+}\n
+\n
+var graph = document.getElementById(\'plot_div\'),\n
+  update = false,\n
+  button_element = document.getElementById(\'plot_button_div\'),\n
+  displayed_data = [],\n
+  displayed_layout = {},\n
+  label_list = ["date", "humidity_min","humidity_mean","humidity_max", "pressure_min","pressure_mean","pressure_max", "temperature_min","temperature_mean", "temperature_max"],\n
+  array_start_date,\n
+  array_last_date,\n
+  orig_start_date = new Date(),\n
+  orig_stop_date = new Date(),\n
+  frequency,\n
+  array_id = "";\n
+orig_start_date.setMonth(orig_start_date.getMonth() - 1);\n
+\n
+\n
+selectorOptions = {\n
+    "buttons": [{\n
+        "step": \'day\',\n
+        "stepmode": \'backward\',\n
+        "count": 1,\n
+        "label": \'day\'\n
+    }, {\n
+        "step": \'month\',\n
+        "stepmode": \'backward\',\n
+        "count": 1,\n
+        "label": \'month\'\n
+    }, {\n
+        "step": \'year\',\n
+        "stepmode": \'backward\',\n
+        "count": 1,\n
+        "label": \'year\'\n
+    }],\n
+}\n
+\n
+function getFrequency(start_date, stop_date) {\n
+  var ratio = screen.availWidth / 1024,\n
+    interval = stop_date - start_date;\n
+  if (stop_date === undefined) {\n
+    return 30000;\n
+  }\n
+  if (interval >= 1000 * 60 * 60 * 24 * 100 * ratio) {\n
+    return 30000;\n
+  } else if (interval >= 1000 * 60 * 60 * 24 * 28 * ratio) {\n
+    return 3000;\n
+  } else if (interval >= 1000 * 60 * 60 * 24 * 7 * ratio) {\n
+    return 300;\n
+  } else {\n
+    return 60;\n
+  }\n
+}\n
+\n
+function getArrayId(frequency) {\n
+  return jio.allDocs({\n
+    query: \'portal_type:"Data Analysis Line" AND \' +\n
+           \'title: "Resampled Array (\' + frequency + \' Seconds)" AND \' +\n
+           \'resource_reference:"GENERIC-INTERVAL-RESAMPLED-ARRAY" AND \' +\n
+           \'parent_source_title:"Sample Factory" AND \' +\n
+           \'simulation_state:"started"\'\n
+  })\n
+    .push(function (result) {\n
+      var data_analysis_line_id = result.data.rows[0].id;\n
+      return jio.allDocs({\n
+        query: \'portal_type:"Data Array" AND \' +\n
+               \'aggregate_related_relative_url:"\' + data_analysis_line_id +\'"\'\n
+      });\n
+    })\n
+    .push(function (result) {\n
+      return result.data.rows[0].id;\n
+    });\n
+}\n
+\n
+function getData(start_date, stop_date){\n
+  var start_index,\n
+    stop_index;\n
+  function unpack(rows, key) {\n
+    return rows.map(function(row) { return row[key]; });\n
+  }\n
+  return new RSVP.Queue()\n
+    .push(function() {\n
+      return getFrequency();\n
+    })\n
+    .push(function(result) {\n
+      frequency = result;\n
+      return getArrayId(frequency);\n
+    })\n
+    .push(function(result) {\n
+      array_id = result;\n
+      return wendelin.getArrayRawSlice(gadget, array_id, 0, 1);\n
+    })\n
+    .push(function(result) {\n
+      array_start_date = wendelin.convertFirstColToDate([[result.data[0]]])[0][0];\n
+      return wendelin.getArrayLastRow(gadget, array_id);\n
+    })\n
+    .push(function(result) {\n
+      var array_last_date = wendelin.convertFirstColToDate([[result.data[0]]])[0][0];\n
+      stop_date = array_last_date;\n
+      start_date = new Date(array_last_date.getTime());\n
+      start_date.setMonth(start_date.getMonth() - 1);\n
+      start_index = Math.max(0, Math.ceil((start_date - array_start_date) / (frequency*1000)));\n
+      stop_index = Math.ceil((stop_date - array_start_date) / (frequency*1000));\n
+      return wendelin.getArrayRawSlice(gadget, array_id, start_index, stop_index)\n
+        .push(function(result) {\n
+          graph_data=[];\n
+          for (i = 0; i < label_list.length; i += 1) {\n
+            graph_data = graph_data.concat(nj.unpack(result.pick( null, label_list[i])));\n
+          }\n
+          return graph_data\n
+        })\n
+        .push(function(result){\n
+          return wendelin.convertFirstColToDate(result)\n
+        })\n
+        .push(function (graph_data) {\n
+          var humidity_trace = {\n
+              x: unpack(graph_data, label_list.indexOf("date")),\n
+              y: unpack(graph_data, label_list.indexOf("humidity_mean")),\n
+          },\n
+          pressure_trace = {\n
+              x: unpack(graph_data, label_list.indexOf("date")),\n
+              y: unpack(graph_data, label_list.indexOf("pressure_mean"))\n
+          },\n
+          temperature_trace = {\n
+              x: unpack(graph_data, label_list.indexOf("date")),\n
+              y: unpack(graph_data, label_list.indexOf("temperature_mean"))\n
+          },\n
+          data = [humidity_trace,pressure_trace,temperature_trace];\n
+          return data\n
+        });\n
+    });\n
+}\n
+\n
+function update_graph(start_date, stop_date) {\n
+  displayed_layout.xaxis.range = [start_date, stop_date];\n
+  return getData(start_date, stop_date)\n
+    .push(function (data) {\n
+      for (var i = 0; i < data.length; i+=1) {\n
+        displayed_data[i] = {...displayed_data[i], ...data[i]};\n
+      }\n
+      return Plotly.react(graph,\n
+        displayed_data,\n
+        displayed_layout\n
+      );\n
+    });\n
+}\n
+\n
+function renderEditor() {\n
+ var props = {\n
+   ref: function ref(element) {\n
+    window.editor = element;\n
+   },\n
+   data: displayed_data,\n
+   layout: displayed_layout,\n
+   frames: [],\n
+   url: ""\n
+ };\n
+  ReactDOM.render(React.createElement(EntryPoint.default.App, props, null), graph);\n
+}\n
+\n
+function editGraph(edit_btn, apply_btn) {\n
+  return new RSVP.Queue()\n
+    .push(function () {\n
+      return Plotly.purge(graph);\n
+    })\n
+    .push(function () {\n
+      return renderEditor();\n
+    })\n
+    .push(function () {\n
+      button_element.replaceChild(apply_btn, edit_btn);\n
+    });\n
+}\n
+\n
+function createGraph() {\n
+  var start_date,\n
+    stop_date;\n
+\n
+  Plotly.newPlot(\n
+    "plot_div",\n
+    displayed_data,\n
+    displayed_layout\n
+  );\n
+  graph.on(\'plotly_relayout\', function(eventdata) {\n
+  start_date = eventdata["xaxis.range[0]"]\n
+  stop_date = eventdata["xaxis.range[1]"]\n
+\n
+  if(start_date == undefined){\n
+    start_date = orig_start_date\n
+  }\n
+  if(stop_date == undefined){\n
+    stop_date = orig_stop_date\n
+  }\n
+\n
+  start_date = new Date(start_date);\n
+  stop_date = new Date(stop_date);\n
+\n
+  return update_graph(start_date, stop_date);\n
+  });\n
+}\n
+\n
+function applyChangesToGraph(edit_btn, apply_btn) {\n
+  var stored_data = [], temp;\n
+  return new RSVP.Queue()\n
+    .push(function () {\n
+      return window.editor.getContent();\n
+    })\n
+    .push(function(result) {\n
+      displayed_data = result.data;\n
+      displayed_layout = result.layout;\n
+      for (var i = 0; i < displayed_data.length; i+=1) {\n
+        stored_data[i] = {};\n
+        for (var key in displayed_data[i]) {\n
+          if (key == "x") {\n
+            stored_data[i][key] = []\n
+          } else if (key == "y") {\n
+            stored_data[i][key] = [];\n
+          } else {\n
+            stored_data[i][key] = displayed_data[i][key];\n
+          }\n
+        }\n
+      }\n
+      editor_jio.put(\n
+        CHART_ID,\n
+        {graph_model: {\n
+          layout: result.layout,\n
+          data: stored_data\n
+          }\n
+        }\n
+      );\n
+      return ReactDOM.unmountComponentAtNode(graph);\n
+    })\n
+    .push(function () {\n
+      return createGraph();\n
+    })\n
+    .push(function(result) {\n
+      button_element.replaceChild(edit_btn, apply_btn);\n
+    });\n
+}\n
+\n
+function createButtons() {\n
+  var plotly_apply_btn = document.createElement("BUTTON"),\n
+    plotly_edit_btn = document.createElement("BUTTON");\n
+  plotly_edit_btn.innerHTML = "Edit Chart";\n
+  plotly_edit_btn.type = "button";\n
+  plotly_apply_btn.innerHTML = "Apply";\n
+  plotly_apply_btn.type = "button";\n
+  plotly_edit_btn.addEventListener("click", editGraph.bind(null, plotly_edit_btn, plotly_apply_btn));\n
+  plotly_apply_btn.addEventListener("click", applyChangesToGraph.bind(null, plotly_edit_btn, plotly_apply_btn));\n
+  button_element.appendChild(plotly_edit_btn);\n
+}\n
+\n
+function getDisplayedLayout() {\n
+  return {\n
+    \'title\' :\'Environmental Sensor Data\',\n
+    \'xaxis\': {\n
+      \'autorange\': true,\n
+      \'rangeselector\': selectorOptions,\n
+    },\n
+    \'yaxis\': {\n
+      \'autorange\': true\n
+    }\n
+  };\n
+}\n
+\n
+function getDisplayedDataTemplate() {\n
+    var humidity_trace = {\n
+      type: "scattergl",\n
+      mode: "markers",\n
+      name: \'Humidity(%)\',\n
+      x: [],\n
+      y: [],\n
+      line: {color: \'#17BECF\'}\n
+    }, pressure_trace = {\n
+      type: "scattergl",\n
+      mode: "markers",\n
+      name: \'Pressure(Pa)\',\n
+      x: [],\n
+      y: [],\n
+      line: {color: \'#7F7F7F\'}\n
+    }, temperature_trace = {\n
+      type: "scattergl",\n
+      mode: "markers",\n
+      name: \'Temperature(C°)\',\n
+      x: [],\n
+      y: [],\n
+      line: {color: \'#FF0000\'}\n
+    };\n
+    return [humidity_trace,pressure_trace,temperature_trace];\n
+}\n
+\n
+function plot() {\n
+  var start_date = orig_start_date,\n
+    stop_date = orig_stop_date;\n
+  return editor_jio.get(CHART_ID)\n
+    .push(function(result) {\n
+      displayed_layout = result.graph_model.layout;\n
+      displayed_data = result.graph_model.data;\n
+      if (displayed_data == undefined) {\n
+        displayed_data = getDisplayedDataTemplate();\n
+      }\n
+      if (displayed_layout == undefined) {\n
+        displayed_layout = getDisplayedLayout();\n
+      }\n
+      return getData(start_date, stop_date);\n
+    }, function(error) {\n
+      displayed_layout = getDisplayedLayout();\n
+      displayed_data = getDisplayedDataTemplate();\n
+      return getData(start_date, stop_date);\n
+    })\n
+    .push(function (data) {\n
+      for (var i = 0; i < data.length; i+=1) {\n
+        displayed_data[i].x = data[i].x;\n
+        displayed_data[i].y = data[i].y;\n
+      }\n
+      Plotly.newPlot(\n
+        "plot_div",\n
+        displayed_data,\n
+        displayed_layout\n
+      );\n
+      graph.on(\'plotly_relayout\', function(eventdata) {\n
+        start_date = eventdata["xaxis.range[0]"]\n
+        stop_date = eventdata["xaxis.range[1]"]\n
+\n
+        if(start_date == undefined){\n
+          start_date = orig_start_date\n
+        }\n
+        if(stop_date == undefined){\n
+          stop_date = orig_stop_date\n
+        }\n
+\n
+        start_date = new Date(start_date);\n
+        stop_date = new Date(stop_date);\n
+\n
+        return update_graph(start_date, stop_date);\n
+      });\n
+    });\n
+}\n
+\n
+function main() {\n
+  return new RSVP.Queue()\n
+    .push(function() {\n
+      return plot();\n
+    })\n
+    .push(function() {\n
+      return createButtons();\n
+    });\n
+}\n
+\n
+main();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Environment Data Sample Chart Editor</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish_alive</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1612184485.9</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>989.47596.46527.37888</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1612184461.26</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>detect_converted_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>converted</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1610633713.67</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
