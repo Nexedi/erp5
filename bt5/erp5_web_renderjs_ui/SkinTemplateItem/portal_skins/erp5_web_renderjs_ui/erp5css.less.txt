@@ -1369,7 +1369,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   //Label
   .ui-field-contain {
-    & > label:not(:is-invalid) {
+    & > label:not(.is-invalid) {
       color: @colorlabel;
 
     }
