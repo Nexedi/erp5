@@ -4,3 +4,4 @@ Foo | view_field_submit_action_dialog
 Foo | view_formlist
 Foo | view_onlyxhtml_raw
 Foo | view_simple_graph
+Web Page | slideshow_raw
