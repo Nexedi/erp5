@@ -12,15 +12,19 @@
 ##############################################################################
 
 from Products.CMFCore.DynamicType import DynamicType
+from zope.component import queryUtility 
+from Products.CMFCore.interfaces import ITypesTool
 
 def getTypeInfo(self):
     """ Get the TypeInformation object specified by the portal type.
     """
-    # <patch>
-    tool = getattr(self.getPortalObject(), "portal_types", None)
-    # </patch>
+    
+    tool = queryUtility(ITypesTool)
     if tool is None:
+        # <patch>
+        assert getattr(self.getPortalObject(), "portal_types", None) is None
         return None
+        # </patch>
     return tool.getTypeInfo(self)  # Can return None.
 
 DynamicType.getTypeInfo = getTypeInfo
