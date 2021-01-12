@@ -1516,7 +1516,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                               "object_list_action", "object_jio_jump")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
-            "_jio" in erp5_action_key):
+            "_jio" in erp5_action_key) and not erp5_action_key.endswith("_raw"):
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
