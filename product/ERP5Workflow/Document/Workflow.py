@@ -153,6 +153,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     PropertySheet.CategoryCore,
     PropertySheet.DublinCore,
     PropertySheet.Reference,
+    PropertySheet.Comment,
     PropertySheet.Workflow,
   )
 
