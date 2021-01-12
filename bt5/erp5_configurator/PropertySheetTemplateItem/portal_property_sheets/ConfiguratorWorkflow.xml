@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WorkflowConfigurator</string> </value>
+            <value> <string>ConfiguratorWorkflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

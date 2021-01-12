@@ -97,17 +97,14 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_configuration_after_script_id</string>
+                        <string>my_transition_form_id</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_default_image_absolute_url</string>
-                        <string>my_default_image_file</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -115,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Workflow_viewConfigurator</string> </value>
+            <value> <string>WorkflowTransition_viewConfigurator</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,7 +120,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Workflow_viewConfigurator</string> </value>
+            <value> <string>WorkflowTransition_viewConfigurator</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
