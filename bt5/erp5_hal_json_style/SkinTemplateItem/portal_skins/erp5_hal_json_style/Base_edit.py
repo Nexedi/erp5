@@ -62,10 +62,7 @@ def editListBox(listbox_field, listbox):
   if listbox is None:
     return
 
-  if context.isPredicate():
-    predicate_listbox = set(context.getCriterionPropertyList()) == set(listbox.keys())
-  else:
-    predicate_listbox = False  # extract hidden (global) attributes from request to be used in listbox's update
+  is_predicate_listbox = set(getattr(context, 'getCriterionPropertyList', lambda: [])()) == set(listbox.keys())
 
   # extract hidden (global) attributes from request to be used in listbox's update
   global_attr = {hidden_key: getattr(request, hidden_key, None)
@@ -74,7 +71,7 @@ def editListBox(listbox_field, listbox):
                 else {}
 
   for item_url, item_value in listbox.items():
-    if predicate_listbox:
+    if is_predicate_listbox:
       item_value.update(global_attr)
       context.setCriterion(item_url, **item_value)
       continue

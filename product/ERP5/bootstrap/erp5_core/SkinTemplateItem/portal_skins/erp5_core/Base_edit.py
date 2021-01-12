@@ -56,16 +56,13 @@ def editListBox(listbox_field, listbox):
   """
   if listbox is not None:
     global_property_dict = {}
-    if context.isPredicate():
-      predicate_listbox = set(context.getCriterionPropertyList()) == set(listbox.keys())
-    else:
-      predicate_listbox = False
+    is_predicate_listbox = set(getattr(context, 'getCriterionPropertyList', lambda: [])()) == set(listbox.keys())
     if listbox_field.has_value('global_attributes'):
       hidden_attribute_list = [x[0] for x in listbox_field.get_value('global_attributes')]
       for hidden_attribute in hidden_attribute_list:
         global_property_dict[hidden_attribute] = getattr(request, hidden_attribute, None)
     for item_url, listbox_item_dict in listbox.items():
-      if predicate_listbox:
+      if is_predicate_listbox:
         listbox_item_dict.update(global_property_dict)
         context.setCriterion(item_url, **listbox_item_dict)
         continue
