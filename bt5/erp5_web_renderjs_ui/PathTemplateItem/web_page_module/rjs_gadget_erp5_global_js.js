@@ -1,8 +1,8 @@
 /*global window, RSVP, SimpleQuery, ComplexQuery, Query,
-         ensureArray */
+         ensureArray, Array*/
 /*jslint indent: 2, maxerr: 3, nomen: true, unparam: true, continue: true */
 (function (window, RSVP, SimpleQuery, ComplexQuery, Query,
-           ensureArray) {
+           ensureArray, Array) {
   "use strict";
 
   ///////////////////////////////
@@ -164,6 +164,125 @@
   ///////////////////////////////
   // Handle listbox action list
   ///////////////////////////////
+  function mergeGlobalActionWithRawActionList(gadget, links, group_id_list,
+                                              command_mapping,
+                                              editable_mapping) {
+    return RSVP.Queue()
+      .push(function () {
+        var i, j, group,
+          action_type,
+          current_href,
+          class_name,
+          options,
+          command,
+          view = gadget.state.view,
+          jump_view = gadget.state.jump_view,
+          group_mapping = {},
+          url_mapping = {},
+          default_command_mapping = {
+            "view": "display_with_history",
+            "action_object_jio_jump": "display_dialog_with_history",
+            "action_object_jio_action": "display_with_history_and_cancel",
+            "action_object_view": "display_with_history",
+            "action_workflow": "display_dialog_with_history",
+            "action_object_clone_action": "display_with_history_and_cancel",
+            "action_object_delete_action": "display_with_history_and_cancel"
+          };
+
+        editable_mapping = editable_mapping || {};
+        command_mapping = command_mapping || {};
+        for (i = 0; i < group_id_list.length; i += 1) {
+          group = group_id_list[i][0];
+          if (group_id_list[i] instanceof Array) {
+            group_mapping[group] = ensureArray(links[group]);
+            action_type = group + "_raw";
+            if (links.hasOwnProperty(action_type)) {
+              if (links[action_type] instanceof Array) {
+                for (i = 0; i < links[action_type].length; i += 1) {
+                  if (links[action_type][i].href) {
+                    group_mapping[group].push(links[action_type][i]);
+                  }
+                }
+              } else {
+                group_mapping[group].push(links[action_type]);
+              }
+            }
+            if (group_id_list[i].length > 1) {
+              for (j = 1; j < group_id_list[i].length; j += 1) {
+                group_mapping[group] = group_mapping[
+                  group
+                ].concat(
+                  ensureArray(links[group_id_list[i][j]])
+                );
+                action_type = group_id_list[i][j] + "_raw";
+                if (links.hasOwnProperty(action_type)) {
+                  if (links[action_type] instanceof Array) {
+                    for (i = 0; i < links[action_type].length; i += 1) {
+                      if (links[action_type][i].href) {
+                        group_mapping[group].push(links[action_type][i]);
+                      }
+                    }
+                  } else {
+                    group_mapping[group].push(links[action_type]);
+                  }
+                }
+              }
+            }
+          } else {
+            group_mapping[group_id_list[i]] = ensureArray(
+              links[group_id_list[i]]
+            );
+          }
+        }
+
+        for (group in group_mapping) {
+          if (group_mapping.hasOwnProperty(group)) {
+            if (!url_mapping.hasOwnProperty(group)) {
+              url_mapping[group] = [];
+            }
+            for (i = 0; i < group_mapping[group].length; i += 1) {
+              class_name = "";
+              current_href = group_mapping[group][i].href;
+              if (view === 'view' && group_mapping[group][i].name === view) {
+                class_name = 'active';
+              } else if (current_href === view) {
+                class_name = 'active';
+              } else if (jump_view && ((current_href === jump_view) ||
+                         (current_href === view))) {
+                class_name = 'active';
+              }
+              if (group_mapping[group][i].name.indexOf("_raw") !== -1) {
+                command = "raw";
+                options = {
+                  title: group_mapping[group][i].title,
+                  href: group_mapping[group][i].href
+                };
+              } else {
+                command = command_mapping[group] || default_command_mapping[group];
+                options = {
+                  title: group_mapping[group][i].title,
+                  class_name: class_name,
+                  jio_key: gadget.state.jio_key,
+                  view: group_mapping[group][i].href,
+                  editable: editable_mapping[group]
+                };
+              }
+              if (group === "view") {
+                // Views in ERP5 must be forms but because of
+                // OfficeJS we keep it empty for different default
+                options.page = undefined;
+              }
+              url_mapping[group].push({
+                command: command,
+                options: options
+              });
+            }
+          }
+        }
+        return url_mapping;
+      });
+  }
+
   function getListboxClipboardActionList() {
     var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
       i,
@@ -311,8 +430,9 @@
       .allowPublicAcquisition("triggerListboxClipboardAction",
                               triggerListboxClipboardAction);
   }
+  window.mergeGlobalActionWithRawActionList = mergeGlobalActionWithRawActionList;
   window.triggerListboxClipboardAction = triggerListboxClipboardAction;
   window.declareGadgetClassCanHandleListboxClipboardAction =
     declareGadgetClassCanHandleListboxClipboardAction;
 
-}(window, RSVP, SimpleQuery, ComplexQuery, Query, ensureArray));
+}(window, RSVP, SimpleQuery, ComplexQuery, Query, ensureArray, Array));
