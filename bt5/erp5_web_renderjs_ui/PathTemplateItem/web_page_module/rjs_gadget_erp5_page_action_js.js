@@ -45,28 +45,27 @@
 
     for (group in group_mapping) {
       if (group_mapping.hasOwnProperty(group)) {
-        if (!(group in url_mapping)) {
+        if (!url_mapping.hasOwnProperty(group)) {
           url_mapping[group] = [];
         }
-        if (group_mapping.hasOwnProperty(group)) {
-          for (i = 0; i < group_mapping[group].length; i += 1) {
-            url_mapping[group].push({
-              command: 'display_with_history_and_cancel', options: {
-                jio_key: gadget.state.jio_key,
-                view: group_mapping[group][i].href,
-                editable: editable_mapping[group]
-              }
-            });
-          }
-          action_type = group + "_raw";
-          if (action_type in links) {
-            for (i = 0; i < erp5_document._links[action_type].length; i += 1) {
-              if (erp5_document._links[action_type][i].href) {
-                url_mapping[group].push(erp5_document._links[i]);
+        for (i = 0; i < group_mapping[group].length; i += 1) {
+          url_mapping[group].push({
+            command: 'display_with_history_and_cancel',
+            options: {
+              jio_key: gadget.state.jio_key,
+              view: group_mapping[group][i].href,
+              editable: editable_mapping[group]
+            }
+          });
+        }
+        action_type = group + "_raw";
+        if (links.hasOwnProperty(action_type)) {
+          for (i = 0; i < links[action_type].length; i += 1) {
+              if (links[action_type][i].href) {
+                url_mapping[group].push(links[action_type][i]);
               }
             }
           }
-        }
       }
     }
     console.log(url_mapping);
@@ -129,7 +128,7 @@
             ensureArray(erp5_document._links.action_object_delete_action), undefined, 'trash-o'];
 
           url_mapping = genericFunctionToMergeActions(gadget, erp5_document._links, {
-            action_object_clone_action: true,
+            action_object_clone_action: true
           });
 
           /* XXX - Reuse url_mapping here and stop to calculate this links in different places
@@ -141,13 +140,6 @@
                 view: group_list[i][j].href,
                 editable: group_list[i + 1]
               }});
-            }
-          }
-
-          // Move this code one place that can be shared
-          for (i in erp5_document._links) {
-            if (i.match(/.*_raw$/) && erp5_document._links[i].href) {
-              raw_list.push(erp5_document._links[i]);
             }
           }
 
