@@ -21,6 +21,7 @@
 ##############################################################################
 
 # Load all monkey patches
+from Products.ERP5Type.patches import MembershipTool
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
