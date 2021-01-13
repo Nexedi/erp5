@@ -374,16 +374,29 @@
 
       if (modification_dict.hasOwnProperty('allDocs_result')) {
         allDocs_result = JSON.parse(gadget.state.allDocs_result);
-        domsugar(gadget.element, [
-          domsugar('p', {text: 'Comments:'}),
-          domsugar('ol', allDocs_result.data.rows.map(function (entry) {
-            console.log(entry);
-            return domsugar('li', [
-              domsugar('div', {html: entry.value.asStrippedHTML}),
-              domsugar('hr')
+        return new RSVP.Queue(RSVP.all(
+          allDocs_result.data.rows.map(function (entry) {
+            return gadget.declareGadget('gadget_html_viewer.html')
+              .push(function (viewer) {
+                return viewer.render({value: entry.value.asStrippedHTML})
+                  .push(function () {
+                    return viewer;
+                  });
+              });
+          })
+        ))
+          .push(function (viewer_list) {
+            domsugar(gadget.element, [
+              domsugar('p', {text: 'Comments:'}),
+              domsugar('ol', allDocs_result.data.rows.map(function (entry, i) {
+                console.log(entry);
+                return domsugar('li', [
+                  viewer_list[i].element,
+                  domsugar('hr')
+                ]);
+              }))
             ]);
-          }))
-        ]);
+          });
         return;
       }
     }, function onStateChange(modification_dict) {
