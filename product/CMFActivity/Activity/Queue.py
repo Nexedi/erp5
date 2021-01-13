@@ -89,73 +89,8 @@ class Queue(object):
   def distribute(self, activity_tool, node_count):
     raise NotImplementedError
 
-  def getExecutableMessageList(self, activity_tool, message, message_dict,
-                               validation_text_dict, now_date=None):
-    """Get messages which have no dependent message, and store them in the dictionary.
-
-    If the passed message itself is executable, simply store only that message.
-    Otherwise, try to find at least one message executable from dependent messages.
-
-    This may result in no new message, if all dependent messages are already present
-    in the dictionary, if all dependent messages are in different activities, or if
-    the message has a circular dependency.
-
-    The validation text dictionary is used only to cache the results of validations,
-    in order to reduce the number of SQL queries.
-    """
-    if message.uid in message_dict:
-      # Nothing to do. But detect a circular dependency.
-      if message_dict[message.uid] is None:
-        LOG('CMFActivity', ERROR,
-            'message uid %r has a circular dependency' % (message.uid,))
-      return
-
-    cached_result = validation_text_dict.get(message.order_validation_text)
-    if cached_result is None:
-      message_list = activity_tool.getDependentMessageList(message, self)
-      if message_list:
-        # The result is not empty, so this message is not executable.
-        validation_text_dict[message.order_validation_text] = 0
-        if now_date is None:
-          now_date = DateTime()
-        for activity, m in message_list:
-          # Note that the messages may contain ones which are already assigned or not
-          # executable yet.
-          if activity is self and m.processing_node == -1 and m.date <= now_date:
-            # Call recursively. Set None as a marker to detect a circular dependency.
-            message_dict[message.uid] = None
-            try:
-              self.getExecutableMessageList(activity_tool, m, message_dict,
-                                             validation_text_dict, now_date=now_date)
-            finally:
-              del message_dict[message.uid]
-      else:
-        validation_text_dict[message.order_validation_text] = 1
-        message_dict[message.uid] = message
-    elif cached_result:
-      message_dict[message.uid] = message
-
   def flush(self, activity_tool, object, **kw):
     pass
-
-  def getOrderValidationText(self, message):
-    # Return an identifier of validators related to ordering.
-    order_validation_item_list = [
-        (key, value)
-        for key, value in sorted(
-            message.activity_kw.iteritems(), key=lambda x: x[0],
-        )
-        if value is not None and
-        getattr(self, "_validate_" + key, None) is not None
-    ]
-    if order_validation_item_list:
-      return sha1(repr(order_validation_item_list)).hexdigest()
-    # When no order validation argument is specified, skip the computation
-    # of the checksum for speed. Here, 'none' is used, because this never be
-    # identical to SHA1 hexdigest (which is always 40 characters), and 'none'
-    # is true in Python. This is important, because dtml-if assumes that an empty
-    # string is false, so we must use a non-empty string for this.
-    return 'none'
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []
