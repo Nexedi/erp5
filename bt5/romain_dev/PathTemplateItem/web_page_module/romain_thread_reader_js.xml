@@ -62,20 +62,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_nx_forum.js</string> </value>
+            <value> <string>gadget_thread_reader.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>romain_forum_js</string> </value>
+            <value> <string>romain_thread_reader_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Forum Reader JS</string> </value>
+            <value> <string>Gadget Thread Reader JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -191,7 +191,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1609424819.36</float>
+                              <float>1610449183.73</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -240,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.18879.37912.30737</string> </value>
+                      <value> <string>989.19030.1234.33297</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1610461438.43</float>
+                              <float>1610470594.07</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -285,9 +285,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>detect_converted_file</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -303,7 +301,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>empty</string> </value>
+                      <value> <string>converted</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -321,7 +319,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1609424753.54</float>
+                              <float>1610447546.97</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
