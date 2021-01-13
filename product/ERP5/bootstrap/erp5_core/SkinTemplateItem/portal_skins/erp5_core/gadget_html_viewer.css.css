@@ -1,0 +1,139 @@
+div[data-gadget-url$="gadget_html_viewer.html"] {
+  max-width: 50em;
+  display: block;
+  word-wrap: break-word;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  text-align: justify;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] canvas,
+div[data-gadget-url$="gadget_html_viewer.html"] img,
+div[data-gadget-url$="gadget_html_viewer.html"] iframe,
+div[data-gadget-url$="gadget_html_viewer.html"] svg {
+  max-width: 100%;
+  max-height: 100vh;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] video {
+  max-width: 100%;
+  height: auto;
+  max-height: 100vh;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] h1 {
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-size: 1.5em;
+  text-transform: capitalize;
+  text-align: center;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] h2 {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 1.3em;
+  text-transform: capitalize;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] h3 {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 1.1em;
+  text-transform: uppercase;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] h4 {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 1.1em;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] blockquote {
+  margin: 6pt 6pt 6pt 0;
+  padding-left: 6pt;
+  border-left: 2px solid #0E81C2;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] i,
+div[data-gadget-url$="gadget_html_viewer.html"] cite,
+div[data-gadget-url$="gadget_html_viewer.html"] em,
+div[data-gadget-url$="gadget_html_viewer.html"] var,
+div[data-gadget-url$="gadget_html_viewer.html"] address,
+div[data-gadget-url$="gadget_html_viewer.html"] dfn {
+  font-style: italic;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] strong,
+div[data-gadget-url$="gadget_html_viewer.html"] b,
+div[data-gadget-url$="gadget_html_viewer.html"] figcaption {
+  font-weight: 600;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] u,
+div[data-gadget-url$="gadget_html_viewer.html"] ins {
+  text-decoration: underline;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] s,
+div[data-gadget-url$="gadget_html_viewer.html"] strike,
+div[data-gadget-url$="gadget_html_viewer.html"] del {
+  text-decoration: line-through;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] tt,
+div[data-gadget-url$="gadget_html_viewer.html"] code,
+div[data-gadget-url$="gadget_html_viewer.html"] kbd,
+div[data-gadget-url$="gadget_html_viewer.html"] samp {
+  font-family: "Courier New", Courier, monospace;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] code,
+div[data-gadget-url$="gadget_html_viewer.html"] kbd {
+  color: #2CC32C;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] q {
+  display: inline;
+  quotes: initial;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] q:before {
+  content: open-quote;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] q:after {
+  content: close-quote;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] pre,
+div[data-gadget-url$="gadget_html_viewer.html"] xmp,
+div[data-gadget-url$="gadget_html_viewer.html"] plaintext,
+div[data-gadget-url$="gadget_html_viewer.html"] listing {
+  display: block;
+  white-space: pre-wrap;
+  font-family: "Courier New", Courier, monospace;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table {
+  border: 1px solid #1F1F1F;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table tr {
+  border: 1px solid #1F1F1F;
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table th,
+div[data-gadget-url$="gadget_html_viewer.html"] table td {
+  text-align: center;
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table th {
+  text-transform: uppercase;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ul {
+  list-style: disc;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ul li {
+  margin-left: 2em;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ol {
+  list-style: decimal;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ol li {
+  margin-left: 2em;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] dl {
+  display: grid;
+  grid-template-columns: max-content auto;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] dl dt {
+  grid-column-start: 1;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] dl dd,
+div[data-gadget-url$="gadget_html_viewer.html"] dl dl {
+  grid-column-start: 2;
+}
