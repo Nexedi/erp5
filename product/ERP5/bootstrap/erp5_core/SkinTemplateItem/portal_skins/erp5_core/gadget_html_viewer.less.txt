@@ -1,0 +1,154 @@
+@sans-serif: 'Open Sans', Helvetica, Arial, sans-serif;
+@monospace: "Courier New", Courier, monospace;
+@serif: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+@margin-size: 6pt;
+@border-size: 2px;
+@border-type: solid;
+@colorsubheaderbackground: #0E81C2;
+@bold-font-weight: 600;
+@black: #1F1F1F;
+@colorforeground: @black;
+
+
+div[data-gadget-url$="gadget_html_viewer.html"] {
+  max-width: 50em;
+
+  display: block;
+  word-wrap: break-word;
+  font-family: @serif;
+  text-align: justify;
+
+  canvas, img, iframe, svg {
+    max-width: 100%;
+    max-height: 100vh;
+  }
+  video {
+    max-width: 100%;
+    height: auto;
+    max-height: 100vh;
+  }
+
+
+  h1 {
+    font-family: @serif;
+    font-size: 1.5em;
+    text-transform: capitalize;
+    text-align: center;
+  }
+
+  h2 {
+    font-family: @sans-serif;
+    font-size: 1.3em;
+    text-transform: capitalize;
+  }
+
+  h3 {
+    font-family: @sans-serif;
+    font-size: 1.1em;
+    text-transform: uppercase;
+  }
+
+  h4 {
+    font-family: @sans-serif;
+    font-size: 1.1em;
+  }
+
+  blockquote {
+    margin: @margin-size @margin-size @margin-size 0;
+    padding-left: @margin-size;
+    border-left: @border-size @border-type @colorsubheaderbackground;
+  }
+
+  i, cite, em, var, address, dfn {
+    font-style: italic;
+  }
+
+  strong, b, figcaption {
+    font-weight: @bold-font-weight;
+  }
+
+  u, ins {
+    text-decoration: underline;
+  }
+
+  s, strike, del {
+    text-decoration: line-through;
+  }
+
+  tt, code, kbd, samp {
+      font-family: @monospace;
+  }
+
+  code, kbd {
+    color: #2CC32C;
+  }
+
+  q {
+    display: inline;
+    &:before {
+      content: open-quote;
+    }
+    &:after {
+      content: close-quote;
+    }
+    quotes: initial;
+  }
+
+  pre, xmp, plaintext, listing {
+    display: block;
+    white-space: pre-wrap;
+    font-family: @monospace;
+  }
+
+  table {
+    border: 1px solid @colorforeground;
+    width: 100%;
+    margin:0;
+    padding:0;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    tr {
+      border: 1px solid @colorforeground;
+      padding-top: @margin-size;
+      padding-bottom: @margin-size;
+    }
+    th, td {
+      text-align: center;
+      padding-top: @margin-size;
+      padding-bottom: @margin-size;
+    }
+
+    th {
+      text-transform: uppercase;
+    }
+  }
+
+  ul {
+    list-style: disc;
+    li {
+      margin-left: 2em;
+    }
+  }
+
+  ol {
+    list-style: decimal;
+    li {
+      margin-left: 2em;
+    }
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content auto;
+    dt {
+      grid-column-start: 1;
+    }
+
+    dd, dl {
+      grid-column-start: 2;
+    }
+  }
+
+
+}
