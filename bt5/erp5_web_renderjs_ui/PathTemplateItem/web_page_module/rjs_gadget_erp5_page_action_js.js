@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray, console */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray) {
   "use strict";
@@ -26,6 +26,52 @@
 
   }
 
+  function genericFunctionToMergeActions(gadget, links, editable_mapping) {
+    /* XXX Move to gadget_erp5_global.js and reuse everywhere
+     This is a draft but the goal here is add raw action_type in ERP5JS
+     and developer setup actions to users access some views from xhtml
+    */
+    var i, group,
+      action_type,
+      url_mapping = {},
+      group_mapping = {
+        action_workflow: ensureArray(links.action_workflow),
+        action_object_jio_action: ensureArray(links.action_object_jio_action)
+          .concat(ensureArray(links.action_object_jio_button))
+          .concat(ensureArray(links.action_object_jio_fast_input)),
+        action_object_clone_action: ensureArray(links.action_object_clone_action),
+        action_object_delete_action: ensureArray(links.action_object_delete_action)
+      };
+
+    for (group in group_mapping) {
+      if (group_mapping.hasOwnProperty(group)) {
+        if (!(group in url_mapping)) {
+          url_mapping[group] = [];
+        }
+        if (group_mapping.hasOwnProperty(group)) {
+          for (i = 0; i < group_mapping[group].length; i += 1) {
+            url_mapping[group].push({
+              command: 'display_with_history_and_cancel', options: {
+                jio_key: gadget.state.jio_key,
+                view: group_mapping[group][i].href,
+                editable: editable_mapping[group]
+              }
+            });
+          }
+          action_type = group + "_raw";
+          if (action_type in links) {
+            for (i = 0; i < erp5_document._links[action_type].length; i += 1) {
+              if (erp5_document._links[action_type][i].href) {
+                url_mapping[group].push(erp5_document._links[i]);
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log(url_mapping);
+    return url_mapping;
+  }
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -59,6 +105,7 @@
     .onStateChange(function () {
       var gadget = this,
         erp5_document,
+        url_mapping,
         group_list,
         raw_list;
 
@@ -69,8 +116,7 @@
           erp5_document = jio_attachment;
           raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
-          var i,
-            j,
+          var i, j,
             url_for_kw_list = [];
 
           group_list = [
@@ -82,6 +128,12 @@
             ensureArray(erp5_document._links.action_object_clone_action), true, 'clone',
             ensureArray(erp5_document._links.action_object_delete_action), undefined, 'trash-o'];
 
+          url_mapping = genericFunctionToMergeActions(gadget, erp5_document._links, {
+            action_object_clone_action: true,
+          });
+
+          /* XXX - Reuse url_mapping here and stop to calculate this links in different places
+          */
           for (i = 0; i < group_list.length; i += 3) {
             for (j = 0; j < group_list[i].length; j += 1) {
               url_for_kw_list.push({command: 'display_with_history_and_cancel', options: {
