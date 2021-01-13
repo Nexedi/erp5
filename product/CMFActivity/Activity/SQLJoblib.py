@@ -106,11 +106,10 @@ CREATE TABLE %s (
     values_list = []
     max_payload = self._insert_max_payload
     sep_len = len(self._insert_separator)
+    hasDependency = self._hasDependency
     for m in message_list:
       if m.is_registered:
         active_process_uid = m.active_process_uid
-        order_validation_text = m.order_validation_text = \
-          self.getOrderValidationText(m)
         date = m.activity_kw.get('at_date')
         row = ','.join((
           '@uid+%s' % i,
@@ -118,7 +117,7 @@ CREATE TABLE %s (
           'NULL' if active_process_uid is None else str(active_process_uid),
           "UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
-          '0' if order_validation_text == 'none' else '-1',
+          '-1' if hasDependency(m) else '0',
           str(m.activity_kw.get('priority', 1)),
           quote(m.getGroupId()),
           quote(m.activity_kw.get('tag', '')),
