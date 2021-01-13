@@ -29,17 +29,17 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Edit Portal Type Accounting Transaction Module</td>
+  <td>Edit Portal Type</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type Accounting Transaction Module"]</td>
+  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type Accounting Transaction Module"]</td>
+  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type"]</td>
   <td></td>
 </tr>
 <tr>
@@ -54,12 +54,12 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Edit Portal Type Base Type</td>
+  <td>Edit Portal Type</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type Base Type"]</td>
+  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type"]</td>
   <td></td>
 </tr>
 <tr>
@@ -74,12 +74,17 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Edit Portal Type Accounting Transaction Module</td>
+  <td>Edit Portal Type</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type Accounting Transaction Module"]</td>
+  <td>//dd[@class="document-listview"]/a[text()="Edit Portal Type"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Accounting"]</td>
   <td></td>
 </tr>
 <tr>
