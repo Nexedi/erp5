@@ -217,13 +217,13 @@
 
 <tr>
   <td>type</td>
-  <td>//tbody//tr[1]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[1]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>2.3</td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>//tbody//tr[1]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[1]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>2.3</td>
 </tr>
 
@@ -236,7 +236,7 @@
 
 <tr>
   <td>type</td>
-  <td>//tbody//tr[2]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[2]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>10.1</td>
 </tr>
 
@@ -334,7 +334,7 @@
 
 <tr>
   <td>assertValue</td>
-  <td>//tbody//tr[1]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[1]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>2.3</td>
 </tr>
 
@@ -348,7 +348,7 @@
 
 <tr>
   <td>assertValue</td>
-  <td>//tbody//tr[2]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[2]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>10.1</td>
 </tr>
 
@@ -476,7 +476,7 @@
 
 <tr>
   <td>assertNotValue</td>
-  <td>//tbody//tr[1]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[1]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>2.3</td>
 </tr>
 
@@ -490,7 +490,7 @@
 
 <tr>
   <td>assertNotValue</td>
-  <td>//tbody//tr[2]//input[@title="Quantity"]</td>
+  <td>//tbody//tr[2]//input[contains(@name, "field_listbox_quantity_")]</td>
   <td>10.1</td>
 </tr>
 

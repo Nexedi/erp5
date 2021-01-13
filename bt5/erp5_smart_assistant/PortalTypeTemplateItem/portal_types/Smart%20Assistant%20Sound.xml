@@ -49,7 +49,9 @@
         <item>
             <key> <string>type_interface</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>ISmartAssistant</string>
+              </tuple>
             </value>
         </item>
         <item>

@@ -135,7 +135,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@name="field_your_seventh_failure" and @title="Seventh Failure"]</td>
+  <td>//input[@name="field_your_seventh_failure"]</td>
   <td></td>
 </tr>
 <tr>

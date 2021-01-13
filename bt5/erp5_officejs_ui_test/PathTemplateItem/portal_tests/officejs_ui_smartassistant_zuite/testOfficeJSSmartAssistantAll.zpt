@@ -306,7 +306,7 @@
 </tr>
 <tr>
   <td>type</td>
-  <td>//textarea[@title='Description']</td>
+  <td>//textarea[@name='field_your_description']</td>
   <td>This is a reply test</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
