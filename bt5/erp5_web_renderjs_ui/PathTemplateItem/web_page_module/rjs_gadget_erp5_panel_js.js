@@ -84,6 +84,8 @@
         display_workflow_list = asBoolean(options.display_workflow_list);
       }
 
+      /* XXX - Reuse url_mapping here and stop to calculate this links in different places
+      */
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
         workflow_list = ensureArray(erp5_document._links.action_workflow);
         view_list = ensureArray(erp5_document._links.action_object_view);
