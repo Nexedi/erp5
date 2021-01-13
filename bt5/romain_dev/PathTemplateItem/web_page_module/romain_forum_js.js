@@ -117,7 +117,7 @@
   }
 
   function renderDiscussionThread(gadget, must_declare, jio_key) {
-    return loadChildGadget(gadget, "gadget_erp5_pt_form_view.html",
+    return loadChildGadget(gadget, "gadget_erp5_pt_form_dialog.html",
                            must_declare, function (form_gadget) {
 
         var thread_info_dict;
@@ -143,13 +143,13 @@
                 ['modification_date', 'Modification Date']
               ];
 
-            field_dict.listbox = {
+            field_dict.nutnut = {
               "column_list": column_list,
               "show_anchor": 0,
               "default_params": {},
               "editable": 1,
               "editable_column_list": [],
-              "key": "field_listbox",
+              "key": "field_nutnut",
               "lines": 15,
               "list_method": "portal_catalog",
               "query": "urn:jio:allDocs?query=" + Query.objectToSearchText(
@@ -177,12 +177,40 @@
               "search_column_list": [],
               "sort_column_list": [],
               "sort": [['modification_date', 'ASC']],
-              "title": "Discussion Posts",
-              "type": "ListBox"
+              "title": "Discussion Posts XXXXXXX",
+              "type": "GadgetField",
+              "url": "gadget_thread_reader.html",
+              "sandbox": "",
+              "renderjs_extra": JSON.stringify({
+                query: "urn:jio:allDocs?query=" + Query.objectToSearchText(
+                  new ComplexQuery({
+                    operator: "AND",
+                    query_list: [
+                      new SimpleQuery({
+                        key: "portal_type",
+                        operator: "=",
+                        type: "simple",
+                        value: "Discussion Post"
+                      }),
+                      new SimpleQuery({
+                        key: "parent_uid",
+                        operator: "=",
+                        type: "simple",
+                        // XXX Check usual states
+                        value: thread_info_dict.uid
+                      })
+                    ],
+                    type: "complex"
+                  })
+                ),
+                sort: [['modification_date', 'ASC']],
+                lines: 15,
+              }),
+              "hidden": 0
             };
             group_list.push([
-              "bottom",
-              [["listbox"]]
+              "center",
+              [["nutnut"]]
             ], [
               "hidden", ["listbox_modification_date"]
             ]);
@@ -465,11 +493,12 @@
       return;
     })
 
-    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+    .allowPublicAcquisition("jio_allDocs", function (param_list, scope) {
       // XXX Convert iso date to a DateTime field
       // XXX Paginate message to last message on modification date column
       var gadget = this,
         options = param_list[0];
+      console.log(scope, param_list);
       return gadget.jio_allDocs(options)
         .push(function (result) {
           var i, date, len = result.data.total_rows;
@@ -502,6 +531,7 @@
                 }
               };
             }
+            /*
             if (result.data.rows[i].value.hasOwnProperty("asStrippedHTML")) {
               result.data.rows[i].value.asStrippedHTML = {
                 url_value: {
@@ -523,6 +553,7 @@
                 }
               };
             }
+            */
 
           }
           return result;
