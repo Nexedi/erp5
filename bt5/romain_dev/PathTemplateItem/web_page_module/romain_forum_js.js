@@ -8,6 +8,8 @@
   // XXX create topic by followup (allDocs group by follow up)
 
   var DISPLAY_READER = 'display_reader',
+    DISPLAY_THREAD = 'display_thread',
+    DISPLAY_POST = 'display_post',
     MAIN_SCOPE = 'child_scope';
 
   function loadChildGadget(gadget, gadget_url, must_declare, callback) {
@@ -117,7 +119,7 @@
   }
 
   function renderDiscussionThread(gadget, must_declare, jio_key) {
-    return loadChildGadget(gadget, "gadget_erp5_pt_form_dialog.html",
+    return loadChildGadget(gadget, "gadget_erp5_pt_form_view_editable.html",
                            must_declare, function (form_gadget) {
 
         var thread_info_dict;
@@ -209,7 +211,7 @@
               "hidden": 0
             };
             group_list.push([
-              "center",
+              "bottom",
               [["nutnut"]]
             ], [
               "hidden", ["listbox_modification_date"]
@@ -496,6 +498,10 @@
     .allowPublicAcquisition("jio_allDocs", function (param_list, scope) {
       // XXX Convert iso date to a DateTime field
       // XXX Paginate message to last message on modification date column
+      if (this.state.display_step !== DISPLAY_READER) {
+        throw new rJS.AcquisitionError();
+      }
+
       var gadget = this,
         options = param_list[0];
       console.log(scope, param_list);
@@ -560,16 +566,26 @@
         });
     })
 
-    .setState({
-      display_step: DISPLAY_READER
-    })
     .declareMethod('render', function (options) {
       console.log(options);
+
+      var display_step,
+        jio_key = options.jio_key;
+      if (jio_key === undefined) {
+        display_step = DISPLAY_READER;
+      } else if ((jio_key.match(/\//g) || []).length === 1) {
+        // XXX HACK
+        display_step = DISPLAY_THREAD;
+      }
+
       return this.changeState({
-        first_render: true,
+        // first_render: true,
         page: options.page,
-        jio_key: options.jio_key,
-        options: options
+        jio_key: jio_key,
+        display_step: display_step,
+        options: options,
+        // Force display in any case
+        render_timestamp: new Date().getTime()
         /*
         display_step: DISPLAY_TREE,
         // Only build the bt5 during the first query
@@ -596,51 +612,28 @@
       console.log('changestate', modification_dict);
       var gadget = this;
 
-      // Always refresh the reader
       if (gadget.state.display_step === DISPLAY_READER) {
-        if (gadget.state.jio_key === undefined) {
-          return renderDiscussionThreadList(
-            gadget,
-            modification_dict.hasOwnProperty('display_step') || modification_dict.first_render
-          );
-        }
-        // XXX HACK
-        if ((gadget.state.jio_key.match(/\//g) || []).length === 1) {
-          return renderDiscussionThread(
-            gadget,
-            modification_dict.hasOwnProperty('display_step') || modification_dict.first_render,
-            gadget.state.jio_key
-          );
-        }
+        return renderDiscussionThreadList(
+          gadget,
+          modification_dict.hasOwnProperty('display_step')
+        );
+      }
+      if (gadget.state.display_step === DISPLAY_THREAD) {
+        return renderDiscussionThread(
+          gadget,
+          modification_dict.hasOwnProperty('display_step'),
+          gadget.state.jio_key
+        );
+      }
+    /*
         return renderDiscussionPost(
           gadget,
           modification_dict.hasOwnProperty('display_step') || modification_dict.first_render,
           gadget.state.jio_key
         );
       }
-/*
-      if (gadget.state.display_step === DISPLAY_TREE) {
-        console.log(modification_dict);
-        if (modification_dict.hasOwnProperty('display_step')) {
-          return renderTreeView(gadget,
-                                modification_dict.hasOwnProperty('extract'));
-        }
-        if (modification_dict.hasOwnProperty('expand_tree')) {
-          return expandTreeView(gadget);
-        }
-      }
-
-      if (modification_dict.display_step === DISPLAY_DIFF) {
-        return renderDiffView(gadget);
-      }
-
-      if (modification_dict.display_step === DISPLAY_CHANGELOG) {
-        return renderChangelogView(gadget);
-      }
 */
-      if (modification_dict.hasOwnProperty('display_step')) {
-        throw new Error('Unhandled display step: ' + gadget.state.display_step);
-      }
+      throw new Error('Unhandled display step: ' + gadget.state.display_step);
     });
 
 }(window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query));
