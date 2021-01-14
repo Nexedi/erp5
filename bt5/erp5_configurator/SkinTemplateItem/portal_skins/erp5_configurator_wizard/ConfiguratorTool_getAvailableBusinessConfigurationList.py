@@ -6,7 +6,7 @@
 bc_list = context.business_configuration_module.searchFolder(
                               portal_type="Business Configuration",
                               simulation_state="draft",
-                              resource_relative_url="workflow_module/%")
+                              resource_relative_url="portal_workflow/%")
 
 bc_list = [bc.getObject() for bc in bc_list if bc.getResourceValue() is not None]
 
