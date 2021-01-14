@@ -107,7 +107,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/workflow_module/run_my_doc_configuration_workflow</string>
+                <string>resource/portal_workflow/run_my_doc_configuration_workflow</string>
               </tuple>
             </value>
         </item>
