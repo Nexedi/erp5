@@ -73,7 +73,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     """ Set Consulting Workflow into Business Configuration """
     business_configuration = sequence.get("business_configuration")
     self.setBusinessConfigurationWorkflow(business_configuration,
-                      "workflow_module/ebusiness_lotse_configuration_workflow")
+                      "portal_workflow/ebusiness_lotse_configuration_workflow")
 
 
   def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
