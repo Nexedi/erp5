@@ -220,7 +220,7 @@
   rJS(window)
 
     .declareMethod('render', function (options) {
-      domsugar(this.element, [cleanup(options.value)]);
+      domsugar(this.element, Array.from(cleanup(options.value).childNodes));
     });
 
 }(window, rJS, domsugar, document, DOMParser, NodeFilter));
