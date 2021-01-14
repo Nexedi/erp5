@@ -137,8 +137,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/workflow_module/erp5_standard_workflow</string>
-                <string>current_state/workflow_module/erp5_standard_workflow/63</string>
+                <string>resource/portal_workflow/erp5_standard_workflow</string>
+                <string>current_state/portal_workflow/erp5_standard_workflow/state_end</string>
                 <string>specialise/portal_templates/50</string>
               </tuple>
             </value>
@@ -313,7 +313,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>workflow_module/erp5_standard_workflow/12</string> </key>
+                    <key> <string>portal_workflow/erp5_standard_workflow/transition_configure_user_accounts</string> </key>
                     <value> <int>0</int> </value>
                 </item>
               </dictionary>

@@ -90,7 +90,7 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     """ Set Consulting Workflow into Business Configuration """
     business_configuration = sequence.get("business_configuration")
     self.setBusinessConfigurationWorkflow(business_configuration,
-                          "workflow_module/maxma_demo_configuration_workflow")
+                          "portal_workflow/maxma_demo_configuration_workflow")
 
 
   def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):

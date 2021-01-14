@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>workflow_path="workflow_module/erp5_standard_workflow"</string> </value>
+            <value> <string>workflow_path="portal_workflow/erp5_standard_workflow"</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

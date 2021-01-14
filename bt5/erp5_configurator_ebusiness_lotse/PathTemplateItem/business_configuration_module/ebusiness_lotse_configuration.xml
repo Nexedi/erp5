@@ -88,8 +88,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/workflow_module/ebusiness_lotse_configuration_workflow</string>
-                <string>current_state/workflow_module/ebusiness_lotse_configuration_workflow/63</string>
+                <string>resource/portal_workflow/ebusiness_lotse_configuration_workflow</string>
+                <string>current_state/portal_workflow/ebusiness_lotse_configuration_workflow/state_end</string>
               </tuple>
             </value>
         </item>

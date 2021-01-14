@@ -82,7 +82,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/workflow_module/officejs_sdk_workflow</string>
+                <string>resource/portal_workflow/officejs_sdk_workflow</string>
               </tuple>
             </value>
         </item>

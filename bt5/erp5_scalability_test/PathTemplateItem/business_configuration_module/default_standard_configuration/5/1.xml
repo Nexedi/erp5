@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>transition</string> </key>
-            <value> <string>workflow_module/erp5_standard_workflow/4</string> </value>
+            <value> <string>portal_workflow/erp5_standard_workflow/transition_configure_organisation</string> </value>
         </item>
       </dictionary>
     </pickle>
