@@ -6,7 +6,6 @@
   function generateSection(title, icon, view_list) {
     var i,
       dom_list = [];
-
     for (i = 0; i < view_list.length; i += 1) {
       dom_list.push(domsugar('li', [domsugar('a', {
         href: view_list[i].link,
@@ -26,22 +25,10 @@
 
   }
 
-  function genericFunctionToMergeActions(gadget, links, editable_mapping) {
-    /* XXX Move to gadget_erp5_global.js and reuse everywhere
-     This is a draft but the goal here is add raw action_type in ERP5JS
-     and developer setup actions to users access some views from xhtml
-    */
+  function genericFunctionToMergeActions(gadget, links, group_mapping, editable_mapping) {
     var i, group,
       action_type,
-      url_mapping = {},
-      group_mapping = {
-        action_workflow: ensureArray(links.action_workflow),
-        action_object_jio_action: ensureArray(links.action_object_jio_action)
-          .concat(ensureArray(links.action_object_jio_button))
-          .concat(ensureArray(links.action_object_jio_fast_input)),
-        action_object_clone_action: ensureArray(links.action_object_clone_action),
-        action_object_delete_action: ensureArray(links.action_object_delete_action)
-      };
+      url_mapping = {};
 
     for (group in group_mapping) {
       if (group_mapping.hasOwnProperty(group)) {
@@ -54,7 +41,8 @@
             options: {
               jio_key: gadget.state.jio_key,
               view: group_mapping[group][i].href,
-              editable: editable_mapping[group]
+              editable: editable_mapping[group],
+              title: group_mapping[group][i].title
             }
           });
         }
@@ -68,7 +56,6 @@
           }
       }
     }
-    console.log(url_mapping);
     return url_mapping;
   }
   rJS(window)
@@ -116,30 +103,36 @@
           raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
           var i, j,
+            group_mapping,
+            icon_mapping,
+            editable_mapping,
             url_for_kw_list = [];
 
-          group_list = [
-            // Action list, editable, icon
-            ensureArray(erp5_document._links.action_workflow), undefined, 'random',
-            ensureArray(erp5_document._links.action_object_jio_action)
+          group_mapping = {
+            action_workflow: ensureArray(erp5_document._links.action_workflow),
+            action_object_jio_action: ensureArray(erp5_document._links.action_object_jio_action)
               .concat(ensureArray(erp5_document._links.action_object_jio_button))
-              .concat(ensureArray(erp5_document._links.action_object_jio_fast_input)), undefined, 'gear',
-            ensureArray(erp5_document._links.action_object_clone_action), true, 'clone',
-            ensureArray(erp5_document._links.action_object_delete_action), undefined, 'trash-o'];
+              .concat(ensureArray(erp5_document._links.action_object_jio_fast_input)),
+            action_object_clone_action: ensureArray(erp5_document._links.action_object_clone_action),
+            action_object_delete_action: ensureArray(erp5_document._links.action_object_delete_action)
+          }
 
-          url_mapping = genericFunctionToMergeActions(gadget, erp5_document._links, {
-            action_object_clone_action: true
+          url_mapping = genericFunctionToMergeActions(gadget,
+            erp5_document._links,
+            group_mapping, {
+              action_object_clone_action: true,
           });
 
-          /* XXX - Reuse url_mapping here and stop to calculate this links in different places
-          */
-          for (i = 0; i < group_list.length; i += 3) {
+          group_list = [
+            url_mapping.action_workflow, 'random',
+            url_mapping.action_object_jio_action, 'gear',
+            url_mapping.action_object_clone_action, 'clone',
+            url_mapping.action_object_delete_action, 'trash-o'
+          ];
+
+          for (i = 0; i < group_list.length; i += 2) {
             for (j = 0; j < group_list[i].length; j += 1) {
-              url_for_kw_list.push({command: 'display_with_history_and_cancel', options: {
-                jio_key: gadget.state.jio_key,
-                view: group_list[i][j].href,
-                editable: group_list[i + 1]
-              }});
+              url_for_kw_list.push(group_list[i][j]);
             }
           }
 
@@ -170,7 +163,7 @@
             raw_action_list = [],
             link_list;
 
-          for (i = 0; i < group_list.length; i += 3) {
+          for (i = 0; i < group_list.length; i += 2) {
             link_list = [];
             for (j = 0; j < group_list[i].length; j += 1) {
               link_list.push({
@@ -180,7 +173,7 @@
               k += 1;
             }
             dom_list.push(
-              generateSection(result_dict.translation_list[i / 3], group_list[i + 2], link_list)
+              generateSection(result_dict.translation_list[i / 2], group_list[i + 1], link_list)
             );
 
           }
