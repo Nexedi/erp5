@@ -216,6 +216,40 @@ and check that the relative time was updated.
   <td>a few seconds ago</td>
 </tr>
 
+<!-- Ctrl+S can also be used as a shortcut to post message -->
+<tal:block tal:define="text_content string:Post test 4">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-scope="editor"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>controlKeyDown</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>keyDown</td>
+  <td>//body</td>
+  <td>S</td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[3]/p</td>
+  <td>Post test 4</td>
+</tr>
 </tbody></table>
   </body>
 </html>
