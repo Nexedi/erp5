@@ -1,3 +1,4 @@
+#pylint:disable=redefined-builtin
 """
   Create an image object and upload the image if necessary
 """
@@ -20,9 +21,8 @@ def createImage(image_id):
 if slide_type in ['Screenshot', 'Illustration'] and upload_image:
   if not(file is None or not file):
     if edit_mode:
-      try:
-        image = context.restrictedTraverse(context.getPath() + '/' + image_id)
-      except:
+      image = context.restrictedTraverse(context.getPath() + '/' + image_id, None)
+      if image is None:
         image = createImage(image_id)
         msg += ' Image %s created.' % image_id
     else:
@@ -42,4 +42,4 @@ if slide_type in ['Screenshot', 'Illustration'] and upload_image:
 
 form_id = context.REQUEST.get('dialog_id', None)
 context.Base_redirect(form_id,
-                      keep_items = dict(portal_status_message=translateString(msg)))
+                      keep_items = dict(portal_status_message=msg))

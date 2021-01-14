@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/
+* http://meyerweb.com/eric/tools/css/reset/ 
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -1183,7 +1183,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
-.gadget-content .ui-field-contain > label:not(:is-invalid) {
+.gadget-content .ui-field-contain > label:not(.is-invalid) {
   color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {

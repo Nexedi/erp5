@@ -49,6 +49,7 @@ MAX_VALIDATED_LIMIT = 1000
 # Read this many messages to validate.
 READ_MESSAGE_LIMIT = 1000
 INVOKE_ERROR_STATE = -2
+DEPENDENCY_IGNORED_ERROR_STATE = -10
 # Activity uids are stored as 64 bits unsigned integers.
 # No need to depend on a database that supports unsigned integers.
 # Numbers are far big enough without using the MSb. Assuming a busy activity
@@ -281,17 +282,17 @@ CREATE TABLE %s (
       for line in result]
 
   def countMessageSQL(self, quote, **kw):
-    return "SELECT count(*) FROM %s WHERE processing_node > -10 AND %s" % (
-      self.sql_table, " AND ".join(
+    return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
+      self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
         sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v
         ) or "1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
     where = [sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v]
     if only_valid:
-      where.append('processing_node > -2')
+      where.append('processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
-      where.append('processing_node < -1')
+      where.append('processing_node <= %d' % INVOKE_ERROR_STATE)
     return "SELECT 1 FROM %s WHERE %s LIMIT 1" % (
       self.sql_table, " AND ".join(where) or "1")
 
@@ -347,8 +348,9 @@ CREATE TABLE %s (
     if validate_list:
       return ("SELECT '%s' as activity, uid, date, processing_node,"
               " priority, group_method_id, message FROM %s"
-              " WHERE processing_node > -10 AND (%s) LIMIT %s" % (
+              " WHERE processing_node > %d AND (%s) LIMIT %s" % (
                 type(self).__name__, self.sql_table,
+                DEPENDENCY_IGNORED_ERROR_STATE,
                 ' OR '.join(validate_list),
                 READ_MESSAGE_LIMIT if same_queue else 1))
 

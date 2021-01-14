@@ -165,7 +165,7 @@
         .push(function (erp5_url) {
           var erp5_url_input =
             gadget.props.element.querySelector("input[name='erp5_url']");
-          erp5_url_input.value = erp5_url || "https://nexedijs.erp5.net";
+          erp5_url_input.value = erp5_url || "https://erp5js.nexedi.net";
           erp5_url_input.removeAttribute("disabled");
           erp5_url_input.parentNode.classList.remove('ui-state-disabled');
           erp5_url_input.focus();

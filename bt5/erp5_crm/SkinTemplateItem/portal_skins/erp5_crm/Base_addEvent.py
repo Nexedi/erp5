@@ -1,4 +1,4 @@
-"""Generic script of Entity_addEvent
+"""Generic script to add event
 It creates new Event for any context which become follow_up of created Event.
 
 Connected user is source (outgoing direction)
