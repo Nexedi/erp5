@@ -7,6 +7,37 @@
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
 
+  function getRelativeTimeString(current_date, date) {
+    var diff,
+      abs,
+      second = 1000,
+      minute = second * 60,
+      hour = minute * 60,
+      day = hour * 24,
+      week = day * 7,
+      time_format = new Intl.RelativeTimeFormat();
+
+    diff = date.getFullYear() - current_date.getFullYear();
+    if (diff !== 0) {
+      return time_format.format(diff, 'year');
+    }
+
+    diff = date - current_date;
+    abs = Math.abs(diff);
+    // "year", "quarter", "month", "week", "day", "hour", "minute", "second"
+    console.log(current_date, date, abs, week, day);
+    if (abs > (week * 2)) {
+      return time_format.format(Math.floor(diff / week), 'week');
+    } else if (abs > (day * 2)) {
+      return time_format.format(Math.floor(diff / day), 'day');
+    } else if (abs > (hour * 2)) {
+      return time_format.format(Math.floor(diff / hour), 'hour');
+    } else {
+      return time_format.format(Math.floor(diff / minute), 'minute');
+    }
+    return date;
+  }
+
   function buildFieldGadgetParam(value) {
     var field_gadget_param;
 
@@ -386,13 +417,38 @@
           })
         ))
           .push(function (viewer_list) {
+            var now = new Date();
             domsugar(gadget.element, [
-              domsugar('p', {text: 'Comments:'}),
               domsugar('ol', allDocs_result.data.rows.map(function (entry, i) {
-                console.log(entry);
+                var source_title = entry.value.source_title || '',
+                  word_list = source_title.split(' '),
+                  source_short_title;
+                if (word_list.length === 1) {
+                  source_short_title = (word_list[0][0] || '?') + (word_list[0][1] || '');
+                } else {
+                  source_short_title = word_list[0][0] + word_list[1][0];
+                }
                 return domsugar('li', [
-                  viewer_list[i].element,
-                  domsugar('hr')
+                  domsugar('div', {
+                    class: 'post_avatar',
+                    text: source_short_title
+                  }),
+                  domsugar('div', {
+                    class: 'post_content',
+                  }, [
+                    domsugar('strong', {text: source_title}),
+                    " ",
+                    domsugar('time', {
+                      datetime: entry.value.modification_date,
+                      title: entry.value.modification_date,
+                      text: getRelativeTimeString(
+                        now, new Date(entry.value.modification_date)
+                      )
+                    }),
+                    domsugar('br'),
+                    viewer_list[i].element,
+                    // domsugar('hr')
+                  ])
                 ]);
               }))
             ]);
@@ -767,6 +823,19 @@
 
       return result_queue;
     })
+
+    .onLoop(function () {
+      // update relative time
+      var now = new Date();
+      this.element.querySelectorAll("div.post_content > time").forEach(
+        function (element) {
+          element.textContent = getRelativeTimeString(
+            now, new Date(element.getAttribute('datetime'))
+          );
+        }
+      );
+      // Loop every minute
+    }, 1000 * 60)
 
     //////////////////////////////////////////////
     // render the listbox in an asynchronous way
