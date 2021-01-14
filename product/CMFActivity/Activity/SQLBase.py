@@ -550,6 +550,9 @@ CREATE TABLE %s (
                                                1, node_set=node_family_id_list)
           if not result:
             break
+          # So reserved documents are properly released even if load raises.
+          for line in result:
+            uid_to_duplicate_uid_list_dict[line.uid] = []
         load = self.getProcessableMessageLoader(db, processing_node)
         m, uid, uid_list = load(result[0])
         message_list = [m]
