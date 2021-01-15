@@ -1,8 +1,8 @@
 /*global window, RSVP, SimpleQuery, ComplexQuery, Query,
-         ensureArray */
+         ensureArray, Array*/
 /*jslint indent: 2, maxerr: 3, nomen: true, unparam: true, continue: true */
 (function (window, RSVP, SimpleQuery, ComplexQuery, Query,
-           ensureArray) {
+           ensureArray, Array) {
   "use strict";
 
   ///////////////////////////////
@@ -168,12 +168,24 @@
                                               editable_mapping) {
     return RSVP.Queue()
       .push(function () {
-        var i, group,
+        var i, j, group,
           action_type,
           group_mapping = {},
           url_mapping = {};
 
         for (i = 0; i < group_id_list.length; i += 1) {
+          if (group_id_list[i] instanceof Array) {
+            group_mapping[group_id_list[i][0]] = ensureArray(
+              links[group_id_list[i][0]]
+            );
+            for (j = 1; j < group_id_list[i].length; j += 1) {
+              group_mapping[group_id_list[i][0]] = ensureArray(
+                links[group_id_list[i][0]].concat(
+                  ensureArray(links[group_id_list[i][j]])
+                )
+              );
+            }
+          }
           group_mapping[group_id_list[i]] = ensureArray(
             links[group_id_list[i]]
           );
@@ -360,4 +372,4 @@
   window.declareGadgetClassCanHandleListboxClipboardAction =
     declareGadgetClassCanHandleListboxClipboardAction;
 
-}(window, RSVP, SimpleQuery, ComplexQuery, Query, ensureArray));
+}(window, RSVP, SimpleQuery, ComplexQuery, Query, ensureArray, Array));
