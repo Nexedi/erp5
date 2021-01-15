@@ -10,7 +10,9 @@
   var DISPLAY_READER = 'display_reader',
     DISPLAY_THREAD = 'display_thread',
     DISPLAY_POST = 'display_post',
-    MAIN_SCOPE = 'child_scope';
+    MAIN_SCOPE = 'child_scope',
+    DISPLAYED_POST_COUNT = 15,
+    THREAD_READER_FIELD_KEY = 'field_listbox';
 
   function loadChildGadget(gadget, gadget_url, must_declare, callback) {
     var queue,
@@ -151,8 +153,8 @@
               "default_params": {},
               "editable": 1,
               "editable_column_list": [],
-              "key": "field_nutnut",
-              "lines": 15,
+              "key": THREAD_READER_FIELD_KEY,
+              "lines": DISPLAYED_POST_COUNT,
               "list_method": "portal_catalog",
               "query": "urn:jio:allDocs?query=" + Query.objectToSearchText(
                 new ComplexQuery({
@@ -205,8 +207,8 @@
                     type: "complex"
                   })
                 ),
-                sort: [['modification_date', 'ASC']],
-                lines: 15,
+                sort: [['modification_date', 'ASC'], ['uid', 'ASC']],
+                lines: DISPLAYED_POST_COUNT,
               }),
               "hidden": 0
             };
@@ -510,7 +512,8 @@
           var i, date,
             len = result.data.total_rows,
             key,
-            url_value;
+            url_value,
+            last_url_value;
           for (i = 0; i < len; i += 1) {
             url_value = {
               command: 'index',
@@ -519,6 +522,16 @@
                 page: gadget.state.page
               }
             };
+            last_url_value = {
+              command: 'index',
+              options: {
+                jio_key: result.data.rows[i].id,
+                page: gadget.state.page,
+              }
+            };
+            last_url_value.options[THREAD_READER_FIELD_KEY + '_begin_from'] =
+              result.data.rows[i].value.DiscussionThread_getDiscussionPostCount -
+              (result.data.rows[i].value.DiscussionThread_getDiscussionPostCount % DISPLAYED_POST_COUNT);
 
             for (key in result.data.rows[i].value) {
               if (result.data.rows[i].value.hasOwnProperty(key)) {
@@ -531,6 +544,8 @@
 
             if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
               date = new Date(result.data.rows[i].value.modification_date.default);
+              console.log(last_url_value);
+              result.data.rows[i].value.modification_date.url_value = last_url_value;
               result.data.rows[i].value.modification_date.field_gadget_param = {
                 allow_empty_time: 0,
                 ampm_time_style: 0,
