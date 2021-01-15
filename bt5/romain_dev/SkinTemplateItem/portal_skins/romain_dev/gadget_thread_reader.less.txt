@@ -13,11 +13,11 @@ div[data-gadget-url$="gadget_thread_reader.html"] {
 
     & > li {
       padding-bottom: 2em;
-
+/*
       &:nth-child(even) {
         background-color: rgba(230, 230, 230, 0.65);
       }
-
+*/
       & > div.post_content {
         display: inline-block;
         & > div {
@@ -45,7 +45,7 @@ div[data-gadget-url$="gadget_thread_reader.html"] {
 
       & + li {
         // Separate posts
-        // border-top: solid 1px @colorsubheaderbackground;
+        border-top: solid 1px @colorsubheaderbackground;
         padding-top: 1em;
       }
     }
