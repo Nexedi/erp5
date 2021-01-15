@@ -45,7 +45,7 @@
           column_list = [
             ['title', 'Title'],
             ['DiscussionThread_getDiscussionPostCount', 'Responses'],
-            ['modification_date', 'Modification Date']
+            ['modification_date', 'Date']
           ];
 
         field_dict.listbox = {
@@ -507,34 +507,58 @@
       console.log(scope, param_list);
       return gadget.jio_allDocs(options)
         .push(function (result) {
-          var i, date, len = result.data.total_rows;
+          var i, date,
+            len = result.data.total_rows,
+            key,
+            url_value;
           for (i = 0; i < len; i += 1) {
-            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
-              date = new Date(result.data.rows[i].value.modification_date);
-              result.data.rows[i].value.modification_date = {
-                url_value: {
-                  command: 'index',
-                  options: {
-                    jio_key: result.data.rows[i].id,
-                    page: gadget.state.page
-                  }
-                },
-                field_gadget_param: {
-                  allow_empty_time: 0,
-                  ampm_time_style: 0,
-                  css_class: "date_field",
-                  date_only: false,
-                  description: "The Date",
-                  editable: 1,
-                  hidden: 0,
-                  hidden_day_is_last_day: 0,
-                  "default": date.toUTCString(),
-                  key: "modification_date",
-                  required: 0,
-                  timezone_style: 0,
-                  title: "Modification Date",
-                  type: "DateTimeField"
+            url_value = {
+              command: 'index',
+              options: {
+                jio_key: result.data.rows[i].id,
+                page: gadget.state.page
+              }
+            };
+
+            for (key in result.data.rows[i].value) {
+              if (result.data.rows[i].value.hasOwnProperty(key)) {
+                result.data.rows[i].value[key] = {
+                  url_value: url_value,
+                  default: result.data.rows[i].value[key]
                 }
+              }
+            }
+
+            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
+              date = new Date(result.data.rows[i].value.modification_date.default);
+              result.data.rows[i].value.modification_date.field_gadget_param = {
+                allow_empty_time: 0,
+                ampm_time_style: 0,
+                css_class: "date_field",
+                date_only: false,
+                description: "The Date",
+                editable: 1,
+                hidden: 0,
+                hidden_day_is_last_day: 0,
+                "default": date.toUTCString(),
+                key: "modification_date",
+                required: 0,
+                timezone_style: 0,
+                title: "Modification Date",
+                type: "DateTimeField"
+              };
+            }
+
+            if (result.data.rows[i].value.hasOwnProperty("DiscussionThread_getDiscussionPostCount")) {
+              result.data.rows[i].value.DiscussionThread_getDiscussionPostCount.field_gadget_param = {
+                description: "Count",
+                editable: 0,
+                hidden: 0,
+                "default": result.data.rows[i].value.DiscussionThread_getDiscussionPostCount.default,
+                key: "count",
+                required: 0,
+                title: "Responses",
+                type: "IntegerField"
               };
             }
             /*
