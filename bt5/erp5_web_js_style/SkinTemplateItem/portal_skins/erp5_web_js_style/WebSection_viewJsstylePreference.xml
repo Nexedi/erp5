@@ -80,6 +80,7 @@
                     <value>
                       <list>
                         <string>my_configuration_style_gadget_url</string>
+                        <string>my_configuration_favicon_url</string>
                       </list>
                     </value>
                 </item>

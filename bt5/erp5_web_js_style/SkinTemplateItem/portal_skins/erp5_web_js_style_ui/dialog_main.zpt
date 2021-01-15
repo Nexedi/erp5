@@ -20,6 +20,9 @@
   <noscript>
     <link rel="stylesheet" href="jsstyle.css">
   </noscript>
+  <tal:block tal:define="favicon_url python: web_site.getLayoutProperty('configuration_favicon_url', default='')" tal:condition="favicon_url">
+    <link rel="icon" tal:attributes="href favicon_url" />
+  </tal:block>
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
   <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
   <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
