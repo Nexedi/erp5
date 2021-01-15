@@ -25,10 +25,17 @@
 
   }
 
-  function genericFunctionToMergeActions(gadget, links, group_mapping, editable_mapping) {
+  function buildGlobalActionList(gadget, links, group_id_list, editable_mapping) {
     var i, group,
       action_type,
+      group_mapping = {},
       url_mapping = {};
+
+    for (i = 0; i < group_id_list.length; i += 1) {
+      group_mapping[group_id_list[i]] = ensureArray(
+        links[group_id_list[i]]
+      );
+    }
 
     for (group in group_mapping) {
       if (group_mapping.hasOwnProperty(group)) {
@@ -49,11 +56,11 @@
         action_type = group + "_raw";
         if (links.hasOwnProperty(action_type)) {
           for (i = 0; i < links[action_type].length; i += 1) {
-              if (links[action_type][i].href) {
-                url_mapping[group].push(links[action_type][i]);
-              }
+            if (links[action_type][i].href) {
+              url_mapping[group].push(links[action_type][i]);
             }
           }
+        }
       }
     }
     return url_mapping;
@@ -103,25 +110,17 @@
           raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
           var i, j,
-            group_mapping,
-            icon_mapping,
-            editable_mapping,
-            url_for_kw_list = [];
+            url_for_kw_list = [],
+            group_id_list = ["action_workflow",
+                             "action_object_jio_action",
+                             "action_object_clone_action",
+                             "action_object_delete_action"];
 
-          group_mapping = {
-            action_workflow: ensureArray(erp5_document._links.action_workflow),
-            action_object_jio_action: ensureArray(erp5_document._links.action_object_jio_action)
-              .concat(ensureArray(erp5_document._links.action_object_jio_button))
-              .concat(ensureArray(erp5_document._links.action_object_jio_fast_input)),
-            action_object_clone_action: ensureArray(erp5_document._links.action_object_clone_action),
-            action_object_delete_action: ensureArray(erp5_document._links.action_object_delete_action)
-          }
-
-          url_mapping = genericFunctionToMergeActions(gadget,
+          url_mapping = buildGlobalActionList(gadget,
             erp5_document._links,
-            group_mapping, {
-              action_object_clone_action: true,
-          });
+            group_id_list, {
+              action_object_clone_action: true
+            });
 
           group_list = [
             url_mapping.action_workflow, 'random',
@@ -167,7 +166,7 @@
             link_list = [];
             for (j = 0; j < group_list[i].length; j += 1) {
               link_list.push({
-                title: group_list[i][j].title,
+                title: group_list[i][j].options.title,
                 link: result_dict.url_list[k]
               });
               k += 1;
