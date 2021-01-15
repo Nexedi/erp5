@@ -831,7 +831,8 @@
 
     .onLoop(function () {
       // update relative time
-      var now = new Date();
+      var now = new Date(),
+        gadget = this;
       this.element.querySelectorAll("div.post_content > time").forEach(
         function (element) {
           element.textContent = getRelativeTimeString(
