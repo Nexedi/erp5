@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="jsstyle.css">
   </noscript>
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
+  <link rel="icon" type="image/png" tal:attributes="href python: web_site.getLayoutProperty('configuration_favicon_url', default='')" />
   <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
   <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
   <script src="gadget_global.js"></script>
