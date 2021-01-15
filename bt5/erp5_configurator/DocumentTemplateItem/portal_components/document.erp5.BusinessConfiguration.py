@@ -101,7 +101,17 @@ class BusinessConfiguration(Item):
       if len(self.objectValues("ERP5 Configuration Save")) > 0:
         raise ValueError("Business Configuration Cannot be initialized, \
                           it contains one or more Configurator Save")
-      workflow.initializeDocument(self)
+
+      # TODO-BEFORE-MERGE: initializeDocument() in workflow_module
+      # implementation: Without this getCurrentState() is None and nothing
+      # happens because getNextTransition() returns None in such case. But
+      # there is no field to modify 'state_base_category' which is sets to
+      # 'current_state' and BusinessConfiguration uses getCurrentState() so is
+      # 'state_base_category' really needed?
+      self.setCategoryMembership(workflow.getStateBaseCategory(),
+                                 workflow.getSource())
+
+      workflow.notifyCreated(self)
 
   security.declareProtected(Permissions.View, 'getNextTransition')
   def getNextTransition(self):

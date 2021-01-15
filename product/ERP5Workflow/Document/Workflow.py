@@ -163,9 +163,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         # Swallow.
         pass
 
-  security.declarePrivate('initializeDocument')
-  initializeDocument = notifyCreated
-
   def _generateHistoryKey(self):
     """
     Generate a key used in the workflow history.
