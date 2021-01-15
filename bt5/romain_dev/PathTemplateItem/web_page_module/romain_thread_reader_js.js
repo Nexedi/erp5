@@ -7,7 +7,7 @@
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
 
-  function getRelativeTimeString(current_date, date) {
+  function getRelativeTimeString(language, current_date, date) {
     var diff,
       abs,
       second = 1000,
@@ -15,7 +15,7 @@
       hour = minute * 60,
       day = hour * 24,
       week = day * 7,
-      time_format = new Intl.RelativeTimeFormat();
+      time_format = new Intl.RelativeTimeFormat(language);
 
     diff = date.getFullYear() - current_date.getFullYear();
     if (diff !== 0) {
@@ -373,6 +373,7 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod('getSelectedLanguage', 'getSelectedLanguage')
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -384,14 +385,18 @@
       // Cancel previous line rendering to not conflict with the asynchronous render for now
       gadget.fetchLineContent(true);
 
-      return gadget.changeState({
-        query_string: new URI(options.query).query(true).query || '',
-        begin_from: 0,
-        lines: options.lines || 1,
-        // Force line calculation in any case
-        render_timestamp: new Date().getTime(),
-        allDocs_result: undefined
-      });
+      return gadget.getSelectedLanguage()
+        .push(function (language) {
+          return gadget.changeState({
+            language: language,
+            query_string: new URI(options.query).query(true).query || '',
+            begin_from: 0,
+            lines: options.lines || 1,
+            // Force line calculation in any case
+            render_timestamp: new Date().getTime(),
+            allDocs_result: undefined
+          });
+        });
     })
 
     .onStateChange(function onStateChange(modification_dict) {
@@ -442,7 +447,7 @@
                       datetime: entry.value.modification_date,
                       title: entry.value.modification_date,
                       text: getRelativeTimeString(
-                        now, new Date(entry.value.modification_date)
+                        gadget.state.language, now, new Date(entry.value.modification_date)
                       )
                     }),
                     domsugar('br'),
@@ -830,7 +835,7 @@
       this.element.querySelectorAll("div.post_content > time").forEach(
         function (element) {
           element.textContent = getRelativeTimeString(
-            now, new Date(element.getAttribute('datetime'))
+            gadget.state.language, now, new Date(element.getAttribute('datetime'))
           );
         }
       );
