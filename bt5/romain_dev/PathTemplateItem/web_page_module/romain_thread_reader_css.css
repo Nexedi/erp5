@@ -3,9 +3,11 @@ div[data-gadget-url$="gadget_thread_reader.html"] > ol {
 }
 div[data-gadget-url$="gadget_thread_reader.html"] > ol > li {
   padding-bottom: 2em;
-}
-div[data-gadget-url$="gadget_thread_reader.html"] > ol > li:nth-child(even) {
-  background-color: rgba(230, 230, 230, 0.65);
+  /*
+      &:nth-child(even) {
+        background-color: rgba(230, 230, 230, 0.65);
+      }
+*/
 }
 div[data-gadget-url$="gadget_thread_reader.html"] > ol > li > div.post_content {
   display: inline-block;
@@ -28,5 +30,6 @@ div[data-gadget-url$="gadget_thread_reader.html"] > ol > li > div.post_avatar {
   text-transform: uppercase;
 }
 div[data-gadget-url$="gadget_thread_reader.html"] > ol > li + li {
+  border-top: solid 1px #0E81C2;
   padding-top: 1em;
 }
