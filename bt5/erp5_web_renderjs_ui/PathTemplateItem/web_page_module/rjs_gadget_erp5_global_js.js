@@ -164,6 +164,50 @@
   ///////////////////////////////
   // Handle listbox action list
   ///////////////////////////////
+  function mergeGlobalActionWithRawActionList(gadget, links, group_id_list,
+                                              editable_mapping) {
+    return RSVP.Queue()
+      .push(function () {
+        var i, group,
+          action_type,
+          group_mapping = {},
+          url_mapping = {};
+
+        for (i = 0; i < group_id_list.length; i += 1) {
+          group_mapping[group_id_list[i]] = ensureArray(
+            links[group_id_list[i]]
+          );
+        }
+        for (group in group_mapping) {
+          if (group_mapping.hasOwnProperty(group)) {
+            if (!url_mapping.hasOwnProperty(group)) {
+              url_mapping[group] = [];
+            }
+            for (i = 0; i < group_mapping[group].length; i += 1) {
+              url_mapping[group].push({
+                command: 'display_with_history_and_cancel',
+                options: {
+                  jio_key: gadget.state.jio_key,
+                  view: group_mapping[group][i].href,
+                  editable: editable_mapping[group],
+                  title: group_mapping[group][i].title
+                }
+              });
+            }
+            action_type = group + "_raw";
+            if (links.hasOwnProperty(action_type)) {
+              for (i = 0; i < links[action_type].length; i += 1) {
+                if (links[action_type][i].href) {
+                  url_mapping[group].push(links[action_type][i]);
+                }
+              }
+            }
+          }
+        }
+        return url_mapping;
+      });
+  }
+
   function getListboxClipboardActionList() {
     var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
       i,
@@ -311,6 +355,7 @@
       .allowPublicAcquisition("triggerListboxClipboardAction",
                               triggerListboxClipboardAction);
   }
+  window.mergeGlobalActionWithRawActionList = mergeGlobalActionWithRawActionList;
   window.triggerListboxClipboardAction = triggerListboxClipboardAction;
   window.declareGadgetClassCanHandleListboxClipboardAction =
     declareGadgetClassCanHandleListboxClipboardAction;

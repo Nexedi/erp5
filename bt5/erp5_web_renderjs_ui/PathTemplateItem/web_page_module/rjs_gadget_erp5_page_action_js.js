@@ -1,6 +1,8 @@
-/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray, console */
+/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+         console, mergeGlobalActionWithRawActionList */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+           mergeGlobalActionWithRawActionList) {
   "use strict";
 
   function generateSection(title, icon, view_list) {
@@ -25,46 +27,6 @@
 
   }
 
-  function buildGlobalActionList(gadget, links, group_id_list, editable_mapping) {
-    var i, group,
-      action_type,
-      group_mapping = {},
-      url_mapping = {};
-
-    for (i = 0; i < group_id_list.length; i += 1) {
-      group_mapping[group_id_list[i]] = ensureArray(
-        links[group_id_list[i]]
-      );
-    }
-
-    for (group in group_mapping) {
-      if (group_mapping.hasOwnProperty(group)) {
-        if (!url_mapping.hasOwnProperty(group)) {
-          url_mapping[group] = [];
-        }
-        for (i = 0; i < group_mapping[group].length; i += 1) {
-          url_mapping[group].push({
-            command: 'display_with_history_and_cancel',
-            options: {
-              jio_key: gadget.state.jio_key,
-              view: group_mapping[group][i].href,
-              editable: editable_mapping[group],
-              title: group_mapping[group][i].title
-            }
-          });
-        }
-        action_type = group + "_raw";
-        if (links.hasOwnProperty(action_type)) {
-          for (i = 0; i < links[action_type].length; i += 1) {
-            if (links[action_type][i].href) {
-              url_mapping[group].push(links[action_type][i]);
-            }
-          }
-        }
-      }
-    }
-    return url_mapping;
-  }
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -98,7 +60,6 @@
     .onStateChange(function () {
       var gadget = this,
         erp5_document,
-        url_mapping,
         group_list,
         raw_list;
 
@@ -107,20 +68,20 @@
       return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
           erp5_document = jio_attachment;
+          return mergeGlobalActionWithRawActionList(gadget,
+            erp5_document._links,
+            ["action_workflow",
+              "action_object_jio_action",
+              "action_object_clone_action",
+              "action_object_delete_action"], {
+              action_object_clone_action: true
+            });
+        })
+        .push(function (url_mapping) {
           raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
           var i, j,
-            url_for_kw_list = [],
-            group_id_list = ["action_workflow",
-                             "action_object_jio_action",
-                             "action_object_clone_action",
-                             "action_object_delete_action"];
-
-          url_mapping = buildGlobalActionList(gadget,
-            erp5_document._links,
-            group_id_list, {
-              action_object_clone_action: true
-            });
+            url_for_kw_list = [];
 
           group_list = [
             url_mapping.action_workflow, 'random',
@@ -200,4 +161,5 @@
       return;
     });
 
-}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+  mergeGlobalActionWithRawActionList));
