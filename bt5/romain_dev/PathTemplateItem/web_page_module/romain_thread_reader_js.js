@@ -281,7 +281,7 @@
         limit: limit_options,
         select_list: ['asStrippedHTML', 'modification_date',
                       'source_title'],
-        sort_on: [['modification_date', 'ASC']]
+        sort_on: [['modification_date', 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
