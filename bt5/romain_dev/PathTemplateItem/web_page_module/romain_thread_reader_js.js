@@ -1,11 +1,7 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar*/
+/*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar, Intl*/
 (function () {
   "use strict";
-
-  var variable = {},
-    loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
-    disabled_class = 'ui-disabled';
 
   function getRelativeTimeString(language, current_date, date) {
     var diff,
@@ -28,36 +24,14 @@
     console.log(current_date, date, abs, week, day);
     if (abs > (week * 2)) {
       return time_format.format(Math.floor(diff / week), 'week');
-    } else if (abs > (day * 2)) {
+    }
+    if (abs > (day * 2)) {
       return time_format.format(Math.floor(diff / day), 'day');
-    } else if (abs > (hour * 2)) {
+    }
+    if (abs > (hour * 2)) {
       return time_format.format(Math.floor(diff / hour), 'hour');
-    } else {
-      return time_format.format(Math.floor(diff / minute), 'minute');
     }
-    return date;
-  }
-
-  function buildFieldGadgetParam(value) {
-    var field_gadget_param;
-
-    if ((value !== undefined) && (value !== null) && (value.constructor === Object)) {
-      if (value.field_gadget_param) {
-        field_gadget_param = value.field_gadget_param;
-      } else {
-        field_gadget_param = {
-          'editable': 0,
-          'default': value.default
-        };
-      }
-    } else {
-      field_gadget_param = {
-        'editable': 0,
-        'default': value
-      };
-    }
-
-    return field_gadget_param;
+    return time_format.format(Math.floor(diff / minute), 'minute');
   }
 
   function setPaginationElement(gadget, count, url_list) {
@@ -166,7 +140,7 @@
         domsugar(gadget.element.querySelector(':scope > nav > span'), {
           class: "ui-icon-spinner ui-btn-icon-left",
           text: ''
-        })
+        });
         return gadget.fetchLineContent(false);
       }
 
@@ -221,7 +195,7 @@
                     text: source_short_title
                   }),
                   domsugar('div', {
-                    class: 'post_content',
+                    class: 'post_content'
                   }, [
                     domsugar('strong', {text: source_title}),
                     " ",
@@ -229,18 +203,20 @@
                       datetime: entry.value.modification_date,
                       title: entry.value.modification_date,
                       text: getRelativeTimeString(
-                        gadget.state.language, now, new Date(entry.value.modification_date)
+                        gadget.state.language,
+                        now,
+                        new Date(entry.value.modification_date)
                       )
                     }),
                     domsugar('br'),
-                    result_dict.viewer_list[i].element,
+                    result_dict.viewer_list[i].element
                     // domsugar('hr')
                   ])
                 ]);
               }));
-            setPaginationElement(gadget, allDocs_result.data.total_rows, result_dict.url_list);
+            setPaginationElement(gadget, allDocs_result.data.total_rows,
+                                 result_dict.url_list);
           });
-        return;
       }
     })
 
@@ -251,7 +227,9 @@
       this.element.querySelectorAll("div.post_content > time").forEach(
         function (element) {
           element.textContent = getRelativeTimeString(
-            gadget.state.language, now, new Date(element.getAttribute('datetime'))
+            gadget.state.language,
+            now,
+            new Date(element.getAttribute('datetime'))
           );
         }
       );
@@ -267,8 +245,7 @@
       }
 
       var gadget = this,
-        limit_options = [],
-        i;
+        limit_options = [];
 
       if (gadget.state.lines === 0) {
         limit_options = undefined;
