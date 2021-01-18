@@ -173,6 +173,7 @@
           group_mapping = {},
           url_mapping = {};
 
+        editable_mapping = editable_mapping || {};
         for (i = 0; i < group_id_list.length; i += 1) {
           if (group_id_list[i] instanceof Array) {
             group_mapping[group_id_list[i][0]] = ensureArray(

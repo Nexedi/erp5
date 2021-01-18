@@ -1,6 +1,8 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
-(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray,
+         mergeGlobalActionWithRawActionList */
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+           mergeGlobalActionWithRawActionList) {
   "use strict";
 
   function appendDt(fragment, dt_title, dt_icon,
@@ -27,7 +29,7 @@
         a_element.setAttribute('class', action_list[i].class_name);
       }
       a_element.href = href_list[index + i];
-      a_element.textContent = action_list[i].title;
+      a_element.textContent = action_list[i].options.title;
       dd_element.appendChild(a_element);
       fragment.appendChild(dd_element);
     }
@@ -65,6 +67,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
+        queue = RSVP.Queue(),
         display_workflow_list,
         context = this,
         workflow_list,
@@ -84,47 +87,63 @@
         display_workflow_list = asBoolean(options.display_workflow_list);
       }
 
-      /* XXX - Reuse url_mapping here and stop to calculate this links in different places
-      */
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
-        workflow_list = ensureArray(erp5_document._links.action_workflow);
-        view_list = ensureArray(erp5_document._links.action_object_view);
-        action_list = ensureArray(erp5_document._links.action_object_jio_action)
-          .concat(ensureArray(erp5_document._links.action_object_jio_button))
-          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
-        clone_list = ensureArray(erp5_document._links.action_object_clone_action);
-        jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
-
-        if (view === 'view') {
-          for (i = 0; i < view_list.length; i += 1) {
-            view_list[i].class_name = view_list[i].name === view ? 'active' : '';
-          }
-        } else {
-          for (i = 0; i < workflow_list.length; i += 1) {
-            workflow_list[i].class_name = workflow_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < view_list.length; i += 1) {
-            view_list[i].class_name = view_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < action_list.length; i += 1) {
-            action_list[i].class_name = action_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < clone_list.length; i += 1) {
-            clone_list[i].class_name = clone_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < jump_list.length; i += 1) {
-            jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
-          }
-        }
-        // Prevent has much as possible to modify the DOM panel
-        // stateChange prefer to compare strings
-        workflow_list = JSON.stringify(workflow_list);
-        view_list = JSON.stringify(view_list);
-        action_list = JSON.stringify(action_list);
-        clone_list = JSON.stringify(clone_list);
-        jump_list = JSON.stringify(jump_list);
+        queue
+          .push(function () {
+            return mergeGlobalActionWithRawActionList(context,
+                                                      erp5_document._links,
+                                                      [
+              "action_workflow", "action_object_view",
+              ["action_object_jio_action",
+               "action_object_jio_button",
+               "action_object_jio_fast_input"],
+              "action_object_clone_action",
+              "action_object_jio_jump"
+            ], {
+              action_object_clone_action: true
+            });
+          })
+          .push(function (group_mapping) {
+            workflow_list = group_mapping.action_workflow;
+            view_list = group_mapping.action_object_view;
+            action_list = group_mapping.action_object_jio_action;
+            clone_list = group_mapping.action_object_clone_action;
+            jump_list = group_mapping.action_object_jio_jump;
+            console.log(view_list);
+            if (view === 'view') {
+              for (i = 0; i < view_list.length; i += 1) {
+                view_list[i].class_name = view_list[i].name === view ? 'active' : '';
+              }
+            } else {
+              for (i = 0; i < workflow_list.length; i += 1) {
+                workflow_list[i].class_name = workflow_list[i].href === view ? 'active' : '';
+              }
+              for (i = 0; i < view_list.length; i += 1) {
+                view_list[i].class_name = view_list[i].href === view ? 'active' : '';
+              }
+              for (i = 0; i < action_list.length; i += 1) {
+                action_list[i].class_name = action_list[i].href === view ? 'active' : '';
+              }
+              for (i = 0; i < clone_list.length; i += 1) {
+                clone_list[i].class_name = clone_list[i].href === view ? 'active' : '';
+              }
+              for (i = 0; i < jump_list.length; i += 1) {
+                jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
+              }
+            }
+            // Prevent has much as possible to modify the DOM panel
+            // stateChange prefer to compare strings
+            workflow_list = JSON.stringify(workflow_list);
+            view_list = JSON.stringify(view_list);
+            action_list = JSON.stringify(action_list);
+            clone_list = JSON.stringify(clone_list);
+            jump_list = JSON.stringify(jump_list);
+          });
       }
-      return context.getUrlParameter('editable')
+      return queue
+        .push(function () {
+          return context.getUrlParameter('editable');
+        })
         .push(function (editable) {
           return context.changeState({
             visible: visible,
@@ -276,51 +295,21 @@
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
               for (i = 0; i < view_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: view_list[i].href
-                  }
-                });
+                parameter_list.push(view_list[i]);
               }
               for (i = 0; i < workflow_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: workflow_list[i].href
-                  }
-                });
+                parameter_list.push(workflow_list[i]);
               }
               for (i = 0; i < action_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: action_list[i].href
-                  }
-                });
+                parameter_list.push(action_list[i]);
               }
               for (i = 0; i < clone_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: clone_list[i].href,
-                    editable: true
-                  }
-                });
+                parameter_list.push(clone_list[i]);
               }
               for (i = 0; i < jump_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: jump_list[i].href
-                  }
-                });
+                parameter_list.push(jump_list[i]);
               }
+
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
@@ -450,4 +439,5 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean,
+  ensureArray, mergeGlobalActionWithRawActionList));
