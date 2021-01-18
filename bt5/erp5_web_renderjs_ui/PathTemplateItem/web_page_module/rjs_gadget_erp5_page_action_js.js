@@ -75,7 +75,7 @@
                "action_object_jio_button" ,
                "action_object_jio_fast_input"],
               "action_object_clone_action",
-              "action_object_delete_action"], {
+              "action_object_delete_action"], {}, {
               action_object_clone_action: true
             });
         })

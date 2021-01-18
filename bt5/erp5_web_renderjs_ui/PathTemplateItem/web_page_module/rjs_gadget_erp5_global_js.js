@@ -165,6 +165,7 @@
   // Handle listbox action list
   ///////////////////////////////
   function mergeGlobalActionWithRawActionList(gadget, links, group_id_list,
+                                              command_mapping,
                                               editable_mapping) {
     return RSVP.Queue()
       .push(function () {
@@ -174,6 +175,7 @@
           url_mapping = {};
 
         editable_mapping = editable_mapping || {};
+        command_mapping = command_mapping || {}
         for (i = 0; i < group_id_list.length; i += 1) {
           if (group_id_list[i] instanceof Array) {
             group_mapping[group_id_list[i][0]] = ensureArray(
@@ -198,7 +200,7 @@
             }
             for (i = 0; i < group_mapping[group].length; i += 1) {
               url_mapping[group].push({
-                command: 'display_with_history_and_cancel',
+                command: command_mapping[group] || 'display_with_history_and_cancel',
                 options: {
                   jio_key: gadget.state.jio_key,
                   view: group_mapping[group][i].href,

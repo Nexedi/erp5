@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
 /*global window, document, rJS, RSVP, Node, asBoolean , ensureArray,
-         mergeGlobalActionWithRawActionList */
+         mergeGlobalActionWithRawActionList*/
 (function (window, document, rJS, RSVP, Node, asBoolean, ensureArray,
            mergeGlobalActionWithRawActionList) {
   "use strict";
@@ -90,17 +90,20 @@
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
         queue
           .push(function () {
-            return mergeGlobalActionWithRawActionList(context,
-                                                      erp5_document._links,
-                                                      [
-              "action_workflow", "action_object_view",
+            return mergeGlobalActionWithRawActionList(
+              {"state": {"jio_key": jio_key}},
+              erp5_document._links, [
+              "action_workflow",
+              "action_object_view",
               ["action_object_jio_action",
                "action_object_jio_button",
                "action_object_jio_fast_input"],
               "action_object_clone_action",
               "action_object_jio_jump"
             ], {
-              action_object_clone_action: true
+              "action_object_view": "display_with_history"
+            }, {
+              "action_object_clone_action": true
             });
           })
           .push(function (group_mapping) {
@@ -109,26 +112,26 @@
             action_list = group_mapping.action_object_jio_action;
             clone_list = group_mapping.action_object_clone_action;
             jump_list = group_mapping.action_object_jio_jump;
-            console.log(view_list);
+
             if (view === 'view') {
               for (i = 0; i < view_list.length; i += 1) {
-                view_list[i].class_name = view_list[i].name === view ? 'active' : '';
+                view_list[i].options.class_name = view_list[i].name === view ? 'active' : '';
               }
             } else {
               for (i = 0; i < workflow_list.length; i += 1) {
-                workflow_list[i].class_name = workflow_list[i].href === view ? 'active' : '';
+                workflow_list[i].options.class_name = workflow_list[i].href === view ? 'active' : '';
               }
               for (i = 0; i < view_list.length; i += 1) {
-                view_list[i].class_name = view_list[i].href === view ? 'active' : '';
+                view_list[i].options.class_name = view_list[i].href === view ? 'active' : '';
               }
               for (i = 0; i < action_list.length; i += 1) {
-                action_list[i].class_name = action_list[i].href === view ? 'active' : '';
+                action_list[i].options.class_name = action_list[i].href === view ? 'active' : '';
               }
               for (i = 0; i < clone_list.length; i += 1) {
-                clone_list[i].class_name = clone_list[i].href === view ? 'active' : '';
+                clone_list[i].options.class_name = clone_list[i].href === view ? 'active' : '';
               }
               for (i = 0; i < jump_list.length; i += 1) {
-                jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
+                jump_list[i].options.class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
               }
             }
             // Prevent has much as possible to modify the DOM panel
@@ -161,10 +164,8 @@
           });
         });
     })
-
     .onStateChange(function onStateChange(modification_dict) {
-      var context = this,
-        gadget = this,
+      var gadget = this,
         workflow_list,
         queue = new RSVP.Queue();
 
@@ -183,7 +184,7 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return context.getDeclaredGadget('erp5_searchfield');
+            return gadget.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
             return search_gadget.render({
@@ -198,7 +199,7 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlForList([
+              gadget.getUrlForList([
                 {command: 'display'},
                 {command: 'display', options: {page: "front"}},
                 {command: 'display', options: {page: "worklist"}},
@@ -207,7 +208,7 @@
                 {command: 'display', options: {page: "preference"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
-              context.getTranslationList([
+              gadget.getTranslationList([
                 'Editable',
                 'Home',
                 'Modules',
@@ -217,7 +218,7 @@
                 'Preferences',
                 'Logout'
               ]),
-              context.getDeclaredGadget("erp5_checkbox")
+              gadget.getDeclaredGadget("erp5_checkbox")
             ]);
           })
           .push(function (result_list) {
@@ -235,7 +236,7 @@
                 'sliders', null,
                 'power-off', 'o'
               ],
-              ul_element = context.element.querySelector("ul");
+              ul_element = gadget.element.querySelector("ul");
 
             for (i = 0; i < result_list[0].length; i += 1) {
               // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
@@ -257,7 +258,7 @@
             ul_element.appendChild(ul_fragment);
 
             // Update the checkbox field value
-            if (context.state.editable) {
+            if (gadget.state.editable) {
               editable_value = ['editable'];
             }
             return result_list[2].render({field_json: {
@@ -389,7 +390,7 @@
             if (result.editable.length === 1) {
               options.editable = true;
             }
-            return context.redirect({command: 'change', options: options}, true);
+            return gadget.redirect({command: 'change', options: options}, true);
           });
       }
       // Typing a search query should not modify the header status
@@ -439,5 +440,5 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean,
-  ensureArray, mergeGlobalActionWithRawActionList));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+  mergeGlobalActionWithRawActionList));
