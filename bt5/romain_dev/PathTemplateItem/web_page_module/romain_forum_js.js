@@ -1,7 +1,7 @@
 /*global window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query,
          console */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, continue:true */
-(function (window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query) {
+(function (window, rJS, domsugar, SimpleQuery, ComplexQuery, Query) {
   "use strict";
   // XXX history_previous: prevent getting to erp5 ui by checking the
   // historing or forcing the page value
@@ -9,7 +9,7 @@
 
   var DISPLAY_READER = 'display_reader',
     DISPLAY_THREAD = 'display_thread',
-    DISPLAY_POST = 'display_post',
+    // DISPLAY_POST = 'display_post',
     MAIN_SCOPE = 'child_scope',
     DISPLAYED_POST_COUNT = 15,
     THREAD_READER_FIELD_KEY = 'field_listbox';
@@ -208,7 +208,7 @@
                   })
                 ),
                 sort: [['modification_date', 'ASC'], ['uid', 'ASC']],
-                lines: DISPLAYED_POST_COUNT,
+                lines: DISPLAYED_POST_COUNT
               }),
               "hidden": 0
             };
@@ -349,147 +349,6 @@
       return;
     })
 
-    .declareMethod('render2', function renderHeader() {
-      var gadget = this;
-      return gadget.jio_allDocs({
-        select_list: ['uid', 'follow_up_title', 'title',
-                      'modification_date', 'countFolder'],
-        sort_on: [['modification_date', 'DESC']],
-        query: Query.objectToSearchText(
-          new ComplexQuery({
-            operator: "AND",
-            query_list: [
-              new SimpleQuery({
-                key: "portal_type",
-                operator: "=",
-                type: "simple",
-                value: "Discussion Thread"
-              }),
-              new SimpleQuery({
-                key: "validation_state",
-                operator: "=",
-                type: "simple",
-                // XXX Check usual states
-                value: "shared"
-              })
-            ],
-            type: "complex"
-          })
-        ),
-        limit: 15
-      })
-        .push(function (result) {
-          var uid_list = [];
-          if (result.data.total_rows.length === 0) {
-            uid_list.push(-1);
-          } else {
-            uid_list = result.data.rows.map(function (x) {
-              return x.value.uid;
-            });
-          }
-          // Search amount of documentation web pages related to those products
-          return gadget.jio_allDocs({
-            select_list: ['parent_uid', 'count(*)'],
-            query: Query.objectToSearchText(
-              new ComplexQuery({
-                operator: "AND",
-                query_list: [
-                  new SimpleQuery({
-                    key: "portal_type",
-                    operator: "=",
-                    type: "simple",
-                    value: "Discussion Post"
-                  }),
-                  new ComplexQuery({
-                    operator: "OR",
-                    type: "complex",
-                    query_list: uid_list.map(function (parent_uid) {
-                      return new SimpleQuery({
-                        key: "parent_uid",
-                        operator: "=",
-                        type: "simple",
-                        value: parent_uid
-                      });
-                    })
-                  })
-                ],
-                type: "complex"
-              })
-            ),
-            group_by: ['parent_uid'],
-            limit: 10000
-          })
-            .push(function () {
-              return result;
-            });
-
-        })
-        .push(function (result) {
-          console.log(result);
-          var element_list = [],
-            i;
-          console.log(result);
-          for (i = 0; i < result.data.total_rows; i += 1) {
-            element_list.push(
-              domsugar('br'),
-              domsugar('div', [
-                domsugar('p', {text: result.data.rows[i].value.title}),
-                domsugar('p', {text: result.data.rows[i].value.modification_date}),
-                domsugar('p', {text: result.data.rows[i].value.follow_up_title}),
-                domsugar('p', {text: result.data.rows[i].value.countFolder}),
-              ])
-            );
-          }
-          // XXX group by discussion post by parent_uid
-          console.log(element_list);
-          return domsugar(gadget.element, element_list);
-        });
-
-      var gadget = this,
-        product_uid_dict = {},
-        meta_product_uid_list = [],
-        product_list = [];
-      // First, get the list of products
-      return searchAllProject(gadget, product_uid_dict,
-                              meta_product_uid_list, product_list)
-        .push(function () {
-          return RSVP.hash({
-            status_dom: buildSoftwareStatusDom(gadget, product_list,
-                                               product_uid_dict),
-            documentation_dom: buildDocumentationDom(gadget,
-                                                     meta_product_uid_list)
-          });
-        })
-        .push(function (result_dict) {
-
-          domsugar(gadget.element, [
-            domsugar('img', {src: 'NXD-Official.Logo.svg?format=',
-                             alt: 'Nexedi Logo'}),
-            domsugar('section', {class: 'ui-content-header-plain'}, [
-              domsugar('h3', [
-                domsugar('span', {class: 'ui-icon ui-icon-exchange',
-                                  text: ' '}),
-                'Documentation'
-              ])
-            ]),
-            result_dict.documentation_dom,
-            domsugar('section', {class: 'ui-content-header-plain'}, [
-              domsugar('h3', [
-                domsugar('span', {class: 'ui-icon ui-icon-exchange',
-                                  text: ' '}),
-                'Software Status'
-              ])
-            ]),
-            result_dict.status_dom
-          ]);
-
-          return gadget.updateHeader({
-            page_title: 'Nexedi Project Quality',
-            page_icon: 'puzzle-piece'
-          });
-        });
-    })
-
     ////////////////////////////////////////////////////////////////////
     // Go
     ////////////////////////////////////////////////////////////////////
@@ -513,7 +372,8 @@
             len = result.data.total_rows,
             key,
             url_value,
-            last_url_value;
+            last_url_value,
+            count;
           for (i = 0; i < len; i += 1) {
             url_value = {
               command: 'index',
@@ -526,55 +386,65 @@
               command: 'index',
               options: {
                 jio_key: result.data.rows[i].id,
-                page: gadget.state.page,
+                page: gadget.state.page
               }
             };
+            count = result.data.rows[i].value
+                          .DiscussionThread_getDiscussionPostCount;
             last_url_value.options[THREAD_READER_FIELD_KEY + '_begin_from'] =
-              result.data.rows[i].value.DiscussionThread_getDiscussionPostCount -
-              (result.data.rows[i].value.DiscussionThread_getDiscussionPostCount % DISPLAYED_POST_COUNT);
+              count - (count % DISPLAYED_POST_COUNT);
 
             for (key in result.data.rows[i].value) {
               if (result.data.rows[i].value.hasOwnProperty(key)) {
                 result.data.rows[i].value[key] = {
                   url_value: url_value,
                   default: result.data.rows[i].value[key]
-                }
+                };
               }
             }
 
             if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
-              date = new Date(result.data.rows[i].value.modification_date.default);
-              console.log(last_url_value);
-              result.data.rows[i].value.modification_date.url_value = last_url_value;
-              result.data.rows[i].value.modification_date.field_gadget_param = {
-                allow_empty_time: 0,
-                ampm_time_style: 0,
-                css_class: "date_field",
-                date_only: false,
-                description: "The Date",
-                editable: 1,
-                hidden: 0,
-                hidden_day_is_last_day: 0,
-                "default": date.toUTCString(),
-                key: "modification_date",
-                required: 0,
-                timezone_style: 0,
-                title: "Modification Date",
-                type: "DateTimeField"
-              };
+              date = new Date(
+                result.data.rows[i].value.modification_date.default
+              );
+              result.data.rows[i].value.modification_date.url_value =
+                last_url_value;
+              result.data.rows[i].value.modification_date
+                    .field_gadget_param = {
+                  allow_empty_time: 0,
+                  ampm_time_style: 0,
+                  css_class: "date_field",
+                  date_only: false,
+                  description: "The Date",
+                  editable: 1,
+                  hidden: 0,
+                  hidden_day_is_last_day: 0,
+                  "default": date.toUTCString(),
+                  key: "modification_date",
+                  required: 0,
+                  timezone_style: 0,
+                  title: "Modification Date",
+                  type: "DateTimeField"
+                };
             }
 
-            if (result.data.rows[i].value.hasOwnProperty("DiscussionThread_getDiscussionPostCount")) {
-              result.data.rows[i].value.DiscussionThread_getDiscussionPostCount.field_gadget_param = {
-                description: "Count",
-                editable: 0,
-                hidden: 0,
-                "default": result.data.rows[i].value.DiscussionThread_getDiscussionPostCount.default,
-                key: "count",
-                required: 0,
-                title: "Responses",
-                type: "IntegerField"
-              };
+            if (result.data.rows[i].value.hasOwnProperty(
+                "DiscussionThread_getDiscussionPostCount"
+              )) {
+              result.data.rows[i].value
+                    .DiscussionThread_getDiscussionPostCount
+                    .field_gadget_param = {
+                  description: "Count",
+                  editable: 0,
+                  hidden: 0,
+                  "default": result.data.rows[i].value
+                                   .DiscussionThread_getDiscussionPostCount
+                                   .default,
+                  key: "count",
+                  required: 0,
+                  title: "Responses",
+                  type: "IntegerField"
+                };
             }
             /*
             if (result.data.rows[i].value.hasOwnProperty("asStrippedHTML")) {
@@ -667,7 +537,8 @@
     /*
         return renderDiscussionPost(
           gadget,
-          modification_dict.hasOwnProperty('display_step') || modification_dict.first_render,
+          modification_dict.hasOwnProperty('display_step') ||
+          modification_dict.first_render,
           gadget.state.jio_key
         );
       }
@@ -675,4 +546,4 @@
       throw new Error('Unhandled display step: ' + gadget.state.display_step);
     });
 
-}(window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query));
+}(window, rJS, domsugar, SimpleQuery, ComplexQuery, Query));
