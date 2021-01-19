@@ -226,6 +226,27 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
     os.mkdir(log_directory)
     return log_directory
 
+class ERP5ProductsCodingStyleTestSuite(_ERP5):
+  """ Run coding style test on products
+  """
+  def getTestList(self):
+    test_list = []
+    for product_path in glob('%s/../product/*' %(HERE)):
+      if os.path.isdir(product_path) and \
+              not os.path.exists(os.path.join(product_path, 'skip_coding_style_test')):
+        test_list.append(os.path.basename(product_path))
+    return test_list
+
+  def run(self, full_test):
+    return self.runUnitTest('Python3StyleTest', TESTED_PRODUCT=full_test)
+
+  def getLogDirectoryPath(self, *args, **kw):
+    log_directory = os.path.join(
+        self.log_directory,
+        '{}-{}'.format(args[-1] , kw['TESTED_PRODUCT']))
+    os.mkdir(log_directory)
+    return log_directory
+
 
 class RJS_Only(_ERP5):
   def getTestList(self):
