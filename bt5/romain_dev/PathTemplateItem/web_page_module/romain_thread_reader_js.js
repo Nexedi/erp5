@@ -218,16 +218,36 @@
             domsugar(gadget.element.querySelector(':scope > ol'),
                      allDocs_result.data.rows.map(function (entry, i) {
                 if (i === gadget.state.lines) {
+                  // Drop the last lines, in case we reached the +1 post value
+                  // from allDocs, used to activate the pagination
                   return '';
                 }
                 var source_title = entry.value.source_title || '',
+                  attachment_list = entry.value
+                                         .DiscussionPost_getAttachmentList,
+                  attachment_element_list = [],
+                  j,
                   word_list = source_title.split(' '),
                   source_short_title;
+
                 if (word_list.length === 1) {
                   source_short_title = (word_list[0][0] || '?') + (word_list[0][1] || '');
                 } else {
                   source_short_title = word_list[0][0] + word_list[1][0];
                 }
+
+                for (j = 0; j < attachment_list.length; j += 1) {
+                  attachment_element_list.push(
+                    domsugar('li', [
+                      domsugar('a', {
+                        text: attachment_list[j].title,
+                        href: attachment_list[j].url,
+                        download: attachment_list[j].title
+                      })
+                    ])
+                  );
+                }
+
                 return domsugar('li', [
                   domsugar('div', {
                     class: 'post_avatar',
@@ -248,7 +268,9 @@
                       )
                     }),
                     domsugar('br'),
-                    result_dict.viewer_list[i].element
+                    result_dict.viewer_list[i].element,
+                    domsugar('br'),
+                    domsugar('ul', attachment_element_list)
                     // domsugar('hr')
                   ])
                 ]);
@@ -296,7 +318,7 @@
         query: gadget.state.query_string,
         limit: limit_options,
         select_list: ['asStrippedHTML', 'modification_date',
-                      'source_title'],
+                      'source_title', 'DiscussionPost_getAttachmentList'],
         sort_on: [['modification_date', 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
