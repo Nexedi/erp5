@@ -250,72 +250,7 @@
 
   }
 
-  function renderDiscussionPost(gadget, must_declare, jio_key) {
-    return loadChildGadget(gadget, "gadget_erp5_pt_form_view.html",
-                           must_declare,
-                           function (form_gadget) {
-
-        var thread_info_dict;
-        return gadget.jio_allDocs({
-          select_list: ['asStrippedHTML', 'title'],
-          query: Query.objectToSearchText(
-            new SimpleQuery({
-              key: "relative_url",
-              operator: "=",
-              type: "simple",
-              value: jio_key
-            })
-          ),
-          limit: [0, 1]
-        })
-          .push(function (result_list) {
-            // XXX implement pseudo getResultValue
-            thread_info_dict = result_list.data.rows[0].value;
-            var group_list = [],
-              field_dict = {};
-
-            field_dict.content = {
-              "editable": 0,
-              "key": "content",
-              "default": thread_info_dict.asStrippedHTML,
-              "type": "EditorField"
-            };
-            group_list.push([
-              "bottom",
-              [["content"]]
-            ]);
-
-            return form_gadget.render({
-              erp5_document: {
-                "_embedded": {
-                  "_view": field_dict
-                },
-                "_links": {
-                  "type": {
-                    // form_list display portal_type in header
-                    name: ""
-                  }
-                }
-              },
-              form_definition: {
-                group_list: group_list
-              }
-            });
-          })
-          .push(function () {
-            return gadget.getUrlFor({command: 'history_previous'});
-          })
-          .push(function (url) {
-            return gadget.updateHeader({
-              page_title: 'Post: ' + thread_info_dict.title,
-              page_icon: 'comment',
-              front_url: url
-            });
-          });
-      });
-
-  }
-
+/*
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
       query_list = [];
@@ -333,6 +268,7 @@
       type: "complex"
     });
   }
+*/
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
