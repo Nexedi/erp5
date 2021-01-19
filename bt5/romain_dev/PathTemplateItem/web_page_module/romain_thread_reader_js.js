@@ -1,7 +1,33 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar, Intl*/
-(function () {
+/*global window, rJS, RSVP, console, domsugar, Intl, Query, SimpleQuery,
+         ComplexQuery*/
+(function (window, rJS, RSVP, console, domsugar, Intl, Query, SimpleQuery,
+           ComplexQuery) {
   "use strict";
+
+  function createMultipleSimpleOrQuery(key, value_list) {
+    var i,
+      query_list = [];
+    if (!Array.isArray(value_list)) {
+      value_list = [value_list];
+    }
+    for (i = 0; i < value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        operator: "=",
+        type: "simple",
+        value: value_list[i]
+      }));
+    }
+    if (value_list.len === 1) {
+      return query_list[0];
+    }
+    return new ComplexQuery({
+      operator: "OR",
+      query_list: query_list,
+      type: "complex"
+    });
+  }
 
   function getRelativeTimeString(language, current_date, date) {
     var diff,
@@ -112,7 +138,16 @@
           return gadget.changeState({
             key: options.key,
             language: result_dict.language,
-            query_string: new URI(options.query).query(true).query || '',
+            query_string: Query.objectToSearchText(
+              new ComplexQuery({
+                operator: "AND",
+                type: "complex",
+                query_list: Object.entries(options.query_dict)
+                                  .map(function (tuple) {
+                    return createMultipleSimpleOrQuery(tuple[0], tuple[1]);
+                  })
+              })
+            ),
             begin_from: parseInt(result_dict.begin_from || '0', 10) || 0,
             lines: options.lines || 1,
             // Force line calculation in any case
@@ -131,6 +166,10 @@
         next_param,
         pagination_key;
       console.log(gadget.state, modification_dict);
+
+      if (!gadget.state.query_string) {
+        throw new Error('No "query_dict" defined for ' + gadget.state.key);
+      }
 
       if (modification_dict.hasOwnProperty('first_render')) {
         setPaginationElement(gadget, 0, []);
@@ -275,4 +314,5 @@
       return true;
     });
 
-}());
+}(window, rJS, RSVP, console, domsugar, Intl, Query, SimpleQuery,
+  ComplexQuery));
