@@ -141,72 +141,20 @@
             // XXX implement pseudo getResultValue
             thread_info_dict = result_list.data.rows[0].value;
             var group_list = [],
-              field_dict = {},
-              column_list = [
-                ['asStrippedHTML', 'Content'],
-                ['modification_date', 'Modification Date']
-              ];
+              field_dict = {};
 
             field_dict.nutnut = {
-              "column_list": column_list,
-              "show_anchor": 0,
-              "default_params": {},
               "editable": 1,
-              "editable_column_list": [],
               "key": THREAD_READER_FIELD_KEY,
-              "lines": DISPLAYED_POST_COUNT,
-              "list_method": "portal_catalog",
-              "query": "urn:jio:allDocs?query=" + Query.objectToSearchText(
-                new ComplexQuery({
-                  operator: "AND",
-                  query_list: [
-                    new SimpleQuery({
-                      key: "portal_type",
-                      operator: "=",
-                      type: "simple",
-                      value: "Discussion Post"
-                    }),
-                    new SimpleQuery({
-                      key: "parent_uid",
-                      operator: "=",
-                      type: "simple",
-                      // XXX Check usual states
-                      value: thread_info_dict.uid
-                    })
-                  ],
-                  type: "complex"
-                })
-              ),
-              "portal_type": ["Discussion Post"],
-              "search_column_list": [],
-              "sort_column_list": [],
-              "sort": [['modification_date', 'ASC']],
-              "title": "Discussion Posts XXXXXXX",
+              "title": "Discussion Posts",
               "type": "GadgetField",
               "url": "gadget_thread_reader.html",
               "sandbox": "",
               "renderjs_extra": JSON.stringify({
-                query: "urn:jio:allDocs?query=" + Query.objectToSearchText(
-                  new ComplexQuery({
-                    operator: "AND",
-                    query_list: [
-                      new SimpleQuery({
-                        key: "portal_type",
-                        operator: "=",
-                        type: "simple",
-                        value: "Discussion Post"
-                      }),
-                      new SimpleQuery({
-                        key: "parent_uid",
-                        operator: "=",
-                        type: "simple",
-                        // XXX Check usual states
-                        value: thread_info_dict.uid
-                      })
-                    ],
-                    type: "complex"
-                  })
-                ),
+                query_dict: {
+                  portal_type: 'Discussion Post',
+                  parent_uid: thread_info_dict.uid
+                },
                 sort: [['modification_date', 'ASC'], ['uid', 'ASC']],
                 lines: DISPLAYED_POST_COUNT
               }),
@@ -215,8 +163,6 @@
             group_list.push([
               "bottom",
               [["nutnut"]]
-            ], [
-              "hidden", ["listbox_modification_date"]
             ]);
 
             return form_gadget.render({
