@@ -57,7 +57,7 @@
         state_dict.append = "%";
       }
       if (!window.isNaN(state_dict.precision)) {
-        state_dict.step = 1 / Math.pow(10, state_dict.precision);
+        state_dict.step = Math.pow(10, -state_dict.precision).toFixed(state_dict.precision);
         state_dict.value = state_dict.value.toFixed(state_dict.precision);
       }
       if (!window.isNaN(state_dict.value)) {
