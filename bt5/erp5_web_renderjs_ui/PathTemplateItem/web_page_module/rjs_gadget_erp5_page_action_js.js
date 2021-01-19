@@ -72,8 +72,8 @@
             erp5_document._links,
             ["action_workflow",
               ["action_object_jio_action",
-               "action_object_jio_button" ,
-               "action_object_jio_fast_input"],
+                "action_object_jio_button",
+                "action_object_jio_fast_input"],
               "action_object_clone_action",
               "action_object_delete_action"], {}, {
               action_object_clone_action: true
