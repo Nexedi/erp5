@@ -181,17 +181,18 @@
             group_mapping[group_id_list[i][0]] = ensureArray(
               links[group_id_list[i][0]]
             );
-            for (j = 1; j < group_id_list[i].length; j += 1) {
-              group_mapping[group_id_list[i][0]] = ensureArray(
-                links[group_id_list[i][0]].concat(
+            if (group_id_list[i].length > 1) {
+              for (j = 1; j < group_id_list[i].length; j += 1) {
+                group_mapping[group_id_list[i][0]].concat(
                   ensureArray(links[group_id_list[i][j]])
-                )
-              );
+                );
+              }
             }
+          } else {
+            group_mapping[group_id_list[i]] = ensureArray(
+              links[group_id_list[i]]
+            );
           }
-          group_mapping[group_id_list[i]] = ensureArray(
-            links[group_id_list[i]]
-          );
         }
         for (group in group_mapping) {
           if (group_mapping.hasOwnProperty(group)) {

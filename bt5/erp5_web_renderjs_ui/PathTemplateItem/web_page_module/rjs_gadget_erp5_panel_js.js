@@ -93,20 +93,21 @@
             return mergeGlobalActionWithRawActionList(
               {"state": {"jio_key": jio_key}},
               erp5_document._links, [
-              "action_workflow",
-              "action_object_view",
-              ["action_object_jio_action",
-               "action_object_jio_button",
-               "action_object_jio_fast_input"],
-              "action_object_clone_action",
-              "action_object_jio_jump"
-            ], {
-              "action_object_jio_jump": "display_dialog_with_history",
-              "action_object_view": "display_with_history",
-              "action_workflow": "display_dialog_with_history"
-            }, {
-              "action_object_clone_action": true
-            });
+                "action_workflow",
+                "action_object_view", [
+                  "action_object_jio_action",
+                  "action_object_jio_button",
+                  "action_object_jio_fast_input"
+                ],
+                "action_object_clone_action",
+                "action_object_jio_jump"
+              ], {
+                "action_object_jio_jump": "display_dialog_with_history",
+                "action_object_view": "display_with_history",
+                "action_workflow": "display_dialog_with_history"
+              }, {
+                "action_object_clone_action": true
+              });
           })
           .push(function (group_mapping) {
             workflow_list = group_mapping.action_workflow;
@@ -392,7 +393,7 @@
             if (result.editable.length === 1) {
               options.editable = true;
             }
-            return gadget.redirect({command: 'change', options: options}, true);
+            return context.redirect({command: 'change', options: options}, true);
           });
       }
       // Typing a search query should not modify the header status
