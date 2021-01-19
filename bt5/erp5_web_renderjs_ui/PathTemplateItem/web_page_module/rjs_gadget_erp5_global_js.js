@@ -171,6 +171,10 @@
       .push(function () {
         var i, j, group,
           action_type,
+          current_href,
+          class_name,
+          view = gadget.state.view,
+          jump_view = gadget.state.jump_view,
           group_mapping = {},
           url_mapping = {};
 
@@ -181,31 +185,44 @@
             group_mapping[group_id_list[i][0]] = ensureArray(
               links[group_id_list[i][0]]
             );
-            for (j = 1; j < group_id_list[i].length; j += 1) {
-              group_mapping[group_id_list[i][0]] = ensureArray(
-                links[group_id_list[i][0]].concat(
+            if (group_id_list[i].length > 1) {
+              for (j = 1; j < group_id_list[i].length; j += 1) {
+                group_mapping[group_id_list[i][0]].concat(
                   ensureArray(links[group_id_list[i][j]])
-                )
-              );
+                );
+              }
             }
+          } else {
+            group_mapping[group_id_list[i]] = ensureArray(
+              links[group_id_list[i]]
+            );
           }
-          group_mapping[group_id_list[i]] = ensureArray(
-            links[group_id_list[i]]
-          );
         }
+
         for (group in group_mapping) {
           if (group_mapping.hasOwnProperty(group)) {
             if (!url_mapping.hasOwnProperty(group)) {
               url_mapping[group] = [];
             }
             for (i = 0; i < group_mapping[group].length; i += 1) {
+              class_name = "";
+              current_href = group_mapping[group][i].href;
+              if (view === 'view' && group_mapping[group][i].name === view) {
+                class_name = 'active';
+              } else if (current_href === view) {
+                class_name = 'active';
+              } else if (jump_view && ((current_href === jump_view) ||
+                         (current_href === view))) {
+                class_name = 'active';
+              }
               url_mapping[group].push({
                 command: command_mapping[group] || 'display_with_history_and_cancel',
                 options: {
+                  title: group_mapping[group][i].title,
+                  class_name: class_name,
                   jio_key: gadget.state.jio_key,
                   view: group_mapping[group][i].href,
-                  editable: editable_mapping[group],
-                  title: group_mapping[group][i].title
+                  editable: editable_mapping[group]
                 }
               });
             }
