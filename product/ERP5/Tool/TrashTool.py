@@ -34,6 +34,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
+from zExceptions import BadRequest
 from zLOG import LOG, WARNING
 from DateTime import DateTime
 from Acquisition import aq_base
@@ -190,7 +191,7 @@ class TrashTool(BaseTool):
     return trashbin
 
   security.declarePrivate('restoreObject')
-  def restoreObject(self, trashbin, container_path, object_id):
+  def restoreObject(self, trashbin, container_path, object_id, pass_if_exist=True):
     """
       Restore an object from the trash bin (copy it under portal)
     """
@@ -258,6 +259,9 @@ class TrashTool(BaseTool):
         # already removed, and we cannot backup the object
         LOG("Trash Tool backupObject", WARNING,
             "Can't backup object %s" % object_path)
+      except BadRequest:
+        if pass_if_exist:
+          pass
 
   security.declareProtected(Permissions.ManagePortal, 'getTrashBinObjectsList')
   def getTrashBinObjectsList(self, trashbin):
