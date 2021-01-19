@@ -29,12 +29,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//ul[@class="document-listview"]/li/a[text()="Edit Portal Type Preference"]</td>
+  <td>//ul[@class="document-listview"]/li/a[text()="Edit Portal Type"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//ul[@class="document-listview"]/li/a[text()="Edit Portal Type Preference"]</td>
+  <td>//ul[@class="document-listview"]/li/a[text()="Edit Portal Type"]</td>
   <td></td>
 </tr>
 <tr>
