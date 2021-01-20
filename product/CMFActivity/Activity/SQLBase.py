@@ -260,15 +260,11 @@ CREATE TABLE %s (
     " message) VALUES\n(%s)")
   _insert_separator = "),\n("
 
-  def _hasDependency(
-    self,
-    message,
-    _DEPENDENCY_NAME_SET=frozenset(_DEPENDENCY_TESTER_DICT),
-  ):
+  def _hasDependency(self, message):
     get = message.activity_kw.get
     return any(
       get(x) is not None
-      for x in _DEPENDENCY_NAME_SET
+      for x in _DEPENDENCY_TESTER_DICT
     )
 
   def prepareQueueMessageList(self, activity_tool, message_list):
