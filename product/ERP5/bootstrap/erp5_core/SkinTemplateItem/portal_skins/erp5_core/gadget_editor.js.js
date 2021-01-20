@@ -20,7 +20,7 @@
 
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
-    return new RSVP.Promise(function (resolve, reject, notify) {
+    return new RSVP.Promise(function (resolve, reject) {
       fr.addEventListener("load", resolve);
       fr.addEventListener("error", reject);
       fr.readAsDataURL(blob);
@@ -70,20 +70,19 @@
     .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
-        url,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
         queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
-          (modification_dict.hasOwnProperty('editor')) || 
+          (modification_dict.hasOwnProperty('editor')) ||
           (gadget.state.editor === 'notebook_editor')) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
-        if (modification_dict.hasOwnProperty('maximize') || 
-          (gadget.state.editor === 'notebook_editor')) {
+        if (modification_dict.hasOwnProperty('maximize') ||
+            (gadget.state.editor === 'notebook_editor')) {
           // for fck_editor fields, we want to be able to maximize also in non editable
           if ((gadget.state.maximize && gadget.state.editable) ||
               (gadget.state.maximize && gadget.state.editor === 'jsmd_editor') ||
@@ -118,14 +117,14 @@
             (gadget.state.editor === 'pdf')) {
           queue
             .push(function () {
-              var url = editor_dict[gadget.state.editor].url;
+              var gadget_url = editor_dict[gadget.state.editor].url;
               if (gadget.state.editor === 'jsmd_editor' &&
-                !gadget.state.run &&
-                gadget.state.editable) {
-                url = editor_dict.codemirror.url;
+                  !gadget.state.run &&
+                  gadget.state.editable) {
+                gadget_url = editor_dict.codemirror.url;
               }
               return gadget.declareGadget(
-                url,
+                gadget_url,
                 {
                   scope: 'editor',
                   sandbox: 'iframe',
@@ -207,7 +206,8 @@
             return result;
           });
           */
-      } else if (this.state.editable &&
+      }
+      if (this.state.editable &&
           (this.state.editor === 'text_area')) {
         result = {};
         result[this.state.key] = this.element.querySelector('textarea').value;
