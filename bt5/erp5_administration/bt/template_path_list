@@ -6,3 +6,4 @@ portal_alarms/check_item_tracking
 portal_alarms/check_localizer
 portal_alarms/check_skin_cache
 portal_alarms/check_stock
+portal_alarms/update_validation_state_from_consistency
