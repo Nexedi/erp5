@@ -171,7 +171,10 @@
       .push(function () {
         var i, j, group,
           action_type,
+          current_href,
+          class_name,
           view = gadget.state.view,
+          jump_view = gadget.state.jump_view,
           group_mapping = {},
           url_mapping = {};
 
@@ -202,13 +205,21 @@
               url_mapping[group] = [];
             }
             for (i = 0; i < group_mapping[group].length; i += 1) {
-              console.log(view, group_mapping[group][i].href);
+              class_name = "";
+              current_href = group_mapping[group][i].href;
+              if (view === 'view' && group_mapping[group][i].name === view) {
+                class_name = 'active';
+              } else if (current_href === view) {
+                class_name = 'active';
+              } else if (jump_view && ((current_href === jump_view) ||
+                         (current_href === view))) {
+                class_name = 'active';
+              }
               url_mapping[group].push({
                 command: command_mapping[group] || 'display_with_history_and_cancel',
                 options: {
                   title: group_mapping[group][i].title,
-                  class_name: group_mapping[group][i].href === view ||
-                    group_mapping[group][i].name === view ? 'active' : '',
+                  class_name: class_name,
                   jio_key: gadget.state.jio_key,
                   view: group_mapping[group][i].href,
                   editable: editable_mapping[group]
@@ -225,7 +236,6 @@
             }
           }
         }
-        console.log(url_mapping);
         return url_mapping;
       });
   }

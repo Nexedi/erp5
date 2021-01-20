@@ -74,8 +74,7 @@
         view_list,
         action_list,
         clone_list,
-        jump_list,
-        i;
+        jump_list;
 
       if (visible === undefined) {
         visible = context.state.visible;
@@ -90,8 +89,11 @@
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
         queue
           .push(function () {
-            return mergeGlobalActionWithRawActionList(
-              {"state": {"jio_key": jio_key, "view": view}},
+            return mergeGlobalActionWithRawActionList({"state": {
+              "jio_key": jio_key,
+              "view": view,
+              "jump_view": jump_view
+            }},
               erp5_document._links, [
                 "action_workflow",
                 "action_object_view", [
@@ -105,7 +107,8 @@
                 "action_object_jio_jump": "display_dialog_with_history",
                 "action_object_jio_action": "display_dialog_with_history",
                 "action_object_view": "display_with_history",
-                "action_workflow": "display_dialog_with_history"
+                "action_workflow": "display_dialog_with_history",
+                "action_object_clone_action": "display_dialog_with_history"
               }, {
                 "action_object_clone_action": true
               });
