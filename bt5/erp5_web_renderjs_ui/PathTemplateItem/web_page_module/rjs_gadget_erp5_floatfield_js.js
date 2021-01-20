@@ -56,8 +56,8 @@
         // (field_json.default type is number, only when it is initially loaded)
         if (typeof(field_json.default) == 'number') {
           state_dict.value *= 100.0;
-          state_dict.append = "%";
         }
+        state_dict.append = "%";
       }
       if (!window.isNaN(state_dict.precision)) {
         state_dict.step = Math.pow(10, -state_dict.precision).toFixed(state_dict.precision);
