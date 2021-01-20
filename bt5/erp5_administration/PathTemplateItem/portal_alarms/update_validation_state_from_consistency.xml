@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Alarm" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_form_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>catalog_query_string</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>module_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>active_sense_method_id</string> </key>
+            <value> <string>Alarm_activateUpdateValidationStateFromConsistencyResult</string> </value>
+        </item>
+        <item>
+            <key> <string>automatic_solve</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>catalog_query_string</string> </key>
+            <value> <string>validation_state:!=deleted</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_form_id</string> </key>
+            <value> <string>Alarm_viewConsistencyCheckConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>enabled</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>update_validation_state_from_consistency</string> </value>
+        </item>
+        <item>
+            <key> <string>module_list</string> </key>
+            <value>
+              <tuple>
+                <string>organisation_module</string>
+                <string>person_module</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_day_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute_frequency</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month_day</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1230768000.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week_day</string> </key>
+            <value>
+              <tuple>
+                <string>Sunday</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Alarm</string> </value>
+        </item>
+        <item>
+            <key> <string>report_method_id</string> </key>
+            <value> <string>Alarm_viewConsistencyCheckReport</string> </value>
+        </item>
+        <item>
+            <key> <string>solve_method_id</string> </key>
+            <value> <string>Alarm_activateFixConsistency</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Update Validation Consistency Check</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
