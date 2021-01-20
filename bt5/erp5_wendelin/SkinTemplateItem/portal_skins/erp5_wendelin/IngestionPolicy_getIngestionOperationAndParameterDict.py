@@ -114,6 +114,7 @@ if modify and data_ingestion is None:
                                                        data_ingestion_reference,
                                                        data_ingestion_id)
 
+
 # find ingestion line for current resource
 for line in data_ingestion.objectValues(portal_type="Data Ingestion Line"):
   if line.getResourceReference() == resource_reference:

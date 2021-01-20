@@ -3,9 +3,6 @@
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
         <td>store</td>
         <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
         <td>base_url_x</td>
@@ -24,6 +21,11 @@
       </tr>
       <tr class="" style="opacity: 1;">
         <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+      <tr>
+       <td>openAndWait</td>
+       <td>${base_url}/Zuite_updateUserPreferenceForTutorialTests</td>
+       <td></td>
       </tr>
     </tbody>
   </table>
@@ -84,6 +86,16 @@
     <tbody>
       <tr>
         <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
         <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
         <td></td>
       </tr>
@@ -119,7 +131,7 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -129,7 +141,7 @@
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
     </tbody>
@@ -241,12 +253,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
@@ -309,6 +321,26 @@
         <td>//a[contains(@href,'page=front')]</td>
         <td></td>
       </tr>
+       <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@accesskey="m"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@accesskey="m"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//a[contains(@href,'data_product_module')]</td>
@@ -331,7 +363,7 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -341,7 +373,7 @@
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       
@@ -413,12 +445,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
@@ -478,6 +510,16 @@
       </tr>-->
       <tr>
         <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
         <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
         <td></td>
       </tr>
@@ -513,25 +555,19 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
-      
       
       <tr>
         <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_id"]</td>
+        <td>//input[@id="field_my_title"]</td>
         <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_id"]</td>
-        <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
       </tr>
       <tr>
         <td>type</td>
@@ -539,16 +575,16 @@
         <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
       </tr>
       <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td></td>
+      </tr>
+      <tr>
         <td>type</td>
         <td>//input[@id="field_my_reference"]</td>
         <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
       </tr>
-      <tr>
-        <td>pause</td>
-        <td>15000</td>
-        <td></td>
-      </tr>
-      <!--<tr>
+            <tr>
         <td>click</td>
         <td>//button[@type="submit" and @data-i18n="Save"]</td>
         <td></td>
@@ -562,7 +598,32 @@
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
-      </tr>-->
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_id"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_id"]</td>
+        <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </test>
@@ -654,6 +715,26 @@ if end &lt; in_data_stream.getSize():
         <td>type</td>
         <td>//input[@id="field_my_parameter_signature"]</td>
         <td>in_stream=None, out_array=None</td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
       </tr>
       <tr>
         <td>type</td>
@@ -795,7 +876,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -805,7 +886,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       
@@ -918,7 +999,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -928,7 +1009,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       
@@ -1081,7 +1162,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -1091,7 +1172,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       
@@ -1269,7 +1350,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -1279,7 +1360,7 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       
@@ -1452,12 +1533,12 @@ if end &lt; in_data_stream.getSize():
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
@@ -1488,10 +1569,12 @@ if end &lt; in_data_stream.getSize():
 <test>
   <table style="display: none;" class="test">
     <tbody>
-      <!--<tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
       </tr>
-      <tr>-->
+      <tr>
         <td>openAndWait</td>
         <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
         <td></td>

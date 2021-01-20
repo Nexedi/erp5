@@ -3,9 +3,6 @@
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
         <td>store</td>
         <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
         <td>base_url_x</td>
@@ -86,12 +83,12 @@
       </tr>
      <tr>
         <td>waitForElementPresent</td>
-        <td>//div[@data-gadget-scope="field_listbox_storage"]//div//div//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td>//a[text()='sensor_1-sample-environment-raw-data']</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyElementPresent</td>
-        <td>//div[@data-gadget-scope="field_listbox_storage"]//div//div//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td>//a[text()='sensor_1-sample-environment-raw-data']</td>
         <td></td>
       </tr>
       <tr>
@@ -101,17 +98,22 @@
       </tr>
       <tr>
         <td>verifyElementPresent</td>
-        <td>//div[@data-gadget-scope="field_listbox_movement"]//div//div//div[@class='document_table']//table//tbody//tr[1]</td>
+        <td>//a[text()='sensor_1']</td>
         <td></td>
-      </tr>
+      </tr
       <tr>
         <td>click</td>
-        <td>//div[@data-gadget-scope="field_listbox_storage"]//div//div//div[@class='document_table']//table//tbody//tr[1]//td[1]//a</td>
+        <td>//a[text()='sensor_1-sample-environment-raw-data']</td>
         <td></td>
       </tr>
       <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
+        <td>pause</td>
+        <td>5000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Total size (bytes)</td>
         <td></td>
       </tr>
       <tr>
@@ -119,6 +121,11 @@
         <td>Validated</td>
         <td></td>
       </tr>      
+     <tr>
+        <td>verifyTextPresent</td>
+        <td>26205759</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </test>

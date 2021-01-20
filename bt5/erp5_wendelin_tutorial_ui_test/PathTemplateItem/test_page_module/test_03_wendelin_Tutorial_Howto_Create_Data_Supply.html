@@ -3,9 +3,6 @@
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
         <td>store</td>
         <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
         <td>base_url_x</td>
@@ -136,7 +133,7 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -146,7 +143,7 @@
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
     </tbody>
@@ -328,12 +325,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
@@ -358,12 +355,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//li[contains(@data-relative-url,'organisation_module/')]</td>
+        <td>//li[@name='Organisation']</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//li[contains(@data-relative-url,'organisation_module/')]</td>
+        <td>//li[@name='Organisation']</td>
         <td></td>
       </tr>
       <tr>
@@ -501,17 +498,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@name="submit"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>5000</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@name="submit"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -590,9 +582,9 @@
         <td></td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
+       <td>pause</td>
+       <td>5000</td>
+       <td></td>
       </tr>
     </tbody>
   </table>
@@ -681,17 +673,17 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@name="submit"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
-      <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
-      </tr>
+       <tr>
+         <td>pause</td>
+         <td>5000</td>
+         <td></td>
+       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@name="submit"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
@@ -740,10 +732,10 @@
         <td></td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
-      </tr>
+         <td>pause</td>
+         <td>5000</td>
+         <td></td>
+       </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
@@ -769,10 +761,24 @@
         <td>//input[@value="out_stream"]</td>
         <td></td>
       </tr>
-      
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
       <tr>
         <td>open</td>
         <td>${base_url_x}/portal_skins/erp5_wendelin_data_lake/Ingestion_ingestDataStream?reference=sensor_1-sample-environment-raw-data</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Data ingested</td>
         <td></td>
       </tr>
       <tr>
