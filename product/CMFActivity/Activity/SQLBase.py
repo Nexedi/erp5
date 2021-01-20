@@ -79,17 +79,19 @@ _IDENTITY = lambda x: x
 def render_datetime(x):
   return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
 
+_SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
+_SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
+
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
   sqltest_dict = {}
-  no_quote_type = int, float, long
   def _(name, column=None, op="="):
     if column is None:
       column = name
     column_op = "%s %s " % (column, op)
     def render(value, render_string):
-      if isinstance(value, no_quote_type):
+      if isinstance(value, _SQLTEST_NO_QUOTE_TYPE_SET):
         return column_op + str(value)
       if isinstance(value, DateTime):
         value = render_datetime(value)
@@ -100,7 +102,7 @@ def sqltest_dict():
         return column + " IS NULL"
       for x in value:
         return "%s IN (%s)" % (column, ', '.join(map(
-          str if isinstance(x, no_quote_type) else
+          str if isinstance(x, _SQLTEST_NO_QUOTE_TYPE_SET) else
           render_datetime if isinstance(x, DateTime) else
           render_string, value)))
       return "0"
@@ -120,8 +122,8 @@ def sqltest_dict():
     # list of values, rendered condition will match the immediate next row in
     # that sort order.
     priority, date, uid = value
-    assert isinstance(priority, no_quote_type)
-    assert isinstance(uid, no_quote_type)
+    assert isinstance(priority, _SQLTEST_NO_QUOTE_TYPE_SET)
+    assert isinstance(uid, _SQLTEST_NO_QUOTE_TYPE_SET)
     return (
         '(priority>%(priority)s OR (priority=%(priority)s AND '
           '(date>%(date)s OR (date=%(date)s AND uid>%(uid)s))'
@@ -451,18 +453,24 @@ CREATE TABLE %s (
           dependency_value_list = [
             x
             for x in (
-              dependency_value
-              if isinstance(dependency_value, (tuple, list)) else
               (dependency_value, )
+              if isinstance(
+                dependency_value,
+                _SQLTEST_NON_SEQUENCE_TYPE_SET,
+              ) else
+              dependency_value
             )
             if x is not None
           ]
         else:
           dependency_value_list = list(product(*(
             (
-              x
-              if isinstance(x, (tuple, list)) else
               (x, )
+              if isinstance(
+                dependency_column_value,
+                _SQLTEST_NON_SEQUENCE_TYPE_SET,
+              ) else
+              x
             )
             for x in dependency_value
             if x is not None
