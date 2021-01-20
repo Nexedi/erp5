@@ -53,7 +53,10 @@
       if (percentage) {
         // ERP5 always devides the value by 100 if it is set to percentages
         // thus we have to mitigate that in javascript here
-        state_dict.value *= 100.0;
+        // (field_json.default type is number, only when it is initially loaded)
+        if (typeof(field_json.default) == 'number') {
+          state_dict.value *= 100.0;
+        }
         state_dict.append = "%";
       }
       if (!window.isNaN(state_dict.precision)) {
