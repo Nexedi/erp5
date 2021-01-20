@@ -65,6 +65,13 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
+
+      if ((!state_dict.editable) &&
+          ((state_dict.editor === 'fck_editor') ||
+           (state_dict.content_type === 'text/html') ||
+           (!state_dict.content_type))) {
+        state_dict.editor = 'html_viewer';
+      }
       return this.changeState(state_dict);
     })
 
@@ -135,7 +142,8 @@
               );
             });
         } else if (!gadget.state.editable &&
-                   (gadget.state.editor === 'fck_editor')) {
+                   ((gadget.state.editor === 'fck_editor') ||
+                    (gadget.state.editor === 'html_viewer'))) {
           queue
             .push(function () {
               return gadget.declareGadget(editor_dict.html_viewer.url, {
@@ -157,6 +165,7 @@
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor === 'html_viewer') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
