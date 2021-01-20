@@ -25,6 +25,8 @@
 <tr><td>assertValue</td>
     <td>//input[@name="field_my_delivery_ratio"]</td>
     <td>100.0</td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_delivery_ratio"]//i[text()='%']</td><td></td></tr>
 
 <tr><td>fireEvent</td>
     <td>field_my_delivery_ratio</td>
@@ -92,6 +94,8 @@
 <tr><td>verifyValue</td>
     <td>field_my_delivery_ratio</td>
     <td>20.0</td></tr>
+<tr><td>verifyElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_delivery_ratio"]//i[text()='%']</td><td></td></tr>
 <tr><td>verifyText</td>
     <td>//div[@data-gadget-scope="field_my_delivery_ratio_read_only"]//p</td>
     <td>20.0%</td></tr>
