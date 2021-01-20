@@ -3,9 +3,6 @@
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
         <td>store</td>
         <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
         <td>base_url_x</td>
@@ -166,17 +163,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
       
@@ -243,12 +235,12 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Proceed"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>

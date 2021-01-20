@@ -5,6 +5,9 @@ request = portal.REQUEST
 index = reference.index('-')
 stream_reference = reference
 ingestion_reference = reference[:index] + '.' + reference[index+1:len(reference)]
+context.log("stream_reference = ", stream_reference)
+context.log("ingestion_reference = ", ingestion_reference)
+context.log("index = ", index)
 
 request.environ['REQUEST_METHOD'] = 'POST'
 request.set('reference', ingestion_reference)
