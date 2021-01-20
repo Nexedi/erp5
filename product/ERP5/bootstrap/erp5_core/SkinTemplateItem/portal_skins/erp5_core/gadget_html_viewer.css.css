@@ -1,331 +1,128 @@
 div[data-gadget-url$="gadget_html_viewer.html"] {
   max-width: 50em;
-  /* Set the global variables for everything. Change these to use your own fonts/colours. */
-  /* Set sans-serif & mono fonts */
-  --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica, "Helvetica Neue", sans-serif;
-  --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-  /* Body font size. By default, effectively 18.4px, based on 16px as 'root em' */
-  --base-fontsize: 1.15rem;
-  /* Major third scale progression - see https://type-scale.com/ */
-  --header-scale: 1.25;
-  /* Line height is set to the "Golden ratio" for optimal legibility */
-  --line-height: 1.618;
-  /* Default (light) theme */
-  --bg: #FFF;
-  --accent-bg: #F5F7FF;
-  --text: #212121;
-  --text-light: #585858;
-  --border: #D8DAE1;
-  --accent: #0D47A1;
-  --accent-light: #90CAF9;
-  --code: #D81B60;
-  /* Dark theme */
-  /* Make the body a nice central block */
-  /* Make the main element a nice central block */
-  /* Make the header bg full width, but the content inline with body */
-  /* Reduces header padding on smaller screens */
-  /* Remove margins for header text */
-  /* Format navigation */
-  /* Format headers */
-  /* Format links & buttons */
-  /* Format the expanding box */
-  /* Format tables */
-  /* Lists */
-  /* Format forms */
-  /* Make the textarea wider than other inputs */
-  /* Makes input fields wider on smaller screens */
-  /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
-  /* Without this any HTML using <fieldset> shows ugly borders and has additional padding/margin. (Issue #3) */
-  /* Misc body elements */
-  /* Use mono font for code like elements */
-  /* Fix embedded code within pre */
+  display: block;
+  word-wrap: break-word;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  text-align: justify;
 }
-@media (prefers-color-scheme: dark) {
-  div[data-gadget-url$="gadget_html_viewer.html"] {
-    --bg: #212121;
-    --accent-bg: #2B2B2B;
-    --text: #DCDCDC;
-    --text-light: #ABABAB;
-    --border: #666;
-    --accent: #FFB300;
-    --accent-light: #FFECB3;
-    --code: #F06292;
-  }
-  div[data-gadget-url$="gadget_html_viewer.html"] img {
-    opacity: 0.6;
-  }
+div[data-gadget-url$="gadget_html_viewer.html"] canvas,
+div[data-gadget-url$="gadget_html_viewer.html"] img,
+div[data-gadget-url$="gadget_html_viewer.html"] iframe,
+div[data-gadget-url$="gadget_html_viewer.html"] svg {
+  max-width: 100%;
+  max-height: 100vh;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] * {
-  /* Set the font globally */
-  font-family: var(--sans-font);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] html {
-  font-size: 16px;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] body {
-  color: var(--text);
-  background: var(--bg);
-  font-size: var(--base-fontsize);
-  line-height: var(--line-height);
-  margin: 0;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] main {
-  margin: 0 auto;
-  margin-top: 1rem;
-  max-width: 45rem;
-  padding: 0 0.5rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] header {
-  background: var(--accent-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 1.5rem 15rem;
-  margin-bottom: 3rem;
-}
-@media only screen and (max-width: 1200px) {
-  div[data-gadget-url$="gadget_html_viewer.html"] header {
-    padding: 1rem;
-  }
-  div[data-gadget-url$="gadget_html_viewer.html"] nav {
-    text-align: center;
-  }
-}
-div[data-gadget-url$="gadget_html_viewer.html"] header h1,
-div[data-gadget-url$="gadget_html_viewer.html"] header p {
-  margin: 0;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] nav {
-  font-size: 1rem;
-  line-height: 2;
-  padding: 1rem 0;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] nav a {
-  margin: 1rem 1rem 0 0;
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  color: var(--text) !important;
-  display: inline-block;
-  padding: 0.1rem 1rem;
-  text-decoration: none;
-  transition: 0.4s;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] nav a:hover {
-  color: var(--accent) !important;
-  border-color: var(--accent);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] nav a.current:hover {
-  text-decoration: none;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] footer {
-  margin-top: 4rem;
-  padding: 2rem 1rem 1.5rem 1rem;
-  color: var(--text-light);
-  font-size: 0.9rem;
-  text-align: center;
-  border-top: 1px solid var(--border);
+div[data-gadget-url$="gadget_html_viewer.html"] video {
+  max-width: 100%;
+  height: auto;
+  max-height: 100vh;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h1 {
-  font-size: calc(var(--base-fontsize) * var(--header-scale) * var(--header-scale) * var(--header-scale) * var(--header-scale));
-  margin-top: calc(var(--line-height) * 1.5rem);
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-size: 1.5em;
+  text-transform: capitalize;
+  text-align: center;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h2 {
-  font-size: calc(var(--base-fontsize) * var(--header-scale) * var(--header-scale) * var(--header-scale));
-  margin-top: calc(var(--line-height) * 1.5rem);
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 1.3em;
+  text-transform: capitalize;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h3 {
-  font-size: calc(var(--base-fontsize) * var(--header-scale) * var(--header-scale));
-  margin-top: calc(var(--line-height) * 1.5rem);
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 1.1em;
+  text-transform: uppercase;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h4 {
-  font-size: calc(var(--base-fontsize) * var(--header-scale));
-  margin-top: calc(var(--line-height) * 1.5rem);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] h5 {
-  font-size: var(--base-fontsize);
-  margin-top: calc(var(--line-height) * 1.5rem);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] h6 {
-  font-size: calc(var(--base-fontsize) / var(--header-scale));
-  margin-top: calc(var(--line-height) * 1.5rem);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] a,
-div[data-gadget-url$="gadget_html_viewer.html"] a:visited {
-  color: var(--accent);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] a:hover {
-  text-decoration: none;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] a button,
-div[data-gadget-url$="gadget_html_viewer.html"] button,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="submit"],
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="reset"],
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="button"] {
-  border: none;
-  border-radius: 5px;
-  background: var(--accent);
-  font-size: 1rem;
-  color: var(--bg);
-  padding: 0.7rem 0.9rem;
-  margin: 0.5rem 0;
-  transition: 0.4s;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] a button[disabled],
-div[data-gadget-url$="gadget_html_viewer.html"] button[disabled],
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="submit"][disabled],
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="reset"][disabled],
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="button"][disabled] {
-  cursor: default;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] button:focus,
-div[data-gadget-url$="gadget_html_viewer.html"] button:enabled:hover,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="submit"]:focus,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="submit"]:enabled:hover,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="reset"]:focus,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="reset"]:enabled:hover,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="button"]:focus,
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="button"]:enabled:hover {
-  opacity: 0.8;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] details {
-  padding: 0.6rem 1rem;
-  background: var(--accent-bg);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  margin-bottom: 1rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] summary {
-  cursor: pointer;
-  font-weight: bold;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] details[open] {
-  padding-bottom: 0.75rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] details[open] summary {
-  margin-bottom: 0.5rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] details[open] > *:last-child {
-  margin-bottom: 0;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] table {
-  border-collapse: collapse;
-  width: 100%;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] td,
-div[data-gadget-url$="gadget_html_viewer.html"] th {
-  border: 1px solid var(--border);
-  text-align: left;
-  padding: 0.5rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] th {
-  background: var(--accent-bg);
-  font-weight: bold;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] tr:nth-child(even) {
-  /* Set every other cell slightly darker. Improves readability. */
-  background: var(--accent-bg);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] table caption {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] ol,
-div[data-gadget-url$="gadget_html_viewer.html"] ul {
-  padding-left: 3rem;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] textarea,
-div[data-gadget-url$="gadget_html_viewer.html"] select,
-div[data-gadget-url$="gadget_html_viewer.html"] input {
-  font-size: inherit;
-  font-family: inherit;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  box-shadow: none;
-  box-sizing: border-box;
-  width: 60%;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] textarea {
-  width: 80%;
-}
-@media only screen and (max-width: 720px) {
-  div[data-gadget-url$="gadget_html_viewer.html"] textarea,
-  div[data-gadget-url$="gadget_html_viewer.html"] select,
-  div[data-gadget-url$="gadget_html_viewer.html"] input {
-    width: 100%;
-  }
-}
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="checkbox"],
-div[data-gadget-url$="gadget_html_viewer.html"] input[type="radio"] {
-  width: auto;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] fieldset {
-  border: 0;
-  padding: 0;
-  margin: 0;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] hr {
-  color: var(--border);
-  border-top: 1px;
-  margin: 1rem auto;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] mark {
-  padding: 3px 6px;
-  background: var(--accent-light);
-}
-div[data-gadget-url$="gadget_html_viewer.html"] main img {
-  max-width: 100%;
-  border-radius: 5px;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] figure {
-  margin: 0;
-}
-div[data-gadget-url$="gadget_html_viewer.html"] figcaption {
-  font-size: 0.9rem;
-  color: var(--text-light);
-  text-align: center;
-  margin-bottom: 1rem;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 1.1em;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] blockquote {
-  margin: 2rem 0 2rem 2rem;
-  padding: 0.4rem 0.8rem;
-  border-left: 0.35rem solid var(--accent);
-  opacity: 0.8;
+  margin: 6pt 6pt 6pt 0;
+  padding-left: 6pt;
+  border-left: 2px solid #0E81C2;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] i,
+div[data-gadget-url$="gadget_html_viewer.html"] cite,
+div[data-gadget-url$="gadget_html_viewer.html"] em,
+div[data-gadget-url$="gadget_html_viewer.html"] var,
+div[data-gadget-url$="gadget_html_viewer.html"] address,
+div[data-gadget-url$="gadget_html_viewer.html"] dfn {
   font-style: italic;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] cite {
-  font-size: 0.9rem;
-  color: var(--text-light);
-  font-style: normal;
+div[data-gadget-url$="gadget_html_viewer.html"] strong,
+div[data-gadget-url$="gadget_html_viewer.html"] b,
+div[data-gadget-url$="gadget_html_viewer.html"] figcaption {
+  font-weight: 600;
 }
+div[data-gadget-url$="gadget_html_viewer.html"] u,
+div[data-gadget-url$="gadget_html_viewer.html"] ins {
+  text-decoration: underline;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] s,
+div[data-gadget-url$="gadget_html_viewer.html"] strike,
+div[data-gadget-url$="gadget_html_viewer.html"] del {
+  text-decoration: line-through;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] tt,
 div[data-gadget-url$="gadget_html_viewer.html"] code,
-div[data-gadget-url$="gadget_html_viewer.html"] pre,
 div[data-gadget-url$="gadget_html_viewer.html"] kbd,
 div[data-gadget-url$="gadget_html_viewer.html"] samp {
-  font-family: var(--mono-font);
-  font-size: 1.1rem;
-  color: var(--code);
+  font-family: "Courier New", Courier, monospace;
 }
+div[data-gadget-url$="gadget_html_viewer.html"] code,
 div[data-gadget-url$="gadget_html_viewer.html"] kbd {
-  border: 1px solid var(--code);
-  border-bottom: 3px solid var(--code);
-  border-radius: 5px;
-  padding: 0.1rem;
+  color: #2CC32C;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] pre {
-  padding: 1rem 1.4rem;
-  max-width: 100%;
-  overflow: auto;
-  background: var(--accent-bg);
-  border: 1px solid var(--border);
-  border-radius: 5px;
+div[data-gadget-url$="gadget_html_viewer.html"] q {
+  display: inline;
+  quotes: initial;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] pre code {
-  color: var(--text);
-  background: none;
+div[data-gadget-url$="gadget_html_viewer.html"] q:before {
+  content: open-quote;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] q:after {
+  content: close-quote;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] pre,
+div[data-gadget-url$="gadget_html_viewer.html"] xmp,
+div[data-gadget-url$="gadget_html_viewer.html"] plaintext,
+div[data-gadget-url$="gadget_html_viewer.html"] listing {
+  display: block;
+  white-space: pre-wrap;
+  font-family: "Courier New", Courier, monospace;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table {
+  border: 1px solid #1F1F1F;
+  width: 100%;
   margin: 0;
   padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table tr {
+  border: 1px solid #1F1F1F;
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table th,
+div[data-gadget-url$="gadget_html_viewer.html"] table td {
+  text-align: center;
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] table th {
+  text-transform: uppercase;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ul {
+  list-style: disc;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ul li {
+  margin-left: 2em;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ol {
+  list-style: decimal;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] ol li {
+  margin-left: 2em;
 }
