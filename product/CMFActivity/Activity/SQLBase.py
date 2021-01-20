@@ -446,9 +446,12 @@ CREATE TABLE %s (
         # There are 2 types of dependencies:
         # - monovalued (most), which accepts a single value and a vector of
         #   values.
-        # - 2-valued (after_path_and_method_id and after_tag_and_method_id)
-        #   which accept a 2-vector, each item being a single value or a vector
+        # - n-valued (after_path_and_method_id and after_tag_and_method_id)
+        #   which accept a n-vector, each item being a single value or a vector
         #   of values.
+        # Convert every form into its vector equivalent form, ignoring
+        # conditions which cannot match any activity, and (for n-valued)
+        # enumerate all possible combinations for later reverse-lookup.
         if len(column_list) == 1:
           dependency_value_list = [
             x
@@ -460,9 +463,12 @@ CREATE TABLE %s (
               ) else
               dependency_value
             )
+            # None values cannot match any activity, ignore them.
             if x is not None
           ]
         else:
+          # Note: it any resulting item ends up empty (ex: it only contained
+          # None), product will return an empty list.
           dependency_value_list = list(product(*(
             (
               (x, )
