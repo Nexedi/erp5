@@ -207,7 +207,8 @@
                 command: command_mapping[group] || 'display_with_history_and_cancel',
                 options: {
                   title: group_mapping[group][i].title,
-                  class_name: group_mapping[group][i].href === view ? 'active' : '',
+                  class_name: group_mapping[group][i].href === view ||
+                    group_mapping[group][i].name === view ? 'active' : '',
                   jio_key: gadget.state.jio_key,
                   view: group_mapping[group][i].href,
                   editable: editable_mapping[group]
