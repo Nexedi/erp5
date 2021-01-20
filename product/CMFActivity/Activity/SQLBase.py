@@ -28,6 +28,7 @@
 
 from collections import defaultdict
 from itertools import product
+import operator
 import sys
 import transaction
 from random import getrandbits
@@ -71,6 +72,9 @@ def sort_message_key(message):
   return message.line.priority, message.line.date, message.uid
 
 _DequeueMessageException = Exception()
+
+_ITEMGETTER0 = operator.itemgetter(0)
+_IDENTITY = lambda x: x
 
 def render_datetime(x):
   return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
@@ -525,12 +529,10 @@ CREATE TABLE %s (
         continue
       column_list, to_sql = dependency_tester_dict[dependency_name]
       if len(column_list) == 1:
-        def row2key(row):
-          key, = row
-          return key
+        row2key = _ITEMGETTER0
         dependency_sql = to_sql(dependency_value_dict.keys(), quote)
       else:
-        row2key = lambda x: x
+        row2key = _IDENTITY
         # XXX: generated SQL could be simpler: for example, a dependency input
         # as
         #   ('foo', ('bar', 'baz'))
