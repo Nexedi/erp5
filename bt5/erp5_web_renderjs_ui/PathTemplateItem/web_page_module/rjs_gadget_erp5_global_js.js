@@ -164,13 +164,14 @@
   ///////////////////////////////
   // Handle listbox action list
   ///////////////////////////////
-  function mergeGlobalActionWithRawActionList(jio_key, links, group_id_list,
+  function mergeGlobalActionWithRawActionList(gadget, links, group_id_list,
                                               command_mapping,
                                               editable_mapping) {
     return RSVP.Queue()
       .push(function () {
         var i, j, group,
           action_type,
+          view = gadget.state.view,
           group_mapping = {},
           url_mapping = {};
 
@@ -194,19 +195,22 @@
             );
           }
         }
+
         for (group in group_mapping) {
           if (group_mapping.hasOwnProperty(group)) {
             if (!url_mapping.hasOwnProperty(group)) {
               url_mapping[group] = [];
             }
             for (i = 0; i < group_mapping[group].length; i += 1) {
+              console.log(view, group_mapping[group][i].href);
               url_mapping[group].push({
                 command: command_mapping[group] || 'display_with_history_and_cancel',
                 options: {
-                  jio_key: jio_key,
+                  title: group_mapping[group][i].title,
+                  class_name: group_mapping[group][i].href === view ? 'active' : '',
+                  jio_key: gadget.state.jio_key,
                   view: group_mapping[group][i].href,
-                  editable: editable_mapping[group],
-                  title: group_mapping[group][i].title
+                  editable: editable_mapping[group]
                 }
               });
             }
@@ -220,6 +224,7 @@
             }
           }
         }
+        console.log(url_mapping);
         return url_mapping;
       });
   }

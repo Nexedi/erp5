@@ -24,9 +24,9 @@
       dd_element = document.createElement('dd');
       dd_element.setAttribute('class', 'document-listview');
       a_element = document.createElement('a');
-      if (action_list[i].class_name) {
+      if (action_list[i].options.class_name) {
         // Avoid add class='undefined' in HTML
-        a_element.setAttribute('class', action_list[i].class_name);
+        a_element.setAttribute('class', action_list[i].options.class_name);
       }
       a_element.href = href_list[index + i];
       a_element.textContent = action_list[i].options.title;
@@ -91,7 +91,7 @@
         queue
           .push(function () {
             return mergeGlobalActionWithRawActionList(
-              jio_key,
+              {"state": {"jio_key": jio_key, "view": view}},
               erp5_document._links, [
                 "action_workflow",
                 "action_object_view", [
@@ -110,40 +110,11 @@
               });
           })
           .push(function (group_mapping) {
-            workflow_list = group_mapping.action_workflow;
-            view_list = group_mapping.action_object_view;
-            action_list = group_mapping.action_object_jio_action;
-            clone_list = group_mapping.action_object_clone_action;
-            jump_list = group_mapping.action_object_jio_jump;
-
-            if (view === 'view') {
-              for (i = 0; i < view_list.length; i += 1) {
-                view_list[i].options.class_name = view_list[i].name === view ? 'active' : '';
-              }
-            } else {
-              for (i = 0; i < workflow_list.length; i += 1) {
-                workflow_list[i].options.class_name = workflow_list[i].href === view ? 'active' : '';
-              }
-              for (i = 0; i < view_list.length; i += 1) {
-                view_list[i].options.class_name = view_list[i].href === view ? 'active' : '';
-              }
-              for (i = 0; i < action_list.length; i += 1) {
-                action_list[i].options.class_name = action_list[i].href === view ? 'active' : '';
-              }
-              for (i = 0; i < clone_list.length; i += 1) {
-                clone_list[i].options.class_name = clone_list[i].href === view ? 'active' : '';
-              }
-              for (i = 0; i < jump_list.length; i += 1) {
-                jump_list[i].options.class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
-              }
-            }
-            // Prevent has much as possible to modify the DOM panel
-            // stateChange prefer to compare strings
-            workflow_list = JSON.stringify(workflow_list);
-            view_list = JSON.stringify(view_list);
-            action_list = JSON.stringify(action_list);
-            clone_list = JSON.stringify(clone_list);
-            jump_list = JSON.stringify(jump_list);
+            workflow_list = JSON.stringify(group_mapping.action_workflow);
+            view_list = JSON.stringify(group_mapping.action_object_view);
+            action_list = JSON.stringify(group_mapping.action_object_jio_action);
+            clone_list = JSON.stringify(group_mapping.action_object_clone_action);
+            jump_list = JSON.stringify(group_mapping.action_object_jio_jump);
           });
       }
       return queue
