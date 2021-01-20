@@ -120,6 +120,8 @@
                         <string>my_quantity_read_only</string>
                         <string>my_quantity_read_only_percent</string>
                         <string>my_price</string>
+                        <string>my_delivery_ratio</string>
+                        <string>my_delivery_ratio_read_only</string>
                         <string>my_frozen</string>
                         <string>my_lines_list</string>
                       </list>
