@@ -114,6 +114,43 @@ class TestERP5Administration(InventoryAPITestCase):
     self.tic()
     self.assertEqual('3', inconsistent_document.title)
 
+  def test_update_validation_from_consistency_alarm(self):
+    alarm = self.portal.portal_alarms.update_validation_state_from_consistency
+    inconsistent_document = self.portal.organisation_module.newContent(
+        portal_type='Organisation')
+    inconsistent_document.validate()
+    # this document will be non consistent, for PropertyTypeValidity
+    inconsistent_document.title = 3
+    # tic right now to make sure the person is indexed, indeed the alarm
+    # could use catalog to retrieve objects to check
+    self.tic()
+
+    alarm.activeSense()
+    self.tic()
+
+    # some errors were detected
+    self.assertTrue(alarm.sense())
+
+    # this alarm has a custom report
+    alarm.Alarm_viewConsistencyCheckReport()
+    # which has a listbox showing all problem reported by constraints and
+    # errors reported by property type validity constraint
+    line_list = alarm.Alarm_viewConsistencyCheckReport.listbox.get_value(
+                        'default', render_format='list')
+    self.assertEqual(1, len([line for line in line_list if line.isDataLine()]))
+    self.assertEqual(str(line_list[-1].getColumnProperty('getTranslatedMessage')),
+      "Attribute title should be of type string but is of type <type 'int'>")
+    self.assertEqual("invalidated", inconsistent_document.getValidationState())
+
+    # this alarm can solve, as long as the constraints can solve, this is the
+    # case of PropertyTypeValidity
+    alarm.solve()
+    self.tic()
+    self.assertEqual('3', inconsistent_document.title)
+    alarm.activeSense()
+    self.tic()
+    self.assertEqual("validated", inconsistent_document.getValidationState())
+
   def test_check_consistency_incremental(self):
     alarm = self.portal.portal_alarms.check_consistency.Base_createCloneDocument(
         batch_mode=True)
