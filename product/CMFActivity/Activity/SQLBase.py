@@ -452,7 +452,8 @@ CREATE TABLE %s (
         # Convert every form into its vector equivalent form, ignoring
         # conditions which cannot match any activity, and (for n-valued)
         # enumerate all possible combinations for later reverse-lookup.
-        if len(column_list) == 1:
+        column_count = len(column_list)
+        if column_count == 1:
           dependency_value_list = [
             x
             for x in (
@@ -467,19 +468,28 @@ CREATE TABLE %s (
             if x is not None
           ]
         else:
+          try:
+            if (
+              len(dependency_value) != column_count or
+              None in dependency_value
+            ):
+              # Malformed or impossible to match dependency, ignore.
+              continue
+          except TypeError:
+            # Malformed dependency, ignore.
+            continue
           # Note: it any resulting item ends up empty (ex: it only contained
           # None), product will return an empty list.
           dependency_value_list = list(product(*(
             (
-              (x, )
+              (dependency_column_value, )
               if isinstance(
                 dependency_column_value,
                 _SQLTEST_NON_SEQUENCE_TYPE_SET,
               ) else
-              x
+              (x for x in dependency_column_value if x is not None)
             )
-            for x in dependency_value
-            if x is not None
+            for dependency_column_value in dependency_value
           )))
         if not dependency_value_list:
           continue
