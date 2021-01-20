@@ -164,7 +164,7 @@
   ///////////////////////////////
   // Handle listbox action list
   ///////////////////////////////
-  function mergeGlobalActionWithRawActionList(gadget, links, group_id_list,
+  function mergeGlobalActionWithRawActionList(jio_key, links, group_id_list,
                                               command_mapping,
                                               editable_mapping) {
     return RSVP.Queue()
@@ -203,7 +203,7 @@
               url_mapping[group].push({
                 command: command_mapping[group] || 'display_with_history_and_cancel',
                 options: {
-                  jio_key: gadget.state.jio_key,
+                  jio_key: jio_key,
                   view: group_mapping[group][i].href,
                   editable: editable_mapping[group],
                   title: group_mapping[group][i].title

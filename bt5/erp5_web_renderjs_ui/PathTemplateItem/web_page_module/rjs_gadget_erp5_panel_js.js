@@ -91,7 +91,7 @@
         queue
           .push(function () {
             return mergeGlobalActionWithRawActionList(
-              {"state": {"jio_key": jio_key}},
+              jio_key,
               erp5_document._links, [
                 "action_workflow",
                 "action_object_view", [

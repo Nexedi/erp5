@@ -68,7 +68,7 @@
       return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
           erp5_document = jio_attachment;
-          return mergeGlobalActionWithRawActionList(gadget,
+          return mergeGlobalActionWithRawActionList(gadget.state.jio_key,
             erp5_document._links,
             ["action_workflow",
               ["action_object_jio_action",
