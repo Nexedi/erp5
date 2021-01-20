@@ -8,6 +8,7 @@
     "monaco": {"url": "monaco-editor.gadget.html"},
     "onlyoffice": {"url": "onlyoffice.gadget.html"},
     "fck_editor": {"url": "ckeditor.gadget.html"},
+    "html_viewer": {"url": "gadget_html_viewer.html"},
     "svg_editor" : {"url": "method-draw/method-draw.gadget.html"},
     "minipaint": {"url": "minipaint.gadget.html"},
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
@@ -64,6 +65,12 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
+
+      if ((!state_dict.editable) &&
+          ((state_dict.editor === 'fck_editor') ||
+           (state_dict.content_type === 'text/html'))) {
+        state_dict.editor = 'html_viewer';
+      }
       return this.changeState(state_dict);
     })
 
@@ -86,7 +93,9 @@
           // for fck_editor fields, we want to be able to maximize also in non editable
           if ((gadget.state.maximize && gadget.state.editable) ||
               (gadget.state.maximize && gadget.state.editor === 'jsmd_editor') ||
-              (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {
+              (gadget.state.maximize &&
+               (gadget.state.editor === 'fck_editor') &&
+               gadget.state.editable)) {
             element.appendChild(div_max);
             queue
               .push(function () {
@@ -111,7 +120,6 @@
 
         if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
@@ -132,6 +140,16 @@
                 }
               );
             });
+        } else if (!gadget.state.editable &&
+                   ((gadget.state.editor === 'fck_editor') ||
+                    (gadget.state.editor === 'html_viewer'))) {
+          queue
+            .push(function () {
+              return gadget.declareGadget(editor_dict.html_viewer.url, {
+                scope: 'editor',
+                element: div
+              });
+            });
         } else if (gadget.state.editable &&
             (gadget.state.editor === 'text_area')) {
           element.appendChild(document.createElement('textarea'));
@@ -145,7 +163,8 @@
 
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor === 'html_viewer') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
