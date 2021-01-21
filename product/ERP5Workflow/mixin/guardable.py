@@ -88,11 +88,12 @@ class GuardableMixin(object):
           break
       else:
         return False
-    if self.guard_expression and self.guard_expression.text:
+    guard_expression = self.getGuardExpression()
+    if guard_expression and guard_expression.text:
       expression_context = createExprContext(StateChangeInfo(current_object,
                                                              workflow,
                                                              kwargs=kw))
-      if not self.guard_expression(expression_context):
+      if not guard_expression(expression_context):
         return False
     return True
 
