@@ -265,28 +265,15 @@
         } else {
           queue
             .push(function () {
-              var i = 0,
-                parameter_list = [],
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
-              workflow_list = JSON.parse(gadget.state.workflow_list);
+              var i = 0, parameter_list,
+                id_list = ["action_list", "clone_list",
+                           "jump_list", "workflow_list"];
 
-              for (i = 0; i < view_list.length; i += 1) {
-                parameter_list.push(view_list[i]);
-              }
-              for (i = 0; i < workflow_list.length; i += 1) {
-                parameter_list.push(workflow_list[i]);
-              }
-              for (i = 0; i < action_list.length; i += 1) {
-                parameter_list.push(action_list[i]);
-              }
-              for (i = 0; i < clone_list.length; i += 1) {
-                parameter_list.push(clone_list[i]);
-              }
-              for (i = 0; i < jump_list.length; i += 1) {
-                parameter_list.push(jump_list[i]);
+              parameter_list = JSON.parse(gadget.state.view_list);
+              for (i = 0; i < id_list.length; i += 1) {
+                parameter_list = parameter_list.concat(
+                  JSON.parse(gadget.state[id_list[i]])
+                );
               }
 
               return RSVP.all([
@@ -301,7 +288,8 @@
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
                 clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+                jump_list = JSON.parse(gadget.state.jump_list),
+                workflow_list = JSON.parse(gadget.state.workflow_list);
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
