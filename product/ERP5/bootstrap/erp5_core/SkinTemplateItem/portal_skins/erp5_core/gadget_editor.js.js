@@ -68,8 +68,7 @@
 
       if ((!state_dict.editable) &&
           ((state_dict.editor === 'fck_editor') ||
-           (state_dict.content_type === 'text/html') ||
-           (!state_dict.content_type))) {
+           (state_dict.content_type === 'text/html'))) {
         state_dict.editor = 'html_viewer';
       }
       return this.changeState(state_dict);
