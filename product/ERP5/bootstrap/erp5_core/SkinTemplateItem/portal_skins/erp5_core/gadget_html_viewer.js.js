@@ -214,13 +214,13 @@
       }
     }
 
-    return html_doc.querySelector('body');
+    return html_doc.querySelector('body') || domsugar(null);
   }
 
   rJS(window)
 
     .declareMethod('render', function (options) {
-      domsugar(this.element, Array.from(cleanup(options.value).childNodes));
+      domsugar(this.element, Array.from(cleanup(options.value || '').childNodes));
     });
 
 }(window, rJS, domsugar, document, DOMParser, NodeFilter));
