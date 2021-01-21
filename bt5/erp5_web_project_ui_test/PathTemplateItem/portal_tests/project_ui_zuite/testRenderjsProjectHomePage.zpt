@@ -70,8 +70,8 @@
  <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()="Maximize"]</td>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_editor.html']</td>
   <td></td>
 </tr>
 <tr>
