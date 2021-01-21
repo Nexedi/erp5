@@ -1,0 +1,141 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:replace="nothing">
+  <!--
+  Copyright (c) 2006-2015 Nexedi SARL and Contributors. All Rights Reserved.
+                     Vincent Pelletier <vincent@nexedi.com>
+                     Christophe Dumez <christophe@nexedi.com>
+
+  This program is Free Software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+  -->
+  </tal:block>
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="
+      website python:here.getWebSiteValue();
+      portal_path python:website.absolute_url();
+      list_mode list_mode | nothing;
+      editable request/editable_mode | python: 0;
+      global css_list_template python:[
+        portal_path + '/gadget_erp5_nojqm.css',
+      ];
+      global js_list python:[];
+      portal_status_message python: request.get('portal_status_message');
+      global_definitions_macros here/global_definitions/macros;
+      subject_list subject_list | python:here.getProperty('subject_list', []) or [];
+  ">
+    <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+      <!DOCTYPE html>
+      <html xml:lang="en" lang="en">
+        <head>
+          <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />
+          <tal:block metal:use-macro="global_definitions_macros/render_css_js" />
+          <meta name="robots" content="index, follow" />
+        </head>
+        <body tal:attributes="class body_css_class|nothing">
+          <div data-gadget-scope="header">
+            <div class="ui-header">
+              <h1><span tal:content="python: form.title"></span></h1>
+            </div>
+          </div>
+
+          <div data-gadget-scope="panel">
+            <div data-role="header">
+              <div class="panel_img">
+                <img alt="ERP5" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAAA/CAMAAADaDqrIAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMEM5NUE4MzQ5NjQxMUUzOUZEQUU2NUY1RTI1RjdCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowMEM5NUE4NDQ5NjQxMUUzOUZEQUU2NUY1RTI1RjdCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAwQzk1QTgxNDk2NDExRTM5RkRBRTY1RjVFMjVGN0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAwQzk1QTgyNDk2NDExRTM5RkRBRTY1RjVFMjVGN0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+J9MJsAAAAwBQTFRF///////M//+Z//9m//8z//8A/8z//8zM/8yZ/8xm/8wz/8wA/5n//5nM/5mZ/5lm/5kz/5kA/2b//2bM/2aZ/2Zm/2Yz/2YA/zP//zPM/zOZ/zNm/zMz/zMA/wD//wDM/wCZ/wBm/wAz/wAAzP//zP/MzP+ZzP9mzP8zzP8AzMz/zMzMzMyZzMxmzMwzzMwAzJn/zJnMzJmZzJlmzJkzzJkAzGb/zGbMzGaZzGZmzGYzzGYAzDP/zDPMzDOZzDNmzDMzzDMAzAD/zADMzACZzABmzAAzzAAAmf//mf/Mmf+Zmf9mmf8zmf8Amcz/mczMmcyZmcxmmcwzmcwAmZn/mZnMmZmZmZlmmZkzmZkAmWb/mWbMmWaZmWZmmWYzmWYAmTP/mTPMmTOZmTNmmTMzmTMAmQD/mQDMmQCZmQBmmQAzmQAAZv//Zv/MZv+ZZv9mZv8zZv8AZsz/ZszMZsyZZsxmZswzZswAZpn/ZpnMZpmZZplmZpkzZpkAZmb/ZmbMZmaZZmZmZmYzZmYAZjP/ZjPMZjOZZjNmZjMzZjMAZgD/ZgDMZgCZZgBmZgAzZgAAM///M//MM/+ZM/9mM/8zM/8AM8z/M8zMM8yZM8xmM8wzM8wAM5n/M5nMM5mZM5lmM5kzM5kAM2b/M2bMM2aZM2ZmM2YzM2YAMzP/MzPMMzOZMzNmMzMzMzMAMwD/MwDMMwCZMwBmMwAzMwAAAP//AP/MAP+ZAP9mAP8zAP8AAMz/AMzMAMyZAMxmAMwzAMwAAJn/AJnMAJmZAJlmAJkzAJkAAGb/AGbMAGaZAGZmAGYzAGYAADP/ADPMADOZADNmADMzADMAAAD/AADMAACZAABmAAAzAAAAHHa7K3/AOojESZHJWZvNaKTSd63Whrbblb/fpMjks9Howtrt4e320uTx8Pb6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdfKHSQAAAOh0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ALItoLoAAAJkSURBVHja7NlZsqsgEABQ979C5kGGddxo4os0Q8BAynoFn0nUU23TNGRB9xzLdE3XdE3XdP2fLnIzF2VSrsYvC72HizAh9eZ5DVuOl15S4/jWwC+kDC8HPzCSJVHcRY8QXV2PwQuujUYTsYrvYlBv1yKLrsXHsPghnvR3Lazoip/JKuwpF8sm6/bY01Ow9CBlTXi53PNoRcUktEZT1NV1PIPnXAjtMJIMlzerFIzU1dVWF7aPj3Tetae4gjdxktG2et/qQjJ4kZFrv6ED4bK4eR1qduHzvEi4+PbGwD0EGu9CQQLFrv1F4jBc6BcuW3YhkPiPX1hOfxQvnHfh0HVMRqc4HuqiQf5k3mO6dq1s8Hx0H/Le5kq9YaNcxAcrZLpOvAv+ClcgNcZFtnrucd5Fwx4mXj0drnbBYXMuJmFDAV3Uhm4qlbHh3ddOrmholHNxFTVC+xTl2mf6pI4uVe4LwSp0DPGOmh/hAnM94bKZjkHlWuiLeV+cTab4luMKk82wy/Px2fLJskvKUk03hRf9RZ0wiYiZ4uVwVwTb9E71y0XboTYXGuTaa33Y47W5zBjXM3P11y7TfR2ycFdxyaW7uwSc5m0un9ix91m3TWJfW+1ijfW+wcVAfjS5dOP62LyvZZdcLHnA1MkFAtbgwq+Vm47po8OA1buwyy/a1ec5urzveAes2sV8kfW963mFaHNhlT0b6+Yi5+StchH1CtaK0ThXELDPLiyOPZHldzm/J1z9O/B14g7/K+DtkP7U8ivSeD4xaPCTSQvy+YIfubZWzRgtRe1iMP+3mq7pmq7p6jv+BBgAPrgi/TzwWzkAAAAASUVORK5CYII=" />
+              </div>
+            </div>
+          </div>
+
+          <div data-role="page">
+            <div class="gadget-content">
+              <article>
+                <section>
+                  <section class="ui-content-header-plain">
+                      <h3 class="ui-content-title ui-body-c">
+                          <span class="ui-icon ui-icon-custom ui-icon-sign-in"></span>
+                          <tal:block tal:replace="python: form.title"></tal:block>
+                      </h3>
+                  </section>
+
+                  <form
+                    class="field_container"
+                    onsubmit="changed=false; return true"
+                    enctype="multipart/form-data"
+                    tal:attributes="
+                      action url;
+                      method python:str(path('form/method | string:post')).lower();
+                    "
+                  >
+                    <fieldset id="hidden_fieldset" class="hidden_fieldset">
+                      <input
+                        tal:condition="form_action | nothing"
+                        id="hidden_button"
+                        class="hidden_button ui-screen-hidden"
+                        type="submit"
+                        value="dummy"
+                        tal:attributes="name string:${form_action}:method"
+                      />
+                      <tal:block metal:use-macro="global_definitions_macros/http_definitions" />
+                    </fieldset>
+                    <tal:block tal:define="dummy python: request.set('editable_mode', True)">
+                      <div id="main_content" tal:attributes="class python:(list_mode and 'list_mode') or 'view_mode'">
+                        <div tal:condition="python: portal_status_message" tal:content="portal_status_message" id="transition_message"/>
+                        <tal:block metal:define-slot="main"/>
+                      </div>
+                      <tal:block tal:condition="python: layout_form is not None">
+                        <tal:block tal:replace="nothing">
+                        <!--<tal:block tal:define="template python: here.developper_shortcut_render">
+                          <tal:block metal:use-macro="template/macros/form"/>
+                        </tal:block>-->
+                        <!-- Here we force the editable_mode variable to True to let the layout and widgets
+                            based on forms be rendered as editable or non-editable according the "editable"
+                            property on fields.
+
+                            However this has bad side effect: the editable_mode variable in request is
+                            forced to True and is no longer representative of the web site mode.
+
+                            We also set some REQUEST variables which will be needed by Widgets.
+                        -->
+                        </tal:block>
+                        <tal:block
+                          tal:repeat="aggregate python: layout_form.Form_getGroupList(['header', 'left', 'right', 'footer'])"
+                          tal:define="
+                            dummy python: request.set('editable_mode', True);
+                            dialog_mode dialog_mode | nothing;
+                            dummy python: request.set('dialog_mode', dialog_mode);
+                            dummy python: request.set('list_mode', list_mode);
+                            dummy python: request.set('http_parameters', http_parameters);
+                            dummy python: request.set('actions', actions);
+                            dummy python: request.set('current_web_section', request.get('current_web_section', here.getWebSectionValue()));
+                            dummy python: request.set('current_web_document', request.get('current_web_document', here));
+                            dummy python: request.set('is_web_section_default_document', request.get('is_web_section_default_document', 0));
+                          "
+                        >
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+                      </tal:block>
+                    </tal:block>
+                  </form>
+                </section>
+              </article>
+            </div>
+          </div>
+        </body>
+      </html>
+    </tal:block>
+  </tal:block>
+</tal:block>
