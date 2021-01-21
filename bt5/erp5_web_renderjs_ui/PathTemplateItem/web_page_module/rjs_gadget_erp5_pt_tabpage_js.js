@@ -109,10 +109,7 @@
             erp5_document._links, [
               "view",
               "action_object_jio_jump"
-            ], {
-              "view": "display_with_history",
-              "action_object_jio_jump": "display_dialog_with_history",
-            });
+            ]);
           })
         .push(function (group_mapping) {
           var url_for_kw_list = [];

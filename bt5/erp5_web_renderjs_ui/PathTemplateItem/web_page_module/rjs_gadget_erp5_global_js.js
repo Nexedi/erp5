@@ -176,7 +176,15 @@
           view = gadget.state.view,
           jump_view = gadget.state.jump_view,
           group_mapping = {},
-          url_mapping = {};
+          url_mapping = {},
+          default_command_mapping = {
+            "view": "display_with_history",
+            "action_object_jio_jump": "display_dialog_with_history",
+            "action_object_jio_action": "display_dialog_with_history",
+            "action_object_view": "display_with_history",
+            "action_workflow": "display_dialog_with_history",
+            "action_object_clone_action": "display_dialog_with_history"
+          };
 
         editable_mapping = editable_mapping || {};
         command_mapping = command_mapping || {};
@@ -187,7 +195,9 @@
             );
             if (group_id_list[i].length > 1) {
               for (j = 1; j < group_id_list[i].length; j += 1) {
-                group_mapping[group_id_list[i][0]] = group_mapping[group_id_list[i][0]].concat(
+                group_mapping[group_id_list[i][0]] = group_mapping[
+                  group_id_list[i][0]
+                ].concat(
                   ensureArray(links[group_id_list[i][j]])
                 );
               }
@@ -216,7 +226,7 @@
                 class_name = 'active';
               }
               url_mapping[group].push({
-                command: command_mapping[group] || 'display_with_history_and_cancel',
+                command: command_mapping[group] || default_command_mapping[group],
                 options: {
                   title: group_mapping[group][i].title,
                   class_name: class_name,
