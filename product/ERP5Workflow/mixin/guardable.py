@@ -7,6 +7,7 @@ from App.class_init import InitializeClass
 from App.special_dtml import DTMLFile
 from Persistence import Persistent
 
+from Products.ERP5.mixin.expression import ExpressionMixin
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions
@@ -16,13 +17,16 @@ from Products.DCWorkflow.Expression import createExprContext
 from Products.DCWorkflow.utils import _dtmldir
 
 
-class GuardableMixin(object):
-  '''
+class GuardableMixin(ExpressionMixin('guard_expression')):
+  """
   code of methods and functions taken from
   Products.DCWorkflow-2.2.4 > Guard.py
-  '''
 
-  guard_expression = Expression('')
+  ExpressionMixin:
+    _setGuardExpression()
+    getGuardExpressionInstance(default=None)
+  """
+  guard_expression = None
   guard_group = ()
   guard_permission = ()
   guard_role = ()
@@ -88,23 +92,11 @@ class GuardableMixin(object):
           break
       else:
         return False
-    guard_expression = self.getGuardExpression()
-    if guard_expression and guard_expression.text:
+    guard_expression = self.getGuardExpressionInstance()
+    if guard_expression is not None:
       expression_context = createExprContext(StateChangeInfo(current_object,
                                                              workflow,
                                                              kwargs=kw))
       if not guard_expression(expression_context):
         return False
     return True
-
-  # Same as WorkflowVariable.variable_expression
-  def _setGuardExpression(self, text):
-    if text:
-      self.guard_expression = Expression(text)
-    else:
-      self.guard_expression = None
-
-  def _getGuardExpression(self):
-    if self.guard_expression is None:
-      return Expression('')
-    return self.guard_expression

@@ -596,7 +596,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       if not vdef.checkGuard(getSecurityManager(), self, ob):
           return default
       status = self.getCurrentStatusDict(ob)
-      variable_expression = vdef.getVariableExpression()
+      variable_expression = vdef.getVariableExpressionInstance()
       if status is not None and status.has_key(name):
           value = status[name]
 
@@ -849,7 +849,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     transition_expression_dict = {}
     if tdef is not None:
       transition_expression_dict = {
-        variable.getCausalityId(): variable.getVariableExpression()
+        variable.getCausalityId(): variable.getVariableExpressionInstance()
         for variable in tdef.objectValues(portal_type='Transition Variable')
       }
 
@@ -875,12 +875,12 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         # Preserve former value
         value = former_status[variable_reference]
       else:
-        variable_expression = vdef.getVariableExpression()
+        variable_expression = vdef.getVariableExpressionInstance()
         if variable_expression is not None:
           # PATCH : if Default expression for 'actor' is 'user/getUserName',
           # we use 'user/getIdOrUserName' instead to store user ID for ERP5
           # user.
-          if variable_id == 'actor' and variable_expression == 'user/getUserName':
+          if variable_id == 'actor' and vdef.getVariableExpression() == 'user/getUserName':
             expr = userGetIdOrUserNameExpression
           else:
             expr = variable_expression
@@ -1123,7 +1123,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             for tr_var in tr_var_list:
               reference = self._getOb(tr_var.getCausalityId()).getReference()
               transition_variable = SubElement(transition_variables, property_id, attrib=dict(id=reference,type='variable'))
-              transition_variable.text = str(tr_var.getVariableExpressionText())
+              transition_variable.text = str(tr_var.getVariableExpression())
           else:
             property_value = tdef.getProperty(property_id)
             property_type = tdef.getPropertyType(property_id)
@@ -1293,7 +1293,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         # Preserve former value
         value = former_status[id]
       else:
-        variable_expression = vdef.getVariableExpression()
+        variable_expression = vdef.getVariableExpressionInstance()
         if variable_expression is not None:
           expr = variable_expression
         else:
@@ -1346,7 +1346,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       for variable in self.getVariableValueList():
         if variable.getForCatalog():
           variable_id = variable.getReference()
-          variable_expression = variable.getVariableExpression()
+          variable_expression = variable.getVariableExpressionInstance()
           if status.has_key(variable_id):
             value = status[variable_id]
           elif variable_expression is not None:

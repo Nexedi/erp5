@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getVariableExpressionText()</string> </value>
+            <value> <string>python: cell.getVariableExpression()</string> </value>
         </item>
       </dictionary>
     </pickle>

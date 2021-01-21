@@ -223,7 +223,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(transition.guard_group, ('Group1', 'Group2'))
     # expression
     transition.setGuardExpression('python: "Hello, world"')
-    self.assertEqual(transition.guard_expression.text, 'python: "Hello, world"')
+    self.assertEqual(transition.getGuardExpressionInstance().text, 'python: "Hello, world"')
 
   def test_InteractionGuards(self):
     self.test_TransitionGuards(transition_type='Interaction')

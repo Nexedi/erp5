@@ -28,31 +28,61 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Utils import convertToUpperCase
 
-class ExpressionMixin:
-  security = ClassSecurityInfo()
+def ExpressionMixin(property_reference='expression'):
+  """
+  Mixin for a common pattern where ERP5 objects stores a TALES Expression as text.
 
-  def _setExpression(self, value):
+  Usage examples:
+    Python Script/SQL Method: expression_property (reference=expression)
+    GuardableMixin: guard_expression_property (reference=guard_expression)
+
+  CMFCore.Expression already stores the Expression text as 'text' property and
+  create a volatile for the instance, so this may seem redundant and we may
+  have stored an Expression instance directly on the object. However this
+  would make exported objects depend on CMFCore.Expression and not storing
+  "directly" user input.
+  """
+  property_reference_uppercase = convertToUpperCase(property_reference)
+
+  volatile_attribute_name = '_v_' + property_reference + '_instance'
+  def _setter(self, value):
+    """
+    _set<PropertyReference>()
+    """
     try:
-      del self._v_expression_instance
+      delattr(self, volatile_attribute_name)
     except AttributeError:
       pass
-    self._baseSetExpression(value)
+    getattr(self, '_baseSet' + property_reference_uppercase)(value)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExpressionInstance')
-  def getExpressionInstance(self, default=None):
+  def getter(self, default=None):
+    """
+    get<PropertyReference>Instance()
+    """
     try:
-      return self._v_expression_instance
+      return getattr(self, volatile_attribute_name)
     except AttributeError:
-      expression = self.getExpression()
+      expression = getattr(self, 'get' + property_reference_uppercase)
       # Check if the expression is not None, because Expression(<expression>)
       # raises an error in case `expression` is empty or None.
       if expression:
         result = Expression(expression)
       else:
         result = None
-      self._v_expression_instance = result
+      setattr(self, volatile_attribute_name, result)
       return result
 
-InitializeClass(ExpressionMixin)
+  class ExpressionMixin:
+    security = ClassSecurityInfo()
+
+  _setter.__name__ = '_set' + property_reference_uppercase
+  setattr(Expression, _setter.__name__, _setter)
+
+  getter.__name__ = 'get' + property_reference_uppercase + 'Instance'
+  setattr(ExpressionMixin, getter.__name__, getter)
+  ExpressionMixin.security.declareProtected(Permissions.AccessContentsInformation,
+                                            getter.__name__)
+
+  return ExpressionMixin

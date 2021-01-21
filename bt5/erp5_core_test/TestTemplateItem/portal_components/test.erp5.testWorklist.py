@@ -207,7 +207,7 @@ class TestWorklist(ERP5TypeTestCase):
           if variable_value is None:
             variable_value = worklist_value.newContent(portal_type='Worklist Variable')
             variable_value.setReference('region_uid')
-          variable_value.setVariableExpressionText(v)
+          variable_value.setVariableExpression(v)
       if 'variable_base_category_id' in props:
         variable_value = worklist_value._getOb('variable_base_category_id', None)
         v = props.get('variable_base_category_id', None)

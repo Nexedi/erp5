@@ -93,7 +93,7 @@
                         <string>my_status_included</string>
                         <string>my_automatic_update</string>
                         <string>my_variable_value</string>
-                        <string>my_variable_expression_text</string>
+                        <string>my_variable_expression</string>
                       </list>
                     </value>
                 </item>
@@ -101,7 +101,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_guard_expression_text</string>
+                        <string>my_guard_expression</string>
                         <string>my_guard_group_list</string>
                         <string>my_guard_permission_list</string>
                         <string>my_guard_role_list</string>

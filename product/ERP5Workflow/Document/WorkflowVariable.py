@@ -32,9 +32,12 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Workflow.mixin.guardable import GuardableMixin
+from Products.ERP5.mixin.expression import ExpressionMixin
 
-class WorkflowVariable(IdAsReferenceMixin("variable_", "prefix"), XMLObject,
-                       GuardableMixin):
+class WorkflowVariable(IdAsReferenceMixin("variable_", "prefix"),
+                       XMLObject,
+                       GuardableMixin,
+                       ExpressionMixin('variable_expression')):
     """
     A ERP5 Workflow Variable.
     """
@@ -65,21 +68,3 @@ class WorkflowVariable(IdAsReferenceMixin("variable_", "prefix"), XMLObject,
                PropertySheet.Guard,
                PropertySheet.WorkflowVariable,
     )
-
-    def _setVariableExpression(self, expression):
-      if isinstance(expression, basestring) and expression:
-        self.setVariableExpressionText(expression)
-      elif isinstance(expression, Expression) and expression.text:
-        self.variable_expression = expression
-      else:
-        self.variable_expression = None
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-      'setVariableExpressionText')
-    def setVariableExpressionText(self, text):
-      self.variable_expression = Expression(text)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-      'getVariableExpressionText')
-    def getVariableExpressionText(self):
-      return getattr(self.variable_expression, 'text', '')
