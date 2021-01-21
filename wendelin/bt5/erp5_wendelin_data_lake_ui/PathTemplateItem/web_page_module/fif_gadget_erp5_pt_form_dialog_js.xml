@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_form_dialog.js</string> </value>
+            <value> <string>fif_gadget_erp5_pt_form_dialog.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -234,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>969.16391.15144.9659</string> </value>
+                      <value> <string>988.28428.60133.36744</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1532966440.99</float>
+                              <float>1611237911.57</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
