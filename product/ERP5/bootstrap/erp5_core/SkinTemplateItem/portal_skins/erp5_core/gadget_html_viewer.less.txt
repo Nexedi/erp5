@@ -138,4 +138,17 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
     }
   }
 
+  dl {
+    display: grid;
+    grid-template-columns: max-content auto;
+    dt {
+      grid-column-start: 1;
+    }
+
+    dd, dl {
+      grid-column-start: 2;
+    }
+  }
+
+
 }

@@ -126,3 +126,14 @@ div[data-gadget-url$="gadget_html_viewer.html"] ol {
 div[data-gadget-url$="gadget_html_viewer.html"] ol li {
   margin-left: 2em;
 }
+div[data-gadget-url$="gadget_html_viewer.html"] dl {
+  display: grid;
+  grid-template-columns: max-content auto;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] dl dt {
+  grid-column-start: 1;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] dl dd,
+div[data-gadget-url$="gadget_html_viewer.html"] dl dl {
+  grid-column-start: 2;
+}
