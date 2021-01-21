@@ -1013,7 +1013,8 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content div[data-gadget-scope='m'] {
   animation: fadein 0.2s ease-out;
 }
-.gadget-content input[type='submit'] {
+.gadget-content input[type='submit'],
+.gadget-content button[type='submit'] {
   padding: 6pt;
   margin-top: 30pt;
   margin-right: 12pt;
@@ -1028,10 +1029,13 @@ div[data-gadget-scope='header'] .ui-header ul {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .gadget-content input[type='submit']:hover,
-.gadget-content input[type='submit']:focus {
+.gadget-content button[type='submit']:hover,
+.gadget-content input[type='submit']:focus,
+.gadget-content button[type='submit']:focus {
   background-color: #ff8533;
 }
-.gadget-content input[type='submit']:active {
+.gadget-content input[type='submit']:active,
+.gadget-content button[type='submit']:active {
   background-color: #ffa366;
 }
 .gadget-content button[name='action_update'] {
