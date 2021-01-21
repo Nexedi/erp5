@@ -52,6 +52,7 @@ div[data-gadget-url$="gadget_thread_reader.html"] {
   max-width: 50em;
 
   & > ol {
+    background-color: @colorbackground;
 
     & > li {
       padding-bottom: @double-margin-size;
