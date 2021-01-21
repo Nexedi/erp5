@@ -265,15 +265,18 @@
         } else {
           queue
             .push(function () {
-              var i = 0, parameter_list,
-                id_list = ["action_list", "clone_list",
-                           "jump_list", "workflow_list"];
+              var action_list,
+                i = 0, j = 0,
+                parameter_list = [],
+                id_list = ["view_list", "workflow_list",
+                           "action_list",
+                           "clone_list", "jump_list"];
 
-              parameter_list = JSON.parse(gadget.state.view_list);
               for (i = 0; i < id_list.length; i += 1) {
-                parameter_list = parameter_list.concat(
-                  JSON.parse(gadget.state[id_list[i]])
-                );
+                action_list = JSON.parse(gadget.state[id_list[i]]);
+                for (j = 0; j < action_list.length; j += 1) {
+                  parameter_list.push(action_list[j]);
+                }
               }
 
               return RSVP.all([

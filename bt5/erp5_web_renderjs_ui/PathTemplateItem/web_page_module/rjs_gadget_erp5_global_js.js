@@ -187,7 +187,7 @@
             );
             if (group_id_list[i].length > 1) {
               for (j = 1; j < group_id_list[i].length; j += 1) {
-                group_mapping[group_id_list[i][0]].concat(
+                group_mapping[group_id_list[i][0]] = group_mapping[group_id_list[i][0]].concat(
                   ensureArray(links[group_id_list[i][j]])
                 );
               }
