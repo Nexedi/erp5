@@ -1,6 +1,9 @@
 div[data-gadget-url$="gadget_thread_reader.html"] {
   max-width: 50em;
 }
+div[data-gadget-url$="gadget_thread_reader.html"] > ol {
+  background-color: #FFFFFF;
+}
 div[data-gadget-url$="gadget_thread_reader.html"] > ol > li {
   padding-bottom: 12pt;
   /*
