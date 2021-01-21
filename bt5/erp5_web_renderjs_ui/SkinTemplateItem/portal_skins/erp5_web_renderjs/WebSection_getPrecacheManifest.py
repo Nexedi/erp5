@@ -151,6 +151,7 @@ url_list = [
   'gadget_editor.js',
   'gadget_html_viewer.html',
   'gadget_html_viewer.js',
+  'gadget_html_viewer.css',
   'gadget_button_maximize.html',
   'gadget_button_maximize.js',
   'domsugar.js',
