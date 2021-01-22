@@ -161,7 +161,7 @@ class PasswordTool(BaseTool):
       error_encountered = True
       LOG(
         'ERP5.PasswordTool', INFO,
-        "User ${user} does not exist.".format(user=user_login)
+        "User {user} does not exist.".format(user=user_login)
       )
     else:
       # We use checked_permission to prevent errors when trying to acquire
@@ -174,13 +174,19 @@ class PasswordTool(BaseTool):
       if email_value is None or not email_value.asText():
         if credential_request_exists:
           raise RuntimeError(
-            "User ${user} does not have an email address, "
+            "User {user} does not have an email address, "
             "please contact site administrator directly".format(user=user_login)
           )
         error_encountered = True
         LOG(
           'ERP5.PasswordTool', INFO,
-          "User ${user} does not have an email address".format(user=user_login)
+          "User {user} does not have an email address".format(user=user_login)
+        )
+      elif email_value.getValidationState() != "reachable":
+        error_encountered = True
+        LOG(
+          'ERP5.PasswordTool', INFO,
+          "User {user} does not have a valid email address".format(user=user_login)
         )
     if error_encountered:
       if batch:
