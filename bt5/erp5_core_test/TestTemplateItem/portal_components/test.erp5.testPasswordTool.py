@@ -434,6 +434,32 @@ class TestPasswordTool(ERP5TypeTestCase):
     # But no mail has been sent
     self.stepCheckNoMailSent()
 
+  def test_unreachable_email_on_person(self):
+    person = self.portal.person_module.newContent(
+      portal_type="Person",
+      reference="user",
+      default_email_text="user@example.invalid",
+    )
+    person.getDefaultEmailValue().declareUnreachable()
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='user-login',
+      password='password',
+    )
+    login.validate()
+
+    self.tic()
+    self.logout()
+    ret = self.portal.portal_password.mailPasswordResetRequest(
+                  user_login='user-login', REQUEST=self.portal.REQUEST)
+
+    # For security reasons, the message should always be the same
+    self.assertTrue("portal_status_message=An+email+has+been+sent+to+you." in str(ret))
+    # But no mail has been sent
+    self.stepCheckNoMailSent()
+
   def test_acquired_email_on_person(self):
     organisation = self.portal.organisation_module.newContent(
                                     portal_type='Organisation',
