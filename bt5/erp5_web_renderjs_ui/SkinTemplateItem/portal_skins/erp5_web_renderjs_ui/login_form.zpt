@@ -3,6 +3,7 @@
                   portal context/getPortalObject;
                   available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
                   enable_google_login python: 'google' in available_oauth_login_list;
+                  credential_recovery_exist python: 'Credential Recovery' in portal.portal_types;
                   ">
   <head>
     <meta charset="UTF-8">
@@ -61,7 +62,8 @@
                   </div>
                   <div class="dialog_button_container">
                     <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
-                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                    <a tal:condition="python: not credential_recovery_exist" i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                    <a tal:condition="python: credential_recovery_exist" i18n:domain="ui" i18n:translate="" tal:attributes="href python: '../credential_recovery'">Can't access your account?</a>
                   </div>
                   <div class="dialog_button_container" tal:condition="enable_google_login"
                        tal:define="current_url python: context.getWebSiteValue().absolute_url()">

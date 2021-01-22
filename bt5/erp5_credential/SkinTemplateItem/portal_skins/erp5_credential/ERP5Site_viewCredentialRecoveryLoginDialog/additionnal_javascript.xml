@@ -186,7 +186,9 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -220,24 +222,18 @@
                     <value> <string encoding="cdata"><![CDATA[
 
 <script>\n
-$(function(){\n
-function toggleRecoveryField() {\n
-if ($("input[name=\'field_your_choice\']:checked").val() == \'username\') {\n
-$("input[name=\'field_your_reference\']").parent().parent().addClass("hidden");\n
-$("input[name=\'field_your_reference\']").addClass("hidden");\n
-$("input[name=\'field_your_default_email_text\']").removeClass("hidden");\n
-$("input[name=\'field_your_default_email_text\']").parent().parent().removeClass("hidden");\n
+function toggleRecoveryField () {\n
+if (document.querySelector("input[name=\'field_your_choice\']:checked").value == \'username\') {\n
+document.querySelector("div.field input[name=\'field_your_reference\']").parentElement.parentElement.classList.add("hidden", "ui-screen-hidden");\n
+document.querySelector("div.field input[name=\'field_your_default_email_text\']").parentElement.parentElement.classList.remove("hidden", "ui-screen-hidden");\n
 }\n
-else{\n
-$("input[name=\'field_your_reference\']").removeClass("hidden");\n
-$("input[name=\'field_your_reference\']").parent().parent().removeClass("hidden");\n
-$("input[name=\'field_your_default_email_text\']").addClass("hidden");\n
-$("input[name=\'field_your_default_email_text\']").parent().parent().addClass("hidden");\n
+else {\n
+document.querySelector("div.field input[name=\'field_your_reference\']").parentElement.parentElement.classList.remove("hidden", "ui-screen-hidden");\n
+document.querySelector("div.field input[name=\'field_your_default_email_text\']").parentElement.parentElement.classList.add("hidden", "ui-screen-hidden");\n
 }\n
 }\n
-$("input[name=\'field_your_choice\']").change(function(){toggleRecoveryField()});\n
+document.querySelectorAll("input[name=\'field_your_choice\']").forEach(function (element) {element.addEventListener("change", toggleRecoveryField)});\n
 toggleRecoveryField();\n
-});\n
 </script>
 
 ]]></string> </value>
@@ -308,6 +304,19 @@ toggleRecoveryField();\n
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: ""</string> </value>
         </item>
       </dictionary>
     </pickle>
