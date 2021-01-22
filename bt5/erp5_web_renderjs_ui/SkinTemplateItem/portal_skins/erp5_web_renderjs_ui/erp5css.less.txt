@@ -1195,7 +1195,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   // Dialog page template main submit button 
   input[type='submit'],
-  button[type='submit'] {
+  button[type='submit'].dialog_submit_button {
     .renderPageSubmitButton(@coloraccent);
     text-shadow: @foreground-text-shadow;
   }

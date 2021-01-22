@@ -1014,7 +1014,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   animation: fadein 0.2s ease-out;
 }
 .gadget-content input[type='submit'],
-.gadget-content button[type='submit'] {
+.gadget-content button[type='submit'].dialog_submit_button {
   padding: 6pt;
   margin-top: 30pt;
   margin-right: 12pt;
@@ -1029,13 +1029,13 @@ div[data-gadget-scope='header'] .ui-header ul {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .gadget-content input[type='submit']:hover,
-.gadget-content button[type='submit']:hover,
+.gadget-content button[type='submit'].dialog_submit_button:hover,
 .gadget-content input[type='submit']:focus,
-.gadget-content button[type='submit']:focus {
+.gadget-content button[type='submit'].dialog_submit_button:focus {
   background-color: #ff8533;
 }
 .gadget-content input[type='submit']:active,
-.gadget-content button[type='submit']:active {
+.gadget-content button[type='submit'].dialog_submit_button:active {
   background-color: #ffa366;
 }
 .gadget-content button[name='action_update'] {
