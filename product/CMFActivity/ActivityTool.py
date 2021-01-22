@@ -1811,8 +1811,8 @@ class ActivityTool (BaseTool):
         REQUEST['RESPONSE'].redirect( 'manage_main' )
       return obj
 
-    security.declarePrivate('getSQLQueueTableNameSet')
-    def getSQLQueueTableNameSet(self):
+    security.declarePrivate('getSQLTableNameSet')
+    def getSQLTableNameSet(self):
       return [x.sql_table for x in activity_dict.itervalues()]
 
     # Required for tests (time shift)
