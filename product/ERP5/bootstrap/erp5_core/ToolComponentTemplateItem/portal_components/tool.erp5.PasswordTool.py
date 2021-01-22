@@ -133,10 +133,7 @@ class PasswordTool(BaseTool):
     ):
       raise RuntimeError("Password Recovery should be done via Credential Request")
     error_encountered = False
-    msg = translateString(
-      "An email has been sent to you. "
-      "If you didn't receive it, please contact the site administrator directly."
-    )
+    msg = translateString("An email has been sent to you.")
     if REQUEST is None:
       REQUEST = get_request()
 
