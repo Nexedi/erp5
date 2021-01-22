@@ -504,7 +504,7 @@ CREATE TABLE %s (
     # doing such work if there is no such further iteration.
     new_blocked_message_set = set()
     quote = db.string_literal
-    table_name_list = activity_tool.getSQLQueueTableNameSet()
+    table_name_list = activity_tool.getSQLTableNameSet()
     for (
       dependency_name,
       dependency_value_dict,
