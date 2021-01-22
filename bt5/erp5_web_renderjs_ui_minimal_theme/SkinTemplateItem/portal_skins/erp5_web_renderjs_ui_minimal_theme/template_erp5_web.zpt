@@ -48,7 +48,7 @@
         <body tal:attributes="class body_css_class|nothing">
           <div data-gadget-scope="header">
             <div class="ui-header">
-              <h1><span tal:content="python: form.title"></span></h1>
+              <h1><span tal:content="python: form.title" i18n:translate="" i18n:domain="ui"></span></h1>
             </div>
           </div>
 
@@ -67,7 +67,7 @@
                   <section class="ui-content-header-plain">
                       <h3 class="ui-content-title ui-body-c">
                           <span class="ui-icon ui-icon-custom ui-icon-sign-in"></span>
-                          <tal:block tal:replace="python: form.title"></tal:block>
+                          <tal:block tal:replace="python: form.title" i18n:translate="" i18n:domain="ui"></tal:block>
                       </h3>
                   </section>
 
