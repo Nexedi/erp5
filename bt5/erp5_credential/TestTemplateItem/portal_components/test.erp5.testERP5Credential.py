@@ -30,7 +30,7 @@ import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from DateTime import DateTime
 import email, re
 from email.header import decode_header, make_header
@@ -80,6 +80,13 @@ class TestERP5Credential(ERP5TypeTestCase):
       system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
       system_preference.enable()
+    # clear modules if necessary
+    module_list = (self.portal.getDefaultModule('Credential Request'),
+        self.portal.getDefaultModule('Credential Update'),
+        self.portal.getDefaultModule('Credential Recovery'),
+        self.portal.getDefaultModule('Person'))
+    for module in module_list:
+      module.manage_delObjects(list(module.objectIds()))
 
   @reindex
   def enableAlarm(self):
@@ -140,14 +147,6 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.login()
-    self.abort()
-    # clear modules if necessary
-    module_list = (self.portal.getDefaultModule('Credential Request'),
-        self.portal.getDefaultModule('Credential Update'),
-        self.portal.getDefaultModule('Credential Recovery'),
-        self.portal.getDefaultModule('Person'))
-    for module in module_list:
-      module.manage_delObjects(list(module.objectIds()))
     self.resetCredentialSystemPreference()
     self.tic()
     self.logout()
@@ -779,12 +778,15 @@ class TestERP5Credential(ERP5TypeTestCase):
     for line in body_message.splitlines():
       match_obj = re.search(rawstr, line)
       if match_obj is not None:
-        url = line[line.find('http:'):]
+        url = line[line.find('http'):]
     url = url.strip()
     self.assertNotEquals(url, None)
     self.publish(url)
     parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
-    self.assertTrue('reset_key' in parameters)
+    self.assertTrue(
+      'reset_key' in parameters,
+      'reset_key not found in mail message : %s' % body_message
+    )
     key = parameters['reset_key'][0]
     # before changing, check that the user exists with 'secret' password
     self._assertUserExists('barney-login', 'secret')
@@ -1442,6 +1444,24 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual(cr.getDefaultAddressCity(), None)
     self.assertEqual(cr.getDefaultAddressRegion(), None)
 
+  def test_credential_recovery_cant_be_bypassed(self):
+    """ PasswordTool provides a basic functionality of credential recovery,
+    that is extended by Credential Recoveries. But if Credential Recovereries
+    exist (iow, the bt5 for this features is installed), PasswordTool should
+    not provide a way to bypass Credential Recoveries
+    """
+    sequence = Sequence()
+    self.stepCreatePerson(sequence)
+    self.tic()
+    with self.assertRaisesRegexp(
+      RuntimeError,
+      "Password Recovery should be done via Credential Request"
+    ):
+      self.portal.portal_password.mailPasswordResetRequest(
+        user_login=sequence['login_reference'],
+        REQUEST=self.app.REQUEST,
+        came_from="/",
+      )
 
 
 def test_suite():

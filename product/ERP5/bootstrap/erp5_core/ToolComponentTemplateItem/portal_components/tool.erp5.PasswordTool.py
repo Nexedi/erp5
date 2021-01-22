@@ -110,6 +110,7 @@ class PasswordTool(BaseTool):
                                store_as_event=False,
                                expiration_date=None,
                                substitution_method_parameter_dict=None,
+                               came_from=None,
                                batch=False):
     """
     Create a random string and expiration date for request
@@ -126,6 +127,13 @@ class PasswordTool(BaseTool):
     substitution_method_parameter_dict -- additional substitution dict for
                                           creating an email.
     """
+    if (
+      getattr(self.getPortalObject().portal_types, 'Credential Request') is not None and
+      REQUEST is not None
+    ):
+      raise RuntimeError("Password Recovery should be done via Credential Request")
+    error_encountered = False
+    msg = translateString("An email has been sent to you.")
     if REQUEST is None:
       REQUEST = get_request()
 
@@ -133,18 +141,23 @@ class PasswordTool(BaseTool):
       user_login = REQUEST["user_login"]
 
     site_url = self.getPortalObject().absolute_url()
-    if REQUEST and 'came_from' in REQUEST:
+    if came_from:
+      site_url = came_from
+    elif REQUEST and 'came_from' in REQUEST:
       site_url = REQUEST.came_from
 
-    msg = None
+    error_encountered = False
     # check user exists, and have an email
     user_path_set = {x['path'] for x in self.getPortalObject().acl_users.searchUsers(
       login=user_login,
       exact_match=True,
     ) if 'path' in x}
     if len(user_path_set) == 0:
-      msg = translateString("User ${user} does not exist.",
-                            mapping={'user':user_login})
+      error_encountered = True
+      LOG(
+        'ERP5.PasswordTool', INFO,
+        "User {user} does not exist.".format(user=user_login)
+      )
     else:
       # We use checked_permission to prevent errors when trying to acquire
       # email from organisation
@@ -154,10 +167,23 @@ class PasswordTool(BaseTool):
       email_value = user_value.getDefaultEmailValue(
         checked_permission='Access content information')
       if email_value is None or not email_value.asText():
-        msg = translateString(
-            "User ${user} does not have an email address, please contact site "
-            "administrator directly", mapping={'user':user_login})
-    if msg:
+        if getattr(self.getPortalObject().portal_types, 'Credential Request') is not None:
+          raise RuntimeError(
+            "User {user} does not have an email address, "
+            "please contact site administrator directly".format(user=user_login)
+          )
+        error_encountered = True
+        LOG(
+          'ERP5.PasswordTool', INFO,
+          "User {user} does not have an email address".format(user=user_login)
+        )
+      elif email_value.getValidationState() != "reachable":
+        error_encountered = True
+        LOG(
+          'ERP5.PasswordTool', INFO,
+          "User {user} does not have a valid email address".format(user=user_login)
+        )
+    if error_encountered:
       if batch:
         raise RuntimeError(msg)
       else:
