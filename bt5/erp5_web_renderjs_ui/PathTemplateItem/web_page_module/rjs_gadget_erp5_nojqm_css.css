@@ -3280,3 +3280,9 @@ hmtl .ui-icon-carat-u::before {
 .ui-icon-clone::before {
   content: "\f24d";
 }
+/**********************************************
+* Compatibility with xhtml_style
+**********************************************/
+.hidden_label > label {
+  display: none;
+}
