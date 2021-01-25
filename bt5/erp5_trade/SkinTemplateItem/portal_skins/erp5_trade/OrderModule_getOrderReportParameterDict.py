@@ -31,6 +31,9 @@ elif request.get('order_report_document_portal_type'):
 else:
   raise ValueError("unknown type for report")
 
+if not request.get('order_report_document_portal_type'):
+  request.set('order_report_document_portal_type', doc_portal_type)
+
 selection_columns = [('group_by', "Group by")]
 if from_date is None:
   # get the minimum start date in catalog
