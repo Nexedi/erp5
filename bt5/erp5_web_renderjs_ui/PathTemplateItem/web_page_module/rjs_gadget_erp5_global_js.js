@@ -173,6 +173,7 @@
           action_type,
           current_href,
           class_name,
+          options,
           view = gadget.state.view,
           jump_view = gadget.state.jump_view,
           group_mapping = {},
@@ -225,15 +226,21 @@
                          (current_href === view))) {
                 class_name = 'active';
               }
+              options = {
+                title: group_mapping[group][i].title,
+                class_name: class_name,
+                jio_key: gadget.state.jio_key,
+                view: group_mapping[group][i].href,
+                editable: editable_mapping[group]
+              };
+              if (group === "view") {
+                // Views in ERP5 must be forms but because of
+                // OfficeJS we keep it empty for different default
+                options.page = undefined;
+              }
               url_mapping[group].push({
                 command: command_mapping[group] || default_command_mapping[group],
-                options: {
-                  title: group_mapping[group][i].title,
-                  class_name: class_name,
-                  jio_key: gadget.state.jio_key,
-                  view: group_mapping[group][i].href,
-                  editable: editable_mapping[group]
-                }
+                options: options
               });
             }
             action_type = group + "_raw";
