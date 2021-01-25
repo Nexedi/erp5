@@ -14,10 +14,16 @@ if "Sale" in context.getPortalType():
   report_type = "sale"
   line_portal_type = "Sale Order Line"
   doc_portal_type = "Sale Order"
+  if "Packing List" in context.getPortalType():
+    line_portal_type = "Sale Packing List Line"
+    doc_portal_type = "Sale Packing List"
 elif "Purchase" in context.getPortalType():
   report_type = "purchase"
   line_portal_type = "Purchase Order Line"
   doc_portal_type = "Purchase Order"
+  if "Packing List" in context.getPortalType():
+    line_portal_type = "Purchase Packing List Line"
+    doc_portal_type = "Purchase Packing List"
 elif request.get('order_report_document_portal_type'):
   doc_portal_type = request.get('order_report_document_portal_type')
   if doc_portal_type == 'Purchase Invoice Transaction':
