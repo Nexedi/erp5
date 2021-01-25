@@ -103,7 +103,10 @@
                 ],
                 "action_object_clone_action",
                 "action_object_jio_jump"
-              ], {"action_object_jio_action": "display_dialog_with_history"}, {
+              ], {
+                "action_object_jio_action": "display_dialog_with_history",
+                "action_object_clone_action": "display_dialog_with_history"
+              }, {
                 "action_object_clone_action": true
               });
           })
