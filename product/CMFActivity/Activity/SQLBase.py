@@ -454,6 +454,8 @@ CREATE TABLE %s (
         # enumerate all possible combinations for later reverse-lookup.
         column_count = len(column_list)
         if column_count == 1:
+          if dependency_value is None:
+            continue
           dependency_value_list = [
             x
             for x in (
