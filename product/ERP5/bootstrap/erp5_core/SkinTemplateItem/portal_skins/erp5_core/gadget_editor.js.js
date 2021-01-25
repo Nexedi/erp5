@@ -70,6 +70,7 @@
           ((state_dict.editor === 'fck_editor') ||
            (state_dict.content_type === 'text/html'))) {
         state_dict.editor = 'html_viewer';
+        state_dict.maximize = undefined;
       }
       return this.changeState(state_dict);
     })
