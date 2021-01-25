@@ -127,10 +127,15 @@ class PasswordTool(BaseTool):
     substitution_method_parameter_dict -- additional substitution dict for
                                           creating an email.
     """
-    if (
-      getattr(self.getPortalObject().portal_types, 'Credential Request') is not None and
-      REQUEST is not None
-    ):
+    # If the portal type Credential Request exists, then this code should be called from a
+    # workflow interaction. If not, this method is called directly via a POST request.
+    # It seems that Zope allow(ed ?) a user to pass REQUEST=None via the URL, which make
+    # this condition not very robust, but anyway it wouldn't cause any harm (we would just
+    # loose some tracking) so it's acceptable.
+    credential_request_exists = getattr(
+      self.getPortalObject().portal_types, 'Credential Request', None
+    ) is not None
+    if credential_request_exists and REQUEST is not None:
       raise RuntimeError("Password Recovery should be done via Credential Request")
     error_encountered = False
     msg = translateString("An email has been sent to you.")
@@ -167,7 +172,7 @@ class PasswordTool(BaseTool):
       email_value = user_value.getDefaultEmailValue(
         checked_permission='Access content information')
       if email_value is None or not email_value.asText():
-        if getattr(self.getPortalObject().portal_types, 'Credential Request') is not None:
+        if credential_request_exists:
           raise RuntimeError(
             "User {user} does not have an email address, "
             "please contact site administrator directly".format(user=user_login)

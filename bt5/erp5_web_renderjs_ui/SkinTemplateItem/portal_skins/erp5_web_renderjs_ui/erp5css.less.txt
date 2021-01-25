@@ -1195,7 +1195,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   // Dialog page template main submit button 
   input[type='submit'],
-  button[type='submit'] {
+  button[type='submit'].dialog_submit_button {
     .renderPageSubmitButton(@coloraccent);
     text-shadow: @foreground-text-shadow;
   }
@@ -3539,4 +3539,12 @@ hmtl .ui-icon-carat-u::before{
 }
 .ui-icon-clone::before {
   content: "\f24d";
+}
+/**********************************************
+* Compatibility with xhtml_style
+**********************************************/
+.hidden_label {
+  & > label {
+    display: none;
+  }
 }
