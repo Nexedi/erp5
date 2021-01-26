@@ -96,7 +96,11 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_first_failure</string>
+                        <string>my_delivery_ratio</string>
+                        <string>my_delivery_ratio_read_only</string>
+                      </list>
                     </value>
                 </item>
                 <item>
