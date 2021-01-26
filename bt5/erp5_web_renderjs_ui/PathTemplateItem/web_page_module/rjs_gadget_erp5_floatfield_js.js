@@ -3,24 +3,31 @@
 (function (window, rJS, Math) {
   "use strict";
 
-  var separator_re = /\d([\., \-_])?\d\d\d/,
-    input_format_re = /(-?)(\d+)(\.\d+)?/,
-    HTML5_INPUT_STYLE = "-1234.5",
+  var HTML5_INPUT_STYLE = "-1234.5",
     SPACE_INPUT_STYLE = "-1 234.5",
     SPACE_COMMA_INPUT_STYLE = "-1 234,5",
     DOT_COMMA_INPUT_STYLE = "-1.234,5",
     COMMA_DOT_INPUT_STYLE = "-1,234.5",
     PERCENT_INPUT_STYLE = "-12.3%";
 
-  /** Slice any slice-able parameter into triplets **/
-  function toTriplets(sliceable) {
-    var parts = [],
-      i = sliceable.length;
-    for (i = sliceable.length; i > 3; i -= 3) {
-      parts.unshift(sliceable.slice(i - 3, i));
+  function setCharAt(str, index, chr) {
+    return str.substring(0, index) + chr + str.substring(index + 1);
+  }
+
+  function getSeparatorDict(input_style) {
+    if (input_style === SPACE_INPUT_STYLE) {
+      return {thousand: ' ', decimal: '.'};
     }
-    parts.unshift(sliceable.slice(0, i));
-    return parts;
+    if (input_style === SPACE_COMMA_INPUT_STYLE) {
+      return {thousand: ' ', decimal: ','};
+    }
+    if (input_style === DOT_COMMA_INPUT_STYLE) {
+      return {thousand: '.', decimal: ','};
+    }
+    if (input_style === COMMA_DOT_INPUT_STYLE) {
+      return {thousand: ',', decimal: '.'};
+    }
+    throw new Error('No supported input style: ' + input_style);
   }
 
   function convertFloatToHTML5Input(precision, input_style, float) {
@@ -34,21 +41,64 @@
     // Always convert
   }
 
-  function convertERP5InputToHTML5Input(precision, input_style, text) {
+  function convertERP5InputToHTML5Input(input_style, text) {
+    console.log('convertERP5InputToHTML5Input', text, input_style);
     // Convert ERP5 input style to html5 float text
     if (input_style === HTML5_INPUT_STYLE) {
       return text;
-    } else {
-      throw new Error('No supported input style: ' + input_style);
     }
+
+    var separator_dict = getSeparatorDict(input_style),
+      decimal_index = text.indexOf(separator_dict.decimal),
+      original_text = text,
+      i;
+
+    if (decimal_index !== -1) {
+      text = setCharAt(text, decimal_index, '.');
+      i = decimal_index;
+    } else {
+      i = text.length;
+    }
+
+    i = i - 4;
+    // Remove thousand separator
+    while (i > 0) {
+      if (text[i] !== separator_dict.thousand) {
+        throw new Error('Can not parse: ' + original_text);
+      }
+      text = text.substring(0, i) + text.substring(i + 1);
+      i -= 4;
+    }
+
+    console.log('convertERP5InputToHTML5Input 2', text);
+    return text;
+    // throw new Error('No supported input style: ' + input_style);
   }
 
-  function convertHTML5InputToERP5Input(precision, input_style, text) {
+  function convertHTML5InputToERP5Input(input_style, text) {
     if (input_style === HTML5_INPUT_STYLE) {
       return text;
-    } else {
-      throw new Error('No supported input style: ' + input_style);
     }
+
+    var separator_dict = getSeparatorDict(input_style),
+      decimal_index = text.indexOf('.'),
+      i;
+    console.log('before', text, decimal_index);
+    if (decimal_index !== -1) {
+      text = setCharAt(text, decimal_index, separator_dict.decimal);
+      i = decimal_index;
+    } else {
+      i = text.length;
+    }
+    i = i - 3;
+    // Add thousand separator
+    while (i > 0) {
+      text = text.substring(0, i) + separator_dict.thousand + text.substring(i);
+      i -= 3;
+    }
+    console.log('after', text, decimal_index);
+    return text;
+    // throw new Error('not implemented');
   }
 
   rJS(window)
@@ -90,10 +140,10 @@
 
       if (typeof(value) === 'number') {
         value = convertFloatToHTML5Input(precision, input_style, value);
-        text_content = convertHTML5InputToERP5Input(precision, input_style, value);
+        text_content = convertHTML5InputToERP5Input(input_style, value);
       } else {
         text_content = value;
-        value = convertERP5InputToHTML5Input(precision, input_style, value);
+        value = convertERP5InputToHTML5Input(input_style, value);
       }
 
       state_dict.value = value;
@@ -168,14 +218,11 @@
             return sub_gadget.getContent();
           })
           .push(function (result) {
-            result[gadget.state.key] =
+            result[gadget.state.name] =
               convertHTML5InputToERP5Input(
-                gadget.state.precision,
                 gadget.state.input_style,
-                result[gadget.state.key]
+                result[gadget.state.name]
               );
-
-            console.log('floatfield.getContent', result);
             return result;
           });
       }
