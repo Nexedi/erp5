@@ -48,6 +48,13 @@
       return text;
     }
 
+    if (input_style === PERCENT_INPUT_STYLE) {
+      if (text[text.length - 1] !== '%') {
+        throw new Error('Can not parse: ' + text);
+      }
+      return text.substring(0, text.length - 1);
+    }
+
     var separator_dict = getSeparatorDict(input_style),
       decimal_index = text.indexOf(separator_dict.decimal),
       original_text = text,
@@ -78,6 +85,10 @@
   function convertHTML5InputToERP5Input(input_style, text) {
     if (input_style === HTML5_INPUT_STYLE) {
       return text;
+    }
+
+    if (input_style === PERCENT_INPUT_STYLE) {
+      return text + '%';
     }
 
     var separator_dict = getSeparatorDict(input_style),
@@ -150,6 +161,10 @@
       state_dict.text_content = text_content;
       state_dict.input_style = input_style;
 
+      if ((input_style === PERCENT_INPUT_STYLE) && state_dict.editable) {
+        // Display the % next to the input field
+        state_dict.append = "%";
+      }
 /*
       if (percentage) {
         // ERP5 always devides the value by 100 if it is set to percentages
