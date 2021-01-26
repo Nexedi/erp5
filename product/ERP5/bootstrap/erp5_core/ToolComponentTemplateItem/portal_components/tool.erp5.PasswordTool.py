@@ -182,12 +182,6 @@ class PasswordTool(BaseTool):
           'ERP5.PasswordTool', INFO,
           "User {user} does not have an email address".format(user=user_login)
         )
-      elif email_value.getValidationState() != "reachable":
-        error_encountered = True
-        LOG(
-          'ERP5.PasswordTool', INFO,
-          "User {user} does not have a valid email address".format(user=user_login)
-        )
     if error_encountered:
       if batch:
         raise RuntimeError(msg)
