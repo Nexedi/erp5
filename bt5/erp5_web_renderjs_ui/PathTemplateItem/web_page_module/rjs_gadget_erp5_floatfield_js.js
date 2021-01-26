@@ -1,6 +1,6 @@
-/*global window, rJS, Math */
+/*global window, rJS, Math, parseFloat, isNaN */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, Math) {
+(function (window, rJS, Math, parseFloat, isNaN) {
   "use strict";
 
   var HTML5_INPUT_STYLE = "-1234.5",
@@ -36,13 +36,13 @@
     if (input_style === PERCENT_INPUT_STYLE) {
       float *= 100.0;
     }
+    if (!isNaN(precision)) {
+      float = float.toFixed(precision);
+    }
     return float.toString();
-    // XXX precision
-    // Always convert
   }
 
   function convertERP5InputToHTML5Input(input_style, text) {
-    console.log('convertERP5InputToHTML5Input', text, input_style);
     // Convert ERP5 input style to html5 float text
     if (input_style === HTML5_INPUT_STYLE) {
       return text;
@@ -77,7 +77,6 @@
       i -= 4;
     }
 
-    console.log('convertERP5InputToHTML5Input 2', text);
     return text;
     // throw new Error('No supported input style: ' + input_style);
   }
@@ -94,7 +93,6 @@
     var separator_dict = getSeparatorDict(input_style),
       decimal_index = text.indexOf('.'),
       i;
-    console.log('before', text, decimal_index);
     if (decimal_index !== -1) {
       text = setCharAt(text, decimal_index, separator_dict.decimal);
       i = decimal_index;
@@ -107,7 +105,6 @@
       text = text.substring(0, i) + separator_dict.thousand + text.substring(i);
       i -= 3;
     }
-    console.log('after', text, decimal_index);
     return text;
     // throw new Error('not implemented');
   }
@@ -118,12 +115,11 @@
       type: "number"
     })
     .declareMethod('render', function (options) {
-      console.log('floatfield.render', options.field_json);
       var field_json = options.field_json || {},
-        input_style = (field_json.input_style || DEFAULT_INPUT_STYLE),
+        input_style = (field_json.input_style || HTML5_INPUT_STYLE),
         value = field_json.default,
         text_content,
-        precision = field_json.precision,
+        precision = parseFloat(field_json.precision),
         // percentage = input_style.endsWith("%"),
         // thousand_sep = separator_re.test(input_style) ? (separator_re.exec(input_style)[1] || "") : "",
         state_dict = {
@@ -146,10 +142,9 @@
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
-        },
-        tmp;
+        };
 
-      if (typeof(value) === 'number') {
+      if (!isNaN(value)) {
         value = convertFloatToHTML5Input(precision, input_style, value);
         text_content = convertHTML5InputToERP5Input(input_style, value);
       } else {
@@ -165,37 +160,15 @@
         // Display the % next to the input field
         state_dict.append = "%";
       }
-/*
-      if (percentage) {
-        // ERP5 always devides the value by 100 if it is set to percentages
-        // thus we have to mitigate that in javascript here
-        // (field_json.default type is number, only when it is initially loaded)
-        if (typeof(field_json.default) == 'number') {
-          state_dict.value *= 100.0;
-        }
-        state_dict.append = "%";
+      if (!isNaN(precision)) {
+        state_dict.step = Math.pow(10, -precision)
+                              .toFixed(precision);
       }
-      if (!window.isNaN(state_dict.precision)) {
-        state_dict.step = Math.pow(10, -state_dict.precision).toFixed(state_dict.precision);
-        state_dict.value = state_dict.value.toFixed(state_dict.precision);
-      }
-      if (!window.isNaN(state_dict.value)) {
-        state_dict.text_content = state_dict.value.toString();
-        if (state_dict.text_content !== "" && thousand_sep !== "") {
-          tmp = input_format_re.exec(state_dict.text_content);
-          // tmp == [full-number, sign, integer-part, .decimal-part (can be undefined because of permissive regexp), ...]
-          state_dict.text_content = tmp[1] + toTriplets(tmp[2]).join(thousand_sep) + (tmp[3] || "");
-          tmp = undefined;
-        }
-      }
-      console.log('floatfield.render2', state_dict.value);
-*/
 
       return this.changeState(state_dict);
     })
 
     .onStateChange(function (modification_dict) {
-      console.log('floatfield.onstatechange', modification_dict.value);
       var element = this.element,
         gadget = this,
         url,
@@ -254,4 +227,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, Math));
+}(window, rJS, Math, parseFloat, isNaN));
