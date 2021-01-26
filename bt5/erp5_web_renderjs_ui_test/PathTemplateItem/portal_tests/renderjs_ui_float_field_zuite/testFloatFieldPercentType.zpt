@@ -32,34 +32,28 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check default 0 value</b></td>
+  <td colspan="3"><b>Check default 1 value</b></td>
 </tr>
 <tr><td>assertValue</td>
-    <td>field_my_quantity</td>
-    <td>0.00</td></tr>
+    <td>field_my_delivery_ratio</td>
+    <td>100.0</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only' and text()='0,000']</td>
-    <td></td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only_percent' and text()='0.00%']</td>
+    <td>//p[@id='field_my_delivery_ratio_read_only' and text()='1,0000']</td>
     <td></td></tr>
 
 <tr><td>type</td>
-    <td>field_my_quantity</td>
-    <td>1</td></tr>
+    <td>field_my_delivery_ratio</td>
+    <td>99.9</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
   <td colspan="3"><b>Check 1 value</b></td>
 </tr>
 <tr><td>assertValue</td>
-    <td>field_my_quantity</td>
-    <td>1.00</td></tr>
+    <td>field_my_delivery_ratio</td>
+    <td>99.9</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only' and text()='1,000']</td>
-    <td></td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only_percent' and text()='100.00%']</td>
+    <td>//p[@id='field_my_delivery_ratio_read_only' and text()='0,9990']</td>
     <td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
@@ -67,36 +61,15 @@
   <td colspan="3"><b>Check value is not modified by save only</b></td>
 </tr>
 <tr><td>assertValue</td>
-    <td>field_my_quantity</td>
-    <td>1.00</td></tr>
+    <td>field_my_delivery_ratio</td>
+    <td>99.9</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only' and text()='1,000']</td>
-    <td></td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only_percent' and text()='100.00%']</td>
+    <td>//p[@id='field_my_delivery_ratio_read_only' and text()='0,9990']</td>
     <td></td></tr>
 
 <tr><td>type</td>
-    <td>field_my_quantity</td>
-    <td>1000.1</td></tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-
-<tr>
-  <td colspan="3"><b>Check 1000.1 value</b></td>
-</tr>
-<tr><td>assertValue</td>
-    <td>field_my_quantity</td>
-    <td>1000.10</td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only' and text()='1.000,100']</td>
-    <td></td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only_percent' and text()='100010.00%']</td>
-    <td></td></tr>
-
-<tr><td>type</td>
-    <td>field_my_quantity</td>
-    <td>0.99</td></tr>
+    <td>field_my_delivery_ratio</td>
+    <td>0.1</td></tr>
 <tr><td>type</td>
     <td>field_your_first_failure</td>
     <td>3</td></tr>
@@ -111,13 +84,10 @@
   <td colspan="3"><b>Check validator string value</b></td>
 </tr>
 <tr><td>assertValue</td>
-    <td>field_my_quantity</td>
-    <td>0.99</td></tr>
+    <td>field_my_delivery_ratio</td>
+    <td>0.1</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only' and text()='1.000,100']</td>
-    <td></td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//p[@id='field_my_quantity_read_only_percent' and text()='100010.00%']</td>
+    <td>//p[@id='field_my_delivery_ratio_read_only' and text()='0,9990']</td>
     <td></td></tr>
 
 </tbody></table>
