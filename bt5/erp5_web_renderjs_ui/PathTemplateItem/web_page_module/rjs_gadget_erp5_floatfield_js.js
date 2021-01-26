@@ -140,6 +140,9 @@
       if (typeof value === 'number') {
         value = convertFloatToHTML5Input(precision, input_style, value);
         text_content = convertHTML5InputToERP5Input(input_style, value);
+      } else if (value === null) {
+        text_content = '';
+        value = undefined;
       } else {
         text_content = value;
         value = convertERP5InputToHTML5Input(input_style, value);
