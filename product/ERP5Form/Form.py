@@ -1387,6 +1387,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                   addMessage(
                       'erp5-Guideline.Use.Correct.Names.For.Simulation.And.Validation.Titles',
                       'Workflow state fields should be named my_translated_${state_variable}_title')
+
+      # check fields, if they implement _checkConsistency
+      for field in self.objectValues():
+        if hasattr(aq_base(field), 'checkConsistency'):
+          message_list.extend(field.checkConsistency(fixit=fixit))
+
       return message_list
 
 
