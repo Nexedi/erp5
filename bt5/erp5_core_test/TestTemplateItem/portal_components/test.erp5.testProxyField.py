@@ -408,3 +408,66 @@ return printed
         'The proxy field <ProxyField at /%s/portal_skins/erp5_geek/Base_viewGeek/my_title> cannot find a template field'
         % self.portal.getId()):
       field.get_recursive_tales('default')
+
+  def test_has_value(self):
+    """Tests has_value method
+    """
+    portal_skins = self.getSkinsTool()
+
+    skin_folder = portal_skins._getOb('custom')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewGeekFieldLibrary',
+        'View')
+    library_form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
+    library_form.manage_addField('my_title_base', 'library base field', 'StringField')
+    library_base_field = library_form._getOb('my_title_base')
+
+    library_form.manage_addField('my_title', 'Title', 'ProxyField')
+    library_proxy_field = library_form._getOb('my_title')
+    library_proxy_field.manage_edit_xmlrpc(dict(
+      form_id=library_form.getId(), field_id=library_base_field.getId()))
+    library_proxy_field._surcharged_tales(
+        {'description': TALESMethod('string:library proxy field')},
+        ['description'])
+
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewGeek',
+        'View')
+    form = skin_folder._getOb('Base_viewGeek', None)
+    form.manage_addField('my_title', 'Title', 'ProxyField')
+    form_proxy_field = form._getOb('my_title')
+    form_proxy_field.manage_edit_xmlrpc(dict(
+      form_id=library_form.getId(), field_id=library_proxy_field.getId()))
+    form_proxy_field._surcharged_tales(
+        {'css_class': TALESMethod('string:form proxy field')},
+        ['css_class'])
+
+    # we have this:
+    #
+    #   Base_viewGeek/my_title [proxy field]
+    #             |            overriding "css_class"
+    #             v
+    #   Base_viewGeekFieldLibrary/my_title [library proxy field]
+    #             |                        overriding "description"
+    #             v
+    #   Base_viewGeekFieldLibrary/my_base_title [string field]
+
+    # sanity check
+    self.assertEqual(form_proxy_field.get_value('title'), 'library base field')
+    self.assertEqual(form_proxy_field.get_value('description'), 'library proxy field')
+    self.assertEqual(form_proxy_field.get_value('css_class'), 'form proxy field')
+
+    # proxy fields have values from proxyied fields
+    self.assertTrue(form_proxy_field.has_value('title'))
+    self.assertTrue(form_proxy_field.has_value('description'))
+    self.assertTrue(form_proxy_field.has_value('css_class'))
+    self.assertTrue(library_proxy_field.has_value('title'))
+    self.assertTrue(library_proxy_field.has_value('description'))
+    self.assertTrue(library_proxy_field.has_value('css_class'))
+
+    # proxy fields have their "own" values
+    self.assertTrue(form_proxy_field.has_value('form_id'))
+    self.assertTrue(form_proxy_field.has_value('field_id'))
+
+    self.assertFalse(form_proxy_field.has_value('not_exists'))
+    self.assertFalse(library_proxy_field.has_value('not_exists'))
