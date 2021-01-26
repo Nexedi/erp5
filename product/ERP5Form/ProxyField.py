@@ -271,7 +271,7 @@ class ProxyField(ZMIField):
     for key, value in result.items():
       if key not in surcharge_list:
         result.pop(key)
-        if key in self.tales:
+        if key in list(self.tales):
           self.tales.pop(key)
 
     # now do actual update of values
@@ -350,7 +350,7 @@ class ProxyField(ZMIField):
     for key, value in result.items():
       if key not in surcharge_list:
         result.pop(key)
-        if key in self.values:
+        if key in list(self.values):
           self.values.pop(key)
 
     # now do actual update of values
