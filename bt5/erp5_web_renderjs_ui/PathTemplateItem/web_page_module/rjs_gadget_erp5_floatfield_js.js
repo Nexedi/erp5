@@ -78,7 +78,6 @@
     }
 
     return text;
-    // throw new Error('No supported input style: ' + input_style);
   }
 
   function convertHTML5InputToERP5Input(input_style, text) {
@@ -106,7 +105,6 @@
       i -= 3;
     }
     return text;
-    // throw new Error('not implemented');
   }
 
   rJS(window)
@@ -120,8 +118,6 @@
         value = field_json.default,
         text_content,
         precision = parseFloat(field_json.precision),
-        // percentage = input_style.endsWith("%"),
-        // thousand_sep = separator_re.test(input_style) ? (separator_re.exec(input_style)[1] || "") : "",
         state_dict = {
           editable: field_json.editable,
           required: field_json.required,
@@ -131,9 +127,6 @@
           title: field_json.description,
           // precision: window.parseFloat(field_json.precision),
           error_text: field_json.error_text,
-          // erp5 always put value into "default" (never "value")
-          // value: window.parseFloat(field_json.default),
-          // text_content: '',
           // `step` is used for browser-level validation thus a mandatory value
           // if unspecified we can use "any" value
           step: "any",
