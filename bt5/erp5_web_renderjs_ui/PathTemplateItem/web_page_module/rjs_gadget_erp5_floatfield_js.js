@@ -137,7 +137,7 @@
           render_timestamp: new Date().getTime()
         };
 
-      if (!isNaN(value)) {
+      if (typeof (value) === 'number') {
         value = convertFloatToHTML5Input(precision, input_style, value);
         text_content = convertHTML5InputToERP5Input(input_style, value);
       } else {
