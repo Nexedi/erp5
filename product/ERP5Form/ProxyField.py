@@ -35,6 +35,7 @@ from Products.Formulator.Errors import ValidationError
 from Products.Formulator import MethodField
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.ObjectMessage import ObjectMessage
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -790,7 +791,18 @@ class ProxyField(ZMIField):
         return cache.__of__(parent)
     raise KeyError
 
-
+  def _checkConsistency(self, fixit=False):
+    """Check the proxy field internal data structures are consistent
+    """
+    object_relative_url = '/'.join(self.getPhysicalPath())[len(self.getPortalObject().getPath()):]
+    difference = set(self.tales).difference(self.values).difference(self.delegated_list)
+    assert not fixit, "todo"
+    if difference:
+      return [
+        ObjectMessage(
+             object_relative_url=object_relative_url,
+             message="Internal proxy field data structures are inconsistent")]
+    return []
 #
 # get_value exception dict
 #
