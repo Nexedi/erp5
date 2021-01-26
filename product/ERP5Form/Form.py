@@ -1190,7 +1190,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                     delegated_list.append(i)
             proxy_field.values.update(new_values)
             proxy_field.tales.update(new_tales)
-            proxy_field.delegated_list = delegated_list
+            proxy_field.delegated_list = sorted(delegated_list)
 
             # move back to the original group and position.
             set_group_and_position(group, position, field_id)
