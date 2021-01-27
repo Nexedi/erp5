@@ -28,7 +28,11 @@
         // Avoid add class='undefined' in HTML
         a_element.setAttribute('class', action_list[i].options.class_name);
       }
-      a_element.href = href_list[index + i];
+      if (action_list[i].command === "raw") {
+        a_element.href = action_list[i].options.href;
+      } else {
+        a_element.href = href_list[index + i];
+      }
       a_element.textContent = action_list[i].options.title;
       dd_element.appendChild(a_element);
       fragment.appendChild(dd_element);
@@ -141,7 +145,6 @@
     })
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
-        workflow_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -263,7 +266,8 @@
           queue
             .push(function () {
               var action_list,
-                i = 0, j = 0,
+                i = 0,
+                j = 0,
                 parameter_list = [],
                 id_list = ["view_list", "workflow_list",
                            "action_list",
@@ -275,7 +279,6 @@
                   parameter_list.push(action_list[j]);
                 }
               }
-
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',

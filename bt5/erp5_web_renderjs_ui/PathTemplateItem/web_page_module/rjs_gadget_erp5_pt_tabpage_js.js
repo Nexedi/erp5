@@ -134,7 +134,6 @@
             j = 0;
 
           for (i = 0; i < view_list.length; i += 1) {
-            console.log(view_list[i]);
             tab_list.push({
               title: view_list[i].options.title,
               link: result_dict.url_list[j]
