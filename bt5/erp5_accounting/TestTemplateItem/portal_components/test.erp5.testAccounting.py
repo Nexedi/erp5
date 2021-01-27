@@ -3372,25 +3372,6 @@ class TestTransactions(AccountingTestCase):
     accounting_transaction.stop()
     self.assertEqual('code-2001-1', accounting_transaction.getSourceReference())
 
-  def test_generate_sub_accounting_periods(self):
-    accounting_period_2007 = self.section.newContent(
-                                portal_type='Accounting Period',
-                                start_date=DateTime('2007/01/01'),
-                                stop_date=DateTime('2007/12/31'),)
-    accounting_period_2007.start()
-
-    accounting_period_2007.AccountingPeriod_createSecondaryPeriod(
-          frequency='monthly', open_periods=1)
-    sub_period_list = sorted(accounting_period_2007.contentValues(),
-                              key=lambda x:x.getStartDate())
-    self.assertEqual(12, len(sub_period_list))
-    first_period = sub_period_list[0]
-    self.assertEqual(DateTime(2007, 1, 1), first_period.getStartDate())
-    self.assertEqual(DateTime(2007, 1, 31), first_period.getStopDate())
-    self.assertEqual('2007-01', first_period.getShortTitle())
-    self.assertEqual('January', first_period.getTitle())
-
-
   def test_SearchableText(self):
     accounting_transaction = self._makeOne(title='A new Transaction',
                                 description="A description",
@@ -6123,3 +6104,70 @@ class TestAccountingAlarms(AccountingTestCase):
             '{} has wrong grouping (4.0)'.format(payment.grouped_line.getRelativeUrl()),]),
         sorted([x.getProperty('detail') for x in alarm.getLastActiveProcess().getResultList()]))
     self.assertTrue(alarm.sense())
+
+
+class TestAccountingPeriod(AccountingTestCase):
+
+  def test_generate_sub_accounting_periods(self):
+    accounting_period_2007 = self.section.newContent(
+                                portal_type='Accounting Period',
+                                start_date=DateTime('2007/01/01'),
+                                stop_date=DateTime('2007/12/31'),)
+    accounting_period_2007.start()
+
+    accounting_period_2007.AccountingPeriod_createSecondaryPeriod(
+          frequency='monthly', open_periods=1)
+    sub_period_list = sorted(accounting_period_2007.contentValues(),
+                              key=lambda x:x.getStartDate())
+    self.assertEqual(12, len(sub_period_list))
+    first_period = sub_period_list[0]
+    self.assertEqual(DateTime(2007, 1, 1), first_period.getStartDate())
+    self.assertEqual(DateTime(2007, 1, 31), first_period.getStopDate())
+    self.assertEqual('2007-01', first_period.getShortTitle())
+    self.assertEqual('January', first_period.getTitle())
+
+  def test_accounting_period_workflow_constraint(self):
+    first_accounting_period = self.section.newContent(
+        portal_type='Accounting Period',
+        start_date=DateTime('2021/01/01'),
+        stop_date=DateTime('2020/12/31'),)
+    with self.assertRaisesRegexp(ValidationFailed,
+        'Start date is after stop date'):
+      self.portal.portal_workflow.doActionFor(first_accounting_period, 'start_action')
+
+    # make first accounting period valid, for the full 2021 year
+    first_accounting_period.setStopDate(DateTime('2021/12/31'))
+    self.portal.portal_workflow.doActionFor(first_accounting_period, 'start_action')
+    self.tic()
+
+    # check dates don't overlap
+    second_accounting_period = self.section.newContent(
+        portal_type='Accounting Period',
+        start_date=DateTime('2021/01/01'),
+        stop_date=DateTime('2022/12/31'),)
+    with self.assertRaisesRegexp(ValidationFailed,
+        '2021/01/01 00:00:00 .* is already in an open accounting period.'):
+      self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
+
+    # check there are no "holes" between dates
+    second_accounting_period.setStartDate('2022/01/02')
+    with self.assertRaisesRegexp(ValidationFailed,
+        'Last opened period ends on 2021/12/31.*, this period starts on 2022/01/02.*. Accounting Periods must be consecutive.'):
+      self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
+
+    # edge case, when the end date of previous period is a DST swich, this should not block
+    first_accounting_period.setStopDate(DateTime('2021/10/31 00:00:00 Europe/Paris'))
+    second_accounting_period.setStartDate(DateTime('2021/11/01 00:00:00 Europe/Paris'))
+    self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
+
+    # reset first period to 2021 and second period 2022
+    first_accounting_period.setStopDate(DateTime('2021/12/31'))
+    second_accounting_period.setStartDate(DateTime('2022/01/01'))
+    second_accounting_period.setStopDate(DateTime('2022/12/31'))
+
+    # check also with more than 2 periods
+    third_accounting_period = self.section.newContent(
+        portal_type='Accounting Period',
+        start_date=DateTime('2023/01/01'),
+        stop_date=DateTime('2023/12/31'),)
+    self.portal.portal_workflow.doActionFor(third_accounting_period, 'start_action')

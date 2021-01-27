@@ -47,7 +47,7 @@
           editable: field_json.editable,
           error_text: field_json.error_text,
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           item_list: field_json.items,
           hidden: field_json.hidden,
           // Force calling subfield render

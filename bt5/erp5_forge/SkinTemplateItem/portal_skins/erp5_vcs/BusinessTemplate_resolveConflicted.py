@@ -8,4 +8,4 @@ else:
   message = 'Conflicted files resolved successfully.'
 
 request.set("portal_status_message", message)
-return context.BusinessTemplate_viewConflicted()
+return context.BusinessTemplate_viewConflictedDialog()

@@ -123,7 +123,7 @@ configuration_dict = {
   },
   'nostyleform': {
     'title': "No Style Form",
-    'custom_render_method_id': 'WebSite_viewJSStyleTestForm'
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog'
   },
   'section': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
@@ -140,7 +140,7 @@ configuration_dict = {
   'form': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Form",
-    'custom_render_method_id': 'WebSite_viewJSStyleTestForm'
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog'
   },
 }
 

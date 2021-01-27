@@ -20,7 +20,7 @@
           item_list: JSON.stringify(item_list),
           required: field_json.required,
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           first_item: field_json.first_item,
           hidden: field_json.hidden,
           error_text: field_json.error_text,
