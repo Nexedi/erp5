@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OrderModule_filterOrderStatResul</string> </value>
+            <value> <string>OrderModule_filterOrderStatResult</string> </value>
         </item>
       </dictionary>
     </pickle>
