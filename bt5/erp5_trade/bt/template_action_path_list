@@ -19,6 +19,7 @@ Internal Order Line | price_view
 Internal Order Line | profile_view
 Internal Order Line | quantity_view
 Internal Order Line | view
+Internal Order Module | delivery_line_report
 Internal Order Module | view
 Internal Order | apply_trade_condition
 Internal Order | fast_input
