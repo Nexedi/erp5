@@ -64,7 +64,7 @@ class PythonScriptThroughZMI(XMLObject):
     def __init__(self, *args, **kw):
       assert False
 
-class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin):
+class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin('expression')):
     """ Script python for ERP5
     """
 
