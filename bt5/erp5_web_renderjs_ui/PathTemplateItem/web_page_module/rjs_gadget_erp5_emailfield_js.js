@@ -16,6 +16,7 @@
           required: field_json.required,
           name: field_json.key,
           title: field_json.description,
+          error_text: field_json.error_text,
           type: 'email',
           hidden: field_json.hidden,
           // Force calling subfield render
