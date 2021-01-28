@@ -81,7 +81,7 @@
         display_workflow_list = asBoolean(options.display_workflow_list);
       }
 
-      if ((erp5_document !== undefined) && (jio_key !== undefined)) {
+      if ((erp5_document !== undefined) && (jio_key !== undefined || options.display_sub_list)) {
         workflow_list = ensureArray(erp5_document._links.action_workflow);
         view_list = ensureArray(erp5_document._links.action_object_view);
         action_list = ensureArray(erp5_document._links.action_object_jio_action)
@@ -274,7 +274,7 @@
                 parameter_list.push({
                   command: 'display_with_history',
                   options: {
-                    jio_key: gadget.state.jio_key,
+                    jio_key: view_list[i].jio_key || gadget.state.jio_key,
                     view: view_list[i].href
                   }
                 });
@@ -283,7 +283,7 @@
                 parameter_list.push({
                   command: 'display_dialog_with_history',
                   options: {
-                    jio_key: gadget.state.jio_key,
+                    jio_key: workflow_list[i].jio_key || gadget.state.jio_key,
                     view: workflow_list[i].href
                   }
                 });
@@ -292,7 +292,7 @@
                 parameter_list.push({
                   command: 'display_dialog_with_history',
                   options: {
-                    jio_key: gadget.state.jio_key,
+                    jio_key: action_list[i].jio_key || gadget.state.jio_key,
                     view: action_list[i].href
                   }
                 });
@@ -301,7 +301,7 @@
                 parameter_list.push({
                   command: 'display_dialog_with_history',
                   options: {
-                    jio_key: gadget.state.jio_key,
+                    jio_key: clone_list[i].jio_key || gadget.state.jio_key,
                     view: clone_list[i].href,
                     editable: true
                   }
@@ -311,7 +311,7 @@
                 parameter_list.push({
                   command: 'display_dialog_with_history',
                   options: {
-                    jio_key: gadget.state.jio_key,
+                    jio_key: jump_list[i].jio_key || gadget.state.jio_key,
                     view: jump_list[i].href
                   }
                 });

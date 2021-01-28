@@ -365,7 +365,7 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>worklist</string> </value>
+            <value> <string>homepage</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -678,7 +678,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.13214.25464.59101</string> </value>
+                      <value> <string>989.40122.57640.46523</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -696,7 +696,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586874388.75</float>
+                              <float>1611830318.98</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

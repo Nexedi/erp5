@@ -1,6 +1,7 @@
 image_module/rjs_*
 portal_alarms/alarm_disable_xhtml_style
 portal_alarms/alarm_enable_xhtml_style
+portal_categories/publication_section/homepage
 portal_contribution_registry/web_script_by_content
 portal_contribution_registry/web_script_extension
 portal_contribution_registry/web_script_mimetype
