@@ -53,6 +53,7 @@ handler_module_dict = {
   'soap_wsdl': 'SOAPWSDLConnection',
   'sftp' : "SFTPConnection",
   'sql' : "SQLConnection",
+  'document' : "DocumentConnection",
 }
 for handler_id, module_id in handler_module_dict.iteritems():
   # Ignore non-functionnal plugins.
