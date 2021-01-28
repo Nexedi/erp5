@@ -98,6 +98,7 @@
                         <string>my_preferred_money_quantity_style</string>
                         <string>my_preferred_quantity_field_width</string>
                         <string>my_preferred_float_number_style</string>
+                        <string>my_preferred_home_page</string>
                       </list>
                     </value>
                 </item>
