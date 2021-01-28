@@ -1491,14 +1491,24 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           extra_param_json['form_id'] = current_action['view_id'] \
             if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
             else last_form_id
-
-          erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
-                "root_url": site_root.absolute_url(),
-                "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
-                "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
-                "view": erp5_action_list[-1]['name'],
-                "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
-              }
+          if 'jio_key' in erp5_action_list[-1]['href']:
+            erp5_action_list[-1]['href'] = json.loads(erp5_action_list[-1]['href'])
+            erp5_action_list[-1]['jio_key']= erp5_action_list[-1]['href']['jio_key']
+            erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
+                  "root_url": site_root.absolute_url(),
+                  "script_id": script.id,
+                  "relative_url": erp5_action_list[-1]['href']['jio_key'].replace("/", "%2F"),
+                  "view": erp5_action_list[-1]['href']['view'],
+                  "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json))),
+                }
+          else:
+            erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
+                  "root_url": site_root.absolute_url(),
+                  "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
+                  "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
+                  "view": erp5_action_list[-1]['name'],
+                  "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
+                }
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
