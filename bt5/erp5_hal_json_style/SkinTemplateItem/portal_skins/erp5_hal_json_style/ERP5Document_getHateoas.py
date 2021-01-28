@@ -1607,7 +1607,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               "root_url": site_root.absolute_url(),
               "relative_url": preference.getRelativeUrl(),
               "script_id": script.id
-            }
+            },
+            "homepage": preference.getPreferredHomePage()
           }
 
       elif relative_url == 'acl_users':
