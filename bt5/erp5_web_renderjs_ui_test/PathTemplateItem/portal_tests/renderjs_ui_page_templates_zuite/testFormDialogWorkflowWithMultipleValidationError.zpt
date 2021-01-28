@@ -130,6 +130,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//label[@for="field_your_tenth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_your_seventh_failure" and @class="is-invalid"]</td>
   <td></td>
 </tr>
@@ -454,6 +459,17 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//textarea[@name="field_your_fifth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_tenth_failure</td>
+  <td>ok</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>assertTextPresent</td>
+  <td>Please include an '@' in the email address. 'ok' is missing an '@'.</td>
   <td></td>
 </tr>
 </tbody>
