@@ -60,7 +60,7 @@ def manage_addSQLMethod(self, id, title='',
     REQUEST['RESPONSE'].redirect( 'manage_main' )
   return c
 
-class SQLMethod(XMLObject, ZSQL, ExpressionMixin):
+class SQLMethod(XMLObject, ZSQL, ExpressionMixin('expression')):
   """SQLMethod for ERP5.
   """
 

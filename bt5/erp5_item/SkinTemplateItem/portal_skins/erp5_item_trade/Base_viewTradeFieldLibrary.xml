@@ -101,7 +101,7 @@
                         <string>my_dialog_mode_total_quantity</string>
                         <string>my_dialog_mode_type</string>
                         <string>my_dialog_mode_quantity_unit</string>
-                        <string>my_dialog_mode_portal_type</string>
+                        <string>my_dialog_mode_item_portal_type</string>
                         <string>my_dialog_mode_reference</string>
                         <string>my_dialog_mode_title</string>
                         <string>my_dialog_mode_delivery_line_quantity_unit</string>

@@ -60,22 +60,40 @@ def getSkinPrefixList(self):
   # Add interfaces prefix, without the I prefix
   skin_prefix_list.extend([x[1:] for x in portal_types.getInterfaceTypeList()])
 
+  # Add property sheets
+  skin_prefix_list.extend([
+      x.getId().replace(' ', '')
+      for x in portal.portal_property_sheets.contentValues()])
+
   # Add other prefix
   skin_prefix_list.extend((
     'ERP5Type',
+
+    # Modules (maybe should be interfaces)
     'Module',
-    
+    'InventoryModule',
+    'OrderModule',
+    'DeliveryModule',
+    'PackingListModule',
+    'SupplyModule',
+    'ResourceModule',
+
+    # Base classes (maybe should be interfaces)
+    'Entity', # A base class for Person / Organisation
+    'PackingListLine',
+    'IndividualVariation',
+    'ExternalLogin',
+
     # Catalog brains
     'Brain',
     'InventoryListBrain',
     'TrackingListBrain',
     'MovementHistoryListBrain',
 
+    # Zope classes
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
     'MailHost',
-
-    'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
 
     # ERP5Form
@@ -123,26 +141,7 @@ ignored_skin_id_set = {
   'resolveUid',
   'IndividualVariation_init',
   'QuantityUnitConversion_getQuantityUnitList',
-  'ResourceModule_getSelection',
-  'DeliveryModule_getDeliveryLineList',
-  'DeliveryModule_getDeliveryLineReportSectionList',
-  'DeliveryModule_getMovementPortalTypeItemList',
-  'DeliveryModule_getShipmentDeliveryList',
-  'DeliveryModule_getShipmentLineData',
-  'DeliveryModule_getShipmentLineList',
-  'DeliveryModule_getShipmentReportSectionList',
-  'OrderModule_activateGetOrderStatList',
-  'OrderModule_deleteAutoPlannedOrderList',
-  'OrderModule_filterOrderStatResul',
-  'OrderModule_getOrderReport',
-  'OrderModule_getOrderReportParameterDict',
-  'OrderModule_getOrderReportSectionList',
-  'OrderModule_getOrderStatList',
-  'OrderModule_launchOrderReport',
-  'OrderModule_processOrderStat',
-  'OrderModule_statOrderStatList',
   'PackingListContent_updateAfterEdit',
-  'PackingListModule_getPackingListReport',
   'Builder_selectAutoPlannedOrderList',
   'Builder_updateManufacturingOrderAfterBuild',
   'ManufacturingOrderBuilder_selectSimulationMovement',
@@ -169,8 +168,6 @@ ignored_skin_id_set = {
   'SaleInvoiceTransaction_selectTaskReportMovement',
   'TaskListOverviewGadget_setPreferences',
   'TaskListsGadgetListbox_getLineCss',
-  'InventoryModule_reindexMovementList',
-  'DeliveryModule_mergeDeliveryList',
   'ERP5VCS_doCreateJavaScriptDiff.js',
   'ERP5VCS_doCreateJavaScriptStatus.js',
   'PdmZuite_CommonTemplate',
@@ -186,7 +183,72 @@ ignored_skin_id_set = {
   'TaskDistributorAlarm_optimize',
   'TestDocument_optimize',
   'TestResultAlarm_restartStuckTestResult',
+  'ActivityTool_viewWatcher',
+  'BaseWorkflow_viewWorkflowActionDialog',
+  'Base_jumpToRelatedObjectList',
+  'Base_viewHistory',
+  'Base_viewZODBHistory',
+  'BusinessTemplate_viewObjectsDiff',
+  'CacheFactory_viewStatisticList',
+  'Folder_deleteDocumentListStatusDialog',
+  'Folder_generateWorkflowReportDialog',
+  'Folder_modifyDocumentListStatusDialog',
+  'PasswordTool_viewEmailPassword',
+  'PasswordTool_viewResetPassword',
+  'Base_FieldLibrary',
+  'Base_viewDialogFieldLibrary',
+  'ERP5Site_newCredentialRecoveryDialog',
+  'ERP5Site_viewCredentialRequestForm',
+  'Document_jumpToRelatedDocumentList',
+  'FCKeditor_viewDocumentSelectionDialog',
+  'FCKeditor_viewImageSelectionDialog',
+  'BaseWorkflow_FieldLibrary',
+  'BaseTradePurchase_FieldLibrary',
+  'BaseTradeSale_FieldLibrary',
+  'Order_viewDialogFieldLibrary',
+  'PackingListLine_viewFieldLibrary',
+  'Tester_view',
+  'GenericSolver_viewConfigurationFormBox',
+  'BaseTradeProject_FieldLibrary',
+  'OrderMilestone_view',
+  'TradeLine_viewProject',
+  'ProductionDelivery_viewInventory',
 }
+
+# TODO: ignore officejs skins for now, but these should probably be
+# renamed
+ignored_skin_id_set.update({
+  # erp5_officejs
+  'Base_cloneDocumentForCodemirrorEditor',
+  'Base_viewNewContentDialogForCodemirror',
+  'Base_cloneDocumentForSlideshowEditor',
+  'Base_cloneNotebookForNotebookEditor',
+  'Base_downloadDialogForNotebookEditor',
+  'Base_downloadHtmlDialogForNotebookEditor',
+  'Base_exportDialogForNotebookEditor',
+  'Base_uploadDialogForNotebookEditor',
+  'Notebook_previewViewForNotebookEditor',
+  'Base_cloneDocumentForPDFViewer',
+  'Base_viewNewContentDialogForPdfViewer',
+  'WebSite_createAppConfigurationManifest',
+  'Base_cloneDocumentForTextEditor',
+  'Base_viewNewContentDialogForTextEditor',
+  'Base_cloneDocumentForSvgEditor',
+  'Base_viewNewContentDialogForSvgEditor',
+
+  # erp5_officejs_jquery_app
+  'Base_cloneDocumentForWebTable',
+  'Base_viewNewContentDialogForWebTableEditor',
+  'Base_cloneDocumentForImageEditor',
+  'Base_viewNewContentDialogForImageEditor',
+
+  # erp5_officejs_ooffice
+ 'Base_cloneDocumentForOofficeEditor',
+ 'Base_uploadDialogForOofficeEditor',
+ 'SpreadsheetDocument_viewAsJioForOofficeSpreadsheetEditor',
+ 'Base_downloadDialogForOofficeEditor',
+ 'PresentationDocument_viewAsJioForOofficePresentationEditor',
+})
 
 # Generic method to check consistency of a skin item
 def checkConsistency(self, fixit=0, source_code=None):
@@ -208,7 +270,7 @@ def checkConsistency(self, fixit=0, source_code=None):
     if prefix not in getSkinPrefixList(self):
       message_list.append(
         ObjectMessage(object_relative_url='/'.join(self.getPhysicalPath())[portal_path_len:],
-                      message='Wrong prefix %s for python script %s' % (prefix, document_id)))
+                      message='Wrong prefix %s for %s %s' % (prefix, self.meta_type, document_id)))
 
   # Make sure source code does not contain legacy callables
   if source_code:
