@@ -11,9 +11,9 @@
             <value>
               <list>
                 <string>hash_script_id</string>
-                <string>title</string>
-                <string>required</string>
                 <string>items</string>
+                <string>required</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -91,6 +91,12 @@
                 <item>
                     <key> <string>hash_script_id</string> </key>
                     <value> <string>Base_hashCategoryList</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>

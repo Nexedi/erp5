@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>css_class</string>
                 <string>default</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -88,6 +88,10 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hidden_label</string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
