@@ -32,6 +32,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementNotPresent</td>
+  <td>//head/link[@rel='prerender']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForTextPresent</td>
   <td>No Style Form</td>
   <td></td>
