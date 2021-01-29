@@ -10,10 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
-                <string>height</string>
                 <string>default</string>
+                <string>description</string>
+                <string>height</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -80,6 +80,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Comments which can be read by internal users but unlike description, are not printed out on official documents.</string> </value>

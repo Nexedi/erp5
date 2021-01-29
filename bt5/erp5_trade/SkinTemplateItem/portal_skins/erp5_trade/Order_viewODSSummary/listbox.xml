@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>domain_tree</string>
-                <string>domain_root_list</string>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>list_method</string>
-                <string>untranslatable_columns</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>title</string>
+                <string>untranslatable_columns</string>
               </list>
             </value>
         </item>
@@ -90,6 +90,17 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list>
@@ -129,6 +140,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Summary per Resource, Line, Worker</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
