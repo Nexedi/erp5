@@ -10,10 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>external_validator</string>
-                <string>title</string>
-                <string>items</string>
                 <string>enabled</string>
+                <string>external_validator</string>
+                <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -87,6 +87,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>external_validator</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -99,6 +103,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

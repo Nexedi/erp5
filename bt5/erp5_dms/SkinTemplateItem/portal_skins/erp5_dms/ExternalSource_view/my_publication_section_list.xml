@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>hash_script_id</string>
                 <string>description</string>
+                <string>hash_script_id</string>
+                <string>items</string>
                 <string>title</string>
                 <string>view_separator</string>
-                <string>items</string>
               </list>
             </value>
         </item>
@@ -96,6 +96,12 @@
                 <item>
                     <key> <string>hash_script_id</string> </key>
                     <value> <string>WebPage_hashPublicationSectionItemList</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
