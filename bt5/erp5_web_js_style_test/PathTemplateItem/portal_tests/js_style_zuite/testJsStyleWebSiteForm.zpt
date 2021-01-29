@@ -32,6 +32,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//head/link[@rel='prerender' and @href='jsstyle_demo.html']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>//header/h1[text()='JS Style Demo']</td>
   <td></td>
