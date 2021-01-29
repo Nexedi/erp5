@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -78,6 +78,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Determines if the local value have priority</string> </value>

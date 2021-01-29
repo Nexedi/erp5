@@ -10,12 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>stat_columns</string>
                 <string>stat_method</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>list_method</string>
-                <string>columns</string>
-                <string>stat_columns</string>
               </list>
             </value>
         </item>
@@ -116,6 +116,12 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>order_module_stat_report_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>

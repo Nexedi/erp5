@@ -11,9 +11,9 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
-                <string>size</string>
                 <string>items</string>
+                <string>size</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -97,6 +97,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
