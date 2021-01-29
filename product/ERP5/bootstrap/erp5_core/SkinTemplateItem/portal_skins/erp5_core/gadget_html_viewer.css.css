@@ -2,7 +2,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   max-width: 50em;
   display: block;
   word-wrap: break-word;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   text-align: justify;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] canvas,
@@ -17,25 +17,57 @@ div[data-gadget-url$="gadget_html_viewer.html"] video {
   height: auto;
   max-height: 100vh;
 }
+div[data-gadget-url$="gadget_html_viewer.html"] div {
+  display: block;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] p {
+  display: block;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] p,
+div[data-gadget-url$="gadget_html_viewer.html"] pre {
+  margin: 1em 0;
+}
 div[data-gadget-url$="gadget_html_viewer.html"] h1 {
+  display: block;
+  font-size: 2em;
   font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
-  font-size: 1.5em;
-  text-transform: capitalize;
-  text-align: center;
+  margin: 0.67em 0;
+  font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h2 {
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-  font-size: 1.3em;
-  text-transform: capitalize;
+  display: block;
+  font-size: 1.5em;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  margin: 0.83em 0;
+  font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h3 {
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-  font-size: 1.1em;
-  text-transform: uppercase;
+  display: block;
+  font-size: 1.17em;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  margin: 1em 0;
+  font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h4 {
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-  font-size: 1.1em;
+  display: block;
+  font-size: 1em;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  margin: 1.33em 0;
+  font-weight: bold;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] h5 {
+  display: block;
+  font-size: 0.83em;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  margin: 1.67em 0;
+  font-weight: bold;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] h5 {
+  display: block;
+  font-size: 0.67em;
+  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  margin: 2.33em 0;
+  font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] blockquote {
   margin: 6pt 6pt 6pt 0;
@@ -70,9 +102,9 @@ div[data-gadget-url$="gadget_html_viewer.html"] kbd,
 div[data-gadget-url$="gadget_html_viewer.html"] samp {
   font-family: "Courier New", Courier, monospace;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] code,
+div[data-gadget-url$="gadget_html_viewer.html"] pre,
 div[data-gadget-url$="gadget_html_viewer.html"] kbd {
-  color: #2CC32C;
+  background-color: rgba(230, 230, 230, 0.65);
 }
 div[data-gadget-url$="gadget_html_viewer.html"] q {
   display: inline;
@@ -93,26 +125,50 @@ div[data-gadget-url$="gadget_html_viewer.html"] listing {
   font-family: "Courier New", Courier, monospace;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] table {
+  display: table;
+  border-spacing: 2px;
   border: 1px solid #1F1F1F;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
-  border-spacing: 0;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] table tr {
+div[data-gadget-url$="gadget_html_viewer.html"] thead {
+  display: table-header-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] tfoot {
+  display: table-footer-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] col {
+  display: table-column;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] colgroup {
+  display: table-column-group;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] tr {
+  display: table-row;
+  vertical-align: middle;
   border: 1px solid #1F1F1F;
-  padding-top: 6pt;
-  padding-bottom: 6pt;
+  padding: 0 6pt;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] table th,
-div[data-gadget-url$="gadget_html_viewer.html"] table td {
-  text-align: center;
-  padding-top: 6pt;
-  padding-bottom: 6pt;
+div[data-gadget-url$="gadget_html_viewer.html"] td,
+div[data-gadget-url$="gadget_html_viewer.html"] th {
+  display: table-cell;
+  vertical-align: inherit;
+  padding: 0 6pt;
 }
-div[data-gadget-url$="gadget_html_viewer.html"] table th {
-  text-transform: uppercase;
+div[data-gadget-url$="gadget_html_viewer.html"] th {
+  font-weight: bold;
+}
+div[data-gadget-url$="gadget_html_viewer.html"] caption {
+  display: table-caption;
+  text-align: -webkit-center;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] ul {
   list-style: disc;

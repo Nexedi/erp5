@@ -7,7 +7,9 @@
 @colorsubheaderbackground: #0E81C2;
 @bold-font-weight: 600;
 @black: #1F1F1F;
+@white: #FFFFFF;
 @colorforeground: @black;
+@colorbackground: @white;
 
 
 div[data-gadget-url$="gadget_html_viewer.html"] {
@@ -15,7 +17,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
 
   display: block;
   word-wrap: break-word;
-  font-family: @serif;
+  font-family: @sans-serif;
   text-align: justify;
 
   canvas, img, iframe, svg {
@@ -28,29 +30,64 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
     max-height: 100vh;
   }
 
+  div {
+    display: block;
+  }
+
+  p {
+    display: block;
+  }
+
+  p, pre {
+    margin: 1em 0;
+  }
 
   h1 {
+    display: block;
+    font-size: 2em;
     font-family: @serif;
-    font-size: 1.5em;
-    text-transform: capitalize;
-    text-align: center;
+    margin: 0.67em 0;
+    font-weight: bold
   }
 
   h2 {
-    font-family: @sans-serif;
-    font-size: 1.3em;
-    text-transform: capitalize;
+    display: block;
+    font-size: 1.5em;
+    font-family: @serif;
+    margin: 0.83em 0;
+    font-weight: bold
   }
 
   h3 {
-    font-family: @sans-serif;
-    font-size: 1.1em;
-    text-transform: uppercase;
+    display: block;
+    font-size: 1.17em;
+    font-family: @serif;
+    margin: 1em 0;
+    font-weight: bold
   }
 
   h4 {
-    font-family: @sans-serif;
-    font-size: 1.1em;
+    display: block;
+    font-size: 1em;
+    font-family: @serif;
+    margin: 1.33em 0;
+    font-weight: bold
+  }
+
+  h5 {
+    display: block;
+    font-size: .83em;
+    font-family: @serif;
+    margin: 1.67em 0;
+    font-weight: bold
+  }
+
+  h5 {
+    display: block;
+    font-size: .67em;
+    font-family: @serif;
+    margin: 2.33em 0;
+    font-weight: bold
   }
 
   blockquote {
@@ -76,11 +113,11 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   }
 
   tt, code, kbd, samp {
-      font-family: @monospace;
+    font-family: @monospace;
   }
 
-  code, kbd {
-    color: #2CC32C;
+  pre, kbd {
+    background-color: fade(darken(@colorbackground, 10%), 65%);
   }
 
   q {
@@ -100,29 +137,53 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
     font-family: @monospace;
   }
 
-  table {
+table {
+    display: table;
+    border-spacing: 2px;
     border: 1px solid @colorforeground;
     width: 100%;
-    margin:0;
-    padding:0;
-    border-collapse: collapse;
-    border-spacing: 0;
+}
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
 
-    tr {
-      border: 1px solid @colorforeground;
-      padding-top: @margin-size;
-      padding-bottom: @margin-size;
-    }
-    th, td {
-      text-align: center;
-      padding-top: @margin-size;
-      padding-bottom: @margin-size;
-    }
+col {
+    display: table-column;
+}
+colgroup {
+    display: table-column-group;
+}
+tr {
+    display: table-row;
+    vertical-align: middle;
+    border: 1px solid @colorforeground;
+    padding: 0 @margin-size;
 
-    th {
-      text-transform: uppercase;
-    }
-  }
+}
+td, th {
+    display: table-cell;
+    vertical-align: inherit;
+    padding: 0 @margin-size;
+}
+th {
+    font-weight: bold;
+}
+caption {
+    display: table-caption;
+    text-align: -webkit-center;
+}
 
   ul {
     list-style: disc;
