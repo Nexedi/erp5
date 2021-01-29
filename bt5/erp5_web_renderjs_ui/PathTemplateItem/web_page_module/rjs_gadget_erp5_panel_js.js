@@ -62,6 +62,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
+        extra_menu_dict = options.extra_menu_dict,
         display_workflow_list,
         context = this,
         workflow_list,
@@ -119,6 +120,9 @@
         clone_list = JSON.stringify(clone_list);
         jump_list = JSON.stringify(jump_list);
       }
+      if (extra_menu_dict !== undefined) {
+        extra_menu_dict = JSON.stringify(extra_menu_dict);
+      }
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
@@ -133,7 +137,8 @@
             jio_key: jio_key,
             view: view,
             jump_view: jump_view,
-            editable: asBoolean(options.editable) || asBoolean(editable) || false
+            editable: asBoolean(options.editable) || asBoolean(editable) || false,
+            extra_menu_dict: extra_menu_dict
           });
         });
     })
@@ -258,7 +263,7 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
-          gadget.element.querySelector("dl").textContent = '';
+          gadget.element.querySelector("dl.document_menu").textContent = '';
         } else {
           queue
             .push(function () {
@@ -345,7 +350,7 @@
                        view_list.length + workflow_list.length +
                        action_list.length + clone_list.length);
 
-              dl_element = gadget.element.querySelector("dl");
+              dl_element = gadget.element.querySelector("dl.document_menu");
               while (dl_element.firstChild) {
                 dl_element.removeChild(dl_element.firstChild);
               }
@@ -353,7 +358,27 @@
             });
         }
       }
-
+      if ((this.state.global === true) &&
+          (modification_dict.hasOwnProperty("extra_menu_dict"))) {
+        queue.push(function () {
+          var key,
+            item,
+            dl_element = gadget.element.querySelector("dl.global_menu"),
+            dl_fragment,
+            extra_menu_dict;
+          if (gadget.state.extra_menu_dict === undefined) {
+            dl_element.textContent = "";
+          } else {
+            dl_fragment = document.createDocumentFragment();
+            extra_menu_dict = JSON.parse(gadget.state.extra_menu_dict);
+            for (key in extra_menu_dict) {
+              appendDt(dl_fragment, key, extra_menu_dict[key].icon,
+                       extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
+            }
+            dl_element.appendChild(dl_fragment);
+          }
+        });
+      }
       return queue;
     })
 
