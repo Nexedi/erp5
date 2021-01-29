@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DeliveryModule_viewDeliveryLineReportDialog?your_portal_skin=ODS</string> </value>
+            <value> <string>string:${object_url}/DeliveryModule_viewDeliveryLineReportDialog?field_your_portal_skin=ODS</string> </value>
         </item>
       </dictionary>
     </pickle>
