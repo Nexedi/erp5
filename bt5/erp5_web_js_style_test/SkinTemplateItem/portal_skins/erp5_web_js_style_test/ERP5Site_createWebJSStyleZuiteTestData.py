@@ -129,6 +129,15 @@ configuration_dict = {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Style",
   },
+  'favicon': {
+    'title': 'Favicon',
+    'configuration_favicon_url': "favicon.ico"
+  },
+  'faviconform':{
+    'title': 'Favicon Form',
+    'configuration_favicon_url': "favicon.ico",
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog'
+  },
   'language': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'available_language_list': ['en', 'fr', 'zh'],
