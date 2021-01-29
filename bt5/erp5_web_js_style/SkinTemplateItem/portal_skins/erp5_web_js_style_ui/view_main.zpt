@@ -9,6 +9,7 @@
       dummy python: request.set('editable_mode', False);
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
+      no_style_gadget_url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='');
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
@@ -27,8 +28,11 @@
   <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
   <script src="gadget_global.js"></script>
   <script src="jsstyle.js"></script>
+  <tal:block tal:condition="python: no_style_gadget_url != ''">
+  <link rel="prerender" tal:attributes="href no_style_gadget_url">
+  </tal:block>
   </head>
-  <body tal:attributes="data-nostyle-gadget-url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='')">
+  <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url">
     <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
     <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>
 
