@@ -134,6 +134,7 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.is_delegated('items'), False)
     self.assertEqual(field.get_tales('items')._text,
                      'here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
+    self.assertTrue(field.has_value('items'))
     self.assertEqual(field.is_delegated('enabled'), True)
     self.assertEqual(field.get_value('enabled'), 1)
     self.assertEqual(field.is_delegated('description'), True)

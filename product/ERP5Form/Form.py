@@ -1184,13 +1184,14 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                                         new_tales[i]):
                                 del new_tales[i]
 
-            delegated_list = []
-            for i in (new_values.keys()+new_tales.keys()):
-                if not i in delegated_list:
-                    delegated_list.append(i)
+            # make sure every TALES is also in values, this is required for has_value
+            for key in new_tales:
+                if key not in new_values:
+                    new_values[key] = proxy_field.get_recursive_orig_value(key, include=0)
+
             proxy_field.values.update(new_values)
             proxy_field.tales.update(new_tales)
-            proxy_field.delegated_list = sorted(delegated_list)
+            proxy_field.delegated_list = list(sorted(new_values.keys()))
 
             # move back to the original group and position.
             set_group_and_position(group, position, field_id)
