@@ -914,6 +914,95 @@ class TestProxyField(ERP5TypeTestCase):
     self.assertFalse(field.is_message_delegated(test_error))
     self.assertEqual(field.get_error_message(test_error), test_message2)
 
+  def _test_has_value(self, setValueOnLibraryField, setValueOnField):
+    """Tests has_value method
+
+    We use this:
+
+       Base_viewGeek/my_title [field]
+                 |            overriding "css_class"
+                 v
+       Base_viewGeekFieldLibrary/my_title [library_field]
+                 |                        overriding "description"
+                 v
+       Base_viewGeekFieldLibrary/my_base_title [library_base_field]
+
+    and check that has_value is correct for both field (a proxy field using
+    another proxy field as target) and library_field (a proxy field using
+    a traditional field as target).
+
+    This will be tested for both cases where the values are set as "normal values"
+    or as TALES, the setup of values is done by setValueOnLibraryField and
+    setValueField functions.
+    """
+    self.addField(
+        self.container.Base_viewProxyFieldLibrary,
+        'my_title_base',
+        'library base field',
+        'StringField'
+    )
+    library_field = self.addField(
+        self.container.Base_viewProxyFieldLibrary,
+        'my_title',
+        '',
+        'Proxy Field'
+    )
+    library_field.manage_edit_xmlrpc(dict(
+        form_id='Base_viewProxyFieldLibrary', field_id='my_title_base',))
+    field = self.addField(
+        self.container.Base_view,
+        'my_title',
+        '',
+        'Proxy Field'
+    )
+    field.manage_edit_xmlrpc(dict(
+      form_id='Base_viewProxyFieldLibrary', field_id='my_title'))
+
+    setValueOnLibraryField(library_field)
+    setValueOnField(field)
+
+    # sanity check
+    self.assertEqual(field.get_value('title'), 'library base field')
+    self.assertEqual(field.get_value('description'), 'library proxy field')
+    self.assertEqual(field.get_value('css_class'), 'form proxy field')
+
+    # proxy fields have values from proxyied fields
+    self.assertTrue(field.has_value('title'))
+    self.assertTrue(field.has_value('description'))
+    self.assertTrue(field.has_value('css_class'))
+    self.assertTrue(library_field.has_value('title'))
+    self.assertTrue(library_field.has_value('description'))
+    self.assertTrue(library_field.has_value('css_class'))
+
+    # proxy fields have their "own" values
+    self.assertTrue(field.has_value('form_id'))
+    self.assertTrue(field.has_value('field_id'))
+
+    self.assertFalse(field.has_value('not_exists'))
+    self.assertFalse(library_field.has_value('not_exists'))
+
+    self.assertFalse(library_field._checkConsistency())
+    self.assertFalse(field._checkConsistency())
+
+  def test_has_value(self):
+    def setValueOnLibraryField(library_field):
+      library_field.manage_edit_surcharged_xmlrpc({'description': 'library proxy field'})
+    def setValueOnField(field):
+      field.manage_edit_surcharged_xmlrpc({'css_class': 'form proxy field'})
+    return self._test_has_value(setValueOnLibraryField, setValueOnField)
+
+  def test_has_value_TALES(self):
+    def setValueOnLibraryField(library_field):
+      library_field._surcharged_tales(
+          {'description': TALESMethod('string:library proxy field')},
+          ['description'])
+    def setValueOnField(field):
+      field._surcharged_tales(
+          {'css_class': TALESMethod('string:form proxy field')},
+          ['css_class'])
+    return self._test_has_value(setValueOnLibraryField, setValueOnField)
+
+
 class TestFieldValueCache(ERP5TypeTestCase):
   """Tests field value caching system
   """
