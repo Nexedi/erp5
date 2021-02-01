@@ -1,4 +1,4 @@
-/*global window, document, rJS, console, RSVP, domsugar*/
+/*global window, document, rJS, console, RSVP, domsugar, URL*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 (function () {
   "use strict";
