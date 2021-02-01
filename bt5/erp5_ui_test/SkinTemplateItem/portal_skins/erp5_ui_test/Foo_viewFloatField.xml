@@ -100,6 +100,7 @@
                         <string>your_first_failure</string>
                         <string>my_delivery_ratio</string>
                         <string>my_delivery_ratio_read_only</string>
+                        <string>your_empty_percent</string>
                       </list>
                     </value>
                 </item>
