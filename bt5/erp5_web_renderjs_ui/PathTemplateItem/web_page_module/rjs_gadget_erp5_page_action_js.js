@@ -67,25 +67,22 @@
       // what view we are at. If no view available than fallback to "links".
       return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
-          erp5_document = jio_attachment;
-          return mergeGlobalActionWithRawActionList(gadget,
-            erp5_document._links,
-            ["action_workflow",
-              ["action_object_jio_action",
-                "action_object_jio_button",
-                "action_object_jio_fast_input"],
-              "action_object_clone_action",
-              "action_object_delete_action"], {
-            "action_workflow": "display_with_history_and_cancel"
-          }, {
+          var  i, j,
+            url_for_kw_list = [],
+            url_mapping = mergeGlobalActionWithRawActionList(gadget,
+              jio_attachment._links,
+              ["action_workflow",
+                ["action_object_jio_action",
+                  "action_object_jio_button",
+                  "action_object_jio_fast_input"],
+                "action_object_clone_action",
+                "action_object_delete_action"], {
+              "action_workflow": "display_with_history_and_cancel"
+            }, {
               action_object_clone_action: true
             });
-        })
-        .push(function (url_mapping) {
+          erp5_document = jio_attachment;
           raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
-
-          var i, j,
-            url_for_kw_list = [];
 
           group_list = [
             url_mapping.action_workflow, 'random',
