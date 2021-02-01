@@ -15,10 +15,16 @@ def getAccountTitle(relative_url):
     account_title_cache[relative_url] = title
     return title
 
+isDisplayed = lambda movement: True
+if use_list:
+  def isDisplayed(movement): # pylint:disable=function-redefined
+    return any(movement.isMemberOf(use) for use in use_list)
 
 for delivery in portal.portal_catalog(uid=uid_list or -1):
   delivery = delivery.getObject()
   for movement in delivery.getMovementList(portal_type=portal_type):
+    if not isDisplayed(movement):
+      continue
     line_list.append(Object(
         int_index=movement.getIntIndex(),
         title=movement.getTitle(),

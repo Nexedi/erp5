@@ -102,6 +102,16 @@ class TestTradeReports(ERP5ReportTestCase):
                                   title=group_id,
                                   reference=group_id,
                                   id=group_id)
+
+    # create use categories
+    for use_id in ('u1', 'u2'):
+      if not self.portal_categories['use'].has_key(use_id):
+        self.portal_categories.use.newContent(
+            portal_type='Category',
+            title=use_id,
+            reference=use_id,
+            id=use_id)
+
     # currencies
     if not self.portal.currency_module.has_key('EUR'):
       self.portal.currency_module.newContent(
@@ -1979,6 +1989,7 @@ class TestTradeReports(ERP5ReportTestCase):
     self.assertFalse('Site Error' in view)
 
     self.portal.REQUEST.form['portal_type'] = ['Sale Order Line']
+    self.portal.REQUEST.form['use'] = []
     report_section, = self.getReportSectionList(
         self.sale_order_module,
         'DeliveryModule_viewDeliveryLineReport')
@@ -1997,6 +2008,42 @@ class TestTradeReports(ERP5ReportTestCase):
         line_list[1],
         start_date=DateTime(2006, 2, 2),
         quantity=11,
+        price=3,
+    )
+
+  def test_LinesReport_use(self):
+    sale_order = self.sale_order_module.newContent(portal_type="Sale Order")
+    sale_order.newContent(
+        portal_type="Sale Order Line",
+        resource_value=self.portal.product_module.product_A,
+        use_value=self.portal.portal_categories.use.u1,
+        quantity=2,
+        price=3,
+    )
+    sale_order.newContent(
+        portal_type="Sale Order Line",
+        resource_value=self.portal.product_module.product_A,
+        use_value=self.portal.portal_categories.use.u2,
+        quantity=3,
+        price=4,
+    )
+    self.tic()
+
+    # view the module first, it will set selection
+    view = self.portal.sale_order_module.view()
+    self.assertFalse('Site Error' in view)
+
+    self.portal.REQUEST.form['portal_type'] = ['Sale Order Line']
+    self.portal.REQUEST.form['use'] = ['use/u1']
+    report_section, = self.getReportSectionList(
+        self.sale_order_module,
+        'DeliveryModule_viewDeliveryLineReport')
+
+    line_list = [l for l in self.getListBoxLineList(report_section) if l.isDataLine()]
+    self.assertEqual(len(line_list), 1)
+    self.checkLineProperties(
+        line_list[0],
+        quantity=2,
         price=3,
     )
 
