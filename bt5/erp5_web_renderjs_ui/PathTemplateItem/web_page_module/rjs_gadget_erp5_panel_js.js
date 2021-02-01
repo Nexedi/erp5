@@ -97,21 +97,21 @@
           "view": view,
           "jump_view": jump_view
         }},
-        erp5_document._links, [
-          "action_workflow",
-          "action_object_view", [
-            "action_object_jio_action",
-            "action_object_jio_button",
-            "action_object_jio_fast_input"
-          ],
-          "action_object_clone_action",
-          "action_object_jio_jump"
-        ], {
-          "action_object_jio_action": "display_dialog_with_history",
-          "action_object_clone_action": "display_dialog_with_history"
-        }, {
-          "action_object_clone_action": true
-        });
+          erp5_document._links, [
+            "action_workflow",
+            "action_object_view", [
+              "action_object_jio_action",
+              "action_object_jio_button",
+              "action_object_jio_fast_input"
+            ],
+            "action_object_clone_action",
+            "action_object_jio_jump"
+          ], {
+            "action_object_jio_action": "display_dialog_with_history",
+            "action_object_clone_action": "display_dialog_with_history"
+          }, {
+            "action_object_clone_action": true
+          });
         workflow_list = JSON.stringify(group_mapping.action_workflow);
         view_list = JSON.stringify(group_mapping.action_object_view);
         action_list = JSON.stringify(group_mapping.action_object_jio_action);

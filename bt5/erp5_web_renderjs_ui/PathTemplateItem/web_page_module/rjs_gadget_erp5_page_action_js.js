@@ -77,10 +77,10 @@
                   "action_object_jio_fast_input"],
                 "action_object_clone_action",
                 "action_object_delete_action"], {
-              "action_workflow": "display_with_history_and_cancel"
-            }, {
-              action_object_clone_action: true
-            });
+                "action_workflow": "display_with_history_and_cancel"
+              }, {
+                action_object_clone_action: true
+              });
           erp5_document = jio_attachment;
           raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
