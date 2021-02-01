@@ -27,6 +27,7 @@ try:
       ReportSection(form_id='DeliveryModule_viewDeliveryLineList',
                      path=context.getPhysicalPath(),
                      selection_params=dict(portal_type=request['portal_type'],
+                                           use_list=request['use'],
                                            uid_list=uid_list,
                                            module_selection_name=module_selection_name)))
   return report_section_list
