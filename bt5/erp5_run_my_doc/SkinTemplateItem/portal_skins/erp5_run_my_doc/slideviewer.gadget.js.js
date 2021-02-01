@@ -1,7 +1,17 @@
-/*global window, rJS, RSVP, domsugar, Reveal*/
+/*global window, rJS, RSVP, domsugar, Reveal, URL*/
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (window, rJS, RSVP, domsugar, Reveal) {
+(function (window, rJS, RSVP, domsugar, Reveal, URL) {
   "use strict";
+
+  function fixupERP5UrlCompatibility(jio_key, url) {
+    if (!jio_key) {
+      return url;
+    }
+    return new URL(
+      url,
+      new URL(jio_key + '/', window.location.href).href
+    ).href;
+  }
 
   function getSlideElementList(presentation_html) {
     // Convert to an Array so that array methods can be used to reorder slides
@@ -23,7 +33,7 @@
     return fragment;
   }
 
-  function cleanupSlide(slide_element) {
+  function cleanupSlide(slide_element, jio_key) {
     var detail_list = Array.prototype.slice.call(
       slide_element.querySelectorAll(':scope > details')
     ),
@@ -50,15 +60,29 @@
         }
       }
     }
+
+    // Rewrite img url to support sub document ID
+    detail_list = Array.prototype.slice.call(
+      slide_element.querySelectorAll('img')
+    );
+    len = detail_list.length;
+    for (i = 0; i < len; i += 1) {
+      detail_list[i].src = fixupERP5UrlCompatibility(
+        jio_key,
+        detail_list[i].getAttribute('src')
+      )
+    }
+
+
     return slide_element;
   }
 
-  function cleanupPresentationFormat(presentation_html) {
+  function cleanupPresentationFormat(presentation_html, jio_key) {
     var slide_list = getSlideElementList(presentation_html),
       i,
       len = slide_list.length;
     for (i = 0; i < len; i += 1) {
-      cleanupSlide(slide_list[i]);
+      cleanupSlide(slide_list[i], jio_key);
     }
     return domsugar('div', {class: 'reveal'}, [
       domsugar('div', {class: 'slides'}, slide_list)
@@ -73,7 +97,8 @@
 
     .declareMethod('render', function (options) {
       return this.changeState({
-        value: options.value || ""
+        value: options.value || "",
+        jio_key: options.jio_key
       });
     })
 
@@ -82,7 +107,7 @@
       return new RSVP.Queue()
         .push(function () {
           domsugar(gadget.element, [
-            cleanupPresentationFormat(gadget.state.value)
+            cleanupPresentationFormat(gadget.state.value, gadget.state.jio_key)
           ]);
 
           return Reveal.initialize(gadget.element, {
@@ -112,4 +137,4 @@
     });
 
 
-}(window, rJS, RSVP, domsugar, Reveal));
+}(window, rJS, RSVP, domsugar, Reveal, URL));

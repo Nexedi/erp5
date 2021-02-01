@@ -1,4 +1,4 @@
-/*global window, document, rJS, console, RSVP, domsugar*/
+/*global window, document, rJS, console, RSVP, domsugar, URL*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 (function () {
   "use strict";
@@ -30,6 +30,16 @@
       'Image URL',
       'Image Caption'
     ];
+
+  function fixupERP5UrlCompatibility(jio_key, url) {
+    if (!jio_key) {
+      return url;
+    }
+    return new URL(
+      url,
+      new URL(jio_key + '/', window.location.href).href
+    ).href;
+  }
 
   ///////////////////////////////////////////////////
   // translation
@@ -465,7 +475,10 @@
           edit_element,
           delete_element,
           domsugar('img', {
-            src: getSlideDictFromSlideElement(section_list[i]).image_url,
+            src: fixupERP5UrlCompatibility(
+              gadget.state.jio_key,
+              getSlideDictFromSlideElement(section_list[i]).image_url
+            ),
             draggable: false
           })
         ];
@@ -597,6 +610,7 @@
 
     .declareMethod('render', function (options) {
       return this.changeState({
+        jio_key: options.jio_key,
         key: options.key,
         value: options.value || "",
         editable: options.editable === undefined ? true : options.editable
