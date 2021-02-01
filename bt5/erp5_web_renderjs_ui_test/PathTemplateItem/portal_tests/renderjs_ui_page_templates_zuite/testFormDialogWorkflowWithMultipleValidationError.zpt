@@ -466,6 +466,11 @@
   <td>field_your_tenth_failure</td>
   <td>ok</td>
 </tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>blur</td>
+</tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tr>
   <td>assertElementPresent</td>
@@ -473,18 +478,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>Please include an '@' in the email address. 'ok' is missing an '@'.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>field_your_tenth_failure</td>
-  <td>blur</td>
-</tr>
-<tr>
-  <td>assertTextNotPresent</td>
-  <td>Please include an '@' in the email address. 'ok' is missing an '@'.</td>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_your_tenth_failure" and @class="is-invalid"]</td>
   <td></td>
 </tr>
 <tr>
@@ -493,8 +488,39 @@
   <td>focus</td>
 </tr>
 <tr>
+  <td>type</td>
+  <td>field_your_tenth_failure</td>
+  <td>email@email.com</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>blur</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_your_tenth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>The input failed the external validator.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>The input failed the external validator.</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertTextPresent</td>
-  <td>Please include an '@' in the email address. 'ok' is missing an '@'.</td>
+  <td>The input failed the external validator.</td>
   <td></td>
 </tr>
 </tbody>
