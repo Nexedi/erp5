@@ -1181,10 +1181,12 @@ class TestERP5Base(ERP5TypeTestCase):
                                    site='distibution/tokyo')
     self.assertNotEquals(None, assignment.getGroupValue())
     assignment.open()
-    self.portal.portal_workflow.doActionFor(person, 'create_user_action',
-                  reference='user_login',
-                  password='pass',
-                  password_confirm='pass')
+    login = person.newContent(
+      portal_type="ERP5 Login",
+      reference="user_login",
+      password="pass",
+    )
+    login.validate()
     self.tic()
 
     # a user is created

@@ -1363,7 +1363,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   //Label
   .ui-field-contain {
-    & > label:not(:is-invalid) {
+    & > label:not(.is-invalid) {
       color: @colorlabel;
 
     }
@@ -1378,6 +1378,10 @@ div[data-gadget-scope='header'] .ui-header {
   .invisible > .ui-field-contain > label {
     // used to hide the label of a formbox
     display: none;
+  }
+  .page {
+    // backward-compatibility: force non transparency on such field
+    background-color: @colorbackground;
   }
 
 

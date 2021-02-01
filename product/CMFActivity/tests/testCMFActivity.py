@@ -47,7 +47,7 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, Message, getCurrentNode, getServerAddress)
-from _mysql_exceptions import OperationalError
+from MySQLdb import OperationalError
 from Products.ZMySQLDA.db import DB
 import gc
 import random
@@ -1176,7 +1176,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.flushAllActivities(silent=1, loop_size=100)
         message, = activity_tool.getMessageList(
           activity=activity, method_id='failingMethod')
-        self.assertEqual(message.processing_node, -2)
+        self.assertEqual(message.processing_node, INVOKE_ERROR_STATE)
         self.assertTrue(message.retry)
         activity_tool.manageDelete(message.uid, activity)
         self.commit()
@@ -1320,18 +1320,70 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         foo.activate(serialization_tag='a', group_method_id='x').getTitle()
         foo.activate(serialization_tag='a').getId()
     """
+    def getMessageList():
+      return [
+        (x.activity_kw['serialization_tag'], x.processing_node)
+        for x in activity_tool.getMessageList()
+      ]
+    def activate(serialization_tag='a'):
+      organisation.activate(
+        serialization_tag=serialization_tag,
+        group_method_id='portal_catalog/catalogObjectList',
+      ).getTitle()
     organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
     activity_tool = self.getActivityTool()
-    organisation.activate(serialization_tag='a').getId()
+    activate('a')
     self.commit()
-    organisation.activate(serialization_tag='a',
-              group_method_id='portal_catalog/catalogObjectList').getTitle()
+    activate('a')
     self.commit()
-    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    # Both activities are queued
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', -1),
+        ('a', -1),
+      ],
+    )
     activity_tool.distribute()
-    # After distribute, there is no deletion because it is different method
-    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    # Both activities are validated at the same time.
+    # Note: this specific test implmeentation relies on the absence of
+    # validation-time deduplication which is not strictly related to
+    # serialization_tag behaviour.
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', 0),
+        ('a', 0),
+      ],
+    )
+    activate('a')
+    self.commit()
+    activate('b')
+    self.commit()
+    # 3rd & 4th activities queued
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', 0),
+        ('a', 0),
+        ('a', -1),
+        ('b', -1),
+      ],
+    )
+    activity_tool.distribute()
+    # 3rd activity does not get validated, 4th is validated
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', 0),
+        ('a', 0),
+        ('a', -1),
+        ('b', 0),
+      ],
+    )
+    # 1st, 2nd and 4th are executed, then 3rd gets validated an executed,
+    # and the queue ends empty.
     self.tic()
 
   def test_104_interQueuePriorities(self):

@@ -130,12 +130,17 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//label[@for="field_your_tenth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_your_seventh_failure" and @class="is-invalid"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@name="field_your_seventh_failure" and @title="Seventh Failure"]</td>
+  <td>//input[@name="field_your_seventh_failure"]</td>
   <td></td>
 </tr>
 <tr>
@@ -454,6 +459,68 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//textarea[@name="field_your_fifth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_tenth_failure</td>
+  <td>ok</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>blur</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//textarea[@name="field_your_fifth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_your_tenth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_tenth_failure</td>
+  <td>email@email.com</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>blur</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_your_tenth_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>The input failed the external validator.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_tenth_failure</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>The input failed the external validator.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>The input failed the external validator.</td>
   <td></td>
 </tr>
 </tbody>

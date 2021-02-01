@@ -770,7 +770,7 @@ define("rsvp/queue",
         resolved;
 
       if (!(this instanceof Queue)) {
-        return new Queue();
+        return new Queue(thenable);
       }
 
       function canceller() {
