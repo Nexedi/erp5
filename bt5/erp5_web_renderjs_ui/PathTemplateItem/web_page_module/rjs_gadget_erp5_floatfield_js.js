@@ -49,7 +49,7 @@
     }
 
     if (input_style === PERCENT_INPUT_STYLE) {
-      if (text[text.length - 1] !== '%') {
+      if (text && text[text.length - 1] !== '%') {
         throw new Error('Can not parse: ' + text);
       }
       return text.substring(0, text.length - 1);
