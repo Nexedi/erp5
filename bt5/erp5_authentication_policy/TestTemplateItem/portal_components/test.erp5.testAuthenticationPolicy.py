@@ -31,9 +31,11 @@
 from functools import partial
 import unittest
 import urllib
+import urlparse
 from StringIO import StringIO
 import time
 import httplib
+import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Document import newTempBase
 
@@ -710,7 +712,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic='test-05:used_ALREADY_1234',
     )
     response = publish()
-    self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Account is blocked."))
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/login_form'.format(portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertEqual(redirect_url_params, [('portal_status_message', 'Account is blocked.')] )
 
     # test expire password message, first unblock it
     login.Login_unblockLogin()
@@ -718,7 +723,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
     response = publish()
-    self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Password is expired."))
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/login_form'.format(portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertEqual(redirect_url_params, [('portal_status_message', 'Password is expired.')] )
     self.assertTrue(login.isPasswordExpired())
 
     # test we're redirected to update password due to soon expire
@@ -727,9 +735,11 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
     response = publish()
-
-    self.assertTrue('Your password will expire' in response.getHeader("Location"))
-    self.assertTrue('You are advised to change it as soon as possible' in response.getHeader("Location"))
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/ERP5Site_viewNewPersonCredentialUpdateDialog'.format(portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qs(redirect_url.query)
+    self.assertIn('Your password will expire', redirect_url_params['portal_status_message'][0])
+    self.assertIn('You are advised to change it as soon as possible', redirect_url_params['portal_status_message'][0])
 
     # test proper login
     preference.setPreferredPasswordLifetimeExpireWarningDuration(12)
@@ -740,6 +750,18 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic='test-05:used_ALREADY_1234',
     )
     self.assertTrue('Welcome to ERP5' in response.getBody())
+
+    # test external redirection prevention
+    response = self.publish(
+      portal.absolute_url_path() + '/logged_in',
+      basic='test-05:used_ALREADY_1234',
+      stdin=StringIO(urllib.urlencode({'came_from': 'https://www.erp5.com'})),
+      request_method='POST',
+    )
+    redirect_url = urlparse.urlparse(response.getHeader("Location"))
+    self.assertEqual(redirect_url.path, portal.absolute_url_path())
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertEqual(redirect_url_params, [('portal_status_message', 'Redirection to an external site prevented.')] )
 
   def test_ExpireOldAuthenticationEventList(self):
     """
@@ -793,39 +815,45 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
 
     reset_key = self.portal.portal_password.getResetPasswordKey(user_login=self.id())
-    ret = self.publish(
-      '%s/portal_password' % self.portal.getPath(),
-      stdin=StringIO(urllib.urlencode({
-        'Base_callDialogMethod:method': '',
-        'dialog_id': 'PasswordTool_viewResetPassword',
-        'dialog_method': 'PasswordTool_changeUserPassword',
-        'field_user_login': self.id(),
-        'field_your_password': 'alice',
-        'field_password_confirm': 'alice',
-        'field_your_password_key': reset_key,
-      })),
-      request_method="POST",
-      handle_errors=False)
+    def submit_reset_password_dialog(new_password):
+      return self.publish(
+        '%s/portal_password' % self.portal.getPath(),
+        stdin=StringIO(urllib.urlencode({
+          'Base_callDialogMethod:method': '',
+          'dialog_id': 'PasswordTool_viewResetPassword',
+          'dialog_method': 'PasswordTool_changeUserPassword',
+          'field_user_login': self.id(),
+          'field_your_password': new_password,
+          'field_password_confirm': new_password,
+          'field_your_password_key': reset_key,
+        })),
+        request_method="POST",
+        handle_errors=False)
+
+    ret = submit_reset_password_dialog('alice')
     self.assertEqual(httplib.OK, ret.getStatus())
     self.assertIn(
       '<span class="error">You can not use any parts of your '
       'first and last name in password.</span>',
       ret.getBody())
 
+    # the messages are translated
+    default_gettext = self.portal.Localizer.erp5_ui.gettext
+    def gettext(message, **kw):
+      if message == 'You can not use any parts of your first and last name in password.':
+        return u'Yöü can not ... translated'
+      assert message != u'Yöü can not ... translated'
+      return default_gettext(message, **kw)
+
+    with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext):
+      ret = submit_reset_password_dialog('alice')
+      self.assertEqual(httplib.OK, ret.getStatus())
+      self.assertIn(
+        '<span class="error">Yöü can not ... translated</span>',
+        ret.getBody())
+
     # now with a password complying to the policy
-    ret = self.publish(
-      '%s/portal_password' % self.portal.getPath(),
-      stdin=StringIO(urllib.urlencode({
-        'Base_callDialogMethod:method': '',
-        'dialog_id': 'PasswordTool_viewResetPassword',
-        'dialog_method': 'PasswordTool_changeUserPassword',
-        'field_user_login': self.id(),
-        'field_your_password': 'ok',
-        'field_password_confirm': 'ok',
-        'field_your_password_key': reset_key,
-      })),
-      request_method="POST",
-      handle_errors=False)
+    ret = submit_reset_password_dialog('ok')
     self.assertEqual(httplib.FOUND, ret.getStatus())
     self.assertTrue(ret.getHeader('Location').endswith(
     '/login_form?portal_status_message=Password+changed.'))
@@ -841,24 +869,42 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
 
+    def submit_change_password_dialog(new_password):
+      return self.publish(
+        '%s/portal_preferences' % self.portal.getPath(),
+        basic='%s:current' % self.id(),
+        stdin=StringIO(urllib.urlencode({
+          'Base_callDialogMethod:method': '',
+          'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
+          'dialog_method': 'PreferenceTool_setNewPassword',
+          'field_your_current_password': 'current',
+          'field_your_new_password': new_password,
+          'field_password_confirm': new_password,
+        })),
+        request_method="POST",
+        handle_errors=False)
+
     # too short password is refused
-    ret = self.publish(
-      '%s/portal_preferences' % self.portal.getPath(),
-      basic='%s:current' % self.id(),
-      stdin=StringIO(urllib.urlencode({
-        'Base_callDialogMethod:method': '',
-        'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
-        'dialog_method': 'PreferenceTool_setNewPassword',
-        'field_your_current_password': 'current',
-        'field_your_new_password': 'short',
-        'field_password_confirm': 'short',
-      })),
-      request_method="POST",
-      handle_errors=False)
+    ret = submit_change_password_dialog('short')
     self.assertEqual(httplib.OK, ret.getStatus())
     self.assertIn(
       '<span class="error">Too short.</span>',
       ret.getBody())
+
+    # the messages are translated
+    default_gettext = self.portal.Localizer.erp5_ui.gettext
+    def gettext(message, **kw):
+      if message == 'Too short.':
+        return u'Töü short ... translated'
+      assert message != u'Töü short ... translated'
+      return default_gettext(message, **kw)
+
+    with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext):
+      ret = submit_change_password_dialog('short')
+      self.assertEqual(httplib.OK, ret.getStatus())
+      self.assertIn(
+        '<span class="error">Töü short ... translated</span>',
+        ret.getBody())
 
     # if for some reason, PreferenceTool_setNewPassword is called directly,
     # the password policy is also checked, so this cause an unhandled exception.
@@ -870,19 +916,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       new_password='short')
 
     # long enough password is accepted
-    ret = self.publish(
-      '%s/portal_preferences' % self.portal.getPath(),
-      basic='%s:current' % self.id(),
-      stdin=StringIO(urllib.urlencode({
-        'Base_callDialogMethod:method': '',
-        'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
-        'dialog_method': 'PreferenceTool_setNewPassword',
-        'field_your_current_password': 'current',
-        'field_your_new_password': 'long_enough_password',
-        'field_password_confirm': 'long_enough_password',
-      })),
-      request_method="POST",
-      handle_errors=False)
+    ret = submit_change_password_dialog('long_enough_password')
     # When password reset is succesful, user is logged out
     self.assertEqual(httplib.FOUND, ret.getStatus())
     self.assertEqual(self.portal.portal_preferences.absolute_url(),

@@ -267,6 +267,22 @@ class TestTradeReports(ERP5ReportTestCase):
 
     return sale_order
 
+  @reindex
+  def _makeOneSalePackingList(self, resource_dict=None, **kw):
+    """
+    Create a sale packing list
+    """
+    if resource_dict is None:
+      resource_dict = {}
+    sale_packing_list = self.portal.sale_packing_list_module.newContent(portal_type="Sale Packing List", **kw)
+    for product, values in resource_dict.iteritems():
+      sale_packing_list.newContent(
+          portal_type="Sale Packing List Line",
+          resource=product,
+          quantity=values["quantity"],
+          price=values["price"])
+    return sale_packing_list
+
   def _createSaleOrdersForSaleOrderReportTest(self):
     # Create sales orders to be used in testSaleOrderReportXXX tests
     self._makeOneSaleOrder(
@@ -318,6 +334,19 @@ class TestTradeReports(ERP5ReportTestCase):
               cancel=True
               )
 
+    # create also packing lists
+    self._makeOneSalePackingList(
+              title='SPL 1 (same as SO 3, but delivered state)',
+              destination_value=self.organisation_module.Organisation_2,
+              destination_section_value=self.organisation_module.Organisation_2,
+              destination_decision_value=self.organisation_module.Organisation_2,
+              source_value=self.organisation_module.Organisation_1,
+              source_section_value=self.organisation_module.Organisation_1,
+              source_decision_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2006, 2, 22),
+              resource_dict = {'product_module/product_A':{"quantity":5, "price":3},
+                               'product_module/product_B':{"quantity":1, "price":6},}
+              )
     self.tic()
 
   def testSaleOrderReportBefore2006(self):
@@ -889,8 +918,88 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
+  def testSalePackingListReport(self):
+    """Using Sale Packing Lists, not sales Order
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
+
+    request['from_date'] = DateTime(2006, 1, 1)
+    request['at_date'] = DateTime(2006, 12, 31)
+    request['simulation_state'] = ['draft',]
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['section_category'] = 'group/g1'
+
+    parameter_dict, _, _ = self.portal.sale_packing_list_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.portal.sale_packing_list_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
+    report_section_list = self.getReportSectionList(self.portal.sale_packing_list_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEqual(3, len(data_line_list))
+
+    # test columns values
+    line = data_line_list[0]
+    self.assertEqual(line.column_id_list, ['client',
+                    'product',
+                    'Amount 2006',
+                    'Quantity 2006',
+                    'Quantity Unit 2006',
+                    'total amount',
+                    'total quantity'])
+
+    d = {
+        'Amount 2006': 21.0,
+        'Quantity 2006': None,
+        'Quantity Unit 2006': None,
+        'client': 'Organisation_2',
+        'product': None,
+        'total amount': 21.0,
+        'total quantity': None,
+    }
+    self.checkLineProperties(data_line_list[0],**d)
+
+    d = {
+      'Amount 2006': 15.0,
+      'Quantity 2006': 5.0,
+      'Quantity Unit 2006': 'G',
+      'client': None,
+      'product': 'product_A',
+      'total amount': 15.0,
+      'total quantity': 5.0,
+    }
+    self.checkLineProperties(data_line_list[1],**d)
+
+    d = {
+        'Amount 2006': 6.0,
+        'Quantity 2006': 1.0,
+        'Quantity Unit 2006': 'Kg',
+        'client': None,
+        'product': 'product_B',
+        'total amount': 6.0,
+        'total quantity': 1.0,
+    }
+    self.checkLineProperties(data_line_list[2],**d)
+
+    # stat line
+    d = {
+      'Amount 2006': 21.0,
+      'Quantity 2006': None,
+      'Quantity Unit 2006': None,
+      'client': 'Total',
+      'product': None,
+      'total amount': 21.0,
+      'total quantity': None,
+    }
+    self.checkLineProperties(stat_line_list[0],**d)
+
   def _createInventoryForStockReportTest(self):
-    # Create inventories
     # Create inventories
     self._makeOneInventory(
               title='Inventory 1',
@@ -1540,6 +1649,35 @@ class TestTradeReports(ERP5ReportTestCase):
         inventory=1,
         quantity_unit='G',
         total_price=7,
+    )
+
+  def testStockReport_valuation_method_asset_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'asset_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=10,
     )
 
   def testStockReport_valuation_and_quantity_unit_conversion(self):

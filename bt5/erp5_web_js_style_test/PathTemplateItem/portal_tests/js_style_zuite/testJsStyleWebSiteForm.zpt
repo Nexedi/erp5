@@ -32,6 +32,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//head/link[@rel='prerender' and @href='jsstyle_demo.html']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>//header/h1[text()='JS Style Demo']</td>
   <td></td>
@@ -78,6 +83,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='portal_status_message' and contains(text(), '')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//head/link[@rel='icon']</td>
   <td></td>
 </tr>
 

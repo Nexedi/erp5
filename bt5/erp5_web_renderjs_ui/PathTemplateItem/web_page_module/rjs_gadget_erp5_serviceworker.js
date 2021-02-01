@@ -21,20 +21,19 @@
     event.waitUntil(
       caches.open(CACHE_NAME)
         .then(function (cache) {
+          // Add all offline dependencies to the cache, one by one, to not
+          // hammer zopes.
           var promise = Promise.resolve();
 
           function append(url_to_cache) {
             promise = promise
               .then(function () {
-                // Use cache.add because safari does not support cache.addAll.
                 return cache.add(url_to_cache);
               });
           }
 
           len = required_url_list.length;
           for (i = 0; i < len; i += 1) {
-            // Add all offline dependencies to the cache
-            // One by one, to not hammer zopes
             append(required_url_list[i]);
           }
           return promise;

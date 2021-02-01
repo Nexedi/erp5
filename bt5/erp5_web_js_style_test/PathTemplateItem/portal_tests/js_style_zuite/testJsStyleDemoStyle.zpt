@@ -33,6 +33,12 @@
 </tr>
 
 <tr>
+  <td>assertElementPresent</td>
+  <td>//head/link[@rel='prerender' and @href='jsstyle_demo.html']</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>waitForElementPresent</td>
   <td>//header/h1[text()='JS Style Demo']</td>
   <td></td>
@@ -46,6 +52,12 @@
 <tr>
   <td>assertElementNotPresent</td>
   <td>//nav[@id='sitemap']/a[text()='No Style']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//head/link[@rel='icon']</td>
   <td></td>
 </tr>
 
