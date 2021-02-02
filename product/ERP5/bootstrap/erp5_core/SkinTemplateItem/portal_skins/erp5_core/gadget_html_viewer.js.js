@@ -103,8 +103,6 @@
       SCRIPT: true,
       STYLE: true,
       NOSCRIPT: true,
-      FORM: true,
-      FIELDSET: true,
       INPUT: true,
       SELECT: true,
       TEXTAREA: true,
