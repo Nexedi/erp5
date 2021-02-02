@@ -86,7 +86,7 @@
     }
 
     if (input_style === PERCENT_INPUT_STYLE) {
-      return text + '%';
+      return text ? text + '%' : '';
     }
 
     var separator_dict = getSeparatorDict(input_style),
