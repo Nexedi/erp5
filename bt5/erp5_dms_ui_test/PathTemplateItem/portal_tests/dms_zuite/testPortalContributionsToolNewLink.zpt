@@ -44,12 +44,12 @@
   <td></td>
 </tr>
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="editor"]//h2[contains(text(), "innovative Unified Business Model")]</td>
   <td></td>
 </tr>
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="editor"]//a[contains(text(), "Nexedi")]</td>
   <td></td>
 </tr>
