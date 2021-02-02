@@ -37,44 +37,20 @@
   <td></td>
 </tr>
 
-<!-- gadget's iframe -->
+<!-- gadget editor html_viewer -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="editor"]/iframe</td>
+  <td>//div[@data-gadget-scope="editor"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>selectFrame</td>
-  <td>//div[@data-gadget-scope="editor"]/iframe</td>
-  <td></td>
-</tr>
-
-
-<!-- ckeditor's iframe -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//iframe</td>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope="editor"]//h2[contains(text(), "innovative Unified Business Model")]</td>
   <td></td>
 </tr>
 <tr>
-  <td>selectFrame</td>
-  <td>//iframe</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>innovative Unified Business Model</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Nexedi</td>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope="editor"]//a[contains(text(), "Nexedi")]</td>
   <td></td>
 </tr>
 
