@@ -44,3 +44,12 @@ if kw.get('setup_wendelin_tutorial'):
     update_catalog=False,
     install_dependency=True,
   )
+
+if kw.get('setup_data_sample'):
+  configuration_save.addConfigurationItem(
+    "Standard BT5 Configurator Item",
+    title='erp5_wendelin_data_sample', 
+    bt5_id='erp5_wendelin_data_sample',
+    update_catalog=False,
+    install_dependency=True,
+  )
