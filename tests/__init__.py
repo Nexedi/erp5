@@ -46,7 +46,7 @@ class _ERP5(ERP5TypeTestSuite):
         # ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
         # ['%s/product/ERP5Security/tests/testERP5Security.py' % path] +
         # ['%s/product/ERP5Type/tests/testUpgradeInstanceWithOldDataFs.py' % path] +
-        # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
+        ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalKM.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
         # glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
