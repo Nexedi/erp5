@@ -4,7 +4,6 @@
   "use strict";
 
   function fixupERP5UrlCompatibility(jio_key, url) {
-    console.log(jio_key);
     if (!jio_key) {
       return url;
     }
@@ -68,10 +67,9 @@
     );
     len = detail_list.length;
     for (i = 0; i < len; i += 1) {
-      console.log('img', detail_list[i]);
       detail_list[i].src = fixupERP5UrlCompatibility(
         jio_key,
-        detail_list[i].src
+        detail_list[i].getAttribute('src')
       )
     }
 
