@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format, report_section_count</string> </value>
+            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format, report_section_count, notify_report_complete_script_id, notify_report_complete_kwargs</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

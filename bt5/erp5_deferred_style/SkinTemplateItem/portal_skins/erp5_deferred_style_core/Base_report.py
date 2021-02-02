@@ -51,9 +51,11 @@ with portal.Localizer.translationContext(localizer_language):
      'content': '%s' % report_data,
      'name': attachment_name},)
 
-portal.ERP5Site_notifyReportComplete(
+getattr(portal, notify_report_complete_script_id)(
   user_name=user_name,
   subject=title,
   message='',
   attachment_list=attachment_list,
-  format=format)
+  format=format,
+  **notify_report_complete_kwargs
+)
