@@ -129,6 +129,10 @@ configuration_dict = {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Style",
   },
+  'not_loading': {
+    'configuration_style_gadget_url': "jsstyle_demo_not_loading.html",
+    'title': "Not Loading Style",
+  },
   'favicon': {
     'title': 'Favicon',
     'configuration_favicon_url': "favicon.ico"

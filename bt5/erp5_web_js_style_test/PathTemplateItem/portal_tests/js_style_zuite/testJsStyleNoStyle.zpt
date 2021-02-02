@@ -39,6 +39,17 @@
 </tr>
 
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>assertElementPresent</td>
   <td>//nav[@id='sitemap']/a[text()='No Style']</td>
   <td></td>
