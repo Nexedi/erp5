@@ -1811,31 +1811,9 @@ class ActivityTool (BaseTool):
         REQUEST['RESPONSE'].redirect( 'manage_main' )
       return obj
 
-    security.declarePrivate('getDependentMessageList')
-    def getDependentMessageList(self, message, validating_queue=None):
-      activity_kw = message.activity_kw
-      db = self.getSQLConnection()
-      quote = db.string_literal
-      queries = []
-      for activity in activity_dict.itervalues():
-        q = activity.getValidationSQL(
-          quote, activity_kw, activity is validating_queue)
-        if q:
-          queries.append(q)
-      if queries:
-        message_list = []
-        for line in Results(db.query("(%s)" % ") UNION ALL (".join(queries))):
-          activity = activity_dict[line.activity]
-          m = Message.load(line.message,
-                           line=line,
-                           uid=line.uid,
-                           date=line.date,
-                           processing_node=line.processing_node)
-          if not hasattr(m, 'order_validation_text'): # BBB
-            m.order_validation_text = activity.getOrderValidationText(m)
-          message_list.append((activity, m))
-        return message_list
-      return ()
+    security.declarePrivate('getSQLTableNameSet')
+    def getSQLTableNameSet(self):
+      return [x.sql_table for x in activity_dict.itervalues()]
 
     # Required for tests (time shift)
     def timeShift(self, delay):

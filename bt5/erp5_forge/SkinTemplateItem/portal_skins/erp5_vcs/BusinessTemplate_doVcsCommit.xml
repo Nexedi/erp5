@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>push=None, changelog=None, added=None, modified=None, removed=None, commit_json=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -88,11 +88,10 @@ __version__='$Revision: 1.20 $'[11:-2]
 
 import os
 import re
-import _mysql
 import MySQLdb
+from MySQLdb import OperationalError, NotSupportedError, ProgrammingError, _mysql
 import warnings
 from contextlib import contextmanager, nested
-from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
 from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
 MySQLdb_version_required = (0,9,2)
 

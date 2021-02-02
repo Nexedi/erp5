@@ -59,6 +59,11 @@ class ToolComponent(DocumentComponent):
     if not error_list:
       expected_meta_type = 'ERP5 ' + ''.join([(c if c.islower() else ' ' + c)
                                               for c in self.getReference()]).strip()
+      # XXX Handle a few exceptions, following the same rules as in
+      # ERP5Site_checkNamingConventions
+      expected_meta_type = expected_meta_type\
+        .replace(' S M S ', ' SMS ')\
+        .replace(' O Auth ', ' OAuth ')
       if re.search(r'^\s*meta_type\s*=\s*[\'"]%s[\'"]\s*$' % expected_meta_type,
                    self.getTextContent(), re.MULTILINE) is None:
         error_list.append(ConsistencyMessage(

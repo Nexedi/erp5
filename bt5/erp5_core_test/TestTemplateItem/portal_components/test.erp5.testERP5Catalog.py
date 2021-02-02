@@ -38,7 +38,7 @@ from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from DateTime import DateTime
-from _mysql_exceptions import ProgrammingError
+from MySQLdb import ProgrammingError
 from OFS.ObjectManager import ObjectManager
 from Products.CMFActivity import ActivityTool
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

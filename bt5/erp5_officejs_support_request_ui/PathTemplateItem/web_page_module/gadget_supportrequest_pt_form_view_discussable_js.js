@@ -63,6 +63,10 @@
           return gadget.changeState(state_dict);
         });
     })
+    // editor gadget call this acquired method on Ctrl+S
+    .declareMethod("triggerSubmit", function triggerSubmit(e) {
+      return this.submitPostComment(e);
+    })
     .onStateChange(function () {
       var gadget = this;
       // render the erp5 form

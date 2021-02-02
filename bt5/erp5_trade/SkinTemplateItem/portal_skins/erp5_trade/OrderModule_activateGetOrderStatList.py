@@ -88,7 +88,7 @@ portal.portal_catalog.activate(tag=tag).searchAndActivate(
                 'date_format' : date_format,
                 'report_type' : report_type,
                 'report_group_by' : report_group_by},
-  select_method_id = 'OrderModule_filterOrderStatResul',
+  select_method_id = 'OrderModule_filterOrderStatResult',
   activate_kw = {'priority' : 7,
     'tag' : tag,
     },
