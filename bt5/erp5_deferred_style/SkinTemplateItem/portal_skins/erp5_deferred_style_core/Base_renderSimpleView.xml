@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>localizer_language, skin_name, request_form, deferred_style_dialog_method, user_name, params</string> </value>
+            <value> <string>localizer_language, skin_name, request_form, deferred_style_dialog_method, user_name, params, notify_report_complete_script_id=\'ERP5Site_notifyReportComplete\', notify_report_complete_kwargs=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
