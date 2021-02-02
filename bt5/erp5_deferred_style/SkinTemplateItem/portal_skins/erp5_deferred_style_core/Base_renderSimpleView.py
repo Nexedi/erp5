@@ -1,6 +1,8 @@
 # Render a "normal" form or an OOo template in an activity and send it by email
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
+if notify_report_complete_kwargs is None:
+  notify_report_complete_kwargs = {}
 request = portal.REQUEST
 report_format = request_form.get('format', '')
 if portal.portal_preferences.getPreferredDeferredReportStoredAsDocument():
@@ -31,9 +33,11 @@ with portal.Localizer.translationContext(localizer_language):
      'content': '%s' % report_data,
      'name': attachment_name},)
 
-  portal.ERP5Site_notifyReportComplete(
+  getattr(portal, notify_report_complete_script_id)(
     user_name=user_name,
     subject=str(translateString(attachment_name.rsplit('.', 1)[0])),
     message='',
     attachment_list=attachment_list,
-    format=report_format)
+    format=report_format,
+    **notify_report_complete_kwargs
+  )
