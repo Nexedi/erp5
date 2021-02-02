@@ -81,7 +81,7 @@
       srcset: true,
       media: true,
       datetime: true,
-      class: true
+      'class': true
     },
     link_node_list: {
       A: true,
