@@ -1,8 +1,8 @@
 /*globals window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          loopEventListener, history */
+          loopEventListener, history, console */
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          loopEventListener, history) {
+          loopEventListener, history, console) {
   "use strict";
 
   // XXX Copy/paste from renderjs
@@ -110,11 +110,10 @@
   }
 
   function parseFormElement(form_element) {
-    var result;
     if (form_element !== null) {
       return form_element.outerHTML;
     }
-    return result;
+    return;
   }
 
   function parseStatusMessage(status_element, information_element) {
@@ -130,6 +129,7 @@
 
   function parsePageContent(body_element) {
     return {
+      original_content: body_element.innerHTML,
       html_content: body_element.querySelector('main').innerHTML,
       language_list: parseLanguageElement(
         body_element.querySelector('nav#language')
@@ -143,7 +143,7 @@
       portal_status_message: parseStatusMessage(
         body_element.querySelector('p#portal_status_message'),
         body_element.querySelector('p#information_area')
-      ),
+      )
     };
   }
 
@@ -315,20 +315,28 @@
         .push(function (result) {
           style_gadget = result;
           return style_gadget.render(parsed_content.html_content,
-                                     parsed_content);
-        })
-        .push(function () {
-          // Trigger URL handling
-          gadget.listenURLChange();
+                                     parsed_content)
+            .push(function () {
+              // Trigger URL handling
+              gadget.listenURLChange();
 
-          body.appendChild(style_gadget.element);
-          gadget.element.hidden = false;
-          scrollToHash(window.location.hash);
+              body.appendChild(style_gadget.element);
+              gadget.element.hidden = false;
+              scrollToHash(window.location.hash);
+            }, function (error) {
+              gadget.element.hidden = false;
+              throw error;
+            });
         }, function (error) {
-          gadget.element.hidden = false;
-          throw error;
+          console.warn('Cant load the style gadget', error);
+          return new RSVP.Queue(rJS.declareCSS("jsstyle.css", document.head))
+            .push(function () {
+              // Set again the page content after the css is loaded
+              // to prevent ugly rendering
+              gadget.element.innerHTML = parsed_content.original_content;
+            });
         });
     });
 
 }(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-  loopEventListener, history));
+  loopEventListener, history, console));
