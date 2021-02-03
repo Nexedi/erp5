@@ -129,6 +129,7 @@
 
   function parsePageContent(body_element) {
     return {
+      original_content: body_element.innerHTML,
       html_content: body_element.querySelector('main').innerHTML,
       language_list: parseLanguageElement(
         body_element.querySelector('nav#language')
@@ -328,6 +329,12 @@
             });
         }, function (error) {
           console.warn('Cant load the style gadget', error);
+          return new RSVP.Queue(rJS.declareCSS("jsstyle.css", document.head))
+            .push(function () {
+              // Set again the page content after the css is loaded
+              // to prevent ugly rendering
+              gadget.element.innerHTML = parsed_content.original_content;
+            });
         });
     });
 
