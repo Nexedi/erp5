@@ -263,7 +263,7 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
-          gadget.element.querySelector("dl.document_menu").textContent = '';
+          gadget.element.querySelector("dl").textContent = '';
         } else {
           queue
             .push(function () {
@@ -350,7 +350,7 @@
                        view_list.length + workflow_list.length +
                        action_list.length + clone_list.length);
 
-              dl_element = gadget.element.querySelector("dl.document_menu");
+              dl_element = gadget.element.querySelector("dl");
               while (dl_element.firstChild) {
                 dl_element.removeChild(dl_element.firstChild);
               }
@@ -362,7 +362,6 @@
           (modification_dict.hasOwnProperty("extra_menu_dict"))) {
         queue.push(function () {
           var key,
-            item,
             dl_element = gadget.element.querySelector("dl.global_menu"),
             dl_fragment,
             extra_menu_dict;
@@ -372,8 +371,10 @@
             dl_fragment = document.createDocumentFragment();
             extra_menu_dict = JSON.parse(gadget.state.extra_menu_dict);
             for (key in extra_menu_dict) {
-              appendDt(dl_fragment, key, extra_menu_dict[key].icon,
-                       extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
+              if (extra_menu_dict.hasOwnProperty(key)) {
+                appendDt(dl_fragment, key, extra_menu_dict[key].icon,
+                         extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
+              }
             }
             dl_element.appendChild(dl_fragment);
           }
