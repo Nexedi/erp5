@@ -62,7 +62,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
-        extra_menu_dict = options.extra_menu_dict,
+        extra_menu_list = options.extra_menu_list,
         display_workflow_list,
         context = this,
         workflow_list,
@@ -120,8 +120,8 @@
         clone_list = JSON.stringify(clone_list);
         jump_list = JSON.stringify(jump_list);
       }
-      if (extra_menu_dict !== undefined) {
-        extra_menu_dict = JSON.stringify(extra_menu_dict);
+      if (extra_menu_list !== undefined) {
+        extra_menu_list = JSON.stringify(extra_menu_list);
       }
       return context.getUrlParameter('editable')
         .push(function (editable) {
@@ -138,15 +138,22 @@
             view: view,
             jump_view: jump_view,
             editable: asBoolean(options.editable) || asBoolean(editable) || false,
-            extra_menu_dict: extra_menu_dict
+            extra_menu_list: extra_menu_list
           });
         });
     })
 
     .onStateChange(function onStateChange(modification_dict) {
-      var context = this,
+      var i,
+        context = this,
         gadget = this,
         workflow_list,
+        view_list,
+        action_list,
+        clone_list,
+        jump_list,
+        dl_fragment,
+        dl_element,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -203,7 +210,6 @@
           })
           .push(function (result_list) {
             var editable_value = [],
-              i,
               ul_fragment = document.createDocumentFragment(),
               a_element,
               li_element,
@@ -261,18 +267,18 @@
           modification_dict.hasOwnProperty("clone_list") ||
           modification_dict.hasOwnProperty("jump_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
-          modification_dict.hasOwnProperty("view_list"))) {
-        if (this.state.view_list === undefined) {
-          gadget.element.querySelector("dl.document_menu").textContent = '';
-        } else {
+          modification_dict.hasOwnProperty("view_list") ||
+          modification_dict.hasOwnProperty("extra_menu_list"))) {
+        dl_fragment = document.createDocumentFragment();
+        gadget.element.querySelector("dl").textContent = '';
+        if (this.state.view_list !== undefined) {
           queue
             .push(function () {
-              var i = 0,
-                parameter_list = [],
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+              var parameter_list = [];
+              view_list = JSON.parse(gadget.state.view_list);
+              action_list = JSON.parse(gadget.state.action_list);
+              clone_list = JSON.parse(gadget.state.clone_list);
+              jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
               for (i = 0; i < view_list.length; i += 1) {
@@ -328,13 +334,6 @@
               ]);
             })
             .push(function (result_list) {
-              var dl_element,
-                dl_fragment = document.createDocumentFragment(),
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
-
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
               if (gadget.state.display_workflow_list) {
@@ -349,36 +348,36 @@
                        jump_list, result_list[0],
                        view_list.length + workflow_list.length +
                        action_list.length + clone_list.length);
-
-              dl_element = gadget.element.querySelector("dl.document_menu");
-              while (dl_element.firstChild) {
-                dl_element.removeChild(dl_element.firstChild);
+            });
+        }
+        if (gadget.state.hasOwnProperty("extra_menu_list") &&
+            gadget.state.extra_menu_list) {
+          queue
+            .push(function () {
+              return gadget.getTranslationList(['Global']);
+            })
+            .push(function (translation_list) {
+              var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
+                href_list = [];
+              for (i = 0; i < extra_menu_list.length; i += 1) {
+                extra_menu_list[i].class_name = extra_menu_list[i].active ? "active" : "";
+                href_list.push(extra_menu_list[i].href);
               }
-              dl_element.appendChild(dl_fragment);
+              appendDt(dl_fragment, translation_list[0], 'globe',
+                       extra_menu_list, href_list, 0);
             });
         }
       }
-      if ((this.state.global === true) &&
-          (modification_dict.hasOwnProperty("extra_menu_dict"))) {
-        queue.push(function () {
-          var key,
-            item,
-            dl_element = gadget.element.querySelector("dl.global_menu"),
-            dl_fragment,
-            extra_menu_dict;
-          if (gadget.state.extra_menu_dict === undefined) {
-            dl_element.textContent = "";
-          } else {
-            dl_fragment = document.createDocumentFragment();
-            extra_menu_dict = JSON.parse(gadget.state.extra_menu_dict);
-            for (key in extra_menu_dict) {
-              appendDt(dl_fragment, key, extra_menu_dict[key].icon,
-                       extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
+      queue
+        .push(function () {
+          if (dl_fragment) {
+            dl_element = gadget.element.querySelector("dl");
+            while (dl_element.firstChild) {
+              dl_element.removeChild(dl_element.firstChild);
             }
             dl_element.appendChild(dl_fragment);
           }
         });
-      }
       return queue;
     })
 
