@@ -36,8 +36,7 @@ from lxml import html
 import email, urlparse, httplib
 
 
-class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
-  """Tests deferred styles for ERP5."""
+class DeferredStyleTestCase(ERP5TypeTestCase, ZopeTestCase.Functional):
   skin = content_type = None
   recipient_email_address = 'invalid@example.com'
   attachment_file_extension = ''
@@ -49,9 +48,6 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   first_name = 'Bob<Par'
   publication_section = "reporting"
   classification = "collaborative"
-
-  def getTitle(self):
-    return 'Test Deferred Style'
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
@@ -67,14 +63,10 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def afterSetUp(self):
     self.login()
-    if not self.skin:
-      raise NotImplementedError('Subclasses must define skin')
-
     self.portal.MailHost.reset()
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
       person = person_module.newContent(id='pers', portal_type='Person',
-                                        reference=self.username,
                                         first_name=self.first_name,
                                         default_email_text=self.recipient_email_address)
       assignment = person.newContent(portal_type='Assignment')
@@ -107,23 +99,29 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
 
   def loginAsUser(self, username):
+    """Login as a user and assign Manager role to this user.
+    """
     uf = self.portal.acl_users
     user = uf.getUser(username).__of__(uf)
     uf.zodb_roles.assignRoleToPrincipal('Manager', user.getId())
     newSecurityManager(None, user)
 
+
+class TestDeferredStyleBase(DeferredStyleTestCase):
+  """Tests deferred styles for ERP5."""
+
   def test_skin_selection(self):
     self.assertTrue('Deferred' in self.portal.portal_skins.getSkinSelections())
 
   def test_report_view(self):
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -158,7 +156,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def _checkDocument(self):
     document_list = self.portal.document_module.objectValues()
-    self.assertEquals(len(document_list), 1)
+    self.assertEqual(len(document_list), 1)
     document = document_list[0].getObject()
     expected_file_name = 'History%s' % self.attachment_file_extension
     self.assertEqual(expected_file_name, document.getFilename())
@@ -179,7 +177,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_report_stored_as_document(self):
     self._defineSystemPreference()
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
@@ -188,7 +186,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._checkDocument()
 
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -217,7 +215,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     notification_message.validate()
     self.tic()
     self._defineSystemPreference("notification-deferred.report")
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
@@ -226,7 +224,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._checkDocument()
 
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -240,7 +238,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_pdf_report_stored_as_document(self):
     self._defineSystemPreference()
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&format=pdf'
@@ -250,7 +248,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._checkDocument()
 
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -263,7 +261,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.fail('Link not found in email\n%s' % message_text)
 
   def test_normal_form(self):
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     # simulate a big request, for which Base_callDialogMethod will not issue a
     # redirect
     response = self.publish(
@@ -275,7 +273,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         '%s:%s' % (self.username, self.password))
     self.tic()
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -298,7 +296,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_lang_negociation(self):
     # User's Accept-Language header is honored in reports.
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
@@ -323,7 +321,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_lang_negociation_cookie(self):
     # User's LOCALIZER_LANGUAGE cookie is honored in reports and have priority over Accept-Language
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
@@ -354,8 +352,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
 
 
-
-class TestODSDeferredStyle(TestDeferredStyle):
+class TestODSDeferredStyle(TestDeferredStyleBase):
   skin = 'ODS'
   content_type = 'application/vnd.oasis.opendocument.spreadsheet'
   attachment_file_extension = '.ods'
@@ -364,14 +361,14 @@ class TestODSDeferredStyle(TestDeferredStyle):
   def test_report_view_sheet_per_report_section(self):
     """Test the sheet_per_report_section feature of erp5_ods_style.
     """
-    self.loginAsUser('bob')
+    self.loginAsUser(self.username)
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&sheet_per_report_section:int=1'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -394,11 +391,12 @@ class TestODSDeferredStyle(TestDeferredStyle):
       self.fail('Attachment not found in email\n%s' % message_text)
 
 
-class TestODTDeferredStyle(TestDeferredStyle):
+class TestODTDeferredStyle(TestDeferredStyleBase):
   skin = 'ODT'
   content_type = 'application/vnd.oasis.opendocument.text'
   attachment_file_extension = '.odt'
   portal_type = "Text"
+
 
 def test_suite():
   suite = unittest.TestSuite()
