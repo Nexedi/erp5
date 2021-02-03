@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=section</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=not_loading</td>
   <td></td>
 </tr>
 <tr>
@@ -34,53 +34,42 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//head/link[@rel='prerender' and @href='jsstyle_demo.html']</td>
+  <td>//head/link[@rel='prerender' and @href='jsstyle_demo_not_loading.html']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//header/h1[text()='JS Style Demo']</td>
+  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//header/h1[text()='JS Style Demo']</td>
+  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//nav[@id='sitemap']/a[text()='Not Loading Style']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//nav[@id='sitemap']/a[text()='Not Loading Style']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>assertElementNotPresent</td>
-  <td>//nav[@id='sitemap']/a[text()='No Style']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//head/link[@rel='icon']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementNotPresent</td>
+  <td>assertElementPresent</td>
   <td>//nav[@id='language']//a[@hreflang='en']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@class='input']/span[@class='headline' and text()='Demo Style']</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//main[text()='Demo Style']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
+  <td>//div[@class='input']/span[@class='headline' and text()='Not Loading Style']</td>
   <td></td>
 </tr>
 
