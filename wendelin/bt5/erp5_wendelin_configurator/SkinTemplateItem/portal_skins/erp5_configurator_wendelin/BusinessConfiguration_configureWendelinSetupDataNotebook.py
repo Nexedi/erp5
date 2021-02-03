@@ -35,16 +35,6 @@ if kw.get('setup_data_lake'):
       install_dependency=True,
     )
 
-# setup 'tutorial'
-if kw.get('setup_wendelin_tutorial'):
-  configuration_save.addConfigurationItem(
-    "Standard BT5 Configurator Item",
-    title='erp5_wendelin_tutorial', 
-    bt5_id='erp5_wendelin_tutorial',
-    update_catalog=False,
-    install_dependency=True,
-  )
-
 if kw.get('setup_data_sample'):
   configuration_save.addConfigurationItem(
     "Standard BT5 Configurator Item",
