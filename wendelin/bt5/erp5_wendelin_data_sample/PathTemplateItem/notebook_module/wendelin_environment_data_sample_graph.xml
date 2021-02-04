@@ -68,10 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default-wendelin_sample_data_chart</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Notebook based on tutorial at https://wendelin.nexedi.com/wendelin-Learning.Track/wendelin-HowTo.Create.Notebook.with.Plotly.Chart.Editor/. Please check the detailed steps there to make this notebook properly work.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -305,7 +307,7 @@ plot();
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Environment Data Sample Graph</string> </value>
+            <value> <string>Sample Data Chart</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -438,7 +440,7 @@ plot();
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.20637.40325.60398</string> </value>
+                      <value> <string>989.53371.24232.30873</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -456,7 +458,7 @@ plot();
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1610720347.94</float>
+                              <float>1612537119.19</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

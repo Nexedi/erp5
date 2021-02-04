@@ -69,13 +69,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>environment_data_sample_chart_editor</string> </value>
+            <value> <string>default-wendelin_sample_data_chart_editor</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Notebook based on tutorial at https://wendelin.nexedi.com/wendelin-Learning.Track/wendelin-HowTo.Create.Notebook.with.Plotly.Chart.Editor/. Please check the detailed steps there to make this notebook properly work.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -496,7 +494,7 @@ main();
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Environment Data Sample Chart Editor</string> </value>
+            <value> <string>Sample Data Chart Editor</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -629,7 +627,7 @@ main();
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.47596.46527.37888</string> </value>
+                      <value> <string>989.53370.50122.49356</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -647,7 +645,7 @@ main();
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612184461.26</float>
+                              <float>1612537114.81</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
