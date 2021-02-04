@@ -14,10 +14,10 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?page=extra_menu&#38;view=view</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?page=extra_menu_test&#38;view=view</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//dd[@class="document-listview"]/a[@class="ui-btn-icon-left ui-icon-file" and contains(text(), "Contribute")]</td>
@@ -28,7 +28,7 @@
   <td>//dd[@class="document-listview"]/a[@class="ui-btn-icon-left ui-icon-file" and contains(text(), "Contribute")]</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_dialog_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//h3[@class="ui-content-title ui-body-c ui-icon ui-icon-custom ui-icon-random" and contains(text(), "Contribute File")]</td>
