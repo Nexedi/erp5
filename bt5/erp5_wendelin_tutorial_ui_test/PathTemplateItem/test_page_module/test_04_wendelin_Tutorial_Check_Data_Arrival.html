@@ -1,0 +1,144 @@
+<section>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_setUpPersonTest</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td></td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+<h1>Agenda</h1>
+
+<ul>
+	<li>See Data In Wendelin</li>
+	<li>Download Data</li>
+</ul>
+
+<details open="">
+<p>&nbsp;</p>
+
+<p>This tutorial teaches how to verify data arrival on wendelin and how to download the data.&nbsp;</p>
+
+<p>Before doing this tutorial make sure you read and completed the following tutorials</p>
+
+<ul>
+	<li><a href="wendelin-Tutorial.Setup.Sensor.IOTGateway">HowTo Setup Sensor and IOT Gateway</a></li>
+	<li><a href="https://slapos.nexedi.com/slapos-HowTo.Use.Slapos.Client">SlapOS HowTo Use SlapOS Client</a></li>
+	<li><a href="fluentd-HowTo.Setup.Fluentd">HowTo Supply Fluentd</a></li>
+	<li><a href="https://docs.fluentd.org/configuration">Fluentd Configuration File</a></li>
+	<li><a href="https://nexedi.erp5.net/web_page_module/10408/wendelin-Tutorial.Setup.Fluentd.on.IOTGateway">HowTo setup Fluentd on IOT Gateway</a></li>
+	<li><a href="https://nexedi.erp5.net/web_page_module/10408/wendelin-Tutorial.Setup.Fluentd.on.Sensor">HowTo setup Fluentd on Sensor</a></li>
+</ul>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Wendelin Dashboard</h1>
+<img alt="" src="wendelin-Data.Arrival.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>Open your Wendelin dashboard.&nbsp;</p>
+
+<p>You see that new Data Stream and Data Ingestion were created.&nbsp;</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Data Stream</h1>
+<img alt="" src="wendelin-Data.Arrival.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>From your Wendelin dashboard click on Data Stream.&nbsp;</p>
+
+<p>In Data Stream you can see the Total size (bytes) of the ingested data.</p>
+
+<p>If you reload the page the size will change as new data arrives.</p>
+</details>
+
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+     <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='sensor_1-sample-environment-raw-data']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//a[text()='sensor_1-sample-environment-raw-data']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>sensor_1-sample-environment-raw-data</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//a[text()='sensor_1']</td>
+        <td></td>
+      </tr
+      <tr>
+        <td>click</td>
+        <td>//a[text()='sensor_1-sample-environment-raw-data']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>5000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Total size (bytes)</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Validated</td>
+        <td></td>
+      </tr>      
+     <tr>
+        <td>verifyTextPresent</td>
+        <td>26205759</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Download Data</h1>
+<img alt="" src="wendelin-Data.Arrival.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+<details open="">
+<p>You can see and download &nbsp;data using the <a href="https://curl.haxx.se/">curl</a> commad:&nbsp;</p>
+
+<p><code>curl -k -u [user]:[password] https://[hostname]/erp5/data_stream_module/[id] -r [start]-[end] --output data.txt</code></p>
+
+<p>As data can be very big you can define start and stop bytes to download a slice of data.&nbsp;</p>
+</details>
+</section>
