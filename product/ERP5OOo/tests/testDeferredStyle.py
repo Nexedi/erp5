@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import textwrap
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
@@ -398,8 +399,141 @@ class TestODTDeferredStyle(TestDeferredStyleBase):
   portal_type = "Text"
 
 
+class TestDeferredReportAlarm(DeferredStyleTestCase):
+  def getBusinessTemplateList(self):
+    return super(TestDeferredReportAlarm, self).getBusinessTemplateList() + (
+        'erp5_pdm',
+        'erp5_simulation',
+        'erp5_trade',
+        'erp5_accounting',
+        'erp5_knowledge_pad',
+        'erp5_web',
+        'erp5_ingestion',
+        'erp5_ingestion_mysql_innodb_catalog',
+        'erp5_dms',
+    )
+
+  def test_alarm(self):
+    # create some data for reports
+    self.portal.person_module.newContent(portal_type='Person', first_name="not_included")
+    self.portal.person_module.newContent(portal_type='Person', first_name="yes_included").validate()
+
+    # make a script to configure the reports
+    report_configuration_script_id = 'Alarm_getTestReportList{}'.format(self.id())
+    report_after_generation_script_id = 'Alarm_afterReportGenerated{}'.format(self.id())
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        report_configuration_script_id,
+        '',
+        textwrap.dedent(
+        '''\
+        # coding: utf-8
+        portal = context.getPortalObject()
+
+        report_data_list = [
+          # For the first two reports, we us included script:
+          #  Alarm_contributeAndShareReportDocument
+          # which creates a document in document module.
+
+          # First with person module view
+          {
+            'form_id': 'PersonModule_viewPersonList',
+            'context': portal.person_module,
+            'parameters': {
+                'validation_state': 'validated',
+            },
+            'skin_name': 'ODS',
+            'language': 'fr',
+            'format': 'txt',
+            'callback_script_id': 'Alarm_contributeAndShareReportDocument',
+            'callback_script_kwargs': {
+                'title': 'Persons {}'.format(DateTime()),
+                'reference': 'TEST-Persons.Report',
+                'language': 'fr',
+            },
+          },
+          # Then with an accounting report (which uses report_view and a different
+          # approach to generate report).
+          {
+            'form_id': 'AccountModule_viewTrialBalanceReport',
+            'context': portal.accounting_module,
+            'parameters': {
+                'from_date': DateTime(2021, 1, 1),
+                'at_date': DateTime(2021, 12, 31),
+                'section_category': 'group',
+                'section_category_strict': False,
+                'simulation_state': ['delivered'],
+                'show_empty_accounts': True,
+                'expand_accounts': False,
+                'per_account_class_summary': False,
+                'show_detailed_balance_columns': False,
+            },
+            'skin_name': 'ODS',
+            'language': 'fr',
+            'callback_script_id': 'Alarm_contributeAndShareReportDocument',
+            'callback_script_kwargs': {
+                'title': 'Trial Balance {}'.format(DateTime()),
+                'reference': 'TEST-Trial.Balance.Report',
+                'language': 'fr',
+            },
+          },
+
+          # then another report to verify the callback script protocol.
+          {
+            'form_id': 'Person_view',
+            'context': portal.person_module.contentValues()[0],
+            'skin_name': 'ODS',
+            'language': portal.Localizer.get_default_language(),
+            'parameters': {},
+            'callback_script_id': '%s',
+            'callback_script_kwargs': {
+                'foo': 'bar'
+            },
+          },
+        ]
+
+        return report_data_list
+        ''' % report_after_generation_script_id))
+
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        report_after_generation_script_id,
+        'subject, attachment_list, foo',
+        textwrap.dedent(
+        '''\
+        context.setTitle('after script called with foo=' + foo)
+        '''
+    ))
+
+    alarm = self.portal.portal_alarms.template_report_alarm.Base_createCloneDocument(
+        batch_mode=True)
+    alarm.edit(
+        report_configuration_script_id=report_configuration_script_id
+    )
+    alarm.activeSense()
+    self.tic()
+
+    # the first two reports are created
+    person_report, = self.portal.portal_catalog.getDocumentValueList(
+        reference='TEST-Persons.Report',
+        language='fr',
+    )
+    self.assertIn('yes_included', person_report.getTextContent())
+    self.assertNotIn('not_included', person_report.getTextContent())
+
+    trial_balance_report, = self.portal.portal_catalog.getDocumentValueList(
+        reference='TEST-Trial.Balance.Report',
+        language='fr',
+    )
+    self.assertEqual(trial_balance_report.getPortalType(), 'Spreadsheet')
+
+    # the third report, used to check the callback script protocol, modified the alarm title
+    self.assertEqual(alarm.getTitle(), 'after script called with foo=bar')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
   suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
+  suite.addTest(unittest.makeSuite(TestDeferredReportAlarm))
   return suite
