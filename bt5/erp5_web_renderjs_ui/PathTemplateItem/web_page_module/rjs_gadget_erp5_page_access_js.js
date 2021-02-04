@@ -14,6 +14,27 @@
     DISPLAYED_POST_COUNT = 15,
     THREAD_READER_FIELD_KEY = 'field_listbox';
 
+  function getUrlForDict(gadget, url_for_options_dict) {
+    var key,
+      key_list = [],
+      url_for_options_list = [];
+    for (key in url_for_options_dict) {
+      if (url_for_options_dict.hasOwnProperty(key)) {
+        key_list.push(key);
+        url_for_options_list.push(url_for_options_dict[key]);
+      }
+    }
+    return gadget.getUrlForList(url_for_options_list)
+      .push(function (url_list) {
+        var result = {},
+          i;
+        for (i = 0; i < url_list.length; i += 1) {
+          result[key_list[i]] = url_list[i];
+        }
+        return result;
+      });
+  }
+
   function loadChildGadget(gadget, gadget_url, must_declare, callback) {
     var queue,
       child_gadget;
@@ -360,16 +381,22 @@
     .declareMethod('render', function (options) {
       this.element.textContent = 'couscous';
       var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getUrlFor({command: 'history_previous'});
-        })
-        .push(function (url) {
-          return gadget.updateHeader({
-            page_title: 'Home',
-            page_icon: 'home',
-            front_url: url
-          });
+      return getUrlForDict(gadget, {
+        front_url: {
+          command: 'history_previous'
+        },
+        upload_url: {
+          command: 'display_erp5_action_with_history',
+          options: {
+            jio_key: 'document_module',
+            page: 'contribute_file'
+          }
+        }
+      })
+        .push(function (url_dict) {
+          url_dict.page_title = 'Home';
+          url_dict.page_icon = 'home';
+          return gadget.updateHeader(url_dict);
         });
       return;
       console.log(options);
