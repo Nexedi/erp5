@@ -105,6 +105,8 @@ url_list = [
   'gadget_erp5_page_tab.js',
   'gadget_erp5_page_worklist.html',
   'gadget_erp5_page_worklist.js',
+  'gadget_erp5_page_access.html',
+  'gadget_erp5_page_access.js',
   'gadget_erp5_panel.html',
   'gadget_erp5_panel.js',
   'gadget_erp5_panel.png',
