@@ -18,7 +18,6 @@ and handling data send&receive.
 
     .declareMethod("render", function render(options) {
       var gadget = this,
-        promise_queue = new RSVP.Queue(),
         new_state = {
           options: options
         },
