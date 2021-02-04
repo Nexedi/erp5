@@ -1,0 +1,241 @@
+<section>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_setUpPersonTest</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Init Ok</td>
+        <td></td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
+      </tr>
+      <tr class="" style="opacity: 1;">
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create Data Acquisition&nbsp;Unit</li>
+</ul>
+
+<details open="">
+<p>&nbsp;</p>
+
+<p>This tutorial teaches how to create Data Acquisition&nbsp;Unit.</p>
+
+<p>Data Acquisition&nbsp;Unit represents the source from where the data comes.&nbsp;</p>
+
+<p>In the scope of this Learning Track we use Olimex Environment Sensor to retrieve data, thus our&nbsp; Data Acquisition&nbsp;Unit will represent that sensor.&nbsp;</p>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Home</h1>
+<img alt="" src="wendelin-new.Interface.home.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Go to your wendelin instance homepage and click on Modules.</p>
+</details>
+</section>
+
+<section>
+<h1>Data Acquisition Unit</h1>
+<img alt="" src="wendelin-new.Interface.modules.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>On the modules page click on Data Acquisition Units.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Add</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Acq.Unit.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Click on Add button.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Create Document</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Acq.Unit.2.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Continue with clicking on Create Document.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Fill the Form</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Acq.Unit.3.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Fill the form and click save.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Validate</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Acq.Unit.4.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>After it is saved, click on Validate on left side panel to validate Data Acquisition Unit.</p>
+</details>
+
+<p>&nbsp;</p>
+</section>
+
+<section>
+<h1>Confirm Valdation</h1>
+<img alt="" src="wendelin-new.Interface.add.Data.Acq.Unit.6.screenshot?format=" title="" type="image/svg+xml" />
+<details open="">
+<p>&nbsp;</p>
+
+<p>Click on Validate to confirm validation.</p>
+</details>
+
+<p>&nbsp;</p>
+<test>
+  <table style="display: none;" class="test">
+    <tbody>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'data_acquisition_unit_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'data_acquisition_unit_module')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Add"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@type="submit" and @value="Create Document"]</td>
+        <td></td>
+      </tr>
+      
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>Olimex Environment Sensor</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>olimex-environment-sensor</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'Dvalidate_action')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</test>
+</section>
