@@ -78,6 +78,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox_quantity</string> </value>
                 </item>

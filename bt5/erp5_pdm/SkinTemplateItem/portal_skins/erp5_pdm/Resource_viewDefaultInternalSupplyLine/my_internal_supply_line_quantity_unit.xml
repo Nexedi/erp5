@@ -75,10 +75,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>

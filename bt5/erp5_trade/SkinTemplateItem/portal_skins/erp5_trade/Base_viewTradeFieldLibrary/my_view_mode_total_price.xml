@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>precision</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -85,6 +85,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

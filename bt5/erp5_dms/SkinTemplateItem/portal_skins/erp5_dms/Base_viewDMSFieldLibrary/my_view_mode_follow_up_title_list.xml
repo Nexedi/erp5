@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>catalog_index</string>
-                <string>portal_type</string>
                 <string>base_category</string>
-                <string>height</string>
+                <string>catalog_index</string>
                 <string>columns</string>
                 <string>default</string>
+                <string>height</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -59,6 +59,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -73,6 +85,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -80,6 +96,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -118,6 +138,12 @@
                           <string>State</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>

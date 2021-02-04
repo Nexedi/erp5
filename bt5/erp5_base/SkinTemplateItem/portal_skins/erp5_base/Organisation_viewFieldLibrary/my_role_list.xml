@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -63,10 +63,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>

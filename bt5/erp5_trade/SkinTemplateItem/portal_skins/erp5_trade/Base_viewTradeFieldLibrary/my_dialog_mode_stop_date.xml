@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>description</string>
                 <string>title</string>
-                <string>default</string>
               </list>
             </value>
         </item>
@@ -79,6 +79,12 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <none/>
+                    </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>The date at which shipped products were delivered or the date at which a service was completed.</string> </value>

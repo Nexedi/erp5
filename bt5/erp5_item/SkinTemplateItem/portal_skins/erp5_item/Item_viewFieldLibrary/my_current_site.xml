@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
                 <string>editable</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -74,10 +74,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>

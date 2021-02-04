@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
                 <string>default</string>
+                <string>description</string>
               </list>
             </value>
         </item>
@@ -78,6 +78,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>The last name of the person.</string> </value>

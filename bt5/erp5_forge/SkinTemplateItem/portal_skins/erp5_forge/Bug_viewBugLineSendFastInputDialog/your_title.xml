@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>required</string>
                 <string>display_width</string>
                 <string>editable</string>
+                <string>required</string>
               </list>
             </value>
         </item>
@@ -88,6 +88,10 @@
                 <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

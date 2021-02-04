@@ -58,10 +58,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -76,15 +72,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>

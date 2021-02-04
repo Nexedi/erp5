@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>view_separator</string>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
+                <string>view_separator</string>
               </list>
             </value>
         </item>
@@ -86,6 +86,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
