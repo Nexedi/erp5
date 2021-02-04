@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard BT5 Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>bt5_id</string> </key>
+            <value> <string>erp5_simulation</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>13</string> </value>
+        </item>
+        <item>
+            <key> <string>install_dependency</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard BT5 Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_simulation</string> </value>
+        </item>
+        <item>
+            <key> <string>update_catalog</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
