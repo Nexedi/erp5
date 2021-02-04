@@ -1,5 +1,7 @@
 """
   This script creates a Business Configuration as if user selected it during configuration process.
+  In case of Wendelin 
+  configuration_save_url = business_configuration_module/default_wendelin_configuration/1
 """
 configuration_save = context.restrictedTraverse(configuration_save_url)
 
@@ -26,13 +28,11 @@ bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          'erp5_forge',
                          'erp5_development_wizard',
                          'erp5_dhtml_style',
-                         # install later UI bt5s as broken now
-                         #'erp5_wendelin_renderjs_ui',
                          'erp5_hal_json_style',
                          'erp5_web_renderjs_ui',
                          'erp5_wendelin',
                          'erp5_wendelin_examples',
-                         'erp5_wendelin_data',
+                         'erp5_wendelin_data_sample',
                          'erp5_wendelin_development',
                          # data lake
                          'erp5_wendelin_data_lake_ingestion',
@@ -62,3 +62,6 @@ configuration_save.addConfigurationItem("Portal Type Roles Spreadsheet Configura
 
 # Create ERP5Site_getSecurityCategoryMapping
 configuration_save.addConfigurationItem("Security Category Mapping Configurator Item")
+
+print "Created."
+return printed
