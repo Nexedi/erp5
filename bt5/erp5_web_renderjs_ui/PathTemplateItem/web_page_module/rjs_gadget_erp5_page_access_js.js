@@ -391,6 +391,18 @@
             jio_key: 'document_module',
             page: 'contribute_file'
           }
+        },
+        add_url: {
+          command: 'change',
+          options: {
+            view: undefined
+          }
+        },
+        export_url: {
+          command: 'change',
+          options: {
+            view: 'couscous'
+          }
         }
       })
         .push(function (url_dict) {
