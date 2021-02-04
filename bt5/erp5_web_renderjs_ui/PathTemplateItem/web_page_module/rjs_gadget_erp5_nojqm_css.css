@@ -1611,6 +1611,9 @@ div.invisible_header .document_table .ui-table-header {
 div.invisible_footer .document_table nav {
   display: none;
 }
+.document_table tbody tr td div {
+  width: 100%;
+}
 .document_table tbody tr td:first-child input.hide_element[type="checkbox"] {
   display: none;
 }
