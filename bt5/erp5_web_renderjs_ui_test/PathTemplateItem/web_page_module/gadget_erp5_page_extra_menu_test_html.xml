@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_extra_menu.js</string> </value>
+            <value> <string>gadget_erp5_page_extra_menu_test.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_extra_menu_js</string> </value>
+            <value> <string>gadget_erp5_page_extra_menu_test_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Page Extra Menu JS</string> </value>
+            <value> <string>Gadget ERP5 Extra Menu Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -185,7 +189,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612302144.39</float>
+                              <float>1612302280.05</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -234,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.50770.25709.4625</string> </value>
+                      <value> <string>989.51867.8549.15291</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612378739.75</float>
+                              <float>1612440694.42</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -313,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612302008.84</float>
+                              <float>1612302060.72</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
