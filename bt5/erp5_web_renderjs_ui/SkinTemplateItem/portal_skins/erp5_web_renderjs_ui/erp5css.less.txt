@@ -1871,6 +1871,9 @@ div[data-gadget-scope='erp5_searchfield'] {
   tbody {
     tr {
       td {
+        div {
+          width: 100%
+        }
         // In select mode, hide the listbox line checkbox.
         // Instead, display an icon before the first label
         // (it is only to make the checkbox rendering nicer)
