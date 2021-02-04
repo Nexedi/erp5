@@ -246,6 +246,9 @@ allow_module('bisect')
 allow_module('colorsys')
 allow_module('crypt')
 ##
+allow_module('__future__')
+allow_module('future')
+allow_module('future.utils')
 
 allow_module('pprint')
 allow_module('quopri')
