@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import textwrap
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
@@ -398,8 +399,103 @@ class TestODTDeferredStyle(TestDeferredStyleBase):
   portal_type = "Text"
 
 
+class TestDeferredReportAlarm(DeferredStyleTestCase):
+  def getBusinessTemplateList(self):
+    return super(TestDeferredReportAlarm, self).getBusinessTemplateList() + (
+        'erp5_pdm',
+        'erp5_simulation',
+        'erp5_trade',
+        'erp5_accounting',
+        'erp5_knowledge_pad',
+        'erp5_web',
+        'erp5_ingestion',
+        'erp5_ingestion_mysql_innodb_catalog',
+        'erp5_dms',
+    )
+
+  def test_alarm(self):
+    # create some data for reports
+    self.portal.person_module.newContent(portal_type='Person', first_name="not_included")
+    self.portal.person_module.newContent(portal_type='Person', first_name="yes_included").validate()
+
+    # make a script to configure the reports. Once reports are finished, this script
+    # will save in document module.
+    report_configuration_script_id = 'Alarm_getTestReportList{}'.format(self.id())
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        report_configuration_script_id,
+        '',
+        textwrap.dedent(
+        '''\
+        # coding: utf-8
+        portal = context.getPortalObject()
+
+        def makeCallbackFunction(report_title, report_reference):
+          def done(subject, attachment_list):
+            for attachment in attachment_list:
+              document = portal.portal_contributions.newContent(
+                data=attachment['content'],
+                filename=attachment['name'],
+                title=report_title,
+                reference=report_reference
+              )
+              document.share()
+          return done
+
+        report_data_list = [
+          {
+            'form_id': 'PersonModule_viewPersonList',
+            'context': portal.person_module,
+            'parameters': {
+                'validation_state': 'validated',
+            },
+            'skin_name': 'ODS',
+            'language': 'fr',
+            'format': 'txt',
+            'mode': 'view',
+            'done': makeCallbackFunction('Persons %s' % DateTime(), 'TEST-Persons.Report')
+          },
+          {
+            'form_id': 'AccountModule_viewTrialBalanceReport',
+            'context': portal.accounting_module,
+            'parameters': {
+                'from_date': DateTime(2021, 1, 1),
+                'at_date': DateTime(2021, 12, 31),
+                'section_category': 'group',
+                'section_category_strict': False,
+                'simulation_state': ['delivered'],
+                'show_empty_accounts': True,
+                'expand_accounts': False,
+                'per_account_class_summary': False,
+                'show_detailed_balance_columns': False,
+            },
+            'skin_name': 'ODS',
+            'language': 'fr',
+            'mode': 'report',
+            'done': makeCallbackFunction('Trial Balance %s' % DateTime(), 'TEST-Trial.Balance.Report')
+          }
+        ]
+
+        return report_data_list
+        '''))
+    alarm = self.portal.portal_alarms.template_report_alarm.Base_createCloneDocument(batch_mode=True)
+    alarm.edit(
+        report_configuration_script_id=report_configuration_script_id
+    )
+    alarm.activeSense()
+    self.tic()
+
+    person_report, = self.portal.portal_catalog.getDocumentValueList(reference='TEST-Persons.Report')
+    self.assertIn('yes_included', person_report.getTextContent())
+    self.assertNotIn('not_included', person_report.getTextContent())
+
+    trial_balance_report, = self.portal.portal_catalog.getDocumentValueList(reference='TEST-Trial.Balance.Report')
+    self.assertEqual(trial_balance_report.getPortalType(), 'Spreadsheet')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
   suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
+  suite.addTest(unittest.makeSuite(TestDeferredReportAlarm))
   return suite
