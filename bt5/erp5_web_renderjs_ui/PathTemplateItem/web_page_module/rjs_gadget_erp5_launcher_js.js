@@ -561,6 +561,11 @@
         return route(this, 'translation_gadget', 'getTranslationList',
                      argument_list);
       })
+    .allowPublicAcquisition("getTranslationDict",
+                            function getTranslationDict(argument_list) {
+        return route(this, 'translation_gadget', 'getTranslationDict',
+                     argument_list);
+      })
     .allowPublicAcquisition("getSelectedLanguage",
                             function getSelectedLanguage() {
         return route(this, 'translation_gadget', 'getSelectedLanguage');
