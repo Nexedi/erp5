@@ -7,7 +7,7 @@
   // XXX create topic by followup (allDocs group by follow up)
 
   var URL_DISPLAY_PARAMETER = 'view',
-    DISPLAY_ADD = 'display_add',
+    DISPLAY_ADD = undefined,
     DISPLAY_REPORT = 'display_report',
     DISPLAY_CONTRIBUTE = 'display_contribute';
 
@@ -36,6 +36,7 @@
   function renderEmbeddedForm(gadget, jio_key, action_name) {
     return searchERP5Action(gadget, jio_key, action_name)
       .push(function (action_href) {
+        throw new Error('notimplemented: load gadget_erp5_page_form and render');
         gadget.element.textContent = action_href;
       });
   }
@@ -74,22 +75,21 @@
               command: 'history_previous'
             },
             upload_url: {
-              command: 'display_erp5_action_with_history',
+              command: 'change',
               options: {
-                jio_key: 'document_module',
-                page: 'contribute_file'
+                view: DISPLAY_CONTRIBUTE
               }
             },
             add_url: {
               command: 'change',
               options: {
-                view: undefined
+                view: DISPLAY_ADD
               }
             },
             export_url: {
               command: 'change',
               options: {
-                view: 'export'
+                view: DISPLAY_REPORT
               }
             }
           });
@@ -101,22 +101,19 @@
         })
 
         .push(function () {
-          if (1) {
+          if (gadget.state.display_step === DISPLAY_CONTRIBUTE) {
             return renderEmbeddedForm(gadget,
                                       'portal_contributions',
                                       'contribute_file');
           }
           if (gadget.state.display_step === DISPLAY_ADD) {
-            throw new Error('not implemented ' + DISPLAY_ADD);
-            return renderDiscussionThreadList(
-              gadget,
-              modification_dict.hasOwnProperty('display_step')
-            );
-          } else {
-            throw new Error(
-              'Unhandled display step: ' + gadget.state.display_step
-            );
+            return renderEmbeddedForm(gadget,
+                                      'portal_contributions',
+                                      'create_a_document');
           }
+          throw new Error(
+            'Unhandled display step: ' + gadget.state.display_step
+          );
         });
     });
 
