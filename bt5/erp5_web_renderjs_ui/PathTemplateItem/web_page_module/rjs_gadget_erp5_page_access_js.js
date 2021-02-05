@@ -28,7 +28,7 @@
     ////////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
       return this.changeState({
-        display_step: options[URL_DISPLAY_PARAMETER] || '',
+        display_step: options[URL_DISPLAY_PARAMETER] || DISPLAY_ADD,
         // Force display in any case to refresh the menus
         render_timestamp: new Date().getTime()
       });
@@ -63,7 +63,7 @@
                 view: 'export'
               }
             }
-          })
+          });
         })
         .push(function (url_dict) {
           url_dict.page_title = _.Home;
@@ -72,29 +72,16 @@
         });
       return queue;
 
-      if (gadget.state.display_step === DISPLAY_READER) {
+      if (gadget.state.display_step === DISPLAY_ADD) {
+        throw new Error('not implemented ' + DISPLAY_ADD);
         return renderDiscussionThreadList(
           gadget,
           modification_dict.hasOwnProperty('display_step')
         );
+      } else {
+        throw new Error('Unhandled display step: ' + gadget.state.display_step);
       }
-      if (gadget.state.display_step === DISPLAY_THREAD) {
-        return renderDiscussionThread(
-          gadget,
-          modification_dict.hasOwnProperty('display_step'),
-          gadget.state.jio_key
-        );
-      }
-    /*
-        return renderDiscussionPost(
-          gadget,
-          modification_dict.hasOwnProperty('display_step') ||
-          modification_dict.first_render,
-          gadget.state.jio_key
-        );
-      }
-*/
-      throw new Error('Unhandled display step: ' + gadget.state.display_step);
+      return queue;
     });
 
 }());
