@@ -35,9 +35,8 @@
     })
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        _,
-        queue;
-      queue = gadget.getTranslationDict(['Home'])
+        _;
+      return gadget.getTranslationDict(['Home'])
         .push(function (translation_dict) {
           _ = translation_dict;
           return gadget.getUrlForDict({
@@ -69,19 +68,21 @@
           url_dict.page_title = _.Home;
           url_dict.page_icon = 'home';
           return gadget.updateHeader(url_dict);
-        });
-      return queue;
+        })
 
-      if (gadget.state.display_step === DISPLAY_ADD) {
-        throw new Error('not implemented ' + DISPLAY_ADD);
-        return renderDiscussionThreadList(
-          gadget,
-          modification_dict.hasOwnProperty('display_step')
-        );
-      } else {
-        throw new Error('Unhandled display step: ' + gadget.state.display_step);
-      }
-      return queue;
+        .push(function () {
+          if (gadget.state.display_step === DISPLAY_ADD) {
+            throw new Error('not implemented ' + DISPLAY_ADD);
+            return renderDiscussionThreadList(
+              gadget,
+              modification_dict.hasOwnProperty('display_step')
+            );
+          } else {
+            throw new Error(
+              'Unhandled display step: ' + gadget.state.display_step
+            );
+          }
+        });
     });
 
 }());
