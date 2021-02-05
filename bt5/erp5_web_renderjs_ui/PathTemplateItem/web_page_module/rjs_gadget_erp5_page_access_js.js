@@ -11,6 +11,35 @@
     DISPLAY_REPORT = 'display_report',
     DISPLAY_CONTRIBUTE = 'display_contribute';
 
+  function searchERP5Action(gadget, jio_key, action_name) {
+    return gadget.jio_getAttachment(jio_key, 'links')
+      .push(function (document_view) {
+        var action, action_data, i, j, new_options;
+        for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
+          action = Object.keys(document_view._links)[i];
+          if (document_view._links.hasOwnProperty(action)) {
+            if (document_view._links[action].constructor !== Array) {
+              document_view._links[action] = [document_view._links[action]];
+            }
+            for (j = 0;  j < document_view._links[action].length; j = j + 1) {
+              action_data = document_view._links[action][j];
+              if (action_data.name === action_name) {
+                return action_data.href;
+              }
+            }
+          }
+        }
+        throw new Error('Action not found: ' + action_name);
+      });
+  }
+
+  function renderEmbeddedForm(gadget, jio_key, action_name) {
+    return searchERP5Action(gadget, jio_key, action_name)
+      .push(function (action_href) {
+        gadget.element.textContent = action_href;
+      });
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -18,6 +47,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
     .declareAcquiredMethod("getUrlForDict", "getUrlForDict")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('triggerSubmit', function () {
       return;
@@ -71,6 +101,11 @@
         })
 
         .push(function () {
+          if (1) {
+            return renderEmbeddedForm(gadget,
+                                      'portal_contributions',
+                                      'contribute_file');
+          }
           if (gadget.state.display_step === DISPLAY_ADD) {
             throw new Error('not implemented ' + DISPLAY_ADD);
             return renderDiscussionThreadList(
