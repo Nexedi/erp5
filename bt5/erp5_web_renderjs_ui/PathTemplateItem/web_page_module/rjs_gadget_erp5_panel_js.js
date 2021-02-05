@@ -261,7 +261,8 @@
           modification_dict.hasOwnProperty("clone_list") ||
           modification_dict.hasOwnProperty("jump_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
-          modification_dict.hasOwnProperty("view_list"))) {
+          modification_dict.hasOwnProperty("view_list") ||
+          modification_dict.hasOwnProperty("extra_menu_dict"))) {
         if (this.state.view_list === undefined) {
           gadget.element.querySelector("dl").textContent = '';
         } else {
@@ -328,7 +329,9 @@
               ]);
             })
             .push(function (result_list) {
-              var dl_element,
+              var key,
+                dl_element,
+                extra_menu_dict,
                 dl_fragment = document.createDocumentFragment(),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
@@ -349,36 +352,23 @@
                        jump_list, result_list[0],
                        view_list.length + workflow_list.length +
                        action_list.length + clone_list.length);
-
               dl_element = gadget.element.querySelector("dl");
+
+              if (gadget.state.hasOwnProperty("extra_menu_dict")) {
+                extra_menu_dict = JSON.parse(gadget.state.extra_menu_dict);
+                for (key in extra_menu_dict) {
+                  if (extra_menu_dict.hasOwnProperty(key)) {
+                    appendDt(dl_fragment, key, extra_menu_dict[key].icon,
+                             extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
+                  }
+                }
+              }
               while (dl_element.firstChild) {
                 dl_element.removeChild(dl_element.firstChild);
               }
               dl_element.appendChild(dl_fragment);
             });
         }
-      }
-      if ((this.state.global === true) &&
-          (modification_dict.hasOwnProperty("extra_menu_dict"))) {
-        queue.push(function () {
-          var key,
-            dl_element = gadget.element.querySelector("dl"),
-            dl_fragment,
-            extra_menu_dict;
-          if (gadget.state.extra_menu_dict === undefined) {
-            dl_element.textContent = "";
-          } else {
-            dl_fragment = document.createDocumentFragment();
-            extra_menu_dict = JSON.parse(gadget.state.extra_menu_dict);
-            for (key in extra_menu_dict) {
-              if (extra_menu_dict.hasOwnProperty(key)) {
-                appendDt(dl_fragment, key, extra_menu_dict[key].icon,
-                         extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
-              }
-            }
-            dl_element.appendChild(dl_fragment);
-          }
-        });
       }
       return queue;
     })
