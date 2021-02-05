@@ -1107,6 +1107,17 @@
       }
       return result_list;
     })
+    .declareMethod('getCommandUrlForDict', function getCommandUrlForDict(
+      options_dict
+    ) {
+      var key;
+      for (key in options_dict) {
+        if (options_dict.hasOwnProperty(key)) {
+          options_dict.push(getCommandUrlForMethod(this, options_dict[key]));
+        }
+      }
+      return options_dict;
+    })
     .declareMethod('getCommandUrlFor', function getCommandUrlFor(options) {
       return getCommandUrlForMethod(this, options);
     })
