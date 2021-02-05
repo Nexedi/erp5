@@ -9,7 +9,8 @@
   var URL_DISPLAY_PARAMETER = 'view',
     DISPLAY_ADD = undefined,
     DISPLAY_REPORT = 'display_report',
-    DISPLAY_CONTRIBUTE = 'display_contribute';
+    DISPLAY_CONTRIBUTE = 'display_contribute',
+    MAIN_SCOPE = 'sub_gadget';
 
   function searchERP5Action(gadget, jio_key, action_name) {
     return gadget.jio_getAttachment(jio_key, 'links')
@@ -33,11 +34,40 @@
       });
   }
 
+  function loadChildGadget(gadget, gadget_url, must_declare, callback) {
+    var queue,
+      child_gadget;
+    if (must_declare) {
+      queue = gadget.declareGadget(gadget_url, {scope: MAIN_SCOPE});
+    } else {
+      queue = gadget.getDeclaredGadget(MAIN_SCOPE);
+    }
+    return queue
+      .push(function (result) {
+        child_gadget = result;
+        if (callback) {
+          return callback(result);
+        }
+      })
+      .push(function (result) {
+        if (must_declare) {
+          domsugar(gadget.element, [child_gadget.element]);
+        }
+        return result;
+      });
+  }
+
   function renderEmbeddedForm(gadget, jio_key, action_name) {
     return searchERP5Action(gadget, jio_key, action_name)
       .push(function (action_href) {
-        throw new Error('notimplemented: load gadget_erp5_page_form and render');
-        gadget.element.textContent = action_href;
+        return loadChildGadget(gadget, "gadget_erp5_page_form.html",
+                               true,
+                               function (form_gadget) {
+          return form_gadget.render({
+            jio_key: jio_key,
+            view: action_href
+          });
+        });
       });
   }
 
@@ -51,6 +81,10 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('triggerSubmit', function () {
+      return;
+    })
+
+    .allowPublicAcquisition('updateHeader', function () {
       return;
     })
 
@@ -103,7 +137,7 @@
         .push(function () {
           if (gadget.state.display_step === DISPLAY_CONTRIBUTE) {
             return renderEmbeddedForm(gadget,
-                                      'portal_contributions',
+                                      'document_module',
                                       'contribute_file');
           }
           if (gadget.state.display_step === DISPLAY_ADD) {
