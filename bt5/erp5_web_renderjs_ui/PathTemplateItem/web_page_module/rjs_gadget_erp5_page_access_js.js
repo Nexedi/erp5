@@ -14,27 +14,6 @@
     DISPLAYED_POST_COUNT = 15,
     THREAD_READER_FIELD_KEY = 'field_listbox';
 
-  function getUrlForDict(gadget, url_for_options_dict) {
-    var key,
-      key_list = [],
-      url_for_options_list = [];
-    for (key in url_for_options_dict) {
-      if (url_for_options_dict.hasOwnProperty(key)) {
-        key_list.push(key);
-        url_for_options_list.push(url_for_options_dict[key]);
-      }
-    }
-    return gadget.getUrlForList(url_for_options_list)
-      .push(function (url_list) {
-        var result = {},
-          i;
-        for (i = 0; i < url_list.length; i += 1) {
-          result[key_list[i]] = url_list[i];
-        }
-        return result;
-      });
-  }
-
   function loadChildGadget(gadget, gadget_url, must_declare, callback) {
     var queue,
       child_gadget;
@@ -243,7 +222,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getUrlForDict", "getUrlForDict")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_get", "jio_get")
@@ -381,7 +360,7 @@
     .declareMethod('render', function (options) {
       this.element.textContent = 'couscous';
       var gadget = this;
-      return getUrlForDict(gadget, {
+      return gadget.getUrlForDict({
         front_url: {
           command: 'history_previous'
         },
@@ -401,7 +380,7 @@
         export_url: {
           command: 'change',
           options: {
-            view: 'couscous'
+            view: 'export'
           }
         }
       })
