@@ -2,6 +2,7 @@
 """
   This simply sucks, hate doing it this way (Ivan)
 """
+from future.utils import raise_
 import sys
 from ZODB.POSException import ConflictError
 from Products.Formulator.MethodField import Method
@@ -36,7 +37,7 @@ def Base_runPythonScript(self, code):
   code = '\n'.join(code_line_list)
   script.write(code)
   if script._code is None:
-    raise ValueError, repr(script.errors)
+    raise_(ValueError, repr(script.errors))
 
   return script()
 

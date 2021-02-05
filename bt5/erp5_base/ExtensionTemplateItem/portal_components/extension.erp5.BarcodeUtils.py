@@ -1,3 +1,4 @@
+from future.utils import raise_
 def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
   # huBarcode's DataMatrix support has limitation for data size.
   # huBarcode's QRCode support is broken.
@@ -29,7 +30,7 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
     fp.seek(0)
     output = fp.read()
   else:
-    raise NotImplementedError, 'barcode_type=%s is not supported' % barcode_type
+    raise_(NotImplementedError, 'barcode_type=%s is not supported' % barcode_type)
   if REQUEST is not None:
     REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
   return output

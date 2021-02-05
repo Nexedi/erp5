@@ -1,3 +1,4 @@
+from future.utils import raise_
 from Products.PythonScripts.standard import Object
 request = container.REQUEST
 portal = context.getPortalObject()
@@ -42,8 +43,8 @@ for person in person_value_list:
     resource = inventory.resource_relative_url
 
     if inventory.resource_uid in presence_resource_uid_list:
-      raise ValueError, "This report does not work when same resource are"\
-                        " used in presence and leave."
+      raise_(ValueError, "This report does not work when same resource are"\
+                        " used in presence and leave.")
 
     person_time = (person_planned_time - person.getAvailableTime(
                       from_date=from_date,

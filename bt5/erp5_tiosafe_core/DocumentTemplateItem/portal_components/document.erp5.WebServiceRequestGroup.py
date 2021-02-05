@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -69,6 +70,6 @@ class WebServiceRequestGroup(XMLObject):
     # after browsing all web service requests check that item exists and only
     # one time
     if len(object_list) != 1:
-      raise KeyError, "No entry for the item %s" % item
+      raise_(KeyError, "No entry for the item %s" % item)
     return object_list[0]
 

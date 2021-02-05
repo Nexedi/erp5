@@ -1,5 +1,6 @@
 # Get the objects based on domain used
 
+from future.utils import raise_
 selection_tool = context.portal_selections
 selection = selection_tool.getSelectionFor('project_planning_selection')
 
@@ -19,7 +20,7 @@ if selection is not None:
   elif selection.report_path == 'parent':
     return context.searchFolder(**kw)
   else:
-    raise NotImplementedError, "Unknow domain %s" % selection.report_path
+    raise_(NotImplementedError, "Unknow domain %s" % selection.report_path)
 
   return context.portal_catalog(**kw)
 

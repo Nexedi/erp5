@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -199,9 +200,9 @@ class Matrix(object):
     """
     script = self._getTypeBasedMethod('asCellRange', **kw)
     if script is None:
-      raise UnboundLocalError,\
+      raise_(UnboundLocalError,\
              "Did not find cell range script for portal type: %r" %\
-             self.getPortalType()
+             self.getPortalType())
     cell_range = script(base_id=base_id, matrixbox=0, **kw)
     self._setCellRange(base_id=base_id, *cell_range)
 
@@ -335,7 +336,7 @@ class Matrix(object):
 
     cell_id = self.keyToId(kw, base_id = base_id)
     if cell_id is None:
-      raise KeyError, 'Invalid key: %s' % str(kw)
+      raise_(KeyError, 'Invalid key: %s' % str(kw))
 
     cell = self.get(cell_id)
     if cell is not None:

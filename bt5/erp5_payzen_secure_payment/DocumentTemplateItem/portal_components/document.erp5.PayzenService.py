@@ -1,3 +1,4 @@
+from future.utils import raise_
 import zope
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -341,7 +342,7 @@ class PayzenService(XMLObject, PayzenSOAP):
         # backward compatibility:
         message_list.append(err[3])
     if message_list:
-      raise ValidationFailed, message_list
+      raise_(ValidationFailed, message_list)
 
     temp_document = self.newContent(temp_object=True, portal_type='Document', id='id')
     temp_document.edit(

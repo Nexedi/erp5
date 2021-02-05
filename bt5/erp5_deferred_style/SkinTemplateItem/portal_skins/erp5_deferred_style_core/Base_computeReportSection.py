@@ -1,4 +1,5 @@
 # pylint: disable=redefined-builtin
+from future.utils import raise_
 portal = context.getPortalObject()
 
 form = context.restrictedTraverse(form)
@@ -14,7 +15,7 @@ with portal.Localizer.translationContext(localizer_language):
       if field.getRecursiveTemplateField().meta_type == 'ReportBox':
         report_section_list.extend(field.render())
   else:
-    raise ValueError, 'form meta_type (%r) unknown' %(form.meta_type,)
+    raise_(ValueError, 'form meta_type (%r) unknown' %(form.meta_type,))
 
   report_title = portal.Base_translateString((form.getProperty('title')))
 

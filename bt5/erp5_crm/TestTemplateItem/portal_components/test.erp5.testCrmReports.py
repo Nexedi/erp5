@@ -30,6 +30,7 @@
 
 """Tests Standards ERP5 Crm Reports
 """
+from future.utils import raise_
 import unittest
 
 from DateTime import DateTime
@@ -110,7 +111,7 @@ class CrmTestCase(ERP5ReportTestCase):
     ev = self.event_module.newContent(portal_type=portal_type,**kw)
 
     if simulation_state == 'assigned':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ticket=self.portal.restrictedTraverse(ev.getFollowUp())
       self._doWorkflowAction(ev,'assign_action',
@@ -120,7 +121,7 @@ class CrmTestCase(ERP5ReportTestCase):
     elif simulation_state == 'planned':
       ev.plan()
     elif simulation_state == 'posted':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ev.start()
       """
@@ -128,12 +129,12 @@ class CrmTestCase(ERP5ReportTestCase):
       ev.start()
       ev.deliver()
     elif simulation_state == 'new':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ev.receive()
       """
     elif simulation_state == 'acknowledged':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ticket=self.portal.restrictedTraverse(ev.getFollowUp())
       self._doWorkflowAction(ev,'assign_action',
@@ -147,13 +148,13 @@ class CrmTestCase(ERP5ReportTestCase):
     elif simulation_state == 'deleted':
       ev.delete()
     elif simulation_state == 'expired':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ev.receive()
       ev.expire()
       """
     elif simulation_state == 'responded':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ev.receive()
       ev.respond()
@@ -161,7 +162,7 @@ class CrmTestCase(ERP5ReportTestCase):
     elif simulation_state == 'started':
       ev.start()
     elif simulation_state == 'ordered':
-      raise NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state
+      raise_(NotImplementedError, '%r state only exists in the old event workflow.' % simulation_state)
       """
       ev.plan()
       ev.order()

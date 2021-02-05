@@ -9,6 +9,7 @@ Differences to the stock implementation:
   (unless we say it is strict)
 """
 
+from future.utils import raise_
 from erp5.component.module.Log import log
 
 category_list = []
@@ -34,7 +35,7 @@ for assignment in person_object.contentValues(filter={'portal_type': 'Assignment
           if root: category_value=category_value.split('/')[0]
           category_dict[base_category] = category_value
         else:
-          raise RuntimeError, "Error: '%s' property is required in order to update person security group"  % (base_category)
+          raise_(RuntimeError, "Error: '%s' property is required in order to update person security group"  % (base_category))
       category_list.append(category_dict)
       # if not strict, we go up the hierarchy (because if you work in group/a/b/c, chances are you 
       # are working in group/a/b, too :)

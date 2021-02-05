@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from erp5.component.module.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST, \
     XUPDATE_DEL, XUPDATE_UPDATE
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
@@ -125,11 +126,11 @@ class TioSafeBaseConduit(ERP5Conduit):
     if getattr(self, 'integration_site', None) is None:
       related_object_list = [x.getObject() for x in sync_object.Base_getRelatedObjectList()]
       if len(related_object_list) != 1:
-        raise ValueError, "Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list)
+        raise_(ValueError, "Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list))
       integration_site = related_object_list[0].getParentValue()
       if integration_site.getPortalType() != "Integration Site":
-        raise ValueError, "Did not get an Integration Site object instead %s : %s" %(integration_site.getPortalType(),
-                                                                                     integration_site.getPath())
+        raise_(ValueError, "Did not get an Integration Site object instead %s : %s" %(integration_site.getPortalType(),
+                                                                                     integration_site.getPath()))
       self.integration_site = integration_site
     return self.integration_site
 
@@ -142,14 +143,14 @@ class TioSafeBaseConduit(ERP5Conduit):
     module_id = "%s_module" %(object_type.lower())
     module = getattr(site, module_id, None)
     if module is None:
-      raise ValueError, "Impossible to find integration module object on %s for %s" %(site.getPath(), object_type)
+      raise_(ValueError, "Impossible to find integration module object on %s for %s" %(site.getPath(), object_type))
 
     if synchronization_type == "publication":
       return module.getSourceSectionValue()
     elif synchronization_type == "subscription":
       return module.getDestinationSectionValue()
     else:
-      raise ValueError, 'Unknown type %s' %(synchronization_type,)
+      raise_(ValueError, 'Unknown type %s' %(synchronization_type,))
 
   def updateNode(self, xml=None, object=None, previous_xml=None, force=False,
       simulate=False, reset=False, xpath_expression=None, **kw):

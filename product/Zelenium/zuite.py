@@ -4,6 +4,7 @@ Zuite instances are collections of Zelenium test cases.
 
 $Id$
 """
+from future.utils import raise_
 import glob
 import logging
 import os
@@ -201,7 +202,7 @@ class Zuite( OrderedFolder ):
         if value is not _MARKER:
             return value
 
-        raise KeyError, key
+        raise_(KeyError, key)
 
 
     security.declareProtected( View, 'listTestCases' )
@@ -678,7 +679,7 @@ class ZuiteResults( Folder ):
         if default is not _MARKER:
             return default
 
-        raise KeyError, key
+        raise_(KeyError, key)
 
 InitializeClass( ZuiteResults )
 
@@ -718,7 +719,7 @@ class _FilesystemProxy( Folder ):
         if default is not _MARKER:
             return default
 
-        raise KeyError, key
+        raise_(KeyError, key)
 
     security.declareProtected( View, 'listTestCases' )
     def listTestCases( self, prefix=() ):

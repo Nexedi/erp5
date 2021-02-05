@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -360,7 +361,7 @@ class DomainTool(BaseTool):
           break
       else:
         if domain is _MARKER: return default
-        raise KeyError, subdomain
+        raise_(KeyError, subdomain)
     return domain
 
 InitializeClass(DomainTool)

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from OFS.Traversable import NotFound
@@ -100,7 +101,7 @@ class StaticWebSection(WebSection):
     try:
       request.RESPONSE.notFoundError("%s\n%s" % (name, method))
     except AttributeError:
-      raise KeyError, name
+      raise_(KeyError, name)
 
 
   security.declareProtected(Permissions.View, '__bobo_traverse__')

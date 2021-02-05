@@ -16,6 +16,7 @@
 """
 
 from DateTime import DateTime
+from future.utils import raise_
 from six.moves import map
 import thread, threading
 from weakref import ref as weakref
@@ -499,8 +500,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
         pass
       else:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise ActivityPendingError, 'Sorry, pending activities prevent ' \
-                         +  'changing id at this current stage'
+          raise_(ActivityPendingError, 'Sorry, pending activities prevent ' \
+                         +  'changing id at this current stage')
 
       # Search for categories that have to be updated in sub objects.
       ob._recursiveSetActivityAfterTag(ob)

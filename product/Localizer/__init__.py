@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from future.utils import raise_
 import os.path
 
 # Import from Zope
@@ -44,7 +45,7 @@ def initialize(context):
         message = (
             "The Localizer product must be installed within the 'Products'"
             " folder with the name 'Localizer' (not '%s').") % filename
-        raise RuntimeError, message
+        raise_(RuntimeError, message)
 
     # XXX This code has been written by Cornel Nitu, it may be a solution to
     # upgrade instances.

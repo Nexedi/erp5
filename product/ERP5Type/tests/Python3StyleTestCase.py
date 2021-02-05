@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import tarfile
 import os
 from glob import glob
@@ -70,7 +71,7 @@ class Python3StyleTestCase(ERP5TypeTestCase):
     try:
         stdout = Popen(["2to3", "--fix", "raise", str(path)], stdout=PIPE).communicate()
     except OSError, e:
-        raise OSError, '%r\n%r' % (os.environ, e)
+        raise_(OSError, '%r\n%r' % (os.environ, e))
     if stdout[0]:
         error_list.append((path, stdout[0]))
     if error_list:

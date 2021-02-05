@@ -10,6 +10,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+from future.utils import raise_
 from Products.ERP5Type.Timeout import getPublisherDeadlineValue
 from ZPublisher import Publish
 from ZPublisher.Publish import (
@@ -84,7 +85,7 @@ def publish(request, module_name, after_list, debug=0,
                             cancel = ''
                             break
                 if cancel:
-                    raise Redirect, cancel
+                    raise_(Redirect, cancel)
 
             after_list[0]=bobo_after
             if debug_mode:

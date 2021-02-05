@@ -1,6 +1,7 @@
 '''
   return a list of slice items
 '''
+from future.utils import raise_
 translateString = context.Base_translateString
 
 # get the model the related model (usefull to get slice values). This script
@@ -45,8 +46,8 @@ if matrixbox :
             translateString('${contribution_share_title} (Amount or Percent)',
                             mapping=dict(contribution_share_title=category_item[0]))))
         else:
-          raise ValueError, "PaySheetModelLine_asCellRange: the two categories "\
-                "must could be only contribution_share and salary_range"
+          raise_(ValueError, "PaySheetModelLine_asCellRange: the two categories "\
+                "must could be only contribution_share and salary_range")
       cell_range.append(category_cell_range)
 
     cell_range = filter(lambda x: x != [], cell_range)

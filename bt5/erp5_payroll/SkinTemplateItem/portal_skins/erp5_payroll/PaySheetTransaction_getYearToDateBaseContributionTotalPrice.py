@@ -7,6 +7,7 @@
 # XXX-Aurel : this script is currently not working as paysheet transaction line/cell
 # are not in stock table due to the lack of source/destination definition
 
+from future.utils import raise_
 if paysheet is None:
     paysheet = context
 
@@ -26,7 +27,7 @@ base_contribution_uid_list = []
 for category in base_contribution_list:
   category_value = base_amount.restrictedTraverse(category)
   if category_value is None:
-    raise ValueError, 'Category "%s/%s" not found.' % (base_amount.getPath(), category)
+    raise_(ValueError, 'Category "%s/%s" not found.' % (base_amount.getPath(), category))
   base_contribution_uid_list.append(category_value.getUid())
 
 params = {

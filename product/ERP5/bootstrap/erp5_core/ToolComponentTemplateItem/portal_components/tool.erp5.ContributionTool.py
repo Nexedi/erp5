@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import cStringIO
 import re
 import urllib2, urllib
@@ -241,7 +242,7 @@ class ContributionTool(BaseTool):
       if document is not None:
         # document is already uploaded. So overrides file.
         if not _checkPermission(Permissions.ModifyPortalContent, document):
-          raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
+          raise_(Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId())
         document.edit(file=kw['file'])
         return document
     # Temp objects use the standard newContent from Folder

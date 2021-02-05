@@ -14,6 +14,7 @@
 #  The script must have proxy role manager
 #####################################################################################################
 
+from future.utils import raise_
 from ZODB.POSException import ConflictError
 from Products.ERP5Type.Message import Message
 
@@ -30,7 +31,7 @@ for allowed_portal_type in container.allowedContentTypes():
     break
 
 if portal_type_object is None:
-  raise ValueError, 'Disallowed subobject type: %s' % portal_type
+  raise_(ValueError, 'Disallowed subobject type: %s' % portal_type)
 else:
   # Default result
   success = 1

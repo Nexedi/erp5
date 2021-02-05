@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass
 from ZODB.POSException import ConflictError
@@ -147,7 +148,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       result = None
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
-        raise AttributeError, "%s is not in valid order key list" % order_id
+        raise_(AttributeError, "%s is not in valid order key list" % order_id)
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id in ('filename', 'file_name',):

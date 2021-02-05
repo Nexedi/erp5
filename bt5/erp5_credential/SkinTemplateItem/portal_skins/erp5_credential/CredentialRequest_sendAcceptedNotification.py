@@ -3,6 +3,7 @@
   Proxy: Assignee, Assignor, Member -- allow to send notification by mail.
 """
 
+from future.utils import raise_
 portal = context.getPortalObject()
 recipient = context.getDestinationDecisionValue(portal_type="Person")
 
@@ -16,7 +17,7 @@ notification_reference = 'credential_request-confirmation-%s' % notification_typ
 notification_message = portal.portal_notifications.getDocumentValue(reference=notification_reference, 
                                                                     language=recipient.getLanguage())
 if notification_message is None:
-  raise ValueError, 'Unable to found Notification Message with reference "%s".' % notification_reference
+  raise_(ValueError, 'Unable to found Notification Message with reference "%s".' % notification_reference)
 
 #Set notification mapping
 notification_mapping_dict = {'login_name': login}

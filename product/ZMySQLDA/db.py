@@ -84,6 +84,7 @@
 ##############################################################################
 
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
+from future.utils import raise_
 __version__='$Revision: 1.20 $'[11:-2]
 
 import os
@@ -97,9 +98,9 @@ MySQLdb_version_required = (0,9,2)
 
 _v = getattr(_mysql, 'version_info', (0,0,0))
 if _v < MySQLdb_version_required:
-    raise NotSupportedError, \
+    raise_(NotSupportedError, \
         "ZMySQLDA requires at least MySQLdb %s, %s found" % \
-        (MySQLdb_version_required, _v)
+        (MySQLdb_version_required, _v))
 
 from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
@@ -230,7 +231,7 @@ class DB(TM):
         if self._try_transactions == '-':
             transactional = 0
         elif not transactional and self._try_transactions == '+':
-            raise NotSupportedError, "transactions not supported by this server"
+            raise NotSupportedError("transactions not supported by this server")
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
 

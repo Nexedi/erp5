@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import warnings
 
 from AccessControl import ModuleSecurityInfo
@@ -525,7 +526,7 @@ def atTheEndOfPeriod(date, period):
     end = atTheEndOfPeriod(date, 'day')
     end = addToDate(end, day=(1-end.dow()) % 7)
   else:
-    raise NotImplementedError, 'Period "%s" not Handled yet' % period
+    raise_(NotImplementedError, 'Period "%s" not Handled yet' % period)
   return end
 
 def copyDate(date, year=None, month=None, day=None,

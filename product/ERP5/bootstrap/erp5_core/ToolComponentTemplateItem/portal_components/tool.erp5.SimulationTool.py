@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
@@ -196,7 +197,7 @@ class SimulationTool(BaseTool):
       if not as_text:
         prop_value = category_tool.getCategoryValue(prop)
         if prop_value is None:
-          raise ValueError, 'Category %s does not exists' % prop
+          raise_(ValueError, 'Category %s does not exists' % prop)
         property_uid_list.append(prop_value.getUid())
       else:
         property_uid_list.append(prop)
@@ -205,7 +206,7 @@ class SimulationTool(BaseTool):
         if not as_text:
           prop_value = category_tool.getCategoryValue(property_item)
           if prop_value is None:
-            raise ValueError, 'Category %s does not exists' % property_item
+            raise_(ValueError, 'Category %s does not exists' % property_item)
           property_uid_list.append(prop_value.getUid())
         else:
           property_uid_list.append(property_item)
@@ -217,7 +218,7 @@ class SimulationTool(BaseTool):
         if not as_text:
           prop_value = category_tool.getCategoryValue(property_item)
           if prop_value is None:
-            raise ValueError, 'Category %s does not exists' % property_item
+            raise_(ValueError, 'Category %s does not exists' % property_item)
           tmp_uid_list.append(prop_value.getUid())
         else:
           tmp_uid_list.append(property_item)
@@ -1142,7 +1143,7 @@ class SimulationTool(BaseTool):
     total_result = 0.0
     if len(result) > 0:
       if len(result) != 1:
-        raise ValueError, 'Sorry we must have only one'
+        raise ValueError('Sorry we must have only one')
       result = result[0]
 
       if hasattr(result, "converted_quantity"):
@@ -2584,8 +2585,7 @@ class SimulationTool(BaseTool):
     """
     # XXX For now, consider that from_date and to_date are required
     if (from_date is None) or (to_date is None):
-      raise NotImplementedError, \
-            "getAvailableTime does not managed yet None values"
+      raise NotImplementedError("getAvailableTime does not managed yet None values")
     portal = self.getPortalObject()
     # Calculate portal_type
     if not portal_type:

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from ply import lex, yacc
 import sys
 from cStringIO import StringIO
@@ -61,10 +62,10 @@ class lexer(object):
         LOG('lexer', 0, line)
 
   def t_error(self, t):
-    raise LexerError, 'ERROR: Invalid character %r' % (t.value[0], )
+    raise_(LexerError, 'ERROR: Invalid character %r' % (t.value[0], ))
 
   def p_error(self, p):
-    raise ParserError, 'Syntax error in input: %r' % (p, )
+    raise_(ParserError, 'Syntax error in input: %r' % (p, ))
 
   def input(self, string):
     self.lexer.input(string)

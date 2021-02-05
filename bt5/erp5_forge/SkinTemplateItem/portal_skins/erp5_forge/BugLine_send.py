@@ -1,3 +1,4 @@
+from future.utils import raise_
 if body is None:
   body = context.getTextContent() #XXX This does not support structured text format.
 
@@ -37,7 +38,7 @@ if to_url is None:
       else:
         to_url_list.append(email)
     else:
-      raise ValueError, 'Recipient %s has no defined email' % recipient
+      raise_(ValueError, 'Recipient %s has no defined email' % recipient)
 elif same_type(to_url, ''):
   to_url_list.append(to_url)
 

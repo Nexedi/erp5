@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from base64 import b16encode, b16decode
 from logging import getLogger
 from urlparse import urlparse
@@ -1036,11 +1037,11 @@ class SyncMLSubscription(XMLObject):
           else:
             result_list = query_method(**kw)
       else:
-        raise KeyError, 'This Subscriber %s provide no list method:%r'\
-          % (self.getPath(), list_method_id)
+        raise_(KeyError, 'This Subscriber %s provide no list method:%r'\
+          % (self.getPath(), list_method_id))
     else:
-      raise KeyError, 'This Subscriber %s provide no list method with id:%r'\
-        % (self.getPath(), list_method_id)
+      raise_(KeyError, 'This Subscriber %s provide no list method with id:%r'\
+        % (self.getPath(), list_method_id))
     return result_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'generateNewSessionId')
@@ -1107,7 +1108,7 @@ class SyncMLSubscription(XMLObject):
         if id == document.getId():
           return signature
     else: # XXX-Aurel : maybe none is expected # pylint: disable=useless-else-on-loop
-      raise KeyError, id
+      raise_(KeyError, id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSignatureFromGid')

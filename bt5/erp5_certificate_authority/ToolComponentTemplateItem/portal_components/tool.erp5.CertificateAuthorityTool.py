@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import glob, os, subprocess, sys
 import Products.ERP5
 
@@ -229,7 +230,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        raise_(e[0], e[1], e[2])
     finally:
       self._unlockCertificateAuthority()
 
@@ -272,7 +273,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        raise_(e[0], e[1], e[2])
     finally:
       self._unlockCertificateAuthority()
 

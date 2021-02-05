@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import Acquisition
 import traceback
 from ZODB.POSException import ConflictError
@@ -52,8 +53,8 @@ class ZSQLBrain(Acquisition.Implicit):
   def getObject(self, REQUEST=None):
     """Try to return the object for this record"""
     if 'path' not in dir(self) and 'PATH' not in dir(self):
-      raise ValueError, "Unable to getObject from ZSQLBrain if ZSQL Method "\
-                  "does not retrieves the `path` column from catalog table."
+      raise_(ValueError, "Unable to getObject from ZSQLBrain if ZSQL Method "\
+                  "does not retrieves the `path` column from catalog table.")
     obj = self.aq_parent.unrestrictedTraverse(self.getPath())
     if obj is None:
       if REQUEST is None:

@@ -1,3 +1,4 @@
+from future.utils import raise_
 resource_uid = context.getResourceUid()
 
 # XXX Currently sale trade condition is hardcoded by specialise category and
@@ -21,4 +22,4 @@ for sale_trade_condition in sale_trade_condition_list:
     if periodicity_line.getResourceUid()==resource_uid:
       return [periodicity_line]
 
-raise RuntimeError, 'Cannot find an appropriate Periodicity Line for the movement: %s' % context.getRelativeUrl()
+raise_(RuntimeError, 'Cannot find an appropriate Periodicity Line for the movement: %s' % context.getRelativeUrl())

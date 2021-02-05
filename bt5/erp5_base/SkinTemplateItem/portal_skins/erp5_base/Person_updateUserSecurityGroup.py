@@ -2,6 +2,7 @@
 # XXX This script could be deleted after the full transition to PAS (don't forget to update assignment workflow too)
 
 # user_folder: NuxUserGroups or PluggableAuthService at the root of the ERP5Site.
+from future.utils import raise_
 user_folder = context.portal_url.getPortalObject()['acl_users']
 
 # This script can be bypassed in the context of PAS use because user groups are
@@ -21,7 +22,7 @@ user_name = context.getId()
 # XXX Note : sometimes, you don't want to update security for users who don't belong to your organisation.
 #            You can then add code in the assignment_workflow script to skip those (if role != internal for instance)
 if user_name not in user_folder.getUserNames():
-  raise RuntimeError, "Error: Zope user '%s' doesn't exist in the acl_users folder"  % (user_name)
+  raise_(RuntimeError, "Error: Zope user '%s' doesn't exist in the acl_users folder"  % (user_name))
 
 category_list = []
 security_group_list = []

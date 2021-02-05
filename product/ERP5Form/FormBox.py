@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -213,7 +214,7 @@ class FormBoxValidator(Validator.Validator):
         REQUEST.set('field_errors', current_field_errors)
         getattr(here, formbox_target_id).validate_all_to_request(REQUEST, key_prefix=key)
       else:
-        raise NotImplementedError, result_type
+        raise_(NotImplementedError, result_type)
 
 FormBoxWidgetInstance = FormBoxWidget()
 FormBoxValidatorInstance = FormBoxValidator()

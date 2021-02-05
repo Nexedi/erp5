@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -648,7 +649,7 @@ class ProxyField(ZMIField):
       if proxied_field.__class__ == ProxyField:
         field = proxied_field
       elif proxied_field is None:
-        raise ValueError, "Can't find the template field of %s" % self.id
+        raise_(ValueError, "Can't find the template field of %s" % self.id)
       else:
         tales = proxied_field.get_tales(id)
         if tales:

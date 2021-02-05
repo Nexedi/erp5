@@ -1,3 +1,4 @@
+from future.utils import raise_
 from DateTime import DateTime
 MESSAGE_TEMPLATE = '''\
 msgid %(english)s
@@ -61,7 +62,7 @@ for i in catalog(portal_type='Glossary Term',
 
   if translated_title:
     if not english_title:
-      raise ValueError, 'Title of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_title)
+      raise_(ValueError, 'Title of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_title))
     if translated_title!=english_title:
       print formatMessage(english=formatString(english_title),
                           translation=formatString(translated_title),
@@ -69,7 +70,7 @@ for i in catalog(portal_type='Glossary Term',
 
   if translated_description:
     if not english_description:
-      raise ValueError, 'Description of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_description)
+      raise_(ValueError, 'Description of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_description))
 
     if translated_description!=english_description:
       print formatMessage(english=formatString(english_description),

@@ -5,7 +5,8 @@ destination_decision_type - List of portal type required in destination decision
 Proxy:
 Assignee -- allow to check credential informations"""
 
+from future.utils import raise_
 for portal_type in destination_decision_type:
   destination = context.getDestinationDecisionValue(portal_type=portal_type)
   if destination is None:
-    raise ValueError, '%s request must  be in relation with a %s' % (context.getPortalType(),portal_type)
+    raise_(ValueError, '%s request must  be in relation with a %s' % (context.getPortalType(),portal_type))

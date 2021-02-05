@@ -1,3 +1,4 @@
+from future.utils import raise_
 listbox_line_list = list(listbox)
 listbox_line_list.sort(key=lambda x: (x['choice'], x['listbox_key']))
 
@@ -8,7 +9,7 @@ for listbox_line in listbox_line_list:
   if not choice:
     continue
   elif len(choice) > 1:
-    raise ValueError, 'Unknown choice %s' % choice
+    raise_(ValueError, 'Unknown choice %s' % choice)
   else:
     choice = choice[0]
     if choice.startswith('0_'):
@@ -29,6 +30,6 @@ for listbox_line in listbox_line_list:
       # skin_folder.manage_addProduct['ERP5Form'].addERP5Form(id=form_id, title='')
       # raise NotImplementedError
     else:
-      raise ValueError, 'Unknown choice %s' % choice
+      raise_(ValueError, 'Unknown choice %s' % choice)
 
 context.Base_redirect()

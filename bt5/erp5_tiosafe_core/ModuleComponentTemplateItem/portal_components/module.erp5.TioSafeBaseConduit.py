@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from erp5.component.module.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST, \
      XUPDATE_DEL, XUPDATE_UPDATE
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
@@ -160,11 +161,11 @@ class TioSafeBaseConduit(ERP5Conduit):
       else:
         related_object_list = [x.getObject() for x in sync_object.Base_getRelatedObjectList()]
       if len(related_object_list) != 1:
-        raise ValueError, "Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list)
+        raise_(ValueError, "Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list))
       integration_site = related_object_list[0].getParentValue()
       if integration_site.getPortalType() != "Integration Site":
-        raise ValueError, "Did not get an Integration Site object instead %s : %s" %(integration_site.getPortalType(),
-                                                                                     integration_site.getPath())
+        raise_(ValueError, "Did not get an Integration Site object instead %s : %s" %(integration_site.getPortalType(),
+                                                                                     integration_site.getPath()))
       self.integration_site = integration_site
     return self.integration_site
 
@@ -187,7 +188,7 @@ class TioSafeBaseConduit(ERP5Conduit):
       elif synchronization_type == "subscription":
         result_list.append(module.getDestinationSectionValue())
       else:
-        raise ValueError, 'Unknown type %s' %(synchronization_type,)
+        raise_(ValueError, 'Unknown type %s' %(synchronization_type,))
 
     return result_list
 

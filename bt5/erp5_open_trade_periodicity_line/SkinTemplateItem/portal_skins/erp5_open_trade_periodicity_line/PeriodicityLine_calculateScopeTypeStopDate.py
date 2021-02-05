@@ -1,3 +1,4 @@
+from future.utils import raise_
 if scope_type=='until_the_next_period':
   return context.getNextPeriodicalDate(start_date)
 elif scope_type=='until_the_end_of_month':
@@ -28,4 +29,4 @@ elif scope_type=='until_the_end_of_month':
     return DateTime(year, month, day)
   return getEndOfMonth(start_date)
 
-raise ValueError, 'Unknown scope type: %s' % scope_type
+raise_(ValueError, 'Unknown scope type: %s' % scope_type)

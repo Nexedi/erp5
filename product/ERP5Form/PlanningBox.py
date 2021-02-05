@@ -38,6 +38,7 @@
     # fit the constraints.
 
 # Class monitoring access security control
+from future.utils import raise_
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Globals import InitializeClass
 
@@ -1777,14 +1778,14 @@ class BasicGroup:
         try:
           block_begin = obj.getProperty(object_property_begin, _marker)
           if block_begin is _marker:
-            raise AttributeError, object_property_begin
+            raise_(AttributeError, object_property_begin)
         except AttributeError:
           block_begin = getattr(obj, object_property_begin, None)
 
         try:
           block_end = obj.getProperty(object_property_end, _marker)
           if block_end is _marker:
-            raise AttributeError, object_property_end
+            raise_(AttributeError, object_property_end)
         except AttributeError:
           block_end = getattr(obj, object_property_end, None)
 

@@ -8,6 +8,7 @@ Follow_up is setted up only if context is not Entity.
 
 User is redirected on Event to fill in message.
 """
+from future.utils import raise_
 portal = context.getPortalObject()
 portal_entity_type_list = portal.getPortalEntityTypeList()
 
@@ -47,7 +48,7 @@ elif direction == 'incoming':
   destination_url = destination or person
   destination_section_url = organisation
 else:
-  raise NotImplementedError, 'The specified direction is not handled: %r' % (direction,)
+  raise_(NotImplementedError, 'The specified direction is not handled: %r' % (direction,))
 
 event_kw = {
   'portal_type' : portal_type,

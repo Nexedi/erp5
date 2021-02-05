@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products import ERP5Security
 from AccessControl.SecurityManagement import newSecurityManager
@@ -50,7 +51,7 @@ class SecurePaymentTool(BaseTool):
       if len(result) > 0:
         return result[0].getObject().__of__(self)
 
-    raise ValueError, "Impossible to find a payment service with '%s' reference" % service_reference
+    raise_(ValueError, "Impossible to find a payment service with '%s' reference" % service_reference)
 
   def _loginAsSuperUser(self):
     user = getSecurityManager().getUser()

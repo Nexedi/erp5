@@ -3,6 +3,7 @@
 
 $Id$
 """
+from future.utils import raise_
 import unittest
 
 
@@ -131,11 +132,11 @@ class ZuiteTests( unittest.TestCase ):
 
         for name in names:
             if name not in contents:
-                raise AssertionError, 'Extra name in archive: %s' % name
+                raise_(AssertionError, 'Extra name in archive: %s' % name)
 
         for name in contents:
             if name not in names:
-                raise AssertionError, 'Missing name in archive: %s' % name
+                raise_(AssertionError, 'Missing name in archive: %s' % name)
 
     def _verifyManifest( self, bits, name, contents ):
 

@@ -58,6 +58,7 @@
 ############################################################################
 #__version__='$Revision: 1.14.10.2 $'[11:-2]
 
+from future.utils import raise_
 from DocumentTemplate.DT_Util import ParseError, parse_params, name_param
 from string import find, split, join, atoi, atof
 StringType=type('')
@@ -77,10 +78,10 @@ class LDIFVar:
 
         self.args=args
         if not args.has_key('type'):
-            raise ParseError, ('the type attribute is required', 'dtvar')
+            raise ParseError('the type attribute is required', 'dtvar')
         t=args['type']
         if not valid_type(t):
-            raise ParseError, ('invalid type, %s' % t, 'dtvar')
+            raise ParseError('invalid type, %s' % t, 'dtvar')
 
     def render(self, md):
         name=self.__name__
@@ -95,7 +96,7 @@ class LDIFVar:
                 return
             if type(expr) is not type(''):
                 raise
-            raise ValueError, 'Missing input variable, <em>%s</em>' % name
+            raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
 
         if v is None:
             return ''
@@ -110,7 +111,7 @@ class LDIFVar:
             except:
                 if not v and args.has_key('optional') and args['optional']:
                     return
-                raise ValueError, (
+                raise ValueError(
                     'Invalid integer value for <em>%s</em>' % name)
         elif t=='float':
             try:
@@ -122,7 +123,7 @@ class LDIFVar:
             except:
                 if not v and args.has_key('optional') and args['optional']:
                     return
-                raise ValueError, (
+                raise ValueError(
                     'Invalid floating-point value for <em>%s</em>' % name)
 
         else:
@@ -132,7 +133,7 @@ class LDIFVar:
                 if args.has_key('optional') and args['optional']:
                     return
                 else:
-                    raise ValueError, (
+                    raise ValueError(
                         'Invalid empty string value for <em>%s</em>' % name)
 
         return v
@@ -152,13 +153,13 @@ class LDIFLine:
 
         self.args=args
         if not args.has_key('type'):
-            raise ParseError, ('the type attribute is required', 'ldifattr')
+            raise ParseError('the type attribute is required', 'ldifattr')
         t=args['type']
         if not valid_type(t):
-            raise ParseError, ('invalid type, %s' % t, 'dtvar')
+            raise ParseError('invalid type, %s' % t, 'dtvar')
 
         if not args.has_key('attr'):
-            raise ParseError, ('the attr attribute is required', 'ldifattr')
+            raise ParseError('the attr attribute is required', 'ldifattr')
         a=args['attr']
 
     def render(self, md):
@@ -176,13 +177,13 @@ class LDIFLine:
                 return default
             if type(expr) is not type(''):
                 raise
-            raise ValueError, 'Missing input variable, <em>%s</em>' % name
+            raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
 
         if v is None:
             if args.has_key('optional') and args['optional']:
                 return default
             else:
-                raise ValueError, 'Missing input variable, <em>%s</em>' % name
+                raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
         if a in ['',None]:
             return default
 
@@ -196,7 +197,7 @@ class LDIFLine:
             except:
                 if not v and args.has_key('optional') and args['optional']:
                     return default
-                raise ValueError, (
+                raise ValueError(
                     'Invalid integer value for <em>%s</em>' % name)
         elif t=='float':
             try:
@@ -208,7 +209,7 @@ class LDIFLine:
             except:
                 if not v and args.has_key('optional') and args['optional']:
                     return default
-                raise ValueError, (
+                raise ValueError(
                     'Invalid floating-point value for <em>%s</em>' % name)
 
         else:
@@ -218,7 +219,7 @@ class LDIFLine:
                 if args.has_key('optional') and args['optional']:
                     return default
                 else:
-                    raise ValueError, (
+                    raise ValueError(
                         'Invalid empty string value for <em>%s</em>' % name)
 
         return '%s: %s' % (a, v)

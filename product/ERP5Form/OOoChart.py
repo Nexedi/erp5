@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from ZTUtils import make_query
 from Products.Formulator import Widget
 from Products.Formulator import Widget, Validator
@@ -495,7 +496,7 @@ class OOoChartWidget(Widget.Widget):
           </div>''' % (url,
                        UrlIconPdf)
       else:
-        raise NotImplementedError, 'Format: %s not handled' % format
+        raise_(NotImplementedError, 'Format: %s not handled' % format)
 
     extra_context = self.getArgumentDict(field, REQUEST)
 

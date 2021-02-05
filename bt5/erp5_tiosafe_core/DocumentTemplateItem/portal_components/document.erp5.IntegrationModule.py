@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -88,7 +89,7 @@ class IntegrationModule(XMLObject):
         else:
           return self.getObjectList[item]
     except ValueError, msg:
-      raise KeyError, msg
+      raise_(KeyError, msg)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGIDFor')

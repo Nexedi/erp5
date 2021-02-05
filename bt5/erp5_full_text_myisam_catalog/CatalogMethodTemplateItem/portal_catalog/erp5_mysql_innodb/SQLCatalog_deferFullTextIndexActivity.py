@@ -1,3 +1,4 @@
+from future.utils import raise_
 from Products.ERP5Type.Utils import UpperCase
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
@@ -39,7 +40,7 @@ if len(failed_path_list):
     context.activate(activity='SQLQueue', priority=5).SQLCatalog_deferFullTextIndexActivity(path_list=failed_path_list)
   else:
     # if all objects are failed one, just raise an exception to avoid infinite loop.
-    raise AttributeError, 'exception %r raised in indexing %r' % (exception, failed_path_list)
+    raise_(AttributeError, 'exception %r raised in indexing %r' % (exception, failed_path_list))
 
 if parameter_dict:
   return method(**parameter_dict)

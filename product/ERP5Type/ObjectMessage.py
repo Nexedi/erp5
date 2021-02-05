@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import zope.interface
 
 from Products.PythonScripts.Utility import allow_class
@@ -77,13 +78,13 @@ class ObjectMessage:
     Wrap the message with the object
     """
     if name.startswith('__') :
-      raise AttributeError, name
+      raise_(AttributeError, name)
     else:
       obj = self.getObject()
       if obj is not None:
         return getattr(obj, name)
       else:
-        raise AttributeError, name
+        raise_(AttributeError, name)
 
   def getObject(self):
     """

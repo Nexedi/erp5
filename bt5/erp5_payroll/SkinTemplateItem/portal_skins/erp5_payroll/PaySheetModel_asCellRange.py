@@ -4,12 +4,13 @@
   corresponding to childs of the selection of the base category in the view
 '''
 
+from future.utils import raise_
 category_list = []
 
 for category in context.getVariationSettingsCategoryList():
   category_name = category.replace('salary_range/','',1)
   if context.portal_categories.getCategoryValue(category) is None:
-    raise ValueError, 'no category %s' % category
+    raise_(ValueError, 'no category %s' % category)
   else:
     if matrixbox:
       category_list.extend(context.portal_categories.getCategoryValue(category).getCategoryChildLogicalPathItemList(checked_permission='View', is_right_display=1, base=1)[1:])

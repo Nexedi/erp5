@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
+from future.utils import raise_
 from base64 import b16encode
 from copy import deepcopy
 
@@ -106,7 +107,7 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
             if tag in node_dict:
               node_dict[tag](document=sub_object, xml=node, **kw)
             else:
-              raise ValueError, "This is an unknown sub-element %s on %s" %(tag, sub_object.getPath())
+              raise_(ValueError, "This is an unknown sub-element %s on %s" %(tag, sub_object.getPath()))
           if tag == 'currency':
             link_object = object.portal_catalog.getResultValue(
                 portal_type='Currency',
@@ -285,7 +286,7 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
               break
         # in the worse case save the line with the unknown product
         if link_object is None:
-          raise ValueError, "Impossible to find related resource for gid %s" %(link_gid)
+          raise_(ValueError, "Impossible to find related resource for gid %s" %(link_gid))
 
         # set the resource in the dict
         movement_dict_value[tag] = link_object

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 import warnings
 import zope.interface
 
@@ -114,7 +115,7 @@ class IdTool(BaseTool):
       Generate the next id in the sequence of ids of a particular group
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid id_group' % (repr(id_group), )
+      raise_(ValueError, '%s is not a valid id_group' % (repr(id_group), ))
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
@@ -174,7 +175,7 @@ class IdTool(BaseTool):
       Generate a list of next ids in the sequence of ids of a particular group
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid id_group' % (repr(id_group), )
+      raise_(ValueError, '%s is not a valid id_group' % (repr(id_group), ))
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
@@ -216,9 +217,9 @@ class IdTool(BaseTool):
           query = getattr(portal_catalog, 'z_portal_ids_generate_id')
           commit = getattr(portal_catalog, 'z_portal_ids_commit')
         if None in (query, commit):
-          raise AttributeError, 'Error while generating Id: ' \
+          raise_(AttributeError, 'Error while generating Id: ' \
             'idTool_zGenerateId and/or idTool_zCommit could not ' \
-            'be found.'
+            'be found.')
         try:
           result = query(id_group=id_group, id_count=id_count, default=default)
         finally:
@@ -309,9 +310,9 @@ class IdTool(BaseTool):
       portal_catalog = getattr(self, 'portal_catalog').getSQLCatalog()
       query = getattr(portal_catalog, 'z_portal_ids_get_last_id')
     if query is None:
-      raise AttributeError, 'Error while getting last Id: ' \
+      raise_(AttributeError, 'Error while getting last Id: ' \
             'IdTool_zGetLastId could not ' \
-            'be found.'
+            'be found.')
     result = query(id_group=id_group)
     if len(result):
       try:

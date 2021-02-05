@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from erp5.component.document.MovementGroup import MovementGroup
 
 class CausalityMovementGroup(MovementGroup):
@@ -58,7 +59,7 @@ class CausalityMovementGroup(MovementGroup):
         movement = movement.getParentValue().getParentValue()
       explanation_value = movement.getExplanationValue()
       if explanation_value is None:
-        raise ValueError, 'No explanation for movement %s' % movement.getPath()
+        raise_(ValueError, 'No explanation for movement %s' % movement.getPath())
     else:
       # This is a temp movement
       explanation_value = None

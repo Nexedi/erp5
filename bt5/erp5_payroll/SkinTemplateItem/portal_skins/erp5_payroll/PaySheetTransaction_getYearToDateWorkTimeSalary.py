@@ -1,3 +1,4 @@
+from future.utils import raise_
 portal = context.getPortalObject()
 accounting_module = portal.accounting_module
 
@@ -22,8 +23,8 @@ for paysheet in paysheet_list:
   if annotation_line is None:
     annotation_line = getattr(paysheet, 'work_time_annotation_line', None)
   if annotation_line is None:
-    raise ValueError, "Paysheet %s has no Annotation Line with reference work_time_annotation_line"\
-                             % paysheet.getRelativeUrl()
+    raise_(ValueError, "Paysheet %s has no Annotation Line with reference work_time_annotation_line"\
+                             % paysheet.getRelativeUrl())
   nb_heures = annotation_line.getQuantity()
   yearly_work_time += nb_heures
 

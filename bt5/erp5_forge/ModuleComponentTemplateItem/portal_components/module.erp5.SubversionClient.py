@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Acquisition import Implicit
 
 import time
@@ -122,7 +123,7 @@ try:
     def __call__(self):
       current_time = time.time()
       if current_time - self.client.creation_time > self.client.getTimeout():
-        raise SubversionTimeoutError, 'too long transaction'
+        raise SubversionTimeoutError('too long transaction')
         #return True
       return False
 
@@ -355,7 +356,7 @@ try:
 
     def info(self, path):
       if not os.path.exists(path):
-        raise ValueError, "Repository %s does not exist" % path
+        raise_(ValueError, "Repository %s does not exist" % path)
       # symlinks are not well supported by pysvn
       if os.path.islink(path):
         path = os.path.realpath(path)
@@ -368,7 +369,7 @@ try:
         else:
           raise error
       if entry is None:
-        raise ValueError, "Could not open SVN repository %s" % path
+        raise_(ValueError, "Could not open SVN repository %s" % path)
       # transform entry to dict to make it more usable in zope
       members_tuple = ('url', 'uuid', 'revision', 'kind', \
       'commit_author', 'commit_revision', 'commit_time',)
@@ -413,4 +414,4 @@ except ImportError:
       'could not import pysvn; until pysvn is installed properly,'
       ' this tool will not work.', error=True)
   def newSubversionClient(container, **kw):
-    raise SubversionInstallationError, 'pysvn library is not installed'
+    raise SubversionInstallationError('pysvn library is not installed')

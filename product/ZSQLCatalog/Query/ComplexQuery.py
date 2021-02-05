@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from future.utils import raise_
 from Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.query import IQuery
@@ -158,7 +159,7 @@ class ComplexQuery(Query):
         assert len(search_text_list) == 1
         result = 'NOT %s' % (search_text_list[0], )
       else:
-        raise ValueError, 'Unknown operator %r' % (self.logical_operator, )
+        raise_(ValueError, 'Unknown operator %r' % (self.logical_operator, ))
       if column not in (None, ''):
         if self_is_composed:
           result = '(%s)' % (result, )

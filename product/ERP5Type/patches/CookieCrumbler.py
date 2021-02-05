@@ -25,6 +25,7 @@ Patch CookieCrumbler to prevent came_from to appear in the URL
 when ERP5 runs in "require_referer" mode.
 """
 
+from future.utils import raise_
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import InitializeClass
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
@@ -286,7 +287,7 @@ if 1:
         # Redirect if desired.
         url = self.getUnauthorizedURL()
         if url is not None:
-            raise Redirect, url
+            raise_(Redirect, url)
         # Fall through to the standard unauthorized() call.
         resp.unauthorized()
 

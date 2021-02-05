@@ -1,3 +1,4 @@
+from future.utils import raise_
 import difflib
 import zipfile
 import os
@@ -45,7 +46,7 @@ def parseTestSuiteResults(file_handler):
   # when called with a string argument, zipfile.ZipFile will open a local file.
   # we don't want this to happen
   if isinstance(file_handler, basestring):
-    raise Unauthorized, file_handler
+    raise_(Unauthorized, file_handler)
   zf = zipfile.ZipFile(file_handler)
 
   result = {}
