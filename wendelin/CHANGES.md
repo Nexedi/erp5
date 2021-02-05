@@ -1,7 +1,7 @@
 Releases
 ===
 
-1.0.162, 15.09.2010
+1.0.162, 15.09.2020
 ---
   - Data Lake uses same unified ingestion model as other agents
   - default storage policy switched from "append as string" to MsgPack format
