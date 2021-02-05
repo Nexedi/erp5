@@ -135,6 +135,17 @@
     .declareMethod('getTranslationList', function (string_list) {
       return promiseTranslateList(this, string_list);
     })
+    .declareMethod('getTranslationDict', function (string_list) {
+      return new RSVP.Queue(promiseTranslateList(this, string_list))
+        .push(function (translation_list) {
+          var i,
+            translation_dict = {};
+          for (i = 0; i < string_list.length; i += 1) {
+            translation_dict[string_list[i]] = translation_list[i];
+          }
+          return translation_dict;
+        });
+    })
     .declareMethod('translate', function (string) {
       return promiseTranslateList(this, [string], true);
     })
