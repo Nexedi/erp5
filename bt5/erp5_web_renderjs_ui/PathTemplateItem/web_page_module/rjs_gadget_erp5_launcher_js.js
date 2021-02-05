@@ -585,6 +585,11 @@
     ) {
       return route(this, 'router', 'getCommandUrlForList', param_list);
     })
+    .allowPublicAcquisition("getUrlForDict", function getUrlForDict(
+      param_list
+    ) {
+      return route(this, 'router', 'getCommandUrlForDict', param_list);
+    })
 
     .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
       initHeaderOptions(this);
