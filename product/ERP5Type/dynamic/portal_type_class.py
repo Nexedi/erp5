@@ -468,6 +468,15 @@ def synchronizeDynamicModules(context, force=False):
         except AttributeError:
           pass # no Activity Tool yet
 
+        for tool_id in ("portal_properties", "portal_uidannotation",
+                        "portal_uidgenerator", "portal_uidhandler"):
+          if portal.hasObject(tool_id):
+            portal._delObject(tool_id, suppress_events=True)
+            migrate = True
+            if tool_id == 'portal_properties':
+              portal.portal_skins.erp5_xhtml_style.breadcrumbs.write(
+                'return []')
+
         if migrate:
           portal.migrateToPortalTypeClass()
           portal.portal_skins.changeSkin(None)

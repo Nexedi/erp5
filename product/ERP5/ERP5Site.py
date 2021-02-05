@@ -15,6 +15,8 @@
   Portal class
 """
 
+from DateTime import DateTime
+from six.moves import map
 import thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
@@ -25,7 +27,7 @@ from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
 from ZPublisher.BaseRequest import RequestContainer
 from AccessControl import ClassSecurityInfo
-from Products.CMFDefault.Portal import CMFSite
+from Products.CMFCore.PortalObject import PortalObjectBase
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base
@@ -36,7 +38,8 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.TransactionalVariable import \
+  getTransactionalVariable, TransactionalResource
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
@@ -227,8 +230,9 @@ class _site(threading.local):
 
 getSite, setSite = _site()
 
+_missing_tools_registered = None
 
-class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
+class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
   of a new ERP5.  It should not assist in the functionality at all.
@@ -268,6 +272,15 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def __init__(self, id):
+    PortalObjectBase.__init__(self, id)
+    self.creation_date = DateTime()
+
+  security.declarePrivate('reindexObject')
+  def reindexObject(self, idxs=[]):
+    """from Products.CMFDefault.Portal"""
+    pass
 
   security.declarePublic('isSubtreeIndexable')
   def isSubtreeIndexable(self):
@@ -328,7 +341,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     from Products.Localizer.MessageCatalog import (
       message_catalog_alias_sources
     )
-    sm = self.getSiteManager()
+    sm = self._components
     for message_catalog in self.Localizer.objectValues():
       sm.registerUtility(message_catalog,
                          provided=ITranslationDomain,
@@ -338,21 +351,31 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
                            provided=ITranslationDomain,
                            name=alias)
 
-  def _doInitialSiteManagerMigration(self):
-    self._createInitialSiteManager()
-    # Now that we have a sitemanager, se can do things that require
-    # one. Including setting up ZTK style utilities and adapters. We
-    # can even call setSite(self), as long as we roll back that later,
-    # since we are actually in the middle of a setSite() call.
-    from zope.site.hooks import getSite, setSite
-    old_site = getSite()
-    try:
-      setSite(self)
-      # setSite(self) is not really necessary for the migration below, but
-      # could be needed by other migrations to be added here.
-      self._doTranslationDomainRegistration()
-    finally:
-      setSite(old_site)
+  _registry_tool_id_list = 'caching_policy_manager',
+  def _registerMissingTools(self):
+    tool_id_list = ("portal_skins", "portal_types", "portal_membership",
+                    "portal_url", "portal_workflow")
+    if (None in map(self.get, tool_id_list) or not
+        TransactionalResource.registerOnce(__name__, 'site_manager', self.id)):
+      return
+    self._registerTools(tool_id_list + self._registry_tool_id_list)
+    def markRegistered(txn):
+      global _missing_tools_registered
+      _missing_tools_registered = self.id
+    TransactionalResource(tpc_finish=markRegistered)
+
+  def _registerTools(self, tool_id_list):
+    from Products.CMFCore import interfaces, utils
+    sm = self._components
+    for tool_id in tool_id_list:
+      tool = self.get(tool_id, None)
+      if tool:
+        tool_interface = utils._tool_interface_registry.get(tool_id)
+        if tool_interface is not None:
+          # Note: already registered tools will be either:
+          # - updated
+          # - registered again after being unregistered
+          sm.registerUtility(aq_base(tool), tool_interface)
 
   # backward compatibility auto-migration
   def getSiteManager(self):
@@ -369,14 +392,29 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     # OFS.ObjectManager.ObjectManager.getSiteManager(), and is exactly
     # as cheap as it is on the case that self._components is already
     # set.
+
+    if self.id == _missing_tools_registered:
+      return self._components # fast path
     _components = self._components
-    if _components is not None:
-      return _components
-    # This method below can take as (reasonably) long as it pleases
-    # since it will not be run ever again
-    self._doInitialSiteManagerMigration()
-    assert self._components is not None, 'Migration Failed!'
-    return self._components
+    if _components is None:
+      # only create _components
+      self._createInitialSiteManager()
+      _components = self._components
+      # Now that we have a sitemanager, se can do things that require
+      # one. Including setting up ZTK style utilities and adapters. We
+      # can even call setSite(self), as long as we roll back that later,
+      # since we are actually in the middle of a setSite() call.
+      from zope.site.hooks import getSite, setSite
+      old_site = getSite()
+      try:
+        setSite(self)
+        self._doTranslationDomainRegistration()
+        self._registerMissingTools()
+      finally:
+        setSite(old_site)
+    else:
+      self._registerMissingTools()
+    return _components
 
   security.declareProtected(Permissions.View, 'view')
   def view(self):
@@ -387,7 +425,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     return self.index_html()
 
   def __of__(self, parent):
-    self = CMFSite.__of__(self, parent)
+    self = PortalObjectBase.__of__(self, parent)
     # Use a transactional variable for performance reason,
     # since ERP5Site.__of__ is called quite often.
     tv = getTransactionalVariable()
@@ -471,7 +509,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
                                        path_item_list=path_item_list,
                                        new_id=new_id)
     # Rename the object
-    return CMFSite.manage_renameObject(self, id=id, new_id=new_id,
+    return PortalObjectBase.manage_renameObject(self, id=id, new_id=new_id,
                                        REQUEST=REQUEST)
 
 
@@ -589,7 +627,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
 
   # _getProperty is missing, but since there are no protected properties
   # on an ERP5 Site, we can just use getProperty instead.
-  _getProperty = CMFSite.getProperty
+  _getProperty = PortalObjectBase.getProperty
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
   def getUid(self):
@@ -703,7 +741,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
                              email_from_address, email_from_name,
                              validate_email
                              ):
-    CMFSite.setupDefaultProperties(self, p, title, description,
+    PortalObjectBase.setupDefaultProperties(self, p, title, description,
                            email_from_address, email_from_name,
                            validate_email)
 
@@ -1863,7 +1901,7 @@ factory_type_information = () # No original CMF portal_types installed by defaul
 
 class PortalGenerator:
 
-    klass = CMFSite
+    klass = PortalObjectBase
 
     def setupTools(self, p):
         """Set up initial tools"""
@@ -1872,28 +1910,12 @@ class PortalGenerator:
         addCMFCoreTool('CMF Actions Tool', None)
         addCMFCoreTool('CMF Catalog', None)
         addCMFCoreTool('CMF Member Data Tool', None)
+        addCMFCoreTool('CMF Membership Tool', None)
+        addCMFCoreTool('CMF Registration Tool', None)
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
         addCMFCoreTool('CMF Workflow Tool', None)
-
-        addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
-        addCMFDefaultTool('Default Discussion Tool', None)
-        addCMFDefaultTool('Default Membership Tool', None)
-        addCMFDefaultTool('Default Registration Tool', None)
-        addCMFDefaultTool('Default Properties Tool', None)
-        addCMFDefaultTool('Default Metadata Tool', None)
-        addCMFDefaultTool('Default Syndication Tool', None)
-
-        # try to install CMFUid without raising exceptions if not available
-        try:
-            addCMFUidTool = p.manage_addProduct['CMFUid'].manage_addTool
-        except AttributeError:
-            pass
-        else:
-            addCMFUidTool('Unique Id Annotation Tool', None)
-            addCMFUidTool('Unique Id Generator Tool', None)
-            addCMFUidTool('Unique Id Handler Tool', None)
 
     def setupMailHost(self, p):
         p.manage_addProduct['MailHost'].manage_addMailHost(
@@ -2194,8 +2216,6 @@ class ERP5Generator(PortalGenerator):
                            'manage_members'))
     # actions tool
     removeActionsFromTool(p.portal_actions, ('folderContents',))
-    # properties tool
-    removeActionsFromTool(p.portal_properties, ('configPortal',))
     # remove unused action providers
     for i in ('portal_registration', 'portal_discussion', 'portal_syndication'):
       p.portal_actions.deleteActionProvider(i)
@@ -2206,35 +2226,14 @@ class ERP5Generator(PortalGenerator):
     """
     pass
 
-  # this lists only the skin layers of Products.CMFDefault we are actually
-  # interested in.
-  CMFDEFAULT_FOLDER_LIST = ['Images']
-  def addCMFDefaultDirectoryViews(self, p):
-    """Semi-manually create DirectoryViews since CMFDefault 2.X no longer
-    registers the "skins" directory, only its subdirectories, making it
-    unusable with Products.CMFCore.DirectoryView.addDirectoryViews."""
-    from Products.CMFCore.DirectoryView import createDirectoryView, _generateKey
-    import Products.CMFDefault
-
-    ps = p.portal_skins
-    # get the layer directories actually present
-    for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
-      reg_key = _generateKey(Products.CMFDefault.__name__,
-                             'skins/' + cmfdefault_skin_layer)
-      createDirectoryView(ps, reg_key)
-
   def setupDefaultSkins(self, p):
     ps = p.portal_skins
-    self.addCMFDefaultDirectoryViews(p)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
     ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
     # Set the 'custom' layer a high priority, so it remains the first
     #   layer when installing new business templates.
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
-    skin_folder_list = [ 'custom'
-                       , 'external_method'
-                       ] + self.CMFDEFAULT_FOLDER_LIST
-    skin_folders = ', '.join(skin_folder_list)
+    skin_folders = ', '.join(('custom', 'external_method'))
     ps.addSkinSelection( 'View'
                        , skin_folders
                        , make_default = 1

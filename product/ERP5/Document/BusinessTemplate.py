@@ -1869,6 +1869,7 @@ class ToolTemplateItem(PathTemplateItem):
   def install(self, context, trashbin, **kw):
     """ When we install a tool that is a type provider not
     registered on types tool, register it into the type provider.
+    We also need to register the tool on the site manager
     """
     PathTemplateItem.install(self, context, trashbin, **kw)
     portal = context.getPortalObject()
@@ -1879,6 +1880,8 @@ class ToolTemplateItem(PathTemplateItem):
           type_container_id not in types_tool.type_provider_list):
         types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
                                         (type_container_id,)
+    tool_id_list = list(set(self._objects.keys()) & set(portal._registry_tool_id_list))
+    portal._registerTools(tool_id_list)
 
   def uninstall(self, context, **kw):
     """ When we uninstall a tool, unregister it from the type provider. """
@@ -2121,7 +2124,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     portal = context.getPortalObject()
-    skin_tool = getToolByName(portal, 'portal_skins')
+    skin_tool = portal.portal_skins
 
     for skin_folder_id in self._objects.keys():
 
@@ -2163,7 +2166,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
-    skin_tool = getToolByName(portal, 'portal_skins')
+    skin_tool = portal.portal_skins
     object_path = kw.get('object_path')
     for skin_folder_id in (object_path,) if object_path else self._objects:
       skin_selection_list = self._objects[skin_folder_id]

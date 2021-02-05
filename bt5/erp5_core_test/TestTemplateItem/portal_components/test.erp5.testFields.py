@@ -638,9 +638,6 @@ class TestProxyField(ERP5TypeTestCase):
     self.container = Folder('container').__of__(self.portal)
     self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_viewProxyFieldLibrary', 'Proxys')
     self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_view', 'View')
-    from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
-    _setUpDefaultTraversable()
-
 
   def addField(self, form, id_, title, field_type):
     form.manage_addField(id_, title, field_type)

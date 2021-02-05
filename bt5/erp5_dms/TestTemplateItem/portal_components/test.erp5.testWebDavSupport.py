@@ -186,12 +186,14 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     iso_text_content = text_content.decode('utf-8').encode('iso-8859-1')
     path = web_page_module.getPath()
-    response = self.publish('%s/%s' % (path, filename),
-                            request_method='PUT',
-                            stdin=StringIO(iso_text_content),
-                            basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
-    self.assertEqual(web_page_module[filename].getData(), iso_text_content)
+    for _ in xrange(2): # Run twice to check the code that compares
+                        # old & new data when setting file attribute.
+      response = self.publish('%s/%s' % (path, filename),
+                              request_method='PUT',
+                              stdin=StringIO(iso_text_content),
+                              basic=self.authentication)
+      self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
+      self.assertEqual(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
     self.tic()
     # Content-Type header is replaced if sonversion encoding succeed

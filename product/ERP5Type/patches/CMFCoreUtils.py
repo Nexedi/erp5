@@ -13,24 +13,25 @@
 ##############################################################################
 
 from Acquisition import aq_parent
-from Products.CMFCore.utils import getToolByName, SUBTEMPLATE
+from Products.CMFCore.utils import SUBTEMPLATE
+from zope.component import queryUtility
+from Products.CMFCore.interfaces import ICachingPolicyManager
 
 # patch _setCacheHeaders so that existing headers are not overridden
 def _setCacheHeaders(obj, extra_context):
     """Set cache headers according to cache policy manager for the obj."""
     REQUEST = getattr(obj, 'REQUEST', None)
-
     if REQUEST is not None:
         call_count = getattr(REQUEST, SUBTEMPLATE, 1) - 1
         setattr(REQUEST, SUBTEMPLATE, call_count)
         if call_count != 0:
-           return
+            return
 
         # cleanup
         delattr(REQUEST, SUBTEMPLATE)
 
         content = aq_parent(obj)
-        manager = getToolByName(obj, 'caching_policy_manager', None)
+        manager = queryUtility(ICachingPolicyManager)
         if manager is None:
             return
 

@@ -265,7 +265,9 @@ allow_module('cStringIO')
 import cStringIO
 allow_type(cStringIO.InputType)
 allow_type(cStringIO.OutputType)
-
+allow_module('io')
+import io
+allow_type(io.BytesIO)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
