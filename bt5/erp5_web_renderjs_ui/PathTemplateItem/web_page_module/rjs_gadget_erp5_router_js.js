@@ -1113,7 +1113,7 @@
       var key;
       for (key in options_dict) {
         if (options_dict.hasOwnProperty(key)) {
-          options_dict.push(getCommandUrlForMethod(this, options_dict[key]));
+          options_dict[key] = getCommandUrlForMethod(this, options_dict[key]);
         }
       }
       return options_dict;
