@@ -179,12 +179,7 @@
               'class': 'document-listview'
             }, element_list)
           ]);
-        /*
-          return;
-          throw new Error(
-            'Unhandled display step: ' + gadget.state.display_step
-          );
-          */
+
         });
     });
 
