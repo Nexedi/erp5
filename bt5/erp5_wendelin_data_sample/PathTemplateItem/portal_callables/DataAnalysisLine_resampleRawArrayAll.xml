@@ -2,22 +2,72 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Data Analysis Line" module="erp5.portal_type"/>
+      <global name="Python Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>categories</string> </key>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
             <value>
               <tuple>
-                <string>aggregate/data_acquisition_unit_module/wendelin_environment_sensor</string>
-                <string>resource/data_operation_module/resample_raw_array_all</string>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>data_operation</string> </value>
+            <key> <string>_params</string> </key>
+            <value> <string>in_array={}, out_array=[]</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -27,25 +77,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>DataAnalysisLine_resampleRawArrayAll</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Data Analysis Line</string> </value>
+            <value> <string>Python Script</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Resample Raw Array</string> </value>
+            <key> <string>reference</string> </key>
+            <value> <string>DataAnalysisLine_resampleRawArrayAll</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -109,7 +149,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.57713.57849.45226</string> </value>
+                      <value> <string>989.57689.51948.56439</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -127,7 +167,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612791496.77</float>
+                              <float>1612790667.9</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
