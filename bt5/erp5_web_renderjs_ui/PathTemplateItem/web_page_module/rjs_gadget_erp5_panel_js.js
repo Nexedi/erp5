@@ -62,7 +62,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
-        extra_menu_dict = options.extra_menu_dict,
+        extra_menu_list = options.extra_menu_list,
         display_workflow_list,
         context = this,
         workflow_list,
@@ -120,8 +120,8 @@
         clone_list = JSON.stringify(clone_list);
         jump_list = JSON.stringify(jump_list);
       }
-      if (extra_menu_dict !== undefined) {
-        extra_menu_dict = JSON.stringify(extra_menu_dict);
+      if (extra_menu_list !== undefined) {
+        extra_menu_list = JSON.stringify(extra_menu_list);
       }
       return context.getUrlParameter('editable')
         .push(function (editable) {
@@ -138,7 +138,7 @@
             view: view,
             jump_view: jump_view,
             editable: asBoolean(options.editable) || asBoolean(editable) || false,
-            extra_menu_dict: extra_menu_dict
+            extra_menu_list: extra_menu_list
           });
         });
     })
@@ -262,7 +262,7 @@
           modification_dict.hasOwnProperty("jump_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
-          modification_dict.hasOwnProperty("extra_menu_dict"))) {
+          modification_dict.hasOwnProperty("extra_menu_list"))) {
         if (this.state.view_list === undefined) {
           gadget.element.querySelector("dl").textContent = '';
         } else {
@@ -329,9 +329,10 @@
               ]);
             })
             .push(function (result_list) {
-              var key,
+              var i,
                 dl_element,
-                extra_menu_dict,
+                extra_menu_list,
+                href_list,
                 dl_fragment = document.createDocumentFragment(),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list),
@@ -354,14 +355,15 @@
                        action_list.length + clone_list.length);
               dl_element = gadget.element.querySelector("dl");
 
-              if (gadget.state.hasOwnProperty("extra_menu_dict")) {
-                extra_menu_dict = JSON.parse(gadget.state.extra_menu_dict);
-                for (key in extra_menu_dict) {
-                  if (extra_menu_dict.hasOwnProperty(key)) {
-                    appendDt(dl_fragment, key, extra_menu_dict[key].icon,
-                             extra_menu_dict[key].action_list, extra_menu_dict[key].href_list, 0);
-                  }
+              if (gadget.state.hasOwnProperty("extra_menu_list") &&
+                  gadget.state.extra_menu_list) {
+                extra_menu_list = JSON.parse(gadget.state.extra_menu_list);
+                href_list = [];
+                for (i = 0; i < extra_menu_list.length; i += 1) {
+                  href_list.push(extra_menu_list[i].href);
                 }
+                appendDt(dl_fragment, "Global", 'globe',
+                  extra_menu_list, href_list, 0);
               }
               while (dl_element.firstChild) {
                 dl_element.removeChild(dl_element.firstChild);
@@ -461,4 +463,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray)); 
