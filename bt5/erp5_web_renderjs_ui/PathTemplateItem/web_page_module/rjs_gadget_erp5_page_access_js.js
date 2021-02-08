@@ -57,11 +57,11 @@
       });
   }
 
-  function renderEmbeddedForm(gadget, jio_key, action_name) {
+  function renderEmbeddedForm(gadget, jio_key, action_name, must_declare) {
     return searchERP5Action(gadget, jio_key, action_name)
       .push(function (action_href) {
         return loadChildGadget(gadget, "gadget_erp5_page_form.html",
-                               true,
+                               must_declare,
                                function (form_gadget) {
             return form_gadget.render({
               jio_key: jio_key,
@@ -98,10 +98,11 @@
       return this.changeState({
         display_step: options[URL_DISPLAY_PARAMETER] || undefined,
         // Force display in any case to refresh the menus
-        render_timestamp: new Date().getTime()
+        render_timestamp: new Date().getTime(),
+        first_render: true
       });
     })
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var gadget = this,
         _;
       return gadget.getTranslationDict(['Home'])
@@ -138,15 +139,19 @@
         })
 
         .push(function () {
+          var first_render = modification_dict
+            .hasOwnProperty('first_render');
           if (gadget.state.display_step === DISPLAY_CONTRIBUTE) {
             return renderEmbeddedForm(gadget,
                                       'document_module',
-                                      'contribute_file');
+                                      'contribute_file',
+                                      first_render);
           }
           if (gadget.state.display_step === undefined) {
             return renderEmbeddedForm(gadget,
                                       'portal_contributions',
-                                      'create_a_document');
+                                      'create_a_document',
+                                      first_render);
           }
           throw new Error(
             'Unhandled display step: ' + gadget.state.display_step
