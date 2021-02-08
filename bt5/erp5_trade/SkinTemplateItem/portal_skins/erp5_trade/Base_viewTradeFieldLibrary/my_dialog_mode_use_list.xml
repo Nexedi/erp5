@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_dialog_mode_portal_type</string> </value>
+            <value> <string>my_dialog_mode_use_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -102,7 +102,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Line Type</string> </value>
+                    <value> <string>Use</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/DeliveryModule_getMovementPortalTypeItemList</string> </value>
+            <value> <string>python: getattr(here.portal_categories.use, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\', base=True)</string> </value>
         </item>
       </dictionary>
     </pickle>

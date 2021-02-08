@@ -10,14 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>items</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_dialog_mode_portal_type</string> </value>
+            <value> <string>your_use</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,12 +61,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -84,17 +77,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>my_dialog_mode_use_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -102,23 +89,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Line Type</string> </value>
+                    <value> <string>Movement Use</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/DeliveryModule_getMovementPortalTypeItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
