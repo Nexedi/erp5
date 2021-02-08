@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_romain_access.js</string> </value>
+            <value> <string>gadget_erp5_site_report_viewer.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>romain_access_js</string> </value>
+            <value> <string>romain_site_report_viewer_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Romain Access JS</string> </value>
+            <value> <string>Site Reports Viewer JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -191,7 +191,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612776682.57</float>
+                              <float>1612803203.18</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -240,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.57786.40092.35054</string> </value>
+                      <value> <string>989.59038.41309.52616</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612796374.11</float>
+                              <float>1612880648.54</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -319,7 +319,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612776517.32</float>
+                              <float>1612803037.77</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
