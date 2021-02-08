@@ -1,15 +1,9 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 /*global domsugar, window, rJS */
-(function () {
+(function (domsugar, window, rJS) {
   "use strict";
-  // XXX history_previous: prevent getting to erp5 ui by checking the
-  // historing or forcing the page value
-  // XXX create topic by followup (allDocs group by follow up)
 
   var URL_DISPLAY_PARAMETER = 'view',
-    // DISPLAY_ADD,
-    DISPLAY_REPORT = 'display_report',
-    DISPLAY_CONTRIBUTE = 'display_contribute',
     MAIN_SCOPE = 'sub_gadget';
 
   function searchERP5Action(gadget, jio_key, action_name) {
@@ -77,7 +71,8 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
-    .declareAcquiredMethod("getUrlForDict", "getUrlForDict")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('triggerSubmit', function () {
@@ -94,9 +89,13 @@
     ////////////////////////////////////////////////////////////////////
     // Go
     ////////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function (options, action_list) {
+      if (action_list === undefined) {
+        action_list = [];
+      }
       return this.changeState({
         display_step: options[URL_DISPLAY_PARAMETER] || undefined,
+        action_list: JSON.stringify(action_list),
         // Force display in any case to refresh the menus
         render_timestamp: new Date().getTime(),
         first_render: true
@@ -104,59 +103,89 @@
     })
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        _;
+        _,
+        action_list = JSON.parse(gadget.state.action_list),
+        url_list;
+
+      if ((gadget.state.display_step === undefined) &&
+          (action_list.length > 0)) {
+        // display the first action by default
+        return gadget.redirect({
+          command: 'change',
+          options: {
+            view: 0
+          }
+        });
+      }
+
       return gadget.getTranslationDict(['Home'])
         .push(function (translation_dict) {
           _ = translation_dict;
-          return gadget.getUrlForDict({
-            front_url: {
-              command: 'history_previous'
-            },
-            upload_url: {
+          var url_for_list = [{
+            command: 'history_previous'
+          }],
+            i;
+          for (i = 0; i < action_list.length; i += 1) {
+            url_for_list.push({
               command: 'change',
               options: {
-                view: DISPLAY_CONTRIBUTE
+                view: i
               }
-            },
-            add_url: {
-              command: 'change',
-              options: {
-                view: undefined
-              }
-            },
-            export_url: {
-              command: 'change',
-              options: {
-                view: DISPLAY_REPORT
-              }
-            }
-          });
+            });
+          }
+          return gadget.getUrlForList(url_for_list);
         })
-        .push(function (url_dict) {
-          url_dict.page_title = _.Home;
-          url_dict.page_icon = 'home';
-          return gadget.updateHeader(url_dict);
+        .push(function (result) {
+          url_list = result;
+          // url_dict.page_title = _.Home;
+          // url_dict.page_icon = 'home';
+          return gadget.updateHeader({
+            page_title: _.Home,
+            page_icon: 'home',
+            front_url: url_list[0]
+          });
         })
 
         .push(function () {
-          var first_render = modification_dict
-            .hasOwnProperty('first_render');
-          if (gadget.state.display_step === DISPLAY_CONTRIBUTE) {
-            return renderEmbeddedForm(gadget,
-                                      'document_module',
-                                      'contribute_file',
-                                      first_render);
+          var first_render = modification_dict.hasOwnProperty('first_render'),
+            element_list = [],
+            i;
+
+          // Try to display the matching action
+          for (i = 0; i < action_list.length; i += 1) {
+            if (gadget.state.display_step === i.toString()) {
+              return renderEmbeddedForm(gadget,
+                                        action_list[i].jio_key,
+                                        action_list[i].erp5_action,
+                                        first_render);
+            }
+            // Prepare to display action list if no action found
+            element_list.push(
+              domsugar('li', [
+                domsugar('a', {
+                  href: url_list[i + 1],
+                  text: action_list[i].title
+                })
+              ])
+            );
           }
-          if (gadget.state.display_step === undefined) {
-            return renderEmbeddedForm(gadget,
-                                      'portal_contributions',
-                                      'create_a_document',
-                                      first_render);
-          }
+
+          // XXX hacky, but enough to force reloading the page gadget
+          // during the next render
+          gadget.state.first_render = false;
+          domsugar(gadget.element, [
+            domsugar('img', {src: 'gadget_erp5_panel.png'}),
+            domsugar('ul', {
+              'class': 'document-listview'
+            }, element_list)
+          ]);
+        /*
+          return;
           throw new Error(
             'Unhandled display step: ' + gadget.state.display_step
           );
+          */
         });
     });
 
-}());
+}(domsugar, window, rJS));
