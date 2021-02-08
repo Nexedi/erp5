@@ -34,9 +34,17 @@ module_business_application_map = {'base': ('currency_module',
                                            'transformation_module',),
                                    }
 
+base_category = portal.portal_categories.business_application
 for business_application_category_id, module_ids in module_business_application_map.items():
+  business_application_category = getattr(base_category, business_application_category_id, None)
+  if business_application_category is None:
+    business_application_category = base_category.newContent(
+      id=business_application_category_id,
+      title=business_application_category_id.capitalize(),
+      portal_type='Category'
+    )
   for module_id in module_ids:
     module = getattr(portal, module_id, None)
     if module is not None:
-      module.edit(business_application = business_application_category_id)
+      module.edit(business_application_value = business_application_category)
 return 'ok'
