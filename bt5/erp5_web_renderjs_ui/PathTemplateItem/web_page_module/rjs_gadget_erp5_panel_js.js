@@ -144,9 +144,19 @@
     })
 
     .onStateChange(function onStateChange(modification_dict) {
-      var context = this,
+      var i,
+        context = this,
         gadget = this,
         workflow_list,
+        view_list,
+        action_list,
+        clone_list,
+        jump_list,
+        element_list,
+        dl_fragment,
+        dl_element,
+        href_list,
+        extra_menu_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -203,7 +213,6 @@
           })
           .push(function (result_list) {
             var editable_value = [],
-              i,
               ul_fragment = document.createDocumentFragment(),
               a_element,
               li_element,
@@ -263,17 +272,20 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
           modification_dict.hasOwnProperty("extra_menu_list"))) {
-        if (this.state.view_list === undefined) {
-          gadget.element.querySelector("dl").textContent = '';
-        } else {
+        console.log("I am here");
+        dl_fragment = document.createDocumentFragment();
+        gadget.element.querySelector("dl").textContent = '';
+
+        if (this.state.view_list !== undefined) {
+          console.log(this.state.view_list);
           queue
             .push(function () {
               var i = 0,
-                parameter_list = [],
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+                parameter_list = [];
+              view_list = JSON.parse(gadget.state.view_list);
+              action_list = JSON.parse(gadget.state.action_list);
+              clone_list = JSON.parse(gadget.state.clone_list);
+              jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
               for (i = 0; i < view_list.length; i += 1) {
@@ -329,16 +341,6 @@
               ]);
             })
             .push(function (result_list) {
-              var i,
-                dl_element,
-                extra_menu_list,
-                href_list,
-                dl_fragment = document.createDocumentFragment(),
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
-
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
               if (gadget.state.display_workflow_list) {
@@ -353,25 +355,29 @@
                        jump_list, result_list[0],
                        view_list.length + workflow_list.length +
                        action_list.length + clone_list.length);
-              dl_element = gadget.element.querySelector("dl");
-
-              if (gadget.state.hasOwnProperty("extra_menu_list") &&
-                  gadget.state.extra_menu_list) {
-                extra_menu_list = JSON.parse(gadget.state.extra_menu_list);
-                href_list = [];
-                for (i = 0; i < extra_menu_list.length; i += 1) {
-                  href_list.push(extra_menu_list[i].href);
-                }
-                appendDt(dl_fragment, "Global", 'globe',
-                  extra_menu_list, href_list, 0);
-              }
-              while (dl_element.firstChild) {
-                dl_element.removeChild(dl_element.firstChild);
-              }
-              dl_element.appendChild(dl_fragment);
             });
         }
+        if (gadget.state.hasOwnProperty("extra_menu_list") &&
+            gadget.state.extra_menu_list) {
+          extra_menu_list = JSON.parse(gadget.state.extra_menu_list);
+          href_list = [];
+          for (i = 0; i < extra_menu_list.length; i += 1) {
+            href_list.push(extra_menu_list[i].href);
+          }
+          appendDt(dl_fragment, "Global", 'globe',
+                   extra_menu_list, href_list, 0);
+        }
       }
+      queue
+        .push(function () {
+          if (dl_fragment) {
+            dl_element = gadget.element.querySelector("dl");
+            while (dl_element.firstChild) {
+              dl_element.removeChild(dl_element.firstChild);
+            }
+            dl_element.appendChild(dl_fragment);
+          }
+        });
       return queue;
     })
 
@@ -463,4 +469,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray)); 
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
