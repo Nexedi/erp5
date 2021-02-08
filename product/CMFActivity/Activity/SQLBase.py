@@ -550,37 +550,26 @@ CREATE TABLE %s (
         # No more non-blocked message for this dependency, skip it.
         continue
       column_list, to_sql = dependency_tester_dict[dependency_name]
-      if len(column_list) == 1:
-        row2key = _ITEMGETTER0
-        dependency_sql = to_sql(dependency_value_dict.keys(), quote)
-      else:
-        row2key = _IDENTITY
-        # XXX: generated SQL could be simpler: for example, a dependency input
-        # as
-        #   ('foo', ('bar', 'baz'))
-        # will become
-        #   (... = 'foo' AND ... = 'bar') OR (... = 'foo' AND ... = 'baz')
-        # This is the correct condition, but it could be expressed with shorter
-        # SQL. But I'm not sure this makes much of a difference for the query
-        # planner, it would likely increase the complexity here a lot, and
-        # anyway these multi-column dependencies should rather be replaced with
-        # tags (as it often possible and produces better overall activity
-        # behaviour).
-        dependency_sql = ' OR '.join(
-          '(' + to_sql(dependency_value, quote) + ')'
-          for dependency_value in dependency_value_dict
-        )
-      base_sql_prefix = '(SELECT DISTINCT %s FROM ' % (
-        ','.join(column_list),
+      row2key = (
+        _ITEMGETTER0
+        if len(column_list) == 1 else
+        _IDENTITY
       )
-      base_sql_suffix = ' WHERE processing_node > %i AND (%s))' % (
+      base_sql_suffix = ' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
         DEPENDENCY_IGNORED_ERROR_STATE,
-        dependency_sql,
+      )
+      sql_suffix_list = [
+        base_sql_suffix % to_sql(dependency_value, quote)
+        for dependency_value in dependency_value_dict
+      ]
+      base_sql_prefix = '(SELECT %s FROM ' % (
+        ','.join(column_list),
       )
       for row in db.query(
         ' UNION '.join(
-          base_sql_prefix + table_name + base_sql_suffix
+          base_sql_prefix + table_name + sql_suffix
           for table_name in table_name_list
+          for sql_suffix in sql_suffix_list
         ),
         max_rows=0,
       )[1]:
