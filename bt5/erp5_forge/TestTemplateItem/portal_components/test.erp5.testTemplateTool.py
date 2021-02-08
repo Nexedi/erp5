@@ -148,8 +148,9 @@ class TestTemplateTool(ERP5TypeTestCase):
      the new bt5 is not installed, only imported.
     """
     self._svn_setup_ssl()
-    global PropertiesTool
-    class PropertiesTool(ActionsTool):
+    # we make this class a global so that it can be pickled
+    global PropertiesTool  # pylint:disable=global-variable-not-assigned
+    class PropertiesTool(ActionsTool):  # pylint:disable=redefined-outer-name
       id = 'portal_properties'
     cls = PropertiesTool
 
