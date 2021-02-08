@@ -148,7 +148,6 @@ class TestTemplateTool(ERP5TypeTestCase):
      the new bt5 is not installed, only imported.
     """
     self._svn_setup_ssl()
-    global PropertiesTool
     class PropertiesTool(ActionsTool):
       id = 'portal_properties'
     cls = PropertiesTool
