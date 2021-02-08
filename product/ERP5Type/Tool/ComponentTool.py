@@ -227,12 +227,6 @@ class Test(ERP5TypeTestCase):
   A Sample Test Class
   """
 
-  def getBusinessTemplateList(self):
-    """
-    Tuple of Business Templates we need to install
-    """
-    return ('erp5_base',)
-
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
