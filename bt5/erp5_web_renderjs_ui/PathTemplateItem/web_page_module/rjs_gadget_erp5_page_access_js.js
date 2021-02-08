@@ -1,5 +1,5 @@
-/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, continue:true */
-/*global a */
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
+/*global domsugar, window, rJS */
 (function () {
   "use strict";
   // XXX history_previous: prevent getting to erp5 ui by checking the
@@ -7,7 +7,7 @@
   // XXX create topic by followup (allDocs group by follow up)
 
   var URL_DISPLAY_PARAMETER = 'view',
-    DISPLAY_ADD = undefined,
+    // DISPLAY_ADD,
     DISPLAY_REPORT = 'display_report',
     DISPLAY_CONTRIBUTE = 'display_contribute',
     MAIN_SCOPE = 'sub_gadget';
@@ -15,7 +15,7 @@
   function searchERP5Action(gadget, jio_key, action_name) {
     return gadget.jio_getAttachment(jio_key, 'links')
       .push(function (document_view) {
-        var action, action_data, i, j, new_options;
+        var action, action_data, i, j;
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
           if (document_view._links.hasOwnProperty(action)) {
@@ -63,11 +63,11 @@
         return loadChildGadget(gadget, "gadget_erp5_page_form.html",
                                true,
                                function (form_gadget) {
-          return form_gadget.render({
-            jio_key: jio_key,
-            view: action_href
+            return form_gadget.render({
+              jio_key: jio_key,
+              view: action_href
+            });
           });
-        });
       });
   }
 
@@ -93,12 +93,12 @@
     ////////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
       return this.changeState({
-        display_step: options[URL_DISPLAY_PARAMETER] || DISPLAY_ADD,
+        display_step: options[URL_DISPLAY_PARAMETER] || undefined,
         // Force display in any case to refresh the menus
         render_timestamp: new Date().getTime()
       });
     })
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this,
         _;
       return gadget.getTranslationDict(['Home'])
@@ -117,7 +117,7 @@
             add_url: {
               command: 'change',
               options: {
-                view: DISPLAY_ADD
+                view: undefined
               }
             },
             export_url: {
@@ -140,7 +140,7 @@
                                       'document_module',
                                       'contribute_file');
           }
-          if (gadget.state.display_step === DISPLAY_ADD) {
+          if (gadget.state.display_step === undefined) {
             return renderEmbeddedForm(gadget,
                                       'portal_contributions',
                                       'create_a_document');
