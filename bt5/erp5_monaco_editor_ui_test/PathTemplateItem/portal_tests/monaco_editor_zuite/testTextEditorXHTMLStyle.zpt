@@ -66,15 +66,9 @@
 
 <tr><td>click</td>
     <td>//div[@class="actions"]//span[text() = "View"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>css=.bottom iframe</td><td></td></tr>
-<tr><td>selectFrame</td>
-    <td>css=.bottom iframe</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>//body</td>
-    <td>glob:1*Hello*</td></tr>
-<tr><td>selectFrame</td>
-    <td>relative=top</td><td></td></tr>
+    <td>//div[contains(@data-gadget-url, 'gadget_editor.html')]</td>
+    <td>Hello</td></tr>
 
 </tbody></table>
 </body>
