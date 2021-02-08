@@ -8,10 +8,18 @@
     .declareMethod('render', function (options) {
       return new RSVP.Queue(RSVP.hash({
         access_gadget: this.getDeclaredGadget('access'),
-        translation_dict: this.getTranslationDict(['Contribute File', 'New'])
+        translation_dict: this.getTranslationDict([
+          'Site Reports',
+          'Contribute File',
+          'New'
+        ])
       }))
         .push(function (result_dict) {
           return result_dict.access_gadget.render(options, [{
+            title: result_dict.translation_dict['Site Reports'],
+            jio_key: 'portal_types',
+            erp5_action: 'list_all_report'
+          }, {
             title: result_dict.translation_dict.New,
             jio_key: 'portal_contributions',
             erp5_action: 'create_a_document'
