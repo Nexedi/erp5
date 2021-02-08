@@ -87,6 +87,9 @@
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
+    .allowPublicAcquisition('updatePanel', function () {
+      return;
+    })
 
     ////////////////////////////////////////////////////////////////////
     // Go
