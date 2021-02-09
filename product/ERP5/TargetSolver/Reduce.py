@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from TargetSolver import TargetSolver
+from .TargetSolver import TargetSolver
 
 class Reduce(TargetSolver):
   """

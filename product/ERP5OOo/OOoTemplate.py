@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from types import StringType
 from mimetypes import guess_extension
 from OFS.Image import File
@@ -40,7 +41,7 @@ from urllib import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from OOoUtils import OOoBuilder
+from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 import re

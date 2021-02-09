@@ -6,6 +6,7 @@
 
    Now by Jeffrey P Shell <jeffrey@Digicool.com>.
 """
+from __future__ import absolute_import
 
 __version__ = "$Revision: 1.11 $"[11:-2]
 
@@ -16,8 +17,8 @@ from App.Dialogs import MessageDialog
 from Persistence import Persistent
 import ldap, urllib
 
-import LDCAccessors
-from Entry import ZopeEntry, GenericEntry, TransactionalEntry
+from . import LDCAccessors
+from .Entry import ZopeEntry, GenericEntry, TransactionalEntry
 ConnectionError='ZLDAP Connection Error'
 
 manage_addZLDAPConnectionForm = HTMLFile('add', globals())

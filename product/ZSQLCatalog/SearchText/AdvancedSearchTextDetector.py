@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from lexer import lexer, update_docstrings
+from .lexer import lexer, update_docstrings
 
 # TODO: remove the special OPERATOR case: it does not work when there are both a valid and an invalid operator
 

@@ -14,6 +14,7 @@
 """
   Portal class
 """
+from __future__ import absolute_import
 
 from DateTime import DateTime
 from six.moves import map
@@ -37,7 +38,7 @@ from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.CMFActivity.Errors import ActivityPendingError
-import ERP5Defaults
+from . import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import \
   getTransactionalVariable, TransactionalResource
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules

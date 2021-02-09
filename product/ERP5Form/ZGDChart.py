@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -30,7 +31,7 @@ from Products.Formulator import Widget
 from Products.Formulator import Widget, Validator
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Field import ZMIField
-from Selection import Selection
+from .Selection import Selection
 
 from zLOG import LOG
 

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -47,8 +48,8 @@ from AccessControl.User import system as system_user
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
-from ActivityBuffer import ActivityBuffer
-from ActivityRuntimeEnvironment import BaseMessage
+from .ActivityBuffer import ActivityBuffer
+from .ActivityRuntimeEnvironment import BaseMessage
 from zExceptions import ExceptionFormatter, Redirect
 from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
@@ -502,7 +503,7 @@ allow_class(GroupedMessage)
 
 # Activity Registration
 def activity_dict():
-  from Activity import SQLDict, SQLQueue, SQLJoblib
+  from .Activity import SQLDict, SQLQueue, SQLJoblib
   return {k: getattr(v, k)() for k, v in locals().iteritems()}
 activity_dict = activity_dict()
 

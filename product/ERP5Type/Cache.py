@@ -27,13 +27,14 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 import string
 from contextlib import contextmanager
 from time import time
 from AccessControl import allow_class, ClassSecurityInfo
 from Acquisition import aq_base
 from BTrees.Length import Length
-from CachePlugins.BaseCache import CachedMethodError
+from .CachePlugins.BaseCache import CachedMethodError
 from persistent import Persistent
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions

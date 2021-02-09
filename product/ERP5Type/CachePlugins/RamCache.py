@@ -30,9 +30,10 @@
 """
 Local RAM based cache plugin.
 """
+from __future__ import absolute_import
 
 import time
-from BaseCache import BaseCache, CacheEntry
+from .BaseCache import BaseCache, CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
 

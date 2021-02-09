@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 ##############################################################################
 
 import warnings
-from interfaces.sql_expression import ISQLExpression
+from .interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from types import NoneType
