@@ -39,31 +39,20 @@ def getModuleActionInformationDict(**kw):
       # Collect view actions.
       # view_list.append((translated_title, module.getId()))
 
-      """
       # Collect add actions.
       module_add_list = []
       for content_type in module.getVisibleAllowedContentTypeList():
         action = 'add %s' % content_type
-        url = renderCustomLink('%s/Base_doAction' % module_url,
-                               dict(cancel_url=cancel_url,
-                                    form_id=form_id,
-                                    selection_name=selection_name,
-                                    select_action=action))
-        module_add_list.append((Base_translateString(content_type), url))
+        module_add_list.append((Base_translateString(content_type), action))
       for template in module.getDocumentTemplateList():
         action = 'template %s' % template.getRelativeUrl()
-        url = renderCustomLink('%s/Base_doAction' % module_url,
-                               dict(cancel_url=cancel_url,
-                                    form_id=form_id,
-                                    selection_name=selection_name,
-                                    select_action=action))
         template_name = Base_translateString('${template_title} (Template)',
                                              mapping=dict(template_title=template.getTitle()))
-        module_add_list.append((template_name, url))
+        module_add_list.append((template_name, action))
       if module_add_list:
-        add_list.append((translated_title, module_add_list))
+        add_list.append((translated_title, module.getId(), module_add_list))
 
-
+      """
       # Collect exchange actions.
       module_exchange_list = []
       for exchange_action in action_dict.get('object_exchange', ()):
