@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-/*global domsugar, window, rJS */
-(function (domsugar, window, rJS) {
+/*global domsugar, window, rJS, RSVP */
+(function (domsugar, window, rJS, RSVP) {
   "use strict";
 
   var URL_DISPLAY_PARAMETER = 'view',
@@ -70,6 +70,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
     .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
@@ -137,8 +138,6 @@
         })
         .push(function (result) {
           url_list = result;
-          // url_dict.page_title = _.Home;
-          // url_dict.page_icon = 'home';
           return gadget.updateHeader({
             page_title: _.Home,
             page_icon: 'home',
@@ -149,15 +148,19 @@
         .push(function () {
           var first_render = modification_dict.hasOwnProperty('first_render'),
             element_list = [],
-            i;
+            i,
+            active,
+            matching_action_index = -1,
+            promise_list = [],
+            extra_menu_list = [];
 
           // Try to display the matching action
           for (i = 0; i < action_list.length; i += 1) {
             if (gadget.state.display_step === i.toString()) {
-              return renderEmbeddedForm(gadget,
-                                        action_list[i].jio_key,
-                                        action_list[i].erp5_action,
-                                        first_render);
+              matching_action_index = i;
+              active = true;
+            } else {
+              active = false;
             }
             // Prepare to display action list if no action found
             element_list.push(
@@ -168,19 +171,37 @@
                 })
               ])
             );
+            extra_menu_list.push({
+              href: url_list[i + 1],
+              title: action_list[i].title,
+              active: active
+            });
           }
 
-          // XXX hacky, but enough to force reloading the page gadget
-          // during the next render
-          gadget.state.first_render = false;
-          domsugar(gadget.element, [
-            domsugar('img', {src: 'gadget_erp5_panel.png'}),
-            domsugar('ul', {
-              'class': 'document-listview'
-            }, element_list)
-          ]);
+          if (matching_action_index === -1) {
+            // XXX hacky, but enough to force reloading the page gadget
+            // during the next render
+            gadget.state.first_render = false;
+            domsugar(gadget.element, [
+              domsugar('img', {src: 'gadget_erp5_panel.png'}),
+              domsugar('ul', {
+                'class': 'document-listview'
+              }, element_list)
+            ]);
+          } else {
+            promise_list.push(renderEmbeddedForm(
+              gadget,
+              action_list[matching_action_index].jio_key,
+              action_list[matching_action_index].erp5_action,
+              first_render
+            ));
+          }
 
+          promise_list.push(gadget.updatePanel({
+            extra_menu_list: extra_menu_list
+          }));
+          return RSVP.all(promise_list);
         });
     });
 
-}(domsugar, window, rJS));
+}(domsugar, window, rJS, RSVP));
