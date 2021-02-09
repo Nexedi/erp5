@@ -78,7 +78,7 @@ def getModuleActionInformationDict(**kw):
       """
       # Collect report actions.
       module_report_list = []
-      for report_action in action_dict.get('object_report', ()):
+      for report_action in action_dict.get('object_jio_report', ()):
         module_report_list.append((Base_translateString(report_action['name']), report_action['id']))
       if module_report_list:
         report_list.append((translated_title, module.getId(), module_report_list))
