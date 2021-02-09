@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'couscous\', here.TypesTool_getCategorizedModuleActionInformationDict().get(\'report\', []))]</string> </value>
+            <value> <string>python: [(\'erp5_report_list\', here.TypesTool_getCategorizedModuleActionInformationDict().get(\'report\', []))]</string> </value>
         </item>
       </dictionary>
     </pickle>
