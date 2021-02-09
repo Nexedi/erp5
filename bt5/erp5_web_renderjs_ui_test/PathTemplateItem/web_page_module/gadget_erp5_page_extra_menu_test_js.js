@@ -1,10 +1,10 @@
-/*global window, rJS, RSVP, ensureArray*/
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /**
 Page Form is a top-level gadget (a "Page") taking care of rendering form
 and handling data send&receive.
 */
-(function (window, rJS, RSVP, ensureArray) {
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
@@ -60,4 +60,4 @@ and handling data send&receive.
         view_list: []
       });
     });
-}(window, rJS, RSVP, ensureArray));
+}(window, rJS));
