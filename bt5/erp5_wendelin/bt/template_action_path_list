@@ -42,6 +42,7 @@ Data Release Module | view
 Data Release | predicate
 Data Release | view
 Data Set Module | view
+Data Set | data_streams
 Data Set | predicate
 Data Set | view
 Data Stream Module | view
