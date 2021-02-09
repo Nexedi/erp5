@@ -28,9 +28,8 @@
     // Go
     ////////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
-      // XXXXXXXXXXXXXX couscous
       var gadget = this,
-        erp5_report_list = options.couscous,
+        erp5_report_list = options.erp5_report_list,
         i,
         j,
         k,
