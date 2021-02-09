@@ -1827,12 +1827,12 @@ div[data-gadget-scope='maximize'] button:active {
 /**********************************************
 * Front page
 **********************************************/
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul {
+ul.gridlist {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
 }
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
+ul.gridlist > li {
   flex-shrink: 1;
   vertical-align: top;
   padding: 3pt;
@@ -1842,25 +1842,25 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
   background-color: #FFFFFF;
 }
 @media not screen and (min-width: 45em) {
-  div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
+  ul.gridlist > li {
     flex-basis: 100%;
     margin-bottom: 6pt;
   }
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
-  div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
+  ul.gridlist > li {
     margin-right: 24pt;
     margin-bottom: 24pt;
     flex-basis: 20em;
   }
 }
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li h2 {
+ul.gridlist > li h2 {
   font-weight: 700;
   background: #085078;
   color: #FFFFFF;
   padding: 6pt;
 }
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li li {
+ul.gridlist > li li {
   padding: 3pt 6pt;
 }
 /**********************************************
