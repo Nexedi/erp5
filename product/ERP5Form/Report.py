@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -38,9 +39,9 @@ from urllib import quote
 from warnings import warn
 from Products.ERP5Type import PropertySheet
 
-from Form import ERP5Form
-from Form import create_settings_form as Form_create_settings_form
-from Selection import Selection
+from .Form import ERP5Form
+from .Form import create_settings_form as Form_create_settings_form
+from .Selection import Selection
 
 def create_settings_form():
     form = Form_create_settings_form()

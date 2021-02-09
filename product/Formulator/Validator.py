@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 import re
-import PatternChecker
-from DummyField import fields
+from . import PatternChecker
+from .DummyField import fields
 from DateTime import DateTime
 from threading import Thread
 from urllib import urlopen
 from urlparse import urljoin
-from Errors import ValidationError
+from .Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
 import unicodedata
 

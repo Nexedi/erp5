@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from struct import unpack
 from copy import copy
 import warnings
@@ -72,13 +73,13 @@ from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
-from Accessor import WorkflowState
+from .Accessor import WorkflowState
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 
-from CopySupport import CopyContainer, CopyError,\
+from .CopySupport import CopyContainer, CopyError,\
     tryMethodCallWithTemporaryPermission
-from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
+from .Errors import DeferredCatalogError, UnsupportedWorkflowMethod
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Message import Message

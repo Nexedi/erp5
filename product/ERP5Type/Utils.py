@@ -28,6 +28,7 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
+from __future__ import absolute_import
 import os
 import re
 import string
@@ -114,8 +115,8 @@ from Products.ERP5Type.Globals import get_request
 # Compatibility - XXX - BAD
 #####################################################
 
-from Accessor.TypeDefinition import type_definition
-from Accessor.TypeDefinition import list_types
+from .Accessor.TypeDefinition import type_definition
+from .Accessor.TypeDefinition import list_types
 
 #####################################################
 # Generic sort method
@@ -551,7 +552,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 # Globals initialization
 #####################################################
 
-from InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
+from .InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
 
 # List Regexp
 python_file_expr = re.compile("py$")
@@ -641,7 +642,7 @@ import imp
 from App.config import getConfiguration
 
 from Products.ERP5Type.Globals import InitializeClass
-from Accessor.Base import func_code
+from .Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
 

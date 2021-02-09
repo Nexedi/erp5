@@ -20,6 +20,7 @@
 This module provides the MessageCatalog base class, which
 provides message catalogs for the web.
 """
+from __future__ import absolute_import
 
 # Import from the Standard Library
 from base64 import encodestring, decodestring
@@ -49,10 +50,10 @@ from zLOG import LOG, INFO
 from zExceptions import Forbidden
 
 # Import from Localizer
-from interfaces import IMessageCatalog
-from LanguageManager import LanguageManager
-from LocalFiles import LocalDTMLFile
-from utils import charsets, lang_negotiator, _
+from .interfaces import IMessageCatalog
+from .LanguageManager import LanguageManager
+from .LocalFiles import LocalDTMLFile
+from .utils import charsets, lang_negotiator, _
 
 
 

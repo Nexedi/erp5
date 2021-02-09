@@ -14,6 +14,7 @@
 ##############################################################################
 """ ERP5Security product initialization.
 """
+from __future__ import absolute_import
 
 from copy import deepcopy
 from collections import defaultdict
@@ -72,17 +73,17 @@ def _setUserNameForAccessLog(username, REQUEST):
 
 
 def initialize(context):
-  import ERP5UserManager
-  import ERP5LoginUserManager
-  import ERP5GroupManager
-  import ERP5RoleManager
-  import ERP5UserFactory
-  import ERP5KeyAuthPlugin
-  import ERP5ExternalAuthenticationPlugin
-  import ERP5BearerExtractionPlugin
-  import ERP5ExternalOauth2ExtractionPlugin
-  import ERP5AccessTokenExtractionPlugin
-  import ERP5DumbHTTPExtractionPlugin
+  from . import ERP5UserManager
+  from . import ERP5LoginUserManager
+  from . import ERP5GroupManager
+  from . import ERP5RoleManager
+  from . import ERP5UserFactory
+  from . import ERP5KeyAuthPlugin
+  from . import ERP5ExternalAuthenticationPlugin
+  from . import ERP5BearerExtractionPlugin
+  from . import ERP5ExternalOauth2ExtractionPlugin
+  from . import ERP5AccessTokenExtractionPlugin
+  from . import ERP5DumbHTTPExtractionPlugin
 
   registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
   registerMultiPlugin(ERP5LoginUserManager.ERP5LoginUserManager.meta_type)

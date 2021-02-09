@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002,2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -33,8 +34,8 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from Selection import Selection, DomainSelection
-from Tool.SelectionTool import createFolderMixInPageSelectionMethod
+from .Selection import Selection, DomainSelection
+from .Tool.SelectionTool import createFolderMixInPageSelectionMethod
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Document import newTempBase

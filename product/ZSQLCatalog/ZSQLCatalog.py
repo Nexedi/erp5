@@ -12,6 +12,7 @@
 #
 ##############################################################################
 """ZCatalog product"""
+from __future__ import absolute_import
 
 from App.special_dtml import DTMLFile
 from App.Dialogs import MessageDialog
@@ -26,7 +27,7 @@ from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
 from AccessControl.Permissions import import_export_objects, \
     manage_zcatalog_entries
-from SQLCatalog import CatalogError
+from .SQLCatalog import CatalogError
 from AccessControl import ClassSecurityInfo
 from DocumentTemplate.security import RestrictedDTML
 from Products.CMFCore.utils import getToolByName

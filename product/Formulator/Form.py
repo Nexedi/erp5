@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import AccessControl
 import OFS
 from App.class_init import default__class_init__ as InitializeClass
@@ -15,12 +16,12 @@ import os
 import string
 from StringIO import StringIO
 
-from Errors import ValidationError, FormValidationError, FieldDisabledError
-from FieldRegistry import FieldRegistry
-from Widget import render_tag
-from DummyField import fields
-from FormToXML import formToXML
-from XMLToForm import XMLToForm
+from .Errors import ValidationError, FormValidationError, FieldDisabledError
+from .FieldRegistry import FieldRegistry
+from .Widget import render_tag
+from .DummyField import fields
+from .FormToXML import formToXML
+from .XMLToForm import XMLToForm
 
 from ComputedAttribute import ComputedAttribute
 
