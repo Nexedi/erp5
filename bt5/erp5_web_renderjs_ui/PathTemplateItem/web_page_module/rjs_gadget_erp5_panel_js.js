@@ -152,11 +152,8 @@
         action_list,
         clone_list,
         jump_list,
-        element_list,
         dl_fragment,
         dl_element,
-        href_list,
-        extra_menu_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -277,8 +274,7 @@
         if (this.state.view_list !== undefined) {
           queue
             .push(function () {
-              var i = 0,
-                parameter_list = [];
+              var parameter_list = [];
               view_list = JSON.parse(gadget.state.view_list);
               action_list = JSON.parse(gadget.state.action_list);
               clone_list = JSON.parse(gadget.state.clone_list);
@@ -361,10 +357,10 @@
               return gadget.getTranslationList(['Global']);
             })
             .push(function (translation_list) {
-              extra_menu_list = JSON.parse(gadget.state.extra_menu_list);
-              href_list = [];
+              var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
+                href_list = [];
               for (i = 0; i < extra_menu_list.length; i += 1) {
-                extra_menu_list[i].class_name = extra_menu_list[i].active ? "active": "";
+                extra_menu_list[i].class_name = extra_menu_list[i].active ? "active" : "";
                 href_list.push(extra_menu_list[i].href);
               }
               appendDt(dl_fragment, translation_list[0], 'globe',
