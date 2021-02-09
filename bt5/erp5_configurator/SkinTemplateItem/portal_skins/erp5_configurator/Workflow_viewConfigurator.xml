@@ -38,6 +38,10 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -135,7 +139,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configutator Settings</string> </value>
+            <value> <string>Configurator Settings</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
