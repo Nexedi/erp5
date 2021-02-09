@@ -45,8 +45,7 @@ and handling data send&receive.
           new_state.extra_menu_list = [{
             'title' : 'Contribute',
             'href': href_list[0],
-            // if class_name is passed here, it is propagated to link
-            'class_name': "active custom-class"
+            'active': true
           }];
           return gadget.changeState(new_state);
         });
