@@ -165,6 +165,10 @@ def generatePortalTypeClass(site, portal_type_name):
       is_partially_generated = True
       return is_partially_generated, ((klass,), [], [], attribute_dict)
 
+  # TODO-BEFORE-MERGE: Hack for legacy Configurator Workflow
+  if portal_type_name == 'Variable':
+    portal_type_name = 'Workflow Variable'
+
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
   portal_type = getattr(site.portal_types, portal_type_name, None)
