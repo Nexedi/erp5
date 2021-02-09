@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 import re, os, tempfile
-import uno
+from . import uno
 import unohelper
 from com.sun.star.beans import PropertyValue
 

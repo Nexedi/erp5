@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -29,7 +30,7 @@
 ##############################################################################
 
 from future.utils import raise_
-from OperatorBase import OperatorBase
+from .OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from zope.interface.verify import verifyClass

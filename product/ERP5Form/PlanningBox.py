@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2005,2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -47,8 +48,8 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from Tool.SelectionTool import makeTreeList
-from Selection import Selection
+from .Tool.SelectionTool import makeTreeList
+from .Selection import Selection
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 

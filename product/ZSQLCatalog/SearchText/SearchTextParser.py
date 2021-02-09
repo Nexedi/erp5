@@ -28,11 +28,12 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from future.utils import raise_
 import threading
-from AdvancedSearchTextDetector import AdvancedSearchTextDetector
-from AdvancedSearchTextParser import AdvancedSearchTextParser
-from lexer import ParserOrLexerError
+from .AdvancedSearchTextDetector import AdvancedSearchTextDetector
+from .AdvancedSearchTextParser import AdvancedSearchTextParser
+from .lexer import ParserOrLexerError
 
 if __name__ == '__main__':
   DEBUG = 1

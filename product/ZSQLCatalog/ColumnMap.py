@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,7 +32,7 @@ from future.utils import raise_
 import re
 import itertools
 from zLOG import LOG, WARNING, INFO
-from interfaces.column_map import IColumnMap
+from .interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.interfaces.column_map import IColumnMap

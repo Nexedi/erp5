@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -35,7 +36,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
 from Products.Formulator.TALESField import TALESField
-import CaptchasDotNet
+from . import CaptchasDotNet
 import string
 import random
 from hashlib import md5

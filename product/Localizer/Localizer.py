@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from __future__ import absolute_import
 from urllib import unquote
 from contextlib import contextmanager
 
@@ -30,11 +31,11 @@ from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
      unregisterBeforeTraverse, queryBeforeTraverse, NameCaller
 
 # Import Localizer modules
-from interfaces import ILocalizer
-from LocalFiles import LocalDTMLFile
-from MessageCatalog import MessageCatalog, to_unicode
-from utils import lang_negotiator
-from LanguageManager import LanguageManager
+from .interfaces import ILocalizer
+from .LocalFiles import LocalDTMLFile
+from .MessageCatalog import MessageCatalog, to_unicode
+from .utils import lang_negotiator
+from .LanguageManager import LanguageManager
 
 
 
@@ -257,7 +258,7 @@ class Localizer(LanguageManager, Folder):
             LOG('Localizer', PROBLEM,
                'Cannot change language inside a translationContext', error=True)
       MARKER = []
-      from patches import get_request # late import, as this is patched by
+      from .patches import get_request # late import, as this is patched by
                                       # unit tests
       request = get_request() # Localizer always use this request internally
       old_accept_language = request.get('AcceptLanguage', MARKER)

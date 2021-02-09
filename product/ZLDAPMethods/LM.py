@@ -2,6 +2,7 @@
 # core of LDAP Filter Methods.
 
 
+from __future__ import absolute_import
 from future.utils import raise_
 __version__ = "$Revision: 1.10 $"[11:-2]
 
@@ -27,7 +28,7 @@ import sys
 
 from zLOG import LOG, INFO
 from ldif import LDIFRecordList, is_dn, valid_changetype_dict, CHANGE_TYPES
-import ldifvar
+from . import ldifvar
 from DocumentTemplate.security import RestrictedDTML
 try:
     from AccessControl import getSecurityManager

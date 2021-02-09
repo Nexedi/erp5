@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Zope Corporation and Contributors. All Rights Reserved.
@@ -13,7 +14,7 @@
 ##############################################################################
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from Permissions import AccessContentsInformation, ManagePortal, \
+from .Permissions import AccessContentsInformation, ManagePortal, \
   ModifyPortalContent
 from OFS.SimpleItem import SimpleItem
 from Acquisition import aq_base

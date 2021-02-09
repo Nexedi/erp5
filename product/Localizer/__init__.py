@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from __future__ import absolute_import
 from future.utils import raise_
 import os.path
 
@@ -23,10 +24,10 @@ from App.ImageFile import ImageFile
 from DocumentTemplate.DT_String import String
 
 # Import from Localizer
-from patches import get_request
-import Localizer, MessageCatalog
-from LocalFiles import LocalDTMLFile
-from GettextTag import GettextTag
+from .patches import get_request
+from . import Localizer, MessageCatalog
+from .LocalFiles import LocalDTMLFile
+from .GettextTag import GettextTag
 
 
 

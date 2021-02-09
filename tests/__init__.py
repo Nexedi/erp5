@@ -231,7 +231,8 @@ class ERP5ProductsCodingStyleTestSuite(_ERP5):
   """
   def getTestList(self):
     test_list = []
-    for product_path in glob('%s/../product/*' %(HERE)):
+    for product_path in (glob('%s/../product/*' % HERE)+
+                glob('%s/../bt5' % HERE)):
       if os.path.isdir(product_path) and \
               not os.path.exists(os.path.join(product_path, 'skip_coding_style_test')):
         test_list.append(os.path.basename(product_path))

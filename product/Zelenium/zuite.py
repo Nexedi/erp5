@@ -4,6 +4,7 @@ Zuite instances are collections of Zelenium test cases.
 
 $Id$
 """
+from __future__ import absolute_import
 from future.utils import raise_
 import glob
 import logging
@@ -28,9 +29,9 @@ from OFS.Image import File
 from OFS.OrderedFolder import OrderedFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from interfaces import IZuite
-from permissions import ManageSeleniumTestCases
-from permissions import View
+from .interfaces import IZuite
+from .permissions import ManageSeleniumTestCases
+from .permissions import View
 
 logger = logging.getLogger('event.Zelenium')
 

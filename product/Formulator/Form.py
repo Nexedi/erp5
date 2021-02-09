@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from future.utils import raise_
 import AccessControl
 import OFS
@@ -16,12 +17,12 @@ import os
 import string
 from StringIO import StringIO
 
-from Errors import ValidationError, FormValidationError, FieldDisabledError
-from FieldRegistry import FieldRegistry
-from Widget import render_tag
-from DummyField import fields
-from FormToXML import formToXML
-from XMLToForm import XMLToForm
+from .Errors import ValidationError, FormValidationError, FieldDisabledError
+from .FieldRegistry import FieldRegistry
+from .Widget import render_tag
+from .DummyField import fields
+from .FormToXML import formToXML
+from .XMLToForm import XMLToForm
 
 from ComputedAttribute import ComputedAttribute
 

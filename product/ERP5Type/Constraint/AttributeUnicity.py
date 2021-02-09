@@ -30,7 +30,8 @@
 #
 ##############################################################################
 
-from PropertyExistence import PropertyExistence
+from __future__ import absolute_import
+from .PropertyExistence import PropertyExistence
 from Products.CMFCore.Expression import Expression
 
 class AttributeUnicity(PropertyExistence):

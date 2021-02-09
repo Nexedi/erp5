@@ -78,5 +78,20 @@ class Python3StyleTestCase(ERP5TypeTestCase):
          message = '\n'.join(["%s\n%s\n" % error for error in error_list])
          self.fail(message)
 
+  def test_importFixApplied(self):
+    """check fixer is applied on products
+    """
+    HERE = os.path.dirname(__file__)
+    path = os.path.normpath(glob('%s/../../%s' %(HERE, os.environ['TESTED_PRODUCT']))[0])
+    error_list = []
+    try:
+        stdout = Popen(["2to3", "--fix", "import", str(path)], stdout=PIPE).communicate()
+    except OSError, e:
+        raise_(OSError, '%r\n%r' % (os.environ, e))
+    if stdout[0]:
+        error_list.append((path, stdout[0]))
+    if error_list:
+         message = '\n'.join(["%s\n%s\n" % error for error in error_list])
+         self.fail(message)
 
 

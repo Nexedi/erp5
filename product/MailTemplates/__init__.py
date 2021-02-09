@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -6,7 +7,7 @@
 
 from AccessControl import allow_module,allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from MailTemplate import MailTemplate
+from .MailTemplate import MailTemplate
 from types import ClassType
 from urllib import quote
 
@@ -15,7 +16,7 @@ try:
 except ImportError:
     pass
 else:
-    import FSMailTemplate
+    from . import FSMailTemplate
     import Products.CMFCore.utils
     Products.CMFCore.utils.registerIcon(FSMailTemplate.FSMailTemplate,
                                         'www/fsmt.gif', globals())
