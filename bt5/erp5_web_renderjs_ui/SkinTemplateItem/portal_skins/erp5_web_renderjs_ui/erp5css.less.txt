@@ -2088,8 +2088,7 @@ div[data-gadget-scope='maximize'] button {
 /**********************************************
 * Front page
 **********************************************/
-div[data-gadget-url$="gadget_erp5_page_front.html"] {
-  > ul {
+ul.ui-list-grid {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -2122,7 +2121,6 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] {
         padding: @half-margin-size @margin-size;
       }
     }
-  }
 }
 
 /**********************************************
