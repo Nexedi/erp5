@@ -21,8 +21,8 @@
             erp5_action: 'list_all_report'
           }, {
             title: result_dict.translation_dict.New,
-            jio_key: 'portal_contributions',
-            erp5_action: 'create_a_document'
+            jio_key: 'portal_types',
+            erp5_action: 'list_all_portal_type_to_create'
           }, {
             title: result_dict.translation_dict['Contribute File'],
             jio_key: 'document_module',
