@@ -272,12 +272,9 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
           modification_dict.hasOwnProperty("extra_menu_list"))) {
-        console.log("I am here");
         dl_fragment = document.createDocumentFragment();
         gadget.element.querySelector("dl").textContent = '';
-
         if (this.state.view_list !== undefined) {
-          console.log(this.state.view_list);
           queue
             .push(function () {
               var i = 0,
@@ -359,13 +356,20 @@
         }
         if (gadget.state.hasOwnProperty("extra_menu_list") &&
             gadget.state.extra_menu_list) {
-          extra_menu_list = JSON.parse(gadget.state.extra_menu_list);
-          href_list = [];
-          for (i = 0; i < extra_menu_list.length; i += 1) {
-            href_list.push(extra_menu_list[i].href);
-          }
-          appendDt(dl_fragment, "Global", 'globe',
-                   extra_menu_list, href_list, 0);
+          queue
+            .push(function () {
+              return gadget.getTranslationList(['Global']);
+            })
+            .push(function (translation_list) {
+              extra_menu_list = JSON.parse(gadget.state.extra_menu_list);
+              href_list = [];
+              for (i = 0; i < extra_menu_list.length; i += 1) {
+                extra_menu_list[i].class_name = extra_menu_list[i].active ? "active": "";
+                href_list.push(extra_menu_list[i].href);
+              }
+              appendDt(dl_fragment, translation_list[0], 'globe',
+                       extra_menu_list, href_list, 0);
+            });
         }
       }
       queue
