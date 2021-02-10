@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_romain_access.js</string> </value>
+            <value> <string>gadget_erp5_page_osoe_access.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Romain Access JS</string> </value>
+            <value> <string>Osoe Access JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -240,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.58905.49586.62361</string> </value>
+                      <value> <string>989.60636.39444.34389</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612884425.93</float>
+                              <float>1612966999.58</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
