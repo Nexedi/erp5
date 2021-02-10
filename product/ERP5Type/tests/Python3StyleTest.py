@@ -31,17 +31,59 @@
 import os
 import unittest
 from glob import glob
+from subprocess import Popen, PIPE
 
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
-from Products.ERP5Type.tests.Python3StyleTestCase import Python3StyleTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
-class Python3StyleTest(Python3StyleTestCase):
-  """Run a coding style test for product defined by
-  TESTED_PRODUCT environment variable, that is set by
-  ERP5BusinessTemplateCodingStyleTestSuite in test/__init__.py
+class Python3StyleTest(ERP5TypeTestCase):
+  """ Check coding style against python3 in the dir
+  defined by the TESTED_PRODUCT environment variable
+  We run 2to3 for each fixer applied to check for diff which means
+  that regression has been introduced
   """
-  pass
+
+  def getBusinessTemplateList(self):
+    """
+    No need to install anything
+    """
+    return ()
+
+  def getTestedBusinessTemplateList(self):
+    """
+    Return the list of business templates to be
+    checked for consistency. By default, return
+    the last business template of the
+    list of installed business templates.
+    """
+    return self.getBusinessTemplateList()[-1:]
+
+  def _testFixer(self, fixer_name):
+    """check fixer is applied on given path
+    """
+    HERE = os.path.dirname(__file__)
+    if os.environ['TESTED_PRODUCT'] == "bt5":
+      path = os.path.normpath(glob('%s/../../../%s' %(HERE, os.environ['TESTED_PRODUCT']))[0])
+    else:
+      path = os.path.normpath(glob('%s/../../%s' %(HERE, os.environ['TESTED_PRODUCT']))[0])
+    error_list = []
+    try:
+        stdout = Popen(["2to3", "--fix", fixer_name, str(path)], stdout=PIPE).communicate()[0]
+    except OSError, e:
+        raise_(OSError, '%r\n%r' % (os.environ, e))
+    if stdout:
+        error_list.append((path, stdout))
+    if error_list:
+         message = '\n'.join(["%s\n%s\n" % error for error in error_list])
+         self.fail(message)
+
+  def test_raiseFixApplied(self):
+    self._testFixer('raise')
+
+  def test_importFixApplied(self):
+    self._testFixer('import')
+
 
 def test_suite():
   suite = unittest.TestSuite()

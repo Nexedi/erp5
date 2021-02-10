@@ -226,8 +226,8 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
     os.mkdir(log_directory)
     return log_directory
 
-class ERP5ProductsCodingStyleTestSuite(_ERP5):
-  """ Run coding style test on products
+class ERP5Python3CodingStyleTestSuite(_ERP5):
+  """ Run coding style test for python 3 migration
   """
   def getTestList(self):
     test_list = []
