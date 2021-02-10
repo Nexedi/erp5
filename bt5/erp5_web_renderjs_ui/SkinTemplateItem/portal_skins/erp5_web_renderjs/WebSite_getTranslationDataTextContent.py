@@ -21,8 +21,8 @@ for web_page_reference in web_page_reference_list:
   else:
     # ... or in skin folders
     web_page = context.restrictedTraverse(web_page_reference, None)
-    if web_page is not None and hasattr(web_page, 'manage_FTPget'):
-      web_page_text_content = web_page.manage_FTPget()
+    if web_page is not None and hasattr(web_page, 'PrincipiaSearchSource'):
+      web_page_text_content = web_page.PrincipiaSearchSource()
 
   if web_page_text_content:
     for message in portal.ERP5Site_extractTranslationMessageListFromHTML(web_page_text_content):
