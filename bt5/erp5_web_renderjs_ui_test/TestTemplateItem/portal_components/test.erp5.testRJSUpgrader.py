@@ -25,6 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import StringIO
 import textwrap
 import time
 
@@ -327,6 +328,19 @@ class TestRenderUpdateTranslationData(RenderJSUpgradeTestCase):
     self.portal.changeSkin(None) # refresh skin cache
     translation_data_text_content = self.web_site.WebSite_getTranslationDataTextContent()
     self.assertIn('"Message from page template":', translation_data_text_content)
+
+  def test_WebSite_getTranslationDataTextContent_extract_from_file(self):
+    self.portal.portal_skins.custom.manage_addProduct['OFS'].manage_addFile(
+        'test_portal_skins_gadget.html',
+        file=StringIO.StringIO(textwrap.dedent('''
+          <html>
+          <!--
+           data-i18n=Message from file
+           -->
+          </html>''')))
+    self.portal.changeSkin(None) # refresh skin cache
+    translation_data_text_content = self.web_site.WebSite_getTranslationDataTextContent()
+    self.assertIn('"Message from file":', translation_data_text_content)
 
   def test_WebSite_getTranslationDataTextContent_ignore_draft_web_page(self):
     self.portal.web_page_module.newContent(
