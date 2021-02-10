@@ -1657,15 +1657,17 @@ class TestDocument(TestDocumentMixin):
 
     # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='contributor1')
-    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Author',])
     person2 =  self.createUser(reference='contributor2')
-    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Author',])
     self.tic()
 
     # login as first one
     super(TestDocument, self).loginByUserName('contributor1')
     doc = document_module.newContent(portal_type='File',
                                      title='Test1')
+    doc.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
+    doc.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     self.tic()
     self.login()
     self.assertSameSet([person1],
