@@ -85,7 +85,7 @@
           }
 
           domsugar(gadget.element, [
-            domsugar('ul', {'class': 'gridlist'},
+            domsugar('ul', {'class': 'ui-list-grid'},
                      business_application_element_list)
           ]);
         });
