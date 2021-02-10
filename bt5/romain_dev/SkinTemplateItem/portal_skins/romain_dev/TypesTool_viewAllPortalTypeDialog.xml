@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_doSiteAction</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
@@ -58,7 +58,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
+                        <string>your_select_action</string>
                       </list>
                     </value>
                 </item>
