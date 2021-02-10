@@ -1722,9 +1722,9 @@ class TestDocument(TestDocumentMixin):
 
     # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='contributor1')
-    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Author',])
     person2 =  self.createUser(reference='contributor2')
-    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Author',])
     self.tic()
 
     # login as first one
@@ -1738,6 +1738,7 @@ class TestDocument(TestDocumentMixin):
 
     # login as second one
     super(TestDocument, self).loginByUserName('contributor2')
+    doc.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     doc.edit(title='Test2')
     self.tic()
     self.login()
