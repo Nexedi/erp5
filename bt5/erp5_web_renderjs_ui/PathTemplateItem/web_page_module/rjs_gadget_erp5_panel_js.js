@@ -71,8 +71,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
-        extra_menu_list = options.extra_menu_list,
-        queue = RSVP.Queue(),
+        extra_menu_list,
         display_workflow_list,
         context = this,
         workflow_list,
@@ -113,19 +112,19 @@
           }, {
             "action_object_clone_action": true
           });
+
         workflow_list = JSON.stringify(group_mapping.action_workflow);
         view_list = JSON.stringify(group_mapping.action_object_view);
         action_list = JSON.stringify(group_mapping.action_object_jio_action);
         clone_list = JSON.stringify(group_mapping.action_object_clone_action);
         jump_list = JSON.stringify(group_mapping.action_object_jio_jump);
       }
-      if (extra_menu_list !== undefined) {
+
+      if (options.extra_menu_list !== undefined) {
         extra_menu_list = JSON.stringify(extra_menu_list);
       }
-      return queue
-        .push(function () {
-          return context.getUrlParameter('editable');
-        })
+
+      return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
             visible: visible,
@@ -270,20 +269,20 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
           modification_dict.hasOwnProperty("extra_menu_list"))) {
+        console.log("I am here", this.state.view_list);
         dl_fragment = document.createDocumentFragment();
         gadget.element.querySelector("dl").textContent = '';
         if (this.state.view_list !== undefined) {
           queue
             .push(function () {
-              var action_list,
-                i = 0,
+              var i = 0,
                 j = 0,
                 parameter_list = [],
                 id_list = ["view_list", "workflow_list",
                            "action_list",
                            "clone_list", "jump_list"];
 
-	      view_list = JSON.parse(gadget.state.view_list);
+              view_list = JSON.parse(gadget.state.view_list);
               action_list = JSON.parse(gadget.state.action_list);
               clone_list = JSON.parse(gadget.state.clone_list);
               jump_list = JSON.parse(gadget.state.jump_list);
@@ -302,14 +301,6 @@
               ]);
             })
             .push(function (result_list) {
-              var dl_element,
-                dl_fragment = document.createDocumentFragment(),
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                clone_list = JSON.parse(gadget.state.clone_list),
-                jump_list = JSON.parse(gadget.state.jump_list),
-                workflow_list = JSON.parse(gadget.state.workflow_list);
-
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
               if (gadget.state.display_workflow_list) {
