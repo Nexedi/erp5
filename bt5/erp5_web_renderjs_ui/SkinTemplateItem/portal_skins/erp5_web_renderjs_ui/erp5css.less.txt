@@ -2094,7 +2094,7 @@ div[data-gadget-scope='maximize'] button {
 /**********************************************
 * Front page
 **********************************************/
-ul.gridlist {
+ul.ui-list-grid {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;

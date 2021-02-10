@@ -1830,12 +1830,12 @@ div[data-gadget-scope='maximize'] button:active {
 /**********************************************
 * Front page
 **********************************************/
-ul.gridlist {
+ul.ui-list-grid {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
 }
-ul.gridlist > li {
+ul.ui-list-grid > li {
   flex-shrink: 1;
   vertical-align: top;
   padding: 3pt;
@@ -1845,25 +1845,25 @@ ul.gridlist > li {
   background-color: #FFFFFF;
 }
 @media not screen and (min-width: 45em) {
-  ul.gridlist > li {
+  ul.ui-list-grid > li {
     flex-basis: 100%;
     margin-bottom: 6pt;
   }
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
-  ul.gridlist > li {
+  ul.ui-list-grid > li {
     margin-right: 24pt;
     margin-bottom: 24pt;
     flex-basis: 20em;
   }
 }
-ul.gridlist > li h2 {
+ul.ui-list-grid > li h2 {
   font-weight: 700;
   background: #085078;
   color: #FFFFFF;
   padding: 6pt;
 }
-ul.gridlist > li li {
+ul.ui-list-grid > li li {
   padding: 3pt 6pt;
 }
 /**********************************************
