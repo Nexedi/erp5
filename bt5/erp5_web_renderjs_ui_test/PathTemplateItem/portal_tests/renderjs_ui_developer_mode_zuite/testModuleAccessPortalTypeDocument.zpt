@@ -8,11 +8,11 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test Module Access Portal Type Document</td></tr>
 </thead><tbody>
-<tal:block tal:define="is_listbox python: True;
-                       website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
 <tr>
   <td>click</td>
   <td>//li/a[text()="Accounting"]</td>
