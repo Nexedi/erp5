@@ -164,7 +164,8 @@
   ///////////////////////////////
   // Handle listbox action list
   ///////////////////////////////
-  function mergeGlobalActionWithRawActionList(gadget, links, group_id_list,
+  function mergeGlobalActionWithRawActionList(jio_key, view, jump_view,
+                                              links, group_id_list,
                                               command_mapping,
                                               editable_mapping) {
     var i, j, group,
@@ -173,8 +174,6 @@
       class_name,
       options,
       command,
-      view = gadget.state.view,
-      jump_view = gadget.state.jump_view,
       group_mapping = {},
       url_mapping = {},
       default_command_mapping = {
@@ -260,7 +259,7 @@
             options = {
               title: group_mapping[group][i].title,
               class_name: class_name,
-              jio_key: gadget.state.jio_key,
+              jio_key: jio_key,
               view: group_mapping[group][i].href,
               editable: editable_mapping[group]
             };
