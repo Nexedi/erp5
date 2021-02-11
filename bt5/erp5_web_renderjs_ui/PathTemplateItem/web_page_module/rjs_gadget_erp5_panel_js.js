@@ -269,18 +269,13 @@
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
           modification_dict.hasOwnProperty("extra_menu_list"))) {
-        console.log("I am here", this.state.view_list);
+
         dl_fragment = document.createDocumentFragment();
         gadget.element.querySelector("dl").textContent = '';
         if (this.state.view_list !== undefined) {
           queue
             .push(function () {
-              var i = 0,
-                j = 0,
-                parameter_list = [],
-                id_list = ["view_list", "workflow_list",
-                           "action_list",
-                           "clone_list", "jump_list"];
+              var parameter_list = [];
 
               view_list = JSON.parse(gadget.state.view_list);
               action_list = JSON.parse(gadget.state.action_list);
@@ -288,12 +283,8 @@
               jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
-              for (i = 0; i < id_list.length; i += 1) {
-                action_list = JSON.parse(gadget.state[id_list[i]]);
-                for (j = 0; j < action_list.length; j += 1) {
-                  parameter_list.push(action_list[j]);
-                }
-              }
+              parameter_list = view_list.concat(workflow_list).concat(
+                action_list).concat(clone_list).concat(jump_list);
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
