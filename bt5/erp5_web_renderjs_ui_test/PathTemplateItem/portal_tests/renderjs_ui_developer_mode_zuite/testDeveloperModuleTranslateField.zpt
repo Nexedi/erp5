@@ -13,41 +13,23 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
-  <td></td>
-</tr>
-<tr>
   <td>check</td>
   <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//li/a[text()="Modules"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>click</td>
   <td>//li/a[text()="Modules"]</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//li/a[text()="Accounting"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>click</td>
   <td>//li/a[text()="Accounting"]</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="ui-field-contain"]/div/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>click</td>
   <td>//div[@class="ui-field-contain"]/div/a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Accounting Transactions$&amp;lang=en"]</td>

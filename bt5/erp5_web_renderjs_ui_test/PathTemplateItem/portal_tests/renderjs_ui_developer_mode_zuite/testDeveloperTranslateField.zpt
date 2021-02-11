@@ -13,21 +13,11 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
-  <td></td>
-</tr>
-<tr>
   <td>check</td>
   <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//label[@for="field_my_preferred_html_style_translator_mode"]</td>
-  <td></td>
-</tr>
 <tr>
   <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=2 and @title="Translate this field title"]</td>
@@ -65,17 +55,17 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=2 and @title="Translate this field title"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=3 and @title="Translate this field description"]</td>
   <td></td>
 </tr>
