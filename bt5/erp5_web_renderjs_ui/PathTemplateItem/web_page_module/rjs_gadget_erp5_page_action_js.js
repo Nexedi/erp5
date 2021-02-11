@@ -69,7 +69,8 @@
         .push(function (jio_attachment) {
           var  i, j,
             url_for_kw_list = [],
-            url_mapping = mergeGlobalActionWithRawActionList(gadget,
+            url_mapping = mergeGlobalActionWithRawActionList(
+              gadget.state.jio_key, gadget.state.view, gadget.state.jump_view,
               jio_attachment._links,
               ["action_workflow",
                 ["action_object_jio_action",

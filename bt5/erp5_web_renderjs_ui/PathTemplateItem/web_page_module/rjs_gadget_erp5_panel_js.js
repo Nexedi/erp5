@@ -92,11 +92,8 @@
       }
 
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
-        group_mapping = mergeGlobalActionWithRawActionList({"state": {
-          "jio_key": jio_key,
-          "view": view,
-          "jump_view": jump_view
-        }},
+        group_mapping = mergeGlobalActionWithRawActionList(jio_key,
+          view, jump_view,
           erp5_document._links, [
             "action_workflow",
             "action_object_view", [
