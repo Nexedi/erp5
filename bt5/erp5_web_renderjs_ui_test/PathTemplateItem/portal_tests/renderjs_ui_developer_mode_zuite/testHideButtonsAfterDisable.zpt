@@ -13,28 +13,18 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>uncheck</td>
   <td>//input[@id='field_my_preferred_html_style_developper_mode']</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
   <td></td>
 </tr>
@@ -45,12 +35,12 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
   <td></td>
 </tr>
@@ -61,17 +51,17 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=2 and @title="Translate this field title"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=3 and @title="Translate this field description"]</td>
   <td></td>
 </tr>
@@ -82,7 +72,7 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>
   <td></td>
 </tr>
