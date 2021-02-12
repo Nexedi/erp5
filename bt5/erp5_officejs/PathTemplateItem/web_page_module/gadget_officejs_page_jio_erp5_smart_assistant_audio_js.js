@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP, loopEventListener, navigator, MediaRecorder, Blob, setInterval, Promise */
+/*global document, window, rJS, RSVP, navigator, MediaRecorder, Blob, setInterval, Promise */
 /*jslint indent:2, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, loopEventListener) {
   "use strict";
 
   function promiseMyStream(stream_options, callback) {
@@ -186,4 +186,4 @@
           return gadget.record();
         });
     });
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, rJS.loopEventListener));
