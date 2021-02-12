@@ -1,5 +1,5 @@
 /*globals window, document, RSVP, rJS,
-          loopEventListener, jQuery, URI, location, XMLHttpRequest, console*/
+          jQuery, URI, location, XMLHttpRequest, console*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS, loopEventListener,
            $, XMLHttpRequest, location, console) {
@@ -586,5 +586,5 @@
       );
     });
 
-}(window, document, RSVP, rJS, loopEventListener, jQuery,
+}(window, document, RSVP, rJS, rJS.loopEventListener, jQuery,
   XMLHttpRequest, location, console));
