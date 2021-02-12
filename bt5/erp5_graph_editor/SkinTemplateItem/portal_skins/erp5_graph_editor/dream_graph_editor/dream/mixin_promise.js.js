@@ -1,46 +1,10 @@
 /// FIXME: merge into the gadget using these utilities and remove this file
 
-/*global RSVP, FileReader */
+/*global RSVP, FileReader, renderJS */
 /*jslint unparam: true */
-(function(window, RSVP, FileReader) {
+(function(window, RSVP, FileReader, renderJS) {
     "use strict";
-    window.loopEventListener = function(target, type, useCapture, callback, allowDefault) {
-        //////////////////////////
-        // Infinite event listener (promise is never resolved)
-        // eventListener is removed when promise is cancelled/rejected
-        //////////////////////////
-        var handle_event_callback, callback_promise;
-        function cancelResolver() {
-            if (callback_promise !== undefined && typeof callback_promise.cancel === "function") {
-                callback_promise.cancel();
-            }
-        }
-        function canceller() {
-            if (handle_event_callback !== undefined) {
-                target.removeEventListener(type, handle_event_callback, useCapture);
-            }
-            cancelResolver();
-        }
-        function itsANonResolvableTrap(resolve, reject) {
-            handle_event_callback = function(evt) {
-                evt.stopPropagation();
-                if (allowDefault !== true) {
-                    evt.preventDefault();
-                }
-                cancelResolver();
-                callback_promise = new RSVP.Queue().push(function() {
-                    return callback(evt);
-                }).push(undefined, function(error) {
-                    if (!(error instanceof RSVP.CancellationError)) {
-                        canceller();
-                        reject(error);
-                    }
-                });
-            };
-            target.addEventListener(type, handle_event_callback, useCapture);
-        }
-        return new RSVP.Promise(itsANonResolvableTrap, canceller);
-    };
+    window.loopEventListener = renderJS.loopEventListener;
     window.promiseEventListener = function(target, type, useCapture) {
         //////////////////////////
         // Resolve the promise as soon as the event is triggered
@@ -74,4 +38,4 @@
             reader.readAsText(file);
         });
     };
-})(window, RSVP, FileReader);
+})(window, RSVP, FileReader, renderJS);
