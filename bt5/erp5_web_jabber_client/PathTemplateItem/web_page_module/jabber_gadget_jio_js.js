@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, jIO, Notification, document, loopEventListener */
+/*global window, rJS, RSVP, jIO, Notification, document */
 /*jslint indent: 2, maxerr: 3, nomen: true */
 (function (window, rJS, RSVP, jIO, Notification, document, loopEventListener) {
   "use strict";
@@ -517,4 +517,4 @@
       );
     });
 
-}(window, rJS, RSVP, jIO, Notification, document, loopEventListener));
+}(window, rJS, RSVP, jIO, Notification, document, rJS.loopEventListener));

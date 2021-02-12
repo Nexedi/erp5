@@ -1,5 +1,4 @@
-/*global window, rJS, RSVP, URL, Blob,
-  loopEventListener, document*/
+/*global window, rJS, RSVP, URL, Blob, document*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, URL, loopEventListener) {
   "use strict";
@@ -134,4 +133,4 @@
           }
         });
     });
-}(window, rJS, RSVP, URL, loopEventListener));
+}(window, rJS, RSVP, URL, rJS.loopEventListener));

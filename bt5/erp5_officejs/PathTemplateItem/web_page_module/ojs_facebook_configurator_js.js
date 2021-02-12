@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP, URI, location,
-    loopEventListener, btoa, FB */
+         btoa, FB */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS, RSVP, FB) {
   "use strict";

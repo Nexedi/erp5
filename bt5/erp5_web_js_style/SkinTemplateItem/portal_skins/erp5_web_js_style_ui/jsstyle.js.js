@@ -1,5 +1,5 @@
 /*globals window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          loopEventListener, history, console */
+          history, console */
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
           loopEventListener, history, console) {
@@ -339,4 +339,4 @@
     });
 
 }(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-  loopEventListener, history, console));
+  rJS.loopEventListener, history, console));
