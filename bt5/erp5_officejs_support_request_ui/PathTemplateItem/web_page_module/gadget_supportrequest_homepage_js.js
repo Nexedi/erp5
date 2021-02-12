@@ -1,4 +1,4 @@
-/*global document, window, Option, rJS, RSVP, promiseEventListener, loopEventListener */
+/*global document, window, Option, rJS, RSVP, promiseEventListener */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, promiseEventListener, loopEventListener) {
   "use strict";
@@ -344,4 +344,4 @@
         });
     });
 
-}(window, rJS, RSVP, promiseEventListener, loopEventListener));
+}(window, rJS, RSVP, promiseEventListener, rJS.loopEventListener));
