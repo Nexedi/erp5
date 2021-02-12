@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, loopEventListener,
+/*global window, rJS, RSVP,
   jIO, document */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, jIO, RSVP) {
+(function (window, rJS, jIO, RSVP, loopEventListener) {
   "use strict";
 
   var content_type = {
@@ -151,4 +151,4 @@
           });
         });
     });
-}(window, rJS, jIO, RSVP));
+}(window, rJS, jIO, RSVP, rJS.loopEventListener));

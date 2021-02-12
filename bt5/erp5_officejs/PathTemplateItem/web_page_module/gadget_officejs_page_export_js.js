@@ -1,7 +1,7 @@
-/*globals window, RSVP, rJS, jIO, loopEventListener, URL, document */
+/*globals window, RSVP, rJS, jIO, URL, document */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 
-(function (window, RSVP, rJS, jIO, URL) {
+(function (window, RSVP, rJS, jIO, URL, loopEventListener) {
   "use strict";
 
   var origin_url = (window.location.origin + window.location.pathname)
@@ -226,4 +226,4 @@
         });
     });
 
-}(window, RSVP, rJS, jIO, URL));
+}(window, RSVP, rJS, jIO, URL, rJS.loopEventListener));
