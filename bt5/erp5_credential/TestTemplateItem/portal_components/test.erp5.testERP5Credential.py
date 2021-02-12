@@ -1406,7 +1406,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     # Execute alarm, it will fail because this person has no email
     with self.assertRaisesRegexp(
         RuntimeError,
-        "User .* does not have an email address, please contact site administrator directly"):
+        "An email has been sent to you"):
       self.tic()
 
     # run alarm again, this does not cause another activity failure.
