@@ -1,6 +1,6 @@
-/*global window, RSVP, FileReader */
+/*global window, RSVP, FileReader, renderJS */
 /*jslint indent: 2, maxerr: 3, unparam: true */
-(function (window, RSVP, FileReader) {
+(function (window, RSVP, FileReader, renderJS) {
   "use strict";
 
 
@@ -62,62 +62,8 @@
   }
   window.asBoolean = asBoolean;
 
-  window.loopEventListener = function (target, type, useCapture, callback,
-                                       prevent_default) {
-    //////////////////////////
-    // Infinite event listener (promise is never resolved)
-    // eventListener is removed when promise is cancelled/rejected
-    //////////////////////////
-    var handle_event_callback,
-      callback_promise;
-
-    if (prevent_default === undefined) {
-      prevent_default = true;
-    }
-
-    function cancelResolver() {
-      if ((callback_promise !== undefined) &&
-          (typeof callback_promise.cancel === "function")) {
-        callback_promise.cancel();
-      }
-    }
-
-    function canceller() {
-      if (handle_event_callback !== undefined) {
-        target.removeEventListener(type, handle_event_callback, useCapture);
-      }
-      cancelResolver();
-    }
-    function itsANonResolvableTrap(resolve, reject) {
-      var result;
-      handle_event_callback = function (evt) {
-        if (prevent_default) {
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-
-        cancelResolver();
-
-        try {
-          result = callback(evt);
-        } catch (e) {
-          result = reject(e);
-        }
-
-        callback_promise = new RSVP.Queue(result)
-          .push(undefined, function handleEventCallbackError(error) {
-            // Prevent rejecting the loop, if the result cancelled itself
-            if (!(error instanceof RSVP.CancellationError)) {
-              canceller();
-              reject(error);
-            }
-          });
-      };
-
-      target.addEventListener(type, handle_event_callback, useCapture);
-    }
-    return new RSVP.Promise(itsANonResolvableTrap, canceller);
-  };
+  // Compatibility with gadgets not accessing this function from renderJS
+  window.loopEventListener = renderJS.loopEventListener;
 
   window.promiseEventListener = function (target, type, useCapture) {
     //////////////////////////
@@ -182,4 +128,4 @@
       });
   };
 
-}(window, RSVP, FileReader));
+}(window, RSVP, FileReader, renderJS));
