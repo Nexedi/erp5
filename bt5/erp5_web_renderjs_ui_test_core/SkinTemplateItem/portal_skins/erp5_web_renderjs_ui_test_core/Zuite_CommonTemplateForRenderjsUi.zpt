@@ -1765,23 +1765,15 @@
   </tal:block>
 
   <tal:block metal:define-macro="enable_developer_mode">
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
       <td tal:content="website_url"></td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[text()="Preferences"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//a[text()="Preferences"]</td>
-      <td></td>
-    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Preferences'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    </tal:block>
     <tr>
       <td>open</td>
       <td>${base_url}/ERP5Site_disableDeveloperMode</td>
@@ -1803,21 +1795,10 @@
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[text()="Preferences"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//a[text()="Preferences"]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[text()="User Interface"]</td>
-      <td></td>
-    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Preferences'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td>click</td>
       <td>//a[text()="User Interface"]</td>
