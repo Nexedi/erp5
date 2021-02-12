@@ -684,6 +684,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                              policy.getStaleIfErrorSecs()))
     finally:
       self.portal.caching_policy_manager._policies['unauthenticated no language'] = policy_orig
+      transaction.commit()
 
   def test_PreviewOOoDocumentWithEmbeddedImage(self):
     """Tests html preview of an OOo document with images as extensible content.
