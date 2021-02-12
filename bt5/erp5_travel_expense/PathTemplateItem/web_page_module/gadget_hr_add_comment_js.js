@@ -82,4 +82,4 @@
          });
       }
     });
-}(window, RSVP, rJS, loopEventListener, Handlebars));
+}(window, RSVP, rJS, rJS.loopEventListener, Handlebars));

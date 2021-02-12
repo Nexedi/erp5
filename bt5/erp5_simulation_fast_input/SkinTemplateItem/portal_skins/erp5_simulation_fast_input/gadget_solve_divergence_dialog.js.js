@@ -5,56 +5,7 @@
 // modify an existing dialog, we do not have nice structure of a full
 // renderjs web page
 
-// horrible copy/paste, this code is now present in latest renderjs,
-// until we can use it, just duplicate the code and remove it when
-// renderjs is up to date
-function loopEventListener(target, type, useCapture, callback) {
-  "use strict";
-  //////////////////////////
-  // Infinite event listener (promise is never resolved)
-  // eventListener is removed when promise is cancelled/rejected
-  //////////////////////////
-  var handle_event_callback,
-    callback_promise;
-  function cancelResolver() {
-    if ((callback_promise !== undefined) &&
-        (typeof callback_promise.cancel === "function")) {
-      callback_promise.cancel();
-    }
-  }
-
-  function canceller() {
-    if (handle_event_callback !== undefined) {
-      target.removeEventListener(type, handle_event_callback, useCapture);
-    }
-    cancelResolver();
-  }
-  function itsANonResolvableTrap(resolve, reject) {
-
-    handle_event_callback = function (evt) {
-      evt.stopPropagation();
-      evt.preventDefault();
-      cancelResolver();
-      callback_promise = new RSVP.Queue()
-        .push(function () {
-          return callback(evt);
-        })
-        .push(undefined, function (error) {
-          if (!(error instanceof RSVP.CancellationError)) {
-            canceller();
-            reject(error);
-          }
-        });
-    };
-
-    target.addEventListener(type, handle_event_callback, useCapture);
-  }
-  return new RSVP.Promise(itsANonResolvableTrap, canceller);
-}
-// end of horrible copy/paste
-
-
-(function (rJS, jIO, Handlebars, RSVP, document, window) {
+(function (rJS, jIO, Handlebars, RSVP, document, window, loopEventListener) {
   "use strict";
   rJS(window)
     .ready(function (g) {
@@ -159,4 +110,4 @@ function loopEventListener(target, type, useCapture, callback) {
       }
       return divergence_choice_list;
     });
-}(rJS, jIO, Handlebars, RSVP, document, window));
+}(rJS, jIO, Handlebars, RSVP, document, window, rJS.loopEventListener));

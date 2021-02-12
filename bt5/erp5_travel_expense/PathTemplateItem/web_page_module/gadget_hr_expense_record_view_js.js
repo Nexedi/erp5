@@ -564,4 +564,4 @@
         );
     });
 
-}(window, document, RSVP, rJS, Handlebars, loopEventListener, promiseEventListener, alertify));
+}(window, document, RSVP, rJS, Handlebars, rJS.loopEventListener, promiseEventListener, alertify));

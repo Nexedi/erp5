@@ -1,59 +1,7 @@
 /*global window, document, rJS, CKEDITOR, RSVP*/
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (window, document, rJS, CKEDITOR, RSVP) {
+(function (window, document, rJS, CKEDITOR, RSVP, loopEventListener) {
   "use strict";
-
-  // erp5_globals is not in xhtml_style.
-  // Copy/Paste this function for now
-  function loopEventListener(target, type, useCapture, callback,
-                             prevent_default) {
-    //////////////////////////
-    // Infinite event listener (promise is never resolved)
-    // eventListener is removed when promise is cancelled/rejected
-    //////////////////////////
-    var handle_event_callback,
-      callback_promise;
-
-    if (prevent_default === undefined) {
-      prevent_default = true;
-    }
-
-    function cancelResolver() {
-      if ((callback_promise !== undefined) &&
-          (typeof callback_promise.cancel === "function")) {
-        callback_promise.cancel();
-      }
-    }
-
-    function canceller() {
-      if (handle_event_callback !== undefined) {
-        target.removeEventListener(type, handle_event_callback, useCapture);
-      }
-      cancelResolver();
-    }
-    function itsANonResolvableTrap(resolve, reject) {
-      var result;
-      handle_event_callback = function (evt) {
-        if (prevent_default) {
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-
-        cancelResolver();
-
-        try {
-          result = callback(evt);
-        } catch (e) {
-          return reject(e);
-        }
-
-        callback_promise = new RSVP.Queue(result).push(undefined, reject);
-      };
-
-      target.addEventListener(type, handle_event_callback, useCapture);
-    }
-    return new RSVP.Promise(itsANonResolvableTrap, canceller);
-  }
 
   // http://nightly.ckeditor.com/17-10-11-06-04/full/samples/toolbarconfigurator/index.html#advanced
   var TOOLBAR_MOBILE = [
@@ -255,4 +203,4 @@
     });
 
 
-}(window, document, rJS, CKEDITOR, RSVP));
+}(window, document, rJS, CKEDITOR, RSVP, rJS.loopEventListener));

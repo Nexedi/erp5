@@ -17,7 +17,7 @@
  * along with DREAM.  If not, see <http://www.gnu.org/licenses/>.
  * ==========================================================================*/
 /*global console, window, Node, RSVP, rJS, $, jsPlumb, Handlebars,
-     loopEventListener, promiseEventListener, DOMParser, Springy */
+     promiseEventListener, DOMParser, Springy */
 /*jslint vars: true unparam: true nomen: true todo: true */
 (function (RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy) {
     "use strict";
@@ -867,4 +867,4 @@
             ]);
         });
 
-}(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy));
+}(RSVP, rJS, $, jsPlumb, Handlebars, rJS.loopEventListener, promiseEventListener, DOMParser, Springy));
