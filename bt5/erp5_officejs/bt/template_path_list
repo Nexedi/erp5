@@ -3,7 +3,6 @@ document_module/gadget_officejs_*
 image_module/gadget_officejs_*
 image_module/hr_logo_svg
 image_module/officejs_audioplayer_*
-image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
 portal_types/Notebook Module/notebook_editor_view
@@ -36,7 +35,6 @@ web_page_module/gadget_officejs_*
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
 web_page_module/officejs_notebook_*
-web_page_module/officejs_todomvc_*
 web_page_module/ojs_*
 web_page_module/wallsearch_privacy_policy_html
 web_site_module/officejs_audioplayer
@@ -64,7 +62,6 @@ web_site_module/officejs_svg_editor
 web_site_module/officejs_svg_editor/**
 web_site_module/officejs_text_editor
 web_site_module/officejs_text_editor/**
-web_site_module/officejs_todomvc
 web_site_module/officejs_wallsearch
 web_site_module/officejs_wallsearch/**
 web_site_module/officejs_whiteboard
