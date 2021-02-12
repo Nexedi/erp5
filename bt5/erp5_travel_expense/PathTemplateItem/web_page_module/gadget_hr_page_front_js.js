@@ -1,6 +1,6 @@
 /*globals window, RSVP, rJS*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, RSVP, rJS) {
+(function (window, RSVP, rJS, loopEventListener) {
   "use strict";
    var gadget_klass = rJS(window),
     source = gadget_klass.__template_element
@@ -158,4 +158,4 @@
          });
     });
 
-}(window, RSVP, rJS));
+}(window, RSVP, rJS, rJS.loopEventListener));
