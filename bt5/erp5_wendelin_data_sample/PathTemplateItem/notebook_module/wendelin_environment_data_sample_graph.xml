@@ -209,7 +209,11 @@ function getData(start_date, stop_date){\n
     }\n
   }\n
   return jio.allDocs({\n
-    query: \'portal_type:"Data Analysis Line" AND \' +\n
+    query: \'portal_type:"Data Array" AND \' +\n
+           \'title: "Sample Array (\' + frequency + \' Seconds)"\'\n
+  })\n
+    // query for tutorial\n
+    /*query: \'portal_type:"Data Analysis Line" AND \' +\n
            \'title: "Resampled Array (\' + frequency + \' Seconds)" AND \' +\n
            \'resource_reference:"GENERIC-INTERVAL-RESAMPLED-ARRAY" AND \' +\n
            \'parent_source_title:"Sample Factory" AND \' +\n
@@ -221,7 +225,7 @@ function getData(start_date, stop_date){\n
         query: \'portal_type:"Data Array" AND \' +\n
                \'aggregate_related_relative_url:"\' + data_analysis_line_id +\'"\'\n
       });\n
-    })\n
+    })*/\n
     .push(function (result) {\n
       array_id = result.data.rows[0].id;\n
       return wendelin.getArrayRawSlice(gadget, array_id, 0, 1);\n
@@ -307,7 +311,7 @@ plot();
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sample Data Chart</string> </value>
+            <value> <string>Data Sample Chart</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -440,7 +444,7 @@ plot();
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.53371.24232.30873</string> </value>
+                      <value> <string>990.5465.1700.18073</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -458,7 +462,7 @@ plot();
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612537119.19</float>
+                              <float>1613589163.48</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
