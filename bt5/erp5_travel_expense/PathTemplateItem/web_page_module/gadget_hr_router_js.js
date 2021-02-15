@@ -1,6 +1,6 @@
 /*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS) {
+(function (window, rJS, loopEventListener) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -165,4 +165,4 @@
         });
     });
 
-}(window, rJS));
+}(window, rJS, rJS.loopEventListener));
