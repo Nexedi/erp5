@@ -26,7 +26,6 @@
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
   <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
   <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
-  <script src="gadget_global.js"></script>
   <script src="jsstyle.js"></script>
   <tal:block tal:condition="python: no_style_gadget_url != ''">
   <link rel="prerender" tal:attributes="href no_style_gadget_url">
