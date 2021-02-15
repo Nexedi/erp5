@@ -77,5 +77,12 @@ bt5_installation_list = bt5_update_catalog_list + ('erp5_xhtml_style',
                                                    'erp5_officejs_appstore_base',
                                                    # 'erp5_oauth2_authorization',
                                                    # 'erp5_oauth2_resource',
+                                                   'erp5_web_monitoring',
+                                                   'erp5_web_jabber_client',
+                                                   'erp5_web_eproject',
+                                                   'erp5_web_ehr',
+                                                   'erp5_web_ecrm',
+                                                   'erp5_web_ecommerce',
+                                                   'erp5_osoe_web_renderjs_ui',
                                                    )
 return bt5_installation_list, []
