@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import XMLObjects
+from __future__ import absolute_import
+from . import XMLObjects
 from Products.Formulator.TALESField import TALESMethod
 from Products.Formulator.MethodField import Method
 

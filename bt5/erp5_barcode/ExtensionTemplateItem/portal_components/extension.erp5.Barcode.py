@@ -66,7 +66,7 @@ def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
     ps2pdf_command = '%s %s %s' % (ps2pdf, ps_file_path, new_pdf_file_path)
     ret = os.system(ps2pdf_command)
     if ret != 0:
-      raise RuntimeError, 'PS Conversion Failed'
+      raise RuntimeError('PS Conversion Failed')
     file = open(new_pdf_file_path, 'rb')
     result = file.read()
     file_size = len(result)
@@ -93,7 +93,7 @@ def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
   text_command = 'echo "%s" > %s' % (input_list, new_txt_file_path)
   ret = os.system(text_command)
   if ret != 0:
-    raise RuntimeError, 'File Creation Failed'
+    raise RuntimeError('File Creation Failed')
 
   if horizontal_padding not in ('', None) and vertical_padding not in ('', None):
     margin = '%sx%s' % (horizontal_padding, vertical_padding)
@@ -139,7 +139,7 @@ def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
   barcode_command += ' -o %s ' %(new_ps_file_path)
   ret = os.system(barcode_command)
   if ret != 0:
-    raise RuntimeError, 'Barcode PS File Creation Failed'
+    raise RuntimeError('Barcode PS File Creation Failed')
   if test:
     return getPdfOutput(self, new_ps_file_path, file_name='TestReferenceSheet.pdf')
 

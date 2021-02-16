@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from CopyToTarget import CopyToTarget
+from .CopyToTarget import CopyToTarget
 
 class TransformationSourcingCopyToTarget(CopyToTarget):
   """

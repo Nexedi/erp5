@@ -22,6 +22,7 @@ locale attribute. Currently it only defines the classes LocalDTMLFile and
 LocalPageTemplateFile, which should be used instead of DTMLFile and
 PageTemplateFile.
 """
+from __future__ import absolute_import
 
 # Import from the Standard Library
 import os
@@ -30,7 +31,7 @@ import os
 from App.special_dtml import DTMLFile
 
 # Import from Localizer
-from utils import DomainAware
+from .utils import DomainAware
 
 
 

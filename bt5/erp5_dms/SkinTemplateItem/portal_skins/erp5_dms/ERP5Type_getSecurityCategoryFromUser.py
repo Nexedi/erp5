@@ -18,7 +18,7 @@ for base_category in base_category_list:
   if category_value not in (None, ''):
     category_dict[base_category] = category_value
   else:
-    raise RuntimeError, "Error: '%s' property is required in order to update person security group"  % (base_category)
+    raise RuntimeError("Error: '%s' property is required in order to update person security group"  % base_category)
   category_list.append(category_dict)
 
 return category_list

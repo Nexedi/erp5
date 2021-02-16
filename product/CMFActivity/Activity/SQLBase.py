@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -42,7 +43,7 @@ from Products.CMFActivity.ActivityTool import (
   Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, SkippedMessage)
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment)
-from Queue import Queue, VALIDATION_ERROR_DELAY
+from .Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ERP5Type import Timeout
 from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline

@@ -1,10 +1,11 @@
 #!/usr/bin/env python2.7
+from __future__ import absolute_import
 import argparse, sys, os, textwrap
 from erp5.util import taskdistribution
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
 # Even if it's not used in this file. Yuck.
-import ERP5TypeTestSuite
+from . import ERP5TypeTestSuite
 
 def _parsingErrorHandler(data, _):
   print >> sys.stderr, 'Error parsing data:', repr(data)

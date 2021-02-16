@@ -13,6 +13,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
@@ -55,11 +56,11 @@ from xml.sax.saxutils import escape, quoteattr
 import os
 from hashlib import md5
 
-from interfaces.query_catalog import ISearchKeyCatalog
+from .interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 
-from SearchText import isAdvancedSearchText, dequote
+from .SearchText import isAdvancedSearchText, dequote
 
 # Try to import ActiveObject in order to make SQLCatalog active
 try:
@@ -2529,10 +2530,10 @@ InitializeClass(Catalog)
 
 class CatalogError(Exception): pass
 
-from Query.Query import Query as BaseQuery
-from Query.SimpleQuery import SimpleQuery
-from Query.ComplexQuery import ComplexQuery
-from Query.AutoQuery import AutoQuery
+from .Query.Query import Query as BaseQuery
+from .Query.SimpleQuery import SimpleQuery
+from .Query.ComplexQuery import ComplexQuery
+from .Query.AutoQuery import AutoQuery
 Query = AutoQuery
 
 def NegatedQuery(query):
@@ -2547,7 +2548,7 @@ def OrQuery(*args):
 allow_class(SimpleQuery)
 allow_class(ComplexQuery)
 
-import SearchKey
+from . import SearchKey
 SEARCH_KEY_INSTANCE_POOL = {}
 SEARCH_KEY_CLASS_CACHE = {}
 
@@ -2657,10 +2658,10 @@ class AdvancedSearchKeyWrapperForScriptableKey(SearchKey.DefaultKey.DefaultKey):
     )
 InitializeClass(AdvancedSearchKeyWrapperForScriptableKey)
 
-from Operator import operator_dict
+from .Operator import operator_dict
 def getComparisonOperatorInstance(operator):
   return operator_dict[operator]
 
-from Query.EntireQuery import EntireQuery
+from .Query.EntireQuery import EntireQuery
 
 verifyClass(ISearchKeyCatalog, Catalog)

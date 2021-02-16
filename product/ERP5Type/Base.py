@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 from struct import unpack
 from copy import copy
 import warnings
@@ -71,13 +72,13 @@ from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
-from Accessor import WorkflowState
+from .Accessor import WorkflowState
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 
-from CopySupport import CopyContainer, CopyError,\
+from .CopySupport import CopyContainer, CopyError,\
     tryMethodCallWithTemporaryPermission
-from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
+from .Errors import DeferredCatalogError, UnsupportedWorkflowMethod
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Message import Message
@@ -1367,8 +1368,7 @@ class Base(
           if value_len == 1:
             mono_value = value[0]
             return method(mono_value, **kw)
-        raise TypeError, \
-           "A mono valued property must be set with a list of len 1"
+        raise TypeError("A mono valued property must be set with a list of len 1")
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     # If we are here, this means we do not use a property that
@@ -3377,7 +3377,7 @@ class Base(
     """
     parent = self.getParentValue()
     if parent.getPortalType() != "Preference" and not parent.isTemplate:
-      raise ValueError, "Template documents can not be created outside Preferences"
+      raise ValueError("Template documents can not be created outside Preferences")
     self.isTemplate = ConstantGetter('isTemplate', value=True)
     # XXX reset security here
 
@@ -3387,7 +3387,7 @@ class Base(
       Make document behave as standard document (indexable)
     """
     if self.getParentValue().getPortalType() == "Preference":
-      raise ValueError, "Template instances can not be created within Preferences"
+      raise ValueError("Template instances can not be created within Preferences")
     # We remove attributes from the instance
     # We do this rather than self.isIndexable = 0 because we want to
     # go back to previous situation (class based definition)
@@ -3483,9 +3483,9 @@ class Base(
     Use an Unrestricted method to edit related relations on other objects.
     """
     if self.getPortalType() == portal_type:
-      raise TypeError, 'Can not migrate a document to same portal_type'
+      raise TypeError('Can not migrate a document to same portal_type')
     if not portal_type:
-      raise TypeError, 'Missing portal_type value'
+      raise TypeError('Missing portal_type value')
 
     # Reingestion requested with portal_type.
     input_kw = {}

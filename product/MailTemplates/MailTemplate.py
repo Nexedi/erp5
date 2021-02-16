@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -14,7 +15,7 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplate import PageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseMailTemplate import BaseMailTemplate
+from .BaseMailTemplate import BaseMailTemplate
 
 class MailTemplate(BaseMailTemplate,ZopePageTemplate):
     "A ZPT-like template for sending mails"
@@ -41,7 +42,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
         """Change the mailhost and document."""
         if self.wl_isLocked():
             from webdav.Lockable import ResourceLockedError
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV")
         self.expand=expand
         self._setPropValue('mailhost',mailhost)
         self.pt_edit(text, content_type)
