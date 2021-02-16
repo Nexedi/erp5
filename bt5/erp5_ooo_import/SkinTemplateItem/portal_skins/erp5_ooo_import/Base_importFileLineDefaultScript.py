@@ -30,7 +30,7 @@ for allowed_portal_type in container.allowedContentTypes():
     break
 
 if portal_type_object is None:
-  raise ValueError, 'Disallowed subobject type: %s' % portal_type
+  raise ValueError('Disallowed subobject type: %s' % portal_type)
 else:
   # Default result
   success = 1

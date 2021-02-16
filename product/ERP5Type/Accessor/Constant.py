@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -27,7 +28,7 @@
 #
 ##############################################################################
 
-from Accessor import Accessor
+from .Accessor import Accessor
 
 # Creation of default constructor
 class func_code: pass

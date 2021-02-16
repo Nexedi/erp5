@@ -189,7 +189,7 @@ class MobytGateway(XMLObject):
       return [result.get('status_info', "")] #return message id (gateway side)
     elif result['status'] == "KO":
       #we get an error when call the gateway
-      raise SMSGatewayError, urllib.unquote(result.get('status_info', "Impossible to send the SMS"))
+      raise SMSGatewayError(urllib.unquote(result.get('status_info', "Impossible to send the SMS")))
     elif result['status'] == "Test":
       #just a test, no message id
       return None
@@ -224,7 +224,7 @@ class MobytGateway(XMLObject):
 
     elif result['status'] == "KO":
       #we get an error when call the gateway
-      raise SMSGatewayError, urllib.unquote(result.get('status_info', "Impossible to get the message status"))
+      raise SMSGatewayError(urllib.unquote(result.get('status_info', "Impossible to get the message status")))
 
   security.declarePublic('receive')
   def receive(self,REQUEST):

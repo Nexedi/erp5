@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 import string
-from DummyField import fields
+from .DummyField import fields
 from DocumentTemplate.DT_Util import html_quote
 from DateTime import DateTime, Timezones
 from cgi import escape

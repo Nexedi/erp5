@@ -24,6 +24,7 @@ with tracebacks of the running python threads will be made.
 
 You MUST configure zope.conf before use.
 """
+from __future__ import absolute_import
 
 from zLOG import LOG, INFO, ERROR
 from App.config import getConfiguration
@@ -42,5 +43,5 @@ if getattr(config, 'product_config', None) is not None:
                 'optionally secret in <product-config deadlockdebugger>, not '
                 'activated')
         else:
-            import dumper
+            from . import dumper
             LOG('DeadlockDebugger', INFO, "Installed")

@@ -14,16 +14,16 @@ if context.getPassword():
         if login.getReference() == reference:
           break
       else:
-        raise RuntimeError, 'Person %s does not have a validated Login with reference %r' % \
-            (person.getRelativeUrl(), reference)
+        raise RuntimeError('Person %s does not have a validated Login with reference %r'
+          % (person.getRelativeUrl(), reference))
     else: # BBB when login reference is not set in Credential Update document.
       if login_list:
         user_id = person.Person_getUserId()
         login = sorted(login_list,
                        key=lambda x:x.getReference() == user_id, reverse=True)[0]
       else:
-        raise RuntimeError, 'Person %s does not have a validated Login with reference %r' % \
-            (person.getRelativeUrl(), reference)
+        raise RuntimeError('Person %s does not have a validated Login with reference %r'
+          % (person.getRelativeUrl(), reference))
   else:
     # BBB
     login = person

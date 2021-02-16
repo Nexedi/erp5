@@ -106,7 +106,7 @@ class TioSafeBrain(Explicit):
           module_list.append(module)
 
       if not len(module_list):
-        raise ValueError, "Impossible to find a module for %s" %(object_type)
+        raise ValueError("Impossible to find a module for %s" % object_type)
 
       sync_object_list = []
       for module in module_list:
@@ -129,12 +129,12 @@ class TioSafeBrain(Explicit):
           #  2. sync_type != tiosafe and destination_portal_type != Integration Module
           sync_object_list.append(module_destination.getPath())
         else:
-          raise ValueError, "Impossible to find pub/sub related to Integration Module, pub = %s with source = %s, sub = %s with source = %s" %(
+          raise ValueError("Impossible to find pub/sub related to Integration Module, pub = %s with source = %s, sub = %s with source = %s" %(
               module.getSourceSection(),
               module_source.getSource(),
               module.getDestinationSection(),
               module_destination.getSource(),
-              )
+              ))
       return sync_object_list
 
     # Cache sync object list
@@ -175,7 +175,7 @@ class TioSafeBrain(Explicit):
         try:
           prop_value = getattr(self, prop)
         except AttributeError:
-          raise AttributeError, "The brain doesn't have the property %s" % prop
+          raise AttributeError("The brain doesn't have the property %s" % prop)
         gid += " %s" %(prop_value,)
 
       self.gid = gid
@@ -401,7 +401,7 @@ class Node(TioSafeBrain):
             organisation_gid = None
 
         if organisation_gid is None:
-          raise ValueError, "Impossible to find organisation for id %s on node %s" %(self.relation, self.path)
+          raise ValueError("Impossible to find organisation for id %s on node %s" %(self.relation, self.path))
       else:
         organisation_gid = ""
       # set the tag
@@ -539,7 +539,7 @@ class Transaction(TioSafeBrain):
         # Must find a better way to browse specialised objects
         specialized_trade_condition = trade_condition.getSpecialiseValue()
         if specialized_trade_condition is None or specialized_trade_condition.getPortalType() == "Business Process":
-          raise ValueError, 'Impossible to find a trade condition containing VAT lines, last trade condition was %s, parent was %s' %(specialized_trade_condition, trade_condition)
+          raise ValueError('Impossible to find a trade condition containing VAT lines, last trade condition was %s, parent was %s' %(specialized_trade_condition, trade_condition))
         else:
           trade_condition = specialized_trade_condition
 
@@ -679,7 +679,7 @@ class Transaction(TioSafeBrain):
             elif line_type == 'Delivery':
               resource = integration_site.getDestinationCarrierValue()
             else:
-              raise ValueError, 'Try to work on "%s" which is an invalid type.' % line_type
+              raise ValueError('Try to work on "%s" which is an invalid type.' % line_type)
           # after the work on the line set the resource value which will be
           # render in the xml
           movement_dict['resource'] = resource_gid

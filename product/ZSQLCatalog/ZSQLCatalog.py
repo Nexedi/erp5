@@ -12,6 +12,7 @@
 #
 ##############################################################################
 """ZCatalog product"""
+from __future__ import absolute_import
 
 from App.special_dtml import DTMLFile
 from App.Dialogs import MessageDialog
@@ -26,7 +27,7 @@ from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
 from AccessControl.Permissions import import_export_objects, \
     manage_zcatalog_entries
-from SQLCatalog import CatalogError
+from .SQLCatalog import CatalogError
 from AccessControl import ClassSecurityInfo
 from DocumentTemplate.security import RestrictedDTML
 from Products.CMFCore.utils import getToolByName
@@ -259,7 +260,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       self.destination_sql_catalog_id = destination_sql_catalog_id
       self.archive_path = archive_path
     else:
-      raise CatalogError, 'unknown hot reindexing state %s' % state
+      raise CatalogError('unknown hot reindexing state %s' % state)
 
   def _finishHotReindexing(self, source_sql_catalog_id,
                           destination_sql_catalog_id, skin_selection_dict,
@@ -293,8 +294,8 @@ class ZCatalog(Folder, Persistent, Implicit):
             ERP5Site_reindexAll.
     """
     if self.getHotReindexingState() == HOT_REINDEXING_FINISHED_STATE:
-      raise Exception, 'cancelHotReindexing called while no Hot Reindexing '\
-                       'was runing. Nothing done.'
+      raise Exception(
+        'cancelHotReindexing called while no Hot Reindexing was running. Nothing done.')
     # Remove hot reindexing state
     self._setHotReindexingState(HOT_REINDEXING_FINISHED_STATE)
     portal_activities = getToolByName(self, 'portal_activities')
@@ -323,9 +324,9 @@ class ZCatalog(Folder, Persistent, Implicit):
       transaction.
     """
     if self.getHotReindexingState() != HOT_REINDEXING_DOUBLE_INDEXING_STATE:
-      raise Exception, 'playBackRecordedObjectList was called while '\
-                       'hot_reindexing_state was not "%s". Playback aborted.' \
-                       % (HOT_REINDEXING_DOUBLE_INDEXING_STATE, )
+      raise Exception('playBackRecordedObjectList was called while'
+                      ' hot_reindexing_state was not %r. Playback aborted.'
+                      % HOT_REINDEXING_DOUBLE_INDEXING_STATE)
     catalog_object = self.getSQLCatalog(sql_catalog_id)
     result = catalog_object.readRecordedObjectList(catalog=catalog)
     if len(result):
@@ -337,7 +338,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           if obj is not None:
             obj.reindexObject(sql_catalog_id=sql_catalog_id)
         else:
-          raise ValueError, '%s is not a valid value for "catalog".' % (catalog, )
+          raise ValueError('%r is not a valid value for "catalog".' % (catalog, ))
       catalog_object.deleteRecordedObjectList(uid_list=[o.uid for o in result])
       # Re-schedule the same action in case there are remaining rows in the
       # table. This can happen if the database connector limits the number
@@ -428,13 +429,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     # Hot reindexing can only be runing once at a time on a system.
     if self.hot_reindexing_state is not None:
-      raise CatalogError, 'hot reindexing process is already running %s -%s' %(self, self.hot_reindexing_state)
+      raise CatalogError('hot reindexing process is already running %s -%s' %(self, self.hot_reindexing_state))
 
     if source_sql_catalog_id == destination_sql_catalog_id:
-      raise CatalogError, 'Hot reindexing cannot be done with the same '\
-                          'catalog as both source and destination. What'\
-                          ' you want to do is a "clear catalog" and an '\
-                          '"ERP5Site_reindexAll".'
+      raise CatalogError("Hot reindexing cannot be done with the same catalog"
+                         " as both source and destination. What you want to do"
+                         " is a 'clear catalog' and an 'ERP5Site_reindexAll'.")
 
     if source_sql_catalog_id != self.getDefaultSqlCatalogId():
       LOG('ZSQLCatalog', 0, 'Warning : Hot reindexing is started with a '\
@@ -833,7 +833,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
     if uid is None:
-      raise TypeError, "sorry uncatalog_object supports only uid"
+      raise TypeError("sorry uncatalog_object supports only uid")
     default_catalog = self.getSQLCatalog()
 
     if sql_catalog_id is None:
@@ -1154,7 +1154,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     try: add_result=result.append
     except AttributeError:
-      raise AttributeError, `result`
+      raise AttributeError(repr(result))
 
     for id, ob in items:
       if pre: p="%s/%s" % (pre, id)

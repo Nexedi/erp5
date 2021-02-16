@@ -796,7 +796,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         elif len(p) == 2:
             [env['PATH_INFO'], env['QUERY_STRING']] = p
         else:
-            raise TypeError, ''
+            raise TypeError('')
 
         if basic:
           assert not user, (basic, user)

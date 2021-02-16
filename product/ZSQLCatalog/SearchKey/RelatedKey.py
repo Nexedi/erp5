@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from SearchKey import SearchKey
+from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.Query import Query
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery

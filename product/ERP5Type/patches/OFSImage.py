@@ -90,7 +90,7 @@ PUT_orig = OFS.Image.File.PUT
 def PUT(self, REQUEST, RESPONSE):
   """Handle HTTP PUT requests"""
   if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-    raise Forbidden, 'REQUEST_METHOD should be PUT.'
+    raise Forbidden('REQUEST_METHOD should be PUT.')
   return PUT_orig(self, REQUEST, RESPONSE)
 
 OFS.Image.File.PUT = PUT

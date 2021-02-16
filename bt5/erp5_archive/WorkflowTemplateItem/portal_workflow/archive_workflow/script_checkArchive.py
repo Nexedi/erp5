@@ -11,7 +11,7 @@ catalog_id = archive.getCatalogId()
 
 if "deferred" not in archive.getDeferredConnectionId():
   msg = Message(domain='ui', message='Deferred connection ID choose is not a deferred connection.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg)
 
 def sort_max_date(a, b):
   return cmp(a.getStopDateRangeMax(), b.getStopDateRangeMax())
@@ -32,7 +32,7 @@ if archive.getStopDateRangeMax() is not None:
         break
     if previous_archive.getStopDateRangeMax().Date() != min_stop_date:
       msg = Message(domain='ui', message='Archive are not contiguous.')
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg)
 else:
   previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_type="Archive",
                                                                          validation_state='ready')]
@@ -47,7 +47,7 @@ else:
         break
     if previous_archive.getStopDateRangeMax().Date() != min_stop_date:
       msg = Message(domain='ui', message='Archive are not contiguous.')
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg)
 
 
 # Check the catalog
@@ -57,4 +57,4 @@ previous_archive_list = [x.getObject() for x in archive.portal_catalog(portal_ty
 for arch in previous_archive_list:
   if arch.getCatalogId() == catalog_id and arch is not previous_archive:
     msg = Message(domain='ui', message='Use of a former catalog is prohibited.')
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg)

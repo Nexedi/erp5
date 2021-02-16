@@ -270,13 +270,13 @@ class StrippingParser(HTMLParser):
             for k, v in attrs:
                 if remove_script and k.strip().lower().startswith('on'):
                     if not self.raise_error: continue
-                    else: raise IllegalHTML, 'Script event "%s" not allowed.' % k
+                    else: raise IllegalHTML('Script event "%s" not allowed.' % k)
                 elif v is None:
                     self.result.append(' %s' % k)
                 elif remove_script and hasScript(v) and \
                         not (k.lower() == 'src' and tag.lower() == 'img'):
                     if not self.raise_error: continue
-                    else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
+                    else: raise IllegalHTML('Script URI "%s" not allowed.' % v)
                 else:
                     if tag.lower() == 'meta' and k.lower() == 'content' and \
                      self.default_encoding and self.default_encoding not in v:
@@ -302,7 +302,7 @@ class StrippingParser(HTMLParser):
         elif self.nasty.has_key(tag):
             self.suppress = True
             if self.raise_error:
-                raise IllegalHTML, 'Dynamic tag "%s" not allowed.' % tag
+                raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
         else:
             # omit tag
             pass

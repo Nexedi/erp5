@@ -17,4 +17,4 @@ for career_step in career_step_list :
   # for now, we only return the first one.
   return career_step.getStartDate()
 
-raise ValueError, 'No Career Step Defined.'
+raise ValueError('No Career Step Defined.')

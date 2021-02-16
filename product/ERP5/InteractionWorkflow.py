@@ -16,6 +16,7 @@
 # GNU General Public License for more details.
 #
 ##############################################################################
+from __future__ import absolute_import
 """
 DCWorkflow implementation *deprecated* in favor of ERP5 Workflow.
 """
@@ -115,7 +116,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
   def __init__(self, id):
     self.id = id
-    from Interaction import Interaction
+    from .Interaction import Interaction
     self._addObject(Interaction('interactions'))
     from Products.DCWorkflow.Variables import Variables
     self._addObject(Variables('variables'))

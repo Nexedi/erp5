@@ -12,8 +12,9 @@
 ##############################################################################
 
 """ZCatalog product"""
+from __future__ import absolute_import
 
-import ZSQLCatalog, SQLCatalog
+from . import ZSQLCatalog, SQLCatalog
 
 def initialize(context):
     context.registerClass(
@@ -40,5 +41,5 @@ ModuleSecurityInfo('Products.ZSQLCatalog.SQLCatalog').declarePublic(
             'ComplexQuery', 'Query', 'NegatedQuery', 'AndQuery', 'OrQuery',
             'BaseQuery')
 
-from Query import Query, SimpleQuery
-from SearchKey import SearchKey
+from .Query import Query, SimpleQuery
+from .SearchKey import SearchKey

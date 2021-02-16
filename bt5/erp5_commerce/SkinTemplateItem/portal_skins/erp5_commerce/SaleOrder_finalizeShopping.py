@@ -21,7 +21,7 @@ if isAnon:
 
 #Check if payment is sucessfull
 if buyer is None:
-  raise ValueError, "Impossible to finalize and order not payed"
+  raise ValueError("Impossible to finalize and order not payed")
 
 portal_type = "Sale %s" % shopping_cart.getPortalType()
 module = context.getDefaultModule(portal_type)

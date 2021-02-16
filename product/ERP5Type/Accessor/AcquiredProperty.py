@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 
 from Acquisition import aq_base
 from ZPublisher.HTTPRequest import FileUpload
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter, Tester as BaseTester
+from .Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter, Tester as BaseTester
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
 

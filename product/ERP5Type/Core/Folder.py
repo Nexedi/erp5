@@ -273,9 +273,9 @@ class FolderMixIn(ExtensionClass.Base):
         if isinstance(my_id, str):
           self._delObject(my_id)
         else:
-          raise TypeError, error_message + str(type(my_id))
+          raise TypeError(error_message + str(type(my_id)))
     else:
-      raise TypeError, error_message + str(type(id))
+      raise TypeError(error_message + str(type(id)))
 
   def _generatePerDayId(self):
     """
@@ -1652,12 +1652,12 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       add_permission = getattr(aq_base(subobject_type), 'permission', '')
       if add_permission:
         if not sm.checkPermission(add_permission, self):
-          raise AccessControl_Unauthorized, add_permission
+          raise AccessControl_Unauthorized(add_permission)
 
       # handle validate_src
       if validate_src:
         if not sm.validate(None, parent, None, object):
-          raise AccessControl_Unauthorized, object.getId()
+          raise AccessControl_Unauthorized(object.getId())
       if validate_src > 1:
         if not sm.checkPermission(Permissions.DeleteObjects, parent):
           raise AccessControl_Unauthorized
@@ -1696,7 +1696,7 @@ class NotImplementedClass(object):
     self.__name__ = method_id
 
   def __call__(self, *args, **kw):
-    raise NotImplementedError, str(self.__name__)
+    raise NotImplementedError(self.__name__)
 
 for source_klass, destination_klass in \
         (

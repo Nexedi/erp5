@@ -2,7 +2,7 @@ im = context
 pub = im.getSourceSectionValue()
 pub_sub_list = pub.objectValues()
 if not len(pub_sub_list):
-  raise ValueError, "%s sub in pub %s for im %s" %(len(pub_sub_list), pub.getPath(), im.getPath())
+  raise ValueError("%s sub in pub %s for im %s" %(len(pub_sub_list), pub.getPath(), im.getPath()))
 else:
   pub_sub = pub_sub_list[0]
 #pub_sub = im.getSourceSectionValue().objectValues()[0]
