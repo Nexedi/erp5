@@ -132,7 +132,7 @@ class PDFTemplate(ZopePageTemplate):
         Change title and pdf_stylesheet.
       """
       if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
-        raise ResourceLockedError, "File is locked via WebDAV"
+        raise ResourceLockedError("File is locked via WebDAV")
       self.pdf_stylesheet = pdf_stylesheet
       self.pt_setTitle(title)
       #REQUEST.set('text', self.read()) # May not equal 'text'!

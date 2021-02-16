@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from App.class_init import default__class_init__ as InitializeClass
 import Acquisition
 from Persistence import Persistent
@@ -6,7 +7,7 @@ from App.special_dtml import DTMLFile
 from AccessControl import ClassSecurityInfo
 import OFS
 from Shared.DC.Scripts.Bindings import Bindings
-from Errors import ValidationError
+from .Errors import ValidationError
 from Products.Formulator.Widget import MultiItemsWidget
 from zLOG import LOG
 from lxml import etree
@@ -648,7 +649,7 @@ class ZMIField(
         """Change TALES expressions through XMLRPC.
         """
         # BEWARE: there is no validation on the values passed through the map
-        from TALESField import TALESMethod
+        from .TALESField import TALESMethod
         result = {}
         for key, value in map.items():
             if value:

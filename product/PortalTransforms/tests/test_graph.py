@@ -1,6 +1,7 @@
+from __future__ import absolute_import
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
-from utils import input_file_path
+from .utils import input_file_path
 FILE_PATH = input_file_path("demo1.pdf")
 
 class TestGraph(ATSiteTestCase):

@@ -27,8 +27,9 @@
 ##############################################################################
 
 "Dummy (no cache)"
+from __future__ import absolute_import
 
-from BaseCache import BaseCache
+from .BaseCache import BaseCache
 
 class DummyCache(BaseCache):
   """ Dummy cache plugin. """

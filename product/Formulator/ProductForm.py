@@ -5,13 +5,14 @@ This file is an adaptation from part of Plone's FormTool.py tool.
 It provides a wrapping around Formulator.BasicForm, allowing it
 to be created inside a product but used outside it.
 """
+from __future__ import absolute_import
 
 import string
 
 from AccessControl import ClassSecurityInfo
 from App.class_init import default__class_init__ as InitializeClass
 import FormValidationError, BasicForm
-import StandardFields
+from . import StandardFields
 
 class ProductForm(BasicForm):
     """Wraps Formulator.BasicForm and provides some convenience methods that

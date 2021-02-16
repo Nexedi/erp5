@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2018 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.PsycoWrapper import psyco
-from Base import Getter as BaseGetter
+from .Base import Getter as BaseGetter
 from Acquisition import aq_base
 
 class ListGetter(BaseGetter):

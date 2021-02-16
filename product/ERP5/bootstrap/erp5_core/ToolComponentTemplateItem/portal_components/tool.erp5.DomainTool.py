@@ -360,7 +360,7 @@ class DomainTool(BaseTool):
           break
       else:
         if domain is _MARKER: return default
-        raise KeyError, subdomain
+        raise KeyError(subdomain)
     return domain
 
 InitializeClass(DomainTool)

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from lexer import lexer, update_docstrings
+from .lexer import lexer, update_docstrings
 try:
   from Products.ZSQLCatalog.interfaces.abstract_syntax_node import INode, IValueNode, ILogicalNode, IColumnNode
   from zope.interface.verify import verifyClass

@@ -17,9 +17,10 @@
 """
 Output dates and times in locale format.
 """
+from __future__ import absolute_import
 
 # Import from itools
-from accept import get_accept
+from .accept import get_accept
 
 
 formats = {

@@ -8,8 +8,9 @@ When the field classes have been defined, get_field()
 can be used on FieldProperty objects to get an
 actual field object.
 """
+from __future__ import absolute_import
 
-from FieldRegistry import FieldRegistry
+from .FieldRegistry import FieldRegistry
 
 class DummyFieldFactory:
     def __getattr__(self, name):

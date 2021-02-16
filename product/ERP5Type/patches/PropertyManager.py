@@ -37,7 +37,7 @@ def PropertyManager_updateProperty(self, id, value, local_properties=False):
     self._wrapperCheck(value)
     if not hasattr(self, 'isRADContent'):
       if not self.hasProperty(id):
-          raise BadRequest, 'The property %s does not exist' % escape(id)
+          raise BadRequest('The property %s does not exist' % escape(id))
     if isinstance(value, str):
         proptype=self.getPropertyType(id, local_properties=local_properties) \
            or 'string'
@@ -106,11 +106,11 @@ def PropertyManager_setProperty(self, id, value, type=None):
 
     self._wrapperCheck(value)
     if not self.valid_property_id(id):
-        raise BadRequest, 'Invalid or duplicate property id: %s' % id
+        raise BadRequest('Invalid or duplicate property id: %s' % id)
 
     if type in ('selection', 'multiple selection'):
         if not hasattr(self, value):
-            raise BadRequest, 'No select variable %s' % value
+            raise BadRequest('No select variable %s' % value)
         self._local_properties=getattr(self, '_local_properties', ()) + (
             {'id':id, 'type':type, 'select_variable':value},)
         if type=='selection':
@@ -136,7 +136,7 @@ def PropertyManager_valid_property_id(self, id):
 
 def PropertyManager_delProperty(self, id):
     if not self.hasProperty(id):
-        raise ValueError, 'The property %s does not exist' % escape(id)
+        raise ValueError('The property %s does not exist' % escape(id))
     self._delPropValue(id)
     self._local_properties=tuple(filter(lambda i, n=id: i['id'] != n,
                                   getattr(self, '_local_properties', ())))

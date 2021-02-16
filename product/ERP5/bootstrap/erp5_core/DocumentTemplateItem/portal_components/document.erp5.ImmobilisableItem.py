@@ -166,8 +166,7 @@ class ImmobilisableItem(Item, Amount):
         # Test immobilisation movement
         if filter_valid and movement.getImmobilisationState() in ('invalid',
                                                                   'calculating',):
-          raise ImmobilisationValidityError, \
-                '%s : some preceding movements are still in calculating state' % self.getRelativeUrl()
+          raise ImmobilisationValidityError('%s : some preceding movements are still in calculating state' % self.getRelativeUrl())
         immo_list.append(movement)
     return immo_list
 
@@ -365,8 +364,7 @@ class ImmobilisableItem(Item, Amount):
       if section_movement.getStopDate() in date_list and \
             section_movement not in section_movement_list and \
             section_movement not in immobilisation_list:
-        raise ImmobilisationCalculationError, \
-            "Some movements related to item %s have the same date" % self.getRelativeUrl()
+        raise ImmobilisationCalculationError("Some movements related to item %s have the same date" % self.getRelativeUrl())
       elif section_movement.getStopDate() not in date_list and \
             section_movement not in section_movement_list:
         #The section movement is different from immobilisation movements
@@ -950,18 +948,16 @@ class ImmobilisableItem(Item, Amount):
         LOG('ERP5 Warning :', 0,
             'Unable to find the ratio calculation script %s for item %s at date %s' % (
                  '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date)))
-        raise ImmobilisationCalculationError, \
-              'Unable to find the ratio calculation script %s for item %s at date %s' % (
-                 '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date))
+        raise ImmobilisationCalculationError('Unable to find the ratio calculation script %s for item %s at date %s' % (
+                 '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date)))
 
       current_ratio = ratio_script(**ratio_params)
       if current_ratio is None:
         LOG("ERP5 Warning :",0,
             "Unable to calculate the ratio during the amortisation calculation on item %s at date %s : script %s returned None" % (
                   self.getRelativeUrl(), repr(at_date), '%s/ratioCalculation' % amortisation_method))
-        raise ImmobilisationCalculationError, \
-              "Unable to calculate the ratio during the amortisation calculation on item %s at date %s" % (
-                  repr(self), repr(at_date))
+        raise ImmobilisationCalculationError("Unable to calculate the ratio during the amortisation calculation on item %s at date %s" % (
+                  repr(self), repr(at_date)))
 
     # Calculate the value at the beginning of the annuity
     annuity_start_price = depreciable_price
