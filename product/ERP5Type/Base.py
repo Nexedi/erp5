@@ -1359,8 +1359,7 @@ class Base(
           if value_len == 1:
             mono_value = value[0]
             return method(mono_value, **kw)
-        raise TypeError, \
-           "A mono valued property must be set with a list of len 1"
+        raise TypeError("A mono valued property must be set with a list of len 1")
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     # If we are here, this means we do not use a property that
@@ -3368,7 +3367,7 @@ class Base(
     """
     parent = self.getParentValue()
     if parent.getPortalType() != "Preference" and not parent.isTemplate:
-      raise ValueError, "Template documents can not be created outside Preferences"
+      raise ValueError("Template documents can not be created outside Preferences")
     self.isTemplate = ConstantGetter('isTemplate', value=True)
     # XXX reset security here
 
@@ -3378,7 +3377,7 @@ class Base(
       Make document behave as standard document (indexable)
     """
     if self.getParentValue().getPortalType() == "Preference":
-      raise ValueError, "Template instances can not be created within Preferences"
+      raise ValueError("Template instances can not be created within Preferences")
     # We remove attributes from the instance
     # We do this rather than self.isIndexable = 0 because we want to
     # go back to previous situation (class based definition)
@@ -3474,9 +3473,9 @@ class Base(
     Use an Unrestricted method to edit related relations on other objects.
     """
     if self.getPortalType() == portal_type:
-      raise TypeError, 'Can not migrate a document to same portal_type'
+      raise TypeError('Can not migrate a document to same portal_type')
     if not portal_type:
-      raise TypeError, 'Missing portal_type value'
+      raise TypeError('Missing portal_type value')
 
     # Reingestion requested with portal_type.
     input_kw = {}

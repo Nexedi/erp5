@@ -241,7 +241,7 @@ class ContributionTool(BaseTool):
       if document is not None:
         # document is already uploaded. So overrides file.
         if not _checkPermission(Permissions.ModifyPortalContent, document):
-          raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
+          raise Unauthorized("[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId())
         document.edit(file=kw['file'])
         return document
     # Temp objects use the standard newContent from Folder

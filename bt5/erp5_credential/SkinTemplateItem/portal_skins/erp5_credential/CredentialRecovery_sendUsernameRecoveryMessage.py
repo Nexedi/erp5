@@ -17,7 +17,7 @@ if context.hasDocumentReference():
 else:
   message_reference = portal.portal_preferences.getPreferredCredentialUsernameRecoveryMessageReference()
 if message_reference is None:
-  raise ValueError, "Preference not configured"
+  raise ValueError("Preference not configured")
 
 notification_message = portal.NotificationTool_getDocumentValue(message_reference,
                                                                 context.getLanguage())

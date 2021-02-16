@@ -77,13 +77,13 @@ class ObjectMessage:
     Wrap the message with the object
     """
     if name.startswith('__') :
-      raise AttributeError, name
+      raise AttributeError(name)
     else:
       obj = self.getObject()
       if obj is not None:
         return getattr(obj, name)
       else:
-        raise AttributeError, name
+        raise AttributeError(name)
 
   def getObject(self):
     """

@@ -77,7 +77,7 @@ class PdataHelper(persistent.Persistent):
       value = StringIO(value)
 
     if isinstance(value, FileUpload) and not value:
-      raise ValueError, 'File not specified'
+      raise ValueError('File not specified')
 
     if isinstance(value, Pdata):
       size = self._read_size_from_pdata(value)

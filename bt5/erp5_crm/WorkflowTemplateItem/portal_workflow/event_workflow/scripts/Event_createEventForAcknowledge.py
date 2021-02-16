@@ -24,7 +24,7 @@ follow_up = event.getFollowUp()
 
 if follow_up is None:
   if not (follow_up_ticket_type and follow_up_ticket_title):
-    raise ValueError, 'Follow up must not empty when assign or acknowledge.'
+    raise ValueError('Follow up must not empty when assign or acknowledge.')
 
 if follow_up is None and follow_up_ticket_type and follow_up_ticket_title:
   event.Event_createFollowUpTicket(follow_up_ticket_title,

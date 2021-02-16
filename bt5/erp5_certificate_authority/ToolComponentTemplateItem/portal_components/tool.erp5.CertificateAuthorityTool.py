@@ -36,6 +36,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, INFO
+from six import reraise
 
 def popenCommunicate(command_list, input_=None, **kwargs):
   kwargs.update(stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -229,7 +230,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        reraise(e[0], e[1], e[2])
     finally:
       self._unlockCertificateAuthority()
 
@@ -272,7 +273,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        reraise(e[0], e[1], e[2])
     finally:
       self._unlockCertificateAuthority()
 

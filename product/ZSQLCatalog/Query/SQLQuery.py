@@ -45,7 +45,7 @@ class SQLQuery(Query):
         Raw SQL text.
     """
     if not isinstance(payload, basestring):
-      raise TypeError, 'Payload must be a string, got a %r: %r' % (type(payload), payload)
+      raise TypeError('Payload must be a string, got a %r: %r' % (type(payload), payload))
     assert len(payload)
     self.payload = '(' + payload + ')'
 
