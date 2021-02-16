@@ -12,7 +12,8 @@
         <td>${base_url}/Zuite_setUpPersonTest</td>
         <td></td>
       </tr>
-      <tr>
+
+      </tr>
         <td>verifyTextPresent</td>
         <td>Init Ok</td>
         <td></td>
@@ -233,6 +234,18 @@
       <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
         <td></td>
       </tr>
     </tbody>
