@@ -62,7 +62,7 @@ class TestZeleniumRunTutorialTests(ERP5TypeFunctionalTestCase):
             'erp5_simulation', 'erp5_accounting',
             'erp5_jquery', 'erp5_dms', 'erp5_jquery_ui', 'erp5_web',
             'erp5_slideshow_style', 'erp5_knowledge_pad', 'erp5_run_my_doc',
-            'erp5_user_tutorial_ui_test', 'erp5_user_tutorial','erp5_wendelin_tutorial_ui_test',)
+            'erp5_user_tutorial_ui_test', 'erp5_user_tutorial','erp5_wendelin_tutorial_ui_test','erp5_wendelin_data_lake_ui')
 
 def test_suite():
   suite = unittest.TestSuite()

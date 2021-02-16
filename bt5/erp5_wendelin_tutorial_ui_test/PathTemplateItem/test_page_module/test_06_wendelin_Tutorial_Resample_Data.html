@@ -8,20 +8,112 @@
         <td>base_url_x</td>
       </tr>
       <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_setUpPersonTest</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyTextPresent</td>
-        <td></td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-      </tr>
+       <td>openAndWait</td>
+       <td>${base_url}/Zuite_createFunctionalTestUserForTutorial</td>
+       <td></td>
+     </tr>
+     <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Base_clearCache</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Cleared.</td>
+      <td></td>
+    </tr>
+    <!-- login with functional test user -->
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/logout</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/login_form</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_name"]</td>
+      <td>functional_test_tutorial_username</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_password"]</td>
+      <td>secret</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//input[@name="logged_in:method"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/view</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>functional_test_tutorial_username</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Base_clearCache</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Cleared.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_updateUserPreference</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Init Ok.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/view</td>
+      <td></td>
+    </tr>
+
+  <tr>
+   <td>openAndWait</td>
+   <td>${base_url}/Zuite_updateUserPreferenceForTutorialTests</td>
+   <td></td>
+  </tr>
     </tbody>
   </table>
 </test>
@@ -235,6 +327,17 @@
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </test>
@@ -336,23 +439,23 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Preference: Preference for functional_test_username"]</td>
+        <td>//a[@data-i18n="Preference: Preference for functional_test_tutorial_username"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//a[@data-i18n="Preference: Preference for functional_test_username"]</td>
+        <td>//a[@data-i18n="Preference: Preference for functional_test_tutorial_username"]</td>
         <td></td>
       </tr>
 
       <tr>
         <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'default_sytem_preference')]</td>
+        <td>//a[contains(@href,'default_system_preference')]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//a[contains(@href,'default_sytem_preference')]</td>
+        <td>//a[contains(@href,'default_system_preference')]</td>
         <td></td>
       </tr>
       <tr>
@@ -926,17 +1029,29 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
         <td></td>
       </tr>
     </tbody>
@@ -1167,6 +1282,14 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td>//a[contains(@href,'page=portal_callables')]</td>
         <td></td>
       </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()="IngestionPolicy_parseSimpleIngestionTag"]</td>
+        <td></td>
+      </tr>
+      
+      
       <tr>
         <td>waitForElementPresent</td>
         <td>//a[@data-i18n="Add"]</td>
@@ -1198,7 +1321,112 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td></td>
       </tr>
       
+
+     <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
       <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      </tr>
+      
+      
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='DataAnalysisLine_resampleRawArrayAll']</td>
+        <td></td>
+      </tr>
+      <td>click</td>
+        <td>//a[text()='DataAnalysisLine_resampleRawArrayAll']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Python Script: DataAnalysisLine_resampleRawArrayAll"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_reference"]</td>
+        <td></td>
+      </tr>
+      
+      
+      
+       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_id"]</td>
         <td></td>
@@ -1208,16 +1436,45 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td>//input[@id="field_my_id"]</td>
         <td>DataAnalysisLine_resampleRawArrayAll</td>
       </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>DataAnalysisLine_resampleRawArrayAll</td>
+      
+      
+       <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
       </tr>
       <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>DataAnalysisLine_resampleRawArrayAll</td>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
       </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      
+      
       <tr>
         <td>type</td>
         <td>//input[@id="field_my_parameter_signature"]</td>
@@ -1225,7 +1482,7 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
       </tr>
       <tr>
         <td>pause</td>
-        <td>15000</td>
+        <td>3000</td>
         <td></td>
       </tr>
       <tr>
@@ -1247,149 +1504,151 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td>type</td>
         <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
         <td>
-import numpy as np
-import pandas as pd
-
-out_array_list = out_array
-
-in_data_array = in_array[&quot;Data Array&quot;]
-progress_indicator = in_array[&quot;Progress Indicator&quot;]
-
-in_zbigarray = in_data_array.getArray()
-if in_zbigarray is None:
-&nbsp; return
-
-if in_zbigarray.shape[0] == 0:
-&nbsp; return
-
-# first fill array with lowest resolution
-default_data_array = out_array_list[0][&quot;Data Array&quot;]
-default_resolution = out_array_list[0][&quot;resolution&quot;]
-default_frequency = pd.to_timedelta(default_resolution)
-default_zbigarray = default_data_array.getArray()
-
-index = progress_indicator.getIntOffsetIndex()
-
-# convert data to DataFrame
-df = pd.DataFrame.from_records(in_zbigarray[index:].copy(), index=&#39;date&#39;)
-
-# ignore data before start date of output array
-if default_zbigarray is not None:
-&nbsp; if default_zbigarray.shape[0] != 0:
-&nbsp; &nbsp; df = df.loc[str(default_zbigarray[0][&#39;date&#39;]):]
-
-if len(df) == 0:
-&nbsp; return
-
-# resample
-df = df.resample(default_resolution).agg([&#39;min&#39;,&#39;mean&#39;,&#39;max&#39;]).fillna(0)
-
-# rename columns from tuples like (&#39;x&#39;, &#39;min&#39;) to names like &#39;x_min&#39;
-df.columns = [&#39;%s%s&#39; % (a, &#39;_%s&#39; % b if b else &#39;&#39;) for a, b in df.columns]
-
-context.log(&quot;df.columns = &quot;, df.columns)
-
-# save date vector for later
-date_vector = df.index.values.copy()
-
-context.log(&quot;date_vector = &quot;, date_vector)
-
-# convert data back to ndarray
-default_data = df.to_records(convert_datetime64=False)
-# view as structured array
-
-# set date to zero where all values are 0
-mask_zero = (df==0).all(axis=1)
-default_data[&#39;date&#39;][mask_zero] = 0
-
-if default_zbigarray is None:
-&nbsp; default_zbigarray = default_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)
-
-if default_zbigarray.shape[0] == 0:
-&nbsp; default_zbigarray.append(default_data)
-
-else:
-  # calculate start and stop index of new data in output array
-&nbsp; default_start_index = int((date_vector[0] - default_zbigarray[0][&#39;date&#39;]) / default_frequency)
-&nbsp; default_stop_index = int((date_vector[-1] - default_zbigarray[0][&#39;date&#39;]) / default_frequency + 1)
-
-  # make sure data fits in
-&nbsp; if default_stop_index &gt; default_zbigarray.shape[0]:
-&nbsp; &nbsp; default_zbigarray.resize((default_stop_index,))
-
-  # fill holes in new data with values from old data
-&nbsp; old_data = default_zbigarray[default_start_index:default_stop_index]
-&nbsp; default_data[mask_zero ] = old_data[mask_zero]
-
-  # write new_data to zbigarray
-&nbsp; default_zbigarray[default_start_index:default_stop_index] = default_data
-
-
-# now use data in first resolution array for all other arrays
-for out_array in out_array_list[1:]:
-&nbsp; out_data_array = out_array[&quot;Data Array&quot;]
-&nbsp; out_array_resolution = out_array[&quot;resolution&quot;]
-&nbsp; out_zbigarray = out_data_array.getArray()
-&nbsp; if out_zbigarray is None:
-&nbsp; &nbsp; out_zbigarray = out_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)
-
-&nbsp; if out_zbigarray.shape[0] == 0:
-&nbsp; &nbsp; start_index = 0
-&nbsp; else:
-&nbsp; &nbsp; out_array_frequency = pd.to_timedelta(out_array_resolution)
-
-&nbsp; &nbsp; new_stop_date = default_zbigarray[0][&#39;date&#39;] + default_zbigarray.shape[0] * default_frequency
-&nbsp; &nbsp; old_stop_date = out_zbigarray[0][&#39;date&#39;] + out_zbigarray.shape[0] * out_array_frequency
-
-&nbsp; &nbsp; start_date = old_stop_date - out_array_frequency
-&nbsp; &nbsp; if old_stop_date &gt;= new_stop_date:
-&nbsp; &nbsp; &nbsp; continue
-
-    # find row index in in_array from where to start resampling
-&nbsp; &nbsp; start_index = int(max((start_date - default_zbigarray[0][&#39;date&#39;]) / default_frequency, 0))
-    # if we got data which has been already resampled, then we resample again and overwrite
-&nbsp; &nbsp; start_index = min(start_index, default_start_index)
-
-&nbsp; data = default_zbigarray[start_index:].copy()
-
-  # convert data to DataFrame and resample
-&nbsp; df = pd.DataFrame.from_records(data, index=&#39;date&#39;)
-
-  # set our own date range index so that we can resample and keep 0-dates
-&nbsp; resampling_start_date = default_zbigarray[0][&#39;date&#39;] + start_index * default_frequency
-&nbsp; df.index = pd.date_range(start=resampling_start_date,
-                           periods=data.shape[0],
-                           freq=default_frequency)
-&nbsp; df.index.name = &#39;date&#39;
-
-  # resample each column with appropriate aggregation method
-&nbsp; aggregation_dict = {c: c.split(&#39;_&#39;)[-1] for c in df.columns}
-&nbsp; df = df.resample(out_array_resolution).agg(aggregation_dict).fillna(0)
-
-  # save date vector for later
-&nbsp; date_vector = df.index.values.copy()
-
-  # convert data back to ndarray
-&nbsp; new_data = df.to_records(convert_datetime64=False)
-
-  # set date to zero where all values are 0
-&nbsp; new_data[&#39;date&#39;][(df==0).all(axis=1)] = 0
-
-&nbsp; if out_zbigarray.shape[0] == 0:
-&nbsp; &nbsp; out_zbigarray.append(new_data)
-&nbsp; else:
-    # calculate start and stop index of new data in output array
-&nbsp; &nbsp; start_index = int((date_vector[0] - out_zbigarray[0][&#39;date&#39;]) / out_array_frequency)
-&nbsp; &nbsp; stop_index = int((date_vector[-1] - out_zbigarray[0][&#39;date&#39;]) / out_array_frequency + 1)
-
-    # make sure data fits in
-&nbsp; &nbsp; if stop_index &gt; out_zbigarray.shape[0]:
-&nbsp; &nbsp; &nbsp; out_zbigarray.resize((stop_index,))
-
-    # write new_data to zbigarray
-&nbsp; &nbsp; out_zbigarray[start_index:stop_index] = new_data
-
+<pre>
+import numpy as np<br />
+import pandas as pd<br />
+<br />
+out_array_list = out_array<br />
+<br />
+in_data_array = in_array[&quot;Data Array&quot;]<br />
+progress_indicator = in_array[&quot;Progress Indicator&quot;]<br />
+<br />
+in_zbigarray = in_data_array.getArray()<br />
+if in_zbigarray is None:<br />
+&nbsp;&nbsp;return<br />
+<br />
+if in_zbigarray.shape[0] == 0:<br />
+&nbsp;&nbsp;return<br />
+<br />
+# first fill array with lowest resolution<br />
+default_data_array = out_array_list[0][&quot;Data Array&quot;]<br />
+default_resolution = out_array_list[0][&quot;resolution&quot;]<br />
+default_frequency = pd.to_timedelta(default_resolution)<br />
+default_zbigarray = default_data_array.getArray()<br />
+<br />
+index = progress_indicator.getIntOffsetIndex()<br />
+<br />
+# convert data to DataFrame<br />
+df = pd.DataFrame.from_records(in_zbigarray[index:].copy(), index=&#039;date&#039;)<br />
+<br />
+# ignore data before start date of output array<br />
+if default_zbigarray is not None:<br />
+&nbsp;&nbsp;if default_zbigarray.shape[0] != 0:<br />
+&nbsp;&nbsp; &nbsp;df = df.loc[str(default_zbigarray[0][&#039;date&#039;]):]<br />
+<br />
+if len(df) == 0:<br />
+&nbsp;&nbsp;return<br />
+<br />
+# resample<br />
+df = df.resample(default_resolution).agg([&#039;min&#039;,&#039;mean&#039;,&#039;max&#039;]).fillna(0)<br />
+<br />
+# rename columns from tuples like (&#039;x&#039;, &#039;min&#039;) to names like &#039;x_min&#039;<br />
+df.columns = [&#039;%s%s&#039; % (a, &#039;_%s&#039; % b if b else &#039;&#039;) for a, b in df.columns]<br />
+<br />
+context.log(&quot;df.columns = &quot;, df.columns)<br />
+<br />
+# save date vector for later<br />
+date_vector = df.index.values.copy()<br />
+<br />
+context.log(&quot;date_vector = &quot;, date_vector)<br />
+<br />
+# convert data back to ndarray<br />
+default_data = df.to_records(convert_datetime64=False)<br />
+# view as structured array<br />
+<br />
+# set date to zero where all values are 0<br />
+mask_zero = (df==0).all(axis=1)<br />
+default_data[&#039;date&#039;][mask_zero] = 0<br />
+<br />
+if default_zbigarray is None:<br />
+&nbsp;&nbsp;default_zbigarray = default_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)<br />
+<br />
+if default_zbigarray.shape[0] == 0:<br />
+&nbsp;&nbsp;default_zbigarray.append(default_data)<br />
+<br />
+else:<br />
+&nbsp;&nbsp;# calculate start and stop index of new data in output array<br />
+&nbsp;&nbsp;default_start_index = int((date_vector[0] - default_zbigarray[0][&#039;date&#039;]) / default_frequency)<br />
+&nbsp;&nbsp;default_stop_index = int((date_vector[-1] - default_zbigarray[0][&#039;date&#039;]) / default_frequency + 1)<br />
+<br />
+&nbsp;&nbsp;# make sure data fits in<br />
+&nbsp;&nbsp;if default_stop_index &gt; default_zbigarray.shape[0]:<br />
+&nbsp;&nbsp; &nbsp;default_zbigarray.resize((default_stop_index,))<br />
+<br />
+&nbsp;&nbsp;# fill holes in new data with values from old data<br />
+&nbsp;&nbsp;old_data = default_zbigarray[default_start_index:default_stop_index]<br />
+&nbsp;&nbsp;default_data[mask_zero ] = old_data[mask_zero]<br />
+<br />
+&nbsp;&nbsp;# write new_data to zbigarray<br />
+&nbsp;&nbsp;default_zbigarray[default_start_index:default_stop_index] = default_data<br />
+<br />
+<br />
+# now use data in first resolution array for all other arrays<br />
+for out_array in out_array_list[1:]:<br />
+&nbsp;&nbsp;out_data_array = out_array[&quot;Data Array&quot;]<br />
+&nbsp;&nbsp;out_array_resolution = out_array[&quot;resolution&quot;]<br />
+&nbsp;&nbsp;out_zbigarray = out_data_array.getArray()<br />
+&nbsp;&nbsp;if out_zbigarray is None:<br />
+&nbsp;&nbsp; &nbsp;out_zbigarray = out_data_array.initArray(shape=(0,), dtype=default_data.dtype.fields)<br />
+<br />
+&nbsp;&nbsp;if out_zbigarray.shape[0] == 0:<br />
+&nbsp;&nbsp; &nbsp;start_index = 0<br />
+&nbsp;&nbsp;else:<br />
+&nbsp;&nbsp; &nbsp;out_array_frequency = pd.to_timedelta(out_array_resolution)<br />
+<br />
+&nbsp;&nbsp; &nbsp;new_stop_date = default_zbigarray[0][&#039;date&#039;] + default_zbigarray.shape[0] * default_frequency<br />
+&nbsp;&nbsp; &nbsp;old_stop_date = out_zbigarray[0][&#039;date&#039;] + out_zbigarray.shape[0] * out_array_frequency<br />
+<br />
+&nbsp;&nbsp; &nbsp;start_date = old_stop_date - out_array_frequency<br />
+&nbsp;&nbsp; &nbsp;if old_stop_date &gt;= new_stop_date:<br />
+&nbsp;&nbsp; &nbsp; &nbsp;continue<br />
+<br />
+&nbsp;&nbsp; &nbsp;# find row index in in_array from where to start resampling<br />
+&nbsp;&nbsp; &nbsp;start_index = int(max((start_date - default_zbigarray[0][&#039;date&#039;]) / default_frequency, 0))<br />
+&nbsp;&nbsp; &nbsp;# if we got data which has been already resampled, then we resample again and overwrite<br />
+&nbsp;&nbsp; &nbsp;start_index = min(start_index, default_start_index)<br />
+<br />
+&nbsp;&nbsp;data = default_zbigarray[start_index:].copy()<br />
+<br />
+&nbsp;&nbsp;# convert data to DataFrame and resample<br />
+&nbsp;&nbsp;df = pd.DataFrame.from_records(data, index=&#039;date&#039;)<br />
+<br />
+&nbsp;&nbsp;# set our own date range index so that we can resample and keep 0-dates<br />
+&nbsp;&nbsp;resampling_start_date = default_zbigarray[0][&#039;date&#039;] + start_index * default_frequency<br />
+&nbsp;&nbsp;df.index = pd.date_range(start=resampling_start_date,<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; periods=data.shape[0],<br />
+&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; freq=default_frequency)<br />
+&nbsp;&nbsp;df.index.name = &#039;date&#039;<br />
+<br />
+&nbsp;&nbsp;# resample each column with appropriate aggregation method<br />
+&nbsp;&nbsp;aggregation_dict = {c: c.split(&#039;_&#039;)[-1] for c in df.columns}<br />
+&nbsp;&nbsp;df = df.resample(out_array_resolution).agg(aggregation_dict).fillna(0)<br />
+<br />
+&nbsp;&nbsp;# save date vector for later<br />
+&nbsp;&nbsp;date_vector = df.index.values.copy()<br />
+<br />
+&nbsp;&nbsp;# convert data back to ndarray<br />
+&nbsp;&nbsp;new_data = df.to_records(convert_datetime64=False)<br />
+<br />
+&nbsp;&nbsp;# set date to zero where all values are 0<br />
+&nbsp;&nbsp;new_data[&#039;date&#039;][(df==0).all(axis=1)] = 0<br />
+<br />
+&nbsp;&nbsp;if out_zbigarray.shape[0] == 0:<br />
+&nbsp;&nbsp; &nbsp;out_zbigarray.append(new_data)<br />
+&nbsp;&nbsp;else:<br />
+&nbsp;&nbsp; &nbsp;# calculate start and stop index of new data in output array<br />
+&nbsp;&nbsp; &nbsp;start_index = int((date_vector[0] - out_zbigarray[0][&#039;date&#039;]) / out_array_frequency)<br />
+&nbsp;&nbsp; &nbsp;stop_index = int((date_vector[-1] - out_zbigarray[0][&#039;date&#039;]) / out_array_frequency + 1)<br />
+<br />
+&nbsp;&nbsp; &nbsp;# make sure data fits in<br />
+&nbsp;&nbsp; &nbsp;if stop_index &gt; out_zbigarray.shape[0]:<br />
+&nbsp;&nbsp; &nbsp; &nbsp;out_zbigarray.resize((stop_index,))<br />
+<br />
+&nbsp;&nbsp; &nbsp;# write new_data to zbigarray<br />
+&nbsp;&nbsp; &nbsp;out_zbigarray[start_index:stop_index] = new_data<br />
+<br />
 progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
+</pre>
         </td>
       </tr>
       <tr>
@@ -2653,17 +2912,28 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
+        <td>//input[@type="submit" and @value="Validate"]</td>
         <td></td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
         <td></td>
       </tr>
     </tbody>
@@ -2704,9 +2974,65 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
         <td>//a[contains(@href,'page=front')]</td>
         <td></td>
       </tr>
+      
       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+     <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@accesskey="m"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@accesskey="m"]</td>
+        <td></td>
+      </tr>
+       <tr>
         <td>pause</td>
-        <td>350000</td>
+        <td>3000</td>
         <td></td>
       </tr>
       <tr>
@@ -2722,11 +3048,6 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
       <tr>
         <td>pause</td>
         <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
         <td></td>
       </tr>
       <tr>
@@ -2778,23 +3099,43 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td>pause</td>
-        <td>3000</td>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
         <td></td>
       </tr>
       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+     <tr>
         <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
+        <td>//a[@accesskey="m"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
+        <td>//a[@accesskey="m"]</td>
         <td></td>
       </tr>
-      <tr>
+       <tr>
         <td>pause</td>
-        <td>350000</td>
+        <td>3000</td>
         <td></td>
       </tr>
       <tr>
@@ -2810,11 +3151,6 @@ progress_indicator.setIntOffsetIndex(in_zbigarray.shape[0])
       <tr>
         <td>pause</td>
         <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
         <td></td>
       </tr>
       <tr>
