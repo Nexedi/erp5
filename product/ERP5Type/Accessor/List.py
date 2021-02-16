@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -27,10 +28,10 @@
 ##############################################################################
 
 
-from Base import func_code, type_definition, list_types,\
+from .Base import func_code, type_definition, list_types,\
                  ATTRIBUTE_PREFIX, Method, evaluateTales
-from TypeDefinition import asList, identity
-import Base
+from .TypeDefinition import asList, identity
+from . import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
 from types import ListType, TupleType

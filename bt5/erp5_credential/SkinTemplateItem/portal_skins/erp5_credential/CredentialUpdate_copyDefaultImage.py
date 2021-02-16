@@ -3,7 +3,7 @@ Proxy
 Manager -- allow to update all image property"""
 
 if REQUEST is not None:
-  raise ValueError, "This script can not be call from url"
+  raise ValueError("This script can not be call from url")
 
 def getAccessor(prop):
   return "".join([x.capitalize() for x in prop.split('_')])

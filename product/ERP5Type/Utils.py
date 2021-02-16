@@ -28,6 +28,7 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
+from __future__ import absolute_import
 import os
 import re
 import string
@@ -114,8 +115,8 @@ from Products.ERP5Type.Globals import get_request
 # Compatibility - XXX - BAD
 #####################################################
 
-from Accessor.TypeDefinition import type_definition
-from Accessor.TypeDefinition import list_types
+from .Accessor.TypeDefinition import type_definition
+from .Accessor.TypeDefinition import list_types
 
 #####################################################
 # Generic sort method
@@ -253,7 +254,7 @@ def convertToUpperCase(key):
     return _cached_convertToUpperCase[key]
   except KeyError:
     if not isinstance(key, basestring):
-      raise TypeError, '%s is not a string' % (key,)
+      raise TypeError('%r is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
 
@@ -278,7 +279,7 @@ def convertToMixedCase(key):
     a method name according to the ERP5 naming conventions
   """
   if not isinstance(key, basestring):
-    raise TypeError, '%s is not a string' % (key,)
+    raise TypeError('%r is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
     parts[1] = convertToUpperCase(parts[1])
@@ -551,7 +552,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 # Globals initialization
 #####################################################
 
-from InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
+from .InitGenerator import InitializeDocument, InitializeInteractor, registerInteractorClass
 
 # List Regexp
 python_file_expr = re.compile("py$")
@@ -641,7 +642,7 @@ import imp
 from App.config import getConfiguration
 
 from Products.ERP5Type.Globals import InitializeClass
-from Accessor.Base import func_code
+from .Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
 
@@ -685,7 +686,7 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
@@ -850,7 +851,7 @@ def writeLocalExtension(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
 
@@ -864,7 +865,7 @@ def writeLocalTest(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
 
@@ -878,7 +879,7 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
@@ -937,7 +938,7 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise IOError, 'the file %s is already present' % path
+      raise IOError('the file %s is already present' % path)
   # check there is no syntax error (that's the most we can do at this time)
   compile(text, path, 'exec')
   with open(path, 'w') as f:
@@ -1749,7 +1750,7 @@ def guessEncodingFromText(data, content_type='text/html'):
     else:
       message = 'No suitable encoding detector found.'\
                 ' You must install python-magic'
-    raise NotImplementedError, message
+    raise NotImplementedError(message)
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe

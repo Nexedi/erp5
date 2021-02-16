@@ -172,7 +172,7 @@ class EssendexGateway(XMLObject):
       return message_ids.split(",")
     elif result['Result'] == "Error":
       #we get an error when call the gateway
-      raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to send the SMS"))
+      raise SMSGatewayError(urllib.unquote(result.get('Message', "Impossible to send the SMS")))
     elif result['Result'] == "Test":
       #just a test, no message id
       return None
@@ -199,7 +199,7 @@ class EssendexGateway(XMLObject):
       return result.get('MessageStatus').lower()
     elif result['Result'] == "Error":
       #we get an error when call the gateway
-      raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to get the message status"))
+      raise SMSGatewayError(urllib.unquote(result.get('Message', "Impossible to get the message status")))
 
   security.declarePublic('receive')
   def receive(self, REQUEST, **kw):
@@ -209,7 +209,7 @@ class EssendexGateway(XMLObject):
     datas = REQUEST['BODY']
 
     if not datas:
-      raise SMSGatewayError, "Impossible to notify nothing"
+      raise SMSGatewayError("Impossible to notify nothing")
 
     #Get current user
     sm = getSecurityManager()
@@ -231,18 +231,18 @@ class EssendexGateway(XMLObject):
 
       #Check Account id
       if xml['AccountId'] != self.getGatewayAccountId():
-        raise Unauthorized, 'Bad accound id (%s)' % xml['AccountId']
+        raise Unauthorized('Bad accound id (%s)' % xml['AccountId'])
 
       if notification_type == 'InboundMessage':
         self.notifyReception(xml)
       elif notification_type == 'MessageDelivered':
         self.notifyDelivery(xml)
       elif notification_type == 'MessageError':
-        raise SMSGatewayError, "'MessageError' notification is not implemented (%s)" % str(kw)
+        raise SMSGatewayError("'MessageError' notification is not implemented (%s)" % str(kw))
       elif notification_type == 'SubscriptionEvent':
-        raise SMSGatewayError, "'MessageError' notification is not implemented (%s)" % str(kw)
+        raise SMSGatewayError("'MessageError' notification is not implemented (%s)" % str(kw))
       else:
-        raise SMSGatewayError, "Unknow '%s' notification (%s)" % (notification_type, str(kw))
+        raise SMSGatewayError("Unknow '%s' notification (%s)" % (notification_type, str(kw)))
     finally:
       #Restore orinal user
       setSecurityManager(sm)
@@ -345,6 +345,6 @@ class EssendexGateway(XMLObject):
       LOG("EssendexGateway", INFO, result)
     elif result['Result'] == "Error":
       #we get an error when call the gateway
-      raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to get last message list"))
+      raise SMSGatewayError(urllib.unquote(result.get('Message', "Impossible to get last message list")))
 
 

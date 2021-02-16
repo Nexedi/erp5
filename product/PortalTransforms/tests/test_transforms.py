@@ -1,9 +1,10 @@
+from __future__ import absolute_import
 import os
 import logging
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
 
-from utils import input_file_path, output_file_path, normalize_html,\
+from .utils import input_file_path, output_file_path, normalize_html,\
      load, matching_inputs
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream

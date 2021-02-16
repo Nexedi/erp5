@@ -327,8 +327,8 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
         LOG('object.getQuantity()',0,object.getQuantity())
         LOG('object.__dict__',0,object.__dict__)
         LOG('object.getDeliveryValue().getQuantity()',0,object.getDeliveryValue().getQuantity())
-        raise AssertionError, "Attribute: %s, Value: %s, Result: %s" %\
-                    (attribute, value, getattr(object, attribute)())
+        raise AssertionError("Attribute: %s, Value: %s, Result: %s"
+                    % (attribute, value, getattr(object, attribute)()))
 
   def stepCheckProductionSimulation(self, sequence=None, sequence_list=None,
                                     **kw):

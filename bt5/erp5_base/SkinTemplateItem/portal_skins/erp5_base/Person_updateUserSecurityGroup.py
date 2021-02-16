@@ -21,7 +21,7 @@ user_name = context.getId()
 # XXX Note : sometimes, you don't want to update security for users who don't belong to your organisation.
 #            You can then add code in the assignment_workflow script to skip those (if role != internal for instance)
 if user_name not in user_folder.getUserNames():
-  raise RuntimeError, "Error: Zope user '%s' doesn't exist in the acl_users folder"  % (user_name)
+  raise RuntimeError("Error: Zope user %r doesn't exist in the acl_users folder"  % user_name)
 
 category_list = []
 security_group_list = []

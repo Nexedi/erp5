@@ -18,7 +18,7 @@ show_parent_accounts = request.get('show_parent_accounts', False)
 # flat_mode is a boolean that indicate wether we should use a report tree
 #   or a flat list of all accounts.
 if request.get('tree_mode', False):
-  raise 'Tree mode no longer supported'
+  raise ValueError('Tree mode no longer supported')
 
 result = []
 params = {

@@ -290,8 +290,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     for movement in select_method(**kw):
       movement = movement.getObject()
       if movement in movement_set:
-        raise SelectMethodError('%s returned %s twice or more' % \
-                (method_id, movement.getRelativeUrl()))
+        raise SelectMethodError('%s returned %s twice or more'
+            % (method_id, movement.getRelativeUrl()))
       movement_set.add(movement)
       movement_list.append(movement)
 
@@ -493,7 +493,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
       if delivery is None:
         if not self.isDeliveryCreatable():
-          raise SelectMethodError('No updatable delivery found with %s for %s' \
+          raise SelectMethodError('No updatable delivery found with %s for %s'
                   % (self.getPath(), movement_group_node_list))
 
         delivery = self._createDelivery(delivery_module,
@@ -661,8 +661,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     else:
       movement_list = movement_group_node.getMovementList()
       if len(movement_list) != 1:
-        raise CollectError, "DeliveryBuilder: %s unable to distinct those\
-              movements: %s" % (self.getId(), str(movement_list))
+        raise CollectError(
+            "DeliveryBuilder: %s unable to distinct those movements: %s"
+            % (self.getId(), movement_list))
       else:
         # XXX Hardcoded value
         base_id = 'movement'
@@ -720,8 +721,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                        membership_criterion_base_category_list=movement.\
                                              getVariationBaseCategoryList())
           else:
-            raise MatrixError, 'Cell: %s already exists on %s' % \
-                  (str(cell_key), str(delivery_line))
+            raise MatrixError('Cell: %s already exists on %s'
+                % (cell_key, delivery_line))
           object_to_update = cell
         self._setUpdated(object_to_update, 'cell')
         self._setDeliveryMovementProperties(

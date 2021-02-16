@@ -76,8 +76,8 @@ class ERP5NodeConduit(TioSafeBaseConduit):
     if len(stc_list) == 0:
       self._createSaleTradeCondition(object, **kw)
     elif len(stc_list) > 1:
-      raise ValueError, "Multiple trade condition (%s) retrieved for %s" \
-      % ([x.path for x in stc_list], object.getTitle())
+      raise ValueError("Multiple trade condition (%s) retrieved for %s"
+      % ([x.path for x in stc_list], object.getTitle()))
     else:
       stc = stc_list[0].getObject()
       stc.edit(
@@ -155,7 +155,8 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       if link_object is not None:
         document.setCareerSubordinationValue(link_object)
       else:
-        raise ValueError, "Impossible to find organisation %s in %s" %(organisation_gid, synchronization_list)
+        raise ValueError("Impossible to find organisation %s in %s"
+                         % (organisation_gid, synchronization_list))
     document.reindexObject()
     return []
 

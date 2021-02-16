@@ -406,6 +406,6 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 # authentication dialog in case of Unauthorized exception to prevent
 # blocking in functional tests.
 def _unauthorized(self):
-  raise RuntimeError, 'Unauthorized exception happens.'
+  raise RuntimeError('Unauthorized exception happens.')
 
 HTTPResponse._unauthorized = _unauthorized

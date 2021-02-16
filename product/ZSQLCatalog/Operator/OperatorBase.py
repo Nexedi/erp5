@@ -151,8 +151,8 @@ class OperatorBase(object):
                                           valueDefaultSearchTextRenderer)(value)
 
   def asSQLExpression(self, column, value_list, only_group_columns):
-    raise NotImplementedError, 'This method must be overloaded by a subclass ' \
-      'to be able to get an SQL representation of this operator.'
+    raise NotImplementedError('This method must be overloaded by a subclass'
+      ' to be able to get an SQL representation of this operator.')
 
   def __repr__(self):
     return '<%s(%r) at %s>' % (self.__class__.__name__, self.getOperator(), id(self))

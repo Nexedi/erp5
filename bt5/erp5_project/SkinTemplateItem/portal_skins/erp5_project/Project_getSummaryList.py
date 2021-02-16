@@ -33,7 +33,7 @@ for task in task_list:
         update_kw['real_start_date'] = task_line.getStartDate()
         update_kw['real_stop_date'] = task_line.getStopDate()
       else:
-        raise ValueError, "This script more than one causality yet"
+        raise ValueError("This script more than one causality yet")
     elif task_line.getPortalType() == 'Task Line':
       update_kw['initial_quantity'] = task_line.getQuantity()
       update_kw['initial_start_date'] = task_line.getStartDate()

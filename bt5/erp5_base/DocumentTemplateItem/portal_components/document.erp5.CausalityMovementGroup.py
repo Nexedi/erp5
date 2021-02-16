@@ -58,7 +58,7 @@ class CausalityMovementGroup(MovementGroup):
         movement = movement.getParentValue().getParentValue()
       explanation_value = movement.getExplanationValue()
       if explanation_value is None:
-        raise ValueError, 'No explanation for movement %s' % movement.getPath()
+        raise ValueError('No explanation for movement %s' % movement.getPath())
     else:
       # This is a temp movement
       explanation_value = None

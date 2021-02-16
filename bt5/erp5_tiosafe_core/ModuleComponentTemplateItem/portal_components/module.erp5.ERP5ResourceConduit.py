@@ -141,7 +141,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
 
       conflict_list = self._createMapping(sub_object, mapping_list)
       if len(conflict_list):
-        raise ValueError, "Conflict on creation of resource, should not happen, conflict = %r" %(conflict_list)
+        raise ValueError("Conflict on creation of resource, should not happen, conflict = %r" % conflict_list)
 
       self.newObject(
           object=sub_object,
@@ -232,7 +232,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       ss_list = portal.sale_supply_module.searchFolder(title=name,
                                                        validation_state='validated')
       if len(ss_list) > 1:
-        raise ValueError, "Too many sale supplies, does not know which to choose"
+        raise ValueError("Too many sale supplies, does not know which to choose")
       if len(ss_list) == 0:
         # Create a new one
         ss = portal.sale_supply_module.newContent(title=name)
@@ -249,7 +249,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       pref_list = [x for x in portal.portal_preferences.objectValues(portal_type="System Preference")\
                    if x.getPreferenceState()=="global"]
       if len(pref_list) > 1:
-        raise ValueError, "Too many system preferences, does not know which to choose"
+        raise ValueError("Too many system preferences, does not know which to choose")
       elif len(pref_list) == 0:
         pref = portal.portal_preferences.newContent(portal_type="System Preference",
                                              title="default system preference for TioSafe",
@@ -376,8 +376,9 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise IndexError, 'Too little or too many value, only one is required for %s' % (
-          previous_xml,
+      raise IndexError(
+          'Too little or too many value, only one is required for %s'
+          % previous_xml
       )
 
     if isinstance(previous_value, unicode):
@@ -545,8 +546,9 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       try:
         previous_value = previous_xml[0].text
       except IndexError:
-        raise IndexError, 'Too little or too many value, only one is required for %s' % (
-            previous_xml
+        raise IndexError(
+          'Too little or too many value, only one is required for %s'
+          % previous_xml
         )
 
       if isinstance(previous_value, unicode):

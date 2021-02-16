@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from OperatorBase import OperatorBase
+from .OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from zope.interface.verify import verifyClass
@@ -45,10 +46,10 @@ class ComparisonOperatorBase(OperatorBase):
     return SQLExpression(self, where_expression='%s %s %s' % (column, self.getOperator().upper(), value_list))
 
   def render(self, column, value_list):
-    raise NotImplementedError, 'This method must be overloaded by a subclass.'
+    raise NotImplementedError('This method must be overloaded by a subclass.')
 
   def renderValue(self, value_list):
-    raise NotImplementedError, 'This method must be overloaded by a subclass.'
+    raise NotImplementedError('This method must be overloaded by a subclass.')
 
 verifyClass(IOperator, ComparisonOperatorBase)
 
@@ -61,7 +62,7 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
       try:
         value_list, = value_list
       except ValueError:
-        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+        raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
     return self._renderValue(value_list)
 
   def render(self, column, value_list):
@@ -72,7 +73,7 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
       try:
         value_list, = value_list
       except ValueError:
-        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+        raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
     return self._render(column, value_list)
 
 verifyClass(IOperator, MonovaluedComparisonOperator)
@@ -83,7 +84,7 @@ class MultivaluedComparisonOperator(ComparisonOperatorBase):
       value_list must be a multi-value list (more than one item).
     """
     if not isinstance(value_list, list_type_list) or len(value_list) < 2:
-      raise ValueError, '%r: value_list must be a list of more than one item. Got %r' % (self, value_list)
+      raise ValueError('%r: value_list must be a list of more than one item. Got %r' % (self, value_list))
     return '(%s)' % ', '.join(map(self._renderValue, value_list))
 
   def render(self, column, value_list):
@@ -91,7 +92,7 @@ class MultivaluedComparisonOperator(ComparisonOperatorBase):
       value_list must be a multi-value list (more than one item).
     """
     if not isinstance(value_list, list_type_list) or len(value_list) < 2:
-      raise ValueError, '%r: value_list must be a list of more than one item. Got %r' % (self, value_list)
+      raise ValueError('%r: value_list must be a list of more than one item. Got %r' % (self, value_list))
     return column, '(%s)' % ', '.join(map(self._renderValue, value_list))
 
 verifyClass(IOperator, MultivaluedComparisonOperator)
@@ -153,7 +154,7 @@ class MroongaComparisonOperator(MatchComparisonOperator):
       try:
         value_list, = value_list
       except ValueError:
-        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+        raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
 
     if self.force_boolean:
       fulltext_query = '*D+ %s' % value_list
@@ -192,7 +193,7 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
       try:
         value_list, = value_list
       except ValueError:
-        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+        raise ValueError('%r: value_list must not contain more than one item. Got %r' % (self, value_list))
     value_list = '%s;mode=extended2;limit=1000' % value_list
     return self._renderValue(value_list)
 

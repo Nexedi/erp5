@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -9,7 +10,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import system as SystemUser,SimpleUser
 from OFS.Folder import Folder
-from test_MailTemplate import DummyMailHost,Zope,get_transaction
+from .test_MailTemplate import DummyMailHost,Zope,get_transaction
 from Testing.makerequest import makerequest
 from unittest import TestCase,TestSuite,makeSuite,main
 

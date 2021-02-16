@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002,2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from SQLBase import SQLBase
+from .SQLBase import SQLBase
 
 class SQLQueue(SQLBase):
   """

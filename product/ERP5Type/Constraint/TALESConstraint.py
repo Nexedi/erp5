@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -36,7 +37,7 @@ CompilerError = Products.PageTemplates.Expressions.getEngine().getCompilerError(
 
 from zLOG import LOG, PROBLEM
 
-from Constraint import Constraint
+from .Constraint import Constraint
 
 class TALESConstraint(Constraint):
   """This constraint uses an arbitrary TALES expression on the context of the

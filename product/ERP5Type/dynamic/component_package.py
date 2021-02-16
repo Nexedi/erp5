@@ -33,6 +33,7 @@ from __future__ import absolute_import
 import sys
 import imp
 import collections
+from six import reraise
 
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type import product_path as ERP5Type_product_path
@@ -344,9 +345,9 @@ class ComponentDynamicPackage(ModuleType):
         if module_fullname_filesystem:
           del sys.modules[module_fullname_filesystem]
 
-        raise ImportError(
-          "%s: cannot load Component %s (%s)" % (fullname, name, error)), \
-          None, sys.exc_info()[2]
+        reraise(ImportError,
+          "%s: cannot load Component %s (%s)" % (fullname, name, error),
+                sys.exc_info()[2])
 
       # Add the newly created module to the Version package and add it as an
       # alias to the top-level package as well

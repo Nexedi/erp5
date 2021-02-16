@@ -244,7 +244,8 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         stdout, stderr = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                                close_fds=True).communicate(body)
       except OSError, e:
-        raise OSError, '%r\n%r' % (os.environ, e)
+        e.strerror += '\n%r' % os.environ
+        raise
       if stdout:
         error_list.append((check_path, stdout))
     if error_list:
