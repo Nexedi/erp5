@@ -214,9 +214,16 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
       if os.path.isdir(business_template_path) and \
               not os.path.exists(os.path.join(business_template_path, 'bt/skip_coding_style_test')):
         test_list.append(os.path.basename(business_template_path))
+    for product_path in (glob('%s/../product/*' %(HERE))
+                         + glob('%s/../bt5' % HERE)):
+      if os.path.isdir(product_path) and \
+              not os.path.exists(os.path.join(product_path, 'skip_coding_style_test')):
+        test_list.append("Python3Style."+os.path.basename(product_path))
     return test_list
 
   def run(self, full_test):
+    if full_test.split('.')[0] == "Python3Style":
+      return self.runUnitTest('Python3StyleTest', TESTED_PRODUCT=full_test.split('.')[1])
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
 
   def getLogDirectoryPath(self, *args, **kw):
