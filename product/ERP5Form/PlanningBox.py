@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2005,2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -46,8 +47,8 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
-from Tool.SelectionTool import makeTreeList
-from Selection import Selection
+from .Tool.SelectionTool import makeTreeList
+from .Selection import Selection
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 
@@ -1777,14 +1778,14 @@ class BasicGroup:
         try:
           block_begin = obj.getProperty(object_property_begin, _marker)
           if block_begin is _marker:
-            raise AttributeError, object_property_begin
+            raise AttributeError(object_property_begin)
         except AttributeError:
           block_begin = getattr(obj, object_property_begin, None)
 
         try:
           block_end = obj.getProperty(object_property_end, _marker)
           if block_end is _marker:
-            raise AttributeError, object_property_end
+            raise AttributeError(object_property_end)
         except AttributeError:
           block_end = getattr(obj, object_property_end, None)
 

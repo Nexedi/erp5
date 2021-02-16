@@ -1,7 +1,8 @@
-import Form
-import StandardFields, HelperFields
-from FieldRegistry import FieldRegistry
-import Errors
+from __future__ import absolute_import
+from . import Form
+from . import StandardFields, HelperFields
+from .FieldRegistry import FieldRegistry
+from . import Errors
 from Products.PythonScripts.Utility import allow_module
 
 try:
@@ -12,7 +13,7 @@ try:
 except ImportError:
     pass
 else:
-    import FSForm
+    from . import FSForm
 
 # Allow Errors to be imported TTW
 allow_module('Products.Formulator.Errors')

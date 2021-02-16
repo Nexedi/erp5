@@ -338,7 +338,7 @@ class TestAlarm(ERP5TypeTestCase):
       finally:
         self.portal.portal_activities.manageClearActivities(keep=0)
     else:
-      raise Exception, 'Tic did not raise though activity was supposed to fail'
+      raise Exception('Tic did not raise though activity was supposed to fail')
     # Make the sense method succeed and leave a trace
     self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
     alarm.activeSense()

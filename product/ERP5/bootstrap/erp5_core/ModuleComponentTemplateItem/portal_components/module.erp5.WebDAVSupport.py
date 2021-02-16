@@ -70,7 +70,7 @@ class TextContent:
     self.dav__init(REQUEST, RESPONSE)
     self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
     if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-      raise Forbidden, 'REQUEST_METHOD should be PUT.'
+      raise Forbidden('REQUEST_METHOD should be PUT.')
     body = REQUEST.get('BODY', '')
 
     try:

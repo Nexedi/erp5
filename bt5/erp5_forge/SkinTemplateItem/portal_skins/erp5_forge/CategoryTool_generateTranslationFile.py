@@ -11,7 +11,7 @@ request = container.REQUEST
 response = request.RESPONSE
 
 if import_filename=='':
-  raise ValueError, "You must upload a file"
+  raise ValueError("You must upload a file")
 
 def addReportLine(error, category, message):
   report_line = newTempBase(context, 'item')
@@ -22,9 +22,8 @@ def invalid_category_spreadsheet_handler(message):
   # action taken when an invalid spreadsheet is provided.
   # we *raise* a Redirect, because we don't want the transaction to succeed
   # note, we could make a dialog parameter to allow import invalid spreadsheet:
-  raise 'Redirect', '%s/view?portal_status_message=%s' % (
-                         context.portal_categories.absolute_url(),
-                         message)
+  context.Base_redirect('view', keep_items={'portal_status_message':message},
+                        abort_transaction=True)
 
 category_list_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,
                                     invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler)

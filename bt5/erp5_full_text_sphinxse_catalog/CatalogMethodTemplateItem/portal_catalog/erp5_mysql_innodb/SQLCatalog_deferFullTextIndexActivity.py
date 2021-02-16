@@ -39,7 +39,7 @@ if len(failed_path_list):
     context.activate(activity='SQLQueue', priority=5, serialization_tag='sphinxse_indexing').SQLCatalog_deferFullTextIndexActivity(path_list=failed_path_list)
   else:
     # if all objects are failed one, just raise an exception to avoid infinite loop.
-    raise AttributeError, 'exception %r raised in indexing %r' % (exception, failed_path_list)
+    raise AttributeError('exception %r raised in indexing %r' % (exception, failed_path_list))
 
 if parameter_dict:
   method(**parameter_dict)

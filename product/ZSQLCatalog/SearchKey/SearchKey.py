@@ -243,24 +243,24 @@ class SearchKey(object):
             comparison_operator = single_operator_dict[value_range]
           elif value_range in dual_operator_dict:
             if not isinstance(actual_value, (tuple, list)):
-              raise TypeError, 'Operator %r requires value to be a '\
-                               'tuple/list. (%r)' % (value_range,
-                               search_value)
+              raise TypeError(
+                'Operator %r requires value to be a tuple/list. (%r)'
+                % (value_range, search_value))
             if len(actual_value) != 2:
-              raise TypeError, 'Operator %r requires value to have a length '\
-                               'of 2. len(%r) = %i (%r)' % (value_range,
-                               actual_value, len(actual_value), search_value)
+              raise TypeError(
+                'Operator %r requires value to have a length of 2. len(%r) = %s (%r)'
+                % (value_range, actual_value, len(actual_value), search_value))
             comparison_operator = dual_operator_dict[value_range]
             logical_operator = 'and'
           else:
-            raise ValueError, 'Unknown "range" value in %r' % (search_value, )
+            raise ValueError('Unknown "range" value in %r' % search_value)
         if value_operator is not None:
           if not isinstance(value_operator, basestring):
-            raise TypeError, 'Operator must be of a string type. Got a %r' % \
-                             (type(value_operator), )
+            raise TypeError('Operator must be of a string type. Got a %r'
+                            % type(value_operator))
           value_operator = value_operator.lower()
           if not isinstance(actual_value, (tuple, list)):
-            raise TypeError, 'When specifying an operator, query must be a list.'
+            raise TypeError('When specifying an operator, query must be a list.')
           if value_operator == 'in':
             comparison_operator = '='
             logical_operator = 'or'

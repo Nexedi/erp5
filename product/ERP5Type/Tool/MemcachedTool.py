@@ -247,7 +247,7 @@ if memcache is not None:
 
     def _prefixKey(self, key):
       if not isinstance(key, basestring):
-        raise TypeError, 'Key %s is not a string. Only strings are supported as key in SharedDict' % (repr(key), )
+        raise TypeError('Key %r is not a string. Only strings are supported as key in SharedDict' % (key,))
       return '%s_%s' % (self.prefix, key)
 
     def __getitem__(self, key):
@@ -318,8 +318,8 @@ else:
         if this function is called and memcachedtool is disabled, fail loudly
         with a meaningfull message.
       """
-      raise RuntimeError, 'MemcachedTool is disabled. You should ask the'\
-        ' server administrator to enable it by installing python-memcached.'
+      raise RuntimeError('MemcachedTool is disabled. You should ask the'
+        ' server administrator to enable it by installing python-memcached.')
 
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod

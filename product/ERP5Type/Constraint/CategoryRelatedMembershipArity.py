@@ -28,7 +28,8 @@
 #
 ##############################################################################
 
-from Constraint import Constraint
+from __future__ import absolute_import
+from .Constraint import Constraint
 from Products.ERP5Type.Constraint.CategoryMembershipArity \
           import CategoryMembershipArity
 

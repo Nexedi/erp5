@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -27,7 +28,7 @@
 #
 ##############################################################################
 
-from Constraint import Constraint
+from .Constraint import Constraint
 
 class CategoryExistence(Constraint):
   """This constraint checks if an object respects the existence of

@@ -27,7 +27,7 @@ if searchabletext is None:
     searchabletext = selection_object.get('searchabletext')
 
 if searchabletext is None:
-  raise ValueError, "No search string specified."
+  raise ValueError("No search string specified.")
 
 parsed_search_string = context.Base_parseSearchString(searchabletext)
 

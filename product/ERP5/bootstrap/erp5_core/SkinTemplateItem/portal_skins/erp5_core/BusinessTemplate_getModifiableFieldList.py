@@ -95,7 +95,7 @@ for skin_folder_id in skin_id_list:
                            alternate_field_library_id))):
       obj = getForm(skin_folder, object_id)
       if obj is None:
-        raise KeyError, '%s/%s' % (skin_folder_id, object_id)
+        raise KeyError('%s/%s' % (skin_folder_id, object_id))
       elif obj.meta_type == 'ERP5 Form':
         modified_object_dict['%s/%s' % (skin_folder_id, object_id)] = \
                                                                   '4_delete_form'
@@ -120,8 +120,8 @@ for skin_folder_id in skin_id_list:
           # As the form will be deleted, no need to manage its fields
           pass
         else:
-          raise KeyError, 'Unexpected form handling %s for %s' % \
-              (modified_object_dict[form_path], form_path)
+          raise KeyError('Unexpected form handling %s for %s'
+            % (modified_object_dict[form_path], form_path))
       elif form_id not in (field_library_id, alternate_field_library_id,
                            'Base_viewFieldLibrary',):
         # Check that proxy field are proxified to field library

@@ -416,7 +416,7 @@ class TemplateTool (BaseTool):
                                     % (self.absolute_url(), psm))
           return
         else :
-          raise RuntimeError, 'No file or an empty file was specified'
+          raise RuntimeError('No file or an empty file was specified')
       # copy to a temp location
       import_file.seek(0) #Rewind to the beginning of file
       tempid, temppath = mkstemp()
@@ -633,7 +633,7 @@ class TemplateTool (BaseTool):
                                        % (self.absolute_url(), psm))
               return
             else:
-              raise RuntimeError, 'Invalid repository: %s' % repository
+              raise RuntimeError('Invalid repository: %s' % repository)
           try:
             property_dict_list = []
             root = doc.documentElement
@@ -741,7 +741,7 @@ class TemplateTool (BaseTool):
         if diff_version == 0:
           return True;
         return False;
-      raise UnsupportedComparingOperator, 'Unsupported comparing operator: %s'%(operator,)
+      raise UnsupportedComparingOperator('Unsupported comparing operator: %s'%(operator,))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'IsOneProviderInstalled')
@@ -773,7 +773,7 @@ class TemplateTool (BaseTool):
         for property_dict in property_dict_list:
           provision_list = property_dict.get('provision_list', [])
           if title in provision_list:
-            raise BusinessTemplateIsMeta, 'Business Template %s is provided by another one'%(title,)
+            raise BusinessTemplateIsMeta('Business Template %s is provided by another one'%(title,))
           if title == property_dict['title']:
             if (version_restriction is None) or (self.compareVersionStrings(property_dict['version'], version_restriction)):
               if (result is None) or (self.compareVersions(property_dict['version'], result[2]) > 0):
@@ -781,7 +781,7 @@ class TemplateTool (BaseTool):
       if result is not None:
         return (result[0], result[1])
       else:
-        raise BusinessTemplateUnknownError, 'Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or '')
+        raise BusinessTemplateUnknownError('Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or ''))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getProviderList')
@@ -839,7 +839,7 @@ class TemplateTool (BaseTool):
                     try:
                       bt_dep = self.getLastestBTOnRepos(dependency, version_restriction)
                     except BusinessTemplateUnknownError:
-                      raise BusinessTemplateMissingDependency, 'While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or '')
+                      raise BusinessTemplateMissingDependency('While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or ''))
                     except BusinessTemplateIsMeta:
                       provider_list = self.getProviderList(dependency)
                       for provider in provider_list:
@@ -854,7 +854,7 @@ class TemplateTool (BaseTool):
                         result_list.append(sub_dep)
                     result_list.append(bt_dep)
                 return result_list
-        raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
+        raise BusinessTemplateUnknownError('The Business Template %s could not be found on repository %s'%(bt[1], bt[0]))
       return []
 
     security.declareProtected(Permissions.ManagePortal,
@@ -869,7 +869,7 @@ class TemplateTool (BaseTool):
         for repository, id in bt_list:
           if id.startswith(provider):
             return (repository, id)
-      raise BusinessTemplateUnknownError, 'Provider not found in bt_list'
+      raise BusinessTemplateUnknownError('Provider not found in bt_list')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'sortBusinessTemplateList')
@@ -944,8 +944,7 @@ class TemplateTool (BaseTool):
             undependent_list.append(dependency_id)
 
       if len(sorted_bt_list) != len(bt_list):
-        raise NotImplementedError, \
-          "Circular dependencies on %s" % reverse_dependency_dict.keys()
+        raise NotImplementedError("Circular dependencies on %s" % list(reverse_dependency_dict))
       else:
         return sorted_bt_list
 
@@ -1193,13 +1192,12 @@ class TemplateTool (BaseTool):
                         candidate.uid))
                   break
             else:
-              raise BusinessTemplateMissingDependency,\
-                "Unable to resolve dependencies for %s, options are %s" \
-                    % (dep_id, provider_list)
+              raise BusinessTemplateMissingDependency("Unable to resolve dependencies for %s, options are %s"
+                    % (dep_id, provider_list))
 
       if len(template_title_list) > 0:
-         raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repositories %s' % \
-             (list(template_title_list), self.getRepositoryList())
+         raise BusinessTemplateUnknownError('The Business Template %s could not be found on repositories %s' %
+             (list(template_title_list), self.getRepositoryList()))
       return self.sortBusinessTemplateList(list(bt5_set))
 
     security.declareProtected(Permissions.ManagePortal,
@@ -1226,9 +1224,8 @@ class TemplateTool (BaseTool):
                                  if not checkAvailability(i[1].replace(".bt5", ""))]
 
       if not install_dependency and len(missing_dependency_list) > 0:
-        raise BusinessTemplateMissingDependency,\
-            "Impossible to install, please install the following dependencies before: %s" \
-            % [x[1] for x in missing_dependency_list]
+        raise BusinessTemplateMissingDependency("Impossible to install, please install the following dependencies before: %s"
+            % [x[1] for x in missing_dependency_list])
 
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
       for repository, bt_id in resolved_template_list:

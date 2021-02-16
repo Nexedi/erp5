@@ -29,11 +29,13 @@
     ERP5 is a set of components to implement an ERP
     with Zope
 """
+from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 from AccessControl import ModuleSecurityInfo
-import sys, Permissions
+import sys
+from . import Permissions
 from Products.PythonScripts.Utility import allow_class
 from AccessControl.SecurityInfo import allow_module
 this_module = sys.modules[ __name__ ]
@@ -41,13 +43,13 @@ document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, ReportBox, MatrixBox
-from Tool import SelectionTool
-import OOoChart, PDFTemplate, Report, ParallelListField
-import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
-import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
-import CaptchaField
-import PreferenceTool
+from . import Form, FSForm, ListBox, ReportBox, MatrixBox
+from .Tool import SelectionTool
+from . import OOoChart, PDFTemplate, Report, ParallelListField
+from . import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
+from . import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
+from . import CaptchaField
+from . import PreferenceTool
 
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
@@ -67,7 +69,7 @@ psyco.bind(ListBox.ListBoxValidator.validate)
 
 # Finish installation
 def initialize( context ):
-    import Document
+    from . import Document
     initializeProduct(context, this_module, globals(),
                          document_module = Document,
                          document_classes = document_classes,
@@ -153,20 +155,20 @@ def initialize( context ):
     FieldRegistry.registerField(HelperFields.MethodField)
     FieldRegistry.registerField(HelperFields.TALESField)
 
-    import HyperLinkField
+    from . import HyperLinkField
     FieldRegistry.registerField(HyperLinkField.HyperLinkField,
                                 'www/LinkField.gif')
 
-    import VideoField
+    from . import VideoField
     FieldRegistry.registerField(VideoField.VideoField,
                                 'www/StringField.gif')
-    import AudioField
+    from . import AudioField
     FieldRegistry.registerField(AudioField.AudioField,
                                 'www/StringField.gif')
-    import GadgetField
+    from . import GadgetField
     FieldRegistry.registerField(GadgetField.GadgetField,
                                 'www/StringField.gif')
-    import HoneypotField
+    from . import HoneypotField
     FieldRegistry.registerField(HoneypotField.HoneypotField,
                                 'www/StringField.gif')
 
@@ -194,7 +196,7 @@ def initialize( context ):
 ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
 ModuleSecurityInfo('Products.ERP5Form.MultiRelationField').declarePublic('SUB_FIELD_ID',)
 allow_module('Products.ERP5Form.Selection')
-import Selection
+from . import Selection
 allow_class(Selection)
 
 __module_aliases__ = ('Products.ERP5Form.SelectionTool', SelectionTool),

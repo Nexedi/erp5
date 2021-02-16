@@ -10,7 +10,7 @@ start_date = closing_period.getStartDate()
 stop_date = closing_period.getStopDate()
 
 if start_date > stop_date:
-  raise ValidationFailed, translateString("Start date is after stop date.")
+  raise ValidationFailed(translateString("Start date is after stop date."))
 
 period_list = [
     x
@@ -23,9 +23,9 @@ period_list = [
 
 for period in period_list:
   if start_date <= period.getStopDate() and not stop_date <= period.getStartDate():
-    raise ValidationFailed, translateString(
+    raise ValidationFailed(translateString(
         "${date} is already in an open accounting period.",
-        mapping={'date': start_date})
+        mapping={'date': start_date}))
 
 previous_period = next(
     iter(
@@ -39,9 +39,9 @@ previous_period = next(
 )
 if previous_period is not None:
   if (start_date - previous_period.getStopDate()) > 1.9:
-    raise ValidationFailed, translateString(
+    raise ValidationFailed(translateString(
         "Last opened period ends on ${last_openned_date},"+
         " this period starts on ${this_period_start_date}."+
         " Accounting Periods must be consecutive.",
           mapping = { 'last_openned_date': previous_period.getStopDate(),
-                      'this_period_start_date': start_date } )
+                      'this_period_start_date': start_date } ))

@@ -164,8 +164,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise ValueError, 'Too little or too many value, only one is required for %s' % (
-          previous_xml
+      raise ValueError(
+        'Too little or too many value, only one is required for %s'
+        % previous_xml
       )
 
     # check if it'a work on product or on categories
@@ -268,8 +269,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
             previous_xml[0].text,
         )
       except IndexError:
-        raise IndexError, 'Too little or too many value, only one is required for %s' % (
-            previous_xml
+        raise IndexError(
+            'Too little or too many value, only one is required for %s'
+            % previous_xml
         )
 
       # retrieve the current value to check if exists a conflict
