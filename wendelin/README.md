@@ -26,4 +26,4 @@ health prediction, intrusion prediction, power prediction, etc.
 In addition, thanks to other Numpy based libraries such as OpenCV or Pandas, 
 Wedelin can be applied to other fields such as video processing or finance.
 
-More information can be found at http://www.wendelin.io/
+More information can be found at https://wendelin.nexedi.com/
