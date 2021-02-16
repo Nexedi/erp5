@@ -41,7 +41,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
         """Change the mailhost and document."""
         if self.wl_isLocked():
             from webdav.Lockable import ResourceLockedError
-            raise ResourceLockedError, "File is locked via WebDAV"
+            raise ResourceLockedError("File is locked via WebDAV")
         self.expand=expand
         self._setPropValue('mailhost',mailhost)
         self.pt_edit(text, content_type)

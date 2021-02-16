@@ -84,7 +84,7 @@ class GenericEntry(Acquisition.Implicit):
 
     def _connection(self):
         if self.__connection is None:
-            raise ConnectionError, 'No connection object for this entry'
+            raise ConnectionError('No connection object for this entry')
         else:
             return self.__connection
 
@@ -100,20 +100,20 @@ class GenericEntry(Acquisition.Implicit):
         if conn.hasEntry(key):
             return conn.getEntry(key, self)
         else:
-            raise IndexError, key
+            raise IndexError(key)
 
     def __getattr__(self, attr):
         if self._data.has_key(attr):
             return AttrWrap(self._data[attr])
         else:
-            raise AttributeError, attr
+            raise AttributeError(attr)
 
     #### Direct access for setting/getting/unsetting attributes
     def get(self, attr):
         if self._data.has_key(attr):
             return self._data[attr]
         else:
-            raise AttributeError, attr
+            raise AttributeError(attr)
 
     def set(self, key, value):
         """ Sets individual items """
@@ -170,7 +170,7 @@ class GenericEntry(Acquisition.Implicit):
     #### Get the ZLDAPConnection object.
     def _connection(self):
         if self.__connection is None:
-            raise ConnectionError, 'Cannot Get Connection'
+            raise ConnectionError('Cannot Get Connection')
         else:
             return self.__connection
 
@@ -234,7 +234,7 @@ class GenericEntry(Acquisition.Implicit):
         # and verify that it doesn't already exist
         dn = "%s,%s" % (string.strip(rdn), self.dn)
         if conn.hasEntry(dn):           # Check the LDAP server directly
-            raise KeyError, "DN '%s' already exists" % dn
+            raise KeyError("DN '%s' already exists" % dn)
 
         # Now split out the first attr based on the RDN (ie 'cn=bob') and
         # turn it into one of our attributes (ie attr[cn] = 'bob')
@@ -396,7 +396,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         #create the new full DN for new subentry and check its existance
         dn='%s,%s' % (string.strip(rdn), self.dn)
         if c.hasEntry(dn):
-            raise KeyError, "DN '%s' already exists" % dn
+            raise KeyError("DN '%s' already exists" % dn)
 
         # now split out the first attr based on the rdn (ie 'cn=bob', turns
         # into attr['cn'] = 'bob'

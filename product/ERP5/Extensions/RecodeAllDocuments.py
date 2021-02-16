@@ -42,7 +42,7 @@ def recodeDocumentRecursively(document, dry_run=0):
           message += 'Recoding %s of %s\n' % (id, document.getRelativeUrl())
           if not dry_run: setattr(base, id, tuple(value_list))
       else:
-        raise RuntimeError, 'unknown type of value %r' % value
+        raise RuntimeError('unknown type of value %r' % value)
 
   # Call itself recursively.
   for object in document.objectValues():

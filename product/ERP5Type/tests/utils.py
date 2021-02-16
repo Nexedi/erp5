@@ -157,7 +157,7 @@ class DummyLocalizer:
   def __getitem__(self, key):
     if hasattr(self, key):
       return getattr(self, key)
-    raise KeyError, key
+    raise KeyError(key)
 
   def get_default_language(self):
     return self._default_language
@@ -426,7 +426,7 @@ class LogInterceptor:
 
     def _catch_log_errors(self, ignored_level=zLOG.WARNING, subsystem=''):
         if subsystem in self.installed:
-            raise ValueError, 'Already installed filter!'
+            raise ValueError('Already installed filter!')
 
         root_logger = logging.getLogger(subsystem)
         self.installed += (subsystem,)
@@ -583,7 +583,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       elif isinstance(table[0][0], (tuple, list)):
         dimension = 3
       else:
-        raise RuntimeError, "Unsupported table structure!"
+        raise RuntimeError("Unsupported table structure!")
 
       if dimension==1:
         for table_line in table:

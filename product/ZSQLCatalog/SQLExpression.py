@@ -125,7 +125,7 @@ class SQLExpression(object):
       if len(limit) < 3:
         self.limit = limit
       else:
-        raise ValueError, 'Unrecognized "limit" value: %r' % (limit, )
+        raise ValueError('Unrecognized "limit" value: %r' % (limit, ))
     else:
       self.limit = (limit, )
     if from_expression is not None:
@@ -188,7 +188,7 @@ class SQLExpression(object):
               sql_expression,
               sql_expression.query,
               ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-          raise ValueError, message
+          raise ValueError(message)
         result[alias] = table_name
     return result
 
@@ -211,7 +211,7 @@ class SQLExpression(object):
             sql_expression,
             sql_expression.query,
             ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-        raise ValueError, message
+        raise ValueError(message)
     return result
 
   def getOrderByList(self):
@@ -251,7 +251,7 @@ class SQLExpression(object):
           if delay_error:
             order_by_dict[key] = MergeConflict(message)
           else:
-            raise MergeConflictError, message
+            raise MergeConflictError(message)
       result_dict.update(order_by_dict)
     return result_dict
 
@@ -317,7 +317,7 @@ class SQLExpression(object):
             sql_expression,
             sql_expression.query,
             ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-        raise ValueError, message
+        raise ValueError(message)
     return result
 
   def getLimitExpression(self):

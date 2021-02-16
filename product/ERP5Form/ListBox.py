@@ -529,7 +529,7 @@ class ListBoxRenderer:
   def getLineClass(self):
     """Return a class object for a line. This must be overridden.
     """
-    raise NotImplementedError, "getLineClass must be overridden in a subclass"
+    raise NotImplementedError("getLineClass must be overridden in a subclass")
 
   # Here, define many getters which cache the results for better performance.
 
@@ -672,7 +672,7 @@ class ListBoxRenderer:
     """Return the maximum number of lines shown in a page.
     This must be overridden in subclasses.
     """
-    raise NotImplementedError, "getMaxLineNumber must be overridden in a subclass"
+    raise NotImplementedError("getMaxLineNumber must be overridden in a subclass")
 
   @lazyMethod
   def showSearchLine(self):
@@ -1532,7 +1532,7 @@ class ListBoxRenderer:
     so the real value can be different from this. For example, if the value exceeds the total number
     of lines, the start number is forced to fit into somewhere. This must be overridden in subclasses.
     """
-    raise NotImplementedError, "getLineStart must be overridden in a subclass"
+    raise NotImplementedError("getLineStart must be overridden in a subclass")
 
   @lazyMethod
   def getSelectedDomainPath(self):
@@ -2042,7 +2042,7 @@ class ListBoxRenderer:
   def render(self, **kw):
     """Render the data. This must be overridden.
     """
-    raise NotImplementedError, "render must be overridden in a subclass"
+    raise NotImplementedError("render must be overridden in a subclass")
 
   def __call__(self, **kw):
     """Render the ListBox. The real rendering must be done the method "render" which should

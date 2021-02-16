@@ -286,7 +286,7 @@ if 1:
         # Redirect if desired.
         url = self.getUnauthorizedURL()
         if url is not None:
-            raise Redirect, url
+            raise Redirect(url)
         # Fall through to the standard unauthorized() call.
         resp.unauthorized()
 

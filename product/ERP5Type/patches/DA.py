@@ -186,12 +186,12 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     #LOG("DA__call__ connection", 300, c)
     try: dbc=getattr(self, c)
     except AttributeError:
-        raise AttributeError, (
+        raise AttributeError(
             "The database connection <em>%s</em> cannot be found." % (
             c))
 
     try: DB__=dbc()
-    except: raise DatabaseError, (
+    except: raise DatabaseError(
         '%s is not connected to a database' % self.id)
 
     p = aq_parent(self) # None if no aq_parent
