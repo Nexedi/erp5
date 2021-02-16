@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -27,7 +28,7 @@
 ##############################################################################
 
 
-from CopyToTarget import CopyToTarget
+from .CopyToTarget import CopyToTarget
 
 class ProfitAndLoss(CopyToTarget):
   """

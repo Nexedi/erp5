@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -58,10 +59,10 @@ class Accessor(Method):
 
     def asAlias(self, id):
       # Returns an alias
-      from Alias import Alias
+      from .Alias import Alias
       return Alias(id, self.__name__)
 
     def asReindexAlias(self, id):
       # Returns a reindexing alias
-      from Alias import ReindexAlias
+      from .Alias import ReindexAlias
       return ReindexAlias(id, self.__name__)

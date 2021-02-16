@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -47,8 +48,8 @@ from AccessControl.User import system as system_user
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
-from ActivityBuffer import ActivityBuffer
-from ActivityRuntimeEnvironment import BaseMessage
+from .ActivityBuffer import ActivityBuffer
+from .ActivityRuntimeEnvironment import BaseMessage
 from zExceptions import ExceptionFormatter, Redirect
 from BTrees.OIBTree import OIBTree
 from BTrees.OOBTree import OOBTree
@@ -461,7 +462,7 @@ Named Parameters: %r
       if exc_info[0] is None:
         # Raise a dummy exception, ignore it, fetch it and use it as if it was the error causing message non-execution. This will help identifyting the cause of this misbehaviour.
         try:
-          raise Exception, 'Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.'
+          raise Exception('Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.')
         except Exception:
           exc_info = sys.exc_info()
       elif exc_info[0] is SkippedMessage:
@@ -502,7 +503,7 @@ allow_class(GroupedMessage)
 
 # Activity Registration
 def activity_dict():
-  from Activity import SQLDict, SQLQueue, SQLJoblib
+  from .Activity import SQLDict, SQLQueue, SQLJoblib
   return {k: getattr(v, k)() for k, v in locals().iteritems()}
 activity_dict = activity_dict()
 
@@ -1343,7 +1344,7 @@ class ActivityTool (BaseTool):
         if not too_many_threads or force:
           active_threads += 1
         else:
-          raise RuntimeError, 'Too many threads'
+          raise RuntimeError('Too many threads')
 
       inner_self = aq_inner(self)
 

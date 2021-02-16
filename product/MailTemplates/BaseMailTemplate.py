@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -16,7 +17,7 @@ from email.Utils import make_msgid, formataddr, getaddresses
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.Common import package_home
-from MTMultipart import MTMultipart
+from .MTMultipart import MTMultipart
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 

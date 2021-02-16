@@ -62,8 +62,8 @@ def encode(format, string_to_encode): # pylint: disable=redefined-builtin
   #elif format is .... put here the other formats
   else:#if there is no format corresponding with format, raise an error
     LOG('encode : unknown or not implemented format : ', INFO, format)
-    raise ValueError, "Sorry, the server ask for the format %s but \
-          it's unknow or not implemented" % format
+    raise ValueError("Sorry, the server ask for the format %s but"
+          " it's unknown or not implemented" % format)
 
 def decode(format, string_to_decode): # pylint: disable=redefined-builtin
   """
@@ -77,8 +77,7 @@ def decode(format, string_to_decode): # pylint: disable=redefined-builtin
   #elif format is .... put here the other formats
   else:#if there is no format corresponding with format, raise an error
     LOG('decode : unknown or not implemented format :', INFO, format)
-    raise ValueError, "Sorry, the format %s is unknow or \
-          not implemented" % format
+    raise ValueError("Sorry, the format %s is unknown or not implemented" % format)
 
 def isDecodeEncodeTheSame(string_encoded, string_decoded, format): # pylint: disable=redefined-builtin
   """
