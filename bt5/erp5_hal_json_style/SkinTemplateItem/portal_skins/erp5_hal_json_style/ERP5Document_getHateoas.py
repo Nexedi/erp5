@@ -1238,15 +1238,9 @@ def renderFormDefinition(form, response_dict):
   if preferred_html_style_developer_mode:
     form_relative_url = getFormRelativeUrl(form)
     response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
-    skin_selection_name = ""
-    if getattr(site_root, "getSkinSelectionName", None):
-      skin_selection_name = site_root.getSkinSelectionName("")
-
-    response_dict["edit_form_action_href"] = '%s/%s/manage_main?portal_skin=%s' % (
-      form_relative_url,
-      form.action,
-      skin_selection_name
-    )
+    response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
+      site_root.getId(),
+      form.action)
 
 
 def statusLevelToString(level):
