@@ -22,7 +22,7 @@ def invalid_category_spreadsheet_handler(message):
   # action taken when an invalid spreadsheet is provided.
   # we *raise* a Redirect, because we don't want the transaction to succeed
   # note, we could make a dialog parameter to allow import invalid spreadsheet:
-  context.Base_redirect('view', keep_items={'portal_status_message':message),
+  context.Base_redirect('view', keep_items={'portal_status_message':message},
                         abort_transaction=True)
 
 category_list_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,
