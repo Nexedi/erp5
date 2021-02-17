@@ -755,10 +755,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
     first_group = range(0, 5)
-    second_group =  range(5, 11)
-    third_group = range(11, 12)
-    fourth_group = range(12, 14)
-    fifth_group = range(14, 15)
+    second_group =  range(5, 12)
+    third_group = range(12, 14)
+    fourth_group = range(14, 15)
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
@@ -772,10 +771,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_ingestion_mysql_innodb_catalog': second_group,
       'erp5_base': second_group,
       'erp5_knowledge_pad': second_group,
-      'erp5_ingestion': third_group,
-      'erp5_web': fourth_group,
-      'erp5_crm': fourth_group,
-      'erp5_credential': fifth_group}
+      'erp5_ingestion': second_group,
+      'erp5_web': third_group,
+      'erp5_crm': third_group,
+      'erp5_credential': fourth_group}
 
     for bt in ordered_list:
       self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],
