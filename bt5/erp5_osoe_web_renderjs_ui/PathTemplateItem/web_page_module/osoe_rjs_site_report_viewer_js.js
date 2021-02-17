@@ -42,7 +42,7 @@
           for (k = 0; k < erp5_report_list[i][1][j][2].length; k += 1) {
             url_for_dict[erp5_report_list[i][1][j][1] +
                          erp5_report_list[i][1][j][2][k][1]] = {
-              command: 'display_erp5_action_with_history',
+              command: 'display_erp5_dialog_with_history',
               options: {
                 jio_key: erp5_report_list[i][1][j][1],
                 page: erp5_report_list[i][1][j][2][k][1]
