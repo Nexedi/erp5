@@ -2126,6 +2126,9 @@ ul.ui-list-grid {
       li {
         padding: @half-margin-size @margin-size;
       }
+      button {
+        .link(@colorlink);
+      }
     }
 }
 
