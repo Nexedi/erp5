@@ -188,22 +188,26 @@
 
     editable_mapping = editable_mapping || {};
     command_mapping = command_mapping || {};
+
+    function addRawUrlToGroupMapping(group, action_type) {
+      if (links.hasOwnProperty(action_type)) {
+        if (links[action_type] instanceof Array) {
+          for (i = 0; i < links[action_type].length; i += 1) {
+            if (links[action_type][i].href) {
+              group_mapping[group].push(links[action_type][i]);
+            }
+          }
+        } else {
+          group_mapping[group].push(links[action_type]);
+        }
+      }
+    }
+
     for (i = 0; i < group_id_list.length; i += 1) {
       group = group_id_list[i][0];
       if (group_id_list[i] instanceof Array) {
         group_mapping[group] = ensureArray(links[group]);
-        action_type = group + "_raw";
-        if (links.hasOwnProperty(action_type)) {
-          if (links[action_type] instanceof Array) {
-            for (i = 0; i < links[action_type].length; i += 1) {
-              if (links[action_type][i].href) {
-                group_mapping[group].push(links[action_type][i]);
-              }
-            }
-          } else {
-            group_mapping[group].push(links[action_type]);
-          }
-        }
+        addRawUrlToGroupMapping(group, group + "_raw");
         if (group_id_list[i].length > 1) {
           for (j = 1; j < group_id_list[i].length; j += 1) {
             group_mapping[group] = group_mapping[
@@ -211,24 +215,16 @@
             ].concat(
               ensureArray(links[group_id_list[i][j]])
             );
-            action_type = group_id_list[i][j] + "_raw";
-            if (links.hasOwnProperty(action_type)) {
-              if (links[action_type] instanceof Array) {
-                for (i = 0; i < links[action_type].length; i += 1) {
-                  if (links[action_type][i].href) {
-                    group_mapping[group].push(links[action_type][i]);
-                  }
-                }
-              } else {
-                group_mapping[group].push(links[action_type]);
-              }
-            }
+            addRawUrlToGroupMapping(group_id_list[i][j],
+                                    group_id_list[i][j] + "_raw");
           }
         }
       } else {
         group_mapping[group_id_list[i]] = ensureArray(
           links[group_id_list[i]]
         );
+        addRawUrlToGroupMapping(group_id_list[i],
+                                group_id_list[i] + "_raw");
       }
     }
 
