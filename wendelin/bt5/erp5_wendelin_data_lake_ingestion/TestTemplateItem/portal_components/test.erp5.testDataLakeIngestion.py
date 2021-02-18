@@ -22,6 +22,7 @@ class TestDataIngestion(SecurityTestCase):
   REF_PREFIX = "fake-supplier" + REFERENCE_SEPARATOR
   REF_SUPPLIER_PREFIX = "fake-supplier" + REFERENCE_SEPARATOR
   INVALID = "_invalid"
+  REF_DATASET = "fake-dataset"
 
   def getTitle(self):
     return "DataIngestionTest"
@@ -38,7 +39,7 @@ class TestDataIngestion(SecurityTestCase):
 
   def getIngestionReference(self, reference, extension, randomize_ingestion_reference=False, data_set_reference=False):
     if not data_set_reference:
-      data_set_reference = "fake-dataset"
+      data_set_reference = self.REF_DATASET
     if not randomize_ingestion_reference:
       # return hard coded which results in one Data Set and multiple Data Streams (in context of test)
       return self.REF_PREFIX + data_set_reference + self.REFERENCE_SEPARATOR + reference + extension
@@ -280,5 +281,57 @@ class TestDataIngestion(SecurityTestCase):
     self.assertEqual(data_set.getValidationState(), 'published')
     self.assertEqual(first_file_stream.getValidationState(), 'published')
     self.assertEqual(second_file_stream.getValidationState(), 'published')
+
+  def test_06_IngestSameElementTwice(self):
+    """
+      Try to ingest same element twice while previous is being processed
+    """
+    reference = self.getRandomReference()
+
+    self.ingest("some-data", reference, self.CSV, self.SINGLE_INGESTION_END)
+    time.sleep(1)
+    self.tic()
+
+    #ingest with same reference while previous was not processed should fail
+    self.assertRaises(Exception, self.ingest, "some-data", reference, self.CSV, self.SINGLE_INGESTION_END)
+
+  def test_07_IngestionReplacesOld(self):
+    """
+      Try to ingest same element twice while previous is being processed
+    """
+    reference = self.getRandomReference()
+
+    self.ingest("some-data", reference, self.CSV, self.SINGLE_INGESTION_END)
+    time.sleep(1)
+    self.tic()
+
+    # call explicitly alarm to process and validate the ingestion
+    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.tic()
+
+    ingestion_reference = self.REF_DATASET + self.REFERENCE_SEPARATOR + reference + self.CSV
+    data_ingestion = self.getDataIngestion(ingestion_reference)
+    data_stream = self.getDataStream(ingestion_reference)
+
+    self.assertEqual(data_ingestion.getSimulationState(), "stopped")
+    self.assertEqual(data_stream.getValidationState(), "validated")
+
+    # the new ingestion should replace the old one
+    self.ingest("some-data", reference, self.CSV, self.SINGLE_INGESTION_END)
+    time.sleep(1)
+    self.tic()
+
+    self.assertEqual(data_stream.getValidationState(), "invalidated")
+    self.assertTrue(data_ingestion.getReference().endswith(self.INVALID))
+
+  def test_08_checkAlarms(self):
+    """
+      Check all data analysis and data transformations are well configured
+    """
+    # call two times the alarm (1. create analysis 2. run analysis)
+    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.tic()
+    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.tic()
 
   # XXX: new test which simulates download / upload of Data Set and increase DS version
