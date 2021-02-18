@@ -1869,6 +1869,20 @@ ul.ui-list-grid > li h2 {
 ul.ui-list-grid > li li {
   padding: 3pt 6pt;
 }
+ul.ui-list-grid > li button {
+  color: #2FA2E4;
+  text-decoration: none;
+}
+ul.ui-list-grid > li button[href=""] {
+  color: #1F1F1F;
+}
+ul.ui-list-grid > li button:hover {
+  text-decoration: underline;
+}
+ul.ui-list-grid > li button:focus {
+  outline-offset: -2px;
+  outline: 2px solid #3388cc;
+}
 /**********************************************
 * Developer mode actions
 **********************************************/
