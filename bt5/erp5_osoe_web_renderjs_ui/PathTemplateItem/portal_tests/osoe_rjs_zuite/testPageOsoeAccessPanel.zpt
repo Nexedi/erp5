@@ -16,51 +16,86 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/?page=osoe_access</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Wait for gadget to be loaded -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']</td>
-  <td></td>
-</tr>
-
-<!-- Check that there is a card -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']//ul/li/h2[text()='Others']</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
-<!-- Generate links to module -->
+<tal:block tal:define="click_configuration python: {'text': 'New'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
-<!-- Follow one link -->
-<!-- Header has a link to the previous history entry -->
+<tal:block tal:define="click_configuration python: {'text': 'Contribute File'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!push_history_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Foos</td>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
+<tal:block tal:define="click_configuration python: {'text': 'Site Reports'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Site Reports' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='New' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Contribute File' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
