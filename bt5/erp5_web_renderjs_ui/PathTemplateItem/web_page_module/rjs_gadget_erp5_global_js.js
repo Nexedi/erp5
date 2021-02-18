@@ -197,10 +197,12 @@
         if (links[action_type] instanceof Array) {
           for (i = 0; i < links[action_type].length; i += 1) {
             if (links[action_type][i].href) {
+              links[action_type][i].action_type = action_type;
               group_mapping[group].push(links[action_type][i]);
             }
           }
         } else {
+          links[action_type].action_type = action_type;
           group_mapping[group].push(links[action_type]);
         }
       }
@@ -247,7 +249,8 @@
               (current_href === view))) {
             class_name = 'active';
           }
-          if (group_mapping[group][i].name.indexOf("_raw") !== -1) {
+          if (group_mapping[group][i].action_type &&
+                group_mapping[group][i].action_type.indexOf("_raw") !== -1) {
             command = "raw";
             options = {
               title: group_mapping[group][i].title,
