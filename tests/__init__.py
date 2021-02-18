@@ -227,13 +227,9 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
 
   def getLogDirectoryPath(self, *args, **kw):
-    if full_test.split('.')[0] == "Python3Style":
-      tested = kw['TESTED_PRODUCT']
-    else:
-      tested = kw['TESTED_BUSINESS_TEMPLATE']
     log_directory = os.path.join(
         self.log_directory,
-        '{}-{}'.format(args[-1] , tested))
+        '{}-{}'.format(args[-1], kw.get('TESTED_BUSINESS_TEMPLATE', kw.get('TESTED_PRODUCT'))))
     os.mkdir(log_directory)
     return log_directory
 
