@@ -196,7 +196,11 @@ function getFrequency(start_date, stop_date) {\n
 \n
 function getArrayId(frequency) {\n
   return jio.allDocs({\n
-    query: \'portal_type:"Data Analysis Line" AND \' +\n
+    query: \'portal_type:"Data Array" AND \' +\n
+           \'title: "Sample Array (\' + frequency + \' Seconds)"\'\n
+  })\n
+    // query for tutorial\n
+    /*query: \'portal_type:"Data Analysis Line" AND \' +\n
            \'title: "Resampled Array (\' + frequency + \' Seconds)" AND \' +\n
            \'resource_reference:"GENERIC-INTERVAL-RESAMPLED-ARRAY" AND \' +\n
            \'parent_source_title:"Sample Factory" AND \' +\n
@@ -208,7 +212,7 @@ function getArrayId(frequency) {\n
         query: \'portal_type:"Data Array" AND \' +\n
                \'aggregate_related_relative_url:"\' + data_analysis_line_id +\'"\'\n
       });\n
-    })\n
+    })*/\n
     .push(function (result) {\n
       return result.data.rows[0].id;\n
     });\n
@@ -494,7 +498,7 @@ main();
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sample Data Chart Editor</string> </value>
+            <value> <string>Data Sample Chart Editor</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -627,7 +631,7 @@ main();
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>989.53370.50122.49356</string> </value>
+                      <value> <string>990.5471.21591.11963</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -645,7 +649,7 @@ main();
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1612537114.81</float>
+                              <float>1613589168.21</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

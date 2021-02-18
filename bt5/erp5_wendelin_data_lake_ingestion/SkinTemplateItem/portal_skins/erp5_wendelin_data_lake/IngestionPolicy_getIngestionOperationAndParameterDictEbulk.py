@@ -27,8 +27,12 @@ data_ingestion = portal_catalog.getResultValue(
   reference = data_ingestion_reference)
 
 if data_ingestion is not None:
+  # reject new ingestion with same reference if it arrives during ongoing previous ingestion
+  if data_ingestion.getSimulationState() == 'started' and eof == reference_end_single:
+    raise Exception("Wendelin is already processing an ingestion with reference " + reference)
   if data_ingestion.getSimulationState() != 'started':
-    if eof == reference_end_single: # if not split (one single ingestion), invalidate old ingestion
+    # new ingestion replaces existing one (ebulk partial ingestion) unless split
+    if eof == reference_end_single:
       portal.ERP5Site_invalidateIngestionObjects(data_ingestion_reference)
 
 specialise_value_list = [x.getObject() for x in portal_catalog.searchResults(
