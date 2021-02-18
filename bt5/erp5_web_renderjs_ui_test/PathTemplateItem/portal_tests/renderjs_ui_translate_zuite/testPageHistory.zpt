@@ -78,16 +78,9 @@
 
 <!-- Go to the history tab -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/open_menu_panel" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]//a[text()='lishi']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='panel']//a[text()='lishi']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'lishi'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
