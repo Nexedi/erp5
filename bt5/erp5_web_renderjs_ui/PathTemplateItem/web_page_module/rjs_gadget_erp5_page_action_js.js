@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+/*global window, rJS, RSVP, domsugar, calculatePageTitle,
          console, mergeGlobalActionWithRawActionList */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+(function (window, rJS, RSVP, domsugar, calculatePageTitle,
            mergeGlobalActionWithRawActionList) {
   "use strict";
 
@@ -69,18 +69,27 @@
           var  i, j,
             url_for_kw_list = [],
             url_mapping = mergeGlobalActionWithRawActionList(
-              gadget.state.jio_key, gadget.state.view, gadget.state.jump_view,
+              gadget.state.jio_key,
+              gadget.state.view,
+              gadget.state.jump_view,
               jio_attachment._links,
-              ["action_workflow",
-                ["action_object_jio_action",
+              [
+                "action_workflow",
+                [
+                  "action_object_jio_action",
                   "action_object_jio_button",
-                  "action_object_jio_fast_input"],
+                  "action_object_jio_fast_input"
+                ],
                 "action_object_clone_action",
-                "action_object_delete_action"], {
+                "action_object_delete_action"
+              ],
+              {
                 "action_workflow": "display_with_history_and_cancel"
-              }, {
+              },
+              {
                 action_object_clone_action: true
-              });
+              }
+            );
           erp5_document = jio_attachment;
 
           group_list = [
@@ -110,7 +119,6 @@
             j,
             k = 0,
             dom_list = [],
-            raw_action_list = [],
             link_list;
 
           for (i = 0; i < group_list.length; i += 2) {
@@ -139,5 +147,5 @@
       return;
     });
 
-}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray,
+}(window, rJS, RSVP, domsugar, calculatePageTitle,
   mergeGlobalActionWithRawActionList));
