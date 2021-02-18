@@ -191,6 +191,9 @@
 
     function addRawUrlToGroupMapping(group, action_type) {
       if (links.hasOwnProperty(action_type)) {
+        if (!group_mapping.hasOwnProperty(group)) {
+          group_mapping[group] = [];
+        }
         if (links[action_type] instanceof Array) {
           for (i = 0; i < links[action_type].length; i += 1) {
             if (links[action_type][i].href) {
