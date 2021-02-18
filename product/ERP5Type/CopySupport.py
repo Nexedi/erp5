@@ -163,8 +163,8 @@ class CopyContainer:
         pass # There is no activity tool
       else:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise ActivityPendingError('Sorry, pending activities prevent ' \
-                         +  'changing id at this current stage')
+          raise ActivityPendingError(
+            'Sorry, pending activities prevent changing id at this current stage')
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)

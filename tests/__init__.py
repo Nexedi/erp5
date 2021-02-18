@@ -3,6 +3,7 @@ import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
 from test_suite import ERP5TypeTestSuite
 import sys
+from itertools import chain
 
 HERE = os.path.dirname(__file__)
 
@@ -34,10 +35,10 @@ class _ERP5(ERP5TypeTestSuite):
     path = "%s/../" % HERE
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
-    for test_path in (
-        glob('%s/product/*/tests/test*.py' % path) +
-        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
-        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+    for test_path in chain(
+        glob(path + '/product/*/tests/test*.py'),
+        glob(path + '/bt5/*/TestTemplateItem/test*.py'),
+        glob(path + '/bt5/*/TestTemplateItem/portal_components/test.*.test*.py')):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
@@ -204,32 +205,30 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   """Run coding style test on all business templates.
   """
   def getTestList(self):
-    test_list = []
-    for business_template_path in (
-            glob('%s/../bt5/*' % HERE)
-            + glob('%s/../product/ERP5/bootstrap/*' % HERE)):
+    test_list = [
+      os.path.basename(business_template_path)
+      for path in chain(
+        glob(HERE + '/../bt5/*'),
+        glob(HERE + '/../product/ERP5/bootstrap/*'))
       # we skip coding style check for business templates having this marker
       # property. Since the property is not exported (on purpose), modified business templates
       # will be candidate for coding style test again.
-      if os.path.isdir(business_template_path) and \
-              not os.path.exists(os.path.join(business_template_path, 'bt/skip_coding_style_test')):
-        test_list.append(os.path.basename(business_template_path))
-    for product_path in (glob('%s/../product/*' %(HERE))
-                         + glob('%s/../bt5' % HERE)):
-      if os.path.isdir(product_path) and \
-              not os.path.exists(os.path.join(product_path, 'skip_coding_style_test')):
-        test_list.append("Python3Style."+os.path.basename(product_path))
+      if not os.path.exists(path + '/bt/skip_coding_style_test')
+    ]
+    for path in glob(HERE + '/../product/*'):
+      if not os.path.exists(path + '/skip_coding_style_test'):
+        test_list.append("Python3Style." + os.path.basename(path))
     return test_list
 
   def run(self, full_test):
-    if full_test.split('.')[0] == "Python3Style":
-      return self.runUnitTest('Python3StyleTest', TESTED_PRODUCT=full_test.split('.')[1])
+    if full_test.startswith("Python3Style."):
+      return self.runUnitTest('Python3StyleTest', TESTED_PRODUCT=full_test[13:])
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
 
   def getLogDirectoryPath(self, *args, **kw):
     log_directory = os.path.join(
         self.log_directory,
-        '{}-{}'.format(args[-1], kw.get('TESTED_BUSINESS_TEMPLATE', kw.get('TESTED_PRODUCT'))))
+        args[-1] + '-' + (kw.get('TESTED_BUSINESS_TEMPLATE') or kw['TESTED_PRODUCT']))
     os.mkdir(log_directory)
     return log_directory
 

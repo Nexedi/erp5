@@ -195,7 +195,9 @@ class ColumnMap(object):
       if alias is not None:
         self.resolveTable(table_name, alias, group=group)
     elif alias is not None and alias != existing_value:
-      raise ValueError('Table %r for group %r is aliased as %r, can\'t alias it now as %r' % (table_name, group, existing_value, alias))
+      raise ValueError(
+        "Table %r for group %r is aliased as %r, can't alias it now as %r"
+        % (table_name, group, existing_value, alias))
 
   def _mapColumns(self, column_table_map, table_usage_dict, column_name_set, group, vote_result_dict):
     mapping_dict = {}

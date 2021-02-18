@@ -55,7 +55,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
      persistent.
     """
     if id_group in (None, 'None'):
-      raise ValueError('%s is not a valid group Id.' % (repr(id_group), ))
+      raise ValueError('%r is not a valid group Id.' % id_group)
     if default is None:
       default = 0
     last_id_dict = getattr(self, 'last_id_dict', None)

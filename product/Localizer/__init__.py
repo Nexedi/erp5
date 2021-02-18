@@ -42,10 +42,10 @@ def initialize(context):
     # (this is a common mistake).
     filename = os.path.split(os.path.split(__file__)[0])[1]
     if filename != 'Localizer':
-        message = (
+        raise RuntimeError(
             "The Localizer product must be installed within the 'Products'"
             " folder with the name 'Localizer' (not '%s').") % filename
-        raise RuntimeError(message)
+        )
 
     # XXX This code has been written by Cornel Nitu, it may be a solution to
     # upgrade instances.

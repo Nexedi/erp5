@@ -129,16 +129,16 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       # Check for month name:
       if MonthNumbers.has_key(s):
         v=MonthNumbers[s]
-        if month is None: month=v
-        else: raise SyntaxError(st)
-        continue
+        if month is None:
+          month = v
+          continue
       # Check for time modifier:
-      if s in TimeModifiers:
-        if tm is None: tm=s
-        else: raise SyntaxError(st)
-        continue
+      elif s in TimeModifiers:
+        if tm is None:
+          tm = s
+          continue
       # Check for and skip day of week:
-      if DayOfWeekNames.has_key(s):
+      elif DayOfWeekNames.has_key(s):
         continue
 
     raise SyntaxError(st)

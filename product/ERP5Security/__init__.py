@@ -73,17 +73,19 @@ def _setUserNameForAccessLog(username, REQUEST):
 
 
 def initialize(context):
-  from . import ERP5UserManager
-  from . import ERP5LoginUserManager
-  from . import ERP5GroupManager
-  from . import ERP5RoleManager
-  from . import ERP5UserFactory
-  from . import ERP5KeyAuthPlugin
-  from . import ERP5ExternalAuthenticationPlugin
-  from . import ERP5BearerExtractionPlugin
-  from . import ERP5ExternalOauth2ExtractionPlugin
-  from . import ERP5AccessTokenExtractionPlugin
-  from . import ERP5DumbHTTPExtractionPlugin
+  from . import (
+    ERP5UserManager,
+    ERP5LoginUserManager,
+    ERP5GroupManager,
+    ERP5RoleManager,
+    ERP5UserFactory,
+    ERP5KeyAuthPlugin,
+    ERP5ExternalAuthenticationPlugin,
+    ERP5BearerExtractionPlugin,
+    ERP5ExternalOauth2ExtractionPlugin,
+    ERP5AccessTokenExtractionPlugin,
+    ERP5DumbHTTPExtractionPlugin,
+  )
 
   registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
   registerMultiPlugin(ERP5LoginUserManager.ERP5LoginUserManager.meta_type)

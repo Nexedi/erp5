@@ -243,8 +243,8 @@ class CachingMethod:
     cache_factory is the id of the cache_factory to use.
     """
     if not callable(callable_object):
-      raise CachedMethodError("callable_object %s is not callable" % str(
-                                                                callable_object))
+      raise CachedMethodError("callable_object %r is not callable"
+                              % (callable_object,))
     if not id:
       raise CachedMethodError("id must be specified")
     self.id = id

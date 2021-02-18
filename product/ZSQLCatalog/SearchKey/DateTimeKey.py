@@ -141,7 +141,7 @@ def getPeriodBoundaries(value):
   elif isinstance(value, DateTime):
     raise TypeError('Impossible to guess a precision from a DateTime type.')
   else:
-    raise TypeError('Unknown date type: %r' % (value))
+    raise TypeError('Unknown date type: %r' % (value,))
   delta = delta_list[delimiter_count]
   if callable(delta):
     delta = delta(first_date)

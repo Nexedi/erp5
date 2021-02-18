@@ -95,17 +95,16 @@ class CesarCipher:
       crypted_letter = str(ord(login[i]) + self.encrypted_key[delta])
       #ord is the inverse of chr() for 8-bit (1111 1111 = 256)
       #so crypted_letter max id 512
-      #we ajust lenght to be able to decrypt by block
+      #we ajust length to be able to decrypt by block
       crypted_letter = crypted_letter.rjust(self.block_length, '0')
       crypted_login += crypted_letter
     return crypted_login
 
   def decrypt(self, crypted_login):
     login = ''
-    #check lenght of the string
     clogin_length = len(crypted_login)
     if clogin_length % self.block_length != 0:
-      raise ValueError("Lenght is not good")
+      raise ValueError("Invalid length")
     #decrypt block per block
     position = 0
     key_length = len(self.encrypted_key)
