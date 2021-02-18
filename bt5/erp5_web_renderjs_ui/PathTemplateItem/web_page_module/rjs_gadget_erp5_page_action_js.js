@@ -60,8 +60,7 @@
     .onStateChange(function () {
       var gadget = this,
         erp5_document,
-        group_list,
-        raw_list;
+        group_list;
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
@@ -83,7 +82,6 @@
                 action_object_clone_action: true
               });
           erp5_document = jio_attachment;
-          raw_list = ensureArray(erp5_document._links.action_object_development_mode_jump_raw);
 
           group_list = [
             url_mapping.action_workflow, 'random',
@@ -98,21 +96,11 @@
             }
           }
 
-          // Developer mode
-          for (i = 0; i < raw_list.length; i += 1) {
-            url_for_kw_list.push({
-              command: 'raw',
-              options: {
-                url: raw_list[i].href
-              }
-            });
-          }
-
           url_for_kw_list.push({command: 'cancel_dialog_with_history'});
 
           return RSVP.hash({
             url_list: gadget.getUrlForList(url_for_kw_list),
-            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete', 'Developer Mode']),
+            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete']),
             page_title: calculatePageTitle(gadget, erp5_document)
           });
         })
@@ -139,18 +127,6 @@
             );
 
           }
-          for (i = 0; i < raw_list.length; i += 1) {
-            raw_action_list.push({
-              title: raw_list[i].title,
-              link: result_dict.url_list[k]
-            });
-            k += 1;
-          }
-
-          if (raw_action_list.length > 0) {
-            dom_list.push(generateSection(result_dict.translation_list[4], 'plane', raw_action_list));
-          }
-
           domsugar(gadget.element, dom_list);
 
           return gadget.updateHeader({
