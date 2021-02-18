@@ -67,7 +67,7 @@ class SimpleQuery(Query):
     """
     self.search_key = search_key
     if len(kw) != 1:
-      raise ValueError('SimpleQuery can support one and one only column. Got %r.' % (kw, ))
+      raise ValueError('SimpleQuery can support one and one only column. Got %r.' % kw)
     self.column, value = kw.popitem()
     # Usability improvement code (those changes should not be needed when
     # this Query is instanciated by a SearchKey, as operator should be correct

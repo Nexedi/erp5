@@ -60,7 +60,7 @@ class ERP5LDIFRecordList(LDIFRecordList):
           if dn!=None:
             raise ValueError('Two lines starting with dn: in one record.')
           if not is_dn(attr_value):
-            raise ValueError('No valid string-representation of distinguished name %s.' % (repr(attr_value)))
+            raise ValueError('No valid string-representation of distinguished name %r.' % (attr_value,))
           dn = attr_value
         elif attr_type=='version' and dn is None:
           version = 1
@@ -71,7 +71,7 @@ class ERP5LDIFRecordList(LDIFRecordList):
           if changetype!=None:
             raise ValueError('Two lines starting with changetype: in one record.')
           if not valid_changetype_dict.has_key(attr_value):
-            raise ValueError('changetype value %s is invalid.' % (repr(attr_value)))
+            raise ValueError('changetype value %r is invalid.' % (attr_value,))
           changetype = attr_value
           attr_type, attr_value = self._parseAttrTypeandValue()
           modify_list = []

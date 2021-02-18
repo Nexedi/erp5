@@ -83,9 +83,8 @@ if 1: # For easy diff with original
             if args.has_key('optional') and args['optional']:
                 return ''
             else:
-                err = 'Invalid empty string value for <em>%s</em>' % name
-                raise ValueError(err)
-
+                raise ValueError(
+                    'Invalid empty string value for <em>%s</em>' % name)
 
         if not vs:
             if self.optional: return ''

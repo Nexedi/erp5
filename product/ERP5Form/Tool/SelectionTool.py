@@ -1258,8 +1258,8 @@ class SelectionTool( BaseTool, SimpleItem ):
               relation_index += 1
       if not relation_field_found:
         # We didn't find the field...
-        raise SelectionError("SelectionTool: can not find the relation" \
-                              " field %s" % index)
+        raise SelectionError("SelectionTool: can not find the relation field %s"
+                             % index)
       else:
         # Field found
         field_key = field.generate_field_key()

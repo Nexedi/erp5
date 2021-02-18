@@ -145,9 +145,10 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise ValueError('Too little or too many value, only one is required for %s' % (
-          previous_xml
-      ))
+      raise ValueError(
+        'Too little or too many value, only one is required for %s'
+        % previous_xml
+      )
 
     if isinstance(previous_value, unicode):
       previous_value = previous_value.encode('utf-8')
@@ -206,9 +207,10 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
             selected_previous_xml[0].text,
         )
       except IndexError:
-        raise IndexError('Too little or too many value, only one is required for %s' % (
-            previous_xml
-        ))
+        raise IndexError(
+          'Too little or too many value, only one is required for %s'
+          % previous_xml
+        )
       LOG("TiosafeResourceConduit.del", 300, "will remove category %s from %s" %(tag, previous_xml.text))
       # retrieve the current value to check if exists a conflict
       current_value = etree.XML(object_xml).xpath(tag)[0].text

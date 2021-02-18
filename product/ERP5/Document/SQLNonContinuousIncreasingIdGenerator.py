@@ -69,7 +69,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
     # Check the arguments
     if id_group in (None, 'None'):
-      raise ValueError('%s is not a valid group Id.' % (repr(id_group), ))
+      raise ValueError('%r is not a valid group Id.' % id_group)
     if default is None:
       default = 0
 

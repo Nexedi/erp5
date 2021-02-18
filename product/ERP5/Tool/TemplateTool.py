@@ -944,7 +944,7 @@ class TemplateTool (BaseTool):
             undependent_list.append(dependency_id)
 
       if len(sorted_bt_list) != len(bt_list):
-        raise NotImplementedError("Circular dependencies on %s" % reverse_dependency_dict.keys())
+        raise NotImplementedError("Circular dependencies on %s" % list(reverse_dependency_dict))
       else:
         return sorted_bt_list
 
@@ -1192,7 +1192,7 @@ class TemplateTool (BaseTool):
                         candidate.uid))
                   break
             else:
-              raise BusinessTemplateMissingDependency("Unable to resolve dependencies for %s, options are %s" \
+              raise BusinessTemplateMissingDependency("Unable to resolve dependencies for %s, options are %s"
                     % (dep_id, provider_list))
 
       if len(template_title_list) > 0:
@@ -1224,7 +1224,7 @@ class TemplateTool (BaseTool):
                                  if not checkAvailability(i[1].replace(".bt5", ""))]
 
       if not install_dependency and len(missing_dependency_list) > 0:
-        raise BusinessTemplateMissingDependency("Impossible to install, please install the following dependencies before: %s" \
+        raise BusinessTemplateMissingDependency("Impossible to install, please install the following dependencies before: %s"
             % [x[1] for x in missing_dependency_list])
 
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))

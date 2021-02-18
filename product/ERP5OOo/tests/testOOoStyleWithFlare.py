@@ -28,7 +28,7 @@
 
 from __future__ import absolute_import
 import unittest
-from Products.ERP5OOo.tests.testOOoStyle import TestOOoStyle
+from .testOOoStyle import TestOOoStyle
 
 class TestOOoStyleWithFlare(TestOOoStyle):
   """Tests ODF styles for ERP5 with Flare."""

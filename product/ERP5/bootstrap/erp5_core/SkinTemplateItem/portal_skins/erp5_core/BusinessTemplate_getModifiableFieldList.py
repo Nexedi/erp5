@@ -120,8 +120,8 @@ for skin_folder_id in skin_id_list:
           # As the form will be deleted, no need to manage its fields
           pass
         else:
-          raise KeyError('Unexpected form handling %s for %s' % \
-              (modified_object_dict[form_path], form_path))
+          raise KeyError('Unexpected form handling %s for %s'
+            % (modified_object_dict[form_path], form_path))
       elif form_id not in (field_library_id, alternate_field_library_id,
                            'Base_viewFieldLibrary',):
         # Check that proxy field are proxified to field library

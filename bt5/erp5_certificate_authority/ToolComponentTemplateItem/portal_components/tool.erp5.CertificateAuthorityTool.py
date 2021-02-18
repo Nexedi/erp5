@@ -230,7 +230,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        reraise(e[0], e[1], e[2])
+        reraise(*e)
     finally:
       self._unlockCertificateAuthority()
 
@@ -273,7 +273,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        reraise(e[0], e[1], e[2])
+        reraise(*e)
     finally:
       self._unlockCertificateAuthority()
 

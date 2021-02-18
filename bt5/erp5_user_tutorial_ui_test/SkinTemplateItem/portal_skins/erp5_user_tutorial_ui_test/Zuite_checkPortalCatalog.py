@@ -19,7 +19,7 @@ for result in result_list:
       raise RuntimeError("One property is not the same that you wanted : you asked '%s' and expecting '%s' but get '%s'" % (key, kw[key], method()))
   # check that every object are owner by you
   if strict_check_mode and object.Base_getOwnerId() not in [owner_id, functional_test_username, 'System Processes','zope', functional_another_test_username]:
-    raise RuntimeError("You have try to clean an item who haven't you as owner : %s is owned by %s and you are %s" % \
+    raise RuntimeError("You have try to clean an item who haven't you as owner : %s is owned by %s and you are %s" %
          (object.getTitle(), object.Base_getOwnerId(), owner_id))
 
 if strict_check_mode and max_count is not None:

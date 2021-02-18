@@ -285,7 +285,7 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
               break
         # in the worse case save the line with the unknown product
         if link_object is None:
-          raise ValueError("Impossible to find related resource for gid %s" %(link_gid))
+          raise ValueError("Impossible to find related resource for gid %s" % link_gid)
 
         # set the resource in the dict
         movement_dict_value[tag] = link_object

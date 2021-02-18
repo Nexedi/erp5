@@ -21,4 +21,4 @@ if node is None:
 # use of the constraint
 error_list = inventory.checkConsistency()
 if len(error_list) > 0:
-  raise ValidationFailed(error_list[0].getTranslatedMessage(),)
+  raise ValidationFailed(error_list[0].getTranslatedMessage())

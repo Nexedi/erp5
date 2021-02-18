@@ -103,7 +103,7 @@ class ReferenceQuery:
         value = MatchList([value])
       self.value = value
     elif len(kw) > 1:
-      raise ValueError('kw must not have more than one item: %r' % (kw, ))
+      raise ValueError('kw must not have more than one item: %r' % kw)
 
   def __eq__(self, other):
     if isinstance(other, SimpleQuery):

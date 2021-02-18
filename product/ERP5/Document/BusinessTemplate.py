@@ -2094,7 +2094,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       if skin_selection_id in selection_list:
         self._objects.setdefault(skin_folder_id, []).append(skin_selection_id)
       else:
-        raise NotFound('No skin selection %s found for skin folder %s.' \
+        raise NotFound('No skin selection %s found for skin folder %s.'
                           % (skin_selection_id, skin_folder_id))
 
   # Function to generate XML Code Manually
@@ -2575,9 +2575,9 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                        'in chain for portal_type %s' % (workflow_name, portal_type))
         self._objects.setdefault(portal_type, []).append(workflow)
       elif not self.is_bt_for_diff:
-        raise NotFound('No workflow chain found for portal type %s. This '\
-                        'is probably a sign of a missing dependency.'\
-                                                    % portal_type)
+        raise NotFound('No workflow chain found for portal type %s.'
+                       ' This is probably a sign of a missing dependency.'
+                       % portal_type)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2692,8 +2692,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             # improve the error message
             for wf_id in self._objects[path]:
               if wf_id.startswith('-'):
-                raise ValueError('"%s" is not a workflow ID for %s' % \
-                                  (wf_id, portal_type))
+                raise ValueError('"%s" is not a workflow ID for %s'
+                                 % (wf_id, portal_type))
             chain_dict[chain_key] = self._objects[path]
         else:
           if context.portal_types.getTypeInfo(portal_type) is None:
@@ -2913,8 +2913,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         if type_information is None:
           if not property_list:
             continue
-          raise AttributeError("Portal type '%s' not found while " \
-              "installing %s" % (portal_id, self.getTitle()))
+          raise AttributeError("Portal type '%s' not found while installing %s"
+                               % (portal_id, self.getTitle()))
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(type_information, self.class_property, ())
         # merge differences between portal types properties
@@ -6046,8 +6046,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       missing_dep_list = self.getMissingDependencyList()
       if len(missing_dep_list) != 0:
-        raise BusinessTemplateMissingDependency('Impossible to install %s, please install the following dependencies before: %s' \
-          %(self.getTitle(), repr(missing_dep_list)))
+        raise BusinessTemplateMissingDependency(
+          'Impossible to install %s, please install the following dependencies before: %r'
+          % (self.getTitle(), missing_dep_list))
 
     security.declareProtected(Permissions.ManagePortal, 'getMissingDependencyList')
     def getMissingDependencyList(self):

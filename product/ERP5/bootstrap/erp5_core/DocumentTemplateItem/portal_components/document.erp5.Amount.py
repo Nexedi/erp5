@@ -303,13 +303,12 @@ class Amount(Base, VariatedMixin):
       variation_list = []
     for property_id, property_value in property_dict.items():
       if property_id not in variation_list:
-        raise KeyError("Can not set the property variation '%s'" % \
-                        property_id)
+        raise KeyError("Can not set the property variation %r" % property_id)
       else:
         try:
           self.setProperty(property_id, property_value)
         except KeyError:
-          LOG("Amount", ERROR, "Can not set %s with value %s on %s" % \
+          LOG("Amount", ERROR, "Can not set %s with value %s on %s" %
                     (property_id, property_value, self.getRelativeUrl()))
           raise
 

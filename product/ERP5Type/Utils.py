@@ -254,7 +254,7 @@ def convertToUpperCase(key):
     return _cached_convertToUpperCase[key]
   except KeyError:
     if not isinstance(key, basestring):
-      raise TypeError('%s is not a string' % (key,))
+      raise TypeError('%r is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
 
@@ -279,7 +279,7 @@ def convertToMixedCase(key):
     a method name according to the ERP5 naming conventions
   """
   if not isinstance(key, basestring):
-    raise TypeError('%s is not a string' % (key,))
+    raise TypeError('%r is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
     parts[1] = convertToUpperCase(parts[1])

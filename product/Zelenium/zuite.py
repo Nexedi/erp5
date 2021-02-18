@@ -713,13 +713,14 @@ class _FilesystemProxy( Folder ):
             return self.__class__( key, self._fsobjs[ 'subdirs' ][ key ]
                                  ).__of__( self.aq_parent )
 
-        if key in _SUPPORT_FILES.keys():
-            return _SUPPORT_FILES[ key ].__of__( self )
-
-        if default is not _MARKER:
+        try:
+            file = _SUPPORT_FILES[key]
+        except KeyError:
+            if default is _MARKER:
+                raise
             return default
 
-        raise KeyError(key)
+        return file.__of__(self)
 
     security.declareProtected( View, 'listTestCases' )
     def listTestCases( self, prefix=() ):
