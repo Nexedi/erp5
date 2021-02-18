@@ -3,59 +3,34 @@
 (function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
   "use strict";
 
-  function appendDt(fragment, dt_title, dt_icon,
-                    action_list, href_list, index) {
-// <dt class="ui-btn-icon-left ui-icon-eye">Views</dt>
-// {{#each view_list}}
-// <dd class="document-listview">
-//   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
-// </dd>
-// {{/each}}
-    var dt_element = document.createElement('dt'),
-      dd_element,
-      a_element,
-      i;
-    dt_element.textContent = dt_title;
-    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
-    fragment.appendChild(dt_element);
-    for (i = 0; i < action_list.length; i += 1) {
-      dd_element = document.createElement('dd');
-      dd_element.setAttribute('class', 'document-listview');
-      a_element = document.createElement('a');
-      a_element.setAttribute('class', action_list[i].class_name);
-      a_element.href = href_list[index + i];
-      a_element.textContent = action_list[i].title;
-      dd_element.appendChild(a_element);
-      fragment.appendChild(dd_element);
-    }
-  }
-
   rJS(window)
-    .setState({
-      visible: false
-    })
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("getTranslationList", "getTranslationList")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('toggle', function toggle() {
-      return this.changeState({
-        visible: !this.state.visible
-      });
+      return this.getDeclaredGadget('subpanel')
+        .push(function (sub_gadget) {
+          return sub_gadget.toggle();
+        });
     })
     .declareMethod('close', function close() {
-      return this.changeState({
-        visible: false
-      });
+      return this.getDeclaredGadget('subpanel')
+        .push(function (sub_gadget) {
+          return sub_gadget.close();
+        });
     })
 
+    .declareMethod('render', function render(options) {
+      return this.getDeclaredGadget('subpanel')
+        .push(function (sub_gadget) {
+          return sub_gadget.render(options);
+        });
+    });
+/*
     .declareMethod('render', function render(options) {
       var erp5_document = options.erp5_document,
         jio_key = options.jio_key,
@@ -466,7 +441,7 @@
         .push(function () {
           return gadget.redirect({command: 'store_and_display', options: redirect_options}, true);
         });
-
-    }, /*useCapture=*/false, /*preventDefault=*/true);
+*/
+    // }, /*useCapture=*/false, /*preventDefault=*/true);
 
 }(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
