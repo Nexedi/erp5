@@ -179,7 +179,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/view</td>
+    <td>${base_url}/web_site_module/renderjs_runner/#/?view=1&page=osoe_access</td>
     <td></td>
   </tr>
 </tal:block>
