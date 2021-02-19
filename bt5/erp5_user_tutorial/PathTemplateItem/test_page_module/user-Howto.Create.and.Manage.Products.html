@@ -94,23 +94,18 @@
           <table style="display: none;" class="test">
             <tbody>
               <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_module"]</td>
-                <td>Products</td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Product</td>
+                <td>clickAndWait</td>
+                <td>//button[text()="Person"]</td>
+                <td></td>
               </tr>
               <tr>
                 <td>verifyText</td>
-                <td>//div[@id="transition_message"]</td>
+                <td>//button[@class="success"]</td>
                 <td>Object created.</td>
               </tr>
               <tr>
                 <td>verifyText</td>
-                <td>//li[@class="selected"]/a/span</td>
+                <td>//a[@class="active"]</td>
                 <td>View</td>
               </tr>
             </tbody>
@@ -128,6 +123,11 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//a[@data-i18n="Editable"]</td>
+                <td></td>
+              </tr>
               <tr style="opacity: 1; z-index: 0;" class="">
                 <td>type</td>
                 <td>//input[@name="field_my_title"]</td>
@@ -150,7 +150,7 @@
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
               <tr>
@@ -176,7 +176,7 @@
             <tbody>
               <tr>
                 <td>clickAndWait</td>
-                <td>link=Purchase</td>
+                <td>//a[text()=Purchase</td>
                 <td></td>
               </tr>
               <tr>
@@ -254,7 +254,7 @@
             <tbody>
               <tr>
                 <td>clickAndWait</td>
-                <td>link=Sale</td>
+                <td>//a[text()=Sale</td>
                 <td></td>
               </tr>
               <tr>
@@ -274,7 +274,7 @@
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
             </tbody>
@@ -304,33 +304,28 @@
           <table style="display: none;" class="test">
             <tbody>
               <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Validate</td>
+                <td>clickAndWait</td>
+                <td>//a[text()="Validate"]</td>
+                <td></td>
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@id="dialog_submit_button"]</td>
+                <td>//input[@value="Validate"]</td>
                 <td></td>
               </tr>
               <tr>
                 <td>verifyText</td>
-                <td>//li[@class="selected"]/a/span</td>
-                <td>Sale</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="transition_message"]</td>
+                <td>//button[@class="success"]</td>
                 <td>Status changed.</td>
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>link=View</td>
+                <td>//a[text()="View"]</td>
                 <td></td>
               </tr>
               <tr>
                 <td>verifyText</td>
-                <td>//div[@title="The current state of the document."]/div[1]</td>
+                <td>//p[@id="field_my_translated_validation_state_title"]</td>
                 <td>Validated</td>
               </tr>
               <tr style="opacity: 1; z-index: 0;" class="">
@@ -379,9 +374,24 @@
           <table style="display: none;" class="test">
             <tbody>
               <tr>
+                <td>clickAndWait</td>
+                <td>//a[contains(text(), "Add")]</td>
+                <td></td>
+              </tr>
+              <tr>
                 <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Product Individual Variation</td>
+                <td>//select[@name="field_your_select_action"]</td>
+                <td>Product Individual Variation</td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//input[@value="Validate"]</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>verifyText</td>
+                <td>//button[@class="success"]</td>
+                <td>Object created.</td>
               </tr>
             </tbody>
           </table>
@@ -421,8 +431,8 @@
               </tr>
               <tr>
                 <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Product Individual Variation</td>
+                <td>//select[@name="field_my_variation_base_category"]</td>
+                <td>Variation</td>
               </tr>
               <tr style="opacity: 1; z-index: 0;" class="">
                 <td>type</td>
@@ -431,7 +441,7 @@
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
             </tbody>
@@ -449,21 +459,6 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
-              <tr style="opacity: 1; z-index: 0;" class="">
-                <td>clickAndWait</td>
-                <td>link=ZUITE-TEST-PRODUCT-PRODUCT-001</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;" class="">
-                <td>verifyValue</td>
-                <td>//input[@name='field_my_title']</td>
-                <td>ZUITE-TEST-PRODUCT-PRODUCT-001</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//span[@class="listbox-current-page-total-number"]</td>
-                <td>2 records</td>
-              </tr>
             </tbody>
           </table>
         </test>
@@ -478,7 +473,12 @@
             <tbody>
               <tr>
                 <td>clickAndWait</td>
-                <td>link=Purchase</td>
+                <td>//a[@accesskey="u"</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//a[text()=Purchase</td>
                 <td></td>
               </tr>
             </tbody>
@@ -503,9 +503,9 @@
                 <td>//select[@name='field_my_purchase_supply_line_p_variation_base_category_list']</td>
                 <td>Variation</td>
               </tr>
-              <tr style="opacity: 1; z-index: 0;" class="">
+              <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
             </tbody>
@@ -537,7 +537,7 @@
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
               <tr>
@@ -565,9 +565,9 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
-              <tr style="opacity: 1; z-index: 0;" class="">
+              <tr>
                 <td>clickAndWait</td>
-                <td>link=Sale</td>
+                <td>//a[text()=Sale</td>
                 <td></td>
               </tr>
               <tr style="opacity: 1; z-index: 0;" class="">
@@ -577,7 +577,7 @@
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
               <tr style="opacity: 1; z-index: 0;" class="">
@@ -590,9 +590,9 @@
                 <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>
                 <td>25</td>
               </tr>
-              <tr>
+               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
             </tbody>
@@ -614,7 +614,7 @@
               </tr>
               <tr style="opacity: 1; z-index: 0;" class="">
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
             </tbody>
