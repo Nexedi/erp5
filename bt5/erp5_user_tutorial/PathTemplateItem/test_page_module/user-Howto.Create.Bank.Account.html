@@ -93,14 +93,9 @@
           <table style="display: none;" class="test">
             <tbody>
               <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_module"]</td>
-                <td>Persons</td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Person</td>
+                <td>clickAndWait</td>
+                <td>//button[text()="Person"]</td>
+                <td></td>
               </tr>
             </tbody>
           </table>
@@ -116,12 +111,12 @@
             <tbody>
               <tr>
                 <td>verifyText</td>
-                <td>//div[@id="transition_message"]</td>
+                <td>//button[@class="success"]</td>
                 <td>Object created.</td>
               </tr>
               <tr>
                 <td>verifyText</td>
-                <td>//li[@class="selected"]/a/span</td>
+                <td>//a[@class="active"]</td>
                 <td>View</td>
               </tr>
             </tbody>
@@ -139,6 +134,11 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//a[@data-i18n="Editable"]</td>
+                <td></td>
+              </tr>
               <tr>
                 <td>type</td>
                 <td>//input[@name="field_my_first_name"]</td>
@@ -191,7 +191,7 @@
               </tr>
               <tr>
                 <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
+                <td>//a[@data-i18n="Save"]</td>
                 <td></td>
               </tr>
             </tbody>
@@ -206,31 +206,7 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="information_area"]</td>
-                <td>Input data has errors. Please look at the error messages below.</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//span[@class="error"]</td>
-                <td>No such document was found.</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="subfield_field_my_career_subordination_title_relation"]</td>
-                <td>Add Organisation</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyTextNotPresent</td>
-                <td>Input data has errors. Please look at the error messages below.</td>
-                <td></td>
-              </tr>
+              <!-- WTF does this testing... need to rewrite...-->
             </tbody>
           </table>
         </test>
