@@ -1212,10 +1212,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(sale_invoice.getDivergenceList(), [])
 
     self.assertEqual(
-        [
+        sorted([
             (m.getQuantity(), m.getPrice(), m.getResourceValue())
             for m in sale_invoice.getMovementList()
-        ], [
+        ]), [
             (7, 10, resource),
             (70, 0.03, vat_service),
         ])
@@ -1471,10 +1471,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(purchase_invoice.getDivergenceList(), [])
 
     self.assertEqual(
-        [
+        sorted([
             (m.getQuantity(), m.getPrice(), m.getResourceValue())
             for m in purchase_invoice.getMovementList()
-        ], [
+        ]), [
             (7, 10, resource),
             (70, 0.03, vat_service),
         ])
