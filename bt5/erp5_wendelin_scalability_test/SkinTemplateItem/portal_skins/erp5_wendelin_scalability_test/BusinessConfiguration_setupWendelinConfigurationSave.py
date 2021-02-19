@@ -34,6 +34,8 @@ bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          'erp5_wendelin_examples',
                          'erp5_wendelin_data_sample',
                          'erp5_wendelin_development',
+                         'erp5_notebook',
+                         'erp5_data_notebook',
                          # data lake
                          'erp5_wendelin_data_lake_ingestion',
                          'erp5_wendelin_data_lake_ingestion_default_security_model',
