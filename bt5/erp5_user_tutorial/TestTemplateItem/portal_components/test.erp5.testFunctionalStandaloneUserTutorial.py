@@ -67,6 +67,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
             'erp5_rss_style', 'erp5_discussion',
             'erp5_l10n_fr', 'erp5_crm', 'erp5_forge',
             'erp5_run_my_doc',
+            'erp5_osoe_web_renderjs_ui',
             'erp5_user_tutorial_ui_test',
             'erp5_user_tutorial',
            )
