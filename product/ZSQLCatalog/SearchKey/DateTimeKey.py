@@ -90,7 +90,7 @@ def castDate(value, change_timezone=True):
       else:
         raise
   else:
-    raise TypeError('Unknown date type: %r' % (value))
+    raise TypeError('Unknown date type: %r' % (value,))
   if change_timezone:
     return value.toZone('UTC')
   else:

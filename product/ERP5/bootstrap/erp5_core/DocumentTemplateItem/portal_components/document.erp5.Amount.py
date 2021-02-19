@@ -308,7 +308,7 @@ class Amount(Base, VariatedMixin):
         try:
           self.setProperty(property_id, property_value)
         except KeyError:
-          LOG("Amount", ERROR, "Can not set %s with value %s on %s" %
+          LOG("Amount", ERROR, "Can not set %s with value %s on %s" % \
                     (property_id, property_value, self.getRelativeUrl()))
           raise
 

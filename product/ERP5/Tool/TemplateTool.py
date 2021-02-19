@@ -1196,7 +1196,7 @@ class TemplateTool (BaseTool):
                     % (dep_id, provider_list))
 
       if len(template_title_list) > 0:
-         raise BusinessTemplateUnknownError('The Business Template %s could not be found on repositories %s' % \
+         raise BusinessTemplateUnknownError('The Business Template %s could not be found on repositories %s' %
              (list(template_title_list), self.getRepositoryList()))
       return self.sortBusinessTemplateList(list(bt5_set))
 

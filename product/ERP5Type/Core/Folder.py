@@ -1697,7 +1697,7 @@ class NotImplementedClass(object):
     self.__name__ = method_id
 
   def __call__(self, *args, **kw):
-    raise NotImplementedError(str(self.__name__))
+    raise NotImplementedError(self.__name__)
 
 for source_klass, destination_klass in \
         (

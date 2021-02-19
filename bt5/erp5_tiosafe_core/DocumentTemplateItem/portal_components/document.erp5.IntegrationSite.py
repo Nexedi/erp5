@@ -125,7 +125,7 @@ class IntegrationSite(Folder):
             missing_mapping = True
           else:
             LOG("getCategoryFromMapping", ERROR, "Mapping object for %s not found" %(cat,))
-            raise ValueError("Mapping object for %s not found" %(cat,))
+            raise ValueError("Mapping object for %s not found" % cat)
 
       mapped_category = cat_object.getDestinationReference()
       if mapped_category in ("", None) and cat_object.getPortalType() == "Integration Category Mapping":
@@ -165,7 +165,7 @@ class IntegrationSite(Folder):
         destination_reference=base_category,
     )
     if len(mapping) != 1:
-      raise IndexError('The integration base category mapping %s must be mapped and with only one base_category' % (base_category))
+      raise IndexError('The integration base category mapping %s must be mapped and with only one base_category' % base_category)
 
     mapping = mapping[0].getObject()
     # retrieve the corresponding category integration mapping
@@ -174,7 +174,7 @@ class IntegrationSite(Folder):
         destination_reference=category,
     )
     if len(mapping_line) > 1:
-      raise IndexError('The integration category mapping %s must be mapped with only one category' % (variation))
+      raise IndexError('The integration category mapping %s must be mapped with only one category' % variation)
     try:
       # shared variation
       return '/'.join(
@@ -204,7 +204,7 @@ class IntegrationSite(Folder):
                                              destination_reference=property_name,
                                              )
     if len(mapping_line) > 1:
-      raise IndexError('The integration property mapping %s must be mapped with only one category' % (property_name))
+      raise IndexError('The integration property mapping %s must be mapped with only one category' % property_name)
     elif len(mapping_line) == 0:
       return property_name
     else:

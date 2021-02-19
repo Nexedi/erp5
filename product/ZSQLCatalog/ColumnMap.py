@@ -289,8 +289,8 @@ class ColumnMap(object):
                 ' is not explicitely used.' % (common_column_set, table_name))
 
     # Detect incomplete mappings
-    if len(column_name_set):
-      raise ValueError('Could not map those columns: %r' % (column_name_set, ))
+    if column_name_set:
+      raise ValueError('Could not map those columns: %r' % column_name_set)
 
     # Do the actual mapping
     for column_name, table_name in mapping_dict.iteritems():
@@ -509,7 +509,7 @@ class ColumnMap(object):
       if column == 'uid':
         LOG('ColumnMap', WARNING, 'Attempt to remap uid from %r to %r ignored.' % (previous_value, table_name))
       else:
-        raise ValueError('Cannot remap a column to another table. column_map[%r] = %r, new = %r' % (column_map_key, column_map.get(column_map_key), table_name))
+        raise ValueError('Cannot remap a column to another table. column_map[%r] = %r, new = %r' % (column_map_key, previous_value, table_name))
 
   def resolveTable(self, table_name, alias, group=DEFAULT_GROUP_ID):
     table_alias_key = (group, table_name)

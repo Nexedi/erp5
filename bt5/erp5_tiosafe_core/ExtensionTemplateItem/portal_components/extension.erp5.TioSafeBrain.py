@@ -106,7 +106,7 @@ class TioSafeBrain(Explicit):
           module_list.append(module)
 
       if not len(module_list):
-        raise ValueError("Impossible to find a module for %s" %(object_type))
+        raise ValueError("Impossible to find a module for %s" % object_type)
 
       sync_object_list = []
       for module in module_list:
