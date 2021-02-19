@@ -209,27 +209,29 @@
     }
 
     for (i = 0; i < group_id_list.length; i += 1) {
-      group = group_id_list[i][0];
-      if (group_id_list[i] instanceof Array) {
-        group_mapping[group] = ensureArray(links[group]);
-        addRawUrlToGroupMapping(group, group + "_raw");
-        if (group_id_list[i].length > 1) {
-          for (j = 1; j < group_id_list[i].length; j += 1) {
-            group_mapping[group] = group_mapping[
-              group
-            ].concat(
-              ensureArray(links[group_id_list[i][j]])
-            );
-            addRawUrlToGroupMapping(group_id_list[i][j],
-                                    group_id_list[i][j] + "_raw");
+      group = group_id_list[i];
+      if (group instanceof Array) {
+        action_type = group[0];
+        group_mapping[action_type] = ensureArray(links[action_type]);
+        addRawUrlToGroupMapping(action_type, action_type + "_raw");
+        if (group.length > 1) {
+          for (j = 1; j < group.length; j += 1) {
+            if (links.hasOwnProperty(group[j])) {
+              group_mapping[group] = group_mapping[
+                action_type
+              ].concat(
+                ensureArray(links[group[j]])
+              );
+            }
+            addRawUrlToGroupMapping(action_type,
+                                    group[j] + "_raw");
           }
         }
       } else {
-        group_mapping[group_id_list[i]] = ensureArray(
-          links[group_id_list[i]]
+        group_mapping[group] = ensureArray(
+          links[group]
         );
-        addRawUrlToGroupMapping(group_id_list[i],
-                                group_id_list[i] + "_raw");
+        addRawUrlToGroupMapping(group, group + "_raw");
       }
     }
 
