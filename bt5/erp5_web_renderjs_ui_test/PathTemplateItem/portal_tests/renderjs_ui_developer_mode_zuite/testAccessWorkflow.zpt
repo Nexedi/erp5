@@ -12,25 +12,18 @@
 <tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 </tal:block>
-<tr>
-  <td>click</td>
-  <td>//div[@class="ui-subheader"]/ul/li/a[text()="Actions"]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
-  <td>assertTextPresent</td>
-  <td>Developer Mode</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//ul[@class="document-listview"]/li/a[text()="Edit Workflow"]</td>
+  <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//ul[@class="document-listview"]/li/a[text()="Edit Workflow"]</td>
+  <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
   <td></td>
 </tr>
 <tr>
