@@ -11,13 +11,10 @@ pdf_data_list = context.Base_getTempImageList(active_process, image_list)
 pdf_data = context.ERP5Site_mergePDFList(pdf_data_list=pdf_data_list)
 file_object = StringIOWithFileName(pdf_data)
 
-doc = context.Base_contribute(file=file_object,
-                              batch_mode=True,
-                              redirect_to_document=False,
-                              follow_up_list=[context.getRelativeUrl(),],
-                              **kw)
-
-if publication_state == "shared":
-  doc.share()
-elif publication_state == "released":
-  doc.release()
+context.Base_contribute(
+    file=file_object,
+    batch_mode=True,
+    redirect_to_document=False,
+    follow_up_list=[context.getRelativeUrl(),],
+    publication_state=publication_state,
+    **kw)
