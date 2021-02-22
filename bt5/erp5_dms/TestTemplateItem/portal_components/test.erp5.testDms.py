@@ -1551,6 +1551,71 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEqual('user supplied title', contributed_document.getTitle())
 
+  def test_Base_contribute_publication_state(self):
+    """Test contributing and choosing the publication state
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+          publication_state=None,
+          # we use as_name, to prevent regular expression from detecting a
+          # reference during ingestion, so that we can upload multiple documents
+          # in one test.
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'draft')
+
+    contributed_document = person.Base_contribute(
+          publication_state='shared',
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'shared')
+
+    contributed_document = person.Base_contribute(
+          publication_state='released',
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'released')
+
+  def test_Base_contribute_publication_state_vs_finishIngestion_script(self):
+    """Contribute dialog allow choosing a publication state, but there's
+    also a "finishIngestion" type based script that can be configured to
+    force change the state. If user selects a publication_state, the state is
+    changed before the finishIngestion can operate.
+    """
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        'PDF_finishIngestion',
+        '',
+        'if context.getValidationState() == "draft":\n'
+        '  context.publish()')
+    try:
+      person = self.portal.person_module.newContent(portal_type='Person')
+      contributed_document = person.Base_contribute(
+            publication_state='shared',
+            synchronous_metadata_discovery=True,
+            file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      self.tic()
+      self.assertEqual(contributed_document.getValidationState(), 'shared')
+      contributed_document.setReference(None)
+      self.tic()
+
+      contributed_document = person.Base_contribute(
+            publication_state='shared',
+            synchronous_metadata_discovery=False,
+            file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      self.tic()
+      self.assertEqual(contributed_document.getValidationState(), 'shared')
+      contributed_document.setReference(None)
+
+      contributed_document = person.Base_contribute(
+            publication_state=None,
+            file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      self.tic()
+      self.assertEqual(contributed_document.getValidationState(), 'published')
+    finally:
+      self.portal.portal_skins.custom.manage_delObjects(ids=['PDF_finishIngestion'])
+      self.commit()
+
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
     then to plain text.
