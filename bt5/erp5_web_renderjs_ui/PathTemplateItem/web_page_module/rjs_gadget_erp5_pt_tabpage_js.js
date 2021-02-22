@@ -46,6 +46,7 @@
       dom_list = [];
 
     for (i = 0; i < view_list.length; i += 1) {
+      console.log(view_list[i]);
       dom_list.push(domsugar('li', [domsugar('a', {
         href: view_list[i].link,
         text: view_list[i].title
@@ -137,14 +138,14 @@
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
               title: view_list[i].options.title,
-              link: result_dict.url_list[j]
+              link: view_list[i].command === "raw" ? view_list[i].options.href : result_dict.url_list[j]
             });
             j += 1;
           }
           for (i = 0; i < jump_list.length; i += 1) {
             jump_action_list.push({
               title: jump_list[i].options.title,
-              link: result_dict.url_list[j]
+              link: jump_list[i].command === "raw" ? jump_list[i].options.href : result_dict.url_list[j]
             });
             j += 1;
           }
