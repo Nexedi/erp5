@@ -67,6 +67,7 @@
                     <value>
                       <list>
                         <string>my_preferred_document_classification</string>
+                        <string>my_preferred_document_ingestion_publication_state</string>
                         <string>my_preferred_document_file_name_regular_expression</string>
                         <string>my_preferred_document_reference_regular_expression</string>
                         <string>my_preferred_document_email_ingestion_address</string>
