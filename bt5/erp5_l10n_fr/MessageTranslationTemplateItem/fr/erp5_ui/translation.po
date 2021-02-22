@@ -5471,7 +5471,7 @@ msgid "Export Terms as PO File"
 msgstr "Exporter les conditions au format PO"
 
 msgid "Export to Spreadsheet"
-msgstr "Exporter"
+msgstr "Exporter en tableur"
 
 msgid "Express Support"
 msgstr "Assistance"
