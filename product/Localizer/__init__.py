@@ -45,7 +45,6 @@ def initialize(context):
         raise RuntimeError(
             "The Localizer product must be installed within the 'Products'"
             " folder with the name 'Localizer' (not '%s').") % filename
-        )
 
     # XXX This code has been written by Cornel Nitu, it may be a solution to
     # upgrade instances.
