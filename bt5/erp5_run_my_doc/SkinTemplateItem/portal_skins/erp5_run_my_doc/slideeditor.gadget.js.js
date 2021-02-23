@@ -112,7 +112,7 @@
     // No idea what it is for now
 
     // Get the comment
-    details = slide.querySelector(':scope > details:last-child');
+    details = slide.querySelector(':scope > details:last-of-type');
     if (details !== null) {
       result.comment_html = details.innerHTML;
       slide.removeChild(details);
