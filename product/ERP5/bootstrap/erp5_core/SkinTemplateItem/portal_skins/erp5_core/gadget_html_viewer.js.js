@@ -58,6 +58,7 @@
       TABLE: true,
       THEAD: true,
       TFOOT: true,
+      CAPTION: true,
       TR: true,
       TH: true,
       TD: true,
