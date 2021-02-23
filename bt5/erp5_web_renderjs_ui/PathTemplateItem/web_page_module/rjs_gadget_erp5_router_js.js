@@ -410,10 +410,11 @@
             for (j = 0;  j < document_view._links[action].length; j = j + 1) {
               action_data = document_view._links[action][j];
               if (action_data.name === next_options.page) {
-                new_options = {
-                  jio_key: next_options.jio_key,
-                  view: action_data.href
-                };
+                // copy (or reuse) to propagate other parameters like editable
+                new_options = next_options;
+                // XXX page options is conflicting with usual usage
+                delete new_options.page;
+                new_options.view = action_data.href;
                 copyStickyParameterDict(previous_options, new_options);
                 if (command === 0) {
                   return execDisplayCommand(gadget, new_options);
