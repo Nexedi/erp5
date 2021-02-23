@@ -215,8 +215,8 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
       # will be candidate for coding style test again.
       if not os.path.exists(path + '/bt/skip_coding_style_test')
     ]
-    for path in (glob(HERE + '/../product/*')
-                 + glob('%s/../bt5' % HERE)):
+    for path in chain(glob(HERE + '/../product/*'),
+                      glob(HERE + '/../bt5')):
       if not os.path.exists(path + '/skip_coding_style_test'):
         test_list.append("Python3Style." + os.path.basename(path))
     return test_list

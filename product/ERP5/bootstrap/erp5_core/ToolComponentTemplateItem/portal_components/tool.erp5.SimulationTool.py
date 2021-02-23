@@ -1143,9 +1143,9 @@ class SimulationTool(BaseTool):
     if result:
       result, = result
 
-      try:
+      if hasattr(result, "converted_quantity")
         total_result = result.converted_quantity
-      except AttributeError:
+      else:
         inventory = result.total_quantity
         if inventory is not None:
           total_result = inventory
