@@ -180,7 +180,8 @@
     slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' +
                       img +
                       slide_dict.slide_html +
-                      '<details>' + slide_dict.comment_html + '</details>';
+                      '<details open="true">' +
+                      slide_dict.comment_html + '</details>';
 
     return slideListAsHTML(slide_list);
   }
