@@ -178,14 +178,7 @@
             len = len - 1;
             attribute = attribute_list[len].name;
             if (whitelist.link_list[attribute]) {
-              if (startsWithOneOf(current_node.getAttribute(attribute),
-                                  ['http://', 'https://', '//', 'data:'])) {
-                link_len += 1;
-              } else {
-                keepOnlyChildren(current_node);
-                already_dropped = true;
-                break;
-              }
+              link_len += 1;
             }
           }
 
