@@ -142,7 +142,6 @@
     })
     .onStateChange(function onStateChange(modification_dict) {
       var i,
-        context = this,
         gadget = this,
         workflow_list,
         view_list,
@@ -281,7 +280,8 @@
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
               parameter_list = view_list.concat(workflow_list).concat(
-                action_list).concat(clone_list).concat(jump_list);
+                action_list
+              ).concat(clone_list).concat(jump_list);
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
