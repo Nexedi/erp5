@@ -24,7 +24,7 @@
       dd_element = document.createElement('dd');
       dd_element.setAttribute('class', 'document-listview');
       a_element = document.createElement('a');
-      if (action_list[i].options.class_name) {
+      if (action_list[i].options && action_list[i].options.class_name) {
         // Avoid add class='undefined' in HTML
         a_element.setAttribute('class', action_list[i].options.class_name);
       }
@@ -71,7 +71,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
-        extra_menu_list,
+        extra_menu_list = options.extra_menu_list,
         display_workflow_list,
         context = this,
         workflow_list,
@@ -117,7 +117,7 @@
         jump_list = JSON.stringify(group_mapping.action_object_jio_jump);
       }
 
-      if (options.extra_menu_list !== undefined) {
+      if (extra_menu_list !== undefined) {
         extra_menu_list = JSON.stringify(extra_menu_list);
       }
 
@@ -315,7 +315,10 @@
               var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
                 href_list = [];
               for (i = 0; i < extra_menu_list.length; i += 1) {
-                extra_menu_list[i].class_name = extra_menu_list[i].active ? "active" : "";
+                extra_menu_list[i].options = {
+                  "class_name": extra_menu_list[i].active ? "active" : "",
+                  "title": extra_menu_list[i].title
+                };
                 href_list.push(extra_menu_list[i].href);
               }
               appendDt(dl_fragment, translation_list[0], 'globe',
