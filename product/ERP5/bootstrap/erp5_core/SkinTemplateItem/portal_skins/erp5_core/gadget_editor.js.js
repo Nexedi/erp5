@@ -80,6 +80,7 @@
         gadget = this,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
+        code,
         queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
@@ -199,6 +200,11 @@
           .push(function (evt) {
             element.querySelector('img').src = evt.target.result;
           });
+      } else if (editor_dict.hasOwnProperty(gadget.state.editor)) {
+        code = document.createElement('code');
+        code.textContent = gadget.state.value;
+        element.querySelector('pre').textContent = '';
+        element.querySelector('pre').appendChild(code);
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }
