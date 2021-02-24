@@ -179,6 +179,13 @@
         }
       }
 
+      if (options.form_definition.hasOwnProperty("edit_form_href")) {
+        hash += "edit_form";
+      }
+
+      if (options.form_definition.hasOwnProperty("edit_form_action_href")) {
+        hash += "edit_form_action";
+      }
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
@@ -226,9 +233,9 @@
         })
         .push(function (result_list) {
           var dom_element = form_gadget.element.querySelector(".field_container"),
+            dev_element_list,
             parent_element,
             field_href,
-            current_field,
             j;
 
           if (modification_dict.hasOwnProperty('hash')) {
@@ -241,6 +248,18 @@
               dom_element.removeChild(dom_element.firstChild);
             }
             dom_element.appendChild(parent_element);
+
+            if (!form_definition.hasOwnProperty("edit_form_href") ||
+                !form_definition.hasOwnProperty("edit_form_action_href")) {
+              dev_element_list = form_gadget.element.querySelectorAll(
+                ".edit-form, .edit-form-action"
+              );
+
+              for (j = 0; j < dev_element_list.length; j += 1) {
+                form_gadget.element.removeChild(dev_element_list[j]);
+              }
+            }
+
             if (form_definition.hasOwnProperty("edit_form_href")) {
               field_href = addDeveloperAction(
                 "edit-form ui-icon-edit ui-btn-icon-left",
@@ -249,6 +268,7 @@
               );
               form_gadget.element.insertBefore(field_href, dom_element);
             }
+
             if (form_definition.hasOwnProperty("edit_form_action_href")) {
               field_href = addDeveloperAction(
                 "edit-form-action ui-icon-external-link ui-btn-icon-left",
