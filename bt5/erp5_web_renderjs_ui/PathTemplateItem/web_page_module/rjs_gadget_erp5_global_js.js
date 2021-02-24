@@ -218,7 +218,7 @@
         if (group.length > 1) {
           for (j = 1; j < group.length; j += 1) {
             if (links.hasOwnProperty(group[j])) {
-              group_mapping[group] = group_mapping[
+              group_mapping[action_type] = group_mapping[
                 action_type
               ].concat(
                 ensureArray(links[group[j]])
