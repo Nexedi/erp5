@@ -230,52 +230,52 @@
                 } else {
                   root_element = field_gadget.element;
                 }
+                if (!gadget.state.options.is_cell) {
+                  if (field_json.hasOwnProperty('edit_field_href') &&
+                      !root_element.querySelector(".edit-field")) {
+                    addDeveloperAction(
+                      "edit-field ui-icon-edit ui-btn-icon-left",
+                      field_json.edit_field_href,
+                      "Edit this field",
+                      root_element
+                    );
+                  } else if (!field_json.hasOwnProperty('edit_field_href')) {
+                    field = root_element.querySelector(".edit-field");
+                    if (field) {
+                      root_element.removeChild(field);
+                    }
+                  }
 
-                if (field_json.hasOwnProperty('edit_field_href') &&
-                    !root_element.querySelector(".edit-field")) {
-                  addDeveloperAction(
-                    "edit-field ui-icon-edit ui-btn-icon-left",
-                    field_json.edit_field_href,
-                    "Edit this field",
-                    root_element
-                  );
-                } else if (!field_json.hasOwnProperty('edit_field_href')) {
-                  field = root_element.querySelector(".edit-field");
-                  if (field) {
-                    root_element.removeChild(field);
+                  if (field_json.hasOwnProperty('translate_title_href') &&
+                      !root_element.querySelector(".translate-title")) {
+                    addDeveloperAction(
+                      "translate-title ui-icon-language ui-btn-icon-left",
+                      field_json.translate_title_href,
+                      "Translate this field title",
+                      root_element
+                    );
+                  } else if (!field_json.hasOwnProperty('translate_title_href')) {
+                    field = root_element.querySelector(".translate-title");
+                    if (field) {
+                      root_element.removeChild(field);
+                    }
+                  }
+
+                  if (field_json.hasOwnProperty('translate_description_href') &&
+                      !root_element.querySelector(".translate-description")) {
+                    addDeveloperAction(
+                      "translate-description ui-icon-language ui-btn-icon-left",
+                      field_json.translate_description_href,
+                      "Translate this field description",
+                      root_element
+                    );
+                  } else if (!field_json.hasOwnProperty('translate_description_href')) {
+                    field = root_element.querySelector(".translate-description");
+                    if (field) {
+                      root_element.removeChild(field);
+                    }
                   }
                 }
-
-                if (field_json.hasOwnProperty('translate_title_href') &&
-                    !root_element.querySelector(".translate-title")) {
-                  addDeveloperAction(
-                    "translate-title ui-icon-language ui-btn-icon-left",
-                    field_json.translate_title_href,
-                    "Translate this field title",
-                    root_element
-                  );
-                } else if (!field_json.hasOwnProperty('translate_title_href')) {
-                  field = root_element.querySelector(".translate-title");
-                  if (field) {
-                    root_element.removeChild(field);
-                  }
-                }
-
-                if (field_json.hasOwnProperty('translate_description_href') &&
-                    !root_element.querySelector(".translate-description")) {
-                  addDeveloperAction(
-                    "translate-description ui-icon-language ui-btn-icon-left",
-                    field_json.translate_description_href,
-                    "Translate this field description",
-                    root_element
-                  );
-                } else if (!field_json.hasOwnProperty('translate_description_href')) {
-                  field = root_element.querySelector(".translate-description");
-                  if (field) {
-                    root_element.removeChild(field);
-                  }
-                }
-
                 return field_gadget;
               });
           }
