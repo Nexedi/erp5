@@ -6754,7 +6754,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Form.MultiRelationField',
       'Products.ERP5Form.OOoChart',
       'Products.ERP5Form.ParallelListField',
-      'Products.ERP5Form.PDFParser',
       'Products.ERP5Form.PDFTemplate',
       'Products.ERP5Form.Permissions',
       'Products.ERP5Form.PlanningBox',
