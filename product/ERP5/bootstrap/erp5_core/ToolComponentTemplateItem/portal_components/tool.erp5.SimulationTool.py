@@ -1143,7 +1143,7 @@ class SimulationTool(BaseTool):
     if result:
       result, = result
 
-      if hasattr(result, "converted_quantity")
+      if hasattr(result, "converted_quantity"):
         total_result = result.converted_quantity
       else:
         inventory = result.total_quantity
