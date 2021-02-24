@@ -14,7 +14,7 @@
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
   <head>
-  <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
+  <!--base tal:attributes="href python: '%s/' % web_section.absolute_url()" /-->
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
   <title tal:content="python: here.getTranslatedTitle() or web_site.getTranslatedTitle()"></title>
   <noscript>
