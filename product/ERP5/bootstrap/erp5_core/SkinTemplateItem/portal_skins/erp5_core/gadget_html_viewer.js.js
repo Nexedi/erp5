@@ -82,7 +82,11 @@
       srcset: true,
       media: true,
       datetime: true,
-      'class': true
+      'class': true,
+      cellspacing: true,
+      cellpadding: true,
+      border: true,
+      colspan: true
     },
     link_node_list: {
       A: true,
