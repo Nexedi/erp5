@@ -14,22 +14,20 @@
         </item>
         <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>uid\n
 getLanguage\n
 getVersion\n
+getSize\n
 getRevision\n
 subject_set_uid\n
 getEffectiveDate\n
 getExpirationDate\n
 getCreationDateIndex\n
-getFrequencyIndex\n
-</string> </value>
+getFrequencyIndex</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -37,11 +35,15 @@ getFrequencyIndex\n
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -55,7 +57,7 @@ getFrequencyIndex\n
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string>python: getattr(context, \'getLanguage\', None) is not None or getattr(context, \'getVersion\', None) is not None</string> </value>
+            <value> <string>python: getattr(context, \'getLanguage\', None) is not None or getattr(context, \'getVersion\', None) is not None or context.getPortalType() == \'Data Stream\'</string> </value>
         </item>
         <item>
             <key> <string>expression_cache_key</string> </key>
@@ -87,7 +89,7 @@ getFrequencyIndex\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_catalog_versioning_list</string> </value>
         </item>
         <item>
             <key> <string>type</string> </key>
