@@ -248,16 +248,11 @@
               dom_element.removeChild(dom_element.firstChild);
             }
             dom_element.appendChild(parent_element);
-
-            if (!form_definition.hasOwnProperty("edit_form_href") ||
-                !form_definition.hasOwnProperty("edit_form_action_href")) {
-              dev_element_list = form_gadget.element.querySelectorAll(
-                ".edit-form, .edit-form-action"
-              );
-
-              for (j = 0; j < dev_element_list.length; j += 1) {
-                form_gadget.element.removeChild(dev_element_list[j]);
-              }
+            dev_element_list = form_gadget.element.querySelectorAll(
+              ".edit-form, .edit-form-action"
+            );
+            for (j = 0; j < dev_element_list.length; j += 1) {
+              form_gadget.element.removeChild(dev_element_list[j]);
             }
 
             if (form_definition.hasOwnProperty("edit_form_href")) {
