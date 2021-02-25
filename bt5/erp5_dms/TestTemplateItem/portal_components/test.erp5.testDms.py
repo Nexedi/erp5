@@ -572,6 +572,14 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([],
       sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
+  def test_catalog_search_by_size(self):
+    doc = self.portal.document_module.newContent(
+      portal_type='Spreadsheet',
+      file=makeFileUpload('import_data_list.ods'))
+    self.tic()
+    self.assertEqual(
+      [x.getObject() for x in self.portal.portal_catalog(size=doc.getSize())], [doc])
+
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
@@ -2966,4 +2974,4 @@ def test_suite():
   return suite
 
 
-# vim: syntax=python shiftwidth=2
+ # vim: syntax=python shiftwidth=2
