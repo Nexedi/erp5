@@ -72,7 +72,9 @@
       ARTICLE: true,
       ASIDE: true,
       NAV: true,
-      FOOTER: true
+      FOOTER: true,
+      DIV: true,
+      SPAN: true
     },
     attribute_list: {
       alt: true,
