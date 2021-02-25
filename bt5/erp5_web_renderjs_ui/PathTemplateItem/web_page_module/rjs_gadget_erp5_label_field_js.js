@@ -32,6 +32,8 @@
       field_url = 'gadget_erp5_field_string.html';
     } else if (field_type === 'HyperLinkField') {
       field_url = 'gadget_erp5_field_hyperlink.html';
+    } else if (field_type === 'LinkField') {
+      field_url = 'gadget_erp5_field_link.html';
     } else if (field_type === 'LinesField') {
       field_url = 'gadget_erp5_field_lines.html';
     } else if (field_type === 'PasswordField') {
