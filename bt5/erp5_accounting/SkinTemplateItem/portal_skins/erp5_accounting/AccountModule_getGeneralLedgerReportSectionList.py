@@ -101,7 +101,7 @@ if request.get('omit_grouping_reference', False):
     params['grouping_query'] = portal.ERP5Site_getNotGroupedAtDateSQLQuery(at_date)
   else:
     params['grouping_reference'] = None
-
+  default_selection_params['omit_grouping_reference'] = True
 
 analytic_column_list = ()
 if hide_analytic:
