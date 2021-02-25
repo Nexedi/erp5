@@ -1,9 +1,7 @@
 div[data-gadget-url$="gadget_html_viewer.html"] {
-  max-width: 50em;
   display: block;
   word-wrap: break-word;
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-  text-align: justify;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] canvas,
 div[data-gadget-url$="gadget_html_viewer.html"] img,

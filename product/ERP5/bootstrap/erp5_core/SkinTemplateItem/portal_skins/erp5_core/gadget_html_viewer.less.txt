@@ -13,12 +13,12 @@
 
 
 div[data-gadget-url$="gadget_html_viewer.html"] {
-  max-width: 50em;
+  // max-width: 50em;
+  // text-align: justify;
 
   display: block;
   word-wrap: break-word;
   font-family: @sans-serif;
-  text-align: justify;
 
   canvas, img, iframe, svg {
     max-width: 100%;
