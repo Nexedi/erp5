@@ -218,8 +218,8 @@
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
           }
-
-          if (field_json && gadget.state.options.development_link !== false) {
+          if (field_json && field_json.editable &&
+              gadget.state.options.development_link !== false) {
             queue
               .push(function (field_gadget) {
                 var root_element,
