@@ -219,7 +219,7 @@
             queue = gadget.getDeclaredGadget(SCOPE);
           }
 
-          if (field_json && !gadget.state.options.is_cell) {
+          if (field_json && gadget.state.options.development_link !== false) {
             queue
               .push(function (field_gadget) {
                 var root_element,

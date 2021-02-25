@@ -266,7 +266,7 @@
           field_type: sub_field_json.type,
           field_json: sub_field_json,
           label: false,
-          is_cell: true
+          development_link: true
         });
       });
   }
