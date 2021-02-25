@@ -1,6 +1,6 @@
 CREATE TABLE `versioning` (
   `uid` BIGINT UNSIGNED NOT NULL,
-  `version` varchar(32) default '',
+  `version` varchar(255) default '',
   `size` BIGINT SIGNED,
   `language` varchar(5) default '',
   `revision` varchar(10) default '',
