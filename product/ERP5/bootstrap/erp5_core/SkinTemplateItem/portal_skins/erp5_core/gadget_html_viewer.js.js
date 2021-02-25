@@ -3,6 +3,7 @@
 (function (window, rJS, domsugar, document, DOMParser, NodeFilter) {
   "use strict";
 
+/*
   function startsWithOneOf(str, prefix_list) {
     var i;
     for (i = prefix_list.length - 1; i >= 0; i -= 1) {
@@ -12,6 +13,7 @@
     }
     return false;
   }
+*/
 
   var whitelist = {
     node_list: {
@@ -90,6 +92,21 @@
       border: true,
       colspan: true
     },
+    style_list: {
+      background: true,
+      'background-color': true,
+      border: true,
+      color: true,
+      content: true,
+      cursor: true,
+      float: true,
+      'font-style': true,
+      height: true,
+      margin: true,
+      'max-width': true,
+      padding: true,
+      width: true
+    },
     link_node_list: {
       A: true,
       IMG: true,
@@ -139,6 +156,7 @@
       attribute_list,
       len,
       link_len,
+      style,
       already_dropped,
       finished = false;
 
@@ -164,6 +182,16 @@
           keepOnlyChildren(current_node);
 
         } else {
+          // Keep the style attribute, which is forbidden by CSP
+          // which is a good thing, as it prevents injecting <style> element
+          style = undefined;
+          attribute = 'style';
+          if (current_node.hasAttribute(attribute)) {
+            style = current_node.getAttribute(attribute);
+            // Prevent anybody to put style in the allowed attribute_list
+            current_node.removeAttribute(attribute);
+          }
+
           // Cleanup attributes
           attribute_list = current_node.attributes;
           len = attribute_list.length;
@@ -172,6 +200,21 @@
             attribute = attribute_list[len].name;
             if (!whitelist.attribute_list[attribute]) {
               current_node.removeAttribute(attribute);
+            }
+          }
+
+          // Restore the style
+          if (style !== undefined) {
+            current_node.style = style;
+            // And drop not allowed style attributes
+            attribute_list = current_node.style;
+            len = attribute_list.length;
+            while (len !== 0) {
+              len = len - 1;
+              attribute = attribute_list[len];
+              if (!whitelist.style_list[attribute]) {
+                current_node.style[attribute] = null;
+              }
             }
           }
 
