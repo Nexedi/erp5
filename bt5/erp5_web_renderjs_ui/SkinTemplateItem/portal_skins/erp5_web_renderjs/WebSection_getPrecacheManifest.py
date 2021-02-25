@@ -43,6 +43,8 @@ url_list = [
   'gadget_erp5_field_list.js',
   'gadget_erp5_field_lines.html',
   'gadget_erp5_field_lines.js',
+  'gadget_erp5_field_link.html',
+  'gadget_erp5_field_link.js',
   'gadget_erp5_field_listbox.html',
   'gadget_erp5_field_listbox.js',
   'gadget_erp5_field_matrixbox.html',
