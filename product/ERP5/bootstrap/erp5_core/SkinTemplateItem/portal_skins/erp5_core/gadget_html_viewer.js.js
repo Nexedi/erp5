@@ -128,10 +128,6 @@
       srcset: true
     }
   },
-    emptylist = {
-      BR: true,
-      HR: true
-    },
     blacklist = {
       SCRIPT: true,
       STYLE: true,
@@ -253,12 +249,6 @@
             }
           }
 
-          // Drop element if no text or link
-          if ((link_len === 0) && (!already_dropped) &&
-              (!current_node.textContent) &&
-              (!emptylist[current_node.nodeName])) {
-            current_node.parentNode.removeChild(current_node);
-          }
         }
 
       }
