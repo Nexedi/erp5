@@ -70,6 +70,12 @@ else:
   document_kw.update({'file': file})
   document = portal_contributions.newContent(**document_kw)
 
+if document.getValidationState() == 'draft':
+  if publication_state == "shared":
+    document.share()
+  elif publication_state == "released":
+    document.release()
+
 is_existing_document_updated = False
 if synchronous_metadata_discovery:
   # we need to do all synchronously, in other case portal_contributions will do
