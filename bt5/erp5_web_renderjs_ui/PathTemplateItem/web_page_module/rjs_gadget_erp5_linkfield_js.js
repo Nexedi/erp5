@@ -18,13 +18,13 @@
           name: field_json.key,
           error_text: field_json.error_text,
           title: field_json.description,
+          label: field_json.title,
           hidden: field_json.hidden,
           trim: true,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
-      state_dict.text_content = state_dict.value;
       return this.changeState(state_dict);
     })
 
@@ -51,16 +51,29 @@
       }
       return result
         .push(function (input) {
-          return input.render(gadget.state);
+          var state;
+          if (gadget.state.editable) {
+            state = gadget.state;
+          } else {
+            state = {
+              tag: 'a',
+              href: gadget.state.value,
+              text_content: gadget.state.label
+            };
+          }
+          return input.render(state);
         });
     })
 
     /** Return content even for non-editable cells - be backward compatible! */
     .declareMethod('getContent', function () {
-      return this.getDeclaredGadget('sub')
-        .push(function (gadget) {
-          return gadget.getContent();
-        });
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.getContent();
+          });
+      }
+      return {};
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
