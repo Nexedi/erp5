@@ -28,7 +28,6 @@
 
 from collections import defaultdict
 import os
-import unittest
 
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -79,15 +78,6 @@ class TestERP5Base(ERP5TypeTestCase):
     return FileUpload(
             os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
             'test_data', 'images', filename))
-
-  def login(self):
-    """Create a new manager user and login.
-    """
-    user_name = 'kevin'
-    user_folder = self.getPortal().acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
 
   def login_as_auditor(self):
     """Create a new member user with Auditor role, and login
@@ -1823,7 +1813,7 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
 
   """
   def afterSetUp(self):
-    super(ERP5TypeTestCase, self).afterSetUp()
+    super(Base_getDialogSectionCategoryItemListTest, self).afterSetUp()
     self.user_id = self.id()
     self.portal.acl_users.zodb_roles.doAssignRoleToPrincipal(self.user_id, 'Auditor')
     self.person = self.portal.person_module.newContent(
