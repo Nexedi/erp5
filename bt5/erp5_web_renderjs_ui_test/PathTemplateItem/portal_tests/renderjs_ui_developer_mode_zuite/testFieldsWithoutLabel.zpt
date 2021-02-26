@@ -113,6 +113,18 @@
         <td>//a[contains(@class, 'translate-title') and @href="/erp5/Localizer/erp5_ui/manage_messages?regex=^Listbox$&amp;lang=en"]</td>
         <td></td>
       </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
+      <tr>
+        <td>click</td>
+        <td>//a[text()="Foos"]</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[@class="document_table"]//a[contains(@class, 'edit-field') and @href="$manage_main"]</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </body>
