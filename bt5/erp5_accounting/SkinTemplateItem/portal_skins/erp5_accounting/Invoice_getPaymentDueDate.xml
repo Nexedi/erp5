@@ -54,11 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeCondition_getDueDate</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Invoice_getPaymentDueDate</string> </value>
         </item>
       </dictionary>
     </pickle>
