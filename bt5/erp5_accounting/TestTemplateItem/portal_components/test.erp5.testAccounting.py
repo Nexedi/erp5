@@ -6171,3 +6171,146 @@ class TestAccountingPeriod(AccountingTestCase):
         start_date=DateTime('2023/01/01'),
         stop_date=DateTime('2023/12/31'),)
     self.portal.portal_workflow.doActionFor(third_accounting_period, 'start_action')
+
+
+class TestInvoice_getPaymentTransactionDueDate(AccountingTestCase):
+  """Test Invoice_getPaymentTransactionDueDate.
+  """
+
+  def test_due_date_calculation(self):
+    """Test the rule to calculate the due date from payment condition properties.
+    """
+    sale_trade_condition = self.portal.sale_trade_condition_module.newContent(
+        portal_type='Sale Trade Condition',
+    )
+    invoice = self._makeOne(
+        portal_type='Sale Invoice Transaction',
+        stop_date=DateTime(1970, 1, 1)
+    )
+
+    self.assertEqual(invoice.Invoice_getPaymentDueDate(), None)
+    invoice.setSpecialiseValue(sale_trade_condition)
+    self.assertEqual(invoice.Invoice_getPaymentDueDate(), None)
+    sale_trade_condition.setPaymentConditionTradeDate('invoice')
+
+
+    for invoice_date, payment_term, payment_end_of_month, payment_additional_term, expected_date in (
+        (DateTime('2001/01/01'), 10, False, 0, DateTime('2001/01/11')),
+        (DateTime('2001/01/01'), 10, True, 0, DateTime('2001/01/31')),
+        (DateTime('2001/01/01'), 10, True, 10, DateTime('2001/02/10')),
+        (DateTime('2001/01/31'), 10, False, 0, DateTime('2001/02/10')),
+        (DateTime('2001/01/31'), 10, True, 0, DateTime('2001/02/28')),
+        (DateTime('2001/01/31'), 10, True, 15, DateTime('2001/03/15')),
+        # leap year
+        (DateTime('2004/01/31'), 10, True, 0, DateTime('2004/02/29')),
+        # this keeps hours/minutes and timezones
+        (DateTime('2001/01/01 01:02:03 GMT+2'), 10, False, 0, DateTime('2001/01/11 01:02:03 GMT+2')),
+        # and works well across daylight time switchs
+        (DateTime('2001/03/31 00:00:00 Europe/Paris'), 10, False, 0, DateTime('2001/04/10 00:00:00 Europe/Paris')),
+        (DateTime('2001/03/31 00:00:00 Europe/Paris'), 0, False, 10, DateTime('2001/04/10 00:00:00 Europe/Paris')),
+        (DateTime('2001/10/27 00:00:00 Europe/Paris'), 10, False, 0, DateTime('2001/11/06 00:00:00 Europe/Paris')),
+        (DateTime('2001/10/27 00:00:00 Europe/Paris'), 0, False, 10, DateTime('2001/11/06 00:00:00 Europe/Paris')),
+    ):
+      invoice.setStartDate(invoice_date)
+      sale_trade_condition.setPaymentConditionPaymentTerm(payment_term)
+      sale_trade_condition.setPaymentConditionPaymentEndOfMonth(payment_end_of_month)
+      sale_trade_condition.setPaymentConditionPaymentAdditionalTerm(payment_additional_term)
+      self.assertEqual(
+          invoice.Invoice_getPaymentDueDate(),
+          expected_date,
+          "{actual} != {expected_date} for case invoice_date:{invoice_date}, "
+          "payment_term:{payment_term}, payment_end_of_month:{payment_end_of_month}, "
+          "payment_additional_term:{payment_additional_term}".format(
+              actual=invoice.Invoice_getPaymentDueDate(),
+              **locals()
+          )
+      )
+
+  def test_sale_invoice_packing_list_or_order(self):
+    """Test how the date is selected from invoice, packing list or order, for sales case
+    """
+    sale_trade_condition = self.portal.sale_trade_condition_module.newContent(
+        portal_type='Sale Trade Condition',
+        payment_condition_payment_term=10,
+    )
+    order = self.portal.sale_order_module.newContent(
+        portal_type='Sale Order',
+        start_date=DateTime(2001, 1, 1),
+        stop_date=DateTime(1970, 1, 1),
+    )
+    delivery = self.portal.sale_packing_list_module.newContent(
+        portal_type='Sale Packing List',
+        start_date=DateTime(1970, 1, 1),
+        stop_date=DateTime(2002, 1, 1),
+        causality_value=order,
+    )
+    invoice = self._makeOne(
+        portal_type='Sale Invoice Transaction',
+        start_date=DateTime(2003, 1, 1),
+        stop_date=DateTime(1970, 1, 1),
+        specialise_value=sale_trade_condition,
+    )
+    trade_date = self.portal.portal_categories.trade_date
+    sale_trade_condition.setPaymentConditionTradeDate(trade_date.invoice.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2003, 1, 11))
+
+    sale_trade_condition.setPaymentConditionTradeDate(trade_date.packing_list.getRelativeUrl())
+    # no related delivery
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        None)
+    invoice.setCausalityValue(delivery)
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2002, 1, 11))
+
+    sale_trade_condition.setPaymentConditionTradeDate(trade_date.order.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2001, 1, 11))
+
+  def test_purchase_invoice_packing_list_or_order(self):
+    """Test how the date is selected from invoice, packing list or order, for purchase case
+    """
+    purchase_trade_condition = self.portal.purchase_trade_condition_module.newContent(
+        portal_type='Purchase Trade Condition',
+        payment_condition_payment_term=10,
+    )
+    order = self.portal.purchase_order_module.newContent(
+        portal_type='Purchase Order',
+        start_date=DateTime(2001, 1, 1),
+        stop_date=DateTime(1970, 1, 1),
+    )
+    delivery = self.portal.purchase_packing_list_module.newContent(
+        portal_type='Purchase Packing List',
+        start_date=DateTime(1970, 1, 1),
+        stop_date=DateTime(2002, 1, 1),
+        causality_value=order,
+    )
+    invoice = self._makeOne(
+        portal_type='Purchase Invoice Transaction',
+        start_date=DateTime(2003, 1, 1),
+        specialise_value=purchase_trade_condition,
+    )
+    trade_date = self.portal.portal_categories.trade_date
+    purchase_trade_condition.setPaymentConditionTradeDate(trade_date.invoice.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2003, 1, 11))
+
+    purchase_trade_condition.setPaymentConditionTradeDate(trade_date.packing_list.getRelativeUrl())
+    # no related delivery
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        None)
+    invoice.setCausalityValue(delivery)
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2002, 1, 11))
+
+    purchase_trade_condition.setPaymentConditionTradeDate(trade_date.order.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2001, 1, 11))
