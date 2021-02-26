@@ -1,7 +1,6 @@
 account_module/bank
-account_module/collected_vat  
-account_module/equity  
-account_module/fixed_assets  
+account_module/equity
+account_module/fixed_assets
 account_module/goods_purchase
 account_module/goods_sales
 account_module/payable
@@ -30,3 +29,4 @@ portal_categories/quantity_unit/unit/**
 portal_categories/region/brazil
 portal_categories/role/**
 portal_categories/use/test_functional_incoming_service
+portal_tests/user-Howto.Create.Persons/**
