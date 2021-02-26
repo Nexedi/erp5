@@ -12073,6 +12073,9 @@ msgstr "Pour le compte de"
 msgid "Specialised Trade Conditions"
 msgstr "Conditions commerciales spécialisées"
 
+msgid "Specialised Trade Conditions and Business Processes"
+msgstr "Conditions commerciales et business process spécialisés"
+
 msgid "Specialist Doctor Name"
 msgstr "Nom du médecin spécialiste"
 
