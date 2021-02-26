@@ -49,11 +49,7 @@
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[position()=3 and @title="Translate this field description"]</td>
   <td></td>
 </tr>
-<tr>
-  <td>uncheck</td>
-  <td>//input[@id='editable']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>assertElementNotPresent</td>
@@ -61,21 +57,17 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[@title="Translate this field title"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]/a[@title="Translate this field description"]</td>
   <td></td>
 </tr>
-<tr>
-  <td>check</td>
-  <td>//input[@id='editable']</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//label[@for="field_my_preferred_html_style_translator_mode"]</td>
