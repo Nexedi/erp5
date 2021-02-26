@@ -28,42 +28,42 @@ div[data-gadget-url$="gadget_html_viewer.html"] pre {
 div[data-gadget-url$="gadget_html_viewer.html"] h1 {
   display: block;
   font-size: 2em;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   margin: 0.67em 0;
   font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h2 {
   display: block;
   font-size: 1.5em;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   margin: 0.83em 0;
   font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h3 {
   display: block;
   font-size: 1.17em;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   margin: 1em 0;
   font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h4 {
   display: block;
   font-size: 1em;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   margin: 1.33em 0;
   font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h5 {
   display: block;
   font-size: 0.83em;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   margin: 1.67em 0;
   font-weight: bold;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] h5 {
   display: block;
   font-size: 0.67em;
-  font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   margin: 2.33em 0;
   font-weight: bold;
 }
@@ -126,7 +126,6 @@ div[data-gadget-url$="gadget_html_viewer.html"] table {
   display: table;
   border-spacing: 2px;
   border: 1px solid #1F1F1F;
-  width: 100%;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] thead {
   display: table-header-group;
@@ -160,6 +159,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] th {
   display: table-cell;
   vertical-align: inherit;
   padding: 0 6pt;
+  border: 1px solid #1F1F1F;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] th {
   font-weight: bold;
@@ -190,4 +190,8 @@ div[data-gadget-url$="gadget_html_viewer.html"] dl dt {
 div[data-gadget-url$="gadget_html_viewer.html"] dl dd,
 div[data-gadget-url$="gadget_html_viewer.html"] dl dl {
   grid-column-start: 2;
+}
+*[align="center"] {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }

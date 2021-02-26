@@ -76,7 +76,9 @@
       NAV: true,
       FOOTER: true,
       DIV: true,
-      SPAN: true
+      SPAN: true,
+      DETAILS: true,
+      SUMMARY: true
     },
     attribute_list: {
       alt: true,
@@ -90,7 +92,11 @@
       cellspacing: true,
       cellpadding: true,
       border: true,
-      colspan: true
+      colspan: true,
+      rowspan: true,
+      align: true,
+      scope: true,
+      summary: true
     },
     style_list: {
       background: true,
@@ -114,6 +120,7 @@
       'padding-right': true,
       'padding-top': true,
       'padding-bottom': true,
+      'text-align': true,
       width: true
     },
     link_node_list: {
