@@ -888,6 +888,54 @@ class TestERP5Base(ERP5TypeTestCase):
       self.portal.portal_workflow.doActionFor(bank_account, 'validate_action')
       self.assertEqual('validated', bank_account.getValidationState())
 
+  def test_bank_account_reference_default_id(self):
+    bank_account = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    ).newContent(
+        portal_type='Bank Account',
+        id='bank_account_id',
+    )
+    self.assertEqual(bank_account.getReference(), 'bank_account_id')
+
+  def test_bank_account_reference_from_bank_code(self):
+    bank_account = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    ).newContent(
+        portal_type='Bank Account',
+    )
+    bank_account.setBankCode('bank-code')
+    bank_account.setBranch('branch-code')
+    bank_account.setBankAccountNumber('account-number')
+    bank_account.setBankAccountKey('account-key')
+    self.assertEqual(
+        bank_account.getReference(),
+        'bank-code branch-code account-number account-key',
+    )
+
+    bank_account.setBankCountryCode('bank-country-code')
+    self.assertEqual(
+        bank_account.getReference(),
+        'bank-country-code bank-code branch-code account-number account-key',
+    )
+
+  def test_bank_account_reference_from_iban(self):
+    bank_account = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    ).newContent(
+        portal_type='Bank Account',
+    )
+    bank_account.setIban('iban')
+    bank_account.setBicCode('bic-code')
+    self.assertEqual(bank_account.getReference(), 'iban')
+
+    # other codes are ignored if there's an iban
+    bank_account.setBankCode('bank-code')
+    bank_account.setBranch('branch-code')
+    bank_account.setBankAccountNumber('account-number')
+    bank_account.setBankAccountKey('account-key')
+    bank_account.setBankCountryCode('bank-country-code')
+    self.assertEqual(bank_account.getReference(), 'iban')
+
   def test_CreateImage(self):
     # We can add Images inside Persons and Organisation
     for entity in (self.getPersonModule().newContent(portal_type='Person'),
