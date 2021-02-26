@@ -11,6 +11,7 @@
       id: undefined,
       name: undefined,
       src: undefined,
+      href: undefined,
       alt: undefined,
       append: '',
       prepend: ''
@@ -23,6 +24,7 @@
           id: options.id,
           tag: options.tag || 'div',
           src: options.src,
+          href: options.href,
           alt: options.alt,
           name: options.name,
           append: getFirstNonEmpty(options.append, ""),
@@ -59,6 +61,9 @@
       }
       if (this.state.src) {
         new_element.setAttribute('src', this.state.src);
+      }
+      if (this.state.href) {
+        new_element.setAttribute('href', this.state.href);
       }
       if (this.state.alt) {
         new_element.setAttribute('alt', this.state.alt);
