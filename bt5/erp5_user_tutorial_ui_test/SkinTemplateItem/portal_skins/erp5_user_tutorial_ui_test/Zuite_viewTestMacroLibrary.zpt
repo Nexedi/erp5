@@ -2,8 +2,14 @@
   <tr>
     <td>store</td>
     <td tal:content="python:
-        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')]">erp5</td>
+        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')] + '/web_site_module/renderjs_runner/'"></td>
     <td>base_url</td>
+  </tr>
+  <tr>
+    <td>store</td>
+    <td tal:content="python:
+        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')] + '/web_site_module/renderjs_runner/#/?view=1&editable=true&page=osoe_access'"></td>
+    <td>base_new_url</td>
   </tr>
   <!-- Always initialize browser to English language -->
   <tr>
@@ -18,7 +24,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/view</td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
@@ -28,12 +34,27 @@
   <!-- Login as manager -->
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/logout</td>
+    <td>${base_url}/#/?page=logout</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>clickAndWait</td>
+    <td>//input[@value="Confirm"]</td>
     <td></td>
   </tr>
   <tr>
     <td>openAndWait</td>
     <td>${base_url}/login_form</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
   <tr>
@@ -50,20 +71,15 @@
   </tr>
   <tr>
     <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/view</td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
-  <tr>
-    <td>assertTextPresent</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['manager_username']"></td>
-    <td></td>
-  </tr>
+
 </tal:block>
 
 <tal:block metal:define-macro="wait_for_activities">
@@ -77,7 +93,7 @@
     <td>assertTextPresent</td>
     <td>Done.</td>
     <td></td>
-  </tr> 
+  </tr>
 </tal:block>
 
 <tal:block metal:define-macro="invoke_simulation_alarms">
@@ -91,7 +107,7 @@
     <td>assertTextPresent</td>
     <td>Done.</td>
     <td></td>
-  </tr> 
+  </tr>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
 </tal:block>
 
@@ -129,6 +145,11 @@
     <td></td>
   </tr>
   <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Login"]</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
     <td tal:content="python:
@@ -142,18 +163,12 @@
   </tr>
   <tr>
     <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/view</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>assertTextPresent</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['functional_test_username']"></td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
@@ -179,7 +194,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/web_site_module/renderjs_runner/#/?view=1&page=osoe_access</td>
+    <td>${base_new_url}</td>
     <td></td>
   </tr>
 </tal:block>
