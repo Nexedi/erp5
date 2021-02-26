@@ -76,7 +76,9 @@
       NAV: true,
       FOOTER: true,
       DIV: true,
-      SPAN: true
+      SPAN: true,
+      DETAILS: true,
+      SUMMARY: true
     },
     attribute_list: {
       alt: true,
