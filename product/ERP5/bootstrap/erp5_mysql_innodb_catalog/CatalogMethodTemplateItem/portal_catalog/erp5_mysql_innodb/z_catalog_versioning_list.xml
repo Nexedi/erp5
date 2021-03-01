@@ -57,7 +57,7 @@ getFrequencyIndex</string> </value>
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string>python: getattr(context, \'getLanguage\', None) is not None or getattr(context, \'getVersion\', None) is not None or getattr(context, \'getSize\', None) is not None</string> </value>
+            <value> <string>python: getattr(context, \'getLanguage\', None) is not None or getattr(context, \'getVersion\', None) is not None</string> </value>
         </item>
         <item>
             <key> <string>expression_cache_key</string> </key>
