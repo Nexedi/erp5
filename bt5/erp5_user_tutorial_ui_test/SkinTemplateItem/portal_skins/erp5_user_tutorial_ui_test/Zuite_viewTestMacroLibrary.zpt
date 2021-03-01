@@ -60,12 +60,14 @@
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
-    <td>zope</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['manager_username']"></td>
   </tr>
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_password"]</td>
-    <td>fbhmwaqd</td>
+    <td tal:content="python:
+        here.Zuite_getHowToInfo()['manager_password']"></td>
   </tr>
   <tr>
     <td>click</td>
