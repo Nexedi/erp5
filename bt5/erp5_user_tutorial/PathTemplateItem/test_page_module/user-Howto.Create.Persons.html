@@ -10,7 +10,7 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+        <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/init_test_environment" />
 		</tr>
 		<tr>
 			<td>openAndWait</td>
@@ -22,12 +22,9 @@
 			<td>Init Ok</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
-		</tr>
+      <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/wait_for_activities" />
+      <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user" />
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -82,16 +79,18 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-        <tr>
-			<td>waitForElementPresent</td>
-			<td>//button[text()="Person"]</td>
-			<td>&#160;</td>
+		<tr>
+			<td>click</td>
+			<td>//a[text()="New"]</td>
+			<td></td>
 		</tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
         <tr>
 			<td>click</td>
 			<td>//button[text()="Person"]</td>
 			<td>&#160;</td>
 		</tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -105,11 +104,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//button[@class="success"]</td>
-			<td></td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -125,16 +119,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//a[@class="active"]</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//input[@name="field_my_first_name"]</td>
-			<td></td>
-		</tr>
 		<tr>
 			<td>type</td>
 			<td>//input[@name="field_my_first_name"]</td>
@@ -180,21 +164,12 @@
 			<td>//input[@name="field_default_telephone_my_default_telephone_coordinate_text"]</td>
 			<td>+33(0)6-218765/00</td>
 		</tr>
-		<tr>
-			<td>click</td>
-			<td>//button[@data-i18n="Save"]</td>
-			<td></td>
-		</tr>
-	    <tr>
-			<td>waitForElementPresent</td>
-			<td>//button[@class="success"]</td>
-			<td></td>
-		</tr>
-        <tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+	  <tr>
 			<td>pause</td>
 			<td>3000</td>
 			<td></td>
-		</tr
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -225,47 +200,33 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		
 	  <tr>
-			<td>click</td>
-			<td>//a[text()="Details"]</td>
-			<td></td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>waitForElementPresent</td>
-			<td>//input[@name="field_my_middle_name"]</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name="field_my_middle_name"]</td>
-			<td>Scott</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name="field_my_child_count"]</td>
-			<td>2</td>
-		</tr>
-		<tr>
-			<td>select</td>
-			<td>//select[@name="field_my_marital_status"]</td>
-			<td>Married</td>
-		</tr>
-		<tr>
-			<td>click</td>
-			<td>//button[@data-i18n="Save"]</td>
-			<td></td>
-		</tr>
-	    <tr>
-			<td>waitForElementPresent</td>
-			<td>//button[@class="success"]</td>
-			<td></td>
-        </tr>
-	    <tr>
-			<td>pause</td>
-			<td>3000</td>
-			<td></td>
-		</tr>
+		<td>click</td>
+		<td>//a[text()="Details"]</td>
+		<td></td>
+	  </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+	  <tr>
+		<td>type</td>
+		<td>//input[@name="field_my_middle_name"]</td>
+		<td>Scott</td>
+      </tr>
+	  <tr>
+		<td>type</td>
+		<td>//input[@name="field_my_child_count"]</td>
+		<td>2</td>
+	  </tr>
+	  <tr>
+		<td>select</td>
+		<td>//select[@name="field_my_marital_status"]</td>
+		<td>Married</td>
+	  </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+	  <tr>
+		<td>pause</td>
+		<td>3000</td>
+		<td></td>
+	  </tr>
 	</tbody>
 </table>
 </test></section>
@@ -296,26 +257,13 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>click</td>
-			<td>//a[text()="Validate"]</td>
-			<td></td>
-		</tr>
 	  <tr>
-			<td>waitForElementPresent</td>
-			<td>//input[@value="Validate"]</td>
-			<td></td>
-		</tr>
-	  <tr>
-			<td>click</td>
-			<td>//input[@value="Validate"]</td>
-			<td></td>
-		</tr>
-	  <tr>
-			<td>waitForElementPresent</td>
-			<td>//button[@class="success"]</td>
-			<td></td>
-		</tr>
+		<td>click</td>
+		<td>//a[text()="Validate"]</td>
+		<td></td>
+	  </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -344,26 +292,17 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//a[text()="View"]</td>
-			<td></td>
-		</tr>
 	  <tr>
-			<td>click</td>
-			<td>//a[text()="View"]</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//p[@id="field_my_translated_validation_state_title"]</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//p[@id="field_my_translated_validation_state_title"]</td>
-			<td>Validated</td>
-		</tr>
+		<td>click</td>
+		<td>//a[text()="View"]</td>
+		<td></td>
+	  </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+	  <tr>
+		<td>verifyText</td>
+		<td>//p[@id="field_my_translated_validation_state_title"]</td>
+		<td>Validated</td>
+	  </tr>
 	</tbody>
 </table>
 </test></section>
@@ -380,16 +319,12 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>click</td>
-			<td>//a[contains(text(), "Modules")]</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//a[text()="Persons"]</td>
-			<td></td>
-		</tr>
+	  <tr>
+		<td>click</td>
+		<td>//a[contains(text(), "Modules")]</td>
+		<td></td>
+	  </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -408,11 +343,7 @@
 			<td>//a[text()="Persons"]</td>
 			<td></td>
 		</tr>
-		<tr>
-			<td>waitForElementPresent</td>
-			<td>//h1[contains(text(), "Persons")]</td>
-			<td></td>
-		</tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -426,22 +357,18 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
-		</tr>
-		<tr>
+		<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
+        <tr>
 			<td>openAndWait</td>
 			<td>${base_url}/Zuite_tearDownPersonTest</td>
-			<td>&nbsp;</td>
+			<td>&#160;</td>
 		</tr>
 		<tr>
 			<td>verifyTextPresent</td>
 			<td>Clean Ok</td>
-			<td>&nbsp;</td>
+			<td>&#160;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
+		<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
 	</tbody>
 </table>
 </test></section>
