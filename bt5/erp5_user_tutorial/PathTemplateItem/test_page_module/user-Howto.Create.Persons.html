@@ -6,11 +6,11 @@
 <details open="open">
 <p>Now that you have access to your ERP5, we are going to show you how to create persons in ERP5, thanks to the &laquo;&nbsp;base&nbsp;&raquo; area of the application. These persons can either be you, your co-workers, your customers, your suppliers, etc. Every person you interact with, can be stored in the ERP5 database. Here we will use an example of adding persons into the ERP5 database.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/init_test_environment"> </tal:block><tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded"> </tal:block></tal:block></tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-        <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/init_test_environment" />
 		</tr>
 		<tr>
 			<td>openAndWait</td>
@@ -23,8 +23,8 @@
 			<td>&nbsp;</td>
 		</tr>
       <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/wait_for_activities" />
+	  <tal:block metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout" />
       <tal:block metal:use-macro="here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user" />
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -76,7 +76,8 @@
 <details open="open">
 <p>Click on &ldquo;Persons&rdquo; to create a person. This will open the View page of a new Person&#39;s document where you will have to fill in the required information.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block><tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
@@ -116,7 +117,8 @@
 
 <p>Note that after entering all information in the current form, you should always save before switching to another tab or document.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save"> </tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
@@ -164,8 +166,8 @@
 			<td>//input[@name="field_default_telephone_my_default_telephone_coordinate_text"]</td>
 			<td>+33(0)6-218765/00</td>
 		</tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-	  <tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+	    <tr>
 			<td>pause</td>
 			<td>3000</td>
 			<td></td>
@@ -197,36 +199,37 @@
 <details open="open">
 <p>When you are done with the &ldquo;view&rdquo; tab, <strong>fill the other tabs.</strong> For example, you can fill out the &ldquo;details&rdquo; tab with the information: The middle name of John Doe is Scott; John is married and has two children. You can also add a profile photo of him.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block><tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save"> </tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//a[text()="Details"]</td>
+			<td></td>
+		</tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+		<tr>
+			<td>type</td>
+			<td>//input[@name="field_my_middle_name"]</td>
+			<td>Scott</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name="field_my_child_count"]</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name="field_my_marital_status"]</td>
+			<td>Married</td>
+		</tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 	  <tr>
-		<td>click</td>
-		<td>//a[text()="Details"]</td>
-		<td></td>
-	  </tr>
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-	  <tr>
-		<td>type</td>
-		<td>//input[@name="field_my_middle_name"]</td>
-		<td>Scott</td>
-      </tr>
-	  <tr>
-		<td>type</td>
-		<td>//input[@name="field_my_child_count"]</td>
-		<td>2</td>
-	  </tr>
-	  <tr>
-		<td>select</td>
-		<td>//select[@name="field_my_marital_status"]</td>
-		<td>Married</td>
-	  </tr>
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-	  <tr>
-		<td>pause</td>
-		<td>3000</td>
-		<td></td>
-	  </tr>
+			<td>pause</td>
+			<td>3000</td>
+			<td></td>
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -254,16 +257,17 @@
 
 <p>ERP5 is an application based on workflows, which means that the data you enter into the system needs to be validated. In the case of a person, this step is really important, for instance, there is no need to validate somebody if you are not sure of his/her name: if the state is &ldquo;draft&rdquo;, which is the state by default, you warn everybody that the related information is incomplete. But when it is validated, the data is sure.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog"> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block></tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
-	  <tr>
-		<td>click</td>
-		<td>//a[text()="Validate"]</td>
-		<td></td>
-	  </tr>
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+		<tr>
+			<td>click</td>
+			<td>//a[text()="Validate"]</td>
+			<td></td>
+		</tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -289,20 +293,21 @@
 
 <p>Thanks to this status change, your data will be validated, which means that your co-workers can be confident in the accuracy of the information.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
-	  <tr>
-		<td>click</td>
-		<td>//a[text()="View"]</td>
-		<td></td>
-	  </tr>
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-	  <tr>
-		<td>verifyText</td>
-		<td>//p[@id="field_my_translated_validation_state_title"]</td>
-		<td>Validated</td>
-	  </tr>
+		<tr>
+			<td>click</td>
+			<td>//a[text()="View"]</td>
+			<td></td>
+		</tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id="field_my_translated_validation_state_title"]</td>
+			<td>Validated</td>
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -316,15 +321,16 @@
 
 <p>This is a three step procedure: As a first step, browse the &ldquo;ERP5 modules&rdquo; item list on the top of the page, and choose &ldquo;persons&rdquo;. The aim of this action is to lead you to the person module which displays each person who has been created in the ERP5 database.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
-	  <tr>
-		<td>click</td>
-		<td>//a[contains(text(), "Modules")]</td>
-		<td></td>
-	  </tr>
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), "Modules")]</td>
+			<td></td>
+		</tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -335,7 +341,8 @@
 <details open="open">
 <p>The second step is to check that you are located in the person general menu and that the new person you created is on the Persons List.</p>
 </details>
-<test>
+<test> <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"> </tal:block>
+
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
@@ -343,7 +350,6 @@
 			<td>//a[text()="Persons"]</td>
 			<td></td>
 		</tr>
-        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 	</tbody>
 </table>
 </test></section>
@@ -354,10 +360,12 @@
 <details open="open">
 <p>You can also use the &quot;Browse&quot; tab on the home page to check the persons stored in your ERP5 database. Just click on &ldquo;Persons&rdquo; in the &ldquo;Base&rdquo; module, which is the module that gathers &ldquo;Currencies&rdquo;, &ldquo;Organisations&rdquo; and &ldquo;Persons&rdquo;.</p>
 </details>
-<test>
+<test> <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span><span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
+
 <table class="test" style="display: none;">
 	<tbody>
-		<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
+		<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
+	    <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
         <tr>
 			<td>openAndWait</td>
 			<td>${base_url}/Zuite_tearDownPersonTest</td>
@@ -369,6 +377,7 @@
 			<td>&#160;</td>
 		</tr>
 		<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
 	</tbody>
 </table>
 </test></section>
