@@ -46,7 +46,9 @@
         tmp; // general use short-scope variable
       if (this.state.type === 'checkbox') {
         textarea.checked = this.state.checked;
-      } else {
+      }
+
+      if (modification_dict.hasOwnProperty("value")) {
         textarea.setAttribute('value', this.state.value);
         textarea.value = this.state.value;
       }
@@ -240,7 +242,6 @@
     .declareJob('deferErrorText', function deferErrorText(error_text) {
       var input = this.element.querySelector("input");
       return this.changeState({
-        value: input.value,
         error_text: error_text
       });
     })
