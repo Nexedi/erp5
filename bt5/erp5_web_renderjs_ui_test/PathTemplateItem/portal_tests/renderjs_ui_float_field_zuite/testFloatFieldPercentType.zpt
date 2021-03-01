@@ -40,6 +40,9 @@
 <tr><td>assertElementPresent</td>
     <td>//p[@id='field_my_delivery_ratio_read_only' and text()='1,0000']</td>
     <td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//p[@id='field_your_empty_percent' and not(text())]</td>
+    <td></td></tr>
 
 <tr><td>type</td>
     <td>field_my_delivery_ratio</td>
