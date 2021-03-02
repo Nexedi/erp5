@@ -76,8 +76,7 @@
     return field_url;
   }
 
-  function addDeveloperAction(class_name,
-      title_href, title, root_element) {
+  function addDeveloperAction(class_name, title_href, title, root_element) {
     var field_href = domsugar("a", {
       "class": class_name,
       href: title_href,

@@ -112,8 +112,7 @@
       });
   }
 
-  function addDeveloperAction(class_name,
-      title_href, title) {
+  function addDeveloperAction(class_name, title_href, title) {
     return domsugar("a", {
       "class": class_name,
       href: title_href,
