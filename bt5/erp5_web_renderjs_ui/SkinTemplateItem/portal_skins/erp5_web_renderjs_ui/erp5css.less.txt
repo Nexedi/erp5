@@ -590,7 +590,7 @@ img {
 /**********************************************
 * Gadget: panel
 **********************************************/
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] {
+div[data-gadget-scope='panel'] {
 
   background-color: @panelbackgroundcolor;
 
