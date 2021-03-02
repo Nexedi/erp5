@@ -335,7 +335,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][5]/div/span[contains(text(), "Input is required but no input given.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][5]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
