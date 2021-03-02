@@ -39,69 +39,82 @@
         option,
         fragment;
 
-      select.id = this.state.id || this.state.name;
-      select.setAttribute('name', this.state.name);
-
-      if (modification_dict.error_text &&
-          !select.classList.contains("is-invalid")) {
-        select.classList.add("is-invalid");
-      } else if (select.classList.contains("is-invalid")) {
-        select.classList.remove("is-invalid");
-      }
-
-      if (this.state.title) {
-        select.setAttribute('title', this.state.title);
-      }
-
-      if (this.state.required) {
-        select.required = true;
-      } else {
-        select.required = false;
-      }
-
-      if (this.state.editable) {
-        select.readonly = true;
-      } else {
-        select.readonly = false;
-      }
-
-      if (this.state.hidden) {
-        select.hidden = true;
-      } else {
-        select.hidden = false;
-      }
-
       if (modification_dict.hasOwnProperty('value') ||
-          modification_dict.hasOwnProperty('item_list')) {
-        fragment = document.createDocumentFragment();
+          modification_dict.hasOwnProperty('item_list') ||
+          modification_dict.hasOwnProperty('editable') ||
+          modification_dict.hasOwnProperty('required') ||
+          modification_dict.hasOwnProperty('id') ||
+          modification_dict.hasOwnProperty('name') ||
+          modification_dict.hasOwnProperty('title')
+          ) {
+        select.id = this.state.id || this.state.name;
+        select.setAttribute('name', this.state.name);
 
-        for (i = 0; i < item_list.length; i += 1) {
-          option = document.createElement('option');
-          option.textContent = item_list[i][0];
-          if (item_list[i][1] === null) {
-            option.setAttribute('disabled', 'disabled');
-          } else {
-            option.setAttribute('value', item_list[i][1]);
-            if (item_list[i][1] === this.state.value) {
-              option.setAttribute('selected', 'selected');
-              found = true;
+        if (this.state.title) {
+          select.setAttribute('title', this.state.title);
+        }
+
+        if (this.state.required) {
+          select.required = true;
+        } else {
+          select.required = false;
+        }
+
+        if (this.state.editable) {
+          select.readonly = true;
+        } else {
+          select.readonly = false;
+        }
+
+        if (modification_dict.hasOwnProperty('value') ||
+            modification_dict.hasOwnProperty('item_list')) {
+          fragment = document.createDocumentFragment();
+
+          for (i = 0; i < item_list.length; i += 1) {
+            option = document.createElement('option');
+            option.textContent = item_list[i][0];
+            if (item_list[i][1] === null) {
+              option.setAttribute('disabled', 'disabled');
+            } else {
+              option.setAttribute('value', item_list[i][1]);
+              if (item_list[i][1] === this.state.value) {
+                option.setAttribute('selected', 'selected');
+                found = true;
+              }
             }
+            fragment.appendChild(option);
           }
-          fragment.appendChild(option);
+
+          if (!found && !isEmpty(this.state.value)) {
+            option = document.createElement('option');
+            option.textContent = '??? (' + this.state.value + ')';
+            option.setAttribute('value', this.state.value);
+            option.setAttribute('selected', 'selected');
+            fragment.appendChild(option);
+          }
+
+          while (select.firstChild) {
+            select.removeChild(select.firstChild);
+          }
+          select.appendChild(fragment);
+        }
+      }
+
+      if (modification_dict.hasOwnProperty('error_text') ||
+          modification_dict.hasOwnProperty('hidden')) {
+        if (this.state.hidden && !this.state.error_text) {
+          select.hidden = true;
+        } else {
+          select.hidden = false;
         }
 
-        if (!found && !isEmpty(this.state.value)) {
-          option = document.createElement('option');
-          option.textContent = '??? (' + this.state.value + ')';
-          option.setAttribute('value', this.state.value);
-          option.setAttribute('selected', 'selected');
-          fragment.appendChild(option);
+        if (this.state.error_text &&
+            !select.classList.contains("is-invalid")) {
+          select.classList.add("is-invalid");
+        } else if (!this.state.error_text &&
+                   select.classList.contains("is-invalid")) {
+          select.classList.remove("is-invalid");
         }
-
-        while (select.firstChild) {
-          select.removeChild(select.firstChild);
-        }
-        select.appendChild(fragment);
       }
     })
 
@@ -122,32 +135,45 @@
         }
       }
       return result;
-    })
+    }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
       var select = this.element.querySelector('select'),
-        result = select.checkValidity() || this.state.error_text === "";
+        result = select.checkValidity();
       if (result) {
         return this.notifyValid()
           .push(function () {
             return result;
           });
       }
+      if (this.state.error_text) {
+        return this.notifyInvalid(this.state.error_text)
+          .push(function () {
+            return result;
+          });
+      }
       return result;
+    }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      return this.changeState({
+        error_text: error_text
+      });
     })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .onEvent('change', function change() {
       return RSVP.all([
         this.checkValidity(),
-        this.notifyChange()
+        this.notifyChange("change")
       ]);
     }, false, false)
+
     .onEvent('input', function input() {
       return RSVP.all([
         this.checkValidity(),
-        this.notifyChange()
+        this.notifyChange("input")
       ]);
     }, false, false)
 
@@ -164,7 +190,10 @@
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false);
 
 }(document, window, rJS, RSVP, getFirstNonEmpty, isEmpty));
