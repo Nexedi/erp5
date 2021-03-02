@@ -98,6 +98,10 @@
       display_error_text: false,
       first_call: false
     })
+    //////////////////////////////////////////////
+    // acquired method
+    //////////////////////////////////////////////
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     .declareMethod('render', function render(options) {
       var state_dict = {
@@ -125,6 +129,7 @@
       var gadget = this,
         options = modification_dict.options || {},
         field_json = options.field_json,
+        field_gadget,
         span,
         css_class,
         i,
@@ -219,10 +224,23 @@
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
           }
+
+          queue
+            .push(function (declared_gadget) {
+              field_gadget = declared_gadget;
+            });
+
           if (field_json && field_json.editable &&
               gadget.state.options.development_link !== false) {
             queue
-              .push(function (field_gadget) {
+              .push(function () {
+                return gadget.getTranslationList([
+                  "Edit this field",
+                  "Translate this field title",
+                  "Translate this field description"
+                ]);
+              })
+              .push(function (translation_list) {
                 var root_element,
                   field;
 
@@ -236,7 +254,7 @@
                   addDeveloperAction(
                     "edit-field ui-icon-edit ui-btn-icon-left",
                     field_json.edit_field_href,
-                    "Edit this field",
+                    translation_list[0],
                     root_element
                   );
                 } else if (!field_json.hasOwnProperty('edit_field_href')) {
@@ -251,7 +269,7 @@
                   addDeveloperAction(
                     "translate-title ui-icon-language ui-btn-icon-left",
                     field_json.translate_title_href,
-                    "Translate this field title",
+                    translation_list[1],
                     root_element
                   );
                 } else if (!field_json.hasOwnProperty('translate_title_href')) {
@@ -266,7 +284,7 @@
                   addDeveloperAction(
                     "translate-description ui-icon-language ui-btn-icon-left",
                     field_json.translate_description_href,
-                    "Translate this field description",
+                    translation_list[2],
                     root_element
                   );
                 } else if (!field_json.hasOwnProperty('translate_description_href')) {
@@ -275,11 +293,11 @@
                     root_element.removeChild(field);
                   }
                 }
-                return field_gadget;
+                return;
               });
           }
           return queue
-            .push(function (field_gadget) {
+            .push(function () {
               return field_gadget.render(gadget.state.options);
             });
         }
