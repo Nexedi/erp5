@@ -31,6 +31,32 @@
 
   </head>
   <body>
-    <div data-gadget-url="gadget_panel.html" data-gadget-scope="subpanel"></div>
+    <div>
+      <div data-role="header">
+        <div class="ui-btn-left">
+          <div class="ui-controlgroup-controls">
+            <button data-i18n="Close" class="ui-btn-icon-notext ui-icon-delete">Close</button>
+          </div>
+        </div>
+        <div class="panel_img">
+        <img alt="ERP5" src="gadget_erp5_panel.png"/>
+        </div>
+      </div>
+      <div>
+
+        <form>
+          <button type="submit" class="ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+          <div data-gadget-url="gadget_erp5_searchfield.html"
+               data-gadget-scope="erp5_searchfield"
+               data-gadget-sandbox="public"></div>
+        </form>
+
+        <ul></ul>
+        <div data-gadget-url="gadget_erp5_field_multicheckbox.html"
+             data-gadget-scope="erp5_checkbox"
+             data-gadget-sandbox="public"></div>
+        <dl></dl>
+      </div>
+    </div>
   </body>
 </html>
