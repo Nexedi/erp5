@@ -55,7 +55,6 @@
           modification_dict.hasOwnProperty('title') ||
           modification_dict.hasOwnProperty('focus') ||
           modification_dict.hasOwnProperty('step') ||
-          modification_dict.hasOwnProperty('hidden') ||
           modification_dict.hasOwnProperty('trim') ||
           modification_dict.hasOwnProperty('multiple') ||
           modification_dict.hasOwnProperty('accept') ||
@@ -107,12 +106,6 @@
           textarea.readonly = false;
         }
 
-        if (this.state.hidden && !modification_dict.error_text) {
-          textarea.hidden = true;
-        } else {
-          textarea.hidden = false;
-        }
-
         if (this.state.focus === true) {
           textarea.autofocus = true;
           textarea.focus();
@@ -140,7 +133,14 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty('error_text')) {
+      if (modification_dict.hasOwnProperty('error_text') ||
+          modification_dict.hasOwnProperty('hidden')) {
+        if (this.state.hidden && !this.state.error_text) {
+          textarea.hidden = true;
+        } else {
+          textarea.hidden = false;
+        }
+
         if (this.state.error_text &&
             !textarea.classList.contains("is-invalid")) {
           textarea.classList.add("is-invalid");
