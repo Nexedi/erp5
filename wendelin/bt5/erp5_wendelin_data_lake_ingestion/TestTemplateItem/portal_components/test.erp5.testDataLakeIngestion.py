@@ -334,4 +334,31 @@ class TestDataIngestion(SecurityTestCase):
     self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
     self.tic()
 
+  def test_10_checkDataSetDataStreamRelation(self):
+    """
+      Data Set and its Data Streams are related through the corresponding Data Ingestion Lines
+    """
+    # ingest a couple of files
+    reference = self.getRandomReference()
+    self.ingest("some-data-1", reference, self.CSV, self.SINGLE_INGESTION_END)
+    time.sleep(1)
+    self.tic()
+    reference += "-2"
+    self.ingest("some-data-2", reference, self.CSV, self.SINGLE_INGESTION_END)
+    time.sleep(1)
+    self.tic()
+    # get corresponding Data Streams by searching via Data Ingestion Lines of the Data Set
+    data_set = self.portal.data_set_module.get(self.REF_DATASET)
+    data_ingestion_line_list = self.portal.portal_catalog(
+                    portal_type = 'Data Ingestion Line',
+                    aggregate_uid = data_set.getUid())
+    data_ingestion_uid_list = [x.getUid() for x in data_ingestion_line_list]
+    data_stream_list = self.portal.portal_catalog(
+                    portal_type = 'Data Stream',
+                    aggregate__related__uid = data_ingestion_uid_list,
+                    select_list = ['reference', 'relative_url', 'versioning.size', 'versioning.version'])
+    data_stream_list = [x.getObject() for x in data_stream_list]
+    # assert that the list from the search is the same as DataSet_getDataStreamList
+    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
+
   # XXX: new test which simulates download / upload of Data Set and increase DS version
