@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFloatFieldFloatingPoint</string> </value>
+            <value> <string>testFloatFieldBrowserValidationMessage</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
