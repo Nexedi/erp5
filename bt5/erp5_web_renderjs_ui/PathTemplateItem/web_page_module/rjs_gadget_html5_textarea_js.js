@@ -30,8 +30,7 @@
           modification_dict.hasOwnProperty('required') ||
           modification_dict.hasOwnProperty('id') ||
           modification_dict.hasOwnProperty('name') ||
-          modification_dict.hasOwnProperty('title') ||
-          modification_dict.hasOwnProperty('hidden')
+          modification_dict.hasOwnProperty('title')
           ) {
 
         if (modification_dict.hasOwnProperty("value")) {
@@ -59,15 +58,16 @@
           textarea.setAttribute('readonly', 'readonly');
         }
 
-        if (this.state.hidden) {
+      }
+
+      if (modification_dict.hasOwnProperty('error_text') ||
+          modification_dict.hasOwnProperty('hidden')) {
+        if (this.state.hidden && !this.state.error_text) {
           textarea.hidden = true;
         } else {
           textarea.hidden = false;
         }
 
-      }
-
-      if (modification_dict.hasOwnProperty('error_text')) {
         if (this.state.error_text &&
             !textarea.classList.contains("is-invalid")) {
           textarea.classList.add("is-invalid");
