@@ -17,6 +17,7 @@
           error_text: field_json.error_text,
           title: field_json.description,
           hidden: field_json.hidden,
+          required: field_json.required,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
