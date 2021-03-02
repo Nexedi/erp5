@@ -34,33 +34,20 @@
 <tr><td>type</td>
     <td>field_my_delivery_ratio</td>
     <td>12.34</td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_delivery_ratio"]//span[text()='Please enter a valid value. The two nearest valid values are 12.3 and 12.4.']</td><td></td></tr>
 <tr><td>fireEvent</td>
-    <td>field_my_quantity</td>
+    <td>field_my_delivery_ratio</td>
     <td>blur</td></tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
-<tr><td>waitForElementPresent</td>
-    <td>//button[text()="Input data has errors."]</td><td></td></tr>
-<tal:block tal:define="notification_configuration python: {'class': 'error',
-                                                           'text': 'Input data has errors.'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="field_my_delivery_ratio" and @class="is-invalid"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="field_my_delivery_ratio" and @class="is-invalid"]</td>
-  <td></td>
-</tr>
+<tr><td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-scope="field_my_delivery_ratio"]//span[text()='Please enter a valid value. The two nearest valid values are 12.3 and 12.4.']</td><td></td></tr>
 <tr>
   <td>fireEvent</td>
   <td>//input[@name="field_my_delivery_ratio" and @class="is-invalid"]</td>
   <td>focus</td>
 </tr>
 <tr><td>assertElementPresent</td>
-    <td>//div[@data-gadget-scope="field_my_delivery_ratio"]//span[text()='The number you input has too large precision.']</td><td></td></tr>
+    <td>//div[@data-gadget-scope="field_my_delivery_ratio"]//span[text()='Please enter a valid value. The two nearest valid values are 12.3 and 12.4.']</td><td></td></tr>
 <tr><td>type</td>
     <td>field_my_delivery_ratio</td>
     <td>20.0</td></tr>

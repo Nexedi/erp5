@@ -36,24 +36,24 @@
   <td>field_my_quantity</td>
   <td>focus</td>
 </tr>
-<tr><td>assertElementNotPresent</td>
-    <td>//input[@name="field_my_quantity" and @class="is-invalid"]</td>
-    <td></td></tr>
-<tr>
 <tr>
   <td>type</td>
   <td>field_my_quantity</td>
-  <td>1.234</td>
+  <td>1.2345</td>
 </tr>
-<tr><td>assertElementPresent</td>
-    <td>//input[@name="field_my_quantity" and @class="is-invalid"]</td>
-    <td></td></tr>
 <tr>
+  <td>fireEvent</td>
+  <td>field_my_quantity</td>
+  <td>input</td>
+</tr>
 <tr>
   <td>assertValue</td>
   <td>field_my_quantity</td>
-  <td>1.234</td>
+  <td>1.2345</td>
 </tr>
+<tr><td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_quantity"]//span[text()='Please enter a valid value. The two nearest valid values are 1.2 and 1.3.']</td><td></td></tr>
+
 </tbody></table>
 </body>
 </html>
