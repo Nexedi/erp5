@@ -50,11 +50,15 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_set_reference=None</string> </value>
+            <value> <string>data_set_uid, limit=[]</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_checkIngestedData</string> </value>
+            <value> <string>ERP5Site_getDataStreamList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
