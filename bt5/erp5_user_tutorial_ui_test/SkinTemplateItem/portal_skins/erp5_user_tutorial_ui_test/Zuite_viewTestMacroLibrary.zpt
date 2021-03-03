@@ -141,6 +141,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
   <!-- login with functional test user -->
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
