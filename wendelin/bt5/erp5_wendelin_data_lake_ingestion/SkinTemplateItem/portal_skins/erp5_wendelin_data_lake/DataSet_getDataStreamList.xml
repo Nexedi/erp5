@@ -50,15 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_set_uid, limit=[]</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>DataSet_getDataStreamList</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
