@@ -228,8 +228,7 @@
               field_gadget = declared_gadget;
             });
 
-          if (field_json && field_json.editable &&
-              gadget.state.options.development_link !== false) {
+          if (field_json && gadget.state.options.development_link !== false) {
             queue
               .push(function () {
                 return gadget.getTranslationList([
