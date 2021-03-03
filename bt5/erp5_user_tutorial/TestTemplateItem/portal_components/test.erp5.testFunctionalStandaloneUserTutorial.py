@@ -37,6 +37,10 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "user_tutorial_zuite"
 
+  def clearCache(self):
+    self.portal.portal_caches.clearAllCache()
+    self.portal.portal_workflow.refreshWorklistCache()
+
   def afterSetUp(self):
     url_list = []
     for x in self.portal.test_page_module.objectValues():
