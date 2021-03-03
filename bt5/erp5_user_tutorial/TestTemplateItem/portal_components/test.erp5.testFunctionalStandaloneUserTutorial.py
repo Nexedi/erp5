@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import random
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
@@ -42,7 +43,52 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       if "user" in x.getId():
         url_list.append("test_page_module/"+x.getId())
     self.remote_code_url_list = url_list
+    # Execute the business configuration if not installed
+    business_configuration = self.getBusinessConfiguration()
+    if (business_configuration.getSimulationState() != 'installed'):
+      self.portal.portal_caches.erp5_site_global_id = '%s' % random.random()
+      self.portal.portal_caches._p_changed = 1
+      self.commit()
+      self.portal.portal_caches.updateCache()
+
+      self.bootstrapSite()
+      self.commit()
+
     ERP5TypeFunctionalTestCase.afterSetUp(self)
+
+  def bootstrapSite(self):
+    self.logMessage('OSOE Development bootstrapSite')
+
+    self.clearCache()
+    self.tic()
+    self.setUpConfiguratorOnce()
+    self.tic()
+
+  def setUpConfiguratorOnce(self):
+    self.commit()
+    self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+       repository_list=self.portal.portal_templates.getRepositoryList())
+    self.commit()
+    self.launchConfigurator()
+
+  def launchConfigurator(self):
+    self.logMessage('OSOE Access Page launchConfigurator')
+    self.login()
+    # Create new Configuration
+    business_configuration  = self.getBusinessConfiguration()
+
+    response_dict = {}
+    while response_dict.get("command", "next") != "install":
+      response_dict = self.portal.portal_configurator._next(
+                            business_configuration, {})
+
+    self.tic()
+    self.portal.portal_configurator.startInstallation(
+                 business_configuration,REQUEST=self.portal.REQUEST)
+
+  def getBusinessConfiguration(self):
+    return self.portal.business_configuration_module[\
+                          "default_standard_configuration"]
 
   def getBusinessTemplateList(self):
     """
