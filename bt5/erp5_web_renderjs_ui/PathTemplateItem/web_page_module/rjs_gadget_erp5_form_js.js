@@ -253,24 +253,22 @@
             for (j = 0; j < dev_element_list.length; j += 1) {
               form_gadget.element.removeChild(dev_element_list[j]);
             }
-            if (form_gadget.state.editable) {
-              if (form_definition.hasOwnProperty("edit_form_href")) {
-                field_href = addDeveloperAction(
-                  "edit-form ui-icon-edit ui-btn-icon-left",
-                  form_definition.edit_form_href,
-                  "Edit this form"
-                );
-                form_gadget.element.insertBefore(field_href, dom_element);
-              }
+            if (form_definition.hasOwnProperty("edit_form_href")) {
+              field_href = addDeveloperAction(
+                "edit-form ui-icon-edit ui-btn-icon-left",
+                form_definition.edit_form_href,
+                "Edit this form"
+              );
+              form_gadget.element.insertBefore(field_href, dom_element);
+            }
 
-              if (form_definition.hasOwnProperty("edit_form_action_href")) {
-                field_href = addDeveloperAction(
-                  "edit-form-action ui-icon-external-link ui-btn-icon-left",
-                  form_definition.edit_form_action_href,
-                  "Edit this form's action"
-                );
-                form_gadget.element.insertBefore(field_href, dom_element);
-              }
+            if (form_definition.hasOwnProperty("edit_form_action_href")) {
+              field_href = addDeveloperAction(
+                "edit-form-action ui-icon-external-link ui-btn-icon-left",
+                form_definition.edit_form_action_href,
+                "Edit this form's action"
+              );
+              form_gadget.element.insertBefore(field_href, dom_element);
             }
           }
         });
