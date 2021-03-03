@@ -43,6 +43,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       if "user" in x.getId():
         url_list.append("test_page_module/"+x.getId())
     self.remote_code_url_list = url_list
+    ERP5TypeFunctionalTestCase.afterSetUp(self)
     # Execute the business configuration if not installed
     business_configuration = self.getBusinessConfiguration()
     if (business_configuration.getSimulationState() != 'installed'):
@@ -54,7 +55,6 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       self.bootstrapSite()
       self.commit()
 
-    ERP5TypeFunctionalTestCase.afterSetUp(self)
 
   def bootstrapSite(self):
     self.logMessage('OSOE Development bootstrapSite')
