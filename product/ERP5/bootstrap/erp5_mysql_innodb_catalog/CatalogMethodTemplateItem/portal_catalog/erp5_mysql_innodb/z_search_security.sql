@@ -1,5 +1,5 @@
 SELECT
-  DISTINCT uid
+  DISTINCT uid, local_roles_group_id
 FROM 
   roles_and_users
 WHERE 

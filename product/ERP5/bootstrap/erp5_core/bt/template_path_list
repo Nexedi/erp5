@@ -80,6 +80,7 @@ portal_categories/elementary_type/string
 portal_categories/elementary_type/tales
 portal_categories/elementary_type/text
 portal_categories/elementary_type/tokens
+portal_categories/local_role_group/agent
 portal_contribution_registry/default_predicate
 portal_domains/base_day_domain
 portal_domains/base_month_domain

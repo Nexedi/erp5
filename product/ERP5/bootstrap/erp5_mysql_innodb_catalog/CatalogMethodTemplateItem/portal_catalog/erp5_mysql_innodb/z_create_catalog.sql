@@ -5,6 +5,7 @@
 CREATE TABLE `catalog` (
   `uid` BIGINT UNSIGNED NOT NULL,
   `security_uid` INT UNSIGNED,
+  `agent_security_uid` INT UNSIGNED,
   `owner` varbinary(255) NOT NULL default '',
   `viewable_owner` varbinary(255) NOT NULL default '',
   `path` varchar(255) NOT NULL default '',
@@ -39,6 +40,7 @@ CREATE TABLE `catalog` (
   `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY  (`uid`),
   KEY `security_uid` (`security_uid`),
+  KEY `agent_security_uid` (`agent_security_uid`),
   KEY `owner` (`owner`),
   KEY `viewable_owner` (`viewable_owner`),
   KEY `Parent` (`parent_uid`),
