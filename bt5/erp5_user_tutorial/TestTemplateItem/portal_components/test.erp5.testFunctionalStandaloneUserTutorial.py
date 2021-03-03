@@ -79,9 +79,18 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     self.logMessage('OSOE Access Page launchConfigurator')
     self.login()
     # Create new Configuration
-    business_configuration  = self.getBusinessConfiguration()
+    # business_configuration  = self.getBusinessConfiguration()
+    # response_dict = {}
+    configurator = self.portal.business_configuration_module.default_standard_configuration
 
-    response_dict = {}
+    # install configurator if not intalled
+    if configurator.getSimulationState() == "draft":
+      try:
+        configurator.buildConfiguration()
+      except Exception as e:
+        error_message = "Error during installation: " + str(e)
+        self.logMessage(error_message)
+      '''
     while response_dict.get("command", "next") != "install":
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
@@ -89,6 +98,9 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     self.tic()
     self.portal.portal_configurator.startInstallation(
                  business_configuration,REQUEST=self.portal.REQUEST)
+                 '''
+    return
+
 
   def getBusinessConfiguration(self):
     return self.portal.business_configuration_module[\
