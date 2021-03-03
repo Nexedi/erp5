@@ -37,6 +37,10 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "user_tutorial_zuite"
 
+  def clearCache(self):
+    self.portal.portal_caches.clearAllCache()
+    self.portal.portal_workflow.refreshWorklistCache()
+
   def afterSetUp(self):
     url_list = []
     for x in self.portal.test_page_module.objectValues():
@@ -76,15 +80,36 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     self.login()
     # Create new Configuration
     business_configuration  = self.getBusinessConfiguration()
-
     response_dict = {}
-    while response_dict.get("command", "next") != "install":
+    '''
+    configurator = self.portal.business_configuration_module.default_standard_configuration
+
+    # install configurator if not intalled
+    if configurator.getSimulationState() == "draft":
+      try:
+        configurator.buildConfiguration()
+      except Exception as e:
+        error_message = "Error during installation: " + str(e)
+        self.logMessage(error_message)
+      '''
+    command = response_dict.get("command", "next")
+    result = []
+    i = 1
+    while command != "install":
+      result.append(command)
+      i += 1
+      if i == 20:
+        raise NotImplementedError(str(response_dict), result)
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
+      command = response_dict.get("command", "next")
+
 
     self.tic()
     self.portal.portal_configurator.startInstallation(
                  business_configuration,REQUEST=self.portal.REQUEST)
+
+
 
   def getBusinessConfiguration(self):
     return self.portal.business_configuration_module[\
