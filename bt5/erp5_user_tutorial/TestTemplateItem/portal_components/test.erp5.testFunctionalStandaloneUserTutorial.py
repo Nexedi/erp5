@@ -79,8 +79,9 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     self.logMessage('OSOE Access Page launchConfigurator')
     self.login()
     # Create new Configuration
-    # business_configuration  = self.getBusinessConfiguration()
-    # response_dict = {}
+    business_configuration  = self.getBusinessConfiguration()
+    response_dict = {}
+    '''
     configurator = self.portal.business_configuration_module.default_standard_configuration
 
     # install configurator if not intalled
@@ -98,8 +99,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     self.tic()
     self.portal.portal_configurator.startInstallation(
                  business_configuration,REQUEST=self.portal.REQUEST)
-                 '''
-    return
+
 
 
   def getBusinessConfiguration(self):
