@@ -99,7 +99,7 @@
       color: true,
       content: true,
       cursor: true,
-      float: true,
+      'float': true,
       'font-style': true,
       'font-weight': true,
       height: true,
