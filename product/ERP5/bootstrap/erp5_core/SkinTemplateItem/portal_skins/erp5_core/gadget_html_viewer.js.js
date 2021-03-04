@@ -92,7 +92,10 @@
       cellspacing: true,
       cellpadding: true,
       border: true,
-      colspan: true
+      colspan: true,
+      rowspan: true,
+      align: true,
+      scope: true
     },
     style_list: {
       background: true,
@@ -116,6 +119,7 @@
       'padding-right': true,
       'padding-top': true,
       'padding-bottom': true,
+      'text-align': true,
       width: true
     },
     link_node_list: {
