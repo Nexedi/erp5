@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>css_class</string>
                 <string>renderjs_extra</string>
                 <string>title</string>
               </list>
@@ -74,6 +75,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>page</string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_text_content</string> </value>

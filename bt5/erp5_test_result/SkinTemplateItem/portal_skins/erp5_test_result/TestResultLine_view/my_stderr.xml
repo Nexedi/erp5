@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>css_class</string>
                 <string>extra</string>
                 <string>renderjs_extra</string>
                 <string>title</string>
@@ -79,6 +80,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>page</string> </value>
+                </item>
                 <item>
                     <key> <string>extra</string> </key>
                     <value> <string>style="width: 100%"</string> </value>
