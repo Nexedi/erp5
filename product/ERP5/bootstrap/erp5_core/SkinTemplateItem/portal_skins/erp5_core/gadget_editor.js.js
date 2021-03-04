@@ -205,13 +205,11 @@
           .push(function (evt) {
             element.querySelector('img').src = evt.target.result;
           });
-      } else if (editor_dict.hasOwnProperty(gadget.state.editor)) {
+      } else {
         code = document.createElement('code');
         code.textContent = gadget.state.value;
         element.querySelector('pre').textContent = '';
         element.querySelector('pre').appendChild(code);
-      } else {
-        element.querySelector('pre').textContent = gadget.state.value;
       }
       return queue;
     })
