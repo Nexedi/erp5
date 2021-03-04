@@ -419,7 +419,9 @@ def getFieldDefault(form, field, key, value=MARKER):
   return value
 
 
-def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
+def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
+                key=None, key_prefix=None, selection_params=None, request_field=True,
+                form_relative_url=None):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -450,9 +452,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
   }
-
-  if preferred_html_style_developer_mode or meta_type == "ListBox":
-    form_relative_url = getFormRelativeUrl(form)
 
   if preferred_html_style_developer_mode:
     result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
@@ -901,7 +900,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       for editable_attribute, _ in field.get_value('editable_attributes')]
     result.update({
       'data': field.render(key=key, value=value, REQUEST=REQUEST, render_format='list'),
-      'template_field_dict': {template_field: renderField(traversed_document, getattr(form, template_field), form)
+      'template_field_dict': {template_field: renderField(traversed_document,
+                                                          getattr(form, template_field),
+                                                          form,
+                                                          form_relative_url=form_relative_url)
         for template_field in template_field_names
         if template_field in form},
     })
@@ -912,7 +914,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   return result
 
 
-def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, extra_param_json=None):
+def renderForm(traversed_document, form, response_dict, key_prefix=None,
+               selection_params=None, extra_param_json=None,
+               form_relative_url=None):
   """
   Render a `form` in plain python dict.
 
@@ -990,8 +994,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     "title": ensureUTF8(traversed_document.getTranslatedTitle())
   }
 
-  form_relative_url = getFormRelativeUrl(form)
-
   # Kept for compatibility
   response_dict['_links']['form_definition'] = {
     "href": default_document_uri_template % {
@@ -1068,7 +1070,10 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, request_field=not use_relation_form_page_template)
+        response_dict[field.id] = renderField(traversed_document, field, form,
+                                              key_prefix=key_prefix, selection_params=selection_params,
+                                              request_field=not use_relation_form_page_template,
+                                              form_relative_url=form_relative_url)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
@@ -1181,7 +1186,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
                  report_form,
                  report_result,
                  key_prefix=report_prefix,
-                 selection_params=report_form_params)  # used to be only report_item.selection_params
+                 selection_params=report_form_params, # used to be only report_item.selection_params
+                 form_relative_url=getFormRelativeUrl(report_form))
       # Report Title is important since there are more section on report page
       # but often they render the same form with different data so we need to
       # distinguish by the title at least.
@@ -1195,7 +1201,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       REQUEST.set(key, value)
 
 
-def renderFormDefinition(form, response_dict):
+def renderFormDefinition(form, response_dict,
+                         form_relative_url):
   """Form "definition" is configurable in Zope admin: Form -> Order.
 
   We add some known constants inside Forms such as form_id and into
@@ -1236,7 +1243,6 @@ def renderFormDefinition(form, response_dict):
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
   if preferred_html_style_developer_mode:
-    form_relative_url = getFormRelativeUrl(form)
     response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
     response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
       site_root.getId(),
@@ -1385,12 +1391,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       REQUEST.set(k, v)
       REQUEST.form[k] = v
 
+    traversed_document_portal_type = traversed_document.getPortalType()
     # Add a link to the portal type if possible
     if not is_portal:
       # traversed_document should always have its Portal Type in ERP5 Portal Types
       # thus attached actions to it so it is viewable
-      document_type_name = traversed_document.getPortalType()
-      document_type = getattr(portal.portal_types, document_type_name, None)
+      document_type = getattr(portal.portal_types, traversed_document_portal_type, None)
       if document_type is not None:
         result_dict['_links']['type'] = {
           "href": default_document_uri_template % {
@@ -1398,7 +1404,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "relative_url": document_type.getRelativeUrl(),
             "script_id": script.id
           },
-          "name": Base_translateString(traversed_document.getPortalType())
+          "name": Base_translateString(traversed_document_portal_type)
         }
 
     # Return info about container
@@ -1473,7 +1479,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # thus we send extra_param_json (=rjs way of passing parameters to REQUEST) as
         # selection_params so they get into callable's **kw.
         renderForm(view_context, view_instance, embedded_dict,
-                   selection_params=extra_param_json, extra_param_json=extra_param_json)
+                   selection_params=extra_param_json,
+                   extra_param_json=extra_param_json,
+                   form_relative_url=getFormRelativeUrl(view_instance))
 
         if view_instance.pt in ["form_python_action", "form_jump"]:
           for k, v in current_action['params'].items():
@@ -1621,9 +1629,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
   
     else:
-      traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
-        renderFormDefinition(traversed_document, result_dict)
+        form_relative_url = getFormRelativeUrl(traversed_document)
+        renderFormDefinition(traversed_document, result_dict, form_relative_url)
         if response is not None:
           response.setHeader("Cache-Control", "private, max-age=1800")
           response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
