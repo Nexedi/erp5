@@ -126,7 +126,6 @@ div[data-gadget-url$="gadget_html_viewer.html"] table {
   display: table;
   border-spacing: 2px;
   border: 1px solid #1F1F1F;
-  width: 100%;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] thead {
   display: table-header-group;

@@ -141,7 +141,6 @@ table {
     display: table;
     border-spacing: 2px;
     border: 1px solid @colorforeground;
-    width: 100%;
 }
 thead {
     display: table-header-group;
