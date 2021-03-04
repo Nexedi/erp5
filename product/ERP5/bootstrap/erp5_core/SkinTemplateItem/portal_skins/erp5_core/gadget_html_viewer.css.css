@@ -160,6 +160,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] th {
   display: table-cell;
   vertical-align: inherit;
   padding: 0 6pt;
+  border: 1px solid #1F1F1F;
 }
 div[data-gadget-url$="gadget_html_viewer.html"] th {
   font-weight: bold;
