@@ -1915,6 +1915,19 @@ div[data-gadget-scope='erp5_searchfield'] {
 }
 
 /**********************************************
+* Radio field
+**********************************************/
+div[data-gadget-url$="gadget_erp5_field_radio.html"] {
+  label {
+    // Ensure the label width do not use 100%
+    // in case of display block
+    // as user may by mistake change the value
+    // when clicking on a blanck area
+    display: inline;
+  }
+}
+
+/**********************************************
 * Notification
 **********************************************/
 div[data-gadget-scope='notification'] {
