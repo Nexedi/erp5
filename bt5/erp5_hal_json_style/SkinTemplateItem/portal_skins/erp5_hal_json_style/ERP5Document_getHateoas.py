@@ -419,7 +419,9 @@ def getFieldDefault(form, field, key, value=MARKER):
   return value
 
 
-def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
+def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
+                key=None, key_prefix=None, selection_params=None,
+                request_field=True, form_relative_url=None):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -450,9 +452,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
   }
-
-  if preferred_html_style_developer_mode or meta_type == "ListBox":
-    form_relative_url = getFormRelativeUrl(form)
 
   if preferred_html_style_developer_mode:
     result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
@@ -901,7 +900,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       for editable_attribute, _ in field.get_value('editable_attributes')]
     result.update({
       'data': field.render(key=key, value=value, REQUEST=REQUEST, render_format='list'),
-      'template_field_dict': {template_field: renderField(traversed_document, getattr(form, template_field), form)
+      'template_field_dict': {template_field: renderField(traversed_document,
+                                                          getattr(form, template_field),
+                                                          form,
+                                                          form_relative_url=form_relative_url)
         for template_field in template_field_names
         if template_field in form},
     })
@@ -1068,7 +1070,10 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, request_field=not use_relation_form_page_template)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix,
+                                              selection_params=selection_params,
+                                              request_field=not use_relation_form_page_template,
+                                              form_relative_url=form_relative_url)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
