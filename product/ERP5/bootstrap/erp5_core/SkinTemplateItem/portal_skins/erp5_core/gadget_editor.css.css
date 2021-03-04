@@ -1,0 +1,4 @@
+div[data-gadget-url$="gadget_editor.html"] > textarea,
+div[data-gadget-url$="gadget_editor.html"] > pre code {
+  font-family: "Courier New", Courier, monospace;
+}
