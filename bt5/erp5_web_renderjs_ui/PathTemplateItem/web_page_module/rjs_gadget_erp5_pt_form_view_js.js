@@ -97,14 +97,14 @@
 
           for (key in embedded_form) {
             if (embedded_form.hasOwnProperty(key) && key[0] !== "_") {
-              if (!gadget.state.editable) {
-                for (j = 0; j < parameter_list.length; j += 1) {
-                  if (embedded_form[key].hasOwnProperty(parameter_list[j])) {
-                    delete embedded_form[key][parameter_list[j]];
+              if (isNonEmptyNonEditableField(embedded_form[key])) {
+                if (!gadget.state.editable) {
+                  for (j = 0; j < parameter_list.length; j += 1) {
+                    if (embedded_form[key].hasOwnProperty(parameter_list[j])) {
+                      delete embedded_form[key][parameter_list[j]];
+                    }
                   }
                 }
-              }
-              if (isNonEmptyNonEditableField(embedded_form[key])) {
                 rendered_form[key] = embedded_form[key];
               }
             }
