@@ -7,4 +7,6 @@ data_product_module
 data_set_module
 data_stream_module
 data_supply_module
+knowledge_pad_module
+notebook_module
 person_module
