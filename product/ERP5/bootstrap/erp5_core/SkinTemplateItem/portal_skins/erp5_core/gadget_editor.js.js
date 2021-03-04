@@ -72,6 +72,11 @@
         state_dict.editor = 'html_viewer';
         state_dict.maximize = undefined;
       }
+
+      if (!editor_dict.hasOwnProperty(state_dict.editor)) {
+        // Do not show the maximize button when not embedding a subgadget
+        state_dict.maximize = undefined;
+      }
       return this.changeState(state_dict);
     })
 
