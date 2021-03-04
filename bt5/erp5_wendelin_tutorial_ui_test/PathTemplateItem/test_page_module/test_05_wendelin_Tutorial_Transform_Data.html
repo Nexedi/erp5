@@ -266,6 +266,16 @@
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </test>
@@ -535,6 +545,11 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
+        <td>//a[text()="IngestionPolicy_parseSimpleIngestionTag"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
         <td>//a[@data-i18n="Add"]</td>
         <td></td>
       </tr>
@@ -563,7 +578,6 @@
         <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
-      
       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_title"]</td>
@@ -575,6 +589,11 @@
         <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
       </tr>
       <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_reference"]</td>
         <td></td>
@@ -584,7 +603,12 @@
         <td>//input[@id="field_my_reference"]</td>
         <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
       </tr>
-            <tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
         <td>click</td>
         <td>//button[@type="submit" and @data-i18n="Save"]</td>
         <td></td>
@@ -600,6 +624,68 @@
         <td></td>
       </tr>
       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='DataAnalysisLine_convertEnvironmentDataStreamToArray']</td>
+        <td></td>
+      </tr>
+      <td>click</td>
+        <td>//a[text()='DataAnalysisLine_convertEnvironmentDataStreamToArray']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Python Script: DataAnalysisLine_convertEnvironmentDataStreamToArray"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_reference"]</td>
+        <td></td>
+      </tr>
+      
+
+      
+      <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_id"]</td>
         <td></td>
@@ -608,6 +694,26 @@
         <td>type</td>
         <td>//input[@id="field_my_id"]</td>
         <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
       </tr>
       <tr>
         <td>click</td>
@@ -739,8 +845,10 @@ if end &lt; in_data_stream.getSize():
       <tr>
         <td>type</td>
         <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
-        <!--<td>//pre[@class=" CodeMirror-line " and @role="presentation"]</td>-->
-        <td>import pandas as pd
+        <!--td>//pre[@class=" CodeMirror-line " and @role="presentation"]</td-->
+        <td>
+<pre>
+import pandas as pd
 
 progress_indicator = in_stream[&quot;Progress Indicator&quot;]
 in_data_stream = in_stream[&quot;Data Stream&quot;]
@@ -755,7 +863,7 @@ f = in_data_stream.extractDateTime
 df = pd.DataFrame((dict(**o[1]) for o in unpacked), dtype=&quot;float64&quot;, index=(f(o[0]) for o in unpacked))
 
 if df.shape[0] == 0:
-&nbsp; return
+  return
 
 df.index.name=&quot;date&quot;
 
@@ -763,17 +871,18 @@ ndarray = df.to_records(convert_datetime64=False)
 
 zbigarray = out_data_array.getArray()
 if zbigarray is None:
-&nbsp; zbigarray = out_data_array.initArray(shape=(0,), dtype=ndarray.dtype.fields)
+  zbigarray = out_data_array.initArray(shape=(0,), dtype=ndarray.dtype.fields)
 
 zbigarray.append(ndarray)
 
 if end &gt; start:
-&nbsp; progress_indicator.setIntOffsetIndex(end)
+  progress_indicator.setIntOffsetIndex(end)
 
 # tell caller to create new activity after processing if we did not reach end of stream
 if end &lt; in_data_stream.getSize():
-&nbsp; return 1
-        </td>
+  return 1
+</pre>
+</td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
@@ -1546,6 +1655,20 @@ if end &lt; in_data_stream.getSize():
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
       </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
+        <td></td>
+      </tr>
+      
+      
     </tbody>
   </table>
 </test>
@@ -1589,9 +1712,60 @@ if end &lt; in_data_stream.getSize():
         <td>//a[contains(@href,'page=front')]</td>
         <td></td>
       </tr>
+     <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
+        <td></td>
+      </tr>
       <tr>
-        <td>pause</td>
-        <td>350000</td>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+        </tr>
+     <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=front')]</td>
         <td></td>
       </tr>
       <tr>
@@ -1657,6 +1831,32 @@ if end &lt; in_data_stream.getSize():
 <test>
   <table style="display: none;" class="test">
     <tbody>
+
+     <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//a[contains(@href,'page=front')]</td>
@@ -1667,6 +1867,7 @@ if end &lt; in_data_stream.getSize():
         <td>//a[contains(@href,'page=front')]</td>
         <td></td>
       </tr>
+
       <tr>
         <td>waitForElementPresent</td>
         <td>//a[contains(@href,'data_array_module')]</td>
@@ -1690,11 +1891,6 @@ if end &lt; in_data_stream.getSize():
       <tr>
         <td>click</td>
         <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>350000</td>
         <td></td>
       </tr>
       <tr>

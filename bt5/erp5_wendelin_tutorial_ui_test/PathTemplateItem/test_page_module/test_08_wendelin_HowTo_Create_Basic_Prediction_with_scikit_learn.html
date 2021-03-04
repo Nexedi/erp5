@@ -2,29 +2,123 @@
 <test>
   <table style="display: none;" class="test">
     <tbody>
-      <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
+     <tr>
         <td>store</td>
         <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
         <td>base_url_x</td>
       </tr>
       <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_setUpPersonTest</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyTextPresent</td>
-        <td></td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-      </tr>
+       <td>openAndWait</td>
+       <td>${base_url}/Zuite_createFunctionalTestUserForTutorial</td>
+       <td></td>
+     </tr>
+     <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Base_clearCache</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Cleared.</td>
+      <td></td>
+    </tr>
+    <!-- login with functional test user -->
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/logout</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/login_form</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_name"]</td>
+      <td>functional_test_tutorial_username</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_password"]</td>
+      <td>secret</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//input[@name="logged_in:method"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/view</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>functional_test_tutorial_username</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Base_clearCache</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Cleared.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_updateUserPreference</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Init Ok.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/view</td>
+      <td></td>
+    </tr>
+   <tr>
+   <td>openAndWait</td>
+   <td>${base_url}/Zuite_updateUserPreferenceForTutorialTests</td>
+   <td></td>
+  </tr>
+  <tr>
+      <td>assertTextPresent</td>
+      <td>Init Ok.</td>
+      <td></td>
+    </tr>
+
     </tbody>
   </table>
 </test>
@@ -240,6 +334,17 @@
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </test>
@@ -289,6 +394,16 @@
 <test>
   <table style="display: none;" class="test">
     <tbody>
+    <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=front')]</td>
+        <td></td>
+      </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//a[@accesskey='m']</td>
@@ -403,6 +518,17 @@
       <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
         <td></td>
       </tr>
     </tbody>
@@ -548,6 +674,11 @@ else:
       </tr>
       <tr>
         <td>waitForElementPresent</td>
+        <td>//a[text()="IngestionPolicy_parseSimpleIngestionTag"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
         <td>//a[@data-i18n="Add"]</td>
         <td></td>
       </tr>
@@ -577,7 +708,112 @@ else:
         <td></td>
       </tr>
       
+      
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td></td>
+      </tr>
       <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_title"]</td>
+        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//input[@id="field_my_reference"]</td>
+        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      </tr>
+      
+      
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[contains(@href,'page=portal_callables')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='DataAnalysisLine_predictPressureFromHumidity']</td>
+        <td></td>
+      </tr>
+      <td>click</td>
+        <td>//a[text()='DataAnalysisLine_predictPressureFromHumidity']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Python Script: DataAnalysisLine_predictPressureFromHumidity"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_reference"]</td>
+        <td></td>
+      </tr>
+      
+      
+      
+       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_id"]</td>
         <td></td>
@@ -587,16 +823,45 @@ else:
         <td>//input[@id="field_my_id"]</td>
         <td>DataAnalysisLine_predictPressureFromHumidity</td>
       </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+      
+      
+       <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
       </tr>
       <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>DataAnalysisLine_predictPressureFromHumidity</td>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
       </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@type="submit" and @data-i18n="Save"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@type="submit" and @class="success"]</td>
+        <td></td>
+      </tr>
+      
+      
       <tr>
         <td>type</td>
         <td>//input[@id="field_my_parameter_signature"]</td>
@@ -625,7 +890,9 @@ else:
       <tr>
         <td>type</td>
         <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
-        <td>import numpy as np
+        <td>
+<pre>
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -676,6 +943,7 @@ else:
 &nbsp; array_len = &nbsp;len(ndarray)
 &nbsp; if start_index &lt; array_len:
 &nbsp; &nbsp; zbigarray.append(ndarray[start_index:])
+</pre>
         </td>
       </tr>
       <tr>
@@ -1558,6 +1826,17 @@ else:
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//label[@for="field_my_translated_validation_state_title"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Validated</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </test>
@@ -1582,23 +1861,63 @@ else:
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td>pause</td>
-        <td>3000</td>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
         <td></td>
       </tr>
       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+     <tr>
         <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
+        <td>//a[@accesskey="m"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
+        <td>//a[@accesskey="m"]</td>
         <td></td>
       </tr>
-      <tr>
+       <tr>
         <td>pause</td>
-        <td>350000</td>
+        <td>3000</td>
         <td></td>
       </tr>
       <tr>
@@ -1614,11 +1933,6 @@ else:
       <tr>
         <td>pause</td>
         <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
         <td></td>
       </tr>
       <tr>
@@ -1670,23 +1984,43 @@ else:
   <table style="display: none;" class="test">
     <tbody>
       <tr>
-        <td>pause</td>
-        <td>3000</td>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+        <td></td>
+      </tr>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
         <td></td>
       </tr>
       <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td></td>
+      </tr>
+     <tr>
         <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
+        <td>//a[@accesskey="m"]</td>
         <td></td>
       </tr>
       <tr>
         <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
+        <td>//a[@accesskey="m"]</td>
         <td></td>
       </tr>
-      <tr>
+       <tr>
         <td>pause</td>
-        <td>350000</td>
+        <td>3000</td>
         <td></td>
       </tr>
       <tr>
@@ -1702,11 +2036,6 @@ else:
       <tr>
         <td>pause</td>
         <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
         <td></td>
       </tr>
       <tr>
@@ -1719,26 +2048,6 @@ else:
         <td>None</td>
         <td></td>
       </tr>
-      <!--<tr>
-        <td>click</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[2]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>200000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'preview')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'preview')]</td>
-        <td></td>
-      </tr>-->
     </tbody>
   </table>
 </test>
@@ -2011,6 +2320,31 @@ function getPredictionData(start_date, stop_date){
 <test>
   <table style="display: none;" class="test">
     <tbody>
+     <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Edit']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Edit']</td>
+        <td></td>
+      </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_title"]</td>
@@ -2023,13 +2357,14 @@ function getPredictionData(start_date, stop_date){
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
         <td></td>
       </tr>
       <tr>
         <td>type</td>
-        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
         <td>
+<pre>
 %% md
 # Prediction
 &lt;div class=&quot;prediction_plot_div&quot; id=&quot;prediction_plot_div&quot;/&gt;
@@ -2153,6 +2488,7 @@ function getPredictionData(start_date, stop_date){
 &nbsp; &nbsp; &nbsp; return data
 &nbsp; &nbsp; });
 }
+</pre>
         </td>
       </tr>
       <tr>
@@ -2177,7 +2513,7 @@ function getPredictionData(start_date, stop_date){
       </tr>
       <tr>
         <td>click</td>
-        <td>//input[@id="editable" and @type="checkbox"]</td>
+        <td>//a[text()="View"]</td>
         <td></td>
       </tr>
       <tr>
