@@ -2,29 +2,123 @@
 <test>
   <table style="display: none;" class="test">
     <tbody>
-      <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
+       <tr>
         <td>store</td>
         <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
         <td>base_url_x</td>
       </tr>
       <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_setUpPersonTest</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyTextPresent</td>
-        <td></td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-      </tr>
+       <td>openAndWait</td>
+       <td>${base_url}/Zuite_createFunctionalTestUserForTutorial</td>
+       <td></td>
+     </tr>
+     <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Base_clearCache</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Cleared.</td>
+      <td></td>
+    </tr>
+    <!-- login with functional test user -->
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/logout</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/login_form</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_name"]</td>
+      <td>functional_test_tutorial_username</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_password"]</td>
+      <td>secret</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//input[@name="logged_in:method"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/view</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>functional_test_tutorial_username</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Base_clearCache</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Cleared.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/Zuite_updateUserPreference</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Init Ok.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/view</td>
+      <td></td>
+    </tr>
+   <tr>
+   <td>openAndWait</td>
+   <td>${base_url}/Zuite_updateUserPreferenceForTutorialTests</td>
+   <td></td>
+  </tr>
+  <tr>
+      <td>assertTextPresent</td>
+      <td>Init Ok.</td>
+      <td></td>
+    </tr>
+
     </tbody>
   </table>
 </test>
@@ -388,12 +482,39 @@ plot();</code>
         <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//input[@id="editable"]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[text()='Edit']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[text()='Edit']</td>
+        <td></td>
+      </tr>
       
       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_title"]</td>
         <td></td>
       </tr>
+      
       <tr>
         <td>type</td>
         <td>//input[@id="field_my_title"]</td>
@@ -401,13 +522,15 @@ plot();</code>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
         <td></td>
       </tr>
       <tr>
         <td>type</td>
-        <td>//div[contains(@class,'CodeMirror')]//div//textarea</td>
-        <td>%% md
+        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
+        <td>
+<pre>
+%% md
 # Time Series
 &lt;div class=&quot;plot_div&quot; id=&quot;plot_div&quot;/&gt;
 
@@ -610,6 +733,7 @@ function plot () {
 &nbsp; &nbsp; });
 }
 plot();
+</pre>
         </td>
       </tr>
       <tr>
@@ -634,7 +758,7 @@ plot();
       </tr>
       <tr>
         <td>click</td>
-        <td>//input[@id="editable" and @type="checkbox"]</td>
+        <td>//a[text()="View"]</td>
         <td></td>
       </tr>
       <tr>

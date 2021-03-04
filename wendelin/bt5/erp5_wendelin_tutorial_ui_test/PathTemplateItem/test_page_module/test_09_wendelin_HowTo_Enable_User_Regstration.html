@@ -1,29 +1,4 @@
 <section>
-<!--<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_setUpPersonTest</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyTextPresent</td>
-        <td>Init Ok</td>
-        <td></td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-      </tr>
-    </tbody>
-  </table>
-</test>-->
 <h1>Agenda</h1>
 
 <ul>
@@ -73,15 +48,43 @@
   <table style="display: none;" class="test">
     <tbody>
       <tr>
+        <td>store</td>
+        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+        <td>base_url_x</td>
+      </tr>
+      <tr>
         <td>openAndWait</td>
-        <td>${base_url}/logout</td>
+        <td>${base_url_x}/logout</td>
         <td></td>
       </tr>
       <tr>
         <td>openAndWait</td>
-        <td>${base_url}/erp5/web_site_module/default_wendelin_data_lake/#/?page=register</td>
+        <td>${base_url_x}/web_site_module/default_wendelin_data_lake/</td>
         <td></td>
       </tr>
+      <tr>
+        <td>pause</td>
+        <td>3000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n="Register"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Wendelin Data Lake Sharing Platform</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n="Register"]</td>
+        <td></td>
+      </tr>
+      
+      
       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@name="your_first_name"]</td>
@@ -133,47 +136,50 @@
         <td></td>
       </tr>
 
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/login_form</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@name="__ac_name"]</td>
-        <td>functional_test_username</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@name="__ac_password"]</td>
-        <td>secret</td>
-      </tr>
-      <tr>
-        <td>clickAndWait</td>
-        <td>//input[@name="logged_in:method"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/erp5/view</td>
-        <td></td>
-      </tr>
+    <!--tr>
+      <td>openAndWait</td>
+      <td>${base_url_x}/login_form</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_name"]</td>
+      <td>functional_test_tutorial_username</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="__ac_password"]</td>
+      <td>secret</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//input[@name="logged_in:method"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url_x}/view</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>functional_test_tutorial_username</td>
+      <td></td>
+    </tr>
 
-      <tr>
-        <td>pause</td>
-        <td>20000</td>
-        <td></td>
-      </tr>
-      <tr>
+     
+     <tr>
         <td>openAndWait</td>
-        <td>${base_url}/erp5/portal_activities/</td>
+        <td>${base_url_x}/Zuite_callHandleAnalysisAlarm</td>
         <td></td>
       </tr>
-      <tr>
-        <td>click</td>
-        <td>//table//tbody//tr[1]//td[2]//a</td>
+       <tr>
+        <td>assertTextPresent</td>
+        <td>Alarm Called.</td>
         <td></td>
       </tr>
+      
+     
       <tr>
         <td>pause</td>
         <td>2000</td>
@@ -182,7 +188,7 @@
       
       <tr>
         <td>openAndWait</td>
-        <td>${base_url}/erp5/event_module/</td>
+        <td>${base_url_x}/event_module/</td>
         <td></td>
       </tr>
       <tr>
@@ -227,7 +233,7 @@
       </tr>
       <tr>
         <td>openAndWait</td>
-        <td>${base_url}/erp5/portal_activities/</td>
+        <td>${base_url_x}/portal_activities/</td>
         <td></td>
       </tr>
       <tr>
@@ -243,12 +249,12 @@
 
       <tr>
         <td>openAndWait</td>
-        <td>${base_url}/logout</td>
+        <td>${base_url_x}/logout</td>
         <td></td>
       </tr>
       <tr>
         <td>openAndWait</td>
-        <td>${base_url}/login_form</td>
+        <td>${base_url_x}/login_form</td>
         <td></td>
       </tr>
       <tr>
@@ -273,14 +279,14 @@
       </tr>
       <tr>
         <td>openAndWait</td>
-        <td>${base_url}/erp5/view</td>
+        <td>${base_url_x}/view</td>
         <td></td>
       </tr>
       <tr>
         <td>assertTextPresent</td>
         <td>TestReference</td>
         <td></td>
-      </tr>
+      </tr-->
     </tbody>
   </table>
 </test>
