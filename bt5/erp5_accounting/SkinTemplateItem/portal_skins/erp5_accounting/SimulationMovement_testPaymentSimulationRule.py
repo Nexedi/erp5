@@ -7,6 +7,9 @@ if parent.getPortalType() != 'Applied Rule':
 if parent.getSpecialiseReference() != 'default_invoice_transaction_rule':
   return False
 
+if parent.getParentValue().getDestination() != 'person_module/100':
+  return False
+
 # XXX hardcoded
 receivable_account_type_list = ('asset/receivable',)
 payable_account_type_list = ('liability/payable',)
