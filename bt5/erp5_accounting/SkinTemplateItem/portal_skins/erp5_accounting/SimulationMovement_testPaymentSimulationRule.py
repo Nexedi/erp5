@@ -7,7 +7,8 @@ if parent.getPortalType() != 'Applied Rule':
 if parent.getSpecialiseReference() != 'default_invoice_transaction_rule':
   return False
 
-if parent.getParentValue().getDestination() != 'person_module/100':
+# For shop sale
+if 'business_process_module/5/accounting_credit_path' in movement.getCausalityList() and parent.getParentValue().getDestination() != 'person_module/100':
   return False
 
 # XXX hardcoded
