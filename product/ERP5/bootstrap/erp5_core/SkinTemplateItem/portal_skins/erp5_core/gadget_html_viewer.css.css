@@ -191,3 +191,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] dl dd,
 div[data-gadget-url$="gadget_html_viewer.html"] dl dl {
   grid-column-start: 2;
 }
+*[align="center"] {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+}

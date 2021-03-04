@@ -213,3 +213,8 @@ caption {
 
 
 }
+
+*[align="center"] {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+}
