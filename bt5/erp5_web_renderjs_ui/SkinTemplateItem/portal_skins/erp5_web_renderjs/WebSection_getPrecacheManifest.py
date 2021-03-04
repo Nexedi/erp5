@@ -153,6 +153,7 @@ url_list = [
   'gadget_translation_data.js',
   'gadget_editor.html',
   'gadget_editor.js',
+  'gadget_editor.css',
   'gadget_html_viewer.html',
   'gadget_html_viewer.js',
   'gadget_html_viewer.css',
