@@ -95,7 +95,8 @@
       colspan: true,
       rowspan: true,
       align: true,
-      scope: true
+      scope: true,
+      summary: true
     },
     style_list: {
       background: true,
