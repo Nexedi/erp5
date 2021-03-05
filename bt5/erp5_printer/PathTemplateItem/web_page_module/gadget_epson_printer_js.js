@@ -38,6 +38,7 @@
         ];
       gadget.state.jio_key = options.jio_key;
       gadget.state.printer_url = options.printer_url;
+      gadget.state.redirect_form_id = options.redirect_form_id;
       return new RSVP.Queue()
        .push(function (hateoas_url) {
           return RSVP.all([
@@ -93,7 +94,7 @@
        gadget = this;
       return gadget.submitContent(
         gadget.state.jio_key,
-        gadget.state.hateoas_url + gadget.state.jio_key + "/" + method,
+        gadget.state.hateoas_url + gadget.state.jio_key + "/" + method + "?redirect_form_id=" + gadget.state.redirect_form_id,
         {})
         .push(function (result) {
           return gadget.redirect({

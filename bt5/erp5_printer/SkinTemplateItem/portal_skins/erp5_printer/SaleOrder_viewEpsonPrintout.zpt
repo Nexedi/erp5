@@ -4,6 +4,7 @@
                   portal_url here/portal_url;
                   reservation python: request.get('reservation_only');
                   form_id python: request.get('form_id');
+                  redirect_form_id python: request.get('redirect_form_id', '');
                   set_precision python: request.set('precision', here.getQuantityPrecisionFromResource(here.getPriceCurrency()));
                   quantity_renderer nocall:here/Base_viewTradeFieldLibrary_printer_custom/my_view_mode_quantity/render_pdf;
                   price_renderer nocall:here/Base_viewTradeFieldLibrary_printer_custom/my_view_mode_total_price/render_pdf;
@@ -310,14 +311,14 @@
             $('#print_button').click();
          })
       </script>
-      <a tal:condition="python: not reservation" href="./SaleOrder_confirmAndReturn"> 
+      <a tal:condition="python: not reservation" tal:attributes="href python:'./SaleOrder_confirmAndReturn?redirect_form_id=%s' % redirect_form_id" >
          <span i18n:translate='' i18n:domain='ui'>Confirm Order and Return </span>
       </a>
       <a tal:condition="reservation" href="./SaleOrderModule_viewReservedItemFastInputDialog"> 
          <span i18n:translate='' i18n:domain='ui'>Return</span>
       </a>
       <div style="float:right">
-        <a  tal:attributes="href python:'./SaleOrder_cancelAndReturn?reservation=%s' % reservation">
+        <a  tal:attributes="href python:'./SaleOrder_cancelAndReturn?reservation=%s&redirect_form_id=%s' % (reservation, redirect_form_id)">
           <span i18n:translate='' i18n:domain='ui'>Cancel Order and Return</span>
         </a>
         <br/>
