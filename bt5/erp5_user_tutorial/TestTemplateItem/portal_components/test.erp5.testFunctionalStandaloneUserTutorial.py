@@ -92,6 +92,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         error_message = "Error during installation: " + str(e)
         self.logMessage(error_message)
       '''
+    raise NotImplementedError(str(response_dict))
     while response_dict.get("command", "next") != "install":
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
