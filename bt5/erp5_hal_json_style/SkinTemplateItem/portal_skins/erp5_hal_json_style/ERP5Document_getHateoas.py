@@ -49,6 +49,7 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 
 from ZTUtils import make_query
 import json
+import urllib
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
@@ -459,18 +460,18 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
   if preferred_html_style_translator_mode:
     erp5_ui = portal.Localizer.erp5_ui
     selected_language = erp5_ui.get_selected_language()
-    result["translate_title_href"] = '%s/manage_messages?regex=^%s$&lang=%s' % (
+    result["translate_title_href"] = '%s/manage_messages?%s' % (
       '/'.join(erp5_ui.getPhysicalPath()),
-      field.title(),
-      selected_language
+      urllib.urlencode({"regex": "^%s$" % field.title(),
+                        "lang": selected_language})
     )
 
     field_description = field.Field_getDescription()
     if field_description:
-      result["translate_description_href"] = '%s/manage_messages?regex=^%s$&lang=%s' % (
+      result["translate_description_href"] = '%s/manage_messages?%s' % (
         '/'.join(erp5_ui.getPhysicalPath()),
-        field_description,
-        selected_language
+        urllib.urlencode({"regex": "^%s$" % field_description,
+                          "lang": selected_language})
       )
 
   if "Field" in meta_type:
