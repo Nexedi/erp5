@@ -105,12 +105,22 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         raise NotImplementedError(form())
         break
       previous_title = title
+
       if "field_" in command:
         raise NotImplementedError(title)
-
+      kw = {}
+      if title == "Configure Organisation":
+        kw = {'field_your_title': 'SpaceZ',
+              'field_your_default_email_text': 'john@spacez.com',
+              'field_your_default_telephone_text': '0123456789',
+              'field_your_default_address_street_address': 'Rue de JeanBart',
+              'field_your_default_address_zip_code': '59000',
+              'field_your_default_address_city': 'Lille',
+              'field_your_default_address_region': 'France',
+             }
 
       response_dict = self.portal.portal_configurator._next(
-                            business_configuration, {})
+                            business_configuration, kw)
       command_list.append(command)
       title = response_dict.get("command", "next")
     

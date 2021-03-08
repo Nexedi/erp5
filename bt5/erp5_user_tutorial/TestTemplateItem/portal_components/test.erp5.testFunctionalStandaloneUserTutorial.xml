@@ -51,7 +51,7 @@
             <value>
               <tuple>
                 <string>W:106,  8: Unreachable code (unreachable)</string>
-                <string>W:120,  4: Unreachable code (unreachable)</string>
+                <string>W:130,  4: Unreachable code (unreachable)</string>
               </tuple>
             </value>
         </item>
