@@ -36,6 +36,44 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
 class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "user_tutorial_zuite"
+  configuration_info = {
+    "Configure Organisation": {
+      'field_your_title': 'SpaceZ',
+      'field_your_default_email_text': 'john@spacez.com',
+      'field_your_default_telephone_text': '0123456789',
+      'field_your_default_address_street_address': 'Rue de JeanBart',
+      'field_your_default_address_zip_code': '59000',
+      'field_your_default_address_city': 'Lille',
+      'field_your_default_address_region': 'europe/western_europe/france',
+    },
+    "Configure user accounts number": {
+      'field_your_company_employees_number': "1",
+    },
+    "Configure user accounts": {
+      'field_your_first_name': "John",
+      'field_your_last_name': "Doe",
+      'field_your_reference': "user",
+      'field_your_password': "1234",
+      'field_your_password_confirm': "1234",
+      'field_your_default_email_text': "abc@nexedi.com",
+      'field_your_function': "project/developer" ,
+    },
+    "Configure accounting": {
+      'field_your_period_title': "2021",
+      'subfield_field_your_period_start_date_year': "2021",
+      'subfield_field_your_period_start_date_month': "01",
+      'subfield_field_your_period_start_date_day': "01",
+      'subfield_field_your_period_stop_date_year': "2021",
+      'subfield_field_your_period_stop_date_month': "12",
+      'subfield_field_your_period_stop_date_day': "31",
+      'field_your_accounting_plan': "fr",
+    },
+    "Configure ERP5 Preferences": {
+      'field_your_lang': "erp5_l10n_fr",
+      'field_your_price_currency': "EUR;0.01;Euro",
+      'field_your_preferred_date_order': "dmy",
+    }
+  }
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
@@ -81,29 +119,20 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     # Create new Configuration
     business_configuration  = self.getBusinessConfiguration()
     response_dict = {}
-    '''
-    configurator = self.portal.business_configuration_module.default_standard_configuration
+    previous_title = None
+    while response_dict.get("command", "next") != "install":
+      title = response_dict.get("next", "")
+      if title == previous_title:
+        # should be False, None, True
+        transition = business_configuration.getNextTransition()
+        form = getattr(business_configuration, transition.getTransitionFormId())
+        raise NotImplementedError(form(), response_dict)
+        break
+      previous_title = title
+      kw = self.configuration_info.get(title, {})
 
-    # install configurator if not intalled
-    if configurator.getSimulationState() == "draft":
-      try:
-        configurator.buildConfiguration()
-      except Exception as e:
-        error_message = "Error during installation: " + str(e)
-        self.logMessage(error_message)
-      '''
-    command = response_dict.get("command", "next")
-    result = []
-    i = 1
-    while command != "install":
-      result.append(command)
-      i += 1
-      if i == 20:
-        raise NotImplementedError(str(response_dict), result)
       response_dict = self.portal.portal_configurator._next(
-                            business_configuration, {})
-      command = response_dict.get("command", "next")
-
+                            business_configuration, kw)
 
     self.tic()
     self.portal.portal_configurator.startInstallation(
