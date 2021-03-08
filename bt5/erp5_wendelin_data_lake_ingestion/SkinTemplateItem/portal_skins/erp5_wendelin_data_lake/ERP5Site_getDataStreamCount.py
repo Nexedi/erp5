@@ -13,7 +13,6 @@ except Exception as e:
   log("Unauthorized access to getDataStreamList: " + str(e))
   return { "status_code": 1, "error_message": "401 - Unauthorized access. Please check your user credentials and try again." }
 
-data_set_uid = data_set.getUid()
-data_stream_list = context.ERP5Site_getDataStreamList(data_set_uid)
+data_stream_list = data_set.DataSet_getDataStreamList()
 
 return { "status_code": 0, "result": len(data_stream_list) }
