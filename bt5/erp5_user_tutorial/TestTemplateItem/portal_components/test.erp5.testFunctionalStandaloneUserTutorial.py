@@ -92,21 +92,20 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         error_message = "Error during installation: " + str(e)
         self.logMessage(error_message)
       '''
-    command = response_dict.get("command", "next")
-    old_command = ''
-    result = []
-    i = 1
-    while command != "install":
-      if old_command == command:
+    title = response_dict.get("command", "next")
+    title_list = []
+    form_values = {}
+    while title != "install":
+      if title in title_list:
         break
-      result.append(command)
-      i += 1
-      if i == 1000:
-        raise NotImplementedError(str(response_dict), result)
+      if "field_" in title:
+        raise NotImplementedError(title)
       response_dict = self.portal.portal_configurator._next(
-                            business_configuration, self.portal.REQUEST.form.copy())
-      old_command = command
-      command = response_dict.get("command", "next")
+                            business_configuration, {})
+      title_list.append(title)
+      title = response_dict.get("command", "next")
+    
+    
     raise NotImplementedError(str(self.portal.REQUEST.form.copy()))
 
     self.tic()
