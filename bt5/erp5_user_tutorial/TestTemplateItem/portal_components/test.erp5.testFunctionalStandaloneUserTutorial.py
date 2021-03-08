@@ -102,7 +102,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         # should be False, None, True
         transition = business_configuration.getNextTransition()
         form = getattr(business_configuration, transition.getTransitionFormId())
-        raise NotImplementedError(form())
+        raise NotImplementedError(form(), response_dict)
         break
       previous_title = title
 
