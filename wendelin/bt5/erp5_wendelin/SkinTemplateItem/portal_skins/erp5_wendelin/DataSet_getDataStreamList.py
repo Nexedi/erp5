@@ -2,7 +2,7 @@
 This script will return all Data streams for Data set
 """
 catalog_kw = {'portal_type': 'Data Ingestion Line',
-              'aggregate_uid': data_set_uid,
+              'aggregate_uid': context.getUid(),
               'limit': limit,
               }
 data_ingestion_line_list = context.portal_catalog(**catalog_kw)
