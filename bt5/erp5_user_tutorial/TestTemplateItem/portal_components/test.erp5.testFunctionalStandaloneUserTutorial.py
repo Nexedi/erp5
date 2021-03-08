@@ -93,15 +93,19 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         self.logMessage(error_message)
       '''
     command = response_dict.get("command", "next")
+    old_command = ''
     result = []
     i = 1
     while command != "install":
+      if old_command == command:
+        break
       result.append(command)
       i += 1
       if i == 1000:
         raise NotImplementedError(str(response_dict), result)
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
+      old_command = command
       command = response_dict.get("command", "next")
 
 
