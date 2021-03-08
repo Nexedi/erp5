@@ -44,87 +44,110 @@
     .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('input'),
         tmp; // general use short-scope variable
-      if (this.state.type === 'checkbox') {
-        textarea.checked = this.state.checked;
-      } else {
-        textarea.setAttribute('value', this.state.value);
-        textarea.value = this.state.value;
+
+      if (modification_dict.hasOwnProperty('value') ||
+          modification_dict.hasOwnProperty('checked') ||
+          modification_dict.hasOwnProperty('editable') ||
+          modification_dict.hasOwnProperty('required') ||
+          modification_dict.hasOwnProperty('id') ||
+          modification_dict.hasOwnProperty('name') ||
+          modification_dict.hasOwnProperty('type') ||
+          modification_dict.hasOwnProperty('title') ||
+          modification_dict.hasOwnProperty('focus') ||
+          modification_dict.hasOwnProperty('step') ||
+          modification_dict.hasOwnProperty('trim') ||
+          modification_dict.hasOwnProperty('multiple') ||
+          modification_dict.hasOwnProperty('accept') ||
+          modification_dict.hasOwnProperty('capture') ||
+          modification_dict.hasOwnProperty('append') ||
+          modification_dict.hasOwnProperty('prepend')
+          ) {
+
+        if (this.state.type === 'checkbox') {
+          textarea.checked = this.state.checked;
+        } else {
+          textarea.setAttribute('value', this.state.value);
+          textarea.value = this.state.value;
+        }
+
+        if (this.state.type === 'radio') {
+          textarea.checked = this.state.checked;
+        }
+        textarea.id = this.state.id || this.state.name;
+        textarea.setAttribute('name', this.state.name);
+
+        textarea.setAttribute('type', this.state.type);
+        if (this.state.title) {
+          textarea.setAttribute('title', this.state.title);
+        }
+        if (this.state.step) {
+          textarea.setAttribute('step', this.state.step);
+        }
+        if (this.state.capture) {
+          textarea.setAttribute('capture', this.state.capture);
+        }
+        if (this.state.accept) {
+          textarea.setAttribute('accept', this.state.accept);
+        }
+
+        if (this.state.multiple) {
+          textarea.multiple = true;
+        }
+
+        if (this.state.required) {
+          textarea.required = true;
+        } else {
+          textarea.required = false;
+        }
+
+        if (this.state.editable) {
+          textarea.readonly = true;
+        } else {
+          textarea.readonly = false;
+        }
+
+        if (this.state.focus === true) {
+          textarea.autofocus = true;
+          textarea.focus();
+        }
+
+        if (this.state.focus === false) {
+          textarea.autofocus = false;
+          textarea.blur();
+        }
+
+        if (modification_dict.append) {
+          this.element.classList.add('ui-input-has-appendinx');
+          tmp = document.createElement('i');
+          tmp.appendChild(document.createTextNode(modification_dict.append));
+          this.element.appendChild(tmp);
+          tmp = undefined;
+        }
+
+        if (modification_dict.prepend) {
+          this.element.classList.add('ui-input-has-prependinx');
+          tmp = document.createElement('i');
+          tmp.appendChild(document.createTextNode(modification_dict.append));
+          this.element.insertBefore(tmp, textarea);
+          tmp = undefined;
+        }
       }
 
-      if (this.state.type === 'radio') {
-        textarea.checked = this.state.checked;
-      }
-      textarea.id = this.state.id || this.state.name;
-      textarea.setAttribute('name', this.state.name);
+      if (modification_dict.hasOwnProperty('error_text') ||
+          modification_dict.hasOwnProperty('hidden')) {
+        if (this.state.hidden && !this.state.error_text) {
+          textarea.hidden = true;
+        } else {
+          textarea.hidden = false;
+        }
 
-      textarea.setAttribute('type', this.state.type);
-      if (this.state.title) {
-        textarea.setAttribute('title', this.state.title);
-      }
-      if (this.state.step) {
-        textarea.setAttribute('step', this.state.step);
-      }
-      if (this.state.capture) {
-        textarea.setAttribute('capture', this.state.capture);
-      }
-      if (this.state.accept) {
-        textarea.setAttribute('accept', this.state.accept);
-      }
-
-      if (this.state.multiple) {
-        textarea.multiple = true;
-      }
-
-      if (this.state.required) {
-        textarea.required = true;
-      } else {
-        textarea.required = false;
-      }
-
-      if (this.state.editable) {
-        textarea.readonly = true;
-      } else {
-        textarea.readonly = false;
-      }
-
-      if (this.state.hidden && !modification_dict.error_text) {
-        textarea.hidden = true;
-      } else {
-        textarea.hidden = false;
-      }
-
-      if (this.state.focus === true) {
-        textarea.autofocus = true;
-        textarea.focus();
-      }
-
-      if (this.state.focus === false) {
-        textarea.autofocus = false;
-        textarea.blur();
-      }
-
-      if (modification_dict.append) {
-        this.element.classList.add('ui-input-has-appendinx');
-        tmp = document.createElement('i');
-        tmp.appendChild(document.createTextNode(modification_dict.append));
-        this.element.appendChild(tmp);
-        tmp = undefined;
-      }
-
-      if (modification_dict.prepend) {
-        this.element.classList.add('ui-input-has-prependinx');
-        tmp = document.createElement('i');
-        tmp.appendChild(document.createTextNode(modification_dict.append));
-        this.element.insertBefore(tmp, textarea);
-        tmp = undefined;
-      }
-
-      if (this.state.error_text &&
-          !textarea.classList.contains("is-invalid")) {
-        textarea.classList.add("is-invalid");
-      } else if (!this.state.error_text &&
-                 textarea.classList.contains("is-invalid")) {
-        textarea.classList.remove("is-invalid");
+        if (this.state.error_text &&
+            !textarea.classList.contains("is-invalid")) {
+          textarea.classList.add("is-invalid");
+        } else if (!this.state.error_text &&
+                   textarea.classList.contains("is-invalid")) {
+          textarea.classList.remove("is-invalid");
+        }
       }
 
     })
@@ -238,9 +261,7 @@
     }, {mutex: 'changestate'})
 
     .declareJob('deferErrorText', function deferErrorText(error_text) {
-      var input = this.element.querySelector("input");
       return this.changeState({
-        value: input.value,
         error_text: error_text
       });
     })

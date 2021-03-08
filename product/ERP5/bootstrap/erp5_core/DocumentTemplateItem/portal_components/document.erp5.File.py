@@ -36,7 +36,7 @@ from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
-from cStringIO import StringIO
+
 
 def _unpackData(data):
   """
@@ -100,7 +100,6 @@ class File(Document, OFS_File):
     """
     if 'file' in kw:
       file_object = kw.pop('file')
-      precondition = kw.get('precondition')
       filename = getattr(file_object, 'filename', None)
       # if file field is empty(no file is uploaded),
       # filename is empty string.

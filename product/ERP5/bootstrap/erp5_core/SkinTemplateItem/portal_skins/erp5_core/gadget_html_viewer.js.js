@@ -3,6 +3,7 @@
 (function (window, rJS, domsugar, document, DOMParser, NodeFilter) {
   "use strict";
 
+/*
   function startsWithOneOf(str, prefix_list) {
     var i;
     for (i = prefix_list.length - 1; i >= 0; i -= 1) {
@@ -12,6 +13,7 @@
     }
     return false;
   }
+*/
 
   var whitelist = {
     node_list: {
@@ -58,6 +60,7 @@
       TABLE: true,
       THEAD: true,
       TFOOT: true,
+      CAPTION: true,
       TR: true,
       TH: true,
       TD: true,
@@ -71,7 +74,11 @@
       ARTICLE: true,
       ASIDE: true,
       NAV: true,
-      FOOTER: true
+      FOOTER: true,
+      DIV: true,
+      SPAN: true,
+      DETAILS: true,
+      SUMMARY: true
     },
     attribute_list: {
       alt: true,
@@ -81,7 +88,40 @@
       srcset: true,
       media: true,
       datetime: true,
-      'class': true
+      'class': true,
+      cellspacing: true,
+      cellpadding: true,
+      border: true,
+      colspan: true,
+      rowspan: true,
+      align: true,
+      scope: true,
+      summary: true
+    },
+    style_list: {
+      background: true,
+      'background-color': true,
+      border: true,
+      color: true,
+      content: true,
+      cursor: true,
+      'float': true,
+      'font-style': true,
+      'font-weight': true,
+      height: true,
+      margin: true,
+      'margin-left': true,
+      'margin-right': true,
+      'margin-top': true,
+      'margin-bottom': true,
+      'max-width': true,
+      padding: true,
+      'padding-left': true,
+      'padding-right': true,
+      'padding-top': true,
+      'padding-bottom': true,
+      'text-align': true,
+      width: true
     },
     link_node_list: {
       A: true,
@@ -95,10 +135,6 @@
       srcset: true
     }
   },
-    emptylist = {
-      BR: true,
-      HR: true
-    },
     blacklist = {
       SCRIPT: true,
       STYLE: true,
@@ -132,6 +168,7 @@
       attribute_list,
       len,
       link_len,
+      style,
       already_dropped,
       finished = false;
 
@@ -157,6 +194,16 @@
           keepOnlyChildren(current_node);
 
         } else {
+          // Keep the style attribute, which is forbidden by CSP
+          // which is a good thing, as it prevents injecting <style> element
+          style = undefined;
+          attribute = 'style';
+          if (current_node.hasAttribute(attribute)) {
+            style = current_node.getAttribute(attribute);
+            // Prevent anybody to put style in the allowed attribute_list
+            current_node.removeAttribute(attribute);
+          }
+
           // Cleanup attributes
           attribute_list = current_node.attributes;
           len = attribute_list.length;
@@ -165,6 +212,21 @@
             attribute = attribute_list[len].name;
             if (!whitelist.attribute_list[attribute]) {
               current_node.removeAttribute(attribute);
+            }
+          }
+
+          // Restore the style
+          if (style !== undefined) {
+            current_node.style = style;
+            // And drop not allowed style attributes
+            attribute_list = current_node.style;
+            len = attribute_list.length;
+            while (len !== 0) {
+              len = len - 1;
+              attribute = attribute_list[len];
+              if (!whitelist.style_list[attribute]) {
+                current_node.style[attribute] = null;
+              }
             }
           }
 
@@ -177,14 +239,7 @@
             len = len - 1;
             attribute = attribute_list[len].name;
             if (whitelist.link_list[attribute]) {
-              if (startsWithOneOf(current_node.getAttribute(attribute),
-                                  ['http://', 'https://', '//', 'data:'])) {
-                link_len += 1;
-              } else {
-                keepOnlyChildren(current_node);
-                already_dropped = true;
-                break;
-              }
+              link_len += 1;
             }
           }
 
@@ -201,12 +256,6 @@
             }
           }
 
-          // Drop element if no text or link
-          if ((link_len === 0) && (!already_dropped) &&
-              (!current_node.textContent) &&
-              (!emptylist[current_node.nodeName])) {
-            current_node.parentNode.removeChild(current_node);
-          }
         }
 
       }
