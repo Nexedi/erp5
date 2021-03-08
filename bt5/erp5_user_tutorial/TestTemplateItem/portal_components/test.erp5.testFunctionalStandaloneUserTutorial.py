@@ -118,6 +118,15 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
              }
       elif title == "Configure user accounts number":
         kw = {'field_your_company_employees_number': "1",  }
+      elif title == "Configure user accounts":
+        kw = {'field_your_first_name': "John",
+              'field_your_reference': "user",
+              'field_your_password': "1234",
+              'field_your_password_confirm': "1234",
+              'field_your_default_email_text': "abc@nexedi.com",
+              'field_your_function': "project/developer" ,
+             }
+
 
 
       response_dict = self.portal.portal_configurator._next(
