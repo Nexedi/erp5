@@ -227,7 +227,7 @@ class TestDataIngestion(SecurityTestCase):
     self.tic()
 
     # check data relation between Data Set and Data Streams work
-    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
+    self.assertSameSet(data_stream_list, [x.getObject() for x in data_set.DataSet_getDataStreamList()])
 
     # check data set and all Data Streams states
     self.assertEqual('validated', data_set.getValidationState())
@@ -340,15 +340,18 @@ class TestDataIngestion(SecurityTestCase):
     """
     # ingest a couple of files
     reference = self.getRandomReference()
-    self.ingest("some-data-1", reference, self.CSV, self.SINGLE_INGESTION_END)
+    data_set_reference = "test-relation-dataset"
+    self.ingest("some-data-1", reference, self.CSV, self.SINGLE_INGESTION_END,
+                randomize_ingestion_reference=False, data_set_reference=data_set_reference)
     time.sleep(1)
     self.tic()
     reference += "-2"
-    self.ingest("some-data-2", reference, self.CSV, self.SINGLE_INGESTION_END)
+    self.ingest("some-data-2", reference, self.CSV, self.SINGLE_INGESTION_END,
+                randomize_ingestion_reference=False, data_set_reference=data_set_reference)
     time.sleep(1)
     self.tic()
     # get corresponding Data Streams by searching via Data Ingestion Lines of the Data Set
-    data_set = self.portal.data_set_module.get(self.REF_DATASET)
+    data_set = self.portal.data_set_module.get(data_set_reference)
     data_ingestion_line_list = self.portal.portal_catalog(
                     portal_type = 'Data Ingestion Line',
                     aggregate_uid = data_set.getUid())
@@ -356,9 +359,10 @@ class TestDataIngestion(SecurityTestCase):
     data_stream_list = self.portal.portal_catalog(
                     portal_type = 'Data Stream',
                     aggregate__related__uid = data_ingestion_uid_list,
+                    validation_state = ['validated','published'],
                     select_list = ['reference', 'relative_url', 'versioning.size', 'versioning.version'])
     data_stream_list = [x.getObject() for x in data_stream_list]
     # assert that the list from the search is the same as DataSet_getDataStreamList
-    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
+    self.assertSameSet(data_stream_list, [x.getObject() for x in data_set.DataSet_getDataStreamList()])
 
   # XXX: new test which simulates download / upload of Data Set and increase DS version
