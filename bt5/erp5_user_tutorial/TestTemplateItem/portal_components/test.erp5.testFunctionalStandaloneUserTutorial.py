@@ -116,7 +116,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
               'field_your_default_address_street_address': 'Rue de JeanBart',
               'field_your_default_address_zip_code': '59000',
               'field_your_default_address_city': 'Lille',
-              'field_your_default_address_region': 'France',
+              'field_your_default_address_region': 'europe/western_europe/france',
              }
 
       response_dict = self.portal.portal_configurator._next(
