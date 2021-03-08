@@ -50,8 +50,8 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:111,  4: Unreachable code (unreachable)</string>
-                <string>W: 97,  4: Unused variable \'form_values\' (unused-variable)</string>
+                <string>W:103,  8: Unreachable code (unreachable)</string>
+                <string>W:115,  4: Unreachable code (unreachable)</string>
               </tuple>
             </value>
         </item>
