@@ -227,7 +227,7 @@ class TestDataIngestion(SecurityTestCase):
     self.tic()
 
     # check data relation between Data Set and Data Streams work
-    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
+    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList(data_set.getUid()))
 
     # check data set and all Data Streams states
     self.assertEqual('validated', data_set.getValidationState())
@@ -359,6 +359,6 @@ class TestDataIngestion(SecurityTestCase):
                     select_list = ['reference', 'relative_url', 'versioning.size', 'versioning.version'])
     data_stream_list = [x.getObject() for x in data_stream_list]
     # assert that the list from the search is the same as DataSet_getDataStreamList
-    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
+    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList(data_set.getUid()))
 
   # XXX: new test which simulates download / upload of Data Set and increase DS version

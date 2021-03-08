@@ -19,7 +19,7 @@ except Exception as e: # fails because unauthorized access
   return json.dumps({ "status_code": 1, "error_message": "401 - Unauthorized access. Please check your user credentials and try again." })
 
 data_set_uid = data_set.getUid()
-data_stream_list = context.ERP5Site_getDataStreamList(data_set_uid, limit)
+data_stream_list = context.DataSet_getDataStreamList(data_set_uid, limit)
 
 data_stream_dict = {}
 for stream_brain in data_stream_list:
