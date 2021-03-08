@@ -99,7 +99,8 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     while response_dict.get("command", "next") != "install":
       title = response_dict.get("next", "")
       if title == previous_title:
-        raise NotImplementedError(title)
+        # should be False, None, True
+        raise NotImplementedError(business_configuration.isEndConfigurationState(), business_configuration.getNextTransition(), business_configuration._isMultiEntryTransition())
         break
       previous_title = title
       if "field_" in command:
