@@ -106,7 +106,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       title = response_dict.get("command", "next")
     
     
-    raise NotImplementedError(str(self.portal.REQUEST.form.copy()))
+    raise NotImplementedError(str(title_list))
 
     self.tic()
     self.portal.portal_configurator.startInstallation(
