@@ -104,10 +104,10 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       if i == 1000:
         raise NotImplementedError(str(response_dict), result)
       response_dict = self.portal.portal_configurator._next(
-                            business_configuration, {})
+                            business_configuration, self.portal.REQUEST.form.copy())
       old_command = command
       command = response_dict.get("command", "next")
-
+    raise NotImplementedError(str(self.portal.REQUEST.form.copy()))
 
     self.tic()
     self.portal.portal_configurator.startInstallation(
