@@ -98,7 +98,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     while command != "install":
       result.append(command)
       i += 1
-      if i == 20:
+      if i == 1000:
         raise NotImplementedError(str(response_dict), result)
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
