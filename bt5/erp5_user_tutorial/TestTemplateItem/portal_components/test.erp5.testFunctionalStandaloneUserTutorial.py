@@ -120,6 +120,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         kw = {'field_your_company_employees_number': "1",  }
       elif title == "Configure user accounts":
         kw = {'field_your_first_name': "John",
+              'field_your_last_name': "Doe",
               'field_your_reference': "user",
               'field_your_password': "1234",
               'field_your_password_confirm': "1234",
