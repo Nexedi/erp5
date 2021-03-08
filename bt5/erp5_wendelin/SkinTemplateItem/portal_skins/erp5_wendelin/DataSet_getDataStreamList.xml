@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_set_uid, limit=[]</string> </value>
+            <value> <string>limit=[]</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
