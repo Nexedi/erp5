@@ -117,7 +117,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
               'field_your_default_address_region': 'europe/western_europe/france',
              }
       elif title == "Configure user accounts number":
-        kw = {'field_your_company_employees_number': 1,  }
+        kw = {'field_your_company_employees_number': "1",  }
 
 
       response_dict = self.portal.portal_configurator._next(
