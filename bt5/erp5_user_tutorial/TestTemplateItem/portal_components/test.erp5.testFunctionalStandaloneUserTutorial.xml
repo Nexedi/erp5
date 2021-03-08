@@ -50,8 +50,8 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:104,  8: Unreachable code (unreachable)</string>
-                <string>W:116,  4: Unreachable code (unreachable)</string>
+                <string>W:111,  6: Unreachable code (unreachable)</string>
+                <string>W:119,  4: Unreachable code (unreachable)</string>
               </tuple>
             </value>
         </item>

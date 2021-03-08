@@ -100,11 +100,14 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       title = response_dict.get("next", "")
       if title == previous_title:
         # should be False, None, True
-        raise NotImplementedError(business_configuration.isEndConfigurationState(), business_configuration.getNextTransition(), business_configuration._isMultiEntryTransition())
         break
       previous_title = title
       if "field_" in command:
         raise NotImplementedError(title)
+      transition = business_configuration.getNextTransition()
+      form = getattr(business_configuration, transition.getTransitionFormId())
+      raise NotImplementedError(form())
+
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
       command_list.append(command)
