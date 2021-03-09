@@ -142,7 +142,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         raise NotImplementedError(form(), response_dict)
         break
       previous_title = title
-      kw = self.configuration_info[title]
+      kw = self.configuration_info.get(title, {})
 
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, kw)
