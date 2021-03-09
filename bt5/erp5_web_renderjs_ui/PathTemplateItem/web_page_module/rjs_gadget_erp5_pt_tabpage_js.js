@@ -137,14 +137,14 @@
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
               title: view_list[i].options.title,
-              link: view_list[i].command === "raw" ? view_list[i].options.href : result_dict.url_list[j]
+              link: result_dict.url_list[j]
             });
             j += 1;
           }
           for (i = 0; i < jump_list.length; i += 1) {
             jump_action_list.push({
               title: jump_list[i].options.title,
-              link: jump_list[i].command === "raw" ? jump_list[i].options.href : result_dict.url_list[j]
+              link: result_dict.url_list[j]
             });
             j += 1;
           }
