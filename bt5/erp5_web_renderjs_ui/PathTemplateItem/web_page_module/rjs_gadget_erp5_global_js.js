@@ -257,7 +257,7 @@
             command = "raw";
             options = {
               title: group_mapping[group][i].title,
-              href: group_mapping[group][i].href
+              url: group_mapping[group][i].href
             };
           } else {
             command = command_mapping[group] || default_command_mapping[group];
