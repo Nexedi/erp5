@@ -164,7 +164,7 @@ class ConfiguratorTool(BaseTool):
       form = getattr(business_configuration, transition.getTransitionFormId())
       for form_key in [x for x in kw.keys() if x.startswith('field_')]:
         form_kw[form_key] = kw[form_key]
-      if "price_currency" in form_kw.keys() or "price_currency" in kw.keys():
+      if "field_your_price_currency" in kw.keys():
         raise NotImplementedError(form_kw, kw)
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
@@ -237,7 +237,7 @@ class ConfiguratorTool(BaseTool):
           ## multiple forms must be validated before
           validation_status = 0
         else:
-          if "price_currency" in form_kw.keys() or "price_currency" in kw.keys():
+          if "price_currency" in form_kw.keys() or "field_your_price_currency" in kw.keys():
             raise NotImplementedError(form_kw, kw)
           validation_status, form_kw, validation_errors = \
               business_configuration._validateNextForm(**kw)
@@ -254,7 +254,7 @@ class ConfiguratorTool(BaseTool):
         else:
           ## validation passed
           need_validation = 0
-          if "price_currency" in form_kw.keys() or "price_currency" in kw.keys():
+          if "price_currency" in form_kw.keys() or "field_your_price_currency" in kw.keys():
             raise NotImplementedError(form_kw, kw)
           business_configuration._executeTransition(form_kw=form_kw, request_kw=kw)
       elif need_validation == 0:
