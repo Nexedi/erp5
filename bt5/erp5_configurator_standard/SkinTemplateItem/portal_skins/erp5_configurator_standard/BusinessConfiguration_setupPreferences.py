@@ -145,6 +145,7 @@ configuration_save.addConfigurationItem(
     title="Default Configurator System Site Preference",
     **system_prefs)
 
+raise NotImplementedError(preferred_language_list, kw)
 # preferred_languages
 for bt5_id in preferred_language_list:
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",
