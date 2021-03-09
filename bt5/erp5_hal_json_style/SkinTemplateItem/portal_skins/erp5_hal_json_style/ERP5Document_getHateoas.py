@@ -1502,10 +1502,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           '_view': embedded_dict
         }
 
-    # Extract & modify action URLs
-    if preferred_html_style_developer_mode and 'object_jio_jump_raw' not in erp5_action_dict:
-      erp5_action_dict["object_jio_jump_raw"] = []
-
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
@@ -1544,15 +1540,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "view": erp5_action_list[-1]['name'],
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
-
-      if preferred_html_style_developer_mode and erp5_action_key == "object_jio_jump_raw":
-        if portal.portal_workflow.Base_getSourceVisibility():
-          for workflow in portal.portal_workflow.getWorkflowsFor(traversed_document):
-            erp5_action_list.append({
-              'href': "%s/manage_properties" % workflow.absolute_url_path(),
-              'name': "jump_to_%s_raw" % workflow.id,
-              'icon': None,
-              'title': workflow.title})
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
