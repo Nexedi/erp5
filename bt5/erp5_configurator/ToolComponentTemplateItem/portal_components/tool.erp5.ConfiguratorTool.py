@@ -248,9 +248,8 @@ class ConfiguratorTool(BaseTool):
         else:
           ## validation passed
           need_validation = 0
-          title = response.get("next", "")
-          if title == "Configure ERP5 Preferences":
-            raise NotImplementedError(title, form_kw, kw)
+          if "price_currency" in form_kw.keys() or "price_currency" in kw.keys():
+            raise NotImplementedError(form_kw, kw)
           business_configuration._executeTransition(form_kw=form_kw, request_kw=kw)
       elif need_validation == 0:
         if business_configuration.getNextTransition() == None:
