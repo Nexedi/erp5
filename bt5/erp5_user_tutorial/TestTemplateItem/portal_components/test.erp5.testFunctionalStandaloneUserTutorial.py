@@ -137,6 +137,10 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
               'subfield_field_your_period_stop_date_day': "31",
               'field_your_accounting_plan': "fr",
              }
+      elif title == "Configure ERP5 Preferences":
+        kw = {'field_your_price_currency': "EUR;0.01;Euro",
+              'field_your_preferred_date_order': "dmy",
+             }
 
 
 
