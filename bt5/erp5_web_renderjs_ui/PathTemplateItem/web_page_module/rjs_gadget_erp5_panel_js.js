@@ -28,11 +28,7 @@
         // Avoid add class='undefined' in HTML
         a_element.setAttribute('class', action_list[i].options.class_name);
       }
-      if (action_list[i].command === "raw") {
-        a_element.href = action_list[i].options.href;
-      } else {
-        a_element.href = href_list[index + i];
-      }
+      a_element.href = href_list[index + i];
       a_element.textContent = action_list[i].options.title;
       dd_element.appendChild(a_element);
       fragment.appendChild(dd_element);
