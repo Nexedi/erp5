@@ -276,6 +276,7 @@
           }
           url_mapping[group].push({
             command: command,
+            absolute_url: command === "raw" ? true : false,
             options: options
           });
         }
