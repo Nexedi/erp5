@@ -248,6 +248,7 @@ class ConfiguratorTool(BaseTool):
         else:
           ## validation passed
           need_validation = 0
+          raise NotImplementedError(form_kw, kw)
           business_configuration._executeTransition(form_kw=form_kw, request_kw=kw)
       elif need_validation == 0:
         if business_configuration.getNextTransition() == None:
