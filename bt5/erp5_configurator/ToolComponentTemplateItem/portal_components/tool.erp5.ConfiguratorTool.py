@@ -164,6 +164,8 @@ class ConfiguratorTool(BaseTool):
       form = getattr(business_configuration, transition.getTransitionFormId())
       for form_key in [x for x in kw.keys() if x.startswith('field_')]:
         form_kw[form_key] = kw[form_key]
+      if "price_currency" in form_kw.keys() or "price_currency" in kw.keys():
+        raise NotImplementedError(form_kw, kw)
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
         single_form_kw = {}
