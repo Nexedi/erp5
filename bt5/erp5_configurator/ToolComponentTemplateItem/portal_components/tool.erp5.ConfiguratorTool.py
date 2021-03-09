@@ -60,7 +60,7 @@ def _validateFormToRequest(form, REQUEST, **kw):
     ## missing fields
     validation_status = 2
   ## extract form arguments and remove leading prefixes
-  if "field_price_currency" in kw.keys():
+  if "field_your_price_currency" in kw.keys():
     raise NotImplementedError(form.get_fields(), REQUEST)
   if validation_status == 0:
     for field in form.get_fields():
