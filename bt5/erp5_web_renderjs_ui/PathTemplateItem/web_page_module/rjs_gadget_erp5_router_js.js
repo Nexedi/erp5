@@ -275,11 +275,7 @@
       }
     }
     if (valid && (options.command) && (VALID_URL_COMMAND_DICT.hasOwnProperty(options.command))) {
-      if (command === COMMAND_RAW && args.href) {
-        hash = args.href;
-      } else {
-        hash = getCommandUrlFor(gadget, command, args);
-      }
+      hash = getCommandUrlFor(gadget, command, args);
     } else {
       hash = getCommandUrlFor(gadget, 'error', options);
     }
