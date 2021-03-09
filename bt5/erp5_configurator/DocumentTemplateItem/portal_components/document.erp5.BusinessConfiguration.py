@@ -222,6 +222,7 @@ class BusinessConfiguration(Item):
           ## fill REQUEST with data as it will be used to render form
           for field in field_ids:
             field_value = getattr(context, "field_%s" % field.id, None)
+            old_field_value = field_value
             if field_value is not None and len(field_value) > form_counter:
               field_value = field_value[form_counter]
               self.REQUEST.set(field.id, field_value)
