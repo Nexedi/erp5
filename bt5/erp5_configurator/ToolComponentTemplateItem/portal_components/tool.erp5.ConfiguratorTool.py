@@ -60,6 +60,8 @@ def _validateFormToRequest(form, REQUEST, **kw):
     ## missing fields
     validation_status = 2
   ## extract form arguments and remove leading prefixes
+  if "price_currency" in kw.keys():
+    raise NotImplementedError(form.get_fields(), REQUEST)
   if validation_status == 0:
     for field in form.get_fields():
       field_id = field.id
@@ -233,6 +235,8 @@ class ConfiguratorTool(BaseTool):
           ## multiple forms must be validated before
           validation_status = 0
         else:
+          if "price_currency" in form_kw.keys() or "price_currency" in kw.keys():
+            raise NotImplementedError(form_kw, kw)
           validation_status, form_kw, validation_errors = \
               business_configuration._validateNextForm(**kw)
         if validation_status == 1:
