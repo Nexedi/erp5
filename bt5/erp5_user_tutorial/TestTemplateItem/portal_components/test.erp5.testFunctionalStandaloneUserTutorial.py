@@ -127,6 +127,16 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
               'field_your_default_email_text': "abc@nexedi.com",
               'field_your_function': "project/developer" ,
              }
+      elif title == "Configure accounting":
+        kw = {'field_your_period_title': "2021",
+              'subfield_field_your_period_start_date_year': "2021",
+              'subfield_field_your_period_start_date_month': "01",
+              'subfield_field_your_period_start_date_day': "01",
+              'subfield_field_your_period_stop_date_year': "2021",
+              'subfield_field_your_period_stop_date_month': "12",
+              'subfield_field_your_period_stop_date_day': "31",
+              'field_your_accounting_plan': "fr",
+             }
 
 
 
