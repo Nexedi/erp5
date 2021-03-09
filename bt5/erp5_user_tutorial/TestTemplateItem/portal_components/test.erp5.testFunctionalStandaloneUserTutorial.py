@@ -118,21 +118,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     # Create new Configuration
     business_configuration  = self.getBusinessConfiguration()
     response_dict = {}
-    '''
-    configurator = self.portal.business_configuration_module.default_standard_configuration
-
-    # install configurator if not intalled
-    if configurator.getSimulationState() == "draft":
-      try:
-        configurator.buildConfiguration()
-      except Exception as e:
-        error_message = "Error during installation: " + str(e)
-        self.logMessage(error_message)
-      '''
-    command = response_dict.get("command", "next")
-    command_list = []
     previous_title = None
-    title_list = []
     while response_dict.get("command", "next") != "install":
       title = response_dict.get("next", "")
       if title == previous_title:
@@ -146,8 +132,6 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
 
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, kw)
-      command_list.append(command)
-      title = response_dict.get("command", "next")
 
     self.tic()
     self.portal.portal_configurator.startInstallation(
