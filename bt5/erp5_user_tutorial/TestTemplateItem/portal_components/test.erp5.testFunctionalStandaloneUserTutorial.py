@@ -71,6 +71,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     "Configure ERP5 Preferences": {
       'field_your_price_currency': "EUR;0.01;Euro",
       'field_your_preferred_date_order': "dmy",
+      'field_your_lang': "erp5_l10n_fr",
     }
   }
 
