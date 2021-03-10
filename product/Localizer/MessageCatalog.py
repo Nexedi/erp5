@@ -206,7 +206,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     def translate(self, msgid, mapping=None, context=None,
-                  target_language=None, default=None):
+                  target_language=None, default=None,
+                  # zope i18n 4.7
+                  msgid_plural=None, default_plural=None, number=None):
         """ """
         msgstr = self.gettext(msgid, lang=target_language, default=default)
         # BBB support str in mapping by converting to unicode for

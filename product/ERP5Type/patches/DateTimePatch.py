@@ -89,16 +89,28 @@ DateTimeKlass.__getstate__ = DateTime__getstate__
 def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   # Parse date-time components from a string
   month=year=tz=tm=None
-  spaces        =self.space_chars
-  intpat        =self.int_pattern
-  fltpat        =self.flt_pattern
-  wordpat       =self.name_pattern
-  delimiters    =self.delimiters
-  MonthNumbers  =self._monthmap
-  DayOfWeekNames=self._daymap
-  ValidZones    =self._tzinfo._zidx
+  try: # BBB DateTime 2.12
+    spaces        =self.space_chars
+    intpat        =self.int_pattern
+    fltpat        =self.flt_pattern
+    wordpat       =self.name_pattern
+    delimiters    =self.delimiters
+    MonthNumbers  =self._monthmap
+    DayOfWeekNames=self._daymap
+    ValidZones    =self._tzinfo._zidx
+    _MONTH_LEN = self._month_len
+  except AttributeError:
+    from DateTime.DateTime import (SPACE_CHARS as spaces,
+                                   INT_PATTERN as intpat,
+                                   FLT_PATTERN as fltpat,
+                                   NAME_PATTERN as wordpat,
+                                   DELIMITERS as delimiters,
+                                   _MONTHMAP as MonthNumbers,
+                                   _DAYMAP as DayOfWeekNames,
+                                   _TZINFO,
+                                   _MONTH_LEN)
+    ValidZones = _TZINFO._zidx
   TimeModifiers =['am','pm']
-
   # Find timezone first, since it should always be the last
   # element, and may contain a slash, confusing the parser.
   st= st.strip()
@@ -236,10 +248,9 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   year = _correctYear(year)
   #handle dates before year 1000
   #if year < 1000: raise SyntaxError, st
-
   leap = year%4==0 and (year%100!=0 or year%400==0)
   try:
-    if not day or day > self._month_len[leap][month]:
+    if not day or day > _MONTH_LEN[leap][month]:
       raise DateError(st)
   except IndexError:
     raise DateError(st)
