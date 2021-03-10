@@ -130,7 +130,10 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         break
       previous_title = title
       kw = self.configuration_info.get(title, {})
-
+      if title == "Configure ERP5 Preferences":
+        transition = business_configuration.getNextTransition()
+        form = getattr(business_configuration, transition.getTransitionFormId())
+        raise NotImplementedError(form(), response_dict)
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, kw)
 
