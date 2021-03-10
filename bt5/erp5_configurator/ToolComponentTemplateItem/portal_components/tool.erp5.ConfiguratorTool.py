@@ -72,7 +72,7 @@ def _validateFormToRequest(form, REQUEST, **kw):
     value_2 = getattr(REQUEST, "your_lang", "your_lang")
     value_list.append(value_1)
     value_list.append(value_2)
-    raise NotImplementedError(form.get_fields(), str(REQUEST.other), field_id_list, value_list)
+    # raise NotImplementedError(form.get_fields(), str(REQUEST.other), field_id_list, value_list)
   if validation_status == 0:
     for field in form.get_fields():
       field_id = field.id
@@ -176,7 +176,8 @@ class ConfiguratorTool(BaseTool):
       for form_key in [x for x in kw.keys() if x.startswith('field_')]:
         form_kw[form_key] = kw[form_key]
       if "field_your_price_currency" in kw.keys():
-        raise NotImplementedError(form_kw, kw)
+        pass
+        # raise NotImplementedError(form_kw, kw)
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
         single_form_kw = {}
