@@ -1,7 +1,8 @@
 # pylint: disable=redefined-builtin
 
 request = container.REQUEST
-request.other.update(request_other)
+request.form.update(report_request)
+request.other.update(report_request)
 
 portal = context.getPortalObject()
 ap = portal.restrictedTraverse(active_process_url)
