@@ -1,0 +1,154 @@
+
+      <section class="master">
+        <h1>Selenium Test Change Language</h1>
+        <h2>Former testHowToInstanceI18N   to be merged with howto-Change.Language  Document (but use a better reference)</h2>
+        <details open="open">
+          <p>(Rafael) I'm not sure there is an related tutorial related to this test. Perhaps a another short how to could be written.</p>
+        </details>
+        <test>
+          <table style="display: none;" class="test">
+            <tbody>
+              <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
+              </tr>
+              <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+              </tr>
+              <tr class="" style="opacity: 1;">
+                <td>deleteCookie</td>
+                <td>LOCALIZER_LANGUAGE</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>createCookie</td>
+                <td>LOCALIZER_LANGUAGE=fr</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>open</td>
+                <td>${base_url}/</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;Language&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;Language&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//select[@id="field_language"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name=&quot;field_language&quot;]</td>
+                <td>value=fr</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//input[@value="Update"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>storeLocation</td>
+                <td>language</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+              </tr>
+              <tr>
+                <td>echo</td>
+                <td>${language}</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>open</td>
+                <td>${language}</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;Personnes&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>deleteCookie</td>
+                <td>LOCALIZER_LANGUAGE</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>createCookie</td>
+                <td>LOCALIZER_LANGUAGE=en</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;Language&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;Language&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//select[@id="field_language"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name=&quot;field_language&quot;]</td>
+                <td>English</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//input[@value="Update"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//label[contains(text(), &quot;User&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section>
+    
