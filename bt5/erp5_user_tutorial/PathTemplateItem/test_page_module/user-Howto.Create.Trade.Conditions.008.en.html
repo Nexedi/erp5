@@ -1,611 +1,794 @@
-    
-      <section class="master">
-        <h1>How to Create Sale Trade Conditions</h1>
-        <footer>
-          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.
-        </footer>
-        <test>
-            <table class="test" style="display: none;">
-              <tbody>
-                <tr>
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>openAndWait</td>
-                  <td>${base_url}/Zuite_createFunctionalTestUser</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyTextPresent</td>
-                  <td>Done</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-                <tr>
-                  <td>openAndWait</td>
-                  <td>${base_url}/Zuite_setUpSaleTradeConditionTest</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyTextPresent</td>
-                  <td>Init Ok</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section><section>
-        <h1>Agenda</h1>
-        <ul>
-          <li>What are trade conditions?</li>
-          <li>How to create trade conditions</li>
-          <li>How and where to apply them</li>
-        </ul>
-        <details open="open">
-          <p>This guide will teach you how to create Sale Trade Conditions in ERP5 Express, using ERP5 Express Trade. You will also learn how to apply a Trade Condition to a Sale Order. Note that Sale Trade Conditions and Purchase Trade Condition are strictly identical, which means that after reading this tutorial, you will be able to create both purchase and sale trade conditions.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody></tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>What are Trade Conditions?</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Explanation?format=png" type="image/png" title="What are Trade Conditions?" alt="What are Trade Conditions?">
-        <details open="open">
-          <p>Trade conditions, as you will notice in this tutorial look like sale or purchase orders documents. The idea is that trade conditions help you store some information that you use in a specific type of order. Once this information is stored, you can import it from the Trade Condition to the Sale or Purchase Order in order to save time. On a Trade Condition, you can set information about the payment mode, the currency, the tax behaviour, the discount behaviour, the delivery mode, the incoterm. This information will be stored only in those trade conditions, and imported whenever necessary to different sale/purchase orders, as many times as you need.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody></tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Create a Sale Trade Condition</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.New?format=png" type="image/png" title="Create a Sale Trade Condition" alt="Create a Sale Trade Condition">
-        <details open="open">
-          <p>In order to create a Sale Trade Condition document from the home page of your instance, click the "New" tab and click on "Sale Trade Condition" in the Trade area.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_module"]</td>
-                <td>Sale Trade Conditions</td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Sale Trade Condition</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>The Trade Conditions document</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Document?format=png" type="image/png" title="Trade Conditions document" alt="Trade Conditions document">
-        <details open="open">
-          <p>Your Sale Trade Condition document has been created successfully, and as you can see in the picture, Sale Trade Conditions look exactly the same as Sale Orders. The reason for this is that the information borne on Sale Trade Conditions are identical as the information borne by Sale Oders.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody></tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the View Tab</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Edit.View?format=png" type="image/png" title="Fill the View Tab" alt="Fill the View Tab">
-        <details open="open">
-          <p>Add a title to your Trade Condition in the Red area, and then add the blue fields with information about the sender, the seller and the supplier. The green area displays the effective and validity dates, and comments for the other users of your ERP5 instance.</p><p>
-            Another important field which is necessary to fill when you are creating any Sale/Purchase Trade Conditions, is the "Specialised Trade Conditions and Business Processes ". It defines the workflow of the ERP5 trade module (Sale/Purchase Orders, Sale/Purchase Packing Lists and Invoices) which you need to apply this Trade Condition later. To fill the field, <strong>click on the Wheel</strong>
-            .
-          </p><p>Note: Please replace "Hongzhao" with the company you created when you configured your ERP5 instance.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr style="opacity: 1;">
-                <td>type</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//textarea[@name="field_my_specialise_title_list"]</td>
-                <td>erp5_default_business_process</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_reference"]</td>
-                <td>ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_price_currency"]</td>
-                <td>EUR</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>select</td>
-                <td>//select[@name="field_my_incoterm"]</td>
-                <td>Carriage Paid To</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>type</td>
-                <td>//textarea[@name="field_my_comment"]</td>
-                <td>VAT</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_effective_date_year"]</td>
-                <td>2011</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_effective_date_month"]</td>
-                <td>01</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_effective_date_day"]</td>
-                <td>01</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_expiration_date_year"]</td>
-                <td>2100</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_expiration_date_month"]</td>
-                <td>12</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_expiration_date_day"]</td>
-                <td>31</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>//input[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>verifyTextPresent</td>
-                <td>Data updated.</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>"Specialised Trade Conditions and Business Processes " (1)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Set.Relations.Business.Processes?format=png" type="image/svg+xml" title="Specialised Business Processes" alt="Specialised Business Processes">
-        <details open="open">
-          <p>
-            In this page, you can choose Specialised Trade Conditions and Business Processes. Because we are creating a Sale Trade Condition, so here we <strong>choose in the first line "Business Processes"</strong>
-            . This goes the same when you create any other Sale/Purchase Trade Conditions.
-          </p>
-        </details>
-      </section><section class="screenshot">
-        <h1>"Specialised Trade Conditions and Business Processes" (2)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Set.Relations.Default.Trade.Business.Process?format=png" type="image/svg+xml" title="Default Business Processes" alt="Default Business Processes">
-        <details open="open">
-          <p>
-            Now you can see there is an option "Default Trade Business Process" on the "Specialised Trade Conditions and Business Processes" list, it is created automatically by the ERP5 configurator when you configurated your instance. Please first <strong>check off</strong>
-            the option "Default Trade Business Process", and then
-            <strong>click on "Set Relation"</strong>
-            .
-          </p><p>Note that you can also create your own "Business Process" using the "Business Processes Module" in ERP5.</p>
-        </details>
-      </section><section class="screenshot">
-        <h1>"Specialised Trade Conditions and Business Processes" (3)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.View.Specialised.Trade.Conditions.And.Business.Processes?format=png" type="image/svg+xml" title="Specialised Trade Conditions and Business Processes" alt="Specialised Trade Conditions and Business Processes">
-        <details open="open">
-          <p>
-            Now you are led again to the View page of the sale trade condition you created. You will see the <strong>"Specialised Trade Conditions and Business Processes" has been defined</strong>
-            . Remember that this field is necessary to fill up when you create any Sale/Purchase Trade Conditions.
-          </p>
-        </details>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab(1)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Fill.Payment.Tab?format=png" type="image/png" title="Fill Payment Tab" alt="Fill Payment Tab">
-        <details open="open">
-          <p>The Payment tab displays the payment mode you want to apply to your orders. In order to edit the Payment mode, click on the payment tab of the Sale Trade Condition document and jump to this page.</p><p>The area circled in blue in the picture is the default payment condition that will be applied to your orders whenever you decide to import those sale trade conditions to them. In this area, you can set the following information: payment mode, trade date, term, end of month and additional term. When you are done, click the save button and jump to next page.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=Payment</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_payment_condition_payment_mode"]</td>
-                <td>Credit Card</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_payment_condition_trade_date"]</td>
-                <td>Invoice</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//input[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>verifyTextPresent</td>
-                <td>Data updated.</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab (2)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Add.Payment.Condition?format=png" type="image/png" title="Add Payment Conditions" alt="Add Payment Conditions">
-        <details open="open">
-          <p>In many cases, you will need more complex payment options. For instance you might need your customers to pay an advance on payment, and pay the balance when the goods are delivered. This is possible in ERP5 Express to add more than one payment conditions, which means that you can build complex payment conditions, following this procedure:</p><p>Open the Action Item List and choose Add Payment Condition.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Payment Condition</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab(3)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.New.Payment.Condition?format=png" type="image/png" title="New Payment Condition" alt="New Payment Condition">
-        <details open="open">
-          <p>This is the new payment condition that has been created in previous page. This condition will not replace the default payment conditions but will be added to them. As you can see circled in red on the picture, you can first decide the % or the amount that will have to be paid following the rules of this payment condition. When you are done, click the save button.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-PAYMENT-CONDITON-002</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>type</td>
-                <td>//textarea[@name="field_my_description"]</td>
-                <td>Description of ZUITE-TEST-PAYMENT-CONDITION-002</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//input[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>verifyTextPresent</td>
-                <td>Data updated.</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab(4)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Advance.Payment?format=png" type="image/png" title="Advance Payment" alt="Advance Payment">
-        <details open="open">
-          <p>This Payment condition is in fact an Advance on Payment of 20%. We have put some information about when this advance should be paid and the payment mode. Refer to the picture for more details. When you are done, click the "save" button.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody></tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab(5)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Additional.Payments?format=png" type="image/png" title="Additional Payments" alt="Additional Payments">
-        <details open="open">
-          <p>Back on the Payment Tab of the Sale Trade Condition, you can see that the Payment Condition you have created has been added to the Additional Payment Lines. For your information, the default_payment line is the line that has been created automatically when you filled the Payment tab in the previous steps.</p><p>We will now edit the default payment line, in order to change its name. Click on the line, and jump to next page.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>link=ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=Payment</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab(6)</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Default.Payment.Condition?format=png" type="image/png" title="Edit default payment condition" alt="Edit default payment condition">
-        <details open="open">
-          <p>We will only change the title of the line and add a description. This line in fact is the balance of the Payment.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=default_payment_condition</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>type</td>
-                <td>//textarea[@name="field_my_description"]</td>
-                <td>Description of ZUITE-TEST-PAYMENT-CONDITION-001</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>//input[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>verifyTextPresent</td>
-                <td>Data updated.</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the Payment Tab(7)</h1>
-        <img title="Balance" alt="Balance" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Default.Payment.Condition.Edit?format=png" type="image/png">
-        <details open="open">
-          <p>When you are done, save your work and go back to the payment tab of your Sale Trade Conditions.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>verifyValue</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Finalized Payment Conditions</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Payment.Condition.Finalized?format=png" type="image/png" title="Finalized Payment Conditions" alt="Finalized Payment Conditions">
-        <details open="open">
-          <p>As you can see here, the two lines have been created, one line for the Advance Payment and one line for the Balance. We are done with the payment Conditions, we will now see the "Profile" Tab.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>link=ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>link=Payment</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>verifyTextPresent</td>
-                <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyTextPresent</td>
-                <td>ZUITE-TEST-PAYMENT-CONDITION-002</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>The Profile Tab</h1>
-        <img src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Profile.Supplier?format=png" type="image/png" title="The Profile Tab" alt="The Profile Tab">
-        <details open="open">
-          <p>This tab gathers information about the two parties of the sale order-the supplier parts are circled in red and the client parts are circled in blue. Some information of the supplier part have already been filled if you filled the view tab out correctly. The only fields you have to edit here are the "Invoice Sender" and the "Payee". You will notice that the "Payee" has no options, this is because you haven't edited the "Financial Information" tab of your organisation which you put in the supplier fields. So we will now add a "Bank Account" in the "Financial Information" tab of the organisation.</p><p>Note that for the client fields which are circled in blue, it is necessary to fill out the information when you set a sale order with your customer, but you don't have to edit them now, because these fields are different according to different sale orders. So you can edit them individually in each particular Sale Order document, after you have imported the general Sale Payment Conditions which we just created.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=Profile</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Add Payee</h1>
-        <img title="Sale Trade Conditions-Supplier" alt="Sale Trade Conditions-Supplier" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Choose.Payee?format=png" type="image/png">
-        <details open="open">
-          <p>
-            In a Sale Order, the one who gets paid is usually the supplier. Therefore we define in the <strong>Payee</strong>
-             field our own bank account. If you cannot select any bank account, than you first have to create a bank account for your organisation as described in the tutorial <a href="user-Howto.Create.Bank.Account/view"><strong>How to create Bank Accounts</strong></a>
-          </p>
-        </details>
-          <test>
-            <table class="test" style="display: none;">
-              <tbody>
-                <tr>
-                  <td>type</td>
-                  <td>//input[@name="field_my_source_section_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>type</td>
-                  <td>//input[@name="field_my_source_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr>
-                  <td>type</td>
-                  <td>//input[@name="field_my_source_decision_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>type</td>
-                  <td>//input[@name="field_my_source_administration_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>clickAndWait</td>
-                  <td>//input[@name="Base_edit:method"]</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_section_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr>
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_decision_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_administration_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section><section class="screenshot">
-          <h1>Validate the Sale Trade Condition</h1>
-          <img alt="Validate Sale Trade Condition" title="Validate Sale Trade Condition" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Validate?format=png">
-          <details open="open">
-            <p>
-              The final step to create the Sale Trade Condition, is to go back to the View tab and <strong>Validate</strong>
-              it.
-            </p><p>For now, you have successfully created a Sale Trade Condition, which you can apply later. The steps to create a Purchase Trade Condition are the same. Now we will show you how and where to apply them.</p>
-          </details>
-      </section><section class="screenshot">
-          <h1>Create a Sale Order</h1>
-          <img alt="Create a Sale Order" title="Create a Sale Order" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Create.Sale.Order.New?format=png" type="image/png">
-          <details open="open">
-            <p>Now we have created Sale Trade Conditions, how can we apply them?</p><p>
-              The Trade Conditions are mostly used when we create a Sale/Purchase order from the "Home Page" of your ERP5 instance. So click on the new tab and choose Sale Order in the Trade Area.
-              .
-            </p>
-          </details>
-          <test>
-            <table class="test" style="display: none;">
-              <tbody>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>openAndWait</td>
-                  <td>${base_url}</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>selectAndWait</td>
-                  <td>//select[@name="select_module"]</td>
-                  <td>Sale Orders</td>
-                </tr>
-                <tr>
-                  <td>selectAndWait</td>
-                  <td>//select[@name="select_action"]</td>
-                  <td>Add Sale Order</td>
-                </tr>
-                <tr>
-                  <td>type</td>
-                  <td>//input[@name="field_my_title"]</td>
-                  <td>ZUITE-TEST-TRADE-CONDITION-SALE-ORDER-001</td>
-                </tr>
-                <tr>
-                  <td>type</td>
-                  <td>//input[@name="field_my_specialise_title"]</td>
-                  <td>ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
-                </tr>
-                <tr>
-                  <td>clickAndWait</td>
-                  <td>//input[@name="Base_edit:method"]</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section><section class="screenshot">
-          <h1>Apply Trade Conditions</h1>
-          <img alt="Apply Sale Trade Condition" title="Apply Sale Trade Condition" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Fill.Save.Apply?format=png" type="image/png">
-          <details open="open">
-            <p>
-              When the order is created, <strong>enter the name of your Trade Condition in the Trade Condition field</strong>
-              , as shown in Blue in the picture (You can also choose from the Sale Trade Conditions list by clicking on the Wheel). When it is done,
-              <strong>save by clicking the Save Button</strong>
-              , as shown in red in the picture. The third step, in black in the picture, is to open the Action Item List and
-              <strong>choose Apply Sale Trade Condition</strong>
-              .
-            </p>
-          </details>
-          <test>
-            <table class="test" style="display: none;">
-              <tbody>
-                <tr>
-                  <td>selectAndWait</td>
-                  <td>//select[@name="select_action"]</td>
-                  <td>Apply Sale Trade Condition</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyText</td>
-                  <td>//div[@id="transition_message"]</td>
-                  <td>Order updated.</td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section><section class="screenshot">
-          <h1>Imported trade condition information on View tab</h1>
-          <img alt="Imported information on View tab" title="Imported information on View tab" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.View?format=png" type="image/png">
-          <details open="open">
-            <p>As you can see, the View tab has been filled with information imported from the Sale Trade Condition you choose to apply.</p>
-          </details>
-          <test>
-            <table class="test" style="display: none;">
-              <tbody>
-                <tr>
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_decision_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section><!--<section class="screenshot">
+<section class="master">
+<h1>How to Create Sale Trade Conditions</h1>
+
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyTextPresent</td>
+			<td>Done</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleTradeConditionTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>What are trade conditions?</li>
+	<li>How to create trade conditions</li>
+	<li>How and where to apply them</li>
+</ul>
+
+<details open="open">
+<p>This guide will teach you how to create Sale Trade Conditions in ERP5 Express, using ERP5 Express Trade. You will also learn how to apply a Trade Condition to a Sale Order. Note that Sale Trade Conditions and Purchase Trade Condition are strictly identical, which means that after reading this tutorial, you will be able to create both purchase and sale trade conditions.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>What are Trade Conditions?</h1>
+<img alt="What are Trade Conditions?" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Explanation?format=png" title="What are Trade Conditions?" type="image/png" />
+<details open="open">
+<p>Trade conditions, as you will notice in this tutorial look like sale or purchase orders documents. The idea is that trade conditions help you store some information that you use in a specific type of order. Once this information is stored, you can import it from the Trade Condition to the Sale or Purchase Order in order to save time. On a Trade Condition, you can set information about the payment mode, the currency, the tax behaviour, the discount behaviour, the delivery mode, the incoterm. This information will be stored only in those trade conditions, and imported whenever necessary to different sale/purchase orders, as many times as you need.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a Sale Trade Condition</h1>
+<img alt="Create a Sale Trade Condition" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.New?format=png" title="Create a Sale Trade Condition" type="image/png" />
+<details open="open">
+<p>In order to create a Sale Trade Condition document from the home page of your instance, click the &quot;New&quot; tab and click on &quot;Sale Trade Condition&quot; in the Trade area.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Sale Trade Condition&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Sale Trade Condition&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>The Trade Conditions document</h1>
+<img alt="Trade Conditions document" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Document?format=png" title="Trade Conditions document" type="image/png" />
+<details open="open">
+<p>Your Sale Trade Condition document has been created successfully, and as you can see in the picture, Sale Trade Conditions look exactly the same as Sale Orders. The reason for this is that the information borne on Sale Trade Conditions are identical as the information borne by Sale Oders.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the View Tab</h1>
+<img alt="Fill the View Tab" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Edit.View?format=png" title="Fill the View Tab" type="image/png" />
+<details open="open">
+<p>Add a title to your Trade Condition in the Red area, and then add the blue fields with information about the sender, the seller and the supplier. The green area displays the effective and validity dates, and comments for the other users of your ERP5 instance.</p>
+
+<p>Another important field which is necessary to fill when you are creating any Sale/Purchase Trade Conditions, is the &quot;Specialised Trade Conditions and Business Processes &quot;. It defines the workflow of the ERP5 trade module (Sale/Purchase Orders, Sale/Purchase Packing Lists and Invoices) which you need to apply this Trade Condition later. To fill the field, <strong>click on the Wheel</strong> .</p>
+
+<p>Note: Please replace &quot;Hongzhao&quot; with the company you created when you configured your ERP5 instance.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_description&quot;]//textarea</td>
+			<td>erp5_default_business_process</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_reference&quot;]</td>
+			<td>ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_price_currency&quot;]</td>
+			<td>EUR</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_incoterm&quot;]</td>
+			<td>Carriage Paid To</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//textarea[@name=&quot;field_my_comment&quot;]</td>
+			<td>VAT</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>&quot;Specialised Trade Conditions and Business Processes &quot; (1)</h1>
+<img alt="Specialised Business Processes" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Set.Relations.Business.Processes?format=png" title="Specialised Business Processes" type="image/svg+xml" />
+<details open="open">
+<p>In this page, you can choose Specialised Trade Conditions and Business Processes. Because we are creating a Sale Trade Condition, so here we <strong>choose in the first line &quot;Business Processes&quot;</strong> . This goes the same when you create any other Sale/Purchase Trade Conditions.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>&quot;Specialised Trade Conditions and Business Processes&quot; (2)</h1>
+<img alt="Default Business Processes" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Set.Relations.Default.Trade.Business.Process?format=png" title="Default Business Processes" type="image/svg+xml" />
+<details open="open">
+<p>Now you can see there is an option &quot;Default Trade Business Process&quot; on the &quot;Specialised Trade Conditions and Business Processes&quot; list, it is created automatically by the ERP5 configurator when you configurated your instance. Please first <strong>check off</strong> the option &quot;Default Trade Business Process&quot;, and then <strong>click on &quot;Set Relation&quot;</strong> .</p>
+
+<p>Note that you can also create your own &quot;Business Process&quot; using the &quot;Business Processes Module&quot; in ERP5.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>&quot;Specialised Trade Conditions and Business Processes&quot; (3)</h1>
+<img alt="Specialised Trade Conditions and Business Processes" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.View.Specialised.Trade.Conditions.And.Business.Processes?format=png" title="Specialised Trade Conditions and Business Processes" type="image/svg+xml" />
+<details open="open">
+<p>Now you are led again to the View page of the sale trade condition you created. You will see the <strong>&quot;Specialised Trade Conditions and Business Processes&quot; has been defined</strong> . Remember that this field is necessary to fill up when you create any Sale/Purchase Trade Conditions.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab(1)</h1>
+<img alt="Fill Payment Tab" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Fill.Payment.Tab?format=png" title="Fill Payment Tab" type="image/png" />
+<details open="open">
+<p>The Payment tab displays the payment mode you want to apply to your orders. In order to edit the Payment mode, click on the payment tab of the Sale Trade Condition document and jump to this page.</p>
+
+<p>The area circled in blue in the picture is the default payment condition that will be applied to your orders whenever you decide to import those sale trade conditions to them. In this area, you can set the following information: payment mode, trade date, term, end of month and additional term. When you are done, click the save button and jump to next page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Payment&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_payment_condition_payment_mode&quot;]</td>
+			<td>Credit Card</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_payment_condition_trade_date&quot;]</td>
+			<td>Invoice</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab (2)</h1>
+<img alt="Add Payment Conditions" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Add.Payment.Condition?format=png" title="Add Payment Conditions" type="image/png" />
+<details open="open">
+<p>In many cases, you will need more complex payment options. For instance you might need your customers to pay an advance on payment, and pay the balance when the goods are delivered. This is possible in ERP5 Express to add more than one payment conditions, which means that you can build complex payment conditions, following this procedure:</p>
+
+<p>Open the Action Item List and choose Add Payment Condition.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;Add&quot;)]</td>
+			<td>Payment Condition</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>Payment Condition</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab(3)</h1>
+<img alt="New Payment Condition" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.New.Payment.Condition?format=png" title="New Payment Condition" type="image/png" />
+<details open="open">
+<p>This is the new payment condition that has been created in previous page. This condition will not replace the default payment conditions but will be added to them. As you can see circled in red on the picture, you can first decide the % or the amount that will have to be paid following the rules of this payment condition. When you are done, click the save button.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-PAYMENT-CONDITON-002</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_description&quot;]//textarea</td>
+			<td>Description of ZUITE-TEST-PAYMENT-CONDITION-002</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>storeLocation</td>
+			<td>before_sale_trade_condition</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${before_sale_trade_condition}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab(4)</h1>
+<img alt="Advance Payment" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Advance.Payment?format=png" title="Advance Payment" type="image/png" />
+<details open="open">
+<p>This Payment condition is in fact an Advance on Payment of 20%. We have put some information about when this advance should be paid and the payment mode. Refer to the picture for more details. When you are done, click the &quot;save&quot; button.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Sale Trade Conditions&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab(5)</h1>
+<img alt="Additional Payments" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Additional.Payments?format=png" title="Additional Payments" type="image/png" />
+<details open="open">
+<p>Back on the Payment Tab of the Sale Trade Condition, you can see that the Payment Condition you have created has been added to the Additional Payment Lines. For your information, the default_payment line is the line that has been created automatically when you filled the Payment tab in the previous steps.</p>
+
+<p>We will now edit the default payment line, in order to change its name. Click on the line, and jump to next page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALE-TRADE-CONDITION-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALE-TRADE-CONDITION-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Payment&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab(6)</h1>
+<img alt="Edit default payment condition" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Default.Payment.Condition?format=png" title="Edit default payment condition" type="image/png" />
+<details open="open">
+<p>We will only change the title of the line and add a description. This line in fact is the balance of the Payment.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[contains(text(), &quot;default_payment_condition&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//p[contains(text(), &quot;default_payment_condition&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_description&quot;]//textarea</td>
+			<td>Description of ZUITE-TEST-PAYMENT-CONDITION-001</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the Payment Tab(7)</h1>
+<img alt="Balance" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Default.Payment.Condition.Edit?format=png" title="Balance" type="image/png" />
+<details open="open">
+<p>When you are done, save your work and go back to the payment tab of your Sale Trade Conditions.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Finalized Payment Conditions</h1>
+<img alt="Finalized Payment Conditions" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Payment.Condition.Finalized?format=png" title="Finalized Payment Conditions" type="image/png" />
+<details open="open">
+<p>As you can see here, the two lines have been created, one line for the Advance Payment and one line for the Balance. We are done with the payment Conditions, we will now see the &quot;Profile&quot; Tab.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Sale Trade Conditions&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALE-TRADE-CONDITION-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALE-TRADE-CONDITION-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Payment&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[text()=&quot;ZUITE-TEST-SALE-TRADE-CONDITION-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyTextPresent</td>
+			<td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>ZUITE-TEST-PAYMENT-CONDITION-002</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>The Profile Tab</h1>
+<img alt="The Profile Tab" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Profile.Supplier?format=png" title="The Profile Tab" type="image/png" />
+<details open="open">
+<p>This tab gathers information about the two parties of the sale order-the supplier parts are circled in red and the client parts are circled in blue. Some information of the supplier part have already been filled if you filled the view tab out correctly. The only fields you have to edit here are the &quot;Invoice Sender&quot; and the &quot;Payee&quot;. You will notice that the &quot;Payee&quot; has no options, this is because you haven&#39;t edited the &quot;Financial Information&quot; tab of your organisation which you put in the supplier fields. So we will now add a &quot;Bank Account&quot; in the &quot;Financial Information&quot; tab of the organisation.</p>
+
+<p>Note that for the client fields which are circled in blue, it is necessary to fill out the information when you set a sale order with your customer, but you don&#39;t have to edit them now, because these fields are different according to different sale orders. So you can edit them individually in each particular Sale Order document, after you have imported the general Sale Payment Conditions which we just created.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Profile&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Add Payee</h1>
+<img alt="Sale Trade Conditions-Supplier" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Choose.Payee?format=png" title="Sale Trade Conditions-Supplier" type="image/png" />
+<details open="open">
+<p>In a Sale Order, the one who gets paid is usually the supplier. Therefore we define in the <strong>Payee</strong> field our own bank account. If you cannot select any bank account, than you first have to create a bank account for your organisation as described in the tutorial <a href="user-Howto.Create.Bank.Account/view"><strong>How to create Bank Accounts</strong></a></p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]/li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Validate the Sale Trade Condition</h1>
+<img alt="Validate Sale Trade Condition" src="http://www.erp5.com/user-Howto.Create.Trade.Conditions.Validate?format=png" title="Validate Sale Trade Condition" type="image/svg+xml" />
+<details open="open">
+<p>The final step to create the Sale Trade Condition, is to go back to the View tab and <strong>Validate</strong> it.</p>
+
+<p>For now, you have successfully created a Sale Trade Condition, which you can apply later. The steps to create a Purchase Trade Condition are the same. Now we will show you how and where to apply them.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Create a Sale Order</h1>
+<img alt="Create a Sale Order" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Create.Sale.Order.New?format=png" title="Create a Sale Order" type="image/png" />
+<details open="open">
+<p>Now we have created Sale Trade Conditions, how can we apply them?</p>
+
+<p>The Trade Conditions are mostly used when we create a Sale/Purchase order from the &quot;Home Page&quot; of your ERP5 instance. So click on the new tab and choose Sale Order in the Trade Area. .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>open</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Sale Order&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Sale Order&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-TRADE-CONDITION-SALE-ORDER-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>ZUITE-TEST-SALE-TRADE-CONDITION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Apply Trade Conditions</h1>
+<img alt="Apply Sale Trade Condition" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Fill.Save.Apply?format=png" title="Apply Sale Trade Condition" type="image/png" />
+<details open="open">
+<p>When the order is created, <strong>enter the name of your Trade Condition in the Trade Condition field</strong> , as shown in Blue in the picture (You can also choose from the Sale Trade Conditions list by clicking on the Wheel). When it is done, <strong>save by clicking the Save Button</strong> , as shown in red in the picture. The third step, in black in the picture, is to open the Action Item List and <strong>choose Apply Sale Trade Condition</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Apply Sale Trade Condition&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Imported trade condition information on View tab</h1>
+<img alt="Imported information on View tab" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.View?format=png" title="Imported information on View tab" type="image/png" />
+<details open="open">
+<p>As you can see, the View tab has been filled with information imported from the Sale Trade Condition you choose to apply.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+<!--<section class="screenshot">
           <h1>The Payment tab is updated</h1>
           <img alt="The Payment tab is updated" title="The Payment tab is updated" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.Payment?format=png" type="image/png">
           <details open="open">
@@ -614,11 +797,12 @@
           <test>
             <table class="test" style="display: none;">
               <tbody>
-                <tr>
-                  <td>clickAndWait</td>
-                  <td>link=Payment</td>
-                  <td></td>
-                </tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Payment&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
                 <tr>
                   <td>verifyTextPresent</td>
                   <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>
@@ -632,61 +816,64 @@
               </tbody>
             </table>
           </test>
-      </section>--><section class="screenshot">
-          <h1>The profile tab is updated</h1>
-          <img alt="The profile tab is updated" title="The profile tab is updated" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.Profile?format=png" type="image/png">
-          <details open="open">
-            <p>The Profile Tab has been updated as well.</p><p>In the following tutorials about sale/purchase orders, packing lists, invoices and payments, you will see the Specialised Business Processes you just defined in the Trade Conditions will also be applied automatically once you apply the Trade Conditions with the defined business processes.</p>
-          </details>
-          <test>
-            <table class="test" style="display: none;">
-              <tbody>
-                <tr>
-                  <td>clickAndWait</td>
-                  <td>link=Profile</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_section_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr>
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_decision_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td>verifyValue</td>
-                  <td>//input[@name="field_my_source_administration_title"]</td>
-                  <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-                <tr>
-                  <td>openAndWait</td>
-                  <td>${base_url}/Zuite_tearDownSaleTradeConditionTest</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>verifyTextPresent</td>
-                  <td>Clean Ok</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section>
-    
+      </section>-->
+
+<section class="screenshot">
+<h1>The profile tab is updated</h1>
+<img alt="The profile tab is updated" src="http://www.erp5.com/user-Howto.Apply.Trade.Conditions.Information.Imported.Profile?format=png" title="The profile tab is updated" type="image/png" />
+<details open="open">
+<p>The Profile Tab has been updated as well.</p>
+
+<p>In the following tutorials about sale/purchase orders, packing lists, invoices and payments, you will see the Specialised Business Processes you just defined in the Trade Conditions will also be applied automatically once you apply the Trade Conditions with the defined business processes.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Profile&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownSaleTradeConditionTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
