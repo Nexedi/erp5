@@ -28,7 +28,7 @@ from ComputedAttribute import ComputedAttribute
 # FIXME: manage_renameObject hack needs these imports
 from Acquisition import aq_base
 from App.Dialogs import MessageDialog
-from OFS.CopySupport import CopyError, eNotSupported
+from OFS.CopySupport import CopyError
 import sys
 
 class Form:
@@ -688,7 +688,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
                       action ='manage_main'))
         ob=self._getOb(id)
         if not ob.cb_isMoveable():
-            raise CopyError(eNotSupported % id)
+            raise CopyError('Not Supported')
         self._verifyObjectPaste(ob)
         try:    ob._notifyOfCopyTo(self, op=1)
         except: raise CopyError(MessageDialog(

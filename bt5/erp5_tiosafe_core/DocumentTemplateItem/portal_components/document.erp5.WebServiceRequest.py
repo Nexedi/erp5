@@ -30,7 +30,12 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.module.TioSafeUtils import EchoDictTarget, NewEchoDictTarget
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
-from App.Extensions import getBrain
+# pylint:disable=no-name-in-module
+try: # BBB Zope 2.12
+  from App.Extensions import getBrain
+except ImportError:
+  from Shared.DC.ZRDB.DA import getBrain
+# pylint:enable=no-name-in-module
 from lxml import etree
 from zLOG import LOG, ERROR, INFO
 from erp5.component.tool.WebServiceTool import ConnectionError

@@ -16,26 +16,48 @@ import copy
 import sys
 import types
 
-from RestrictedPython.RestrictionMutator import RestrictionMutator
+try:
+  from RestrictedPython.transformer import FORBIDDEN_FUNC_NAMES
+except:
+  # BBB
+  FORBIDDEN_FUNC_NAMES = frozenset(['printed',])
+
 _MARKER = []
-def checkNameLax(self, node, name=_MARKER):
-  """Verifies that a name being assigned is safe.
+def checkNameLax(self, node, name=_MARKER, allow_magic_methods=False):
+  """Check names if they are allowed.
 
   In ERP5 we are much more lax that than in Zope's original restricted
   python and allow to using names starting with _, because we rely on
   runtime checks to prevent access to forbidden attributes from objects.
 
   We don't allow defining attributes ending with __roles__ though.
+
+  If ``allow_magic_methods is True`` names in `ALLOWED_FUNC_NAMES`
+  are additionally allowed although their names start with `_`.
+
   """
+  if name is None:
+    return
+
   if name is _MARKER:
     # we use same implementation for checkName and checkAttrName which access
     # the name in different ways ( see RestrictionMutator 3.6.0 )
     name = node.attrname
+
   if name.endswith('__roles__'):
     self.error(node, '"%s" is an invalid variable name because '
-                     'it ends with "__roles__".' % name)
+               'it ends with "__roles__".' % name)
+  elif name in FORBIDDEN_FUNC_NAMES:
+    self.error(node, '"{name}" is a reserved name.'.format(name=name))
 
-RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
+
+try:
+  from RestrictedPython.transformer import RestrictingNodeTransformer
+  RestrictingNodeTransformer.check_name = checkNameLax
+except ImportError:
+  # BBB Restriced 3.6.0
+  from RestrictedPython.RestrictionMutator import RestrictionMutator
+  RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire
@@ -49,17 +71,21 @@ from AccessControl.ZopeGuards import (safe_builtins, _marker, Unauthorized,
 # TODO: add buffer/bytearray
 
 def add_builtins(**kw):
-    assert not set(safe_builtins).intersection(kw)
+    assert not set(safe_builtins).intersection(kw), "%r intersect %r\n%r" %(safe_builtins, kw, set(safe_builtins).intersection(kw))
     safe_builtins.update(kw)
 
 del safe_builtins['dict']
 del safe_builtins['list']
+
 add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
-             dict=dict, list=list, set=set, frozenset=frozenset)
+             dict=dict, list=list)
+if "set" not in safe_builtins: # BBB
+    add_builtins(set=set, frozenset=frozenset, slice=slice)
 
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
-             property=property, slice=slice, staticmethod=staticmethod,
+             property=property, staticmethod=staticmethod,
              super=super, type=type)
+
 
 def guarded_next(iterator, default=_marker):
     """next(iterator[, default])
@@ -81,7 +107,10 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-add_builtins(next=guarded_next)
+#if "next" not in safe_builtins: # BBB
+# override the default next if exists
+safe_builtins.update(next=guarded_next)
+#    add_builtins()
 
 _safe_class_attribute_dict = {}
 import inspect
@@ -237,7 +266,7 @@ from AccessControl.ZopeGuards import _dict_white_list
 # (closure) directly to ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+#XXXfull_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
 
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
