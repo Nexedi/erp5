@@ -53,16 +53,8 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleInvoiceTransaction_getDueDate</string> </value>
+            <value> <string>Invoice_getPaymentDueDate</string> </value>
         </item>
       </dictionary>
     </pickle>
