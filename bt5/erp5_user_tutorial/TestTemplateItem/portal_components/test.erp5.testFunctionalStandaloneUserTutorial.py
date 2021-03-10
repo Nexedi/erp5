@@ -72,6 +72,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       'field_your_lang': "erp5_l10n_fr",
       'field_your_price_currency': "EUR;0.01;Euro",
       'field_your_preferred_date_order': "dmy",
+      'default_field_your_lang': "1",
     }
   }
 
@@ -130,10 +131,6 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
         break
       previous_title = title
       kw = self.configuration_info.get(title, {})
-      if title == "Configure ERP5 Preferences":
-        transition = business_configuration.getNextTransition()
-        form = getattr(business_configuration, transition.getTransitionFormId())
-        raise NotImplementedError(form(), response_dict)
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, kw)
 
