@@ -462,7 +462,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     if wf is not None:
       actions.append({
         "id": wf.id,
-        "title": wf.title,
+        "name": wf.title,
         "url": "%s/manage_properties" % wf.absolute_url_path(),
         "icon": None,
         "category": "object_onlyjio_jump_raw",
