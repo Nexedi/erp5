@@ -60,19 +60,6 @@ def _validateFormToRequest(form, REQUEST, **kw):
     ## missing fields
     validation_status = 2
   ## extract form arguments and remove leading prefixes
-  field_id_list = []
-  value_list = []
-  if "field_your_price_currency" in kw.keys():
-    for field in form.get_fields():
-      field_id = field.id
-      value = getattr(REQUEST, field_id, None)
-      field_id_list.append(field_id)
-      value_list.append(value)
-    value_1 = getattr(REQUEST, "field_your_lang", "field_your_lang")
-    value_2 = getattr(REQUEST, "your_lang", "your_lang")
-    value_list.append(value_1)
-    value_list.append(value_2)
-    # raise NotImplementedError(form.get_fields(), str(REQUEST.other), field_id_list, value_list)
   if validation_status == 0:
     for field in form.get_fields():
       field_id = field.id
@@ -175,9 +162,6 @@ class ConfiguratorTool(BaseTool):
       form = getattr(business_configuration, transition.getTransitionFormId())
       for form_key in [x for x in kw.keys() if x.startswith('field_')]:
         form_kw[form_key] = kw[form_key]
-      if "field_your_price_currency" in kw.keys():
-        pass
-        # raise NotImplementedError(form_kw, kw)
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
         single_form_kw = {}
@@ -264,8 +248,6 @@ class ConfiguratorTool(BaseTool):
         else:
           ## validation passed
           need_validation = 0
-          if "price_currency" in form_kw.keys() or "field_your_price_currency" in kw.keys():
-            raise NotImplementedError(form_kw, kw)
           business_configuration._executeTransition(form_kw=form_kw, request_kw=kw)
       elif need_validation == 0:
         if business_configuration.getNextTransition() == None:
