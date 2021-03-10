@@ -20,8 +20,12 @@ import ZConfig
 import Zope2
 from Zope2.Startup.run import make_wsgi_app
 
-from Products.ERP5Type.patches.WSGIPublisher import publish_module
-
+try:
+  from ZPublisher.WSGIPublisher import _MODULES
+  from ZPublisher.WSGIPublisher import publish_module
+except ImportError:
+  # BBB Zope2
+  from Products.ERP5Type.patches.WSGIPublisher import publish_module
 
 # this class licensed under the MIT license (stolen from pyramid_translogger)
 class TransLogger(object):
@@ -167,7 +171,10 @@ def runwsgi():
     args = parser.parse_args()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
-    schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
+    if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
+      schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
+    else: # BBB
+      schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
@@ -190,11 +197,11 @@ def runwsgi():
     port = int(port)
     createServer(
         app_wrapper(
-          large_file_threshold=conf.large_file_threshold,
+          large_file_threshold=getattr(conf, 'large_file_threshold', None),
           webdav_ports=[port] if args.webdav else ()),
         listen=args.address,
         logger=logging.getLogger("access"),
-        threads=conf.zserver_threads,
+        threads=getattr(conf, 'zserver_threads', 4),
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
