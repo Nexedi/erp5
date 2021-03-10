@@ -228,8 +228,6 @@ class BusinessConfiguration(Item):
               self.REQUEST.set(field.id, field_value)
             else:
               self.REQUEST.set(field.id, '')
-            if "price_currency" in field.id:
-              raise NotImplementedError(field, field_ids, old_field_value, field_value, context, form_counter)
           form_html = self.Base_mainConfiguratorFormTemplate( \
                              current_form_number=form_counter + 1,\
                              max_form_numbers=forms_number,\
