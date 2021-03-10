@@ -68,7 +68,10 @@ def _validateFormToRequest(form, REQUEST, **kw):
       value = getattr(REQUEST, field_id, None)
       field_id_list.append(field_id)
       value_list.append(value)
-    raise NotImplementedError(form.get_fields(), REQUEST, field_id_list, value_list)
+    value_1 = getattr(REQUEST, "field_your_lang", "field_your_lang")
+    value_2 = getattr(REQUEST, "your_lang", "your_lang")
+    value_list.append(value_1, value_2)
+    raise NotImplementedError(form.get_fields(), str(REQUEST.other), field_id_list, value_list)
   if validation_status == 0:
     for field in form.get_fields():
       field_id = field.id
