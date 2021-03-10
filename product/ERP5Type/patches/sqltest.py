@@ -13,6 +13,7 @@
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
+from types import StringType
 
 list_type_list = list, tuple, set, frozenset, dict
 
@@ -50,7 +51,7 @@ if 1: # For easy diff with original
                     if type(v) is StringType:
                         if v[-1:]=='L':
                             v=v[:-1]
-                        atoi(v)
+                        int(v)
                     else: v=str(int(v))
                 except ValueError:
                     raise ValueError(
@@ -58,7 +59,7 @@ if 1: # For easy diff with original
             elif t=='float':
                 if not v and type(v) is StringType: continue
                 try:
-                    if type(v) is StringType: atof(v)
+                    if type(v) is StringType: float(v)
                     else: v=str(float(v))
                 except ValueError:
                     raise ValueError(
@@ -92,7 +93,7 @@ if 1: # For easy diff with original
                 'No input was provided for <em>%s</em>' % name)
 
         if len(vs) > 1:
-            vs=join(map(str,vs),', ')
+            vs = ', '.join(map(str, vs))
             if self.op == '<>':
                 ## Do the equivalent of 'not-equal' for a list,
                 ## "a not in (b,c)"
@@ -103,4 +104,11 @@ if 1: # For easy diff with original
         return "%s %s %s" % (self.column, self.op, vs[0])
     SQLTest.render = SQLTest.__call__ = render
 
-sqltest.valid_type = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in xrange(7))).__contains__
+new_valid_types = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in xrange(7)))
+
+try:
+  # BBB
+  from Shared.DC.ZRDB.sqltest import valid_type
+  sqltest.valid_type = new_valid_types.__contains__
+except ImportError:
+  sqltest.valid_types = new_valid_types

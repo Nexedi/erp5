@@ -48,7 +48,10 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
-from App.Extensions import getBrain
+try: # BBB Zope 2.12
+  from App.Extensions import getBrain
+except ImportError:
+  from Shared.DC.ZRDB.DA import getBrain
 from MySQLdb import ProgrammingError
 from MySQLdb.constants.ER import NO_SUCH_TABLE
 
