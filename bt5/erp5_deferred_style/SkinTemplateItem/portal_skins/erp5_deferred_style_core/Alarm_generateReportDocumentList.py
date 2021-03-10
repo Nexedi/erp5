@@ -50,7 +50,7 @@ for idx, report_data in enumerate(getattr(context, report_configuration_script_i
     # erp5 report
     report_active_context.Base_computeReportSection(
         form=report_data['form_id'],
-        request_other=report_data['parameters'],
+        report_request=report_data['parameters'],
         user_name=None,
         tag=tag,
         skin_name=report_data['skin_name'],
