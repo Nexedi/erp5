@@ -147,6 +147,26 @@
 			<td>Doh</td>
 		</tr>
 		<tr>
+			<td>type</td>
+			<td>//input[@name="field_my_career_subordination_title"]</td>
+			<td>Z Company</td>
+		</tr>
+        <tr>
+		    <td>fireEvent</td>
+  		    <td>//input[@name="field_my_career_subordination_title"]</td>
+  		    <td>input</td>
+		</tr>
+		<tr>
+  		    <td>waitForElementPresent</td>
+  		    <td>//ul[@class="search_ul"]//li</td>
+  		    <td></td>
+	    </tr>
+	    <tr>
+  	        <td>click</td>
+ 		    <td>//ul[@class="search_ul"]/li[@name="Organisation"]</td>
+ 		    <td></td>
+		</tr>
+		<tr>
 			<td>select</td>
 			<td>//select[@name=&quot;field_my_gender&quot;]</td>
 			<td>Male</td>
@@ -219,11 +239,6 @@
 		</tr>
 		<tr>
 			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;field_my_middle_name&quot;]</td>
-			<td>Scott</td>
 		</tr>
 		<tr>
 			<td>type</td>
