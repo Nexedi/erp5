@@ -1,3 +1,5 @@
 test_page_module/developer-Test.Page.Sample
+test_page_module/user-Howto.Create.Organisations
+test_page_module/user-Howto.Create.Organisations/**
 test_page_module/user-Howto.Create.Persons
 test_page_module/user-Howto.Create.Persons/**
