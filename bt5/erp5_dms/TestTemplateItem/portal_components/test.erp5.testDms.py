@@ -2896,6 +2896,44 @@ return 1
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
 
+  def test_Base_getRelatedDocumentList(self):
+    """
+      Checks Base_getRelatedDocumentList works correctly with both
+      related (follow_up) Documents and with sub-object Embedded Files
+    """
+    uploaded_file = makeFileUpload('TEST-001-en.dummy')
+    document_value = self.portal.Base_contribute(
+      file=uploaded_file,
+      synchronous_metadata_discovery=True,
+      portal_type='File'
+    )
+    person_value = self.portal.person_module.newContent(portal_type='Person')
+    getRelatedDocumentList = person_value.Base_getRelatedDocumentList
+    self.tic()
+    # No related document
+    self.assertEqual(len(getRelatedDocumentList()), 0)
+    document_value.setFollowUpValue(person_value)
+    self.tic()
+    # Only related follow_up File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [document_value]
+    )
+    sub_document_value = person_value.newContent(portal_type='Embedded File')
+    self.tic()
+    # Related follow_up File and Embedded File
+    self.assertEqual(
+      sorted([brain.getObject() for brain in getRelatedDocumentList()]),
+      sorted([sub_document_value, document_value])
+    )
+    document_value.setFollowUpValue(None)
+    self.tic()
+    # Only related Embedded File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [sub_document_value]
+    )
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'

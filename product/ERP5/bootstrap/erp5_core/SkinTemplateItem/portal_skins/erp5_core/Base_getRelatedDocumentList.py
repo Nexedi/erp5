@@ -7,12 +7,20 @@ portal_catalog = portal.portal_catalog
 
 if portal_type is None:
   portal_type = portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList()
-
-document_query = ComplexQuery(
-  Query(follow_up_uid=context.getUid()),
-  Query(relative_url='%s/%%' % context.getRelativeUrl().replace('_', r'\_')),
-  logical_operator='or'
+limit = kw.pop('limit', None)
+follow_up_related_document_list = portal_catalog(
+   portal_type=portal_type,
+   follow_up_uid=context.getUid(),
+  **kw
 )
+if follow_up_related_document_list:
+  document_query = ComplexQuery(
+    Query(relative_url='%s/%%' % context.getRelativeUrl().replace('_', r'\_')),
+    Query(uid=[x.getUid() for x in follow_up_related_document_list]),
+    logical_operator='or'
+  )
+else:
+  document_query = Query(relative_url='%s/%%' % context.getRelativeUrl().replace('_', r'\_'))
 if query is None:
   query = document_query
 else:
@@ -25,4 +33,5 @@ else:
 return portal_catalog(
   portal_type=portal_type,
   query=query,
+  limit=limit,
   **kw)
