@@ -1,11 +1,11 @@
-/*global window, rJS, RSVP, domsugar, URI, calculatePageTitle, ensureArray,
+/*global window, rJS, RSVP, domsugar, URI, calculatePageTitle,
          mergeGlobalActionWithRawActionList */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 
 /** Page for displaying Views, Jump and BreadCrumb navigation for a document.
 */
 
-(function (window, rJS, RSVP, domsugar, URI, calculatePageTitle, ensureArray,
+(function (window, rJS, RSVP, domsugar, URI, calculatePageTitle,
            mergeGlobalActionWithRawActionList) {
   "use strict";
 
@@ -104,21 +104,18 @@
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
         .push(function (result) {
-          erp5_document = result;
-          return mergeGlobalActionWithRawActionList(gadget.state.jio_key,
+          var group_mapping = mergeGlobalActionWithRawActionList(gadget.state.jio_key,
             gadget.state.view, gadget.state.jump_view,
             erp5_document._links, [
               "view",
               "action_object_jio_jump"
-            ]);
-          })
-        .push(function (group_mapping) {
-          var url_for_kw_list = [];
+            ]),
+            url_for_kw_list = [];
+          erp5_document = result;
           view_list = group_mapping.view;
           jump_list = group_mapping.action_object_jio_jump;
 
-          url_for_kw_list = url_for_kw_list.concat(
-            view_list).concat(jump_list);
+          url_for_kw_list = url_for_kw_list.concat(view_list).concat(jump_list);
 
           url_for_kw_list.push({command: 'cancel_dialog_with_history'});
           return RSVP.hash({
@@ -165,4 +162,4 @@
       return;
     });
 
-}(window, rJS, RSVP, domsugar, URI, calculatePageTitle, ensureArray, mergeGlobalActionWithRawActionList));
+}(window, rJS, RSVP, domsugar, URI, calculatePageTitle, mergeGlobalActionWithRawActionList));
