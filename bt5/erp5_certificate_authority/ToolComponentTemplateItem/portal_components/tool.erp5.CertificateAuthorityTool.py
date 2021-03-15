@@ -221,7 +221,7 @@ class CertificateAuthorityTool(BaseTool):
           certificate=open(cert).read(),
           id=new_id,
           common_name=common_name)
-      except:
+      except Exception:
         e = sys.exc_info()
         try:
           for p in key, csr, cert:
@@ -261,7 +261,7 @@ class CertificateAuthorityTool(BaseTool):
         created.append(alias)
         os.symlink(os.path.basename(crl), alias)
         return dict(crl=open(crl).read())
-      except:
+      except Exception:
         e = sys.exc_info()
         try:
           for p in 'index.txt', 'crlnumber':
