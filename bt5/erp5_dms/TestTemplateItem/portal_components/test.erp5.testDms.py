@@ -2923,8 +2923,8 @@ return 1
     self.tic()
     # Related follow_up File and Embedded File
     self.assertEqual(
-      sorted([brain.getObject() for brain in getRelatedDocumentList()]),
-      sorted([sub_document_value, document_value])
+      sorted([brain.getObject() for brain in getRelatedDocumentList()], key=lambda brain: brain.path),
+      sorted([sub_document_value, document_value], key=lambda doc: doc.getPath())
     )
     document_value.setFollowUpValue(None)
     self.tic()
