@@ -261,7 +261,7 @@ class TestWorklist(ERP5TypeTestCase):
         self.logMessage("Check %s worklist" % user_id)
         self.loginByUserName(user_id)
         result = workflow_tool.listActions(object=document)
-        self.assertNotEqual(result, [])
+        self.assertEqual(len(result), 2)
         action, = [r for r in result if r["id"] == "onlyjio_validation_workflow"]
         self.assertEqual(action["name"], "Validation Workflow")
         self.assertTrue(
