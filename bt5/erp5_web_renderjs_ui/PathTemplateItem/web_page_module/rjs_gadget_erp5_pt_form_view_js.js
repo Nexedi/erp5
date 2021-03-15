@@ -86,6 +86,9 @@
              Deleting objects inplace was not a good idea.
              So we pass through only non-empty (non-editable) fields.
           */
+          if (gadget.state.editable) {
+            throw "Is editable " + gadget.state;
+          }
           if (form_definition.hasOwnProperty('edit_form_href')) {
             delete form_definition.edit_form_href;
           }
