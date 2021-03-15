@@ -165,7 +165,7 @@
   // Handle listbox action list
   ///////////////////////////////
   function mergeGlobalActionWithRawActionList(jio_key, view, jump_view,
-                                              links, group_id_list,
+                                              link_list, group_id_list,
                                               command_mapping,
                                               editable_mapping) {
     var i, j, group,
@@ -191,20 +191,20 @@
 
     function addRawUrlToGroupMapping(group, action_type) {
       var index;
-      if (links.hasOwnProperty(action_type)) {
+      if (link_list.hasOwnProperty(action_type)) {
         if (!group_mapping.hasOwnProperty(group)) {
           group_mapping[group] = [];
         }
-        if (links[action_type] instanceof Array) {
-          for (index = 0; index < links[action_type].length; index += 1) {
-            if (links[action_type][index].href) {
-              links[action_type][index].action_type = action_type;
-              group_mapping[group].push(links[action_type][index]);
+        if (link_list[action_type] instanceof Array) {
+          for (index = 0; index < link_list[action_type].length; index += 1) {
+            if (link_list[action_type][index].href) {
+              link_list[action_type][index].action_type = action_type;
+              group_mapping[group].push(link_list[action_type][index]);
             }
           }
         } else {
-          links[action_type].action_type = action_type;
-          group_mapping[group].push(links[action_type]);
+          link_list[action_type].action_type = action_type;
+          group_mapping[group].push(link_list[action_type]);
         }
       }
     }
@@ -213,15 +213,15 @@
       group = group_id_list[i];
       if (group instanceof Array) {
         action_type = group[0];
-        group_mapping[action_type] = ensureArray(links[action_type]);
+        group_mapping[action_type] = ensureArray(link_list[action_type]);
         addRawUrlToGroupMapping(action_type, action_type + "_raw");
         if (group.length > 1) {
           for (j = 1; j < group.length; j += 1) {
-            if (links.hasOwnProperty(group[j])) {
+            if (link_list.hasOwnProperty(group[j])) {
               group_mapping[action_type] = group_mapping[
                 action_type
               ].concat(
-                ensureArray(links[group[j]])
+                ensureArray(link_list[group[j]])
               );
             }
             addRawUrlToGroupMapping(action_type,
@@ -230,7 +230,7 @@
         }
       } else {
         group_mapping[group] = ensureArray(
-          links[group]
+          link_list[group]
         );
         addRawUrlToGroupMapping(group, group + "_raw");
       }
