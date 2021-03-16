@@ -41,6 +41,55 @@ INITIAL_STATE_TITLE = 'Start'
 DOWNLOAD_STATE_TITLE = 'Download'
 END_STATE_TITLE = 'End'
 
+## TODO-ERP5Workflow: Initially part of Workflow implementation done for
+##                    ERP5Configurator but not used by ERP5 Workflow...
+def _generateHistoryKey(workflow):
+   """
+   Generate a key used in the workflow history.
+   """
+   return workflow.getReference()
+def getWorkflowHistory(state, document, remove_undo=0, remove_not_displayed=0):
+  """
+  Return history tuple
+  """
+  wh = document.workflow_history[_generateHistoryKey(state.getParentValue())]
+  result = []
+  # Remove undo
+  if not remove_undo:
+    result = [x.copy() for x in wh]
+  else:
+    result = []
+    for x in wh:
+      if x.has_key('undo') and x['undo'] == 1:
+        result.pop()
+      else:
+        result.append(x.copy())
+  return result
+def _checkPermission(transition, document):
+  """
+  Check if transition is allowed.
+  """
+  expr_value = transition.getGuardExpression(evaluate=0)
+  if expr_value is not None:
+    # do not use 'getGuardExpression' to calculate tales because
+    # it caches value which is bad. Instead do it manually
+    from Products.ERP5Type.Accessor.Base import _evaluateTales
+    value = _evaluateTales(document, expr_value)
+  else:
+    value = True
+  #print "CALC", expr_value, '-->', value
+  return value
+def getAvailableTransitionList(state, document):
+  """
+  Return available transitions only if they are accessible for the current document.
+  """
+  result_list = []
+  for transition in state.getDestinationValueList():
+    value = _checkPermission(transition, document)
+    if value:
+      result_list.append(transition)
+  return result_list
+
 class BusinessConfiguration(Item):
   """
     BusinessConfiguration store the values enter by the wizard.
@@ -119,7 +168,7 @@ class BusinessConfiguration(Item):
     current_state = self.getCurrentStateValue()
     if current_state is None:
       return None
-    transition_list = current_state.getAvailableTransitionList(self)
+    transition_list = getAvailableTransitionList(current_state, self)
     transition_number = len(transition_list)
     if transition_number > 1:
       raise TypeError("More than one transition is available.")
@@ -250,7 +299,7 @@ class BusinessConfiguration(Item):
   security.declarePrivate('_displayPreviousForm')
   def _displayPreviousForm(self):
     """ Render previous form using workflow history. """
-    workflow_history = self.getCurrentStateValue().getWorkflowHistory(self, remove_undo=1)
+    workflow_history = getWorkflowHistory(self.getCurrentStateValue(), self, remove_undo=1)
     workflow_history.reverse()
     for wh in workflow_history:
       ## go one step back
@@ -261,7 +310,7 @@ class BusinessConfiguration(Item):
       transition = self.unrestrictedTraverse(wh['transition'])
       conf_save = self.unrestrictedTraverse(wh['configuration_save_url'])
       ## check if this transition can be shown to user ...
-      if transition._checkPermission(self) and \
+      if _checkPermission(transition, self) and \
            transition.getTransitionFormId() is not None:
         return  self._displayNextForm(context=conf_save, transition=transition)
 
@@ -279,7 +328,7 @@ class BusinessConfiguration(Item):
     current_state = self.getCurrentStateValue()
     transition = self.getNextTransition()
     next_state = self.unrestrictedTraverse(transition.getDestination())
-    for wh in current_state.getWorkflowHistory(self):
+    for wh in getWorkflowHistory(current_state, self):
       if next_state == self.unrestrictedTraverse(wh['current_state']):
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
@@ -287,11 +336,11 @@ class BusinessConfiguration(Item):
   security.declarePrivate('_isAlreadyConfSaveInWorkflowHistory')
   def _isAlreadyConfSaveInWorkflowHistory(self, transition):
     """ check if we have an entry in worklow history for this state """
-    workflow_history = self.getCurrentStateValue().getWorkflowHistory(self, remove_undo=1)
+    workflow_history = getWorkflowHistory(self.getCurrentStateValue(), self, remove_undo=1)
     workflow_history.reverse()
     for wh in workflow_history:
       wh_state = self.unrestrictedTraverse(wh['current_state'])
-      for wh_transition in wh_state.getAvailableTransitionList(self):
+      for wh_transition in getAvailableTransitionList(wh_state, self):
         if wh_transition.getTransitionFormId() is not None and \
            wh_transition != transition:
           return True
