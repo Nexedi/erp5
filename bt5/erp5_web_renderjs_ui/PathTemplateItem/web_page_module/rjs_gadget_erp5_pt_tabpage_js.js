@@ -103,7 +103,7 @@
         jump_list;
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
-        .push(function (result) {
+        .push(function (erp5_document) {
           var group_mapping = mergeGlobalActionWithRawActionList(gadget.state.jio_key,
             gadget.state.view, gadget.state.jump_view,
             erp5_document._links, [
@@ -111,7 +111,6 @@
               "action_object_jio_jump"
             ]),
             url_for_kw_list = [];
-          erp5_document = result;
           view_list = group_mapping.view;
           jump_list = group_mapping.action_object_jio_jump;
 
