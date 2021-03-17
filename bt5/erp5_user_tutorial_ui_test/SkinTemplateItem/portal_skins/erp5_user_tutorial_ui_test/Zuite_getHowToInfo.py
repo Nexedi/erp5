@@ -25,6 +25,7 @@ return {'now': DateTime(),
         'person_howto_organisation_title': 'Z Company',
 
         'organisation_howto_organisation_title': 'Z Company',
+        'bankaccount_howto_organisation_title': 'HSBC Enterprise',
 
         'link_howto_person_title' : 'ZUITE-TEST-LINK USER-001',
         'link_howto_person_first_name': 'ZUITE-TEST-LINK',
