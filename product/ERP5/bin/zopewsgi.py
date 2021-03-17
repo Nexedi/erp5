@@ -173,9 +173,9 @@ def runwsgi():
     port = int(port)
     createServer(
         app_wrapper(
-          large_file_threshold=conf.large_file_threshold,
+#          large_file_threshold=conf.large_file_threshold,
           webdav_ports=[port] if args.webdav else ()),
         listen=args.address,
         logger=logging.getLogger("access"),
-        threads=conf.zserver_threads,
+ #       threads=conf.zserver_threads,
     ).run()
