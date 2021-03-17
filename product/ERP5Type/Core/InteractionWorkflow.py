@@ -321,18 +321,17 @@ class InteractionWorkflow(Workflow):
         # between here and when the interaction was executed... So we
         # need to switch to the security manager as it was back then
         setSecurityManager(security_manager)
-        self.getScriptValueById(script_name)(sci)
+        self._getOb(script_name)(sci)
       finally:
         setSecurityManager(current_security_manager)
 
   security.declarePrivate('activeScript')
   def activeScript(self, script_name, ob_url, former_status, tdef_id):
-    script = self.getScriptValueById(script_name)
     ob = self.unrestrictedTraverse(ob_url)
-    tdef = self._getOb(tdef_id)
+    tdef = self.getTransitionValueById(tdef_id)
     sci = StateChangeInfo(
           ob, self, former_status, tdef, None, None, None)
-    script(sci)
+    self._getOb(script_name)(sci)
 
   security.declarePrivate('isActionSupported')
   def isActionSupported(self, document, action, **kw):
@@ -514,9 +513,10 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
   from Products.ERP5Type.Utils import deprecated
   from ComputedAttribute import ComputedAttribute
 
+  from Products.ERP5Type.Core.Workflow import _ContainerTab
   InteractionWorkflow.interactions = ComputedAttribute(
     deprecated('`interactions` is deprecated; use getTransitionValueList()')\
-              (lambda self: {o.getReference(): o for o in self.getTransitionValueList()}),
+              (lambda self: _ContainerTab({o.getReference(): o for o in self.getTransitionValueList()})),
     1) # must be Acquisition-wrapped
   InteractionWorkflow.security.declareProtected(Permissions.AccessContentsInformation,
                                                 'interactions')
