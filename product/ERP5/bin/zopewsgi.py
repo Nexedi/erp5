@@ -167,7 +167,7 @@ def runwsgi():
     args = parser.parse_args()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
-    schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
+    schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
