@@ -198,6 +198,6 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
   from ComputedAttribute import ComputedAttribute
   State.transitions = ComputedAttribute(
     deprecated('`transitions` is deprecated; use getDestinationValueList()')\
-              (lambda self: {o.getReference(): o for o in self.getDestinationValueList()}),
+              (lambda self: [o.getReference()]),
     1) # must be Acquisition-wrapped
   State.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')

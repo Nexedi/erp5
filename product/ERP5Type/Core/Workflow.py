@@ -1484,15 +1484,25 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
               (lambda self: self.getStateVariable()))
   Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'state_var')
 
+  class _ContainerTab(dict):
+    """
+    Backward compatibility for Products.DCWorkflow.ContainerTab
+    """
+    def objectIds(self):
+      return self.keys()
+
+    def objectValues(self):
+      return self.values()
+
   Workflow.states = ComputedAttribute(
     deprecated('`states` is deprecated; use getStateValueList()')\
-              (lambda self: {o.getReference(): o for o in self.getStateValueList()}),
+              (lambda self: _ContainerTab({o.getReference(): o for o in self.getStateValueList()})),
     1) # must be Acquisition-wrapped
   Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'states')
 
   Workflow.transitions = ComputedAttribute(
     deprecated('`transitions` is deprecated; use getTransitionValueList()')\
-              (lambda self: {o.getReference(): o for o in self.getTransitionValueList()}),
+              (lambda self: _ContainerTab({o.getReference(): o for o in self.getTransitionValueList()})),
     1) # must be Acquisition-wrapped
   Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')
 
@@ -1501,7 +1511,7 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
     """
     Backward compatibility to avoid modifying Workflow Scripts code
     """
-    script_dict = {}
+    script_dict = _ContainerTab()
     for script in self.getScriptValueList():
       # wf.scripts['foobar']
       script_dict[script.getReference()] = script

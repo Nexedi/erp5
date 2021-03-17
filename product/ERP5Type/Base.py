@@ -63,6 +63,7 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
 from Products.ERP5Type.Utils import INFINITE_SET
+from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
@@ -1810,11 +1811,12 @@ class Base(
     return self.aq_inner.aq_parent.getPortalObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
+  @deprecated
   def getWorkflowIds(self):
     """
       Returns the list of workflows
     """
-    return self.portal_workflow.getWorkflowIds()
+    return self.portal_workflow.objectIds()
 
   # Object Database Management
   security.declareProtected( Permissions.ManagePortal, 'upgrade' )
