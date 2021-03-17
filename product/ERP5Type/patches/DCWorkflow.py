@@ -642,6 +642,10 @@ def DCWorkflowDefinition_getScriptValueList(self):
   return []
 def StateDefinition_getDestinationIdList(self):
   return self.transitions
+def StateDefinition_getDestinationValueList(self):
+  if self.transitions is not None:
+    return self.transitions.values()
+  return []
 def StateDefinition_getStateTypeList(self):
   return getattr(self, 'type_list', ())
 def DCWorkflowDefinition_getPortalType(self):
@@ -1273,6 +1277,7 @@ StateDefinition.getId = method_getId
 StateDefinition.getTitle = method_getTitle
 StateDefinition.getDescription = method_getDescription
 StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
+StateDefinition.getDestinationValueList = StateDefinition_getDestinationValueList
 StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
 StateDefinition.showDict = DCWorkflowDefinition_showDict
 StateDefinition.getStateTypeList = StateDefinition_getStateTypeList

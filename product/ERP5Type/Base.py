@@ -618,11 +618,14 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       # Check portal type filter
-      if portal_type not in tdef.getPortalTypeFilterList():
+      portal_type_filter_list = tdef.getPortalTypeFilterList()
+      if (portal_type_filter_list and
+          portal_type not in tdef.getPortalTypeFilterList()):
         continue
 
       # Check portal type group filter
-      if tdef.getPortalTypeGroupFilterList():
+      portal_type_group_filter_list = tdef.getPortalTypeGroupFilterList()
+      if portal_type_group_filter_list:
         getPortalGroupedTypeSet = portal_workflow.getPortalObject()._getPortalGroupedTypeSet
         if not any(portal_type in getPortalGroupedTypeSet(portal_type_group) for
                    portal_type_group in tdef.getPortalTypeGroupFilterList()):
@@ -3495,7 +3498,7 @@ class Base(
     # Use meta transition to jump from one state to another
     # without existing transitions.
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
-    from Products.Core.Core.InteractionWorkflow import InteractionWorkflow
+    from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow
     worflow_variable_list = []

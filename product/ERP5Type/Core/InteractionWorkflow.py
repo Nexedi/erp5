@@ -260,10 +260,7 @@ class InteractionWorkflow(Workflow):
       sci = None
 
       # Update variables.
-      try:
-        tdef_exprs = {v.getId(): v for v in tdef.getTransitionVariableValueList()}
-      except AttributeError:
-        import pdb; pdb.set_trace()
+      tdef_exprs = {v.getId(): v for v in tdef.getTransitionVariableValueList()}
       status = {}
       for vdef in workflow_variable_list:
         id_ = vdef.getId()

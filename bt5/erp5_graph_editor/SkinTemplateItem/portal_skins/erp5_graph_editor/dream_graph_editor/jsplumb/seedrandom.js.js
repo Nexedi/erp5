@@ -76,11 +76,11 @@ require(['seedrandom'], function(seedrandom) {
 Network seeding
 ---------------
 
-<script src=//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js>
+<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js">
 </script>
 
 <!-- Seeds using urandom bits from a server. -->
-<script src=//jsonlib.appspot.com/urandom?callback=Math.seedrandom">
+<script src="//jsonlib.appspot.com/urandom?callback=Math.seedrandom">
 </script>
 
 <!-- Seeds mixing in random.org bits -->

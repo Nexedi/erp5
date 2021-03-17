@@ -41,9 +41,10 @@ class StateError(Exception):
   """
   pass
 
-# Prototype of a mixin allowing to have custom storage for matrix
 class CustomStorageMatrixMixin(XMLMatrix):
-
+  """
+  Prototype of a mixin allowing to have custom storage for matrix
+  """
   def newCellContent(self, cell_id, **kw):
     """
     Creates a new content as a matrix box cell.
@@ -55,7 +56,9 @@ class CustomStorageMatrixMixin(XMLMatrix):
   def getCell(self, *kw , **kwd):
     return self.newCell(*kw , **kwd)
 
-class State(IdAsReferenceMixin("state_"), XMLObject, CustomStorageMatrixMixin):
+class State(IdAsReferenceMixin("state_"),
+            XMLObject,
+            CustomStorageMatrixMixin):
   """
   A ERP5 State.
   """
@@ -64,24 +67,23 @@ class State(IdAsReferenceMixin("state_"), XMLObject, CustomStorageMatrixMixin):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  default_reference = ''
   state_type = ()
   acquire_permission = []
   state_permission_roles_dict = {}
+  var_values = None
 
-  # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  var_values = None
-  # Declarative properties
+
   property_sheets = (
-             PropertySheet.Base,
-             PropertySheet.XMLObject,
-             PropertySheet.CategoryCore,
-             PropertySheet.DublinCore,
-             PropertySheet.Reference,
-             PropertySheet.SortIndex,
-             PropertySheet.State,)
+    'Base',
+    'XMLObject',
+    'CategoryCore',
+    'DublinCore',
+    'Reference',
+    'SortIndex',
+    'State',
+  )
 
   def addPossibleTransition(self, tr_ref):
     possible_transition_list = self.getCategoryList()

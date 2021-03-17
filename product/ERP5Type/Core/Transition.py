@@ -47,12 +47,10 @@ class Transition(IdAsReferenceMixin("transition_"), XMLObject, GuardableMixin):
   isRADContent = 1
   trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
   var_exprs = None  # A mapping.
-  default_reference = ''
-  # Declarative security
+
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative properties
   property_sheets = (
     'Base',
     'XMLObject',
