@@ -27,8 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.Expression import Expression
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.mixin.guardable import GuardableMixin
@@ -41,30 +40,20 @@ class WorkflowVariable(IdAsReferenceMixin("variable_"),
     """
     A ERP5 Workflow Variable.
     """
-
     meta_type = 'ERP5 Variable'
     portal_type = 'Workflow Variable'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = True
-    isRADContent = True
 
-    info_guard = None
-    status_included = True
-    variable_default_value = ''
-    variable_default_expression = None  # Overrides variable_default_value if set
-    default_reference = ''
-    # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
     property_sheets = (
-               PropertySheet.Base,
-               PropertySheet.XMLObject,
-               PropertySheet.CategoryCore,
-               PropertySheet.DublinCore,
-               PropertySheet.Reference,
-               PropertySheet.Variable,
-               PropertySheet.Guard,
-               PropertySheet.WorkflowVariable,
+      'Base',
+      'XMLObject',
+      'CategoryCore',
+      'DublinCore',
+      'Reference',
+      'Variable',
+      'Guard',
+      'WorkflowVariable',
     )

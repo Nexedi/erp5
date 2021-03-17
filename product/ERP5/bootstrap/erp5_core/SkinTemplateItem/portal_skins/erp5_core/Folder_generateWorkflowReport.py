@@ -1,4 +1,5 @@
 portal = context.getPortalObject()
+getWorkflowValueListFor = portal.portal_workflow.getWorkflowValueListFor
 translateString = portal.Base_translateString
 state_variable_set = set()
 add = state_variable_set.add

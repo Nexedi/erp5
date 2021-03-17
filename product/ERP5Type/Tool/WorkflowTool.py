@@ -31,13 +31,11 @@ Most of the code in this file has been taken from patches/WorkflowTool.py
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import aq_base
 from DateTime import DateTime
-from MethodObject import Method
 from MySQLdb import ProgrammingError, OperationalError
-from Products.CMFCore.interfaces import IWorkflowDefinition
 from Products.CMFCore.utils import Message
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.CMFCore.WorkflowTool import WorkflowTool as OriginalWorkflowTool
-from Products.CMFCore.WorkflowCore import ObjectDeleted, WorkflowException
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
@@ -63,11 +61,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   portal_type   = 'Workflow Tool'
   allowed_types = ('Workflow', 'Interaction Workflow')
 
-  # Declarative Security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative properties
   property_sheets = (
     'Base',
     'XMLObject',
@@ -314,7 +310,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       # XXX: Code below is duplicated from WorkflowTool_listActions
       info = self._getOAI(None)
       worklist_dict = {}
-      wf_ids = self.getWorkflowIds()
+      wf_ids = self.objectIds()
       for wf_id in wf_ids:
         wf = self.getWorkflowById(wf_id)
         if wf is not None:
@@ -429,12 +425,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       info = self._getOAI(object)
     actions = []
 
-    object_portal_type = info.object.getTypeInfo()
-    if object_portal_type is not None:
-      for wf_id in object_portal_type.getTypeWorkflowList():
-        wf = self._getOb(wf_id, None)
-        if wf is not None:
-          actions.extend(wf.listObjectActions(info))
+    if info.object is not None:
+      object_portal_type = info.object.getTypeInfo()
+      if object_portal_type is not None:
+        for wf_id in object_portal_type.getTypeWorkflowList():
+          wf = self._getOb(wf_id, None)
+          if wf is not None:
+            actions.extend(wf.listObjectActions(info))
 
     portal = self.getPortalObject()
     portal_url = portal.portal_url()

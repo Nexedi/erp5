@@ -28,31 +28,29 @@
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
-from App.special_dtml import HTMLFile
 from Products.ERP5.Document.PythonScript import PythonScript
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 SCRIPT_PREFIX = 'script_'
 
 class WorkflowScript(PythonScript, IdAsReferenceMixin("script_")):
-  meta_type = 'ERP5 Python Script'
+  meta_type = 'ERP5 Workflow Script'
   portal_type = 'Workflow Script'
   add_permission = Permissions.AddPortalContent
-  default_reference = ''
   _params = ''
 
-  # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Reference
-                      , PropertySheet.PythonScript
-                      )
+
+  property_sheets = (
+    'Base',
+    'XMLObject',
+    'CategoryCore',
+    'DublinCore',
+    'Reference',
+    'PythonScript',
+  )
 
   security.declarePublic("execute")
   execute = PythonScript.__call__

@@ -27,8 +27,6 @@
 ##############################################################################
 
 from Products.ERP5Type.Core.WorkflowVariable import WorkflowVariable
-from Products.ERP5Type import PropertySheet
-
 class WorklistVariable(WorkflowVariable):
     """
     A ERP5 Worklist Variable which serves as dynamic variable of Worklist.
@@ -37,15 +35,12 @@ class WorklistVariable(WorkflowVariable):
       - variable_default_value;
       - variable_default_expression which will override default when it's set.
     """
-
-
-    # Declarative properties
     property_sheets = (
-               PropertySheet.Base,
-               PropertySheet.XMLObject,
-               PropertySheet.CategoryCore,
-               PropertySheet.DublinCore,
-               PropertySheet.Reference,
-               PropertySheet.Variable,
-               PropertySheet.Guard,
+      'Base',
+      'XMLObject',
+      'CategoryCore',
+      'DublinCore',
+      'Reference',
+      'Variable',
+      'Guard',
     )

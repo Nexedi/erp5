@@ -27,13 +27,12 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_inner, aq_parent
 from Persistence import PersistentMapping
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
-from zLOG import LOG, ERROR, DEBUG, WARNING
 
 class StateError(Exception):
   """
@@ -65,12 +64,9 @@ class State(IdAsReferenceMixin("state_"),
   meta_type = 'ERP5 State'
   portal_type = 'State'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  state_type = ()
-  acquire_permission = []
+
+  # TODO-ERP5Workflow: Shouldn't it be in a Property Sheet?
   state_permission_roles_dict = {}
-  var_values = None
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -191,13 +187,13 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
   from Products.ERP5Type.Utils import deprecated
 
   State.getTransitions = deprecated(
-    "getTransitions() is deprecated; use getDestinationIdList()")\
+    'getTransitions() is deprecated; use getDestinationIdList()')\
     (State.getDestinationIdList)
   State.security.declareProtected(Permissions.AccessContentsInformation, 'getTransitions')
 
-  from ComputedAttribute import ComputedAttribute
-  State.transitions = ComputedAttribute(
-    deprecated('`transitions` is deprecated; use getDestinationValueList()')\
-              (lambda self: {o.getReference(): o for o in self.getDestinationValueList()}),
-    1) # must be Acquisition-wrapped
+  State.transitions = deprecated(
+    '`transitions` is deprecated; use getDestinationValueList()')\
+    (State.getDestinationIdList)
   State.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')
+
+InitializeClass(State)

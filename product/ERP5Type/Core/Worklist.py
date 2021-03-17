@@ -30,13 +30,11 @@
 import re
 
 from AccessControl import ClassSecurityInfo
-from Persistence import PersistentMapping
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.mixin.guardable import GuardableMixin
-from zLOG import LOG, WARNING
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
@@ -47,30 +45,22 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
     can be accessed directly; other dynamic variables will be accessable through
     content type "Worklist Variable".
     """
-
     meta_type = 'ERP5 Worklist'
     portal_type = 'Worklist'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-    description = ''
-    var_matches = []  # Compared with catalog when set.
-    matched_portal_type = ''
-    default_reference = ''
-    # Declarative security
+
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
     property_sheets = (
-               PropertySheet.Base,
-               PropertySheet.XMLObject,
-               PropertySheet.CategoryCore,
-               PropertySheet.DublinCore,
-               PropertySheet.Reference,
-               PropertySheet.Worklist,
-               PropertySheet.Guard,
-               PropertySheet.ActionInformation,
+      'Base',
+      'XMLObject',
+      'CategoryCore',
+      'DublinCore',
+      'Reference',
+      'Worklist',
+      'Guard',
+      'ActionInformation',
     )
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -145,7 +135,7 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
           key_list.append('validation_state')
         if self.getMatchedCausalityState():
           key_list.append('causality_state')
-        
+
         key_list += [dynamic_variable.getReference() for dynamic_variable in self.objectValues()
          if dynamic_variable.getVariableDefaultValue() or dynamic_variable.getVariableDefaultExpression()]
 

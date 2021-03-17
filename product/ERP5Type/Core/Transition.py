@@ -31,22 +31,21 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.mixin.guardable import GuardableMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
 
 TRIGGER_AUTOMATIC = 0
 TRIGGER_USER_ACTION = 1
 TRIGGER_WORKFLOW_METHOD = 2
 
-class Transition(IdAsReferenceMixin("transition_"), XMLObject, GuardableMixin):
+class Transition(IdAsReferenceMixin("transition_"),
+                 XMLObject,
+                 GuardableMixin):
   """
   A ERP5 Transition.
   """
   meta_type = 'ERP5 Transition'
   portal_type = 'Transition'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
-  trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
-  var_exprs = None  # A mapping.
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -173,3 +172,5 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
               (lambda self: self.getActionName()))
   Transition.security.declareProtected(Permissions.AccessContentsInformation,
                                        'actbox_name')
+
+InitializeClass(Transition)

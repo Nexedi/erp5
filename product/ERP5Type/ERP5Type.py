@@ -508,7 +508,7 @@ class ERP5TypeInformation(XMLObject,
       # defined in a specific order. Then, your new implementation should use
       # indexes on workflows as in portal types action's priority.
       # Note: 'sorted' also convert a tuple or a set to a list
-      self.workflow_list = sorted(type_workflow_list)
+      self._setTypeWorkflowList(sorted(type_workflow_list))
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()

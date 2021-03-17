@@ -128,19 +128,14 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertTrue(hasattr(doc, 'diverge'))
 
       wf = self.portal.portal_workflow.delivery_causality_workflow
-      wf.addTransition('dummy_workflow_method')
       from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-      if wf.getPortalType() == 'Workflow':
-        wf._getOb('transition_dummy_workflow_method')._edit(trigger_type=TRIGGER_WORKFLOW_METHOD)
-      else:
-        wf.transitions.dummy_workflow_method.setProperties(
-          title='', new_state_id='', trigger_type=TRIGGER_WORKFLOW_METHOD)
-
+      dummy_transition = wf.newContent(portal_type='Transition',
+                                       reference='dummy_workflow_method',
+                                       trigger_type=TRIGGER_WORKFLOW_METHOD)
       self.commit()
       self.assertTrue(hasattr(doc, 'dummyWorkflowMethod'))
 
-      wf.deleteTransitions(['dummy_workflow_method'])
-
+      wf.deleteContent(dummy_transition.getId())
       self.commit()
       self.assertFalse(hasattr(doc, 'dummyWorkflowMethod'))
 
