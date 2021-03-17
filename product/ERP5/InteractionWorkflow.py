@@ -124,6 +124,23 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     from Products.DCWorkflow.Scripts import Scripts
     self._addObject(Scripts('scripts'))
 
+  def _before_commit(self, sci, script_name, security_manager):
+    # check the object still exists before calling the script
+    ob = sci.object
+    while ob.isTempObject():
+      ob = ob.getParentValue()
+    if aq_base(self.unrestrictedTraverse(ob.getPhysicalPath(), None)) is \
+       aq_base(ob):
+      current_security_manager = getSecurityManager()
+      try:
+        # Who knows what happened to the authentication context
+        # between here and when the interaction was executed... So we
+        # need to switch to the security manager as it was back then
+        setSecurityManager(security_manager)
+        self.scripts[script_name](sci)
+      finally:
+        setSecurityManager(current_security_manager)
+
   def _checkTransitionGuard(self, t, ob, **kw):
     # This check can be implemented with a guard expression, but
     # it has a lot of overhead to use a TALES, so we make a special
@@ -348,7 +365,6 @@ for method_name, security in (
     ('getInfoFor', _s.declarePrivate),
     ('isWorkflowMethodSupported', _s.declarePrivate),
     ('activeScript', _s.declarePrivate),
-    ('_before_commit', None),
     ('notifyBefore', _s.declarePrivate),
     ('notifySuccess', _s.declarePrivate),
     ):

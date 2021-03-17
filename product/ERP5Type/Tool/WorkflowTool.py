@@ -314,7 +314,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       # XXX: Code below is duplicated from WorkflowTool_listActions
       info = self._getOAI(None)
       worklist_dict = {}
-      wf_ids = self.getWorkflowIds()
+      wf_ids = self.objectIds()
       for wf_id in wf_ids:
         wf = self.getWorkflowById(wf_id)
         if wf is not None:
@@ -429,12 +429,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       info = self._getOAI(object)
     actions = []
 
-    object_portal_type = info.object.getTypeInfo()
-    if object_portal_type is not None:
-      for wf_id in object_portal_type.getTypeWorkflowList():
-        wf = self._getOb(wf_id, None)
-        if wf is not None:
-          actions.extend(wf.listObjectActions(info))
+    if info.object is not None:
+      object_portal_type = info.object.getTypeInfo()
+      if object_portal_type is not None:
+        for wf_id in object_portal_type.getTypeWorkflowList():
+          wf = self._getOb(wf_id, None)
+          if wf is not None:
+            actions.extend(wf.listObjectActions(info))
 
     portal = self.getPortalObject()
     portal_url = portal.portal_url()

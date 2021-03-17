@@ -20,6 +20,7 @@ from Products.ERP5Type import Permissions
 from Acquisition import aq_base
 from Products.CMFCore.utils import _checkPermission
 from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Core.Workflow import createExpressionContext
 
 class GuardableMixin(ExpressionMixin('guard_expression')):
@@ -111,3 +112,5 @@ class GuardableMixin(ExpressionMixin('guard_expression')):
                                                 workflow,
                                                 kwargs=kw)))
     return True
+
+InitializeClass(GuardableMixin)
