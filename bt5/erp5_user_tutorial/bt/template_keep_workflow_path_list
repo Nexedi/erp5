@@ -5,3 +5,5 @@ test_page_module/user-Howto.Create.Organisations
 test_page_module/user-Howto.Create.Organisations/**
 test_page_module/user-Howto.Create.Bank.Account
 test_page_module/user-Howto.Create.Bank.Account/**
+test_page_module/user-Howto.Link.Persons.and.Organisations
+test_page_module/user-Howto.Link.Persons.and.Organisations/**
