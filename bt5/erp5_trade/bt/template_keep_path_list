@@ -1,2 +1,8 @@
 portal_components/document.erp5.BusinessProcess
+portal_components/interface.erp5.IBuildableBusinessLinkProcess
+portal_components/interface.erp5.IBusinessLinkProcess
 portal_components/interface.erp5.IBusinessProcess
+portal_components/interface.erp5.ISimulationMovementProcess
+portal_components/interface.erp5.ITradeModelPathProcess
+portal_components/interface.erp5.ITradePhaseProcess
+portal_components/interface.erp5.ITradeStateProcess
