@@ -101,18 +101,6 @@
 		<tr>
 			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
-		<tr>
-			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Open Ticket&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
-		</tr>
-		<tr>
-			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
-		</tr>
-		<tr>
-			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
-		</tr>
-		<tr>
-			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -217,7 +205,7 @@
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>verifyText</td>
-			<td>//p[@id="field_my_translated_simulation_state_title"]</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Planned</td>
 		</tr>
 	</tbody>
@@ -306,7 +294,7 @@
 		</tr>
 		<tr>
 			<td>verifyText</td>
-			<td>//p[@id="field_my_translated_simulation_state_title"]</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Opened</td>
 		</tr>
 	</tbody>
@@ -326,12 +314,12 @@
 	<tbody>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>waitForElementPresent</td>
-			<td>//a[text()="ZUITE-TEST-CREATE-EVENT-EVENT-001"]</td>
-			<td></td>
+			<td>//a[text()=&quot;ZUITE-TEST-CREATE-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>click</td>
-			<td>//a[text()="ZUITE-TEST-CREATE-EVENT-EVENT-001"]</td>
+			<td>//a[text()=&quot;ZUITE-TEST-CREATE-EVENT-EVENT-001&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
@@ -339,7 +327,7 @@
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>verifyText</td>
-			<td>//p[@id="field_my_translated_simulation_state_title"]</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Planned</td>
 		</tr>
 		<tr>
@@ -362,8 +350,8 @@
 		</tr>
 		<tr>
 			<td>waitForElementPresent</td>
-			<td>//p[text()="Confirmed"]</td>
-			<td></td>
+			<td>//p[text()=&quot;Confirmed&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
@@ -441,7 +429,7 @@
 		</tr>
 		<tr>
 			<td>waitForElementPresent</td>
-			<td>//p[text()="Sent"]</td>
+			<td>//p[text()=&quot;Sent&quot;]</td>
 			<td>Sent</td>
 		</tr>
 		<tr>
