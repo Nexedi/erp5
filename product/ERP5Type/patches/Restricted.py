@@ -76,12 +76,16 @@ def add_builtins(**kw):
 
 del safe_builtins['dict']
 del safe_builtins['list']
+
 add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
-             dict=dict, list=list) #, set=set, frozenset=frozenset)
+             dict=dict, list=list)
+if "set" not in safe_builtins: # BBB
+    add_builtins(set=set, frozenset=frozenset, slice=slice)
 
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              property=property, staticmethod=staticmethod,
-             super=super, type=type) # slice=slice, 
+             super=super, type=type)
+
 
 def guarded_next(iterator, default=_marker):
     """next(iterator[, default])
@@ -103,7 +107,8 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-#add_builtins(next=guarded_next)
+if "next" not in safe_builtins: # BBB
+    add_builtins(next=guarded_next)
 
 _safe_class_attribute_dict = {}
 import inspect
