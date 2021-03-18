@@ -16,9 +16,14 @@ import copy
 import sys
 import types
 
-from RestrictedPython.transformer import RestrictingNodeTransformer
+try:
+  from RestrictedPython.transformer import FORBIDDEN_FUNC_NAMES
+except:
+  # BBB
+  FORBIDDEN_FUNC_NAMES = frozenset(['printed',])
+
 _MARKER = []
-def checkNameLax(self, node, name, allow_magic_methods=False):
+def checkNameLax(self, node, name=_MARKER, allow_magic_methods=False):
   """Check names if they are allowed.
 
   In ERP5 we are much more lax that than in Zope's original restricted
@@ -26,13 +31,18 @@ def checkNameLax(self, node, name, allow_magic_methods=False):
   runtime checks to prevent access to forbidden attributes from objects.
 
   We don't allow defining attributes ending with __roles__ though.
-  
+
   If ``allow_magic_methods is True`` names in `ALLOWED_FUNC_NAMES`
   are additionally allowed although their names start with `_`.
-  
+
   """
   if name is None:
     return
+
+  if name is _MARKER:
+    # we use same implementation for checkName and checkAttrName which access
+    # the name in different ways ( see RestrictionMutator 3.6.0 )
+    name = node.attrname
 
   if name.endswith('__roles__'):
     self.error(node, '"%s" is an invalid variable name because '
@@ -40,8 +50,14 @@ def checkNameLax(self, node, name, allow_magic_methods=False):
   elif name in FORBIDDEN_FUNC_NAMES:
     self.error(node, '"{name}" is a reserved name.'.format(name=name))
 
-RestrictingNodeTransformer.check_name = checkNameLax
-# XXX we might want to pach visit_Attribute too
+
+try:
+  from RestrictedPython.transformer import RestrictingNodeTransformer
+  RestrictingNodeTransformer.check_name = checkNameLax
+except ImportError:
+  # BBB Restriced 3.6.0
+  from RestrictedPython.RestrictionMutator import RestrictionMutator
+  RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire
