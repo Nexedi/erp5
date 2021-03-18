@@ -1,5 +1,13 @@
 Releases
 ===
+1.0.181, 17.03.2021
+---
+  - ebulk integration with Wendelin improved in terms of scalability
+  - Selenium test for tutorial added
+  - plotty editor notebooks added
+  - default sample data notebook added
+
+  
 
 1.0.162, 15.09.2020
 ---
