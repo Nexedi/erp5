@@ -9,3 +9,5 @@ test_page_module/user-Howto.Link.Persons.and.Organisations
 test_page_module/user-Howto.Link.Persons.and.Organisations/**
 test_page_module/user-Howto.Create.Campaigns
 test_page_module/user-Howto.Create.Campaigns/**
+test_page_module/user-Howto.Create.Outgoing.Events
+test_page_module/user-Howto.Create.Outgoing.Events/**
