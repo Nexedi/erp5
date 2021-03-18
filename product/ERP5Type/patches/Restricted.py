@@ -46,7 +46,7 @@ def checkNameLax(self, node, name=_MARKER, allow_magic_methods=False):
   if name.endswith('__roles__'):
     self.error(node, '"%s" is an invalid variable name because '
                'it ends with "__roles__".' % name)
-                  elif name in FORBIDDEN_FUNC_NAMES:
+  elif name in FORBIDDEN_FUNC_NAMES:
     self.error(node, '"{name}" is a reserved name.'.format(name=name))
 
 
