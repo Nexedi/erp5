@@ -23,19 +23,15 @@ Update a press release dialog with parameters manually entered
 
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
-  return context.Base_redirect(
-    dialog_id,
-    keep_items = dict(
-      portal_status_message=translateString('Preview updated.'),
-      cancel_url=cancel_url,
-      portal_skin=portal_skin,
-      override_source_organisation_title=override_source_organisation_title,
-      override_source_person_title=override_source_person_title,
-      format=format,
-      display_svg=display_svg,
-      display_about=display_about,
-      document_save=document_save,
-      document_download=document_download,
-      **kw
-    )
-  )
+  request = container.REQUEST
+  request.form['portal_status_message'] = translateString('Preview updated.')
+  request.form['cancel_url'] = cancel_url
+  request.form['portal_skin'] = portal_skin
+  request.form['override_source_organisation_title'] = override_source_organisation_title
+  request.form['override_source_person_title'] = override_source_person_title
+  request.form['format'] = format
+  request.form['display_svg'] = display_svg
+  request.form['display_about'] = display_about
+  request.form['document_save'] = document_save
+  request.form['document_download'] = document_download
+  return context.Base_renderForm(dialog_id)

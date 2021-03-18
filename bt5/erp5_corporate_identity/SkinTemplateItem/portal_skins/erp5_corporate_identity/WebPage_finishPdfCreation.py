@@ -53,9 +53,10 @@ if doc_save:
         'portal_type': document.getTranslatedPortalType()
       }
     )
-
     # XXX redirect = true?
-    return document.Base_redirect(
+    if context.getWebSiteValue():
+      context.getPortalObject().portal_skins.changeSkin('HalRestricted')
+    return document.Base_redirect(form_id='view',
       keep_items=dict(portal_status_message=message)
     )
   #XXX else:
