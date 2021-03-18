@@ -167,7 +167,10 @@ def runwsgi():
     args = parser.parse_args()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
-    schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
+    if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
+      schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
+    else: # BBB
+      schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
@@ -190,11 +193,11 @@ def runwsgi():
     port = int(port)
     createServer(
         app_wrapper(
-          large_file_threshold=conf.large_file_threshold,
+          large_file_threshold=getattr(conf, 'large_file_threshold', None),
           webdav_ports=[port] if args.webdav else ()),
         listen=args.address,
         logger=logging.getLogger("access"),
-        threads=conf.zserver_threads,
+        threads=getattr(conf, 'zserver_threads', None),
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
