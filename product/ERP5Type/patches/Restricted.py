@@ -250,7 +250,10 @@ from AccessControl.ZopeGuards import _dict_white_list
 # (closure) directly to ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-#XXXfull_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+if isinstance(full_write_guard.func_closure[1].cell_contents, set):
+  full_write_guard.func_closure[1].cell_contents.add(defaultdict)
+else: # BBB RestrictedPython 3.6
+  full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
 
 # In contrary to builtins such as dict/defaultdict, it is possible to set
 # attributes on OrderedDict instances, so only allow setitem/delitem
@@ -496,7 +499,20 @@ ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
 # of RestrictedPython (closure) directly to allow
 # write access to ndarray and pandas DataFrame.
 from RestrictedPython.Guards import full_write_guard
-if False:
+if isinstance(full_write_guard.func_closure[1].cell_contents, set):
+  full_write_guard.func_closure[1].cell_contents.update((
+    np.ndarray,
+    np.core.records.recarray,
+    np.core.records.record,
+    pd.DataFrame,
+    pd.Series,
+    pd.tseries.index.DatetimeIndex,
+    pd.core.indexing._iLocIndexer,
+    pd.core.indexing._LocIndexer,
+    pd.MultiIndex,
+    pd.Index
+    ))
+else:  # BBB RestrictedPython 3.6
   full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
   full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
   full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
