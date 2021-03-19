@@ -564,6 +564,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
                           'when': None,
                           'interval': None,
                           'formatter': None,
+                          # Zope4 config
+                          'style': 'classic',
+                          'arbitrary_fields': False,
+                          'encoding': None,
+                          'delay': None,
                           },
                          None, None)
   section.handlers = [handlers.FileHandlerFactory(section)]
