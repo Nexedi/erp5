@@ -197,7 +197,7 @@ def runwsgi():
           webdav_ports=[port] if args.webdav else ()),
         listen=args.address,
         logger=logging.getLogger("access"),
-        threads=getattr(conf, 'zserver_threads', None),
+        threads=getattr(conf, 'zserver_threads', 4),
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
