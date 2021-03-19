@@ -251,7 +251,9 @@
               ".edit-form, .edit-form-action"
             );
             for (j = 0; j < dev_element_list.length; j += 1) {
-              form_gadget.element.removeChild(dev_element_list[j]);
+              if (dev_element_list[j].parentNode) {
+                dev_element_list[j].parentNode.removeChild(dev_element_list[j]);
+              }
             }
             if (form_definition.hasOwnProperty("edit_form_href")) {
               field_href = addDeveloperAction(
