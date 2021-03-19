@@ -1089,6 +1089,25 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       del Organisation.putMarkerValue
       del Organisation.checkMarkerValue
 
+  def test_globalrequest(self):
+    """zope.globalrequest.getRequest (also known as Products.Global.get_request)
+    should be same as app.REQUEST, also when executing activities.
+    """
+    from zope.globalrequest import getRequest
+    get_request_before = getRequest()
+    def checkRequest(active_self):
+      self.assertIs(getRequest(), active_self.REQUEST)
+
+    obj = self.portal.organisation_module.newContent(portal_type='Organisation')
+    Organisation.checkRequest = checkRequest
+    try:
+      obj.activate(activity='SQLQueue').checkRequest()
+      obj.activate(activity='SQLDict').checkRequest()
+      self.tic()
+    finally:
+      del Organisation.checkRequest
+    self.assertIs(getRequest(), get_request_before)
+
   @for_each_activity
   def testTryUserNotificationOnActivityFailure(self, activity):
     message_list = self.portal.MailHost._message_list
