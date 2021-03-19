@@ -71,7 +71,7 @@
         } else {
           // XXX Investigate why removing this break everything
           // There is not reason to always create a DOM element
-          field_element = document.createElement("div");
+          field_element = domsugar("div");
         }
         return label_gadget.render(suboptions);
       })
@@ -82,12 +82,10 @@
 
 
   function addGroup(group, rendered_document, form_definition, form_gadget, modification_dict) {
-    // XXX: > Romain: fieldset will be needed later for menus
-    var fieldset_element = document.createElement("div"),
-      group_name = group[0],
-      field_list = group[1];
-
-    fieldset_element.setAttribute("class", group_name);
+    var group_name = group[0],
+      field_list = group[1],
+      // XXX: > Romain: fieldset will be needed later for menus
+      fieldset_element = domsugar("div", {"class": group_name});
 
     return new RSVP.Queue()
       .push(function () {
@@ -213,7 +211,7 @@
         if (modification_dict.title) {
           if (tmp === null) {
             // create new title element for existing title
-            tmp = document.createElement("h3");
+            tmp = domsugar("h3");
             this.element.insertBefore(tmp, this.element.firstChild);
           }
           tmp.textContent = modification_dict.title;
@@ -248,8 +246,9 @@
             }
             dom_element.appendChild(parent_element);
             dev_element_list = form_gadget.element.querySelectorAll(
-              ".edit-form, .edit-form-action"
+              ":scope > .edit-form, :scope > .edit-form-action"
             );
+
             for (j = 0; j < dev_element_list.length; j += 1) {
               form_gadget.element.removeChild(dev_element_list[j]);
             }
