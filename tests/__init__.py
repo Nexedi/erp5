@@ -213,7 +213,7 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
       # we skip coding style check for business templates having this marker
       # property. Since the property is not exported (on purpose), modified business templates
       # will be candidate for coding style test again.
-      if not os.path.exists(path + '/bt/skip_coding_style_test')
+      if not os.path.exists(path + '/bt/skip_coding_style_test') and os.path.isdir(path)
     ]
     for path in chain(glob(HERE + '/../product/*'),
                       glob(HERE + '/../bt5')):
