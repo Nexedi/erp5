@@ -44,6 +44,7 @@ from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModule
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
 from zLOG import LOG, INFO, WARNING, ERROR
+from zExceptions import BadRequest
 from string import join
 import os
 import warnings
@@ -2255,7 +2256,10 @@ class ERP5Generator(PortalGenerator):
     workflow_list = ['business_template_building_workflow',
                      'business_template_installation_workflow']
     tool = p.portal_workflow
-    tool.manage_delObjects(filter(tool.hasObject, workflow_list))
+    try:
+      tool.manage_delObjects(filter(tool.hasObject, workflow_list))
+    except BadRequest:
+      pass
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
     tool.setChainForPortalTypes(('Business Template',), workflow_list)
 
