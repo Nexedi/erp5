@@ -11,3 +11,5 @@ test_page_module/user-Howto.Create.Campaigns
 test_page_module/user-Howto.Create.Campaigns/**
 test_page_module/user-Howto.Create.Outgoing.Events
 test_page_module/user-Howto.Create.Outgoing.Events/**
+test_page_module/user-Howto.Post.Outgoing.Events
+test_page_module/user-Howto.Post.Outgoing.Events/**
