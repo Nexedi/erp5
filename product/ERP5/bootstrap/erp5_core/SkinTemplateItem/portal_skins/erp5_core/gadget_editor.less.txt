@@ -1,0 +1,7 @@
+@monospace: "Courier New", Courier, monospace;
+
+div[data-gadget-url$="gadget_editor.html"] {
+  & > textarea, & > pre code {
+    font-family: @monospace;
+  }
+}

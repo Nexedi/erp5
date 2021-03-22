@@ -13,12 +13,12 @@
 
 
 div[data-gadget-url$="gadget_html_viewer.html"] {
-  max-width: 50em;
+  // max-width: 50em;
+  // text-align: justify;
 
   display: block;
   word-wrap: break-word;
   font-family: @sans-serif;
-  text-align: justify;
 
   canvas, img, iframe, svg {
     max-width: 100%;
@@ -45,7 +45,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   h1 {
     display: block;
     font-size: 2em;
-    font-family: @serif;
+    font-family: @sans-serif;
     margin: 0.67em 0;
     font-weight: bold
   }
@@ -53,7 +53,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   h2 {
     display: block;
     font-size: 1.5em;
-    font-family: @serif;
+    font-family: @sans-serif;
     margin: 0.83em 0;
     font-weight: bold
   }
@@ -61,7 +61,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   h3 {
     display: block;
     font-size: 1.17em;
-    font-family: @serif;
+    font-family: @sans-serif;
     margin: 1em 0;
     font-weight: bold
   }
@@ -69,7 +69,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   h4 {
     display: block;
     font-size: 1em;
-    font-family: @serif;
+    font-family: @sans-serif;
     margin: 1.33em 0;
     font-weight: bold
   }
@@ -77,7 +77,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   h5 {
     display: block;
     font-size: .83em;
-    font-family: @serif;
+    font-family: @sans-serif;
     margin: 1.67em 0;
     font-weight: bold
   }
@@ -85,7 +85,7 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
   h5 {
     display: block;
     font-size: .67em;
-    font-family: @serif;
+    font-family: @sans-serif;
     margin: 2.33em 0;
     font-weight: bold
   }
@@ -141,7 +141,6 @@ table {
     display: table;
     border-spacing: 2px;
     border: 1px solid @colorforeground;
-    width: 100%;
 }
 thead {
     display: table-header-group;
@@ -176,6 +175,7 @@ td, th {
     display: table-cell;
     vertical-align: inherit;
     padding: 0 @margin-size;
+    border: 1px solid @colorforeground;
 }
 th {
     font-weight: bold;
@@ -212,4 +212,9 @@ caption {
   }
 
 
+}
+
+*[align="center"] {
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }

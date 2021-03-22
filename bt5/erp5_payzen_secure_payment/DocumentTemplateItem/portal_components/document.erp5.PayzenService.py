@@ -4,9 +4,11 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 import hashlib
 from zLOG import LOG, WARNING
+import base64
 import datetime
 import os
 import time
+import requests
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 present = False
@@ -16,250 +18,79 @@ if 'TZ' in os.environ:
   tz = os.environ['TZ']
 os.environ['TZ'] = 'UTC'
 time.tzset()
-try:
-  import suds
-except ImportError:
-  class PayzenSOAP:
-    pass
-else:
-  def setUTCTimeZone(fn):
-    def wrapped(*args, **kwargs):
-      present = False
-      tz = None
-      if 'TZ' in os.environ:
-        present = True
-        tz = os.environ['TZ']
-      os.environ['TZ'] = 'UTC'
+def setUTCTimeZone(fn):
+  def wrapped(*args, **kwargs):
+    present = False
+    tz = None
+    if 'TZ' in os.environ:
+      present = True
+      tz = os.environ['TZ']
+    os.environ['TZ'] = 'UTC'
+    time.tzset()
+    try:
+      return fn(*args, **kwargs)
+    finally:
+      if present:
+        os.environ['TZ'] = tz
+      else:
+        del(os.environ['TZ'])
       time.tzset()
-      try:
-        return fn(*args, **kwargs)
-      finally:
-        if present:
-          os.environ['TZ'] = tz
-        else:
-          del(os.environ['TZ'])
-        time.tzset()
-    return wrapped
-      
-  class PayzenSOAP:
-    """SOAP communication
+  return wrapped
 
-    Methods are returning list of:
-      * parsed response
-      * signature check (True or False)
-      * sent XML
-      * received XML
+if present:
+  os.environ['TZ'] = tz
+else:
+  del(os.environ['TZ'])
+time.tzset()
 
-    SOAP protocol is assumed as untrusted and dangerous, users of those methods
-    are encouraged to log such messages for future debugging."""
-    def _check_transactionInfoSignature(self, data):
-      """Checks transactionInfo signature
-      Can raise.
-      """
-      received_sorted_keys = ['errorCode', 'extendedErrorCode',
-        'transactionStatus', 'shopId', 'paymentMethod', 'contractNumber',
-        'orderId', 'orderInfo', 'orderInfo2', 'orderInfo3', 'transmissionDate',
-        'transactionId', 'sequenceNb', 'amount', 'initialAmount', 'devise',
-        'cvAmount', 'cvDevise', 'presentationDate', 'type', 'multiplePaiement',
-        'ctxMode', 'cardNumber', 'cardNetwork', 'cardType', 'cardCountry',
-        'cardExpirationDate', 'customerId', 'customerTitle', 'customerName',
-        'customerPhone', 'customerMail', 'customerAddress', 'customerZipCode',
-        'customerCity', 'customerCountry', 'customerLanguage', 'customerIP',
-        'transactionCondition', 'vadsEnrolled', 'vadsStatus', 'vadsECI',
-        'vadsXID', 'vadsCAVVAlgorithm', 'vadsCAVV', 'vadsSignatureValid',
-        'directoryServer', 'authMode', 'markAmount', 'markDevise', 'markDate',
-        'markNb', 'markResult', 'markCVV2_CVC2', 'authAmount', 'authDevise',
-        'authDate', 'authNb', 'authResult', 'authCVV2_CVC2', 'warrantlyResult',
-        'captureDate', 'captureNumber', 'rapprochementStatut', 'refoundAmount',
-        'refundDevise', 'litige', 'timestamp']
+class PayzenREST:
+  """REST communication
 
-      signature = self._getSignature(data, received_sorted_keys)
-      return signature == data.signature
+  Methods are returning list of:
+    * parsed response
+    * sent Data
+    * received Data
+  """
 
-    @setUTCTimeZone
-    def soap_getInfo(self, transmissionDate, transactionId):
-      """Returns getInfo as dict, booelan, string, string
+  def callPayzenApi(self, URL, payzen_dict):
+    base64string = base64.encodestring(
+      '%s:%s' % (
+        self.getServiceUsername(),
+        self.getServiceApiKey())).replace('\n', '')
+    header = {"Authorization": "Basic %s" % base64string}
+    LOG('callPayzenApi', WARNING,
+        "data = %s URL = %s" % (str(payzen_dict), URL), error=False)
+    # send data
+    result = requests.post(URL, data=payzen_dict, headers=header)
+    try:
+      data = result.json()
+    except Exception:
+      data = {}
+      LOG('PayzenService', WARNING,
+        'Issue during processing data_kw:', error=True)
+    return data, result.text
 
-      transmissionDate is "raw" date in format YYYYMMDD, without any marks
-      transactionId is id of transaction for this date
 
-      As soon as communication happeneded does not raise.
-      """
-      client = suds.client.Client(self.wsdl_link.getUrlString())
-      sorted_keys = ['shopId', 'transmissionDate', 'transactionId',
-        'sequenceNb', 'ctxMode']
-      kw = dict(
-        transactionId=transactionId,
-        ctxMode=self.getPayzenVadsCtxMode(),
-        shopId=self.getServiceUsername(),
-        sequenceNb=1,
-        transmissionDate=transmissionDate,
-      )
-      kw['wsSignature'] = self._getSignature(kw, sorted_keys)
+  @setUTCTimeZone
+  def rest_getInfo(self, transmissionDate, transactionId):
+    """Returns getInfo as dict, booelan, string, string
 
-      data = client.service.getInfo(**kw)
-      # Note: Code shall not raise since now, as communication begin and caller
-      #       will have to log sent/received messages.
-      try:
-        data_kw = dict(data)
-        for k in data_kw.keys():
-          v = data_kw[k]
-          if not isinstance(v, str):
-            data_kw[k] = str(v)
-      except Exception:
-        data_kw = {}
-        signature = False
-        LOG('PayzenService', WARNING,
-          'Issue during processing data_kw:', error=True)
-      else:
-        try:
-          signature = self._check_transactionInfoSignature(data)
-        except Exception:
-          LOG('PayzenService', WARNING, 'Issue during signature calculation:',
-            error=True)
-          signature = False
+    transmissionDate is "raw" date in format YYYYMMDD, without any marks
+    transactionId is id of transaction for this date
 
-      try:
-        last_sent = str(client.last_sent())
-      except Exception:
-        LOG('PayzenService', WARNING,
-          'Issue during converting last_sent to string:', error=True)
-        signature = False
+    As soon as communication happeneded does not raise.
+    """
+    URL = "https://api.payzen.eu/api-payment/V4/Order/Get"
+    kw = dict(
+      orderId=transactionId,
+    )
+    sent_data = str(kw)
+    data_kw, received_data = self.callPayzenApi(URL, kw)
+    return [data_kw, sent_data, received_data]
 
-      try:
-        last_received = str(client.last_received())
-      except Exception:
-        LOG('PayzenService', WARNING,
-          'Issue during converting last_received to string:', error=True)
-        signature = False
-
-      return [data_kw, signature, last_sent, last_received]
-
-    @setUTCTimeZone
-    def soap_duplicate(self, transmissionDate, transactionId, presentationDate,
-      newTransactionId, amount, devise, orderId='', orderInfo='', orderInfo2='',
-      orderInfo3='', validationMode=0, comment=''):
-      # prepare with passed parameters
-      kw = dict(transmissionDate=transmissionDate, transactionId=transactionId,
-        presentationDate=presentationDate, newTransactionId=newTransactionId,
-        amount=amount, devise=devise, orderId=orderId, orderInfo=orderInfo,
-        orderInfo2=orderInfo2, orderInfo3=orderInfo3,
-        validationMode=validationMode, comment=comment)
-
-      signature_sorted_key_list= ['shopId', 'transmissionDate', 'transactionId',
-        'sequenceNb', 'ctxMode', 'orderId', 'orderInfo', 'orderInfo2',
-        'orderInfo3', 'amount', 'devise', 'newTransactionId',
-        'presentationDate', 'validationMode', 'comment']
-      kw.update(
-        ctxMode=self.getPayzenVadsCtxMode(),
-        shopId=self.getServiceUsername(),
-        sequenceNb=1,
-      )
-      kw['wsSignature'] = self._getSignature(kw, signature_sorted_key_list)
-      # Note: Code shall not raise since now, as communication begin and caller
-      #       will have to log sent/received messages.
-      client = suds.client.Client(self.wsdl_link.getUrlString())
-      data = client.service.duplicate(**kw)
-      # Note: Code shall not raise since now, as communication begin and caller
-      #       will have to log sent/received messages.
-      try:
-        data_kw = dict(data)
-        for k in data_kw.keys():
-          v = data_kw[k]
-          if not isinstance(v, str):
-            data_kw[k] = str(v)
-      except Exception:
-        data_kw = {}
-        signature = False
-        LOG('PayzenService', WARNING,
-          'Issue during processing data_kw:', error=True)
-      else:
-        try:
-          signature = self._check_transactionInfoSignature(data)
-        except Exception:
-          LOG('PayzenService', WARNING, 'Issue during signature calculation:',
-            error=True)
-          signature = False
-
-      try:
-        last_sent = str(client.last_sent())
-      except Exception:
-        LOG('PayzenService', WARNING,
-          'Issue during converting last_sent to string:', error=True)
-        signature = False
-
-      try:
-        last_received = str(client.last_received())
-      except Exception:
-        LOG('PayzenService', WARNING,
-          'Issue during converting last_received to string:', error=True)
-        signature = False
-
-      return [data_kw, signature, last_sent, last_received]
-
-    @setUTCTimeZone
-    def soap_cancel(self, transmissionDate, transactionId, comment=''):
-      # prepare with passed parameters
-      kw = dict(transmissionDate=transmissionDate, transactionId=transactionId,
-        comment=comment)
-
-      signature_sorted_key_list= ['shopId', 'transmissionDate', 'transactionId',
-        'sequenceNb', 'ctxMode', 'comment']
-      kw.update(
-        ctxMode=self.getPayzenVadsCtxMode(),
-        shopId=self.getServiceUsername(),
-        sequenceNb=1,
-      )
-      kw['wsSignature'] = self._getSignature(kw, signature_sorted_key_list)
-      # Note: Code shall not raise since now, as communication begin and caller
-      #       will have to log sent/received messages.
-      client = suds.client.Client(self.wsdl_link.getUrlString())
-      data = client.service.cancel(**kw)
-      # Note: Code shall not raise since now, as communication begin and caller
-      #       will have to log sent/received messages.
-      try:
-        data_kw = dict(data)
-        for k in data_kw.keys():
-          v = data_kw[k]
-          if not isinstance(v, str):
-            data_kw[k] = str(v)
-      except Exception:
-        data_kw = {}
-        signature = False
-        LOG('PayzenService', WARNING,
-          'Issue during processing data_kw:', error=True)
-      else:
-        try:
-          signature = self._check_transactionInfoSignature(data)
-        except Exception:
-          LOG('PayzenService', WARNING, 'Issue during signature calculation:',
-            error=True)
-          signature = False
-
-      try:
-        last_sent = str(client.last_sent())
-      except Exception:
-        LOG('PayzenService', WARNING,
-          'Issue during converting last_sent to string:', error=True)
-        signature = False
-
-      try:
-        last_received = str(client.last_received())
-      except Exception:
-        LOG('PayzenService', WARNING,
-          'Issue during converting last_received to string:', error=True)
-        signature = False
-
-      return [data_kw, signature, last_sent, last_received]
-finally:
-  if present:
-    os.environ['TZ'] = tz
-  else:
-    del(os.environ['TZ'])
-  time.tzset()
 
 from erp5.component.interface.IPaymentService import IPaymentService
-class PayzenService(XMLObject, PayzenSOAP):
+class PayzenService(XMLObject, PayzenREST):
   meta_type = 'Payzen Service'
   portal_type = 'Payzen Service'
 

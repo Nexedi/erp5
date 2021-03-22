@@ -72,6 +72,11 @@
         state_dict.editor = 'html_viewer';
         state_dict.maximize = undefined;
       }
+
+      if (!editor_dict.hasOwnProperty(state_dict.editor)) {
+        // Do not show the maximize button when not embedding a subgadget
+        state_dict.maximize = undefined;
+      }
       return this.changeState(state_dict);
     })
 
@@ -80,6 +85,7 @@
         gadget = this,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
+        code,
         queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
@@ -200,7 +206,10 @@
             element.querySelector('img').src = evt.target.result;
           });
       } else {
-        element.querySelector('pre').textContent = gadget.state.value;
+        code = document.createElement('code');
+        code.textContent = gadget.state.value;
+        element.querySelector('pre').textContent = '';
+        element.querySelector('pre').appendChild(code);
       }
       return queue;
     })

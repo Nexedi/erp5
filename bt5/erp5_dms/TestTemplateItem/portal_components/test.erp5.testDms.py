@@ -572,6 +572,14 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([],
       sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
+  def test_catalog_search_by_size(self):
+    doc = self.portal.document_module.newContent(
+      portal_type='Spreadsheet',
+      file=makeFileUpload('import_data_list.ods'))
+    self.tic()
+    self.assertEqual(
+      [x.getObject() for x in self.portal.portal_catalog(size=doc.getSize())], [doc])
+
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
@@ -1551,6 +1559,71 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEqual('user supplied title', contributed_document.getTitle())
 
+  def test_Base_contribute_publication_state(self):
+    """Test contributing and choosing the publication state
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+          publication_state=None,
+          # we use as_name, to prevent regular expression from detecting a
+          # reference during ingestion, so that we can upload multiple documents
+          # in one test.
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'draft')
+
+    contributed_document = person.Base_contribute(
+          publication_state='shared',
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'shared')
+
+    contributed_document = person.Base_contribute(
+          publication_state='released',
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'released')
+
+  def test_Base_contribute_publication_state_vs_finishIngestion_script(self):
+    """Contribute dialog allow choosing a publication state, but there's
+    also a "finishIngestion" type based script that can be configured to
+    force change the state. If user selects a publication_state, the state is
+    changed before the finishIngestion can operate.
+    """
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        'PDF_finishIngestion',
+        '',
+        'if context.getValidationState() == "draft":\n'
+        '  context.publish()')
+    try:
+      person = self.portal.person_module.newContent(portal_type='Person')
+      contributed_document = person.Base_contribute(
+            publication_state='shared',
+            synchronous_metadata_discovery=True,
+            file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      self.tic()
+      self.assertEqual(contributed_document.getValidationState(), 'shared')
+      contributed_document.setReference(None)
+      self.tic()
+
+      contributed_document = person.Base_contribute(
+            publication_state='shared',
+            synchronous_metadata_discovery=False,
+            file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      self.tic()
+      self.assertEqual(contributed_document.getValidationState(), 'shared')
+      contributed_document.setReference(None)
+
+      contributed_document = person.Base_contribute(
+            publication_state=None,
+            file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+      self.tic()
+      self.assertEqual(contributed_document.getValidationState(), 'published')
+    finally:
+      self.portal.portal_skins.custom.manage_delObjects(ids=['PDF_finishIngestion'])
+      self.commit()
+
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
     then to plain text.
@@ -1657,9 +1730,9 @@ class TestDocument(TestDocumentMixin):
 
     # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='contributor1')
-    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Author',])
     person2 =  self.createUser(reference='contributor2')
-    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Author',])
     self.tic()
 
     # login as first one
@@ -1673,6 +1746,7 @@ class TestDocument(TestDocumentMixin):
 
     # login as second one
     super(TestDocument, self).loginByUserName('contributor2')
+    doc.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     doc.edit(title='Test2')
     self.tic()
     self.login()
@@ -2822,6 +2896,44 @@ return 1
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
 
+  def test_Base_getRelatedDocumentList(self):
+    """
+      Checks Base_getRelatedDocumentList works correctly with both
+      related (follow_up) Documents and with sub-object Embedded Files
+    """
+    uploaded_file = makeFileUpload('TEST-001-en.dummy')
+    document_value = self.portal.Base_contribute(
+      file=uploaded_file,
+      synchronous_metadata_discovery=True,
+      portal_type='File'
+    )
+    person_value = self.portal.person_module.newContent(portal_type='Person')
+    getRelatedDocumentList = person_value.Base_getRelatedDocumentList
+    self.tic()
+    # No related document
+    self.assertEqual(len(getRelatedDocumentList()), 0)
+    document_value.setFollowUpValue(person_value)
+    self.tic()
+    # Only related follow_up File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [document_value]
+    )
+    sub_document_value = person_value.newContent(portal_type='Embedded File')
+    self.tic()
+    # Related follow_up File and Embedded File
+    self.assertEqual(
+      sorted([brain.getObject() for brain in getRelatedDocumentList()], key=lambda doc: doc.getPath()),
+      sorted([sub_document_value, document_value], key=lambda doc: doc.getPath())
+    )
+    document_value.setFollowUpValue(None)
+    self.tic()
+    # Only related Embedded File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [sub_document_value]
+    )
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
@@ -2966,4 +3078,4 @@ def test_suite():
   return suite
 
 
-# vim: syntax=python shiftwidth=2
+ # vim: syntax=python shiftwidth=2
