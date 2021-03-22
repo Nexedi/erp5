@@ -27,11 +27,19 @@
 #
 ##############################################################################
 
+import os
+import time
 import unittest
 
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate, getIntervalListBetweenDates, \
     atTheEndOfPeriod, getClosestDate
+
+os.environ['TZ']='Europe/Paris'
+time.tzset()
+DateTime._localzone0 = 'GMT+1'
+DateTime._localzone1 = 'GMT+2'
+DateTime._multipleZones = True
 
 class TestDateUtils(unittest.TestCase):
   """
@@ -174,6 +182,32 @@ class TestDateUtils(unittest.TestCase):
       getClosestDate(date=date, target_date=target_date, precision='month', before=True).pCommonZ())
     self.assertEqual('Sep. 10, 2008 12:00 am GMT-2',
       getClosestDate(date=date, target_date=target_date, precision='month', before=False).pCommonZ())
+
+  def test_implicit_local_time(self):
+    self.assertEqual(
+      str(addToDate(DateTime('2020/03/10'), month=1)),
+      '2020/04/10 00:00:00 GMT+2',
+    )
+    self.assertEqual(
+      str(addToDate(DateTime('2020/10/20'), month=1)),
+      '2020/11/20 00:00:00 GMT+1',
+    )
+    self.assertEqual(
+      str(addToDate(DateTime('2020/03/29'), day=1)),
+      '2020/03/30 00:00:00 GMT+2',
+    )
+    self.assertEqual(
+      str(addToDate(DateTime('2020/10/25'), day=1)),
+      '2020/10/26 00:00:00 GMT+1',
+    )
+    self.assertEqual(
+      str(addToDate(DateTime('2020/03/29 00:30:00.123456'), hour=3)),
+      '2020/03/29 04:30:0.123456 GMT+2',
+    )
+    self.assertEqual(
+      str(addToDate(DateTime('2020/10/25 00:30:00.123456'), hour=3)),
+      '2020/10/25 02:30:0.123456 GMT+1',
+    )
 
 def test_suite():
   suite = unittest.TestSuite()

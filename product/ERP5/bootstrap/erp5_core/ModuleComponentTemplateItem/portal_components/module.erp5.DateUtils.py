@@ -129,15 +129,23 @@ def addToDate(date, to_add=None, **kw):
   if to_add.get('day', None) is not None:
     day_to_add += to_add['day']
   return_value['day'] = 1
-  return_date = DateTime('%i/%i/%i %i:%i:%d %s' % (return_value['year'],
-                                                return_value['month'],
-                                                return_value['day'],
-                                                return_value['hour'],
-                                                return_value['minute'],
-                                                return_value['second'],
-                                                date.timezone()))
+  # compute year/month/date with UTC to ignore possible offset change.
+  return_date = DateTime('%i/%i/%i UTC' % (return_value['year'],
+                                           return_value['month'],
+                                           return_value['day'],))
 
   return_date += day_to_add
+  timezone = date.timezone()
+  if DateTime(date.strftime('%Y/%m/%d %H:%M:%S.%f')).timezone() == timezone:
+    # assume date has local timezone.
+    timezone = ''
+  return_date = DateTime(return_date.strftime('%Y/%m/%d ' + timezone)) + \
+    return_value['hour'] / 24. + \
+    return_value['minute'] / 1440. + \
+    return_value['second'] / 86400.
+  if not timezone:
+    # convert to valid local time at return_date timing.
+    return_date = DateTime(float(return_date))
   return return_date
 
 def getClosestDate(date=None, target_date=None,
