@@ -34,7 +34,7 @@
   </tr>
   <!-- Logout -->
   <tr>
-    <td>openAndWait</td>
+    <td>open</td>
     <td>${base_url}</td>
     <td></td>
   </tr>
@@ -42,7 +42,16 @@
   <tal:block tal:define="click_configuration python: {'text': 'Logout'}">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
   </tal:block>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//h1/a[@data-i18n="Logout"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
   <tr>
     <td>click</td>
     <td>//input[@value="Confirm"]</td>
@@ -212,16 +221,7 @@
     <td></td>
   </tr>
   <!-- login with functional test user -->
-  <tr>
-    <td>openAndWait</td>
-    <td>${base_url}/logout</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>${base_url}/login_form</td>
-    <td></td>
-  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
@@ -235,21 +235,11 @@
         here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
   </tr>
   <tr>
-    <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
+    <td>click</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>${base_url}/view</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>assertTextPresent</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['functional_another_test_username']"></td>
-    <td></td>
-  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
@@ -273,9 +263,10 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/view</td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 </tal:block>
 
 <tal:block metal:define-macro="login_as_user">
