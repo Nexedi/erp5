@@ -11,5 +11,7 @@ test_page_module/user-Howto.Create.Persons
 test_page_module/user-Howto.Create.Persons/**
 test_page_module/user-Howto.Link.Persons.and.Organisations
 test_page_module/user-Howto.Link.Persons.and.Organisations/**
+test_page_module/user-Howto.Manage.Support.Request.NewUI
+test_page_module/user-Howto.Manage.Support.Request.NewUI/**
 test_page_module/user-Howto.Post.Outgoing.Events
 test_page_module/user-Howto.Post.Outgoing.Events/**
