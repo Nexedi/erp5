@@ -40,6 +40,11 @@ sale_trade_condition_list = context.Zuite_checkPortalCatalog(portal_type='Sale T
 if sale_trade_condition_list is not None:
   portal.sale_trade_condition_module.deleteContent(sale_trade_condition_list[0].getId())
 
+# remove sale order created in the test
+sale_order_in_test_list = context.Zuite_checkPortalCatalog(portal_type='Sale Order', max_count=1,
+                                                          title=howto_dict['sale_howto_sale_order_title'])
+if sale_order_in_test_list is not None:
+  portal.sale_order_module.deleteContent(sale_order_in_test_list[0].getId())
 
 pref = getattr(context.portal_preferences, howto_dict['howto_preference_id'], None)
 if pref is not None:
