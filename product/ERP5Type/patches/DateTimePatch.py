@@ -37,7 +37,10 @@ STATE_KEY = 'str'
 original_DateTime__setstate__ = DateTimeKlass.__setstate__
 
 def DateTime__setstate__(self, state):
-  self.__dict__.clear()
+  try: # BBB DateTime 2.12.8
+    self.__dict__.clear()
+  except AttributeError:
+    pass
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
