@@ -65,25 +65,41 @@ for obj in object_list:
     object_to_delete_list.append(obj)
 
 # Remove some objects
-try:
-  if object_to_remove_list:
-    if context.portal_type == 'Preference':
-      # Templates inside preference are not indexed, so we cannot pass
-      # uids= to manage_delObjects and have to use ids=
-      context.manage_delObjects(
-                    ids=[x.getId() for x in object_to_remove_list],
-                    REQUEST=REQUEST)
-      portal.portal_caches.clearCacheFactory('erp5_ui_medium')
-    else:
-      context.manage_delObjects(
-                    uids=[x.getUid() for x in object_to_remove_list],
-                    REQUEST=REQUEST)
-except ConflictError:
-  raise
-except Exception as error:
-  return context.Base_renderMessage(str(error), "error")
-
 if object_to_remove_list:
+  if context.getPortalType() != 'Preference':
+    # Use uids so that we can delete from listboxs showing documents
+    # that are not sub-objects of the current document
+    try:
+      context.manage_delObjects(
+        uids=[x.getUid() for x in object_to_remove_list],
+        REQUEST=REQUEST,
+      )
+    except ConflictError:
+      raise
+    except Exception as error:
+      # Note, this does not rollback transaction, so in case manage_delObjects
+      # did delete some objects these will be deleted.
+      # This may be considered a feature of user point of view
+      # (something went wrong with some documents, but some where deleted)
+      return context.Base_renderMessage(str(error), "error")
+  else:
+    # Templates inside preference are not indexed, so we cannot pass
+    # uids= to manage_delObjects and have to use ids=
+    for document in object_to_remove_list:
+      try:
+        document.getParentValue().manage_delObjects(
+          ids=[document.getId()]
+        )
+        # Clear cache to recalculate the list of possible templates in case one was deleted
+        portal.portal_caches.clearCacheFactory('erp5_ui_medium')
+      except ConflictError:
+        raise
+      except Exception as error:
+        # Note, this does not rollback transaction, so in case manage_delObjects
+        # did delete some objects these will be deleted.
+        # This may be considered a feature of user point of view
+        # (something went wrong with some documents, but some where deleted)
+        return context.Base_renderMessage(str(error), "error")
   try:
     # record object deletion in workflow history
     portal.portal_workflow.doActionFor(
