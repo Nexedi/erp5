@@ -74,33 +74,16 @@
         .push(function (embedded_form_gadget) {
           var form_options = gadget.state.erp5_form,
             embedded_form = gadget.state.erp5_document._embedded._view,
-            form_definition = gadget.state.form_definition,
-            parameter_list = ["edit_field_href",
-                              "translate_title_href",
-                              "translate_description_href"],
             rendered_form = {},
-            key,
-            j;
+            key;
 
           /* Remove empty non-editable fields to prevent them from displaying (business requirement).
              Deleting objects inplace was not a good idea.
              So we pass through only non-empty (non-editable) fields.
           */
-          if (form_definition.hasOwnProperty('edit_form_href')) {
-            delete form_definition.edit_form_href;
-          }
-          if (form_definition.hasOwnProperty('edit_form_action_href')) {
-            delete form_definition.edit_form_action_href;
-          }
-
           for (key in embedded_form) {
             if (embedded_form.hasOwnProperty(key) && key[0] !== "_") {
               if (isNonEmptyNonEditableField(embedded_form[key])) {
-                for (j = 0; j < parameter_list.length; j += 1) {
-                  if (embedded_form[key].hasOwnProperty(parameter_list[j])) {
-                    delete embedded_form[key][parameter_list[j]];
-                  }
-                }
                 rendered_form[key] = embedded_form[key];
               }
             }
