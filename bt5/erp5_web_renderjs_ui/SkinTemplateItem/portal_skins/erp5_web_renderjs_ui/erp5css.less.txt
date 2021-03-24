@@ -2140,7 +2140,7 @@ ul.ui-list-grid {
 **********************************************/
 .edit-form, .edit-form-action, .edit-field, .translate-title, .translate-description {
   margin-left: @half-margin-size;
-  color: @black;
+  color: @colorlabel;
 }
 
 .translate-description {
