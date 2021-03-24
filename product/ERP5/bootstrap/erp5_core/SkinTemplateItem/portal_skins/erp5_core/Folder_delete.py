@@ -100,21 +100,29 @@ if object_to_remove_list:
     pass
 
 message = Base_translateString("Deleted.")
+portal_status_level = "success"
 
 # Try to call "delete_action" workflow transition on documents which defined it
-# Failure of such a call is not a failure globally. The document was deleted anyway
 for obj in object_to_delete_list:
   # Hidden transition (without a message displayed)
   # are not returned by getActionsFor
   try:
     portal.portal_workflow.doActionFor(obj, 'delete_action')
-  except ConflictError:
-    raise
-  except Exception:
-    pass
+  except WorkflowException:
+    # The user does not have rights to invoke delete action.
+    # Do not raise since delete_action may succeed for other selected documents
+    # Do give a warning though
+    message = Base_translateString("One or more documents could not be deleted.")
+    portal_status_level = "warning"
 
 # make sure nothing is checked after
 if selection_name:
   portal.portal_selections.setSelectionCheckedUidsFor(selection_name, ())
 
-return context.Base_redirect(form_id, keep_items={"portal_status_message": str(message)})
+return context.Base_redirect(
+  form_id,
+  keep_items={
+    "portal_status_message": str(message),
+    "portal_status_level": portal_status_level,
+  },
+)
