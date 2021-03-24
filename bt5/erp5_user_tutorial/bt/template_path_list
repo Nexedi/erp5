@@ -13,6 +13,8 @@ test_page_module/user-Howto.Create.Trade.Conditions.008.en
 test_page_module/user-Howto.Create.Trade.Conditions.008.en/**
 test_page_module/user-Howto.Create.and.Manage.Products
 test_page_module/user-Howto.Create.and.Manage.Products/**
+test_page_module/user-Howto.Generate.Report
+test_page_module/user-Howto.Generate.Report/**
 test_page_module/user-Howto.Link.Persons.and.Organisations
 test_page_module/user-Howto.Link.Persons.and.Organisations/**
 test_page_module/user-Howto.Manage.Support.Request.NewUI
