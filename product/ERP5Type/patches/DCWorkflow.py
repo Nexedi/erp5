@@ -38,7 +38,7 @@ from Products.CMFCore.utils import  _getAuthenticatedUser
 from DocumentTemplate.DT_Util import TemplateDict
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Utils import convertToMixedCase
+from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
 import sys
 from Acquisition import aq_base
 from copy import deepcopy
@@ -970,7 +970,7 @@ def convertToERP5Workflow(self, temp_object=False):
     # give temp workflow an uid for form_dialog.
     workflow.uid = uid
   workflow.default_reference = self.id
-  workflow.setTitle(self.title)
+  workflow.setTitle(convertToUpperCase(self.title))
   workflow.setDescription(self.description)
 
   if not temp_object:
