@@ -15,6 +15,7 @@ the selection.
 """
 from ZODB.POSException import ConflictError
 from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.ERP5Type.Message import Message
 
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
@@ -82,16 +83,21 @@ except ConflictError:
 except Exception as error:
   return context.Base_renderMessage(str(error), "error")
 
-object_ids = [x.getId() for x in object_to_remove_list]
-comment = Base_translateString('Deleted objects: ${object_ids}',
-                               mapping={'object_ids': object_ids})
-try:
-  # record object deletion in workflow history
-  portal.portal_workflow.doActionFor(context, 'edit_action',
-                                     comment=comment)
-except WorkflowException:
-  # no 'edit_action' transition for this container
-  pass
+if object_to_remove_list:
+  try:
+    # record object deletion in workflow history
+    portal.portal_workflow.doActionFor(
+      context,
+      'edit_action',
+      comment=Message(
+        domain='ui',
+        message='Deleted objects: ${object_ids}',
+        mapping={'object_ids': [x.getId() for x in object_to_remove_list]},
+      ),
+    )
+  except WorkflowException:
+    # no 'edit_action' transition for this container
+    pass
 
 message = Base_translateString("Deleted.")
 
