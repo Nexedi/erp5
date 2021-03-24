@@ -81,6 +81,10 @@ try:
 except ConflictError:
   raise
 except Exception as error:
+  # Note, this does not rollback transaction, so in case manage_delObjects
+  # did delete some objects these will be deleted.
+  # This may be considered a feature of user point of view
+  # (something went wrong with some documents, but some where deleted)
   return context.Base_renderMessage(str(error), "error")
 
 if object_to_remove_list:
