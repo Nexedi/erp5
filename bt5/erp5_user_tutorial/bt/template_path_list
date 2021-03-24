@@ -1,4 +1,6 @@
 test_page_module/developer-Test.Page.Sample
+test_page_module/user-Howto.Create.A.Payment
+test_page_module/user-Howto.Create.A.Payment/**
 test_page_module/user-Howto.Create.Bank.Account
 test_page_module/user-Howto.Create.Bank.Account/**
 test_page_module/user-Howto.Create.Campaigns
