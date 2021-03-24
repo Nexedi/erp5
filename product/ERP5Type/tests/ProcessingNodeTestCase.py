@@ -5,7 +5,10 @@ from UserDict import IterableUserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase
-from ZServer.Testing import utils
+try:
+  from ZServer.Testing import utils
+except: # BBB Zope 2.12
+  from Testing.ZopeTestCase import utils
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -148,7 +151,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
-    #utils = ZopeTestCase.utils
     if utils._Z2HOST is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
