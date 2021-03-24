@@ -38,7 +38,6 @@ class WorkflowScript(PythonScript, IdAsReferenceMixin("script_")):
   meta_type = 'ERP5 Workflow Script'
   portal_type = 'Workflow Script'
   add_permission = Permissions.AddPortalContent
-  _params = ''
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -51,14 +50,5 @@ class WorkflowScript(PythonScript, IdAsReferenceMixin("script_")):
     'Reference',
     'PythonScript',
   )
-
-  security.declarePublic("execute")
-  execute = PythonScript.__call__
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getScriptParameterList')
-  def getScriptParameterList(self):
-    ''' returns script's parameter for use by Pylint '''
-    return self._params
 
 InitializeClass(WorkflowScript)
