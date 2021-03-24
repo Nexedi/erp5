@@ -1433,7 +1433,10 @@ class ObjectTemplateItem(BaseTemplateItem):
         self.removeProperties(obj, 0)
         __traceback_info__ = (container, object_id, obj)
         container._setObject(object_id, obj)
-        obj = container._getOb(object_id)
+        try:
+          obj = container._getOb(object_id)
+        except:
+          import ipdb; ipdb.set_trace()
 
         if not object_existed:
           # A new object was added, call the hook
