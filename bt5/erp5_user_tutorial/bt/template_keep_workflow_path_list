@@ -25,3 +25,5 @@ test_page_module/user-Howto.Manage.Support.Request.NewUI
 test_page_module/user-Howto.Manage.Support.Request.NewUI/**
 test_page_module/user-Howto.Manage.Document.Versionning.Test
 test_page_module/user-Howto.Manage.Document.Versionning.Test/**
+test_page_module/user-Howto.Create.Purchase.Transactions
+test_page_module/user-Howto.Create.Purchase.Transactions/**
