@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>state_variable</string> </key>
-            <value> <string>simulation_state</string> </value>
+            <value> <string>current_state</string> </value>
         </item>
       </dictionary>
     </pickle>
