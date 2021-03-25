@@ -99,7 +99,6 @@
         tab_list = [],
         jump_action_list = [],
         breadcrumb_action_list = [],
-        erp5_document,
         jump_list;
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
