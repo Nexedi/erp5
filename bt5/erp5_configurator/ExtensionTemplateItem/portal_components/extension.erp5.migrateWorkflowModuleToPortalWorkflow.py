@@ -13,15 +13,14 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
             for o in category_value_list ]
 
   workflow = portal_workflow.newContent(
-    id=workflow_id,
     portal_type='Workflow',
     reference=configurator_workflow.getId(),
     comment=configurator_workflow.getComment(),
     description=configurator_workflow.getDescription(),
+    state_variable=configurator_workflow.getProperty('state_variable_name'),
     source_list=getCategoryList('state_', configurator_workflow.getSourceValueList()),
     # ConfiguratorWorkflow PropertySheet
-    configuration_after_script_id=configurator_workflow.getConfigurationAfterScriptId(),
-    state_base_category=configurator_workflow.getStateBaseCategory())
+    configuration_after_script_id=configurator_workflow.getConfigurationAfterScriptId())
   for business_configuration in configurator_workflow.getRelatedValueList(
       portal_type='Business Configuration'):
     business_configuration.setResourceValue(workflow)
@@ -32,7 +31,6 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
 
     if subobject.getPortalType() == 'State':
       state = workflow.newContent(
-        id='state_' + reference,
         portal_type='State',
         reference=reference,
         title=title,
@@ -45,7 +43,6 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
 
     elif subobject.getPortalType() == 'Transition':
       workflow.newContent(
-        id='transition_' + reference,
         portal_type='Transition',
         reference=reference,
         title=title,
@@ -70,7 +67,6 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
         continue
 
       workflow.newContent(
-        id='variable_' + reference,
         portal_type='Workflow Variable',
         reference=reference,
         title=title,
