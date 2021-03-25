@@ -13,6 +13,7 @@
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
+from types import StringType
 
 list_type_list = list, tuple, set, frozenset, dict
 
@@ -92,7 +93,7 @@ if 1: # For easy diff with original
                 'No input was provided for <em>%s</em>' % name)
 
         if len(vs) > 1:
-            vs=join(map(str,vs),', ')
+            vs = ', '.join(map(str, vs))
             if self.op == '<>':
                 ## Do the equivalent of 'not-equal' for a list,
                 ## "a not in (b,c)"
