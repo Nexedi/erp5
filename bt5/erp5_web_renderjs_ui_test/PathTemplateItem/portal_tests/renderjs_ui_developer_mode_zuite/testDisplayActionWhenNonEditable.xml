@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testHideActionWhenNonEditable</string> </value>
+            <value> <string>testDisplayActionWhenNonEditable</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Hide Actions When non-editable</unicode> </value>
+            <value> <unicode>Test Display Actions When non-editable</unicode> </value>
         </item>
       </dictionary>
     </pickle>
