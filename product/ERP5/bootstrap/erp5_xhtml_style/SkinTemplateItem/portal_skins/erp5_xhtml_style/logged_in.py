@@ -32,7 +32,7 @@ if REQUEST.get('is_user_account_password_expired_expire_date'):
     keep_items={
       'cancel_url': url,
       'portal_status_message': translateString(
-          'Your password will expire at {date}. '
+          'Your password will expire at ${date}. '
           'You are advised to change it as soon as possible.',
           mapping={'date':
             portal.Base_FormatDate(
