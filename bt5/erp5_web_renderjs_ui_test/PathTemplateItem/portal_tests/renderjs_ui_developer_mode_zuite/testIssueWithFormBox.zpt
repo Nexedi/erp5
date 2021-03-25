@@ -49,6 +49,12 @@
         <td>Failed to execute 'removeChild' on 'Node'</td>
         <td></td>
       </tr>
+      <!-- We should not display form action link if it is empty and this happens with Formbox. -->
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//[@class="edit-form-action" and @href="hateoas//manage_main"]</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </body>
