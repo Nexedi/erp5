@@ -67,7 +67,7 @@ class PropertySheetTool(BaseTool):
     'template_tool_component_id_property')
 
   def _isBootstrapRequired(self):
-    if not self.has_key('BaseType'):
+    if not self.has_key('Interaction'):
       return True
 
     bt_has_key = self.BusinessTemplate.has_key
