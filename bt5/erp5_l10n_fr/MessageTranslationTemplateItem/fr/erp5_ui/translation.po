@@ -13897,6 +13897,9 @@ msgstr "Effectuez une recherche pour afficher le contenu."
 msgid "To reset your password, please enter your login below. An email will be sent to your address with a link to enter your new password."
 msgstr "Afin de changer votre mot de passe, entrez votre nom d'utilisateur ci-dessous. Un email contenant des explications sur la marche à suivre sera envoyé à votre adresse."
 
+msgid "Too many documents selected."
+msgstr "Trop de documents sélectionnés."
+
 msgid "Too many documents were found."
 msgstr "Trop de possibilités trouvées."
 
