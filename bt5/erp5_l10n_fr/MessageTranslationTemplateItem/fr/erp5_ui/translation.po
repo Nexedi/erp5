@@ -664,6 +664,9 @@ msgstr "Action impossible : La source n'est pas spécifiée"
 msgid "Action impossible : the quantity of the transaction is greater than the transferable maximum quantity (TMQ): TMQ = 50000.00"
 msgstr "hkhkjhkjh"
 
+msgid "Action impossible : too many documents selected."
+msgstr "Action impossible : trop de documents sélectionnés."
+
 msgid "Action impossible : transaction is not balanced for destination section"
 msgstr "Action impossible : l'écriture n'est pas équilibrée"
 
