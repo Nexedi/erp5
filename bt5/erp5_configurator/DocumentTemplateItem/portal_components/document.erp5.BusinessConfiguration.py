@@ -43,6 +43,21 @@ END_STATE_TITLE = 'End'
 
 ## TODO-ERP5Workflow: Initially part of Workflow implementation done for
 ##                    ERP5Configurator but not used by ERP5 Workflow...
+def initializeDocument(workflow, document):
+  """
+  Set initial state on the Document
+  """
+  state_bc_id = workflow.getStateBaseCategory()
+  document.setCategoryMembership(state_bc_id, workflow.getSource())
+
+  object = workflow.getStateChangeInformation(document, workflow.getSourceValue())
+
+  # Initialize workflow history
+  status_dict = {state_bc_id: workflow.getSource()}
+  variable_list = workflow.contentValues(portal_type='Workflow Variable')
+  for variable in variable_list:
+    status_dict[variable.getTitle()] = variable.getVariableValue(object=object)
+  workflow._updateWorkflowHistory(document, status_dict)
 def _generateHistoryKey(workflow):
    """
    Generate a key used in the workflow history.
@@ -330,6 +345,7 @@ class BusinessConfiguration(Item):
     next_state = self.unrestrictedTraverse(transition.getDestination())
     for wh in getWorkflowHistory(current_state, self):
       if next_state == self.unrestrictedTraverse(wh['current_state']):
+        import pdb; pdb.set_trace()
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
