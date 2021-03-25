@@ -345,6 +345,7 @@ class BusinessConfiguration(Item):
     next_state = self.unrestrictedTraverse(transition.getDestination())
     for wh in getWorkflowHistory(current_state, self):
       if next_state == self.unrestrictedTraverse(wh['current_state']):
+        import pdb; pdb.set_trace()
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
