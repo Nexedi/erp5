@@ -35,6 +35,13 @@ if not listbox_uid:
 
 # already filters out documents with relations that cannot be deleted
 object_list = context.Folder_getDeleteObjectList(uid=listbox_uid)
+if len(object_list) > 1000:
+  return context.Base_redirect(
+    keep_items={
+    'portal_status_message': translate("Action impossible : too many documents selected."),
+    'portal_status_level': "warning",
+    }
+  )
 object_not_deletable_len = len(listbox_uid) - len(object_list)
 
 # some documents cannot be deleted thus we stop and warn the user
