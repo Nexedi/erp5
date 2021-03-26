@@ -205,6 +205,7 @@ def WorkflowTool_bootstrap(self):
 
 WorkflowTool._isBootstrapRequired = WorkflowTool_isBootstrapRequired
 WorkflowTool._bootstrap = WorkflowTool_bootstrap
+WorkflowTool.getWorkflowValueListFor = WorkflowTool.getWorkflowsFor
 
 def _deleteChainsByType(self, pt, wf_id):
   self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf!=wf_id)

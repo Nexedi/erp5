@@ -101,7 +101,7 @@ class TypesTool(TypeProvider):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _isBootstrapRequired(self):
-    if not self.has_key('Standard Property'):
+    if not self.has_key('Interaction Workflow'):
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates
@@ -133,7 +133,11 @@ class TypesTool(TypeProvider):
       'Standard Property',
       'Acquired Property',
       # workflow (initializePortalTypeDynamicWorkflowMethods)
+      'State',
       'Transition',
+      'Workflow Script',
+      'Workflow Variable',
+      'Worklist',
       'Workflow',
       'Interaction',
       'Interaction Workflow',
@@ -143,6 +147,8 @@ class TypesTool(TypeProvider):
       'Catalog Tool',
     ))
     ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow')
+    ERP5Generator.bootstrap_allow_type(self, 'Interaction Workflow')
 
   def listContentTypes(self, container=None):
     """List content types from all providers
