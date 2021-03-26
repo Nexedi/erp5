@@ -644,7 +644,7 @@ def StateDefinition_getDestinationIdList(self):
   return self.transitions
 def StateDefinition_getDestinationValueList(self):
   if self.transitions: # empty tuple by default
-    return [v for i, v in self.getWorkflow().transitions.iteritems()
+    return [v for i, v in self.getWorkflow().transitions.items()
             if i in self.transitions]
   return []
 def StateDefinition_getStateTypeList(self):
