@@ -1,4 +1,4 @@
-workflow_tool = context.getPortalObject()
+workflow_tool = context.getPortalObject().portal_workflow
 unknown_workflow_id_list = []
 for workflow_id in context.getTemplateWorkflowIdList():
   try:

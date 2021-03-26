@@ -145,6 +145,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "PDF":                 ("pdf",  0, "data"),
   "PyData Script":       ("py",   0, "_body"),
   "Python Script":       ("py",   0, "_body"),
+  "Workflow Script":     ("py",   0, "_body"),
   "PythonScript":        ("py",   0, "_body"),
   "Spreadsheet":         (None,   0, "data"),
   "SQL":                 ("sql",  0, "src"),
