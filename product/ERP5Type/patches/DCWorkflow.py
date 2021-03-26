@@ -1229,7 +1229,8 @@ def convertToERP5Workflow(self, temp_object=False):
     trash_tool = getattr(portal, 'portal_trash', None)
     if trash_tool is not None:
       # move old workflow to trash tool;
-      LOG(" | Move old workflow '%s' into a trash bin", 0, self.id)
+      LOG("convertToERP5Workflow", 0,
+          "Move old workflow '%s' into a trash bin" % self.id)
       workflow_tool._delOb(self.id)
       from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(self.id)

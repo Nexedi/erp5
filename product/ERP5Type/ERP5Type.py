@@ -497,6 +497,9 @@ class ERP5TypeInformation(XMLObject,
       """Getter for 'type_workflow' property"""
       return list(self.workflow_list)
 
+    def _setTypeWorkflowList(self, type_workflow_list):
+      self.workflow_list = type_workflow_list
+
     security.declareProtected(Permissions.ModifyPortalContent,
                               'setTypeWorkflowList')
     def setTypeWorkflowList(self, type_workflow_list):

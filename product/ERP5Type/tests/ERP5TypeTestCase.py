@@ -944,14 +944,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
-      for x, y in (("erp5_core_proxy_field_legacy", "erp5_base"),
-        ("erp5_stock_cache", "erp5_pdm")):
-        if x not in template_list:
-          try:
-            template_list.insert(template_list.index(y), x)
-          except ValueError:
-            pass
-
       self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,
@@ -1274,9 +1266,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
             self.dynamicWorkflowConversion()
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
-            self.getPortal().erp5_sql_connection.manage_test("update message_queue set processing_node=0, priority=1 where processing_node=-1")
-            self.getPortal().erp5_sql_connection.manage_test("update message set processing_node=0, priority=2 where processing_node=-1")
             self.tic(not quiet)
+
             # Log out
             if not quiet:
               ZopeTestCase._print('Logout ... \n')
