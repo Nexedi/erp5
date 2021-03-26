@@ -117,12 +117,12 @@ class DownloadableMixin:
     if format:
       web_cache_kw['format'] = format
     view = _ViewEmulator().__of__(self)
+    # call caching policy manager.
+    _setCacheHeaders(view, web_cache_kw)
     # If we have a conditional get, set status 304 and return
     # no content
     if _checkConditionalGET(view, web_cache_kw):
       return ''
-    # call caching policy manager.
-    _setCacheHeaders(view, web_cache_kw)
 
     if not self.checkConversionFormatPermission(format, **kw):
       raise Forbidden('You are not allowed to get this document in this ' \

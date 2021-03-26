@@ -2553,12 +2553,12 @@ class Base(
     """Returns the default view even if index_html is overridden"""
     result = self._renderDefaultView('view')
     view = _ViewEmulator().__of__(self)
+    # call caching policy manager.
+    _setCacheHeaders(view, {})
     # If we have a conditional get, set status 304 and return
     # no content
     if _checkConditionalGET(view, extra_context={}):
       return ''
-    # call caching policy manager.
-    _setCacheHeaders(view, {})
     return result
 
   # Default views - the default security in CMFCore
