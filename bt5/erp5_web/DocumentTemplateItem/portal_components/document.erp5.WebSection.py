@@ -255,7 +255,6 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       if custom_render_method_id is not None:
         if document is None:
           document = self
-        result = getattr(document, custom_render_method_id)()
         view = _ViewEmulator().__of__(self)
         # call caching policy manager.
         _setCacheHeaders(view, {})
@@ -263,6 +262,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         # no content
         if _checkConditionalGET(view, extra_context={}):
           return ''
+        result = getattr(document, custom_render_method_id)()
         return result
       elif document is not None:
         return document()
