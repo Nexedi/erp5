@@ -121,7 +121,12 @@
       'padding-top': true,
       'padding-bottom': true,
       'text-align': true,
-      width: true
+      width: true,
+      'display': true,
+      'list-style': true,
+      'text-align': true,
+      'vertical-align': true,
+      'border-radius': true
     },
     link_node_list: {
       A: true,
