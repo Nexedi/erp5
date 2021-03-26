@@ -1257,6 +1257,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
             self._callSetUpOnce()
+            self._reindexSite()
 
             # Enable reindexing
             # Do hot reindexing # Does not work
@@ -1264,7 +1265,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
 
-            self.dynamicWorkflowConversion()
+#            self.dynamicWorkflowConversion()
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
             self.tic(not quiet)
 
