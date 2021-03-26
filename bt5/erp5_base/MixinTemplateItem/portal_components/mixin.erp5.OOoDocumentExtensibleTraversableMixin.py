@@ -49,7 +49,6 @@ class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
     web_cache_kw = {'name': name,
                     'format': EMBEDDED_FORMAT}
     try:
-      self._convert(format='html')
       view = _ViewEmulator().__of__(self)
       # call caching policy manager.
       _setCacheHeaders(view, web_cache_kw)
@@ -57,6 +56,7 @@ class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
       # no content
       if _checkConditionalGET(view, web_cache_kw):
         return ''
+      self._convert(format='html')
       mime, data = self.getConversion(format=EMBEDDED_FORMAT, filename=name)
       document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):
