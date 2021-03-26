@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_action</string>
+                <string>action_type/object_jio_action</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_action</string> </value>
+            <value> <string>object_jio_action</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Convert workflows to ERP5 Workflows</string> </value>
+            <value> <string>Convert DCWorkflow to ERP5 Workflows</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BusinessTemplate_convertToERP5Workflows</string> </value>
+            <value> <string>string:${object_url}/BusinessTemplate_convertAllDCWorkflowToERP5Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>

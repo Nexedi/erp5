@@ -1257,6 +1257,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
             self._callSetUpOnce()
+            self._reindexSite()
 
             # Enable reindexing
             # Do hot reindexing # Does not work
