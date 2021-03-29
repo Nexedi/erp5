@@ -167,29 +167,6 @@ class Workflow(XMLObject):
     except (ObjectDeleted,ObjectMoved):
       pass
 
-  def _updateWorkflowHistory(self, document, status_dict):
-    """
-    Change the state of the object.
-    """
-    # Create history attributes if needed
-    if getattr(aq_base(document), 'workflow_history', None) is None:
-      document.workflow_history = PersistentMapping()
-      # XXX this _p_changed is apparently not necessary
-      document._p_changed = 1
-
-    # Add an entry for the workflow in the history
-    workflow_key = self.getReference()
-    if not document.workflow_history.has_key(workflow_key):
-      document.workflow_history[workflow_key] = ()
-
-    # Update history
-    document.workflow_history[workflow_key] += (status_dict,)
-    # XXX this _p_changed marks the document modified, but only the
-    # PersistentMapping is modified
-    # document._p_changed = 1
-    # XXX this _p_changed is apparently not necessary
-    #document.workflow_history._p_changed = 1
-
   security.declarePublic('getDateTime')
   def getDateTime(self):
     """
