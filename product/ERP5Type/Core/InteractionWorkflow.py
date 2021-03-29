@@ -150,13 +150,6 @@ class InteractionWorkflow(Workflow):
   def getValidRoleList(self):
     return sorted(self.getPortalObject().acl_users.valid_roles())
 
-  security.declarePrivate('_updateWorkflowHistory')
-  def _updateWorkflowHistory(self, document, status_dict):
-    """
-    Stateless.
-    """
-    return
-
   security.declarePrivate('getinteraction_workflowVariableMatchDict')
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     return None

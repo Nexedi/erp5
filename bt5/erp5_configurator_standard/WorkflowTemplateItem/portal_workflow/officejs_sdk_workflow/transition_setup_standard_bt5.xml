@@ -24,6 +24,16 @@
             </value>
         </item>
         <item>
+            <key> <string>after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_setupOfficeJSDevelopmentStandardBT5</string> </value>
+        </item>
+        <item>
+            <key> <string>before_script_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>

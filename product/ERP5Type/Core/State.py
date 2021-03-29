@@ -34,12 +34,6 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 
-class StateError(Exception):
-  """
-  Must call only an available transition
-  """
-  pass
-
 class CustomStorageMatrixMixin(XMLMatrix):
   """
   Prototype of a mixin allowing to have custom storage for matrix
