@@ -24,6 +24,10 @@
             </value>
         </item>
         <item>
+            <key> <string>after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_displayDownload</string> </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
