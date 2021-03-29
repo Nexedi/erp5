@@ -51,7 +51,7 @@ if 1: # For easy diff with original
                     if type(v) is StringType:
                         if v[-1:]=='L':
                             v=v[:-1]
-                        atoi(v)
+                        int(v)
                     else: v=str(int(v))
                 except ValueError:
                     raise ValueError(
@@ -59,7 +59,7 @@ if 1: # For easy diff with original
             elif t=='float':
                 if not v and type(v) is StringType: continue
                 try:
-                    if type(v) is StringType: atof(v)
+                    if type(v) is StringType: float(v)
                     else: v=str(float(v))
                 except ValueError:
                     raise ValueError(
@@ -104,4 +104,11 @@ if 1: # For easy diff with original
         return "%s %s %s" % (self.column, self.op, vs[0])
     SQLTest.render = SQLTest.__call__ = render
 
-sqltest.valid_type = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in xrange(7))).__contains__
+new_valid_types = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in xrange(7)))
+
+try:
+  # BBB
+  from Shared.DC.ZRDB.sqltest import valid_type
+  sqltest.valid_type = new_valid_types.__contains__
+except ImportError:
+  sqltest.valid_types = new_valid_types
