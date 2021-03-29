@@ -217,6 +217,10 @@ DateTime._parse_args = _parse_args
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
+    def __init__(self, *args, **kw):
+      super(ERP5TypeTestCaseMixin, self).__init__(*args, **kw)
+      self.sequence_string_registry = {}
+
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
@@ -863,6 +867,47 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         start = time.time()
         setup_once()
         ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
+    def _getCleanupDict(self):
+      raise NotImplementedError
+
+    def registerSequenceString(self, sequence_title, sequence_string):
+      self.sequence_string_registry[sequence_title] = sequence_string
+
+    def getSequenceString(self, sequence_title):
+      return self.sequence_string_registry[sequence_title]
+
+    def stepStoreSequence(self, sequence):
+      sequence_title = "sequence_title"
+      document_dict = self._getCleanupDict()
+      if sequence_title in self.portal.portal_trash:
+        self.portal.portal_trash.manage_delObjects(ids=[sequence_title])
+      trashbin_value = self.portal.portal_trash.newContent(
+        portal_type="Trash Bin",
+        id=sequence_title,
+        title=sequence_title,
+        serialized_sequence=sequence.serializeSequenceDict(),
+        document_dict=document_dict,
+      )
+      for module_id, object_id_list in document_dict.iteritems():
+        for object_id in object_id_list:
+          self.portal.portal_trash.backupObject(
+            trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
+          )
+
+    def stepRestoreSequence(self, sequence):
+      sequence_title = "sequence_title"
+      trashbin_value = self.portal.portal_trash[sequence_title]
+      document_dict = trashbin_value.getProperty('document_dict')
+      for module_id, object_id_list in document_dict.iteritems():
+        for object_id in object_id_list:
+          self.portal.portal_trash.restoreObject(
+            trashbin_value, [module_id], object_id, pass_if_exist=True
+          )
+      sequence.deserializeSequenceDict(
+        trashbin_value.getProperty("serialized_sequence"),
+      )
+      self.tic()
 
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     __original_ZMySQLDA_connect = None
