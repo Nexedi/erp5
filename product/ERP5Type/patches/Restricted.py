@@ -106,8 +106,10 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
+BBB_ACCESS_CONTROL = False
 if "next" not in safe_builtins: # BBB
     add_builtins(next=guarded_next)
+    BBB_ACCESS_CONTROL = True
 
 _safe_class_attribute_dict = {}
 import inspect
@@ -164,16 +166,25 @@ class TypeAccessChecker:
 
 ContainerAssertions[type] = TypeAccessChecker()
 
+if BBB_ACCESS_CONTROL:
+  class SafeIterItems(SafeIter):
 
-class SafeIterItems(SafeIter):
+      def next(self):
+          ob = self._next()
+          c = self.container
+          guard(c, ob[0])
+          guard(c, ob[1])
+          return ob
+else:
+  class SafeIterItems(SafeIter):
 
-    def next(self):
-        ob = self._next()
-        c = self.container
-        guard(c, ob[0])
-        guard(c, ob[1])
-        return ob
-
+      def next(self):
+          ob = next(self._iter)
+          c = self.container
+          guard(c, ob[0])
+          guard(c, ob[1])
+          return ob
+  
 def get_iteritems(c, name):
     return lambda: SafeIterItems(c.iteritems(), c)
 _dict_white_list['iteritems'] = get_iteritems
