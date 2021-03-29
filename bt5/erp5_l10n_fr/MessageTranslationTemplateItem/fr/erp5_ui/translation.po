@@ -661,9 +661,6 @@ msgstr "Action impossible : Le tiers n'est pas spécifié à la ligne ${line}, m
 msgid "Action impossible : source_section is not defined"
 msgstr "Action impossible : La source n'est pas spécifiée"
 
-msgid "Action impossible : the quantity of the transaction is greater than the transferable maximum quantity (TMQ): TMQ = 50000.00"
-msgstr "hkhkjhkjh"
-
 msgid "Action impossible : transaction is not balanced for destination section"
 msgstr "Action impossible : l'écriture n'est pas équilibrée"
 
