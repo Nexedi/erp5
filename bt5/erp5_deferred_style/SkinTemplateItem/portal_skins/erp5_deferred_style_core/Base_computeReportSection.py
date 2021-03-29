@@ -1,5 +1,7 @@
 # pylint: disable=redefined-builtin
 portal = context.getPortalObject()
+if notify_report_complete_kwargs is None:
+  notify_report_complete_kwargs = {}
 
 form = context.restrictedTraverse(form)
 request = container.REQUEST
@@ -58,5 +60,7 @@ activity_context.activate(
            form_path=form.getPhysicalPath(),
            user_name=user_name,
            format=format,
-           report_section_count=len(report_section_list)
-          )
+           report_section_count=len(report_section_list),
+           notify_report_complete_script_id=notify_report_complete_script_id,
+           notify_report_complete_kwargs=notify_report_complete_kwargs,
+)

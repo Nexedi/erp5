@@ -50,23 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format, report_section_count, notify_report_complete_script_id, notify_report_complete_kwargs</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>tag, fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_report</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Alarm_generateReportDocumentList</string> </value>
         </item>
       </dictionary>
     </pickle>
