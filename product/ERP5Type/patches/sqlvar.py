@@ -83,11 +83,16 @@ def SQLVar_render(self, md):
                      % (t, self.__name__, v))
 
 # Patched by yo. datetime is added.
-
 valid_type = 'int', 'float', 'string', 'nb', 'datetime'
 valid_type += tuple(map('datetime(%s)'.__mod__, xrange(7)))
-valid_type = valid_type.__contains__
+try:
+  # BBB
+  from Shared.DC.ZRDB.sqlvar import valid_type
+  valid_type = valid_type.__contains__
+  sqlvar.valid_type = valid_type
+except ImportError:
+  sqlvar.valid_types = valid_type
+    
 
 SQLVar.render = SQLVar_render
 SQLVar.__call__ = SQLVar_render
-sqlvar.valid_type = valid_type
