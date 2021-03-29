@@ -175,6 +175,106 @@ class Sequence:
           step = step[4:]
         self.addStep(step)
 
+
+class StoredSequence(Sequence):
+  """A StoredSequence is a Sequence that can store an ERP5's state into
+  a Trash Bin and restore it before before being played. If the state is
+  not stored yet, then it will create it then store it.
+  This capability is interesting when multiple tests share a same initial
+  state, as the state needs to be generated only once and can be reused
+  for all of them.
+  """
+
+  def __init__(self, context, id):
+    Sequence.__init__(self, context)
+    self._id = id
+
+  def serializeSequenceDict(self):
+    def _serialize(key, value):
+      result_dict = {'key': key}
+      if isinstance(value, str) or isinstance(value, int) or isinstance(value, float) or value is None:
+        result_dict['type'] = "raw"
+        result_dict['value'] = value
+      elif isinstance(value, dict):
+        result_dict['type'] = "raw"
+        result_dict['value'] = value
+      elif isinstance(value, list):
+        result_dict['type'] = "list"
+        result_dict['value'] = [_serialize(key, x) for x in value]
+      else:
+        result_dict['type'] = "erp5_object"
+        result_dict['value'] = value.getRelativeUrl()
+      return result_dict
+
+    result_list = []
+    for key, value in self._dict.iteritems():
+      result_list.append(_serialize(key, value))
+    return result_list
+
+  def deserializeSequenceDict(self, data):
+    portal = self._context.getPortalObject()
+    def _deserialize(serialized_dict):
+      if serialized_dict['type'] == "raw":
+        return serialized_dict['value']
+      elif serialized_dict['type'] == "list":
+        return [_deserialize(x) for x in serialized_dict['value']]
+      elif serialized_dict['type'] == "erp5_object":
+        return portal.restrictedTraverse(serialized_dict['value'])
+      else:
+        raise ValueError("Unknown type in %s " % serialized_dict)
+
+    for serialized_dict in data:
+      self._dict[serialized_dict['key']] = _deserialize(serialized_dict)
+
+  def store(self, context):
+    context.login()
+    document_dict = context._getCleanupDict()
+    if self._id in context.portal.portal_trash:
+      context.portal.portal_trash.manage_delObjects(ids=[self._id])
+    trashbin_value = context.portal.portal_trash.newContent(
+      portal_type="Trash Bin",
+      id=self._id,
+      title=self._id,
+      serialized_sequence=self.serializeSequenceDict(),
+      document_dict=document_dict,
+    )
+    for module_id, object_id_list in document_dict.iteritems():
+      for object_id in object_id_list:
+        context.portal.portal_trash.backupObject(
+          trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
+        )
+    context.tic()
+    context.logout()
+
+  def restore(self, context):
+    context.login()
+    trashbin_value = context.portal.portal_trash[self._id]
+    document_dict = trashbin_value.getProperty('document_dict')
+    for module_id, object_id_list in document_dict.iteritems():
+      for object_id in object_id_list:
+        context.portal.portal_trash.restoreObject(
+          trashbin_value, [module_id], object_id, pass_if_exist=True
+        )
+    self.deserializeSequenceDict(
+      trashbin_value.getProperty("serialized_sequence"),
+    )
+    context.tic()
+    context.logout()
+
+  def play(self, context, **kw):
+    portal = self._context.getPortal()
+    if getattr(portal.portal_trash, self._id, None) is None:
+      ZopeTestCase._print('\nRunning and saving stored sequence \"%s\" ...' % self._id)
+      sequence = Sequence()
+      sequence.setSequenceString(context.getSequenceString(self._id))
+      sequence.play(context)
+      self._dict = sequence._dict.copy()
+      self.store(context)
+    else:
+      ZopeTestCase._print('\nRestoring stored sequence \"%s\" ...' % self._id)
+      self.restore(context)
+    Sequence.play(self, context, **kw)
+
 class SequenceList:
 
   def __init__(self):
