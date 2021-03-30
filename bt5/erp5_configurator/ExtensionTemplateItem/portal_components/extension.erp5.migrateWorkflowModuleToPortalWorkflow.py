@@ -42,18 +42,49 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
         business_configuration.setCurrentStateValue(state)
 
     elif subobject.getPortalType() == 'Transition':
-      workflow.newContent(
+# TODO-ERP5Workflow: Workflows only call Workflow Script and do not call
+#                    Python Script in portal_skins but Configurator Workflows
+#                    do. For now leave them as they ({before, after}_script_id
+#                    property) but they should be migrated later on.
+#
+#      def addWorkflowScript(script_id_property):
+#        old_script_id = getattr(subobject.aq_base, script_id_property, None)
+#        if old_script_id:
+#          old_script = portal_workflow.getPortalObject().unrestrictedTraverse(old_script_id)
+#          script = workflow.newContent(id=workflow.getScriptIdByReference(old_script.id),
+#                                       portal_type='Workflow Script')
+#          script.defeault_reference = old_script.id
+#          script.setTitle(old_script.title)
+#          script.setParameterSignature('state_change')
+#          script.setBody(old_script._body)
+#          script.setProxyRole(old_script._proxy_roles)
+#          return script
+#      before_script_value = addWorkflowScript('before_script_id')
+#      after_script_value = addWorkflowScript('after_script_id')
+
+      transition = workflow.newContent(
         portal_type='Transition',
         reference=reference,
         title=title,
         destination_list=getCategoryList('state_', subobject.getDestinationValueList()),
         comment=subobject.getComment(),
         description=subobject.getDescription(),
-        before_script_value=subobject.getProperty('before_script_id'),
-        after_script_value=subobject.getProperty('after_script_id'),
+# TODO-ERP5Workflow: Same as above
+#        before_script_value=before_script_value,
+#        after_script_value=after_script_value,
         guard_expression=subobject.getProperty('guard_expression'),
         # ConfiguratorWorkflowTransition Property Sheet
         transition_form_id=subobject.getProperty('transition_form_id'))
+# TODO-ERP5Workflow: ad-hoc: Should use the normal {before, after}_script
+#                    Workflow Property, see above.
+      try:
+        transition.before_script_id = subobject.aq_base.before_script_id
+      except AttributeError:
+        pass
+      try:
+        transition.after_script_id = subobject.aq_base.after_script_id
+      except AttributeError:
+        pass
       # XXX: Transition Variable: Not used in erp5.git, used elsewhere?
 
     elif subobject.getPortalType() == 'Variable':
