@@ -228,9 +228,6 @@ First, you need to start the transaction, which means that the accounting lines 
 			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Journalised</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -284,6 +281,11 @@ First, you need to start the transaction, which means that the accounting lines 
 			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
 			<td>verifyText</td>
 			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Posted to General Ledger</td>
@@ -332,6 +334,11 @@ First, you need to start the transaction, which means that the accounting lines 
 		</tr>
 		<tr>
 			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>verifyText</td>
