@@ -30,8 +30,7 @@ from Products.Localizer.itools.i18n.accept import AcceptLanguage
 from PIL import Image
 import cStringIO
 import math
-import io
-import base64
+
 
 def changeSkin(skin_name):
   """
@@ -135,21 +134,14 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     # - rms is ~1.0 if date is 2017-06-07 vs 2017-06-06 with bmp images
     return rms
 
-  def convertToPng(self, img_data):
-    bmp_file = Image.open(io.BytesIO(img_data))
-    img_buff = cStringIO.StringIO()
-    bmp_file.save(img_buff, format='PNG', optimize=True, quality=75)
-    img_data = img_buff.getvalue()
-    return ''.join(['data:image/png;base64,', base64.encodestring(img_data)])
-
   def assertImageRenderingEquals(self, test_image_data, expected_image_data, message="Images rendering differs", max_rms=10.0):
     rms = self.computeImageRenderingRootMeanSquare(test_image_data, expected_image_data)
     if rms <= max_rms:
       return
     raise AssertionError("%(message)s\nComparing rendered image:\n%(base64_1)s\nWith expected image:\n%(base64_2)s\nRMS: %(rms)s > %(max_rms)s\nAssertionError: %(message)s" % {
       "message": message,
-      "base64_1": self.convertToPng(test_image_data),
-      "base64_2": self.convertToPng(expected_image_data),
+      "base64_1": test_image_data,
+      "base64_2": expected_image_data,
       "rms": rms,
       "max_rms": max_rms,
     })
@@ -256,13 +248,13 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
     self.login()
     image_source_pdf_doc.setData(pdf_data)
-    _, bmp = image_source_pdf_doc.convert("bmp", frame=kw.get("page_number"))
+    _, png = image_source_pdf_doc.convert("png", frame=kw.get("page_number"), quality=100)
 
-    # update bmp files
+    # update reference files
     if dump:
-      expected_image.setData(bmp)
+      expected_image.setData(png)
       self.tic()
-    self.assertImageRenderingEquals(str(bmp), str(expected_image.getData()))
+    self.assertImageRenderingEquals(str(png), str(expected_image.getData()))
 
   ##############################################################################
   # What rendering is tested:
