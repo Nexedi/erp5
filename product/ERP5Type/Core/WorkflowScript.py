@@ -34,7 +34,15 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
 SCRIPT_PREFIX = 'script_'
 
-class WorkflowScript(PythonScript, IdAsReferenceMixin("script_")):
+class WorkflowScript(IdAsReferenceMixin(SCRIPT_PREFIX),
+                     PythonScript):
+  """
+  Script within a Workflow taking state_change as a parameter.
+
+  Difference with Python Script: Reference added and ID automatically set to
+  reference prefixed with SCRIPT_PREFIX (Workflow Sctrips are at the same
+  level as Transitions, States, Variables and Worklists).
+  """
   meta_type = 'ERP5 Workflow Script'
   portal_type = 'Workflow Script'
   add_permission = Permissions.AddPortalContent
@@ -47,8 +55,8 @@ class WorkflowScript(PythonScript, IdAsReferenceMixin("script_")):
     'XMLObject',
     'CategoryCore',
     'DublinCore',
-    'Reference',
     'PythonScript',
+    'Reference',
   )
 
 InitializeClass(WorkflowScript)

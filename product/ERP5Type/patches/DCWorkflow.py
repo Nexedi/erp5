@@ -982,9 +982,9 @@ def convertToERP5Workflow(self, temp_object=False):
     for script_id in dc_workflow_script_list:
       script = dc_workflow_script_list.get(script_id)
       # add a prefix if there is a script & method conflict
-      workflow_script = workflow.newContent(id=workflow.getScriptIdByReference(script_id),
-                                            portal_type='Workflow Script',
+      workflow_script = workflow.newContent(portal_type='Workflow Script',
                                             temp_object=temp_object)
+      workflow_script.setReference(script.id)
       workflow_script.setTitle(script.title)
       workflow_script.default_reference = script_id
       workflow_script.setParameterSignature(script._params)
