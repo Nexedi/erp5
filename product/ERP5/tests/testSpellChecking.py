@@ -149,17 +149,16 @@ class TestSpellChecking(ERP5TypeTestCase):
        - title
     """
     message = 'State %s: %s, \n Workflow: %s \n Suggestions: %s'
-    attribute_list = ['id', 'title']
+    attribute_list = ['reference', 'title']
     error_list = []
     for workflow in self.portal.portal_workflow.objectValues():
-      if getattr(workflow, 'states', None) is not None:
-        for state in workflow.states.objectValues():
-          for attribute in attribute_list:
-            sentence = getattr(state, attribute)
-            result_dict = self.validate_spell(sentence)
-            if result_dict:
-              error_list.append(message % (attribute, sentence, workflow.id, \
-                                                   result_dict.pop(sentence)))
+      for state in workflow.getStateValueList():
+        for attribute in attribute_list:
+          sentence = state.getProperty(attribute)
+          result_dict = self.validate_spell(sentence)
+          if result_dict:
+            error_list.append(message % (attribute, sentence, workflow.getId(),
+                                         result_dict.pop(sentence)))
 
     if error_list:
       self.fail('\n'.join(error_list))
