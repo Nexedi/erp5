@@ -236,7 +236,16 @@ and handling data send&receive.
                   }});
                 });
             }
-          });
+          })
+          .push(null, function (error) {
+              return gadget.jio_getAttachment(options.jio_key, "links")
+                .push(function (result2) {
+                  return gadget.redirect({command: 'display_with_history', options: {
+                    jio_key: options.jio_key,
+                    view: ensureArray(result2._links.view)[0].href
+                  }});
+                });
+            });
       }
 
       return promise_queue
