@@ -830,6 +830,22 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=300.0)))
 
+  def createAtDateDataSet(self):
+    account_module = self.portal.account_module
+    self._makeOne(
+        portal_type='Sale Invoice Transaction',
+        title='Invoice in the middle of day',
+        source_reference='1',
+        simulation_state='delivered',
+        reference='I',
+        destination_section_value=self.organisation_module.client_1,
+        start_date=DateTime(2006, 2, 2, 1, 2),
+        lines=(dict(source_value=account_module.receivable,
+                    source_debit=500.0),
+                dict(source_value=account_module.goods_sales,
+                    source_credit=500.0)))
+
+
   @UnrestrictedMethod
   def createLedgerCategory(self):
     ledger = self.portal.portal_categories.ledger
@@ -1086,6 +1102,37 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertNotEquals('Previous Balance',
           data_line_list[0].getColumnProperty('Movement_getSpecificReference'))
 
+  def testAccountStatementAtDateLatestTime(self):
+    # account statement with at_date should include the transactions from that at_date
+    self.createAtDateDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['export'] = False
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountModule_viewAccountStatementReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTitleAndAnalytics='Invoice in the middle of day\nI',
+        date=DateTime(2006, 2, 2, 1, 2),
+        debit_price=500, credit_price=0, running_total_price=500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
 
   def createHideGroupingDataSet(self):
     account_module = self.account_module
@@ -3888,6 +3935,50 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         credit=400, final_debit_balance=400, final_credit_balance=400,
         final_balance_if_debit=400, final_balance_if_credit=400)
 
+  def testTrialBalanceAtDateLatestTime(self):
+    # account statement with at_date should include the transactions from that at_date
+    self.createAtDateDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['stopped', 'delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+    request_form['portal_type'] = ['Sale Invoice Transaction']
+    request_form['group_analytic'] = []
+    request_form['show_detailed_balance_columns'] = 1
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountModule_viewTrialBalanceReport')
+    self.assertEqual(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=0, debit=500, credit=0,
+        final_debit_balance=500, final_credit_balance=0,
+        final_balance_if_debit=500, final_balance_if_credit=0,)
+
+    self.checkLineProperties(data_line_list[1], node_id='7',
+        node_title='Goods Sales', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=500, final_debit_balance=0,
+        final_credit_balance=500, final_balance_if_debit=0,
+        final_balance_if_credit=500,)
+
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=500,
+        credit=500, final_debit_balance=500, final_credit_balance=500,
+        final_balance_if_debit=500, final_balance_if_credit=500)
+
   def testGeneralLedger(self):
     # Simple test of general ledger
     # we will use the same data set as account statement
@@ -4534,6 +4625,52 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=300,
                              credit_price=300)
+
+  def testGeneralLedgerAtDateLatestTime(self):
+    # general ledger with at_date should include the transactions from that at_date
+    self.createAtDateDataSet()
+
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 2, 2)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['export'] = False
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountModule_viewGeneralLedgerReport')
+    self.assertEqual(3, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTitleAndAnalytics='Invoice in the middle of day\nI',
+        date=DateTime(2006, 2, 2, 1, 2),
+        debit_price=500, credit_price=0, running_total_price=500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=500, credit_price=0)
+
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+        Movement_getSpecificReference='1',
+        Movement_getExplanationTitleAndAnalytics='Invoice in the middle of day\nI',
+        date=DateTime(2006, 2, 2, 1, 2),
+        debit_price=0, credit_price=500, running_total_price=-500, )
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=500)
+
+    line_list = self.getListBoxLineList(report_section_list[2])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0], debit_price=500,
+                             credit_price=500)
 
   def testProfitAndLoss(self):
     # Simple test of profit and loss
