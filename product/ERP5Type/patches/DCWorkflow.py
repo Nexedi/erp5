@@ -963,7 +963,7 @@ def convertToERP5Workflow(self, temp_object=False):
                                       portal_type=portal_type)
   if workflow_class_name == 'DCWorkflowDefinition':
     workflow.setStateVariable(self.state_var)
-    workflow.setWorkflowManagedPermission(self.permissions)
+    workflow.setWorkflowManagedPermissionList(self.permissions)
     workflow.setManagerBypass(self.manager_bypass)
 
   if temp_object:
