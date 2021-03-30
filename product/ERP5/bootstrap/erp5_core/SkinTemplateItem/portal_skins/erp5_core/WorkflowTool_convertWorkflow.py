@@ -1,5 +1,3 @@
-from Products.PythonScripts.standard import url_quote
-
 workflow_list = kw.get('workflow_list')
 selected_workflow_list = []
 selected_workflow_id_list = []

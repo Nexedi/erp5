@@ -28,9 +28,9 @@ def get_obj_and_reference_list(business_field):
       for state in wf.getStateValueList():
         result.append((state, state.getReference(), 'state'))
       for transition in wf.getTransitionValueList():
-        result.append((transition, transaction.getReference(), 'transition'))
-        if transition.getTriggerType() == 1 and transaction.getActionName(): # 1 == TRIGGER_USER_ACTION
-          result.append((transition, "%s_actbox_name" % transaction.getReference(), 'action'))
+        result.append((transition, transition.getReference(), 'transition'))
+        if transition.getTriggerType() == 1 and transition.getActionName(): # 1 == TRIGGER_USER_ACTION
+          result.append((transition, "%s_actbox_name" % transition.getReference(), 'action'))
   return result
 
 business_field_list = [i for i in business_field_list if i]

@@ -24,7 +24,7 @@ for portal_type in portal_type_list:
   associated_workflow_id_list = []
   associated_workflow_id_list.extend(portal_type.getTypeWorkflowList())
   for wf_id in associated_workflow_id_list:
-    wf = getattr(context.portal_workflow, wf_id, None)
+    wf = getattr(portal_workflow, wf_id, None)
     if wf is None:
       continue
     state_var = wf.getStateVariable()
