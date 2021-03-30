@@ -8,7 +8,7 @@ request  = portal.REQUEST
 cat_tool = portal.portal_categories
 Base_translateString = portal.Base_translateString
 
-at_date             = request['at_date']
+at_date             = request['at_date'].latestTime()
 section_category    = request['section_category']
 section_uid = context.Base_getSectionUidListForSectionCategory(
                         section_category, request['section_category_strict'])
