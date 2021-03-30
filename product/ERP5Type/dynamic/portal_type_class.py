@@ -198,6 +198,10 @@ def generatePortalTypeClass(site, portal_type_name):
         "Cannot find a portal type definition for '%s', trying to guess..."
         % portal_type_name)
 
+  # TODO-BEFORE-MERGE: Hack for legacy Configurator Workflow
+  if portal_type_name == 'Transition Variable':
+    type_class = 'WorkflowVariable'
+
   # But if neither factory_init_method_id nor type_class are set on
   # the portal type, we have to try to guess, for compatibility.
   # Moreover, some tools, such as 'Activity Tool', don't have any
