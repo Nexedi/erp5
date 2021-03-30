@@ -38,7 +38,7 @@ from Products.CMFCore.utils import  _getAuthenticatedUser
 from DocumentTemplate.DT_Util import TemplateDict
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
+from Products.ERP5Type.Utils import convertToMixedCase
 import sys
 from Acquisition import aq_base
 from copy import deepcopy
@@ -970,7 +970,7 @@ def convertToERP5Workflow(self, temp_object=False):
     # give temp workflow an uid for form_dialog.
     workflow.uid = uid
   workflow.default_reference = self.id
-  workflow.setTitle(convertToUpperCase(self.title))
+  workflow.setTitle(self.title)
   workflow.setDescription(self.description)
 
   if not temp_object:
@@ -996,7 +996,10 @@ def convertToERP5Workflow(self, temp_object=False):
       # remove default state and variables
       for def_var in workflow.objectValues(portal_type='Workflow Variable'):
         workflow._delObject(def_var.getId())
-      workflow._delObject('state_draft')
+      try:
+        workflow._delObject('state_draft')
+      except KeyError:
+        pass
       dc_workflow_transition_value_list = self.transitions
       dc_workflow_transition_id_list = dc_workflow_transition_value_list.objectIds()
 
@@ -1044,7 +1047,8 @@ def convertToERP5Workflow(self, temp_object=False):
         state = workflow.newContent(portal_type='State', temp_object=temp_object)
         if sdef.title == '' or sdef.title is None:
           sdef.title = UpperCase(sdef.id)
-        if hasattr(sdef, 'type_list'): state.setStateType(sdef.type_list)
+        if hasattr(sdef, 'type_list'):
+          state.setStateType(sdef.type_list)
         state.setTitle(sdef.title)
         state.setReference(sdef.id)
         state.setDescription(sdef.description)

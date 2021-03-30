@@ -241,8 +241,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       if script_name:
         script = getattr(workflow, workflow.getScriptIdByReference(script_name), None) or \
                  getattr(workflow, workflow.getTransitionIdByReference(script_name), None)
-        script_path = script.getRelativeUrl()
-        script_path_list.append(script_path)
+        if script is not None:
+          script_path_list.append(script.getRelativeUrl())
     return script_path_list
 
   _reindexWorkflowVariables = lambda self, ob: \
