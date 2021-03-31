@@ -1,0 +1,12 @@
+div[data-gadget-url$="gadget_erp5_graphic_editor.html"] .graphic-listview {
+  text-align: center;
+}
+
+div[data-gadget-url$="gadget_erp5_graphic_editor.html"] ul.graphic-listview li a {
+  display: block;
+  padding: 6pt 12pt;
+  padding-right: 24pt;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

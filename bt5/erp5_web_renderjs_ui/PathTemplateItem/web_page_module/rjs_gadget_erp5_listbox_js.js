@@ -1,11 +1,30 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar*/
-(function (window, document, rJS, URI, RSVP, isEmpty, console, domsugar) {
+/*global window, rJS, URI, RSVP, isEmpty, console, domsugar*/
+(function (window, rJS, URI, RSVP, isEmpty, console, domsugar) {
   "use strict";
 
   var variable = {},
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
+
+  function getDefaultGraphicType(gadget, option_list) {
+    var i,
+      default_option_list = [
+        "translated_simulation_state_title",
+        "simulation_state",
+        "translated_validation_state_title",
+        "validation_state"
+      ];
+    if (!option_list.length) {
+      return gadget.disableGraphic();
+    }
+    for (i = 0; i < option_list.length; i += 1) {
+      if (default_option_list.indexOf(option_list[i][0]) !== -1) {
+        return option_list[i][0];
+      }
+    }
+    return gadget.disableGraphic();
+  }
 
   function buildFieldGadgetParam(value) {
     var field_gadget_param;
@@ -346,11 +365,14 @@
       })
       .push(function () {
         var table =  gadget.element.querySelector("table"),
+          old_container;
+        if (table) {
           old_container = table.querySelector(container_name);
-        if (old_container) {
-          table.replaceChild(container, old_container);
-        } else {
-          table.appendChild(container);
+          if (old_container) {
+            table.replaceChild(container, old_container);
+          } else {
+            table.appendChild(container);
+          }
         }
         return table;
       });
@@ -387,6 +409,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("disableGraphic", "disableGraphic")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
@@ -406,12 +429,12 @@
     .declareMethod('render', function render(options) {
       var gadget = this,
         field_json = options.field_json,
+        option_list = field_json.domain_root_list || [],
         sort_column_list = [],
         search_column_list = [],
         query_string,
         url_query,
         queue;
-
       /** Transform sort arguments (column_name, sort_direction) to jIO's "ascending" and "descending" **/
       function jioize_sort(column_sort) {
         if (column_sort[1].toLowerCase().startsWith('asc')) {
@@ -476,7 +499,9 @@
             j,
             column_id,
             column_title,
-            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
+            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])],
+            key_list = [];
+
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
@@ -500,64 +525,100 @@
               }
             }
           }
+
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
           }
 
-          return gadget.changeState({
-            key: field_json.key,
-            title: field_json.title,
-            editable: field_json.editable,
+          for (i = 0; i < not_concatenated_list.length; i += 1) {
+            for (j = 0; j < not_concatenated_list[i].length; j += 1) {
+              if (not_concatenated_list[i][j][0].indexOf("_state") !== -1 &&
+                  key_list.indexOf(not_concatenated_list[i][j][0]) === -1) {
+                key_list.push(not_concatenated_list[i][j][0]);
+                option_list.push([
+                  not_concatenated_list[i][j][0],
+                  not_concatenated_list[i][j][1]
+                ]);
+              }
+            }
+          }
+          return new RSVP.Queue(RSVP.all([
+            gadget.getUrlParameter("graphic_type"),
+            gadget.getUrlParameter("only_graphic")
+          ]))
+            .push(function (parameter_list) {
+              var only_graphic,
+                enable_graphic = option_list.length > 0 && options.enable_graphic;
 
-            begin_from: parseInt(result_list[0] || '0', 10) || 0,
+              if (!enable_graphic) {
+                only_graphic = false;
+              } else if (parameter_list[1] === undefined || parameter_list[1] === "true") {
+                only_graphic = true;
+              } else {
+                only_graphic = false;
+              }
+              return gadget.changeState({
+                jio_key: options.jio_key,
+                key: field_json.key,
+                title: field_json.title,
+                editable: field_json.editable,
 
-            // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
-            sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
+                begin_from: parseInt(result_list[0] || '0', 10) || 0,
 
-            selection_name: field_json.selection_name,
-            checked_uid_list: field_json.checked_uid_list || [],
+                // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
+                sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
-            show_anchor: field_json.show_anchor,
-            show_stat: field_json.show_stat,
-            show_count: field_json.show_count,
-            show_select: field_json.show_select,
-            form_id: result_list[3].pt,
+                selection_name: field_json.selection_name,
+                checked_uid_list: field_json.checked_uid_list || [],
 
-            line_icon: field_json.line_icon,
-            query: field_json.query,
-            query_string: query_string,
-            lines: field_json.lines,
-            list_method: field_json.list_method,
-            list_method_template: field_json.list_method_template,
+                show_anchor: field_json.show_anchor,
+                show_stat: field_json.show_stat,
+                show_count: field_json.show_count,
+                show_select: field_json.show_select,
+                form_id: result_list[3].pt,
 
-            domain_list_json: JSON.stringify(field_json.domain_root_list || []),
-            domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
+                line_icon: field_json.line_icon,
+                query: field_json.query,
+                query_string: query_string,
+                lines: field_json.lines,
+                list_method: field_json.list_method,
+                list_method_template: field_json.list_method_template,
 
-            column_list_json: JSON.stringify(displayed_column_item_list),
-            displayable_column_list_json:
-              JSON.stringify(displayable_column_item_list),
+                option_list: option_list,
+                domain_list_json: JSON.stringify(option_list),
+                domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
 
-            sort_column_list_json: JSON.stringify(sort_column_list),
-            search_column_list_json: JSON.stringify(search_column_list),
-            sort_class: field_json.sort_column_list.length ? "" : "ui-disabled",
+                column_list_json: JSON.stringify(displayed_column_item_list),
+                displayable_column_list_json:
+                  JSON.stringify(displayable_column_item_list),
 
-            field_id: options.field_id,
-            extended_search: options.extended_search,
-            hide_class: options.hide_enabled ? "" : "ui-disabled",
-            configure_class: options.configure_enabled ? "" : "ui-disabled",
-            command: field_json.command || 'index',
+                sort_column_list_json: JSON.stringify(sort_column_list),
+                search_column_list_json: JSON.stringify(search_column_list),
+                sort_class: field_json.sort_column_list.length ? "" : "ui-disabled",
 
-            // Force line calculation in any case
-            render_timestamp: new Date().getTime(),
-            allDocs_result: undefined,
-            default_value: field_json.default,
+                field_id: options.field_id,
+                extended_search: options.extended_search,
+                hide_class: options.hide_enabled ? "" : "ui-disabled",
+                configure_class: options.configure_enabled ? "" : "ui-disabled",
+                command: field_json.command || 'index',
 
-            // No error message
-            has_error: false,
-            show_line_selector: false,
-            show_select_action: false,
-            show_clipboard_action: false
-          });
+                // Force line calculation in any case
+                render_timestamp: new Date().getTime(),
+                allDocs_result: undefined,
+                default_value: field_json["default"],
+
+                // No error message
+                has_error: false,
+                show_line_selector: false,
+                show_select_action: false,
+                show_clipboard_action: false,
+
+                // graphic
+                enable_graphic: enable_graphic,
+                graphic_type: parameter_list[0] || getDefaultGraphicType(gadget, option_list),
+                only_graphic: only_graphic
+              });
+            });
         });
       return queue;
     })
@@ -576,7 +637,6 @@
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
         button;
-
 /*
       if (modification_dict.hasOwnProperty('error_text') && this.state.error_text !== undefined) {
         // XXX TODO
@@ -646,6 +706,7 @@
           (modification_dict.hasOwnProperty('sort_class')) ||
           (modification_dict.hasOwnProperty('hide_class')) ||
           (modification_dict.hasOwnProperty('configure_class')) ||
+          (modification_dict.hasOwnProperty('only_graphic')) ||
           (modification_dict.hasOwnProperty('extended_search'))) {
 
         // display sorting arrow inside correct columns
@@ -745,7 +806,6 @@
                 domsugar("tfoot")
               ]),
               th_element_list = [],
-              tr_element,
               th_element;
 
             if (gadget.state.show_select_action) {
@@ -891,14 +951,15 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-
-            domsugar(container, [
-              domsugar('div', {
-                "class": 'ui-table-header ui-header'
-              }, div_element_list),
-              table_element,
-              domsugar('nav')
-            ]);
+            if (!gadget.state.only_graphic || !gadget.state.enable_graphic) {
+              domsugar(container, [
+                domsugar('div', {
+                  "class": 'ui-table-header ui-header'
+                }, div_element_list),
+                table_element,
+                domsugar('nav')
+              ]);
+            }
           });
       }
 
@@ -910,14 +971,17 @@
         result_queue
           .push(function () {
             var loading_element = gadget.element.querySelector(".listboxloader"),
-              loading_element_classList = loading_element.classList,
+              loading_element_classList,
+              tbody_classList;
+            if (loading_element) {
+              loading_element_classList = loading_element.classList;
               tbody_classList = gadget.element.querySelector("table").querySelector("tbody").classList;
-            // Set the loading icon and trigger line calculation
-            loading_element_classList.add.apply(loading_element_classList, loading_class_list);
-            // remove pagination information
-            loading_element.textContent = '';
-            tbody_classList.add(disabled_class);
-
+              // Set the loading icon and trigger line calculation
+              loading_element_classList.add.apply(loading_element_classList, loading_class_list);
+              // remove pagination information
+              loading_element.textContent = '';
+              tbody_classList.add(disabled_class);
+            }
             return gadget.fetchLineContent(false);
           });
 
@@ -1149,14 +1213,119 @@
               })
               .push(function () {
                 var loading_element = gadget.element.querySelector(".listboxloader"),
+                  loading_element_classList;
+                if (loading_element) {
                   loading_element_classList = loading_element.classList;
-                loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
-                loading_element.textContent = '(' + pagination_message + ')';
+                  loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
+                  loading_element.textContent = '(' + pagination_message + ')';
+                }
+                // XXX if is duplicated. Look at line 1222
+                if (gadget.state.enable_graphic && ((
+                    gadget.state.graphic_type && !gadget.state.extended_search && gadget.state.only_graphic
+                  ) || (gadget.state.graphic_type && gadget.state.extended_search &&
+                        gadget.state.only_graphic))) {
+                  domsugar(gadget.element.querySelector(".graphic_section"), [
+                    domsugar("div", {"class": "graphic_area"})
+                  ]);
+                }
               });
           });
+        if (gadget.state.enable_graphic && ((
+            gadget.state.graphic_type && !gadget.state.extended_search && gadget.state.only_graphic
+          ) || (
+            gadget.state.graphic_type && gadget.state.extended_search && gadget.state.only_graphic
+          ))) {
+          result_queue
+            .push(function () {
+              return gadget.declareGadget('gadget_graphic.html', {
+                scope: 'gadget_graphic',
+                element: gadget.element.querySelector(".graphic_area")
+              });
+            })
+            .push(function (graphic_gadget) {
+              var group_by,
+                group_by_title,
+                option_list = gadget.state.option_list,
+                domain_dict = JSON.parse(gadget.state.domain_dict_json),
+                domain_list = [],
+                domain_id,
+                domain;
+              for (i = 0; i < option_list.length; i += 1) {
+                if (option_list[i][0] === gadget.state.graphic_type &&
+                    option_list[i][0].indexOf("_domain") === -1) {
+                  group_by = option_list[i][0];
+                  group_by_title = option_list[i][1];
+                  return graphic_gadget.render({
+                    jio_key: gadget.state.jio_key,
+                    group_by: group_by,
+                    query_by: {},
+                    title: group_by_title,
+                    list_method_template: gadget.state.list_method_template,
+                    list_method: gadget.state.list_method,
+                    layout: {
+                      x: {
+                        "title": group_by_title,
+                        "key": group_by
+                      },
+                      y: {
+                        "title": "Quantity"
+                      }
+                    }
+                  });
+                }
+              }
+              for (domain_id in domain_dict) {
+                if (domain_dict.hasOwnProperty(domain_id)) {
+                  domain = {
+                    "domain_id": domain_id,
+                    "domain_list": [],
+                    "column_list": []
+                  };
+                  for (i = 0; i < domain_dict[domain_id].length; i += 1) {
+                    domain.column_list.push(domain_dict[domain_id][i][0]);
+                    domain.domain_list.push(domain_dict[domain_id][i][1]);
+                  }
+                  domain_list.push(domain);
+                }
+              }
+              for (i = 0; i < option_list.length; i += 1) {
+                if (option_list[i][0].indexOf("_state") !== -1) {
+                  group_by = option_list[i][0];
+                  group_by_title = option_list[i][1];
+                }
+              }
+              for (i = 0; i < domain_list.length; i += 1) {
+                if (domain_list[i].domain_id === gadget.state.graphic_type) {
+                  return graphic_gadget.render({
+                    jio_key: gadget.state.jio_key,
+                    group_by: group_by,
+                    query_by: {},
+                    title: gadget.state.title,
+                    list_method_template: gadget.state.list_method_template,
+                    list_method: gadget.state.list_method,
+                    layout: {
+                      x: {
+                        "title": group_by_title,
+                        "key": group_by,
+                        "domain_id": domain_list[i].domain_id,
+                        "domain_list": domain_list[i].domain_list,
+                        "column_list": domain_list[i].column_list
+                      },
+                      y: {
+                        "title": "Quantity"
+                      }
+                    }
+                  });
+                }
+              }
+            });
+        }
       }
-
       return result_queue;
+    })
+
+    .declareMethod('getGraphicType', function getGraphicType() {
+      return this.state.graphic_type;
     })
 
     .declareMethod('getListboxInfo', function getListboxInfo() {
@@ -1178,6 +1347,7 @@
         search_column_list: JSON.parse(this.state.search_column_list_json),
         domain_list: domain_list,
         domain_dict: domain_dict,
+        graphic_option_list: this.state.option_list,
         begin_from: this.state.key + "_begin_from"
       };
     })
@@ -1237,6 +1407,9 @@
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
         .push(function (result) {
+          if (result.count === 0 && gadget.state.only_graphic) {
+            return gadget.disableGraphic();
+          }
           return gadget.changeState({
             allDocs_result: JSON.stringify(result)
           });
@@ -1337,7 +1510,6 @@
           return result;
         });
     }, {mutex: 'changestate'})
-
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks
@@ -1439,4 +1611,4 @@
       return;
     });
 
-}(window, document, rJS, URI, RSVP, isEmpty, console, domsugar));
+}(window, rJS, URI, RSVP, isEmpty, console, domsugar));
