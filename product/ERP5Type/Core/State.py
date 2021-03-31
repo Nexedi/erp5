@@ -71,6 +71,7 @@ class State(IdAsReferenceMixin("state_"),
     'CategoryCore',
     'DublinCore',
     'Reference',
+    'Comment',
     'SortIndex',
     'State',
   )

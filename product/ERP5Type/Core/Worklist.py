@@ -58,6 +58,7 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
       'CategoryCore',
       'DublinCore',
       'Reference',
+      'Comment',
       'Worklist',
       'Guard',
       'ActionInformation',
