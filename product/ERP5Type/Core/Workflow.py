@@ -1471,6 +1471,12 @@ if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
     def objectValues(self):
       return self.values()
 
+    def __getattr__(self, name):
+      try:
+        return self[name]
+      except KeyError, e:
+        raise AttributeError, e
+
   Workflow.states = ComputedAttribute(
     deprecated('`states` is deprecated; use getStateValueList()')\
               (lambda self: _ContainerTab({o.getReference(): o for o in self.getStateValueList()})),

@@ -285,12 +285,12 @@ class InteractionWorkflow(Workflow):
       sm = getSecurityManager()
       for script in tdef.getBeforeCommitScriptValueList():
         transaction.get().addBeforeCommitHook(self._before_commit,
-                                              (sci, script.getReference(), sm))
+                                              (sci, script.getId(), sm))
 
       # Execute "activity" scripts
       for script in tdef.getActivateScriptValueList():
         self.activate(activity='SQLQueue').activeScript(
-          script.getReference(), ob.getRelativeUrl(), status, tdef.getId())
+          script.getId(), ob.getRelativeUrl(), status, tdef.getId())
 
   def _before_commit(self, sci, script_name, security_manager):
     # check the object still exists before calling the script

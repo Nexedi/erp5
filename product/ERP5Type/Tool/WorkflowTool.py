@@ -79,11 +79,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     Init permissions right after creation, same as SimulationTool
     """
-    item.manage_permission(Permissions.AddPortalContent,
+    self.manage_permission(Permissions.AddPortalContent,
                            ['Member', 'Author', 'Manager'])
-    item.manage_permission(Permissions.AccessContentsInformation,
+    self.manage_permission(Permissions.AccessContentsInformation,
                            ['Member', 'Auditor', 'Manager'])
-    item.manage_permission(Permissions.View,
+    self.manage_permission(Permissions.View,
                            ['Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
