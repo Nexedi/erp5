@@ -222,4 +222,6 @@ class TestDedup(ERP5TypeTestCase):
     finally:
       Workflow.dedupStrings = orig_dedupStrings
     self.assertEqual(deduped, [whl._tail_count])
+    abc = whl._p_jar.db().storage.load(whl._prev._p_oid)
+    import pdb; pdb.set_trace()
     self.assertEqual(len(list(whl)), whl._tail_count + 1)
