@@ -27,14 +27,15 @@
     if (!rendered_document.hasOwnProperty(field_name)) {
       return;
     }
-
     suboptions = {
       hide_enabled: form_definition.hide_enabled, // listbox specific
       configure_enabled: form_definition.configure_enabled, // listbox specific
       extended_search: (is_first_bottom_listbox && (form_definition.extended_search)), // searchfield specific
       field_type: rendered_document[field_name].type,
       label: ((group_name !== "bottom") && (rendered_document[field_name].title.length > 0)), // no label for bottom group and field without title
-      field_json: rendered_document[field_name] // pass
+      field_json: rendered_document[field_name], // pass
+      jio_key: modification_dict.jio_key,
+      enable_graphic: modification_dict.enable_graphic
     };
 
     // XXX: what is the purpose of this?
@@ -186,10 +187,10 @@
       if (options.form_definition.hasOwnProperty("edit_form_update_href")) {
         hash += "edit_form_update_action";
       }
-
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
+        enable_graphic: options.enable_graphic,
         jio_key: options.jio_key,
         hash: hash,
         view: options.view,
@@ -299,6 +300,15 @@
         begin_from: 0
       };
     }, {mutex: 'changestate'})
+
+    .declareMethod("getGraphicType", function () {
+      var gadget = this;
+      if (gadget.props.listbox_gadget) {
+        return gadget.props.listbox_gadget.getGraphicType();
+      }
+      return;
+    }, {mutex: 'changestate'})
+
     .declareMethod("getContent", function (options) {
       var form_gadget = this,
         k,
