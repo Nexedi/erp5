@@ -1152,7 +1152,104 @@
                   loading_element_classList = loading_element.classList;
                 loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
                 loading_element.textContent = '(' + pagination_message + ')';
-              });
+              })
+              .push(function () {
+                var div,
+                  gadget_list = [],
+                  domain_list = JSON.parse(gadget.state.domain_list_json);
+                div = domsugar("div", {"class": "graphic-section"});
+                gadget.element.appendChild(div);
+                gadget_list.push(
+                  gadget.declareGadget('gadget_graphic.html', {
+                    scope: 'gadget_graphic',
+                    element: div
+                  })
+                );
+                for (i = 0; i < domain_list.length; i += 1) {
+                  div = domsugar("div", {
+                    "class": "graphic-section " + domain_list[i][0]
+                  });
+                  gadget.element.appendChild(div);
+                  gadget_list.push(
+                    gadget.declareGadget('gadget_graphic.html', {
+                      scope: 'gadget_graphic_' + domain_list[i][0],
+                      element: div
+                    })
+                  );
+                }
+                return RSVP.all(gadget_list);
+              })
+              .push(function (gadget_list) {
+                var default_param_list = JSON.parse(gadget.state.column_list_json),
+                  domain_dict = JSON.parse(gadget.state.domain_dict_json),
+                  domain_list = [],
+                  queue_list = [],
+                  group_by,
+                  group_by_title,
+                  domain_id,
+                  layout,
+                  domain;
+                for (domain_id in domain_dict) {
+                  if (domain_dict.hasOwnProperty(domain_id)) {
+                    domain = {
+                      "domain_id": domain_id,
+                      "domain_list": [],
+                      "column_list": []
+                    };
+                    for (i = 0; i < domain_dict[domain_id].length; i += 1) {
+                      domain.column_list.push(domain_dict[domain_id][i][0]);
+                      domain.domain_list.push(domain_dict[domain_id][i][1]);
+                    }
+                    domain_list.push(domain);
+                  }
+                }
+                for (i = 0; i < default_param_list.length; i += 1) {
+                  if (default_param_list[i][0].indexOf("_state") !== -1) {
+                    group_by = default_param_list[i][0];
+                    group_by_title = default_param_list[i][1];
+                  }
+                }
+                if (gadget_list) {
+                  queue_list.push(gadget_list[0].render({
+                    group_by: group_by,
+                    query_by: {},
+                    title: gadget.state.title,
+                    list_method_template: gadget.state.list_method_template,
+                    list_method: gadget.state.list_method,
+                    layout: {
+                      x: {
+                        "title": group_by_title,
+                        "key": group_by
+                      },
+                      y: {
+                        "title": "Quantity"
+                      }
+                    }
+                  }));
+                  for (i = 0; i < domain_list.length; i += 1) {
+                    queue_list.push(gadget_list[i + 1].render({
+                      group_by: group_by,
+                      query_by: {},
+                      title: gadget.state.title,
+                      list_method_template: gadget.state.list_method_template,
+                      list_method: gadget.state.list_method,
+                      layout: {
+                        x: {
+                          "title": group_by_title,
+                          "key": group_by,
+                          "domain_id": domain_list[i].domain_id,
+                          "domain_list": domain_list[i].domain_list,
+                          "column_list": domain_list[i].column_list
+                        },
+                        y: {
+                          "title": "Quantity"
+                        }
+                      }
+                   }));
+                 }
+                 return RSVP.all(queue_list);
+                }
+             });
           });
       }
 
