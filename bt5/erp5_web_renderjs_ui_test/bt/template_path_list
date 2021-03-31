@@ -1,3 +1,5 @@
+portal_domains/graphic_gadget_creation_date_domain
+portal_domains/graphic_gadget_modification_date_domain
 portal_tests/renderjs_ui_check_box_field_zuite
 portal_tests/renderjs_ui_check_box_field_zuite/**
 portal_tests/renderjs_ui_date_time_field_zuite
