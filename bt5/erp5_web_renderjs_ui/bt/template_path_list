@@ -7,6 +7,7 @@ portal_contribution_registry/web_script_mimetype
 portal_contribution_registry/web_style_by_content
 portal_contribution_registry/web_style_extension
 portal_contribution_registry/web_style_mimetype
+portal_domains/graphic_gadget_delivery_start_date_domain
 web_page_module/rjs_*
 web_site_module/renderjs_runner
 web_site_module/renderjs_runner/**
