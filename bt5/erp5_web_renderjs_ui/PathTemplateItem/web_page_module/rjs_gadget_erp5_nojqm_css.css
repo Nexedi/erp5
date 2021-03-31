@@ -1212,12 +1212,6 @@ div[data-gadget-scope='header'] .ui-header ul {
     flex: 7;
   }
 }
-.gadget-content .bottom iframe {
-  height: 80vh;
-}
-.gadget-content .bottom div[data-gadget-url$="gadget_erp5_field_listbox.html"] iframe {
-  height: 30vh;
-}
 .gadget-content form .ui-field-contain {
   position: relative;
 }
