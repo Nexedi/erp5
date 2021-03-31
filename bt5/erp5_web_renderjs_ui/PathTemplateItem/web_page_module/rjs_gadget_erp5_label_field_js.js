@@ -337,6 +337,14 @@
         });
     }, {mutex: 'changestate'})
 
+    .declareMethod('getGraphicType', function getGraphicType() {
+      var argument_list = arguments;
+      return this.getDeclaredGadget(SCOPE)
+        .push(function (gadget) {
+          return gadget.getGraphicType.apply(gadget, argument_list);
+        });
+    }, {mutex: 'changestate'})
+
     .allowPublicAcquisition("notifyFocus", function notifyFocus() {
       return this.changeState({display_error_text: true});
     })
