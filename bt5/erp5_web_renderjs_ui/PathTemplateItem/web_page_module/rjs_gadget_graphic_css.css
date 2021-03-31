@@ -1,0 +1,28 @@
+div[data-gadget-url$="gadget_graphic.html"] iframe {
+  height: 100%;
+}
+
+div[data-gadget-url$="gadget_graphic.html"] .ui-field-contain .graph-spinner {
+  position: absolute;
+  top: 100px;
+  width: 120px;
+}
+
+div[data-gadget-url$="gadget_graphic.html"] .left {
+  height: 50%;
+  width: 100%;
+}
+
+div[data-gadget-url$="gadget_graphic.html"] .ui-field-contain .bottom .first-line-buttons {
+  -webkit-appearance: none;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+div[data-gadget-url$="gadget_graphic.html"] .graph-section {
+  height: 300px;
+}
+
+div[data-gadget-url$="gadget_graphic.html"] .graph-button {
+  font-size: 13pt;
+}

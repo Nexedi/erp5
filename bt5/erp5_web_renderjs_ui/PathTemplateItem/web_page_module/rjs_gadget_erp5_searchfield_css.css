@@ -1,0 +1,9 @@
+div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section > button {
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  margin-right: 6pt;
+  border-radius: 0.325em;
+}
+
+.graphic-button-section {
+  float: left;
+}

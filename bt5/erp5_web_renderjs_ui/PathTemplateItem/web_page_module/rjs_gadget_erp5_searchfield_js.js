@@ -1,8 +1,8 @@
-/*global window, rJS, document, Node,
-         QueryFactory, SimpleQuery, ComplexQuery, Query*/
+/*global window, rJS, Node,
+         QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, document, Node,
-           QueryFactory, SimpleQuery, ComplexQuery, Query) {
+(function (window, rJS, Node,
+           QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar) {
   "use strict";
 
   function convertQueryToSearchText(query) {
@@ -29,19 +29,41 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("getUrlParameter",
+                           "getUrlParameter")
     .declareMethod('render', function (options) {
-      var state_dict = {
-        extended_search: options.extended_search || ""
-      };
-      return this.changeState(state_dict);
-    })
+      var gadget = this,
+        state_dict = {
+          extended_search: options.extended_search || "",
+          graphic_type: options.graphic_type,
+          enable_graphic: options.enable_graphic,
+          jio_key: options.jio_key
+        };
 
+      return gadget.getUrlParameter("only_graphic")
+        .push(function (only_graphic) {
+          if (typeof only_graphic === "string") {
+            state_dict.only_graphic = only_graphic === "true";
+          } else if (only_graphic === undefined) {
+            state_dict.only_graphic = true;
+          } else {
+            state_dict.only_graphic = only_graphic;
+          }
+          return gadget.changeState(state_dict);
+        });
+    })
+    .declareAcquiredMethod("triggerListboxGraphicSelection",
+                           "triggerListboxGraphicSelection")
     .onStateChange(function () {
       var gadget = this,
         i,
         len,
+        listbox_button_class,
+        graphic_button_class,
+        only_graphic = gadget.state.only_graphic,
         button_container = gadget.element.querySelector('div.search_parsed_value'),
-        button,
+        graphic_container = gadget.element.querySelector(".graphic-button-section"),
+        hide_button_class = "ui-screen-hidden",
         operator = 'AND',
         jio_query_list = [],
         query_text_list = [],
@@ -52,7 +74,30 @@
         input_value = '',
         continue_full_text_query_search = true;
 
+      if (gadget.state.enable_graphic) {
+        listbox_button_class = "ui-btn-icon-notext ui-icon-list-alt switch-listbox";
+        graphic_button_class = "ui-btn-icon-notext ui-icon-bar-chart-o switch-graph";
+
+        if (!only_graphic) {
+          listbox_button_class = listbox_button_class + " " + hide_button_class;
+        } else if (only_graphic) {
+          graphic_button_class = graphic_button_class + " " + hide_button_class;
+        }
+
+        domsugar(graphic_container, [
+          domsugar("button", {
+            "class": listbox_button_class,
+            "type": "button"
+          }),
+          domsugar("button", {
+            "class": graphic_button_class,
+            "type": "button"
+          })
+        ]);
+      }
+
       if (gadget.state.extended_search) {
+
         // Parse the raw query
         try {
           jio_query = QueryFactory.create(gadget.state.extended_search);
@@ -114,15 +159,17 @@
       button_container.innerHTML = '';
       len = query_text_list.length;
       for (i = 0; i < len; i += 1) {
-        button = document.createElement('button');
-        button.textContent = query_text_list[i];
-        button.value = i;
-        button_container.appendChild(button);
+        button_container.appendChild(
+          domsugar("button", {
+            "text": query_text_list[i],
+            "value": i
+          })
+        );
       }
-      button = document.createElement('input');
-      button.setAttribute("type", "hidden");
-      button.value = parsed_value;
-      button_container.appendChild(button);
+      button_container.appendChild(domsugar("input", {
+        "type": "hidden",
+        "value": parsed_value
+      }));
 
       return gadget.getDeclaredGadget('input')
         .push(function (input_gadget) {
@@ -222,17 +269,43 @@
       // But, in the case of panel, we don't need to handle anything.
       return;
     })
-
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
-      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
-          (evt.target.tagName === 'BUTTON') &&
-          (evt.target.value)) {
-        // Open the filter panel if one 'search' button is clicked
-        evt.preventDefault();
-        return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
+      var gadget = this;
+      if (evt.target.tagName === 'BUTTON') {
+        if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
+            (evt.target.value)) {
+          // Open the filter panel if one 'search' button is clicked
+          evt.preventDefault();
+          return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
+        }
+        if (evt.target.classList.contains("switch-listbox")) {
+          evt.target.classList.add("ui-screen-hidden");
+          return gadget.redirect({
+            command: "display",
+            options: {
+              jio_key: gadget.state.jio_key,
+              graphic_type: gadget.state.graphic_type,
+              extended_search: gadget.state.extended_search,
+              only_graphic: false
+            }
+          });
+        }
+        if (evt.target.classList.contains("switch-graph")) {
+          evt.target.classList.add("ui-screen-hidden");
+          return gadget.redirect({
+            command: "display",
+            options: {
+              jio_key: gadget.state.jio_key,
+              graphic_type: gadget.state.graphic_type,
+              extended_search: gadget.state.extended_search,
+              only_graphic: true
+            }
+          });
+        }
       }
     }, false, false);
 
-}(window, rJS, document, Node,
-  QueryFactory, SimpleQuery, ComplexQuery, Query));
+}(window, rJS, Node,
+  QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar));
