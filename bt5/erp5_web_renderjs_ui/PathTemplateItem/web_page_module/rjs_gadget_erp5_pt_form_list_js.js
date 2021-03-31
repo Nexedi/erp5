@@ -1,12 +1,12 @@
 /*global window, rJS, renderFormViewHeader, renderFormListHeader,
          SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
-         declareGadgetClassCanHandleListboxClipboardAction*/
+         declareGadgetClassCanHandleListboxClipboardAction, RSVP*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, renderFormViewHeader, renderFormListHeader,
            SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
-           declareGadgetClassCanHandleListboxClipboardAction) {
+           declareGadgetClassCanHandleListboxClipboardAction, RSVP) {
   "use strict";
 
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
@@ -114,12 +114,19 @@
     })
 
     .onStateChange(function onStateChange() {
-      var form_gadget = this;
+      var erp5_form,
+        graphic_type,
+        form_gadget = this;
 
       // render the erp5 form
-      return form_gadget.getDeclaredGadget("erp5_form")
-        .push(function (erp5_form) {
+      return new RSVP.Queue(RSVP.all([
+        form_gadget.getDeclaredGadget("erp5_form"),
+        form_gadget.getUrlParameter("graphic_type")
+      ]))
+        .push(function (result_list) {
           var form_options = form_gadget.state.erp5_form;
+          graphic_type = result_list[1];
+          erp5_form = result_list[0];
 
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
@@ -136,19 +143,39 @@
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
 
+          form_options.enable_graphic = false;
+          if (graphic_type || (
+              !form_gadget.state.extended_search && !graphic_type
+            )) {
+            form_options.enable_graphic = true;
+          }
+
           return erp5_form.render(form_options);
         })
 
         // render the search field
         .push(function () {
-          return form_gadget.getDeclaredGadget("erp5_searchfield");
+          return RSVP.all([
+            form_gadget.getDeclaredGadget("erp5_searchfield"),
+            erp5_form.getGraphicType()
+          ]);
         })
-        .push(function (search_gadget) {
-          var search_options = {};
+        .push(function (result_list) {
+          var search_gadget = result_list[0],
+            search_options = {};
           // XXX not generic, fix later
           if (form_gadget.state.extended_search) {
             search_options.extended_search = form_gadget.state.extended_search;
           }
+          search_options.enable_graphic = false;
+          if (graphic_type ||
+              (!form_gadget.state.extended_search && !graphic_type)
+              ) {
+            search_options.enable_graphic = true;
+          }
+
+          search_options.graphic_type = result_list[1];
+          search_options.jio_key = form_gadget.state.jio_key;
           return search_gadget.render(search_options);
         })
 
@@ -267,7 +294,23 @@
           return result_list;
         });
     })
-
+    .allowPublicAcquisition("triggerListboxGraphicSelection", function triggerListboxGraphicSelection() {
+      var gadget = this;
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return RSVP.all([
+            declared_gadget.getListboxInfo(),
+            gadget.getUrlParameter("graphic_type")
+          ]);
+        })
+        .push(function (result_list) {
+          return gadget.renderEditorPanel("gadget_erp5_graphic_editor.html", {
+            graphic_option_list: result_list[0].graphic_option_list,
+            jio_key: gadget.state.jio_key,
+            graphic_type: result_list[1]
+          });
+        });
+    })
     .allowPublicAcquisition("triggerListboxSelectAction", function triggerListboxSelectAction(argument_list) {
       var action = argument_list[0],
         checked_uid_list = argument_list[1],
@@ -311,4 +354,4 @@
 }(window, rJS, renderFormViewHeader, renderFormListHeader, SimpleQuery,
   ComplexQuery, Query,
   QueryFactory, ensureArray, triggerListboxClipboardAction,
-  declareGadgetClassCanHandleListboxClipboardAction));
+  declareGadgetClassCanHandleListboxClipboardAction, RSVP));
