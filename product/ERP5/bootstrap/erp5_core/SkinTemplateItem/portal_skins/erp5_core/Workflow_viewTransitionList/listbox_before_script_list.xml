@@ -95,7 +95,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \', \'.join(cell.getBeforeScriptIdList())</string> </value>
+            <value> <string>python: \', \'.join(cell.getBeforeScriptReferenceList())</string> </value>
         </item>
       </dictionary>
     </pickle>
