@@ -1,0 +1,15 @@
+#wrap1 iframe {
+  height: 100%;
+}
+
+.gadget-content .ui-field-contain .graph-spinner {
+  position: relative;
+  top: 100px;
+  width: 120px;
+}
+
+.gadget-content .ui-field-contain .bottom .first-line-buttons {
+  -webkit-appearance: none;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
