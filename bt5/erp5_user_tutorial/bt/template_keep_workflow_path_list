@@ -5,3 +5,5 @@ test_page_module/user-Howto.Create.Trade.Conditions.008.en
 test_page_module/user-Howto.Create.Trade.Conditions.008.en/**
 test_page_module/user-Howto.Manage.Invoices
 test_page_module/user-Howto.Manage.Invoices/**
+test_page_module/user-Howto.Create.Outgoing.Events
+test_page_module/user-Howto.Create.Outgoing.Events/**
