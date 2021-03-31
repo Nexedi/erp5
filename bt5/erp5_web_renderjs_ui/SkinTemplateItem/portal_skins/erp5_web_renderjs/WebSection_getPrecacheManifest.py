@@ -2,6 +2,8 @@ web_section = context
 
 # Add all ERP5JS gadget
 url_list = [
+  'echarts-all.js',
+  'favicon.ico',
   'font-awesome/font-awesome-webfont.eot',
   'font-awesome/font-awesome-webfont.woff',
   'font-awesome/font-awesome-webfont.woff2',
@@ -135,9 +137,13 @@ url_list = [
   'gadget_erp5_search_editor.js',
   'gadget_erp5_searchfield.html',
   'gadget_erp5_searchfield.js',
+  'gadget_erp5_searchfield.css',
   'gadget_erp5_sort_editor.html',
   'gadget_erp5_sort_editor.js',
   'gadget_global.js',
+  'gadget_graphic.html',
+  'gadget_graphic.js',
+  'gadget_graphic.css',
   'gadget_html5_element.html',
   'gadget_html5_element.js',
   'gadget_html5_input.html',
@@ -164,6 +170,8 @@ url_list = [
   'jiodev.js',
   'renderjs.js',
   'rsvp.js',
+  'unsafe/gadget_field_graph_echarts.html',
+  'unsafe/gadget_field_graph_echarts.js'
 ]
 
 # Add all root gadgets
