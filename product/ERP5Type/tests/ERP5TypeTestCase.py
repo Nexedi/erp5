@@ -1153,19 +1153,16 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           if workflow.getPortalType() not in ('Workflow', 'Interaction Workflow'):
             workflow.convertToERP5Workflow(temp_object=False)
             workflow_tool.reassignWorkflow(workflow_id)
-            self.commit()
         # force convert edit_workflow: Why have to load edit_workflow this way?
         edit_workflow = workflow_tool._getOb('edit_workflow', None)
         if (edit_workflow is not None and
             edit_workflow.getPortalType() not in ('Workflow', 'Interaction Workflow')):
           edit_workflow.convertToERP5Workflow(temp_object=False)
           workflow_tool.reassignWorkflow('edit_workflow')
-          self.commit()
         # Reset the original workflows assignement order.
         for type_value in sorted(type_tool.objectValues()):
           type_value.workflow_list = tuple(reversed(type_value.workflow_list))
           LOG(" || Portal Type: '%s': '%s'"%(type_value.getId(), type_value.workflow_list), 0, "")
-        self.commit()
 
     def setUpERP5Site(self,
                      business_template_list=(),
