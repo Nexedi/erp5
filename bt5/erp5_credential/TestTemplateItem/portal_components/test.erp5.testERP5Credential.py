@@ -1238,6 +1238,37 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_ERP5Site_newCredentialUpdate_change_password(self):
+    reference = self._testMethodName
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+        reference=reference,
+        role='internal',
+    )
+    assignment = person.newContent(portal_type='Assignment', function='manager')
+    assignment.open()
+    # create a login
+    username = person.getReference() + '-login'
+    login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=username,
+        password='secret',
+    )
+    login.validate()
+    old_password = login.getPassword()
+    self.tic()
+
+    self.login(person.getUserId())
+    self.portal.ERP5Site_viewNewPersonCredentialUpdateDialog()
+    ret = self.portal.ERP5Site_newPersonCredentialUpdate(password='new_password')
+    self.assertEqual(
+      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      ['Password changed.'],
+    )
+    self.tic()
+    self.assertNotEqual(login.getPassword(), old_password)
+    self._assertUserExists(username, 'new_password')
+
   def test_no_reset_assignment_ERP5Site_newCredentialUpdate(self):
     """Checks that assignments are left intact after credential update"""
     reference = self._testMethodName
