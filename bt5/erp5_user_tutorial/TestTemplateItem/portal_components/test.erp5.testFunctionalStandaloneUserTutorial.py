@@ -146,31 +146,8 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     """
       Return the list of business templates.
     """
-    return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
-            'erp5_base', 'erp5_ui_test_core',
-            'erp5_dhtml_style',
-            'erp5_jquery', 'erp5_jquery_ui',
-            'erp5_knowledge_pad', 'erp5_pdm',
-            'erp5_simulation', 'erp5_trade', 'erp5_ooo_import',
-            'erp5_accounting', 'erp5_invoicing',
-            'erp5_simplified_invoicing', 'erp5_project',
-            'erp5_simulation',
+    return ('erp5_full_text_mroonga_catalog',
             'erp5_configurator',
-            'erp5_configurator_standard',
-            'erp5_configurator_standard_solver',
-            'erp5_configurator_standard_trade_template',
-            'erp5_configurator_standard_accounting_template',
-            'erp5_configurator_standard_invoicing_template',
-            'erp5_simulation_test',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms', 'erp5_credential',
-            'erp5_rss_style', 'erp5_discussion',
-            'erp5_l10n_fr', 'erp5_crm', 'erp5_forge',
-            'erp5_run_my_doc',
-            'erp5_osoe_web_renderjs_ui',
-            'erp5_web_renderjs_ui_test_core',
-            'erp5_user_tutorial_ui_test',
-            'erp5_user_tutorial',
            )
 
 def test_suite():
