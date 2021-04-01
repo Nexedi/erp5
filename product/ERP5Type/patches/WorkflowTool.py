@@ -251,7 +251,11 @@ def reassignWorkflowWithoutConversion(self):
     if portal_type is not None:
       for workflow_id in type_workflow_dict[portal_type_id]:
         workflow = getattr(self, workflow_id, None)
-        if workflow and workflow.getPortalType() in ['Workflow', 'Interaction Workflow', 'DCWorkflowDefinition', 'InteractionWorkflowDefinition']:
+        if (workflow is not None and
+            workflow.getPortalType() in ('Workflow',
+                                         'Interaction Workflow',
+                                         'DCWorkflowDefinition',
+                                         'InteractionWorkflowDefinition')):
           # 1. clean DC workflow tool "chain by type" assignement:
           _deleteChainsByType(self, portal_type.getId(), workflow.id)
           # 2. assign workflow to portal type:
