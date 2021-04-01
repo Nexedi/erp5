@@ -148,11 +148,6 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     """
     return ('erp5_full_text_mroonga_catalog',
             'erp5_configurator',
-            'erp5_configurator_standard',
-            'erp5_configurator_standard_solver',
-            'erp5_configurator_standard_trade_template',
-            'erp5_configurator_standard_accounting_template',
-            'erp5_configurator_standard_invoicing_template',
            )
 
 def test_suite():
