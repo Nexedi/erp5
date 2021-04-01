@@ -165,9 +165,9 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
           if dynamic_variable_value:
             matches = [dynamic_variable_value]
           # Override initial value if expression set:
-          dynamic_variable_default_expression_text = dynamic_variable.getVariableDefaultExpression()
-          if dynamic_variable_default_expression_text:
-            matches = dynamic_variable_default_expression_text
+          dynamic_variable_default_expression = dynamic_variable.getVariableDefaultExpressionInstance()
+          if dynamic_variable_default_expression:
+            matches = dynamic_variable_default_expression
 
         if matches not in ([], None):
           if not isinstance(matches, (tuple, Expression)):

@@ -32,7 +32,8 @@ class TestWorkflowMixin(ERP5TypeTestCase):
       self.assertEqual(200, self.publish(url, user='manager').getStatus())
       self.commit()
 
-      if getattr(self, 'module_selection_name') is not None:
+      selection_name = getattr(self, 'module_selection_name', None)
+      if selection_name is not None:
         selection_parameter_dict = self.portal.portal_selections.getSelectionParamsFor(selection_name)
         for parameter, value in url_parameter_dict.iteritems():
           self.assertIn(parameter, selection_parameter_dict)
