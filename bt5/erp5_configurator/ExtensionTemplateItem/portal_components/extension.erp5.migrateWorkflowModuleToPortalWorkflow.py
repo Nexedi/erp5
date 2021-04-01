@@ -104,7 +104,7 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
         title=title,
         description=subobject.getDescription(),
         automatic_update=subobject.getAutomaticUpdate(),
-        variable_default_expression=subobject.getProperty('initial_value', evaluate=0),
+        variable_default_expression=subobject.aq_base.initial_value,
         comment=subobject.getComment())
 
     # default_image

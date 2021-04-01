@@ -54,8 +54,7 @@ def initializeDocument(workflow, document):
 
   # Initialize workflow history
   status_dict = {state_bc_id: workflow.getSource()}
-  variable_list = workflow.contentValues(portal_type='Workflow Variable')
-  for variable in variable_list:
+  for variable in workflow.getVariableValueList():
     status_dict[variable.getTitle()] = variable.getVariableDefaultExpression(object=obj)
   _updateWorkflowHistory(workflow, document, status_dict)
 def _generateHistoryKey(workflow):
@@ -110,14 +109,17 @@ def undoTransition(state, document):
   """
   Reverse previous transition
   """
+  workflow = state.getParentValue()
   wh = getWorkflowHistory(state, document, remove_undo=1)
   status_dict = wh[-2]
   # Update workflow state
   state_bc_id = state.getParentValue().getStateBaseCategory()
-  document.setCategoryMembership(state_bc_id, status_dict[state_bc_id])
+  document.setCategoryMembership(
+    state_bc_id,
+    workflow.getStateValueById(status_dict[state_bc_id]).getRelativeUrl())
   # Update workflow history
   status_dict['undo'] = 1
-  _updateWorkflowHistory(state.getParentValue(), document, status_dict)
+  _updateWorkflowHistory(workflow, document, status_dict)
   # XXX
   LOG("State, undo", ERROR, "Variable (like DateTime) need to be updated!")
 def _checkPermission(transition, document):
@@ -208,7 +210,8 @@ def execute(self, document, form_kw=None):
   object_ = workflow.getStateChangeInformation(document, state_object, transition=self)
 
   # Update all variables
-  for variable in workflow.contentValues(portal_type='Variable'):
+  expression_context = None
+  for variable in workflow.getVariableValueList():
     if variable.getAutomaticUpdate():
       # if we have it in form get it from there
       # otherwise use default
@@ -216,12 +219,18 @@ def execute(self, document, form_kw=None):
       if variable_title in form_kw:
         status_dict[variable_title] = form_kw[variable_title]
       else:
-        status_dict[variable_title] = variable.getInitialValue(object=object_)
+        expression = variable.getVariableDefaultExpressionInstance()
+        if expression is not None:
+          if expression_context is None:
+            from Products.ERP5Type.Core.Workflow import createExpressionContext
+            from Products.DCWorkflow.Expression import StateChangeInfo
+            expression_context = createExpressionContext(StateChangeInfo(document, self, status_dict))
+          status_dict[variable_title] = expression(expression_context)
 
   # Update all transition variables
   if form_kw is not None:
     object_.REQUEST.other.update(form_kw)
-  for variable in self.contentValues(portal_type='Transition Variable'):
+  for variable in self.getTransitionVariableValueList():
     status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object_)
 
   _updateWorkflowHistory(workflow, document, status_dict)
