@@ -41,7 +41,8 @@ if test_result.getPortalType() == 'Test Result':
                  failures=0,
                  skips=0,
                  test_result_retry_count=0)
-  for line in test_result.objectValues(portal_type='Test Result Line'):
+  test_result_line_list = test_result.objectValues(portal_type='Test Result Line')
+  for line in test_result_line_list:
     for prop in edit_kw:
       try:
         edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)
@@ -51,7 +52,7 @@ if test_result.getPortalType() == 'Test Result':
       else:
         if line.getStringIndex() == 'UNKNOWN':
           has_unknown_result = True
-  if has_unknown_result or edit_kw['errors'] or (
+  if has_unknown_result or not test_result_line_list or edit_kw['errors'] or (
       edit_kw['failures'] and unexpected(test_result)):
     status = 'FAIL'
   else:
