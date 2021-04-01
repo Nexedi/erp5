@@ -74,19 +74,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def filtered_meta_types(self, user=None):
     return False
 
-  security.declarePrivate('manage_afterAdd')
-  def manage_afterAdd(self, item, container) :
-    """
-    Init permissions right after creation, same as SimulationTool
-    """
-    self.manage_permission(Permissions.AddPortalContent,
-                           ['Member', 'Author', 'Manager'])
-    self.manage_permission(Permissions.AccessContentsInformation,
-                           ['Member', 'Auditor', 'Manager'])
-    self.manage_permission(Permissions.View,
-                           ['Manager'])
-    BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
-
   def _jumpToStateFor(self, ob, state_id, wf_id=None, *_, **__):
     """Inspired from doActionFor.
     This is public method to allow passing meta transition (Jump form

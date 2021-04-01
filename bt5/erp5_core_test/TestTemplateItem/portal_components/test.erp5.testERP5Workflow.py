@@ -28,6 +28,8 @@
 ##############################################################################
 
 import unittest
+
+from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
@@ -236,6 +238,12 @@ class TestERP5Workflow(ERP5TypeTestCase):
     transition.setCategoryList('destination/' + transition.getPath())
     transition.Base_viewDict()
 
+  # XXX: When ERP5Workflow was designed for Configurator, it was deemed
+  #      necessary for WorkflowTool to not be viewable by Anonymous but
+  #      DCWorkflow portal_workflow inherits all permissions from the Site
+  #      (furthermore this does not work where an Anonymous user create an
+  #      Account and thus invoking Workflows...)
+  @expectedFailure
   def test_WorkflowSecurity(self):
     """
      Test workflow security. Should be test with other methods. To be finished.
@@ -256,9 +264,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertRaises(Unauthorized, createWorkflowInstance)
     self.assertRaises(Unauthorized, workflow_instance.view)
 
-
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Workflow))
   return suite
-
