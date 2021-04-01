@@ -17,6 +17,7 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
     reference=configurator_workflow.getId(),
     comment=configurator_workflow.getComment(),
     description=configurator_workflow.getDescription(),
+    state_base_category=configurator_workflow.getProperty('state_base_category'),
     state_variable=configurator_workflow.getProperty('state_variable_name'),
     source_list=getCategoryList('state_', configurator_workflow.getSourceValueList()),
     # ConfiguratorWorkflow PropertySheet

@@ -194,5 +194,4 @@ AttributeBlacklistedConstraint
 CaptchaPreference
 GeographicalPoint
 Interaction
-WorkflowConfigurator
 Worklist
