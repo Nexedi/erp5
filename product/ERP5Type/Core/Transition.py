@@ -155,7 +155,7 @@ class Transition(IdAsReferenceMixin("transition_"),
     """
     Return Transition Variables
     """
-    return objectValues(portal_type='Transition Variable')
+    return self.objectValues(portal_type='Transition Variable')
 
 from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
 if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
