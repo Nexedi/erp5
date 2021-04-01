@@ -7,29 +7,14 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>comment</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>automatic_update</string> </key>
             <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>comment</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -51,9 +36,7 @@
         </item>
         <item>
             <key> <string>variable_default_expression</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>python: request.get(\'transition\', None)</string> </value>
         </item>
       </dictionary>
     </pickle>

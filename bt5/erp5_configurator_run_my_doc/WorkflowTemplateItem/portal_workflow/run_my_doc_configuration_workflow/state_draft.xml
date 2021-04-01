@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>draft</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>state_draft</string> </value>
         </item>
