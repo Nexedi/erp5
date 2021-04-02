@@ -505,7 +505,8 @@ def synchronizeDynamicModules(context, force=False):
             error=True)
         raise
 
-    LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
+    import traceback
+    LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes: %s" % ''.join(traceback.format_stack()))
     try:
       for _, klass in inspect.getmembers(erp5.portal_type,
                                          inspect.isclass):

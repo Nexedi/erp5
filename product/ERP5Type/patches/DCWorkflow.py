@@ -48,7 +48,6 @@ from copy import deepcopy
 from Products.ERP5Type.Core.Workflow import (Workflow as ERP5Workflow,
                                              ValidationFailed,
                                              _marker,
-                                             ACTIVITY_GROUPING_COUNT,
                                              userGetIdOrUserNameExpression)
 from Products.ERP5Type.mixin.guardable import GuardableMixin as ERP5Guardable
 
@@ -495,48 +494,6 @@ def updateRoleMappingsFor(self, ob):
     return changed
 
 DCWorkflowDefinition.updateRoleMappingsFor = updateRoleMappingsFor
-
-# TODO-ERP5Workflow: Code duplicated in Products.ERP5Type.Core.Workflow
-# This patch allows to update all objects using one workflow, for example
-# after the permissions per state for this workflow were modified
-def updateRoleMappings(self, REQUEST=None):
-  """
-  Changes permissions of all objects related to this workflow
-  """
-  wf_tool = aq_parent(aq_inner(self))
-  type_info_list = wf_tool._listTypeInfo()
-  wf_id = self.id
-  portal_type_list = []
-  # get the list of portal types to update
-  if wf_id in wf_tool._default_chain:
-    include_default = True
-  else:
-    include_default = False
-  for type_info in type_info_list:
-    if wf_id in type_info.getTypeWorkflowList() or include_default:
-        portal_type_list.append(type_info.getId())
-  if portal_type_list:
-    object_list = self.portal_catalog(portal_type=portal_type_list, limit=None)
-    object_list_len = len(object_list)
-    portal_activities = self.portal_activities
-    object_path_list = [x.path for x in object_list]
-    for i in xrange(0, object_list_len, ACTIVITY_GROUPING_COUNT):
-      current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
-      portal_activities.activate(activity='SQLQueue',
-                                  priority=3)\
-            .callMethodOnObjectList(current_path_list,
-                                    'updateRoleMappingsFor',
-                                    wf_id = self.getId())
-  else:
-    object_list_len = 0
-
-  if REQUEST is not None:
-    return self.manage_properties(REQUEST,
-        manage_tabs_message='%d object(s) updated.' % object_list_len)
-  else:
-    return object_list_len
-
-DCWorkflowDefinition.updateRoleMappings = updateRoleMappings
 
 # this patch allows to get list of portal types for workflow
 def getPortalTypeListForWorkflow(self):
@@ -1200,34 +1157,32 @@ def convertToERP5Workflow(self, temp_object=False):
       for tid in dc_workflow_transition_value_list:
         origin_tdef = dc_workflow_transition_value_list[tid]
         transition = workflow.getTransitionValueById(tid)
-        new_category = []
         if origin_tdef.var_exprs is None:
           var_exprs = {}
         else: var_exprs = origin_tdef.var_exprs
         for key in var_exprs:
           tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp_object)
+          tr_var.setReference(key)
           tr_var.setVariableDefaultExpression(var_exprs[key].text)
           tr_var_path = getattr(workflow, 'variable_'+key).getPath()
           tr_var_path = '/'.join(tr_var_path.split('/')[2:])
-          new_category.append(tr_var_path)
-          tr_var.setCausalityList(new_category)
+          tr_var.setCausalityList([tr_var_path])
     # Configure interaction variable:
     if getattr(self, 'interactions', None) is not None:
       dc_workflow_interaction_value_list = self.interactions
       for tid in dc_workflow_interaction_value_list:
         origin_tdef = dc_workflow_interaction_value_list[tid]
         interaction = workflow._getOb('interaction_'+tid)
-        new_category = []
         if origin_tdef.var_exprs is None:
           var_exprs = {}
         else: var_exprs = origin_tdef.var_exprs
         for key in var_exprs:
           tr_var = interaction.newContent(portal_type='Transition Variable', temp_object=temp_object)
+          tr_var.setReference(key)
           tr_var.setVariableDefaultExpression(var_exprs[key].text)
           tr_var_path = getattr(workflow, 'variable_'+key).getPath()
           tr_var_path = '/'.join(tr_var_path.split('/')[2:])
-          new_category.append(tr_var_path)
-          tr_var.setCausalityList(new_category)
+          tr_var.setCausalityList([tr_var_path])
     # move dc workflow to trash bin
     trash_tool = getattr(portal, 'portal_trash', None)
     if trash_tool is not None:
