@@ -305,7 +305,7 @@ class Workflow(XMLObject):
         return permission_roles_dict
       inherited_permission_dict = ac_all_inherited_permissions_dict(ob)
       for name, new_roles in new_permission_roles_dict.iteritems():
-        old_roles = inherited_permission_dict[name]
+        old_roles = inherited_permission_dict.get(name, ())
         p = Permission(name, old_roles, ob)
         old_roles = p.getRoles()
         if type(old_roles) != type(new_roles) or sorted(old_roles) != sorted(new_roles):
