@@ -221,8 +221,9 @@ class Workflow(XMLObject):
       if state is None:
         return 0
 
-    if action in state.getDestinationIdList():
-      transition = getattr(self, action, None)
+    action_id = self.getTransitionIdByReference(action)
+    if action_id in state.getDestinationIdList():
+      transition = getattr(self, action_id, None)
       if (transition is not None and
         transition.getTriggerType() == TRIGGER_USER_ACTION and
         self._checkTransitionGuard(transition, document, **kw)):
@@ -422,7 +423,7 @@ class Workflow(XMLObject):
     return sorted(self.getPortalObject().acl_users.valid_roles())
 
   security.declarePrivate('doActionFor')
-  def doActionFor(self, ob, action, comment='', is_action_supported=_marker, **kw):
+  def doActionFor(self, ob, action, comment='', **kw):
     """
     Allows the user to request a workflow action.  This method
     must perform its own security checks.
@@ -432,14 +433,13 @@ class Workflow(XMLObject):
     if state is None:
       raise WorkflowException(_(u'Object is in an undefined state.'))
 
-    if is_action_supported is _marker:
-      is_action_supported = self.isActionSupported(ob, action,
-                                                   state=state, **kw)
+    is_action_supported = kw.get('is_action_supported',
+                                 self.isActionSupported(ob, action, state=state, **kw))
     if not is_action_supported:
       # action is not allowed from the current state
       raise Unauthorized(action)
 
-    transition = self._getOb(action, None)
+    transition = self.getTransitionValueById(action)
 
     if transition is None or transition.getTriggerType() != TRIGGER_USER_ACTION:
       msg = _(u"Transition '${action_id}' is not triggered by a user "

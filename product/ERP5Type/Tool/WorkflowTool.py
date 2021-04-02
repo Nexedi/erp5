@@ -151,36 +151,73 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable_dict.update(v)
     return variable_dict
 
+  def _invokeWithNotification(self, wfs, ob, action, func, args, kw):
+    """ Private utility method:  call 'func', and deal with exceptions
+        indicating that the object has been deleted or moved.
+    """
+    from zope.event import notify
+    from Products.CMFCore.WorkflowCore import ActionRaisedExceptionEvent
+    from Products.CMFCore.WorkflowCore import ActionSucceededEvent
+    from Products.CMFCore.WorkflowCore import ActionWillBeInvokedEvent
+    from Products.CMFCore.WorkflowCore import ObjectDeleted
+    from Products.CMFCore.WorkflowCore import ObjectMoved
+    from Products.CMFCore.WorkflowCore import WorkflowException
+
+    reindex = 1
+    for w in wfs:
+      w.notifyBefore(ob, action)
+      notify(ActionWillBeInvokedEvent(ob, w, action))
+    try:
+      res = func(*args, **kw)
+    except ObjectDeleted, ex:
+      res = ex.getResult()
+      reindex = 0
+    except ObjectMoved, ex:
+      res = ex.getResult()
+      ob = ex.getNewObject()
+    except:
+      import sys
+      exc = sys.exc_info()
+      try:
+        for w in wfs:
+          w.notifyException(ob, action, exc)
+          notify(ActionRaisedExceptionEvent(ob, w, action, exc))
+        raise exc[0], exc[1], exc[2]
+      finally:
+        exc = None
+    for w in wfs:
+      w.notifySuccess(ob, action, res)
+      notify(ActionSucceededEvent(ob, w, action, res))
+    if reindex:
+      self._reindexWorkflowVariables(ob)
+    return res
+
   security.declarePublic('doActionFor')
-  def doActionFor(self, ob, action, wf_id=None, *_, **kw):
+  def doActionFor(self, ob, action, wf_id=None, *args, **kw):
     workflow_id = wf_id
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
-    action_id = ''
     if workflow_id is None:
-      if workflow_list == []:
+      if not workflow_list:
         raise WorkflowException(Message(u'No workflows found.'))
-      found = False
       for workflow in workflow_list:
-        action_id = workflow.getTransitionIdByReference(action)
-        is_action_supported = workflow.isActionSupported(ob, action_id, **kw)
+        is_action_supported = workflow.isActionSupported(ob, action, **kw)
         if is_action_supported:
-          found = True
+          kw['is_action_supported'] = is_action_supported
           break
-
-      if found:
-        result = workflow.doActionFor(ob, action_id,
-                                      is_action_supported=is_action_supported,
-                                      **kw)
       else:
-        message = "No workflow provides the %s action." % action
-        raise WorkflowException(message)
+        raise WorkflowException(
+          Message(u"No workflow provides the '${action_id}' action.",
+                  mapping={'action_id': action}))
     else:
       workflow = self.getWorkflowById(workflow_id)
       if workflow is None:
         raise WorkflowException(Message(u'Requested workflow not found.'))
-      action_id = workflow.getTransitionIdByReference(action)
-      result = workflow.doActionFor(ob, action_id, **kw)
-    return result
+
+    return self._invokeWithNotification(
+      workflow_list,
+      ob,
+      action,
+      workflow.doActionFor, (ob, action) + tuple(args), kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWorkflowValueListFor')
