@@ -154,14 +154,16 @@ from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
 if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
   from Products.ERP5Type.Utils import deprecated
 
-  State.getTransitions = deprecated(
-    'getTransitions() is deprecated; use getDestinationIdList()')\
-    (State.getDestinationIdList)
+  State.getTransitions = \
+    deprecated('getTransitions() is deprecated; use getDestinationIdList()')\
+              (lambda self: self.getDestinationIdList())
   State.security.declareProtected(Permissions.AccessContentsInformation, 'getTransitions')
 
-  State.transitions = deprecated(
-    '`transitions` is deprecated; use getDestinationValueList()')\
-    (State.getDestinationIdList)
+  from ComputedAttribute import ComputedAttribute
+  State.transitions = ComputedAttribute(
+    deprecated('`transitions` is deprecated; use getDestinationValueList()')\
+              (State.getDestinationIdList),
+    1) # must be Acquisition-wrapped
   State.security.declareProtected(Permissions.AccessContentsInformation, 'transitions')
 
 InitializeClass(State)

@@ -97,7 +97,6 @@ from Products.ERP5Type.Core.Transition import (TRIGGER_AUTOMATIC,
                                                TRIGGER_WORKFLOW_METHOD)
 
 _marker = ''
-ACTIVITY_GROUPING_COUNT = 100
 
 from Products.CMFCore.Expression import getEngine
 userGetIdOrUserNameExpression = Expression('user/getIdOrUserName')
@@ -376,48 +375,6 @@ class Workflow(XMLObject):
           new_permission_roles_dict[permission] = roles
       changed = modifyRolesForPermissionDict(ob, new_permission_roles_dict)
     return changed
-
-  # This method allows to update all objects using one workflow, for example
-  # after the permissions per state for this workflow were modified
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateRoleMappings')
-  def updateRoleMappings(self, REQUEST=None):
-    """
-    Changes permissions of all objects related to this workflow
-    """
-    # XXX(WORKFLOW) add test for roles update:
-    #  - edit permission/roles on a workflow
-    #  - check permission on an existing object of a type using this workflow
-    workflow_tool = aq_parent(aq_inner(self))
-    type_info_list = workflow_tool._listTypeInfo()
-    workflow_id = self.getId()
-    # check the workflow defined on the type objects
-    portal_type_id_list = [
-      portal_type.getId() for portal_type in type_info_list
-      if workflow_id in portal_type.getTypeWorkflowList()
-    ]
-
-    if portal_type_id_list:
-      object_list = self.portal_catalog(portal_type=portal_type_id_list, limit=None)
-      portal_activities = self.portal_activities
-      object_path_list = [x.path for x in object_list]
-      for i in xrange(0, len(object_list), ACTIVITY_GROUPING_COUNT):
-        current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
-        portal_activities.activate(activity='SQLQueue',
-                                    priority=3)\
-              .callMethodOnObjectList(current_path_list,
-                                      'updateRoleMappingsFor',
-                                      wf_id = self.getId())
-    else:
-      object_list = []
-    if REQUEST is not None:
-      message = 'No object updated.'
-      if object_list:
-        message = '%d object(s) updated: \n %s.' % (len(object_list),
-          ', '.join([o.getTitleOrId() + ' (' + o.getPortalType() + ')'
-                     for o in object_list]))
-      return message
-    else:
-      return len(object_list)
 
   def getManagedRoleList(self):
     return sorted(self.getPortalObject().acl_users.valid_roles())
