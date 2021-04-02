@@ -1380,6 +1380,8 @@ class Workflow(XMLObject):
       # add permission from state_permission_roles_dict when added on workflow
       for permission in permission_list:
         if permission not in permission_roles_dict:
+          if state.state_permission_roles_dict is None:
+            state.state_permission_roles_dict = PersistentMapping()
           state.state_permission_roles_dict[permission] = []
           # a new permission should be acquired by default
           acquired_permission_set.append(permission)
