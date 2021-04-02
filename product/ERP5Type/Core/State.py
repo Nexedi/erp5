@@ -34,24 +34,8 @@ from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 
-class CustomStorageMatrixMixin(XMLMatrix):
-  """
-  Prototype of a mixin allowing to have custom storage for matrix
-  """
-  def newCellContent(self, cell_id, **kw):
-    """
-    Creates a new content as a matrix box cell.
-    """
-    cell = self.newContent(id=cell_id, temp_object=True, **kw)
-    self.updateCellFromCustomStorage(cell)
-    return cell
 
-  def getCell(self, *kw , **kwd):
-    return self.newCell(*kw , **kwd)
-
-class State(IdAsReferenceMixin("state_"),
-            XMLObject,
-            CustomStorageMatrixMixin):
+class State(IdAsReferenceMixin("state_"), XMLObject):
   """
   A ERP5 State.
   """
@@ -59,8 +43,7 @@ class State(IdAsReferenceMixin("state_"),
   portal_type = 'State'
   add_permission = Permissions.AddPortalContent
 
-  # TODO-ERP5Workflow: Shouldn't it be in a Property Sheet?
-  state_permission_roles_dict = {}
+  state_permission_roles_dict = None
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -131,7 +114,8 @@ class State(IdAsReferenceMixin("state_"),
     use a PersistentMapping so that the ZODB is updated
     when this dict is changed
     """
-    self.state_permission_roles_dict = PersistentMapping(permission_roles)
+    self.state_permission_roles_dict = PersistentMapping(
+        {k: tuple(v) for (k, v) in permission_roles.items()})
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getStatePermissionRolesDict')
@@ -141,15 +125,15 @@ class State(IdAsReferenceMixin("state_"),
     """
     if self.state_permission_roles_dict is None:
       return {}
-    return self.state_permission_roles_dict
+    return dict(self.state_permission_roles_dict.items())
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setPermission')
-  def setPermission(self, permission, acquired, roles, REQUEST=None):
+  def setPermission(self, permission, roles, REQUEST=None):
     """
     Set a permission for this State.
     """
-    self.state_permission_roles_dict[permission] = list(roles)
+    self.state_permission_roles_dict[permission] = tuple(roles)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAvailableTypeList')
@@ -166,16 +150,6 @@ class State(IdAsReferenceMixin("state_"),
             'transit_inventory',
             'current_inventory',
             )
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'updateCellFromCustomStorage')
-  def updateCellFromCustomStorage(self, cell, **kw):
-    """
-    Creates a new content as a matrix box cell.
-    """
-    cell_permission = cell._getPermission()
-    cell_role = cell._getRole()
-    cell.selected = cell_role in self.getStatePermissionRolesDict()[cell_permission]
 
 from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
 if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:

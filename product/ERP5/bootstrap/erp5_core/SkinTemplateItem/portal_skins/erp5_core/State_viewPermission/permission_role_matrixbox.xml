@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>as_cell_range_script_id</string> </key>
-                    <value> <string>PermissionRoles_asCellRange</string> </value>
+                    <value> <string>State_asCellRange</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_base_id</string> </key>
@@ -225,7 +225,7 @@
                 </item>
                 <item>
                     <key> <string>cell_portal_type</string> </key>
-                    <value> <string>PermissionRoles</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -270,7 +270,7 @@
                 </item>
                 <item>
                     <key> <string>getter_method</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>State_getPermissionMatrixContext</string> </value>
                 </item>
                 <item>
                     <key> <string>global_attributes</string> </key>
@@ -300,7 +300,7 @@
                 </item>
                 <item>
                     <key> <string>update_cell_range</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>url_cells</string> </key>
