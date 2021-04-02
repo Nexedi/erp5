@@ -569,6 +569,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     """
     default_email_text = "bart@duff.com"
     person_list = []
+    username_list = []
     for reference in ['userX', 'bart', 'homer']:
       portal = self.getPortalObject()
       # create a person with 'secret' as password
@@ -581,16 +582,19 @@ class TestERP5Credential(ERP5TypeTestCase):
       assignment = person.newContent(portal_type='Assignment',
                         function='member')
       assignment.open()
+      username = person.getReference() + '-login'
       # create a login
       login = person.newContent(
         portal_type='ERP5 Login',
-        reference=person.getReference() + '-login',
+        reference=username,
         password='secret',
       )
       login.validate()
       person_list.append(person)
+      username_list.append(username)
 
     sequence.edit(person_list=person_list,
+                  username_list=username_list,
                   default_email_text=default_email_text)
 
   def stepCreateCredentialRecovery(self, sequence=None, sequence_list=None,
@@ -738,28 +742,21 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepCheckEmailIsSentForUsername(self, sequence=None, sequence_list=None, **kw):
     '''
-      Check an email containing the usernames list as been sent
+      Check an email containing the usernames as been sent
     '''
-    person_list = sequence.get('person_list')
-    email_text = sequence.get('default_email_text')
-    # after accept, only one email is send containing the reset link
+    # after accept, only one email is send containing the user names
     previous_message = self.portal.MailHost._previous_message
     last_message = self.portal.MailHost._last_message
     if len(previous_message):
       self.assertNotEqual(previous_message[2], last_message[2])
     decoded_message = self.decode_email(last_message[2])
     body_message = decoded_message['body']
-
-    for person in person_list:
-      match_obj = None
-      reference = person.getReference()
-      match_obj = re.search(reference, body_message)
-      # check the reset password link is in the mail
-      self.assertNotEquals(match_obj, None)
+    for username in sequence['username_list']:
+      self.assertIn(username, body_message)
 
     # check the mail is sent to the requester :
     send_to = decoded_message['headers']['to']
-    self.assertEqual(email_text, send_to)
+    self.assertEqual(send_to, sequence['default_email_text'])
 
   def stepCheckPasswordChange(self, sequence=None, sequence_list=None, **kw):
     """
