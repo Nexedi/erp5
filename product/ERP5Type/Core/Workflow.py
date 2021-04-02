@@ -422,18 +422,18 @@ class Workflow(XMLObject):
     return sorted(self.getPortalObject().acl_users.valid_roles())
 
   security.declarePrivate('doActionFor')
-  def doActionFor(self, document, action, comment='', is_action_supported=_marker, **kw):
+  def doActionFor(self, ob, action, comment='', is_action_supported=_marker, **kw):
     """
     Allows the user to request a workflow action.  This method
     must perform its own security checks.
     """
-    state = self._getWorkflowStateOf(document)
+    state = self._getWorkflowStateOf(ob)
     kw['comment'] = comment
     if state is None:
       raise WorkflowException(_(u'Object is in an undefined state.'))
 
     if is_action_supported is _marker:
-      is_action_supported = self.isActionSupported(document, action,
+      is_action_supported = self.isActionSupported(ob, action,
                                                    state=state, **kw)
     if not is_action_supported:
       # action is not allowed from the current state
@@ -445,9 +445,9 @@ class Workflow(XMLObject):
       msg = _(u"Transition '${action_id}' is not triggered by a user "
         u"action.", mapping={'action_id': action})
       raise WorkflowException(msg)
-    if not self._checkTransitionGuard(transition, document, **kw):
+    if not self._checkTransitionGuard(transition, ob, **kw):
       raise Unauthorized(action)
-    self._changeStateOf(document, transition, kw)
+    self._changeStateOf(ob, transition, kw)
 
   def _changeStateOf(self, document, tdef=None, kwargs=None):
     """

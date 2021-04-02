@@ -152,34 +152,34 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return variable_dict
 
   security.declarePublic('doActionFor')
-  def doActionFor(self, current_object, action_reference, wf_id=None, *_, **kw):
+  def doActionFor(self, ob, action, wf_id=None, *_, **kw):
     workflow_id = wf_id
-    workflow_list = self.getWorkflowValueListFor(current_object.getPortalType())
+    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     action_id = ''
     if workflow_id is None:
       if workflow_list == []:
         raise WorkflowException(Message(u'No workflows found.'))
       found = False
       for workflow in workflow_list:
-        action_id = workflow.getTransitionIdByReference(action_reference)
-        is_action_supported = workflow.isActionSupported(current_object, action_id, **kw)
+        action_id = workflow.getTransitionIdByReference(action)
+        is_action_supported = workflow.isActionSupported(ob, action_id, **kw)
         if is_action_supported:
           found = True
           break
 
       if found:
-        result = workflow.doActionFor(current_object, action_id,
+        result = workflow.doActionFor(ob, action_id,
                                       is_action_supported=is_action_supported,
                                       **kw)
       else:
-        message = "No workflow provides the %s action." % action_reference
+        message = "No workflow provides the %s action." % action
         raise WorkflowException(message)
     else:
       workflow = self.getWorkflowById(workflow_id)
       if workflow is None:
         raise WorkflowException(Message(u'Requested workflow not found.'))
-      action_id = workflow.getTransitionIdByReference(action_reference)
-      result = workflow.doActionFor(current_object, action_id, **kw)
+      action_id = workflow.getTransitionIdByReference(action)
+      result = workflow.doActionFor(ob, action_id, **kw)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,

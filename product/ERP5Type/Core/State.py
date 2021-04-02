@@ -106,7 +106,7 @@ class State(IdAsReferenceMixin("state_"),
     return [parent._getOb(destination_id) for destination_id in
             self.getDestinationIdList()]
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'setStatePermissionRolesDict')
   def setStatePermissionRolesDict(self, permission_roles):
     """
@@ -118,7 +118,7 @@ class State(IdAsReferenceMixin("state_"),
     self.state_permission_roles_dict = PersistentMapping(
         {k: tuple(v) for (k, v) in permission_roles.items()})
 
-  security.declareProtected(Permissions.ModifyPortalContent,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getStatePermissionRolesDict')
   def getStatePermissionRolesDict(self):
     """
