@@ -876,12 +876,6 @@ class Workflow(XMLObject):
             document = moved_exc.getNewObject()
             # Re-raise after transition
 
-    # update variables
-    state_values = {}
-    # seems state variable is not used in new workflow.
-    if new_state is not None:
-      state_values = getattr(new_state,'var_values', None) or {}
-
     transition_expression_dict = {}
     if tdef is not None:
       transition_expression_dict = {
@@ -903,9 +897,7 @@ class Workflow(XMLObject):
         continue
 
       expr = None
-      if variable_reference in state_values:
-        value = state_values[variable_reference]
-      elif variable_id in transition_expression_dict:
+      if variable_id in transition_expression_dict:
         expr = transition_expression_dict[variable_id]
       elif not vdef.getAutomaticUpdate() and variable_reference in former_status:
         # Preserve former value
@@ -1296,20 +1288,13 @@ class Workflow(XMLObject):
     if new_sdef is None:
       raise WorkflowException, ('Destination state undefined: ' + new_state_id)
 
-    # Update variables.
-    state_values = self.getVariableValueDict()
-    if state_values is None:
-      state_values = {}
-
     tdef_exprs = {}
     status = {}
-    for id_, vdef in state_values.items():
+    for id_, vdef in self.getVariableValueDict().iteritems():
       if not vdef.getStatusIncluded():
         continue
       expr = None
-      if state_values.has_key(id_):
-        value = state_values[id_]
-      elif tdef_exprs.has_key(id_):
+      if tdef_exprs.has_key(id_):
         expr = tdef_exprs[id_]
       elif not vdef.getAutomaticUpdate() and former_status.has_key(id_):
         # Preserve former value
