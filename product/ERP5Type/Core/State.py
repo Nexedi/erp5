@@ -143,14 +143,12 @@ class State(IdAsReferenceMixin("state_"),
     This is a method specific to ERP5. This returns a list of state types,
     which are used for portal methods.
     """
-    return (
-            'draft_order',
+    return ('draft_order',
             'planned_order',
             'future_inventory',
             'reserved_inventory',
             'transit_inventory',
-            'current_inventory',
-            )
+            'current_inventory')
 
 from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
 if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
