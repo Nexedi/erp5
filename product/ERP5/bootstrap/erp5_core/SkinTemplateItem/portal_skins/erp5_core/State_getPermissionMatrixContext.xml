@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox, base_id=\'cell\'</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PermissionRoles_asCellRange</string> </value>
+            <value> <string>State_getPermissionMatrixContext</string> </value>
         </item>
       </dictionary>
     </pickle>
