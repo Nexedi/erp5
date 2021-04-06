@@ -1,14 +1,14 @@
 from Products.ERP5Type.Message import translateString
 
 def getCategoryUrl(category_mapping=None):
-  if getattr(category_mapping.getParent(), "getDestinationReference", None) is None:
+  if getattr(category_mapping.getParentValue(), "getDestinationReference", None) is None:
     return "portal_categories"
-  return  "%s/%s" % (getCategoryUrl(category_mapping.getParent()), category_mapping.getDestinationReference())
+  return  "%s/%s" % (getCategoryUrl(category_mapping.getParentValue()), category_mapping.getDestinationReference())
 
 def createCategory(object_mapping=None, category=""):
   if object_mapping is None or category=="":
     return 
-  category_url = getCategoryUrl(object_mapping.getParent())
+  category_url = getCategoryUrl(object_mapping.getParentValue())
   category_object = context.restrictedTraverse(category_url)
   if category_object is not None:
     if category_object.getId() == "portal_categories":

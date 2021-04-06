@@ -7,7 +7,7 @@ default_available_language = kw.get('default_available_language', 'en')
 context.setGlobalConfigurationAttr(default_available_language=default_available_language)
 
 configuration_save = context.restrictedTraverse(configuration_save_url)
-business_configuration = configuration_save.getParent()
+business_configuration = configuration_save.getParentValue()
 
 # if preferred email is not specified used previously saved company email.
 company_email = context.getGlobalConfigurationAttr('company_email')

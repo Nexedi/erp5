@@ -756,7 +756,7 @@ class TestPackingListMixin(TestOrderMixin):
       delivery_value = simulation_movement.getDeliveryValue()
       if delivery_value not in delivery_value_list:
         delivery_value_list.append(delivery_value_list)
-#      new_packing_list = delivery_value.getParent()
+#      new_packing_list = delivery_value.getParentValue()
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
     self.assertEqual(len(delivery_value_list),len(resource_list))
 
@@ -784,7 +784,7 @@ class TestPackingListMixin(TestOrderMixin):
       delivery_value = simulation_movement.getDeliveryValue()
       if delivery_value not in delivery_value_list:
         delivery_value_list.append(delivery_value_list)
-#      new_packing_list = delivery_value.getParent()
+#      new_packing_list = delivery_value.getParentValue()
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
     self.assertEqual(len(delivery_value_list),len(resource_list))
 
