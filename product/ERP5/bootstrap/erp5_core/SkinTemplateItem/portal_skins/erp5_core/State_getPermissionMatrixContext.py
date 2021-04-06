@@ -21,11 +21,19 @@ def newCell(permission, role, base_id, portal_type):
       edit=edit,
   )
 
+
 def hasInRange(*args, **kw):
   return True
 
-return context.asContext(
+
+# XXX we need to use a context that is *not* an XML Matrix to override
+# methods like this, otherwise attributes can not be accessed
+# Unauthorized: You are not allowed to access 'newCell' in this context
+# (Your user account is defined outside the context of the object being accessed)
+return context.getParentValue().asContext(
     getCell=getCell,
     newCell=newCell,
     hasInRange=hasInRange,
+    getWorkflowManagedPermissionList=context.getParentValue().getWorkflowManagedPermissionList,
+    getManagedRoleList=context.getManagedRoleList
 )

@@ -1,4 +1,4 @@
-managed_permissions = sorted(context.getParent().getWorkflowManagedPermissionList())
+managed_permissions = sorted(context.getWorkflowManagedPermissionList())
 available_roles = context.getManagedRoleList()
 
 ma_i = []
