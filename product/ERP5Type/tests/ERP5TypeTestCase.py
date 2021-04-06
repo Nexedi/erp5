@@ -868,6 +868,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         setup_once()
         ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
+    def _getCleanupDict(self):
+      raise NotImplementedError
+
     def registerSequenceString(self, sequence_title, sequence_string):
       self.sequence_string_registry[sequence_title] = sequence_string
 

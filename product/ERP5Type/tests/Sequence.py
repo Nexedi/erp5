@@ -189,8 +189,8 @@ class StoredSequence(Sequence):
     Sequence.__init__(self, context)
     self._id = id
 
-  def serializeSequenceDict(self):
-    def _serialize(key, value):
+  def serialiseSequenceDict(self):
+    def _serialise(key, value):
       result_dict = {'key': key}
       if isinstance(value, str) or isinstance(value, int) or isinstance(value, float) or value is None:
         result_dict['type'] = "raw"
@@ -200,7 +200,7 @@ class StoredSequence(Sequence):
         result_dict['value'] = value
       elif isinstance(value, list):
         result_dict['type'] = "list"
-        result_dict['value'] = [_serialize(key, x) for x in value]
+        result_dict['value'] = [_serialise(key, x) for x in value]
       else:
         result_dict['type'] = "erp5_object"
         result_dict['value'] = value.getRelativeUrl()
@@ -208,23 +208,23 @@ class StoredSequence(Sequence):
 
     result_list = []
     for key, value in self._dict.iteritems():
-      result_list.append(_serialize(key, value))
+      result_list.append(_serialise(key, value))
     return result_list
 
-  def deserializeSequenceDict(self, data):
+  def deserialiseSequenceDict(self, data):
     portal = self._context.getPortalObject()
-    def _deserialize(serialized_dict):
-      if serialized_dict['type'] == "raw":
-        return serialized_dict['value']
-      elif serialized_dict['type'] == "list":
-        return [_deserialize(x) for x in serialized_dict['value']]
-      elif serialized_dict['type'] == "erp5_object":
-        return portal.restrictedTraverse(serialized_dict['value'])
+    def _deserialise(serialised_dict):
+      if serialised_dict['type'] == "raw":
+        return serialised_dict['value']
+      elif serialised_dict['type'] == "list":
+        return [_deserialise(x) for x in serialised_dict['value']]
+      elif serialised_dict['type'] == "erp5_object":
+        return portal.restrictedTraverse(serialised_dict['value'])
       else:
-        raise ValueError("Unknown type in %s " % serialized_dict)
+        raise ValueError("Unknown type in %s " % serialised_dict)
 
-    for serialized_dict in data:
-      self._dict[serialized_dict['key']] = _deserialize(serialized_dict)
+    for serialised_dict in data:
+      self._dict[serialised_dict['key']] = _deserialise(serialised_dict)
 
   def store(self, context):
     context.login()
@@ -235,7 +235,7 @@ class StoredSequence(Sequence):
       portal_type="Trash Bin",
       id=self._id,
       title=self._id,
-      serialized_sequence=self.serializeSequenceDict(),
+      serialised_sequence=self.serialiseSequenceDict(),
       document_dict=document_dict,
     )
     for module_id, object_id_list in document_dict.iteritems():
@@ -255,8 +255,8 @@ class StoredSequence(Sequence):
         context.portal.portal_trash.restoreObject(
           trashbin_value, [module_id], object_id, pass_if_exist=True
         )
-    self.deserializeSequenceDict(
-      trashbin_value.getProperty("serialized_sequence"),
+    self.deserialiseSequenceDict(
+      trashbin_value.getProperty("serialised_sequence"),
     )
     context.tic()
     context.logout()
