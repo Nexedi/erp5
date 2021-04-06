@@ -606,6 +606,8 @@ def StateDefinition_getDestinationValueList(self):
   return []
 def StateDefinition_getStateTypeList(self):
   return getattr(self, 'type_list', ())
+def StateDefinition_setStateTypeList(self, state_type_list):
+  self.type_list = state_type_list
 def DCWorkflowDefinition_getPortalType(self):
   return self.__class__.__name__
 def method_getReference(self):
@@ -1241,6 +1243,7 @@ StateDefinition.getDestinationValueList = StateDefinition_getDestinationValueLis
 StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
 StateDefinition.showDict = DCWorkflowDefinition_showDict
 StateDefinition.getStateTypeList = StateDefinition_getStateTypeList
+StateDefinition.setStateTypeList = StateDefinition_setStateTypeList
 StateDefinition.getStatePermissionRolesDict = StateDefinition_getStatePermissionRolesDict
 StateDefinition.getAcquirePermissionList = StateDefinition_getAcquirePermissionList
 TransitionDefinition.getParentValue = TransitionDefinition_getParentValue
