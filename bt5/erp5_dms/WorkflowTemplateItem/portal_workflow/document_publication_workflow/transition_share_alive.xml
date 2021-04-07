@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transition" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action_name</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/workflow</string>
+                <string>after_script/portal_workflow/document_publication_workflow/script_archiveVersion</string>
+                <string>destination/portal_workflow/document_publication_workflow/state_shared_alive</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The Share Alive workflow method sets the document validation state to shared_alive and archives any previously shared document with same version and same language.</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_group</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_permission</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_role</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Associate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>transition_share_alive</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Transition</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Share Document Alive</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
