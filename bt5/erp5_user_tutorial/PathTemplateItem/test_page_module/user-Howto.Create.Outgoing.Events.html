@@ -1,531 +1,534 @@
-      <section class="master">
-        <h1>How to Prepare Outgoing Events</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Front.Page?format=png" title="Create an Event from the campaign Ticket: Beta developer program" alt="Create an Event from the campaign Ticket: Beta developer program">
-        <footer>
-          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.
-        </footer>
-        <details open="open">
-          <p>
-            From the previous tutorial <a href="user-Howto.Create.Campaigns/view">"How to create Campaigns"</a>, you have learned how to create a campaign with ERP5 CRM Ticket module. Then in this tutorial, you will see how to create new events from this campaign.
-          </p><p>As introduced in the previous tutorial "Events", an event can be a phone call, an email, a fax message, etc. It can be either an incoming or outgoing event. The idea here is to learn how to prepare a campaign, which means to create detail events that will be sent later, as you will learn in the next tutorial.</p>
-        </details>
-      </section><section>
-        <h1>Agenda</h1>
-        <ul>
-          <li>Starting point: the Ticket - Campaign</li>
-          <li>Create a new Event</li>
-          <li>Edit the Event document</li>
-          <li>Go back to the Ticket page and check the Events list</li>
-        </ul>
-        <test>		 
-          <table class="test" style="display: none;">		 
-            <tbody></tbody>		 
-          </table>		 
-        </test>
-      </section><section class="screenshot">
-        <h1>Example: Create the Event Mail message (SlapOS Recruits Beta Developers) from the Ticket (Beta Developer Program)</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Example.Beta.Developer.Program.Ticket.Mail.Message.Event?format=png" alt="Example: Create the Event - Mail message from the Ticke - Beta Developer Program" title="Example: Create the Event - Mail message from the Ticke - Beta Developer Program">
-        <details open="open">
-          <p>In last tutorial, we have created a Ticket - the marketing campaign Beta Developer Program (the right side screenshot), which aims at increasing the awareness of SlapOS (The new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers.</p><p>Now that the campaign Ticket has been opened, we are going to create Events for it, send these Outgoing Events to the customers of the marketing campaign, and then handle those Incoming Events from our clients. In our VIFIB example, after the marketing campaign has been opened, as described in the introduction of Events, Cédric de Saint Martin, the community manager of VIFIB will create a mail message - an Event, and then send to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they will reply to the VIFIB manager by mail message, which will be well stored in the CRM system for future reference.</p><p>In this tutorial, we will describe in detail how to create the mail message Event from the marketing campaign Ticket</p><p>
-            <strong>Description:</strong>
-            the
-            <strong>Event Title</strong>
-            is "SlapOS Recruits Beta Developers", the
-            <strong>Event Type</strong>
-            is Mail Message, the
-            <strong>Event Nature</strong>
-            is Announcement, the
-            <strong>Sender</strong>
-            is Cédric de Saint Martin (SlapOS Community Manager from VIFIB), the
-            <strong>Recipients</strong>
-            are 4 contacts including software developers, company managers, college professors, etc., the
-            <strong>Event Content</strong>
-            is about announcing the developer hiring campaign and describing the progression of SlapOS Project.
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr class="" style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/Zuite_setUpCreateEventTest</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>verifyTextPresent</td>
-                <td>Init Ok</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr class="" style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr class="" style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Starting point: the Ticket - Campaign</h1>
-        <img alt="The screenshot of a newly opened Campaign Ticket shows that we will create new Event from the Ticket" title="Create an Event: Start from the Ticket-Campaign" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Starting.Point.Ticket.Campaign.Empty.Event.List?format=png">
-        <details open="open">
-          <p>
-            At the bottom of a campaign Ticket there is a list of all the events of the campaign. As you can see in the screenshot, this list is empty now, and we will create new events <strong>from this campaign Ticket</strong>
-            , in order to fill this Events list.
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/view</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_module"]</td>
-                <td>Campaigns</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=(['title', 'ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001'],), enter_object=True)"/&gt;</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[2]</td>
-                <td>Campaigns</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[3]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Create a new Event</h1>
-        <img alt="The screenshot shows the first step to create Event is to choose the 'Create New Event' from the 'Action' item list" title="Create a new Event from the 'Action' item list" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Create.New.Event.Action.List?format=png">
-        <details open="open">
-          <p>
-            In order to add an Event to a campaign Ticket, <strong>open the "Action" item list</strong>
-            on top of the page and click on
-            <strong>“Create New Event”</strong>
-            .
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Create New Event</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Set the Event title, type, direction and edit the message</h1>
-        <img alt="Event title, type, direction and message" title="Event title, type, direction and message" src="https://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Title.Type.Direction.Message?format=png">
-        <details open="open">
-          <p>
-            Now you will arrive at the Event creation page where you can <strong>add a Title</strong>
-            to this event; if you have chosen to create a web message (email), the title of the event will be the title of the email received by the Recipient when you will post the event, as described in the next tutorial. Then,
-            <strong>choose the Event type</strong>
-            and
-            <strong>select the direction</strong>
-            of the event (in our example, this Event  will be an outgoing mail message). Then in the area
-            <strong>"Message"</strong>
-            , you can edit the content of the email you want to send.
-          </p><p>
-            When you are done, you can choose to <strong>Keep the Event in "Draft" state</strong>
-            , so that you can delete the Event from the Events list in the Ticket document. If not, the Event will be created under "Planned" state, which means it is ready to be sent, and you cannot delete it from the Ticket document anymore, because it will be recorded as a history of your Campaign. Then you can
-            <strong>click the “New Event”</strong>
-            button. This will create the new Event and open it in order for you to edit it further.
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_your_portal_type"]</td>
-                <td>Mail Message</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_your_title"]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>
-              </tr>
-              <tr class="" style="opacity: 1; z-index: 0;">
-                <td>select</td>
-                <td>//select[@name="field_your_destination"]</td>
-                <td>functional_test_username</td>
-              </tr>
-              <tr>
-                <td>waitForElementPresent</td>
-                <td>//div[@data-gadget-editable="field_your_text_content"]//textarea</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//div[@data-gadget-editable="field_your_text_content"]//textarea</td>
-                <td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>
-              </tr>
-              <tr>
-                <td>click</td>
-                <td>//input[@name="field_your_event_workflow_action" and @value="plan"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@id="dialog_submit_button"]</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="transition_message"]</td>
-                <td>Created and associated a new Mail Message to the ticket.</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Event “Follow Up” a Ticket</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Follow.Up.Ticket?format=png" title="Event follows up a Ticket" alt="Event follows up a Ticket">
-        <details open="open">
-          <p>Now that the Event has been created, you can see on the screenshot that some fields of this event have already been filled.</p><p>
-            For example, we will now explain the <strong>“Follow Up”</strong>
-            field. You remember that in order to keep tracks of interactions, the ERP5 CRM uses "Event Origin" and "Follow Up". The field “Follow Up” creates a link between an Event and a Ticket ( A Ticket is either a Campaign, a Support Request, a Meeting, a Sale Opportunity, etc...), from where the Event is created. The field "Event Origin" creates a link between related Events ( eg, an original mail message and the replies from its recipients).
-          </p><p>In our example, as we have created the Event (the Mail message "SlapOS Recruits Beta Developers") from a Campaign Ticket (the Beta Developer Program), the "Follow Up" field has been automatically set as being this very Campaign. As a result, this Event will be displayed in the Events list of the Follow Up Ticket, in our example, in the page of Beta Developer Program from where we have created this Event.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>verifyValue</td>
-                <td>//input[@name="field_my_default_follow_up_title"]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001</td>
-              </tr>
-              <tr>
-                <td>verifyValue</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>verifyText</td>
-                <td>//label[normalize-space(text())='State']/../div</td>
-                <td>Planned</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Edit the Event document</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Edit.Event.Document.Description.Senders.And.Recipients?format=png" title="Edit the Event document" alt="Edit the Event document">
-        <details open="open">
-          <p>
-            Because in the previous step "Set Event title, type, direction and edit the message", we have written the content of the email already, you now only have to fill out the  <strong>"Description"</strong>
-            field (if you need to note something to your team member to see), and you will have to fill out the
-            <strong>Sender/Caller</strong>
-            which means the person that will be in charge of sending the Event, and the
-            <strong>Recipients</strong>
-            field which must contain a person or an organisation from the Person or Organisation Modules of your ERP5 instance. If you are not sure of a name, you can click on the little wheels next to those fields and set the relation between a person/organisation and this Event, following the procedure you have learned in the previous tutorials. Once you have entered the recipients, make sure that the person documents of your recipients have an e-mail address, if necessary add an e-mail address to the person document. When you are done editing the Event document,
-            <strong>Save</strong>
-            your work by clicking the “Save" button.
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>waitForElementPresent</td>
-                <td>//div[@data-gadget-editable="field_my_text_content"]//textarea</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//div[@data-gadget-editable="field_my_text_content"]//textarea</td>
-                <td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Preview the Event</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Preview?format=png" title="Preview the Event" alt="Preview the Event">
-        <details open="open">
-          <p>
-            If you want to see what your email looks like, you can <strong>click on the “Preview” tab</strong>
-            , as circled in red in the picture.
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>storeAttribute</td>
-                <td>//div[@id="breadcrumb"]/a[3]@href</td>
-                <td>event_url</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${event_url}</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=Preview</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>waitForTextPresent</td>
-                <td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//span[contains(text(),'View')]</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Go back to the Ticket from Event</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Go.Back.To.Ticket.From.Event?format=png" title="Go back to the Campaign Ticket" alt="Go back to the Campaign Ticket">
-        <details open="open">
-          <p>We will now go back to the campaign in order to check whether this event has been added to the Campaign Ticket.</p><p>
-            In order to reach the associated Campaign Ticket, you can <strong>go back to the view tab</strong>
-            of your event by clicking on the “View” tab, circled in red on the picture. Then
-            <strong>click on the plane icon</strong>
-            next to the “Follow Up” field, which will lead you to the Ticket that has been linked to your Event.
-          </p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//input[@name="field_my_default_follow_up_title"]/../a</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[2]</td>
-                <td>Campaigns</td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[3]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//span[@class="listbox-current-page-total-number"]</td>
-                <td>1 records</td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>clickAndWait</td>
-                <td>link=ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>verifyText</td>
-                <td>//label[normalize-space(text())='State']/../div</td>
-                <td>Opened</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Check the Events list in the Ticket</h1>
-        <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Check.Events.List.In.Ticket.Document?format=png" title="Events list in the Ticket" alt="Events list in the Ticket">
-        <details open="open">
-          <p>
-            Now you will be redirected to the Follow Up Ticket of the Event, which is the Campaign from where we created the event. In the red area on the bottom of this campaign Ticket, you can now see that the Event you just created and edited is <strong>displayed as a Planned message</strong>
-            , which means has been created successfully and is waiting to be confirmed.
-          </p><p>The next step will be to understand how to process this outgoing Event. We will learn how to do this in the next tutorial “How to Send Outgoing Events”.</p>
-        </details>
-        <test>
-          <table class="test" style="display: none;">
-            <tbody>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>verifyText</td>
-                <td>//tr[@class='listbox-data-line-0 DataA']/td[1]/</td>
-                <td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>clickAndWait</td>
-                <td>link=ZUITE-TEST-CREATE-EVENT-EVENT-001</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td>verifyText</td>
-                <td>//label[normalize-space(text())='State']/../div</td>
-                <td>Planned</td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Confirm</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@id="dialog_submit_button"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//input[@name="field_my_default_follow_up_title"]/../a</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//tr[@class='listbox-data-line-0 DataA']/td[7]/</td>
-                <td>Confirmed</td>
-              </tr>
-              <tr>
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/Base_clearCache</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>assertTextPresent</td>
-                <td>Cleared.</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/view</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_module"]</td>
-                <td>Events</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[2]</td>
-                <td>Events</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=(['title', 'ZUITE-TEST-CREATE-EVENT-EVENT-001'],), enter_object=True)"/&gt;</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_source_title"]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//textarea[@name="field_my_destination_title_list"]</td>
-                <td>ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>//input[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>verifyTextPresent</td>
-                <td>Data updated.</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Send</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@id="dialog_submit_button"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//label[normalize-space(text())='State']/../div</td>
-                <td>Sent</td>
-              </tr>
-              <tr>
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/Base_clearCache</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>assertTextPresent</td>
-                <td>Cleared.</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/event_module?simulation_state=ordered</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//span[@class="listbox-current-page-total-number"]</td>
-                <td>0 records</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/Zuite_tearDownCreateEventTest</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td>verifyTextPresent</td>
-                <td>Clean Ok</td>
-                <td>
-                  <br>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section>
-    
+<section class="master">
+<h1>How to Prepare Outgoing Events</h1>
+<img alt="Create an Event from the campaign Ticket: Beta developer program" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Front.Page?format=png" title="Create an Event from the campaign Ticket: Beta developer program" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>From the previous tutorial <a href="user-Howto.Create.Campaigns/view">&quot;How to create Campaigns&quot;</a>, you have learned how to create a campaign with ERP5 CRM Ticket module. Then in this tutorial, you will see how to create new events from this campaign.</p>
+
+<p>As introduced in the previous tutorial &quot;Events&quot;, an event can be a phone call, an email, a fax message, etc. It can be either an incoming or outgoing event. The idea here is to learn how to prepare a campaign, which means to create detail events that will be sent later, as you will learn in the next tutorial.</p>
+</details>
+</section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Starting point: the Ticket - Campaign</li>
+	<li>Create a new Event</li>
+	<li>Edit the Event document</li>
+	<li>Go back to the Ticket page and check the Events list</li>
+</ul>
+<test>field_my_destination_title_list
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Example: Create the Event Mail message (SlapOS Recruits Beta Developers) from the Ticket (Beta Developer Program)</h1>
+<img alt="Example: Create the Event - Mail message from the Ticke - Beta Developer Program" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Example.Beta.Developer.Program.Ticket.Mail.Message.Event?format=png" title="Example: Create the Event - Mail message from the Ticke - Beta Developer Program" />
+<details open="open">
+<p>In last tutorial, we have created a Ticket - the marketing campaign Beta Developer Program (the right side screenshot), which aims at increasing the awareness of SlapOS (The new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers.</p>
+
+<p>Now that the campaign Ticket has been opened, we are going to create Events for it, send these Outgoing Events to the customers of the marketing campaign, and then handle those Incoming Events from our clients. In our VIFIB example, after the marketing campaign has been opened, as described in the introduction of Events, C&eacute;dric de Saint Martin, the community manager of VIFIB will create a mail message - an Event, and then send to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they will reply to the VIFIB manager by mail message, which will be well stored in the CRM system for future reference.</p>
+
+<p>In this tutorial, we will describe in detail how to create the mail message Event from the marketing campaign Ticket</p>
+
+<p><strong>Description:</strong> the <strong>Event Title</strong> is &quot;SlapOS Recruits Beta Developers&quot;, the <strong>Event Type</strong> is Mail Message, the <strong>Event Nature</strong> is Announcement, the <strong>Sender</strong> is C&eacute;dric de Saint Martin (SlapOS Community Manager from VIFIB), the <strong>Recipients</strong> are 4 contacts including software developers, company managers, college professors, etc., the <strong>Event Content</strong> is about announcing the developer hiring campaign and describing the progression of SlapOS Project.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpCreateEventTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Starting point: the Ticket - Campaign</h1>
+<img alt="The screenshot of a newly opened Campaign Ticket shows that we will create new Event from the Ticket" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Starting.Point.Ticket.Campaign.Empty.Event.List?format=png" title="Create an Event: Start from the Ticket-Campaign" />
+<details open="open">
+<p>At the bottom of a campaign Ticket there is a list of all the events of the campaign. As you can see in the screenshot, this list is empty now, and we will create new events <strong>from this campaign Ticket</strong> , in order to fill this Events list.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Campaigns&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a new Event</h1>
+<img alt="The screenshot shows the first step to create Event is to choose the 'Create New Event' from the 'Action' item list" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Create.New.Event.Action.List?format=png" title="Create a new Event from the 'Action' item list" />
+<details open="open">
+<p>In order to add an Event to a campaign Ticket, <strong>open the &quot;Action&quot; item list</strong> on top of the page and click on <strong>&ldquo;Create New Event&rdquo;</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create New Event&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Set the Event title, type, direction and edit the message</h1>
+<img alt="Event title, type, direction and message" src="https://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Title.Type.Direction.Message?format=png" title="Event title, type, direction and message" />
+<details open="open">
+<p>Now you will arrive at the Event creation page where you can <strong>add a Title</strong> to this event; if you have chosen to create a web message (email), the title of the event will be the title of the email received by the Recipient when you will post the event, as described in the next tutorial. Then, <strong>choose the Event type</strong> and <strong>select the direction</strong> of the event (in our example, this Event will be an outgoing mail message). Then in the area <strong>&quot;Message&quot;</strong> , you can edit the content of the email you want to send.</p>
+
+<p>When you are done, you can choose to <strong>Keep the Event in &quot;Draft&quot; state</strong> , so that you can delete the Event from the Events list in the Ticket document. If not, the Event will be created under &quot;Planned&quot; state, which means it is ready to be sent, and you cannot delete it from the Ticket document anymore, because it will be recorded as a history of your Campaign. Then you can <strong>click the &ldquo;New Event&rdquo;</strong> button. This will create the new Event and open it in order for you to edit it further.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_portal_type&quot;]</td>
+			<td>Mail Message</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_your_title&quot;]</td>
+			<td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_destination&quot;]</td>
+			<td>functional_test_username</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//div[@data-gadget-scope=&quot;field_your_text_content&quot;]//textarea</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_your_text_content&quot;]//textarea</td>
+			<td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;field_your_event_workflow_action&quot; and @value=&quot;plan&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Event &ldquo;Follow Up&rdquo; a Ticket</h1>
+<img alt="Event follows up a Ticket" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Follow.Up.Ticket?format=png" title="Event follows up a Ticket" />
+<details open="open">
+<p>Now that the Event has been created, you can see on the screenshot that some fields of this event have already been filled.</p>
+
+<p>For example, we will now explain the <strong>&ldquo;Follow Up&rdquo;</strong> field. You remember that in order to keep tracks of interactions, the ERP5 CRM uses &quot;Event Origin&quot; and &quot;Follow Up&quot;. The field &ldquo;Follow Up&rdquo; creates a link between an Event and a Ticket ( A Ticket is either a Campaign, a Support Request, a Meeting, a Sale Opportunity, etc...), from where the Event is created. The field &quot;Event Origin&quot; creates a link between related Events ( eg, an original mail message and the replies from its recipients).</p>
+
+<p>In our example, as we have created the Event (the Mail message &quot;SlapOS Recruits Beta Developers&quot;) from a Campaign Ticket (the Beta Developer Program), the &quot;Follow Up&quot; field has been automatically set as being this very Campaign. As a result, this Event will be displayed in the Events list of the Follow Up Ticket, in our example, in the page of Beta Developer Program from where we have created this Event.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@value=&quot;ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]</td>
+			<td>ZUITE-TEST-CREATE-EVENT-CAMPAIGN-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Planned</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Edit the Event document</h1>
+<img alt="Edit the Event document" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Edit.Event.Document.Description.Senders.And.Recipients?format=png" title="Edit the Event document" />
+<details open="open">
+<p>Because in the previous step &quot;Set Event title, type, direction and edit the message&quot;, we have written the content of the email already, you now only have to fill out the <strong>&quot;Description&quot;</strong> field (if you need to note something to your team member to see), and you will have to fill out the <strong>Sender/Caller</strong> which means the person that will be in charge of sending the Event, and the <strong>Recipients</strong> field which must contain a person or an organisation from the Person or Organisation Modules of your ERP5 instance. If you are not sure of a name, you can click on the little wheels next to those fields and set the relation between a person/organisation and this Event, following the procedure you have learned in the previous tutorials. Once you have entered the recipients, make sure that the person documents of your recipients have an e-mail address, if necessary add an e-mail address to the person document. When you are done editing the Event document, <strong>Save</strong> your work by clicking the &ldquo;Save&quot; button.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_text_content&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_text_content&quot;]//textarea</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_text_content&quot;]//textarea</td>
+			<td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Preview the Event</h1>
+<img alt="Preview the Event" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Preview?format=png" title="Preview the Event" />
+<details open="open">
+<p>If you want to see what your email looks like, you can <strong>click on the &ldquo;Preview&rdquo; tab</strong> , as circled in red in the picture.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>storeLocation</td>
+			<td>event_creation</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${event_creation}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Preview&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForTextPresent</td>
+			<td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;View&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Go back to the Ticket from Event</h1>
+<img alt="Go back to the Campaign Ticket" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Go.Back.To.Ticket.From.Event?format=png" title="Go back to the Campaign Ticket" />
+<details open="open">
+<p>We will now go back to the campaign in order to check whether this event has been added to the Campaign Ticket.</p>
+
+<p>In order to reach the associated Campaign Ticket, you can <strong>go back to the view tab</strong> of your event by clicking on the &ldquo;View&rdquo; tab, circled in red on the picture. Then <strong>click on the plane icon</strong> next to the &ldquo;Follow Up&rdquo; field, which will lead you to the Ticket that has been linked to your Event.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]/../../a</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Opened</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Check the Events list in the Ticket</h1>
+<img alt="Events list in the Ticket" src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Event.Check.Events.List.In.Ticket.Document?format=png" title="Events list in the Ticket" />
+<details open="open">
+<p>Now you will be redirected to the Follow Up Ticket of the Event, which is the Campaign from where we created the event. In the red area on the bottom of this campaign Ticket, you can now see that the Event you just created and edited is <strong>displayed as a Planned message</strong> , which means has been created successfully and is waiting to be confirmed.</p>
+
+<p>The next step will be to understand how to process this outgoing Event. We will learn how to do this in the next tutorial &ldquo;How to Send Outgoing Events&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>waitForElementPresent</td>
+			<td>//a[text()=&quot;ZUITE-TEST-CREATE-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>click</td>
+			<td>//a[text()=&quot;ZUITE-TEST-CREATE-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Planned</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Confirm&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Confirm&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[text()=&quot;Confirmed&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Base_clearCache</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>assertTextPresent</td>
+			<td>Cleared.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-CREATE-EVENT-EVENT-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-CREATE-EVENT-EVENT-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_destination_title_list&quot;]</td>
+			<td>ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Send&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[text()=&quot;Sent&quot;]</td>
+			<td>Sent</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Base_clearCache</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>assertTextPresent</td>
+			<td>Cleared.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownCreateEventTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
