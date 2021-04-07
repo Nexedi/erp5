@@ -1,276 +1,357 @@
-    
-      <section class="master">
-        <h1>How To Create Sale Orders</h1>
-        <footer>
-          by the <a href="http://www.osoe-project.org/contact">OSOE Project</a>.
-        </footer>
-        <test>
-            <table style="display: none;" class="test">
-              <tbody>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
-                </tr>
-                <tr style="opacity: 1; z-index: 0;">
-                  <td>openAndWait</td>
-                  <td>${base_url}/Zuite_createFunctionalTestUser</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1; z-index: 0;">
-                  <td>verifyTextPresent</td>
-                  <td>Done.</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1; z-index: 0;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-                <tr>
-                  <td>openAndWait</td>
-                  <td>${base_url}/Zuite_setUpSaleOrderTest</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>verifyTextPresent</td>
-                  <td>Init Ok</td>
-                  <td></td>
-                </tr>
-                <tr style="opacity: 1; z-index: 0;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-                </tr>
-                <tr style="opacity: 1;">
-                  <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-                </tr>
-              </tbody>
-            </table>
-          </test>
-      </section><section class="">
-        <h1>Agenda</h1>
-        <ul>
-          <li>How to create a Sale Order</li>
-          <li>How to add products to the Sale Order</li>
-          <li>How to generate a Sale Packing List</li>
-        </ul>
-        <details open="open">
-          <p>This tutorial aims at explaining how to create a sale order. Whether dealing with products or services, this is one of the key operations that is frequently performed in all businesses.</p><p>This is a several step procedure :</p><p>First, you need to create the sale order so that it exists in ERP5, then edit the details of your sale order and lastly, confirm the sale order. The result of these steps is the generation of a “sale packing list”, linked to this sale order.</p><p>Note that the concept of "Sale Packing List" which is used to manage the stock, container and delivery of products can be also applied to services, and it is also indispensable. In this tutorial we will use a physical product to help you understand how to manage sale order, but the procedure goes the same for a service: confirming the sale order will generate a sale packing list, then a corresponding invoice.</p><p>Products/Services : sales order =&gt; sales packing list ==&gt; invoice ==&gt; payment</p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody></tbody>
-          </table>
-        </test>
-      </section><section class="illustration">
-        <h1>Scenario</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Example?format=png" title="Scenario" alt="Scenario">
-        <details open="open">
-          <p>We are going to explain the procedure using a new example. We have previously created persons, organisations and products, which we will use throughout this tutorial :</p><p>
-            Your company (Hongzhao) is an electronic component supplier, and has many clients worldwide. One of these clients is Z Company, which is an electricity supplier. Z Company has just ordered <strong>100 000 Red Leds</strong>
-            from your company under the following terms :
-          </p><p>
-            <strong>Title</strong>
-            : Red LED
-          </p><p>
-            <strong>Supplier</strong>
-            : Your company (Hongzhao)
-          </p><p>
-            <strong>Sender</strong>
-            : Your company (Hongzhao)
-          </p><p>
-            <strong>Seller</strong>
-            : Your company (Hongzhao)
-          </p><p>
-            <strong>Trade Condition</strong>
-            : General Sale Trade Condition
-          </p><p>
-            <strong>Priority</strong>
-            : Normal
-          </p><p>
-            <strong>Currency</strong>
-            : EUR
-          </p><p>
-            <strong>Incoterm</strong>
-            : x
-          </p><p>
-            <strong>Delivery</strong>
-            : By air
-          </p><p>
-            <strong>Client</strong>
-            : Z Company
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody></tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Create a new Sale Order</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.New?format=png" title="Create a new sale order" alt="Create a new sale order">
-        <details open="open">
-          <p>We recommend you have some experience working with ERP5 before creating sales orders. If you are experiencing any difficulties, we encourage you to refer back to previous tutorials about how to create and link persons and organisations. At this point, you should feel comfortable creating new objects in ERP5. To create sale orders, use the same method: choose to create a new sale order from the home menu of ERP5.</p><p>You will then be redirected to the sheet of the sale order you have just created.</p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_module"]</td>
-                <td>Sale Orders</td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Sale Order</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="transition_message"]</td>
-                <td>Object created.</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Fill the “View” tab</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.View?format=png" title="Sale Order View Form" alt="Sale Order View Form">
-        <details open="open">
-          <p>There are several tabs in a Sale Order document:</p><p>The “View” tab has general information about the order itself, such as who is selling and who is buying, as well as the shipping and delivery date, etc...</p><p>The “Payment” tab gathers information about how the order is going to be paid.</p><p>The “Profile” contains information about the seller and the buyer.</p><p>“History” helps you track every movement occurring with the object.</p><p>
-            Using previously provided information, we are now going to <strong>fill the “View” tab of this sale order</strong>
-            .
-            Try to do it on your own, and compare your results on this image.
-          </p><p>
-            There are two important points to remember: first, <strong>it is important to fill in the field "Sale Trade Condition"</strong>
-            ; second, you have to
-            <strong>put a valid Shipping and Delivery Date, a date that is inside the Effective and Expiration Date of the Sale Trade Condition</strong>
-            you have chosen for this Sale Order.
-          </p><p>When you are done, do not forget to save your work before browsing another tab.</p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>verifyText</td>
-                <td>//li[@class="selected"]/a/span</td>
-                <td>View</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>type</td>
-                <td>//input[@name="field_my_specialise_title"]</td>
-                <td>General Sale Trade Condition</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_source_section"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_source_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_source_decision_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_order"]</td>
-                <td>Normal</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_price_currency"]</td>
-                <td>EUR</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_price_currency"]</td>
-                <td>EUR</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_delivery_mode"]</td>
-                <td>By Air</td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_incoterm"]</td>
-                <td>Carriage Paid To</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_destination_section_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_destination_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_destination_decision_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_start_date_year"]</td>
-                <td tal:content="python: here.Zuite_getHowToInfo()['now'].strftime('%Y')">2012</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_start_date_month"]</td>
-                <td tal:content="python: here.Zuite_getHowToInfo()['now'].strftime('%m')">01</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_start_date_day"]</td>
-                <td tal:content="python: here.Zuite_getHowToInfo()['now'].strftime('%d')">01</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_stop_date_year"]</td>
-                <td tal:content="python: here.Zuite_getHowToInfo()['now'].strftime('%Y')">2012</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_stop_date_month"]</td>
-                <td>12</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="subfield_field_my_stop_date_day"]</td>
-                <td>31</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Apply Sale Trade Condition in Sale Order</h1>
-        <img alt="Apply Sale Trade Condition" title="Apply Sale Trade Condition" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Apply.Sale.Trade.Condition?format=png">
-        <details open="open">
-          <p>
-            After you saved your work in the View tab, <strong>open the Action list and choose "Apply Sale Trade Condition"</strong>
-            .
-          </p><p>
-           The chosen General Sale Trade Condition created by the ERP5 system has some basic information as the sale trade conditions you learned to create by yourself.  When you apply it, some information in the View tab and other tabs will be updated according to it automatically (see the previous tutorial <a href="user-Howto.Create.Trade.Conditions/view">"How to create Trade Conditions"</a>).
-          </p>
-        </details>
-      </section><!--<section class="screenshot">
+<section class="master">
+<h1>How To Create Sale Orders</h1>
+
+<footer>by the <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Done.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>How to create a Sale Order</li>
+	<li>How to add products to the Sale Order</li>
+	<li>How to generate a Sale Packing List</li>
+</ul>
+
+<details open="open">
+<p>This tutorial aims at explaining how to create a sale order. Whether dealing with products or services, this is one of the key operations that is frequently performed in all businesses.</p>
+
+<p>This is a several step procedure :</p>
+
+<p>First, you need to create the sale order so that it exists in ERP5, then edit the details of your sale order and lastly, confirm the sale order. The result of these steps is the generation of a &ldquo;sale packing list&rdquo;, linked to this sale order.</p>
+
+<p>Note that the concept of &quot;Sale Packing List&quot; which is used to manage the stock, container and delivery of products can be also applied to services, and it is also indispensable. In this tutorial we will use a physical product to help you understand how to manage sale order, but the procedure goes the same for a service: confirming the sale order will generate a sale packing list, then a corresponding invoice.</p>
+
+<p>Products/Services : sales order =&gt; sales packing list ==&gt; invoice ==&gt; payment</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Scenario</h1>
+<img alt="Scenario" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Example?format=png" title="Scenario" />
+<details open="open">
+<p>We are going to explain the procedure using a new example. We have previously created persons, organisations and products, which we will use throughout this tutorial :</p>
+
+<p>Your company (Hongzhao) is an electronic component supplier, and has many clients worldwide. One of these clients is Z Company, which is an electricity supplier. Z Company has just ordered <strong>100 000 Red Leds</strong> from your company under the following terms :</p>
+
+<p><strong>Title</strong> : Red LED</p>
+
+<p><strong>Supplier</strong> : Your company (Hongzhao)</p>
+
+<p><strong>Sender</strong> : Your company (Hongzhao)</p>
+
+<p><strong>Seller</strong> : Your company (Hongzhao)</p>
+
+<p><strong>Trade Condition</strong> : General Sale Trade Condition</p>
+
+<p><strong>Priority</strong> : Normal</p>
+
+<p><strong>Currency</strong> : EUR</p>
+
+<p><strong>Incoterm</strong> : x</p>
+
+<p><strong>Delivery</strong> : By air</p>
+
+<p><strong>Client</strong> : Z Company</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a new Sale Order</h1>
+<img alt="Create a new sale order" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.New?format=png" title="Create a new sale order" />
+<details open="open">
+<p>We recommend you have some experience working with ERP5 before creating sales orders. If you are experiencing any difficulties, we encourage you to refer back to previous tutorials about how to create and link persons and organisations. At this point, you should feel comfortable creating new objects in ERP5. To create sale orders, use the same method: choose to create a new sale order from the home menu of ERP5.</p>
+
+<p>You will then be redirected to the sheet of the sale order you have just created.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Sale Order&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Sale Order&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the &ldquo;View&rdquo; tab</h1>
+<img alt="Sale Order View Form" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.View?format=png" title="Sale Order View Form" />
+<details open="open">
+<p>There are several tabs in a Sale Order document:</p>
+
+<p>The &ldquo;View&rdquo; tab has general information about the order itself, such as who is selling and who is buying, as well as the shipping and delivery date, etc...</p>
+
+<p>The &ldquo;Payment&rdquo; tab gathers information about how the order is going to be paid.</p>
+
+<p>The &ldquo;Profile&rdquo; contains information about the seller and the buyer.</p>
+
+<p>&ldquo;History&rdquo; helps you track every movement occurring with the object.</p>
+
+<p>Using previously provided information, we are now going to <strong>fill the &ldquo;View&rdquo; tab of this sale order</strong> . Try to do it on your own, and compare your results on this image.</p>
+
+<p>There are two important points to remember: first, <strong>it is important to fill in the field &quot;Sale Trade Condition&quot;</strong> ; second, you have to <strong>put a valid Shipping and Delivery Date, a date that is inside the Effective and Expiration Date of the Sale Trade Condition</strong> you have chosen for this Sale Order.</p>
+
+<p>When you are done, do not forget to save your work before browsing another tab.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>General Sale Trade Condition</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_source_section&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_order&quot;]</td>
+			<td>Normal</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_price_currency&quot;]</td>
+			<td>EUR</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_price_currency&quot;]</td>
+			<td>EUR</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_delivery_mode&quot;]</td>
+			<td>By Air</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_incoterm&quot;]</td>
+			<td>Carriage Paid To</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_destination_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_destination_section_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_destination_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_destination_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_destination_decision_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_destination_decision_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_start_date&quot;]</td>
+			<td>2021-07-14</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_stop_date&quot;]</td>
+			<td>2021-07-22</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Apply Sale Trade Condition in Sale Order</h1>
+<img alt="Apply Sale Trade Condition" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Apply.Sale.Trade.Condition?format=png" title="Apply Sale Trade Condition" type="image/svg+xml" />
+<details open="open">
+<p>After you saved your work in the View tab, <strong>open the Action list and choose &quot;Apply Sale Trade Condition&quot;</strong> .</p>
+
+<p>The chosen General Sale Trade Condition created by the ERP5 system has some basic information as the sale trade conditions you learned to create by yourself. When you apply it, some information in the View tab and other tabs will be updated according to it automatically (see the previous tutorial <a href="user-Howto.Create.Trade.Conditions/view">&quot;How to create Trade Conditions&quot;</a>).</p>
+</details>
+</section>
+<!--<section class="screenshot">
         <h1>Update the payment tab</h1>
         <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Payment.Updated.Automatically?format=png" title="Payment tab updated automatically" alt="Payment tab updated automatically">
         <details open="open">
@@ -284,11 +365,12 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=Payment</td>
-                <td></td>
-              </tr>
+		      <tr>
+		    	<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Payment&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		      </tr>
+		      <tr>
+		    	<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		      </tr>
               <tr>
                 <td>select</td>
                 <td>//select[@name="field_my_payment_condition_payment_mode"]</td>
@@ -309,11 +391,9 @@
                 <td>//input[@name="field_my_payment_condition_payment_end_of_month"]</td>
                 <td></td>
               </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
+		      <tr>
+		      	<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		      </tr>
             </tbody>
           </table>
         </test>
@@ -327,6 +407,11 @@
           <table style="display: none;" class="test">
             <tbody>
               <tr>
+                <td>waitForElementPresent</td>
+                <td>//input[@name="field_my_payment_condition_payment_term"]</td>
+                <td></td>
+              </tr>
+              <tr>
                 <td>verifyValue</td>
                 <td>//input[@name="field_my_payment_condition_payment_term"]</td>
                 <td>30</td>
@@ -334,344 +419,345 @@
             </tbody>
           </table>
         </test>
-      </section>--><section class="screenshot">
-        <h1>The Profile tab is updated automatically</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Profile.Updated.Automatically?format=png" type="image/svg+xml" title="Profile tab updated automatically" alt="Profile tab updated automatically">
-        <details open="open">
-          <p>
-            When saving the “View” tab, information has been gathered about the sender, the recipient etc., since you have chosen the Sale Trade Condition. As you can see by browsing the “Profile” tab, you do not have to enter these information again, ERP5 <strong>displays it automatically</strong>
-            . Then, the only information you have to
-            <strong>edit is about the invoice</strong>
-            : who sends it, who should receive it and who pays it? Please see the next page.
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>clickAndWait</td>
-                <td>link=Profile</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_source_administration_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_destination_administration_title"]</td>
-                <td>ZUITE-TEST-SALEORDER USER-001</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Edit “Profile” information</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Edit.Profile?format=png" type="image/svg+xml" title="Edit “Profile” information" alt="Edit “Profile” information">
-        <details open="open">
-          <p>Now you can edit the remaining information in the Profile tab according to the information of the sale order.</p><p>For now, the first part of creating a Sale Order is over: you have filled the “View”, “Payment” and “Profile” tabs successfully with the required information.</p><p>
-            However, <strong>you have not yet entered any information about a product or a service</strong>
-            . The goal of a Sale Order is to enter information about the order, meaning that
-            <strong>a product or a service must be involved as well</strong>
-            . In fact, ERP5 works in a way that
-            <strong>firstly</strong>
-            , you add general information about the sale, and
-            <strong>afterwards</strong>
-            , you add products or services to this order, depending on what has been ordered by your client. To do so, we are now going to add “Sale Order Lines” to this Sale Order. Remember that each sale order line represents a product or a service, the quantity is irrelevant. For example, if two different products have been ordered, you will have two sale order lines on your sale order; if only one product has been ordered with a quantity, you will have only one sale order line.
-          </p>
-        </details>
-      </section><section class="screenshot">
-        <h1>Add “Sale Order Line(s)” (1)</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Add.Sale.Order.Line.Action?format=png" title="Add Sale Order Line" alt="Add Sale Order Line">
-        <details open="open">
-          <p>
-            First, browse the “Action” menu and choose <strong>“Add Sale Order Line”</strong>
-            . You will be directed to the Sale Order Line document.
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Add Sale Order Line</td>
-              </tr>
-              <tr>
-                <td>waitForElementPresent</td>
-                <td>//input[@name='field_my_title']</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>storeAttribute</td>
-                <td>//div[@id="breadcrumb"]/a[4]@href</td>
-                <td>waitactivities</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Add “Sale Order Line(s)”(2)</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Fill.Sale.Order.Line?format=png" title="Fill Sale Order Line" alt="Fill Sale Order Line">
-        <details open="open">
-          <p>As you can see on the bread crumb, you are now located on the Sale Order Line document named “1” by default, since this is your first order line ever.</p><p>
-            After you have <strong>named your Sale Order Line properly</strong>
-            , you can
-            <strong>link a product</strong>
-            to it. To do so, just click on the wheel next to “Product or Service”, and set a relation as described in the previous tutorial
-            <a href="user-Howto.Link.Persons.and.Organisations/view">"Linking Persons and Organisations"</a>.
-          </p><p>
-            After you have saved the change in the Product and Service field, you will find out that <strong>the Price of your product and the Base contribution are updated automatically</strong>
-            according to the price set in the Product document  (if you have entered these information when you created your product correctly). However, you can still edit these fields, according to your decision with the buyer. Then, type the
-            <strong>quantity</strong>
-            ordered by your client, in our example, we will enter 100000.
-          </p><p>
-            Then, as you can see on the picture, <strong>some of the information needed here is created by the Sale Order itself</strong>
-            , such as the Shipping Date, Sender, etc. This is the main reason why we recommend you should first fill the “View”, “Payment” and “Profile” tabs of the Sale Order before adding a Sale Order Line. Those details will be updated automatically.
-          </p><p>
-            <strong>Note:</strong>
-            This operation implies that the product or the service you want to be linked to the Sale Order has already been created in ERP5. Please browse the tutorial
-            <a href="user-Howto.Create.and.Manage.Products/view">"How to create Products"</a> for more information about how to proceed.
-          </p><p>
-            <strong>Question:</strong>
-            How will the price appear if the product has various prices? Such as the book we created in the previous tutorial which has two formats so two prices?
-            <br>
-            <strong>Answer:</strong>
-            <br>When you choose a product which has variations, after you link it to the sale order line, there will have a new filed appeared under the "Product and Service": "Variations". Choose all lines in "Variation" field, and click "Save" button. Then you will see two new tabs been created: Quantity and Price. You <b>only have to define the quantity</b> of different product variation in the sales order, "Save" the changes, then the Total Quantity and Total Price in the Sales Order's view page will be updated accordingly.
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>open</td>
-                <td>${waitactivities}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_reference"]</td>
-                <td>ZUITE-TEST-SALEORDER-RL01</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_resource_title"]</td>
-                <td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_quantity"]</td>
-                <td>100000</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>select</td>
-                <td>//select[@name="field_my_quantity_unit"]</td>
-                <td>Unit/Piece</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="field_my_price"]</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@name="Base_edit:method"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyTextNotPresent</td>
-                <td>Input data has errors. Please look at the error messages below.</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Save and go back to Sale Order</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Save.Sale.Order.Line.And.Go.Back.To.Sale.Order?format=png" title="Save and Return" alt="Save and Return">
-        <details open="open">
-          <p>Now that we have filled the details of the Sale Order Line, which means that we have added a product to the Sale Order, we can now go back to the Sale Order document to finish its editing.</p><p>Do not forget to save your work by clicking on the disk on the right side of the screen.</p><p>
-            When saving is complete, take a look at the bread crumb:<br>
-            If you remember correctly, the bread crumb displays a location, and has a folder path. For example, the one here displays:
-            <br>
-            <strong>ERP5/Sale orders/Red LED/Red LED</strong>
-            <br>
-            This means that you are in the instance
-            <strong>ERP5</strong>
-            , in the
-            <strong>Sale Order Line “Red LED”</strong>
-            which is located in the
-            <strong>“Sale order” “Red LED”</strong>
-            .
-            <br>
-            So, to go back to your Sale Order, just click on
-            <strong>“Red LED”</strong>
-            (the red represents your Sale Order, the blue represents the Sale Order Line) in the bread crumb.
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[1]</td>
-                <td>ERP5</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[2]</td>
-                <td>Sale Orders</td>
-              </tr>
-              <tr>
-                <td>storeAttribute</td>
-                <td>//div[@id="breadcrumb"]/a[3]@href</td>
-                <td>waitconfirm</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>open</td>
-                <td>${waitconfirm}</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Confirm the Sale Order</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Confirm?format=png" title="Confirming the Sale Order" alt="Confirming the Sale Order">
-        <details open="open">
-          <p>
-            After reviewing the Sale Order Lines in the View tab of the Sale Order, and you are sure everything else is fine, you can change the state of the Sale Order. The first step is to browse the “Action” menu, and <strong>click on “Confirm”</strong>
-            . A new page will appear in which you can add comments and validate that you want to
-            <strong>“Confirm"  the Sale Order</strong>
-            .
-          </p><p>
-            This step is really important, because when you <strong>"Confirm" a Sale Order</strong>
-            , you tell ERP5 that you have agreed with the buyer and confirm the Sale Order, so you can start preparing the products for shipment. Then, you will be ready to fill the details of the shipment, which is done using the Sale Packing List that has been generated while
-            <strong>confirming the Sale Order</strong>
-            .
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_action"]</td>
-                <td>Confirm Order</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//button[@id="dialog_submit_button"]</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Jump to "Related Sale Packing List"</h1>
-        <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Jump.To.Related.Sale.Packing.List?format=png" title="Jump to related Sale Packing List" alt="Jump to related Sale Packing List">
-        <details open="open">
-          <p>
-            When a Sale Order is “confirmed”, <strong>a Sale Packing List is automatically generated at the same time</strong>
-            (it can take few minutes). You can reach it and modify it by browsing the “Jump...” menu and choosing
-            <strong>“Related Sale Packing List”</strong>
-            .
-          </p><p>
-            Note: It sometimes happens that you have an error message : "No Sale Packing List related". This means most of the time that the Sale Order is not confirmed yet. Remember that the Sale Packing List is only created when you confirm a Sale Order.<br>
-            If you just validated a Sale Order and cannot reach the "Related Sale Packing List", wait a minute, this will be available soon. You will see sometimes a little clock on the right of the screen, this means that the application is applying the requested changes, so be patient, it only takes a few seconds generally.
-          </p>
-        </details>
-        <test>
-          <table style="display: none;" class="test">
-            <tbody>
-              <tr>
-                <td>verifyText</td>
-                <td>//label[normalize-space(text())='State']/../div</td>
-                <td>Confirmed</td>
-              </tr>
-              <tr>
-                <td>storeAttribute</td>
-                <td>//div[@id="breadcrumb"]/a[3]@href</td>
-                <td>product</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms"&gt; Invoke simulation alarms &lt;/span&gt;</td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>open</td>
-                <td>${product}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>selectAndWait</td>
-                <td>//select[@name="select_jump"]</td>
-                <td>Related Sale Packing List</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[1]</td>
-                <td>ERP5</td>
-              </tr>
-              <tr>
-                <td>verifyText</td>
-                <td>//div[@id="breadcrumb"]/a[2]</td>
-                <td>Sale Packing Lists</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-              <tr style="opacity: 1;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>
-              </tr>
-              <tr>
-                <td>open</td>
-                <td>${base_url}/Zuite_tearDownSaleOrderTest</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>verifyTextPresent</td>
-                <td>Clean Ok</td>
-                <td></td>
-              </tr>
-              <tr style="opacity: 1; z-index: 0;">
-                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-              </tr>
-            </tbody>
-          </table>
-        </test>
-      </section><section class="screenshot">
-        <h1>Generated Sale Packing List</h1>
-        <img alt="Generated Sale Packing List" title="Generated Sale Packing List" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Generated.Sale.Packing.List?format=png">
-        <details open="open">
-          <p>Using "Jump..." menu, you can quickly access the newly generated "Sale Packing List related to Sale Order: Red LED". Then if you need to go back to the initial Sale Order, you can either use the "Jump..." list again, or by browsing the Sale Orders in the "Modules" list.</p><p>Now you can have a look at the fresh new Packing List document. In next tutorial, you will learn how to manage Sale Packing Lists.</p>
-        </details>
-      </section>
-    
+      </section>-->
+
+<section class="screenshot">
+<h1>The Profile tab is updated automatically</h1>
+<img alt="Profile tab updated automatically" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Profile.Updated.Automatically?format=png" title="Profile tab updated automatically" type="image/svg+xml" />
+<details open="open">
+<p>When saving the &ldquo;View&rdquo; tab, information has been gathered about the sender, the recipient etc., since you have chosen the Sale Trade Condition. As you can see by browsing the &ldquo;Profile&rdquo; tab, you do not have to enter these information again, ERP5 <strong>displays it automatically</strong> . Then, the only information you have to <strong>edit is about the invoice</strong> : who sends it, who should receive it and who pays it? Please see the next page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Profile&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]/li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_destination_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER USER-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_destination_administration_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]/li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Edit &ldquo;Profile&rdquo; information</h1>
+<img alt="Edit “Profile” information" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Edit.Profile?format=png" title="Edit “Profile” information" type="image/svg+xml" />
+<details open="open">
+<p>Now you can edit the remaining information in the Profile tab according to the information of the sale order.</p>
+
+<p>For now, the first part of creating a Sale Order is over: you have filled the &ldquo;View&rdquo;, &ldquo;Payment&rdquo; and &ldquo;Profile&rdquo; tabs successfully with the required information.</p>
+
+<p>However, <strong>you have not yet entered any information about a product or a service</strong> . The goal of a Sale Order is to enter information about the order, meaning that <strong>a product or a service must be involved as well</strong> . In fact, ERP5 works in a way that <strong>firstly</strong> , you add general information about the sale, and <strong>afterwards</strong> , you add products or services to this order, depending on what has been ordered by your client. To do so, we are now going to add &ldquo;Sale Order Lines&rdquo; to this Sale Order. Remember that each sale order line represents a product or a service, the quantity is irrelevant. For example, if two different products have been ordered, you will have two sale order lines on your sale order; if only one product has been ordered with a quantity, you will have only one sale order line.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Add &ldquo;Sale Order Line(s)&rdquo; (1)</h1>
+<img alt="Add Sale Order Line" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Add.Sale.Order.Line.Action?format=png" title="Add Sale Order Line" />
+<details open="open">
+<p>First, browse the &ldquo;Action&rdquo; menu and choose <strong>&ldquo;Add Sale Order Line&rdquo;</strong> . You will be directed to the Sale Order Line document.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;Add&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>Sale Order Line</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&#39;field_my_title&#39;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Add &ldquo;Sale Order Line(s)&rdquo;(2)</h1>
+<img alt="Fill Sale Order Line" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Fill.Sale.Order.Line?format=png" title="Fill Sale Order Line" />
+<details open="open">
+<p>As you can see on the bread crumb, you are now located on the Sale Order Line document named &ldquo;1&rdquo; by default, since this is your first order line ever.</p>
+
+<p>After you have <strong>named your Sale Order Line properly</strong> , you can <strong>link a product</strong> to it. To do so, just click on the wheel next to &ldquo;Product or Service&rdquo;, and set a relation as described in the previous tutorial <a href="user-Howto.Link.Persons.and.Organisations/view">&quot;Linking Persons and Organisations&quot;</a>.</p>
+
+<p>After you have saved the change in the Product and Service field, you will find out that <strong>the Price of your product and the Base contribution are updated automatically</strong> according to the price set in the Product document (if you have entered these information when you created your product correctly). However, you can still edit these fields, according to your decision with the buyer. Then, type the <strong>quantity</strong> ordered by your client, in our example, we will enter 100000.</p>
+
+<p>Then, as you can see on the picture, <strong>some of the information needed here is created by the Sale Order itself</strong> , such as the Shipping Date, Sender, etc. This is the main reason why we recommend you should first fill the &ldquo;View&rdquo;, &ldquo;Payment&rdquo; and &ldquo;Profile&rdquo; tabs of the Sale Order before adding a Sale Order Line. Those details will be updated automatically.</p>
+
+<p><strong>Note:</strong> This operation implies that the product or the service you want to be linked to the Sale Order has already been created in ERP5. Please browse the tutorial <a href="user-Howto.Create.and.Manage.Products/view">&quot;How to create Products&quot;</a> for more information about how to proceed.</p>
+
+<p><strong>Question:</strong> How will the price appear if the product has various prices? Such as the book we created in the previous tutorial which has two formats so two prices?<br />
+<strong>Answer:</strong><br />
+When you choose a product which has variations, after you link it to the sale order line, there will have a new filed appeared under the &quot;Product and Service&quot;: &quot;Variations&quot;. Choose all lines in &quot;Variation&quot; field, and click &quot;Save&quot; button. Then you will see two new tabs been created: Quantity and Price. You <b>only have to define the quantity</b> of different product variation in the sales order, &quot;Save&quot; the changes, then the Total Quantity and Total Price in the Sales Order&#39;s view page will be updated accordingly.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_reference&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-RL01</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_resource_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_resource_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]/li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_quantity&quot;]</td>
+			<td>100000</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_quantity_unit&quot;]</td>
+			<td>Unit/Piece</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_price&quot;]</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyTextNotPresent</td>
+			<td>Input data has errors. Please look at the error messages below.</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Save and go back to Sale Order</h1>
+<img alt="Save and Return" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Save.Sale.Order.Line.And.Go.Back.To.Sale.Order?format=png" title="Save and Return" />
+<details open="open">
+<p>Now that we have filled the details of the Sale Order Line, which means that we have added a product to the Sale Order, we can now go back to the Sale Order document to finish its editing.</p>
+
+<p>Do not forget to save your work by clicking on the disk on the right side of the screen.</p>
+
+<p>When saving is complete, take a look at the bread crumb:<br />
+If you remember correctly, the bread crumb displays a location, and has a folder path. For example, the one here displays:<br />
+<strong>ERP5/Sale orders/Red LED/Red LED</strong><br />
+This means that you are in the instance <strong>ERP5</strong> , in the <strong>Sale Order Line &ldquo;Red LED&rdquo;</strong> which is located in the <strong>&ldquo;Sale order&rdquo; &ldquo;Red LED&rdquo;</strong> .<br />
+So, to go back to your Sale Order, just click on <strong>&ldquo;Red LED&rdquo;</strong> (the red represents your Sale Order, the blue represents the Sale Order Line) in the bread crumb.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//a[@accesskey=&quot;u&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Confirm the Sale Order</h1>
+<img alt="Confirming the Sale Order" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Confirm?format=png" title="Confirming the Sale Order" />
+<details open="open">
+<p>After reviewing the Sale Order Lines in the View tab of the Sale Order, and you are sure everything else is fine, you can change the state of the Sale Order. The first step is to browse the &ldquo;Action&rdquo; menu, and <strong>click on &ldquo;Confirm&rdquo;</strong> . A new page will appear in which you can add comments and validate that you want to <strong>&ldquo;Confirm&quot; the Sale Order</strong> .</p>
+
+<p>This step is really important, because when you <strong>&quot;Confirm&quot; a Sale Order</strong> , you tell ERP5 that you have agreed with the buyer and confirm the Sale Order, so you can start preparing the products for shipment. Then, you will be ready to fill the details of the shipment, which is done using the Sale Packing List that has been generated while <strong>confirming the Sale Order</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>storeLocation</td>
+			<td>sale_order</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${sale_order}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Confirm Order&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Jump to &quot;Related Sale Packing List&quot;</h1>
+<img alt="Jump to related Sale Packing List" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Jump.To.Related.Sale.Packing.List?format=png" title="Jump to related Sale Packing List" />
+<details open="open">
+<p>When a Sale Order is &ldquo;confirmed&rdquo;, <strong>a Sale Packing List is automatically generated at the same time</strong> (it can take few minutes). You can reach it and modify it by browsing the &ldquo;Jump...&rdquo; menu and choosing <strong>&ldquo;Related Sale Packing List&rdquo;</strong> .</p>
+
+<p>Note: It sometimes happens that you have an error message : &quot;No Sale Packing List related&quot;. This means most of the time that the Sale Order is not confirmed yet. Remember that the Sale Packing List is only created when you confirm a Sale Order.<br />
+If you just validated a Sale Order and cannot reach the &quot;Related Sale Packing List&quot;, wait a minute, this will be available soon. You will see sometimes a little clock on the right of the screen, this means that the application is applying the requested changes, so be patient, it only takes a few seconds generally.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;View&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Confirmed</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;Related Sale Packing List&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${base_url}/Zuite_tearDownSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Generated Sale Packing List</h1>
+<img alt="Generated Sale Packing List" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Generated.Sale.Packing.List?format=png" title="Generated Sale Packing List" type="image/svg+xml" />
+<details open="open">
+<p>Using &quot;Jump...&quot; menu, you can quickly access the newly generated &quot;Sale Packing List related to Sale Order: Red LED&quot;. Then if you need to go back to the initial Sale Order, you can either use the &quot;Jump...&quot; list again, or by browsing the Sale Orders in the &quot;Modules&quot; list.</p>
+
+<p>Now you can have a look at the fresh new Packing List document. In next tutorial, you will learn how to manage Sale Packing Lists.</p>
+</details>
+</section>
