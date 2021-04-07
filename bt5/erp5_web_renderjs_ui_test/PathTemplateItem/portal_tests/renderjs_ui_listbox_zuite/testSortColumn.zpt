@@ -52,12 +52,8 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//th/a[text()='ID']</td>
-  <td></td>
-</tr>
 <!-- Issue sorting - should cycle from DESC to ASC -->
 <tr>
   <td>click</td>
