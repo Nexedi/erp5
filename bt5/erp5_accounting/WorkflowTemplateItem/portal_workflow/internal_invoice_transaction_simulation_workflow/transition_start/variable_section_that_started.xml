@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transition Variable" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>causality/portal_workflow/internal_invoice_transaction_simulation_workflow/variable_section_that_started</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>variable_section_that_started</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Transition Variable</string> </value>
+        </item>
+        <item>
+            <key> <string>variable_default_expression</string> </key>
+            <value> <string>object/InternalInvoiceTransaction_getAuthenticatedUserSection</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
