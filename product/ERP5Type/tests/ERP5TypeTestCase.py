@@ -1139,31 +1139,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       kw['sql_reset'] = 1
       return kw
 
-    def dynamicWorkflowConversion(self):
-      # Converting DCWorkflow dynamically
-      workflow_tool = self.getWorkflowTool()
-      type_workflow_dict = workflow_tool.getChainsByType()
-      type_tool = self.getTypesTool()
-      if workflow_tool:
-        for workflow_id in workflow_tool.objectIds():
-          # Do not convert workflow's live test related workflows.
-          if workflow_id in ['testing_initial_dc_interaction_workflow', 'testing_initial_dc_workflow']:
-            continue
-          workflow = workflow_tool._getOb(workflow_id)
-          if workflow.getPortalType() not in ('Workflow', 'Interaction Workflow'):
-            workflow.convertToERP5Workflow(temp_object=False)
-            workflow_tool.reassignWorkflow(workflow_id)
-        # force convert edit_workflow: Why have to load edit_workflow this way?
-        edit_workflow = workflow_tool._getOb('edit_workflow', None)
-        if (edit_workflow is not None and
-            edit_workflow.getPortalType() not in ('Workflow', 'Interaction Workflow')):
-          edit_workflow.convertToERP5Workflow(temp_object=False)
-          workflow_tool.reassignWorkflow('edit_workflow')
-        # Reset the original workflows assignement order.
-        for type_value in sorted(type_tool.objectValues()):
-          type_value.workflow_list = tuple(reversed(type_value.workflow_list))
-          LOG(" || Portal Type: '%s': '%s'"%(type_value.getId(), type_value.workflow_list), 0, "")
-
     def setUpERP5Site(self,
                      business_template_list=(),
                      quiet=0,
@@ -1262,8 +1237,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
 
-            self.tic()
-            self.dynamicWorkflowConversion()
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
             self.tic(not quiet)
 
