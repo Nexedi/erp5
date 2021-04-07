@@ -250,7 +250,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
 
     return workflow_list
 
-  # WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+  # WITH_LEGACY_WORKFLOW
   getWorkflowsFor = deprecated(
     "getWorkflowsFor() is deprecated; use getWorkflowValueListFor() instead")(
       getWorkflowValueListFor)

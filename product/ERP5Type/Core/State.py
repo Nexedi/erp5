@@ -150,8 +150,8 @@ class State(IdAsReferenceMixin("state_"),
             'transit_inventory',
             'current_inventory')
 
-from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
-if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.Utils import deprecated
 
   State.getTransitions = \

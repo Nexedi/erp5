@@ -165,8 +165,12 @@ def generatePortalTypeClass(site, portal_type_name):
       is_partially_generated = True
       return is_partially_generated, ((klass,), [], [], attribute_dict)
 
-  # TODO-BEFORE-MERGE: Hack for legacy Configurator Workflow
-  if portal_type_name == 'Variable':
+  # Ugly but done only once on Workflows (not data) so no migration code:
+  # Configurator Workflow implementation (workflow_module) used to have a
+  # 'Variable' Portal Type. Because the name was too generic this has been
+  # renamed to 'Workflow Variable' in ERP5 Workflow (portal_workflow)
+  from .. import WITH_LEGACY_WORKFLOW
+  if WITH_LEGACY_WORKFLOW and portal_type_name == 'Variable':
     portal_type_name = 'Workflow Variable'
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
@@ -198,10 +202,6 @@ def generatePortalTypeClass(site, portal_type_name):
         "Cannot find a portal type definition for '%s', trying to guess..."
         % portal_type_name)
 
-  # TODO-BEFORE-MERGE: Hack for legacy Configurator Workflow
-  if portal_type_name == 'Transition Variable':
-    type_class = 'WorkflowVariable'
-
   # But if neither factory_init_method_id nor type_class are set on
   # the portal type, we have to try to guess, for compatibility.
   # Moreover, some tools, such as 'Activity Tool', don't have any
@@ -221,6 +221,13 @@ def generatePortalTypeClass(site, portal_type_name):
     mixin_list = []
     interface_list = []
     acquire_local_role = True
+
+  # Ugly but done only once on Workflows (not data) so no migration code:
+  # Configurator Workflow implementation (workflow_module) used to have a
+  # dedicated Portal Type for Transition Variable but this is now the same as
+  # any other Workflow Variable.
+  if WITH_LEGACY_WORKFLOW and portal_type_name == 'Transition Variable':
+    type_class = 'WorkflowVariable'
 
   if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type ' + \

@@ -20,7 +20,7 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
-from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 
 # Load all monkey patches
 from Products.ERP5Type.patches import WSGIPublisher
@@ -32,11 +32,11 @@ from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
-if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
   from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
-if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import DynamicType
@@ -48,7 +48,7 @@ from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
-if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import States
 from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation

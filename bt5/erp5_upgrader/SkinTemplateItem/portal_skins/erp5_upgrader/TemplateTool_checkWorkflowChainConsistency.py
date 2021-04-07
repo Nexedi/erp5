@@ -39,7 +39,8 @@ for _, bt5_id in resolved_list:
 
 error_list = []
 for portal_type, workflow_chain in portal_type_dict.iteritems():
-  workflow_chain_list = context.portal_types.getTypeInfo(portal_type).getTypeWorkflowList()
+  portal_type_document = context.portal_types.getTypeInfo(portal_type)
+  workflow_chain_list = portal_type_document.getTypeWorkflowList()
   expected_workflow_chain = sorted(workflow_chain)
   if sorted(workflow_chain_list) != expected_workflow_chain:
     error_list.append("%r - Expected: %s <> Found: %r" % (portal_type, workflow_chain, workflow_chain_list))

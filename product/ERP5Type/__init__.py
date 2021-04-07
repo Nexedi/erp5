@@ -35,7 +35,7 @@ from patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
-WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY = True
+WITH_LEGACY_WORKFLOW = True # BBB
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'

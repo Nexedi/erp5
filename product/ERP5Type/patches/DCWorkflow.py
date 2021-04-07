@@ -13,7 +13,7 @@
 #
 ##############################################################################
 
-# WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+# WITH_LEGACY_WORKFLOW
 
 ## ERP5 Workflow: This must go before any Products.DCWorkflow imports as this
 ## patch createExprContext() from-imported in several of its modules
