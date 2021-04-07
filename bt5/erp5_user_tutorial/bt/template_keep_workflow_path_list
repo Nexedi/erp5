@@ -40,3 +40,5 @@ test_page_module/user-Howto.Manage.Invoices
 test_page_module/user-Howto.Manage.Invoices/**
 test_page_module/user-Howto.Manage.Packing.Lists
 test_page_module/user-Howto.Manage.Packing.Lists/**
+test_page_module/user-Howto.Create.Sale.Orders.005.en
+test_page_module/user-Howto.Create.Sale.Orders.005.en/**
