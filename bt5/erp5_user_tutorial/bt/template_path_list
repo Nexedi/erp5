@@ -19,6 +19,6 @@ test_page_module/user-Howto.Manage.Invoices
 test_page_module/user-Howto.Manage.Invoices/**
 test_page_module/user-Howto.Manage.Packing.Lists
 test_page_module/user-Howto.Manage.Packing.Lists/**
-test_page_module/user-Howto.Manage.Support.Request.007.en
-test_page_module/user-Howto.Manage.Support.Request.007.en/**
 test_page_module/user-Howto.Post.Outgoing.Events
+test_page_module/user-Howto.Manage.Support.Request.NewUI
+test_page_module/user-Howto.Manage.Support.Request.NewUI/**
