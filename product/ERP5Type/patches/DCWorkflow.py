@@ -85,7 +85,6 @@ WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmld
 
 DCWorkflowDefinition.security = ClassSecurityInfo()
 
-# TODO-ERP5Workflow: Not used?
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
     Allows this workflow to
@@ -212,9 +211,9 @@ TransitionDefinition.__init__ = TransitionDefinition__init__
 DCWorkflow.ValidationFailed = ValidationFailed
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
 
-# TODO-ERP5Workflow: Code duplicated in Products.ERP5Type.Core.Workflow
-# Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed
-# error messages in workflow history.
+# XXX: Code duplicated in Products.ERP5Type.Core.Workflow Patch
+# executeTransition from DCWorkflowDefinition, to put ValidationFailed error
+# messages in workflow history.
 def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     '''
     Private method.
@@ -349,7 +348,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
 DCWorkflowDefinition._executeTransition = DCWorkflowDefinition_executeTransition
 from Products.DCWorkflow.utils import modifyRolesForPermission
 
-# TODO-ERP5Workflow: Code duplicated in Products.ERP5Type.Core.Workflow
+# XXX: Code duplicated in Products.ERP5Type.Core.Workflow
 def _executeMetaTransition(self, ob, new_state_id):
   """
   Allow jumping from state to another without triggering any hooks.
@@ -436,9 +435,9 @@ def DCWorkflowDefinition_getWorkflowManagedPermissionList(self):
   return permission_list
 DCWorkflowDefinition.getWorkflowManagedPermissionList = DCWorkflowDefinition_getWorkflowManagedPermissionList
 
-# TODO-ERP5Workflow: Code duplicated in Products.ERP5Type.Core.Workflow
-# Patch updateRoleMappingsFor so that if 2 workflows define security, then we
-# should do an AND operation between each permission
+# XXX: Code duplicated in Products.ERP5Type.Core.Workflow Patch
+# updateRoleMappingsFor so that if 2 workflows define security, then we should
+# do an AND operation between each permission
 def updateRoleMappingsFor(self, ob):
     '''
     Changes the object permissions according to the current
@@ -513,7 +512,6 @@ DCWorkflowDefinition.security.declareProtected(Permissions.AccessContentsInforma
                                                'getPortalTypeListForWorkflow')
 DCWorkflowDefinition.getPortalTypeListForWorkflow = getPortalTypeListForWorkflow
 
-# TODO-ERP5Workflow: Not used?
 def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
                                            _future_state_set=None):
   """Return the states that can be reached from a given state, directly or not.
