@@ -33,18 +33,11 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()='zhenjia']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[text()='zhenjia']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'zhenjia'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -55,39 +48,20 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>baochun</td>
   <td></td>
 </tr>
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()='shitu']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[text()='shitu']</td>
-  <td></td>
-</tr>
-
-
+<tal:block tal:define="click_configuration python: {'text': 'shitu'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block tal:define="click_configuration python: {'text': 'Relation Fields'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_successor_title']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>type</td>
@@ -162,13 +136,6 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_successor_title']</td>
-  <td></td>
-</tr>
-
 
 <tr>
   <td>verifyValue</td>

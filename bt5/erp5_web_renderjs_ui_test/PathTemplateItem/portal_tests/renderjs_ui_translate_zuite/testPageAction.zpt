@@ -28,7 +28,6 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-
 <tr>
   <td>assertElementPresent</td>
   <td>//label[@for="field_my_id"]</td>
@@ -40,25 +39,10 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//a[text() = 'yanzhen']</td>
-  <td></td>
-</tr>
- 
-<tr>
-  <td>click</td>
-  <td>//a[text() = 'yanzhen']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@value = 'yanzhen']</td>
-  <td></td>
-</tr>
-
+<tal:block tal:define="click_configuration python: {'text': 'yanzhen'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>verifyElementPresent</td>
