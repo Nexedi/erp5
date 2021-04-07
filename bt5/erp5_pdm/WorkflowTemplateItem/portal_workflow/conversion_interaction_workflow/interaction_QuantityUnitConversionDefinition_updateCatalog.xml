@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Interaction" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>after_script/portal_workflow/conversion_interaction_workflow/script_QuantityUnitConversionDefinition_reindexResource</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Update parent Resource after changing local Quantity Unit Conversion Definition, or update all Resources that define a Local Quantity Unit Conversion Definition when a Global Quantity Unit Conversion Definition is modified.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interaction_QuantityUnitConversionDefinition_updateCatalog</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type_filter</string> </key>
+            <value>
+              <tuple>
+                <string>Quantity Unit Conversion Definition</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Update related resources</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>reindexObject</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>trigger_once_per_transaction</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
