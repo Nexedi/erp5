@@ -41,8 +41,8 @@ INITIAL_STATE_TITLE = 'Start'
 DOWNLOAD_STATE_TITLE = 'Download'
 END_STATE_TITLE = 'End'
 
-## TODO-ERP5Workflow: Initially part of Workflow implementation done for
-##                    ERP5Configurator but not used by ERP5 Workflow...
+## Methods defined in Configurator Workflow (workflow_module) implementation
+## but not needed for generic ERP5 Workflow (portal_workflow) implementation
 def initializeDocument(workflow, document):
   """
   Set initial state on the Document
@@ -299,12 +299,15 @@ class BusinessConfiguration(Item):
         raise ValueError("Business Configuration Cannot be initialized, \
                           it contains one or more Configurator Save")
 
-      # TODO-BEFORE-MERGE: initializeDocument() in workflow_module
-      # implementation: Without this getCurrentState() is None and nothing
-      # happens because getNextTransition() returns None in such case. But
-      # there is no field to modify 'state_base_category' which is sets to
-      # 'current_state' and BusinessConfiguration uses getCurrentState() so is
-      # 'state_base_category' really needed?
+      # XXX: `state_base_category` points to the state category (usually
+      # 'current_state'). Without this, getCurrentState() is None and nothing
+      # happens because getNextTransition() returns None in such case.
+      #
+      # But does the state category really need to be configured, or should
+      # state_base_category be removed and `current_state` used by default?
+      #   * No field to modify `state_base_category`.
+      #   * In erp5.git, it is always `current_state`.
+      #   * Some code using directly `getCurrentState()`.
       self.setCategoryMembership(workflow.getStateBaseCategory(),
                                  workflow.getSource())
 

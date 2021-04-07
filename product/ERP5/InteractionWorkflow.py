@@ -100,8 +100,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   meta_type = 'Workflow'
   title = 'Interaction Workflow Definition'
 
-  # TODO-BEFORE-MERGE: Do not seem to be used for InteractionWorkflow but
-  # needs to be defined (GuardMixin.checkGuard())
+  # Do not seem to be used for InteractionWorkflow but must be defined
+  # (GuardMixin.checkGuard())
   isManagerBypass = ConstantGetter('isManagerBypass', value=False)
 
   security = ClassSecurityInfo()

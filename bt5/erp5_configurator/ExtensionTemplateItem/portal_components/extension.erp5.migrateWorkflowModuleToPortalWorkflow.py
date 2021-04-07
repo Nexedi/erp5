@@ -43,10 +43,9 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
         business_configuration.setCurrentStateValue(state)
 
     elif subobject.getPortalType() == 'Transition':
-# TODO-ERP5Workflow: Workflows only call Workflow Script and do not call
-#                    Python Script in portal_skins but Configurator Workflows
-#                    do. For now leave them as they ({before, after}_script_id
-#                    property) but they should be migrated later on.
+# XXX_1: Workflows only call Workflow Script and do not call Python Script in
+#        portal_skins but Configurator Workflows do. For now leave them as they
+#        ({before,after}_script_id property) but they should be migrated later on.
 #
 #      def addWorkflowScript(script_id_property):
 #        old_script_id = getattr(subobject.aq_base, script_id_property, None)
@@ -70,14 +69,12 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
         destination_list=getCategoryList('state_', subobject.getDestinationValueList()),
         comment=subobject.getComment(),
         description=subobject.getDescription(),
-# TODO-ERP5Workflow: Same as above
-#        before_script_value=before_script_value,
+# XXX_1: before_script_value=before_script_value,
 #        after_script_value=after_script_value,
         guard_expression=subobject.getProperty('guard_expression'),
         # ConfiguratorWorkflowTransition Property Sheet
         transition_form_id=subobject.getProperty('transition_form_id'))
-# TODO-ERP5Workflow: ad-hoc: Should use the normal {before, after}_script
-#                    Workflow Property, see above.
+# XXX_1: Should use the normal {before,after}_script Workflow Property.
       try:
         transition.before_script_id = subobject.aq_base.before_script_id
       except AttributeError:
