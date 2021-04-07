@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transition" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=release_action</string> </value>
+        </item>
+        <item>
+            <key> <string>action_name</string> </key>
+            <value> <string>Release Document</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/workflow</string>
+                <string>before_script/portal_workflow/document_publication_workflow/script_checkValidity</string>
+                <string>after_script/portal_workflow/document_publication_workflow/transition_release</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The Release action grants access to a document to all Auditor (ex. employees of a company) based on classification policy security definition.</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_group</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_permission</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_role</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Associate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>transition_release_action</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Transition</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Release Document Action</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
