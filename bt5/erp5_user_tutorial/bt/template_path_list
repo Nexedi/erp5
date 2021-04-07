@@ -1,5 +1,4 @@
 test_page_module/developer-Test.Page.Sample
-test_page_module/user-HowTo.Change.Language-TESTONLY
 test_page_module/user-HowTo.Use.FullText.Search-TESTONLY
 test_page_module/user-Howto.Create.A.Payment
 test_page_module/user-Howto.Create.Bank.Account
@@ -19,6 +18,6 @@ test_page_module/user-Howto.Manage.Invoices
 test_page_module/user-Howto.Manage.Invoices/**
 test_page_module/user-Howto.Manage.Packing.Lists
 test_page_module/user-Howto.Manage.Packing.Lists/**
-test_page_module/user-Howto.Post.Outgoing.Events
 test_page_module/user-Howto.Manage.Support.Request.NewUI
 test_page_module/user-Howto.Manage.Support.Request.NewUI/**
+test_page_module/user-Howto.Post.Outgoing.Events
