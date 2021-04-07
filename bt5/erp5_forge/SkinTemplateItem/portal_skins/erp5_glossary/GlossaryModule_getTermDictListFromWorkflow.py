@@ -1,8 +1,6 @@
 from Products.ERP5Type.Document import newTempBase
 marker = []
 
-result = []
-
 portal_catalog = context.portal_catalog
 portal_workflow = context.portal_workflow
 portal_templates = context.portal_templates
@@ -34,13 +32,13 @@ def get_obj_and_reference_list(business_field):
           result.append((transition, "%s_actbox_name" % transition.getReference(), 'action'))
   return result
 
-business_field_list = [i for i in business_field_list if i]
-
 line_list = []
 c = 0
 item_dict = {}
-for business_field in business_field_list:
-  for wf_item, reference, type in get_obj_and_reference_list(business_field):
+for business_field in template_list:
+  if not business_field:
+    continue
+  for wf_item, reference, wf_item_type in get_obj_and_reference_list(business_field):
     term_list = get_term_list(business_field, reference)
     #if not term_list:
     #  continue
@@ -49,21 +47,21 @@ for business_field in business_field_list:
     item_dict[wf_item] = True
 
     c += 1
-    if type == 'workflow':
+    if wf_item_type == 'workflow':
       wf_item_path = wf_item.getId()
       wf_item_title = wf_item.getTitle()
-    elif type == 'state':
+    elif wf_item_type == 'state':
       wf_item_path = '%s/states/%s' % (wf_item.aq_parent.aq_parent.getId(), wf_item.getId())
       wf_item_title = wf_item.getTitle()
-    elif type == 'transition':
+    elif wf_item_type == 'transition':
       wf_item_path = '%s/transitions/%s' % (wf_item.aq_parent.aq_parent.getId(), wf_item.getId())
       wf_item_title = wf_item.getTitle()
-    else: # type == 'action'
+    else: # wf_item_type == 'action'
       wf_item_path = '%s/transitions/%s_actbox_name' % (wf_item.aq_parent.aq_parent.getId(), wf_item.getId())
       wf_item_title = wf_item.getActionName()
     wf_item_description = wf_item.getDescription()
 
-    if type == 'transition' and wf_item_path.endswith('_action'):
+    if wf_item_type == 'transition' and wf_item_path.endswith('_action'):
       if len(term_list) == 1 and \
           term_list[0].getTitle() + ' Action' == wf_item_title and \
           term_list[0].getDescription() == wf_item_description:
@@ -76,7 +74,7 @@ for business_field in business_field_list:
 
     line = newTempBase(context, 'tmp_glossary_wf_item_%s' %  c)
     line.edit(wf_item_path=wf_item_path,
-              wf_item_type=type,
+              wf_item_type=wf_item_type,
               wf_item_title=wf_item_title,
               wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),
               wf_item_description = wf_item_description,

@@ -23,7 +23,6 @@ def dumpWorkflowChain(self, ignore_default=False,
   if ignore_id_set is None:
     ignore_id_set = set()
   workflow_tool = self.getPortalObject().portal_workflow
-  cbt = workflow_tool._chains_by_type
   ti = workflow_tool._listTypeInfo()
   types_info = []
   for t in ti:

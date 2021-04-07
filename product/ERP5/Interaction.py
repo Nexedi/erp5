@@ -20,8 +20,8 @@
 Interaction in a web-configurable workflow. This is DCWorkflow
 implementation *deprecated* in favor of ERP5 Workflow.
 """
-from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
-assert WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+assert WITH_LEGACY_WORKFLOW
 
 from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type.Globals import DTMLFile, PersistentMapping

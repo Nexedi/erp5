@@ -187,7 +187,7 @@ class _(PatchClass(PythonScript)):
   def _bindAndExec(self, args, kw, caller_namespace):
     return self(*args, **kw) # caller_namespace not used by PythonScript
 
-  ## WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
+  ## WITH_LEGACY_WORKFLOW
   def getReference(self):
     return self.id
   # Following methods are necessary for Workflow showAsXML() function

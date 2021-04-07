@@ -59,8 +59,8 @@ def createExpressionContext(sci):
         }
     return getEngine().getContext(data)
 
-from Products.ERP5Type import WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY
-if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+if WITH_LEGACY_WORKFLOW:
   ## Patch for ERP5 Workflow: This must go before any Products.DCWorkflow
   ## imports as createExprContext() is from-imported in several of its modules
   import Products.DCWorkflow.Expression
@@ -1370,7 +1370,7 @@ class Workflow(XMLObject):
       return self._getOb(source_id)
     return None
 
-if WITH_DC_WORKFLOW_BACKWARD_COMPATIBILITY:
+if WITH_LEGACY_WORKFLOW:
   import warnings
   def __getattr__(self, name):
     """
