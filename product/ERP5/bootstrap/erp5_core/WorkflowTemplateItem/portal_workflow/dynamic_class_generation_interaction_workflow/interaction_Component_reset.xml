@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Interaction" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>before_commit_script/portal_workflow/dynamic_class_generation_interaction_workflow/script_ComponentTool_reset</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>When a Component is validated or invalidated, all loaded Components are reset</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interaction_Component_reset</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type_filter</string> </key>
+            <value>
+              <tuple>
+                <string>Document Component</string>
+                <string>Extension Component</string>
+                <string>Interface Component</string>
+                <string>Mixin Component</string>
+                <string>Module Component</string>
+                <string>Test Component</string>
+                <string>Tool Component</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>_setSourceReference</string>
+                <string>validate</string>
+                <string>invalidate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>trigger_once_per_transaction</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
