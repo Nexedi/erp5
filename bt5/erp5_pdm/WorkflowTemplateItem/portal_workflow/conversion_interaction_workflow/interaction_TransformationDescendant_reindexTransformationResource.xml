@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Interaction" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>after_script/portal_workflow/conversion_interaction_workflow/script_TransformationDescendant_reindexTransformationResource</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: not here.isTempDocument()</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_group</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_permission</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_role</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interaction_TransformationDescendant_reindexTransformationResource</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type_filter</string> </key>
+            <value>
+              <tuple>
+                <string>Transformation Operation</string>
+                <string>Transformation Operation Cell</string>
+                <string>Transformation Optional Resource</string>
+                <string>Transformation Transformed Resource</string>
+                <string>Transformation Transformed Resource Cell</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>_setResource.*</string>
+                <string>_setQuantity</string>
+                <string>_setVariation.*</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>trigger_once_per_transaction</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

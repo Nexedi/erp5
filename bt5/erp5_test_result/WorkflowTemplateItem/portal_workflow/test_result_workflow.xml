@@ -2,21 +2,39 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+      <global name="Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_objects</string> </key>
+            <key> <string>_count</string> </key>
             <value>
-              <tuple/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>creation_guard</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_workflow/test_result_workflow/state_draft</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>test_result_workflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,52 +42,27 @@
 Can be used to trigger a script on test completion (eg. sending an email)</string> </value>
         </item>
         <item>
-            <key> <string>groups</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>test_result_workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>initial_state</string> </key>
-            <value> <string>draft</string> </value>
-        </item>
-        <item>
-            <key> <string>isIndexable</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_id</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>value</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>manager_bypass</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>permissions</string> </key>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>state_variable</string> </key>
+            <value> <string>simulation_state</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Test Results</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_managed_permission</string> </key>
             <value>
               <tuple>
                 <string>Access contents information</string>
@@ -81,15 +74,29 @@ Can be used to trigger a script on test completion (eg. sending an email)</strin
               </tuple>
             </value>
         </item>
-        <item>
-            <key> <string>state_var</string> </key>
-            <value> <string>simulation_state</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Test Results</string> </value>
-        </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
     </pickle>
   </record>
 </ZopeData>

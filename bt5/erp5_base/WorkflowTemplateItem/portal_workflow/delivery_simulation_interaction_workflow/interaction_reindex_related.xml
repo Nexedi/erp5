@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Interaction" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>after_script/portal_workflow/delivery_simulation_interaction_workflow/script_Delivery_reindexRelatedSimulationMovement</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>reindex simulation after workflow state change, to keep consistency\r\n
+\r\n
+XXX: Something more reliable than a hardcoded list of methods from simulation workflows should be implemented.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interaction_reindex_related</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type_filter</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>cancel</string>
+                <string>close</string>
+                <string>confirm</string>
+                <string>deliver</string>
+                <string>order</string>
+                <string>plan</string>
+                <string>setReady</string>
+                <string>start</string>
+                <string>stop</string>
+                <string>submit</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>trigger_once_per_transaction</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

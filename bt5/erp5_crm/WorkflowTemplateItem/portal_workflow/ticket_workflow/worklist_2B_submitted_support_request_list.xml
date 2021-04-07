@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Worklist" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+support_request_module?simulation_state=submitted&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>action_name</string> </key>
+            <value> <string>Support Requests to Open (%(count)s)</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/global</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Submitted Support Requests</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_group</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_permission</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_role</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>worklist_2B_submitted_support_request_list</string> </value>
+        </item>
+        <item>
+            <key> <string>matched_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>Support Request</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>matched_simulation_state</string> </key>
+            <value>
+              <tuple>
+                <string>submitted</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Worklist</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
