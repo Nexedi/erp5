@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WorkflowTransition_viewConfigurator</string> </value>
+            <value> <string>Transition_viewConfigurator</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
