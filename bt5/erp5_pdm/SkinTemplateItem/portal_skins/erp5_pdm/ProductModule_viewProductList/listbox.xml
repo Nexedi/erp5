@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>all_columns</string>
+                <string>default_params</string>
                 <string>title</string>
               </list>
             </value>
@@ -135,6 +136,25 @@
                         <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>getPurchaseSupplyLineBasePrice</string>
+                          <string>Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>getSaleSupplyLineBasePrice</string>
+                          <string>Sale Price</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>limit</string>
+                          <string>100000</string>
                         </tuple>
                       </list>
                     </value>
