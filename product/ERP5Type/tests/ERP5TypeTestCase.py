@@ -869,7 +869,13 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
     def _getCleanupDict(self):
-      raise NotImplementedError
+      """
+        You must override this. Return the documents that should be
+        stored while saving/restoring a StoredSequence as a dict,
+        the keys being the module containing them, and the values
+        the list of ids of documents
+      """
+      return {}
 
     def registerSequenceString(self, sequence_title, sequence_string):
       self.sequence_string_registry[sequence_title] = sequence_string
