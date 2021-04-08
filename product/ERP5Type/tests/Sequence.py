@@ -229,15 +229,21 @@ class StoredSequence(Sequence):
     for serialised_dict in data:
       self._dict[serialised_dict['key']] = _deserialise(serialised_dict)
 
+  def _getTrashBinId(self, context):
+    if not context:
+      context = self.context
+    return "%s_%s" % (context.__class__.__name__, self._id)
+
   def store(self, context):
     context.login()
     document_dict = context._getCleanupDict()
-    if self._id in context.portal.portal_trash:
+    trashbin_id = self._getTrashBinId(context)
+    if trashbin_id in context.portal.portal_trash:
       context.portal.portal_trash.manage_delObjects(ids=[self._id])
     trashbin_value = context.portal.portal_trash.newContent(
       portal_type="Trash Bin",
-      id=self._id,
-      title=self._id,
+      id=trashbin_id,
+      title=trashbin_id,
       serialised_sequence=self.serialiseSequenceDict(),
       document_dict=document_dict,
     )
@@ -251,7 +257,7 @@ class StoredSequence(Sequence):
 
   def restore(self, context):
     context.login()
-    trashbin_value = context.portal.portal_trash[self._id]
+    trashbin_value = context.portal.portal_trash[self._getTrashBinId(context)]
     document_dict = trashbin_value.getProperty('document_dict')
     for module_id, object_id_list in document_dict.iteritems():
       for object_id in object_id_list:
@@ -266,7 +272,7 @@ class StoredSequence(Sequence):
 
   def play(self, context, **kw):
     portal = self._context.getPortal()
-    if getattr(portal.portal_trash, self._id, None) is None:
+    if getattr(portal.portal_trash, self._getTrashBinId(context), None) is None:
       ZopeTestCase._print('\nRunning and saving stored sequence \"%s\" ...' % self._id)
       sequence = Sequence()
       sequence.setSequenceString(context.getSequenceString(self._id))

@@ -87,7 +87,7 @@ class TestStoredSequence(ERP5TypeTestCase):
     sequence_list.addSequence(sequence)
     sequence_list.play(self)
     self.assertEqual(self.portal.person_module.person.getTitle(), "Person 1")
-    trashbin_value = self.portal.portal_trash[sequence_id]
+    trashbin_value = self.portal.portal_trash[sequence._getTrashBinId(self)]
     self.assertEqual(trashbin_value.person_module.person.getTitle(), "Person")
     self.assertEqual(
       trashbin_value.getProperty("serialised_sequence"),
@@ -116,7 +116,9 @@ class TestStoredSequence(ERP5TypeTestCase):
     sequence_list.play(self)
     sequence_dict = sequence._dict
     # sequence._dict will be recalculated
-    sequence.deserialiseSequenceDict(self.portal.portal_trash[sequence_id].serialised_sequence)
+    sequence.deserialiseSequenceDict(
+      self.portal.portal_trash[sequence._getTrashBinId(self)].serialised_sequence
+    )
     self.assertEqual(
       sequence_dict,
       sequence._dict,
