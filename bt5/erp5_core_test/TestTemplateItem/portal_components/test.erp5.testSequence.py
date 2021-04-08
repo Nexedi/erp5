@@ -34,9 +34,13 @@ class TestStoredSequence(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.portal = self.getPortalObject()
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base',)
+    self.portal.person_module.manage_delObjects(
+      ids=list(self.portal.person_module.objectIds())
+    )
+    for trashbin_value in self.portal.portal_trash.objectValues():
+      if trashbin_value.getId().startswith(self.__class__.__name__):
+        self.portal.portal_trash.manage_delObjects(ids=[trashbin_value.getId()])
+    self.tic()
 
   registerSequenceString = ERP5TypeTestCase.registerSequenceString
 
@@ -98,6 +102,7 @@ class TestStoredSequence(ERP5TypeTestCase):
     # Update the title of the person document in the trashbin to be
     # sure it has been restored from trash and not created
     trashbin_value.person_module.person.setTitle("Trash Person")
+    self.tic()
     sequence = StoredSequence(self, sequence_id)
     sequence.setSequenceString("stepUpdatePerson2")
     sequence_list = SequenceList()
