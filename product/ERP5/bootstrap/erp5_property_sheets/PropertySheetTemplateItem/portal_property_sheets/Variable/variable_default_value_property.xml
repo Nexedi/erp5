@@ -49,9 +49,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>python: \'\'</string> </value>
         </item>
         <item>
             <key> <string>storage_id</string> </key>

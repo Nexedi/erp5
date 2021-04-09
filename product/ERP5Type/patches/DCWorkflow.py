@@ -1378,9 +1378,6 @@ Guard.check = Guard_check
 
 InitializeClass(DCWorkflowDefinition)
 
-from Products.CMFCore.DirectoryView import registerMetaType
-registerMetaType('Workflow', DCWorkflowDefinition)
-
 # Add class security in DCWorkflow.Variables.Variables.
 from Products.DCWorkflow.Variables import Variables
 security = ClassSecurityInfo()

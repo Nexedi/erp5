@@ -17,8 +17,20 @@ class TestERP5WorkflowMixin(TestWorkflowMixin):
     self.copyWorkflow(self.portal.portal_workflow, self.initial_dc_workflow_id, self.workflow_id)
     self.copyWorkflow(self.portal.portal_workflow, self.initial_dc_interaction_workflow_id, self.interaction_workflow_id)
 
-  def copyWorkflow(self, portal_workflow, old_wf_id, new_wf_id):
-    portal_workflow.copyWorkflow(old_wf_id, new_wf_id)
+  def copyWorkflow(self, portal_workflow, old_workflow_id, new_workflow_id):
+    """
+      Create a copy of old_workflow_id workflow
+      (overwrites existing object with new_workflow_id ID if any)
+    """
+    copy = portal_workflow.manage_copyObjects(ids=[old_workflow_id])
+    pasted = portal_workflow.manage_pasteObjects(copy)
+    pasted_workflow_id = pasted[0]['new_id']
+
+    if getattr(portal_workflow, new_workflow_id, None) is not None:
+      portal_workflow.manage_delObjects(new_workflow_id)
+    portal_workflow.manage_renameObjects(ids=[pasted_workflow_id],
+                                         new_ids=[new_workflow_id])
+
     self.commit()
 
   def getTestObject(self):
@@ -119,19 +131,18 @@ class TestERP5WorkflowMixin(TestWorkflowMixin):
     """
     Check the list of actions available to users
     """
+    def checkExpectedDict(expected_action_name):
+      action_list = [a for a in self.getWorkflowTool().listActions(object=new_object)
+                     if a['category'] == 'workflow']
+      self.assertNotEqual(action_list, [])
+      for action in action_list:
+        self.assertEqual(expected_action_name, action.get('name'))
+
     new_object = self.getTestObject()
-    action_list = self.getWorkflowTool().listActions(object=new_object)
-    action = action_list[0]
-    def checkExpectedDict(expected_dict, action):
-      for key in expected_dict.keys():
-        self.assertEqual(expected_dict[key], action.get(key))
-    checkExpectedDict({"category": "workflow", "name": "Validate"},
-                      action)
+    checkExpectedDict("Validate")
+
     self.doActionFor(new_object, "validate_action")
-    action_list = self.getWorkflowTool().listActions(object=new_object)
-    action = action_list[0]
-    checkExpectedDict({"category": "workflow", "name": "Invalidate"},
-                      action)
+    checkExpectedDict("Invalidate")
 
   def test_09_testBaseGetWorkflowHistoryItemListScript(self):
     """
@@ -244,8 +255,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     workflow.setWorkflowManagedPermissionList([permission])
 
     # Verify permission roles dict on 'current' state"
-    permission_roles_dict = workflow.state_current\
-                              .getStatePermissionRolesDict()
+    permission_roles_dict = workflow.state_current.getStatePermissionRolesDict()
     self.assertIn(permission, permission_roles_dict)
 
     # Update document permissions/roles mapping
@@ -256,7 +266,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     # change roles and update permission/roles mapping on text_document
     # and check document permissions/roles mapping was updated
     # it should now be a tuple, as there is no acquisition (otherwise a list)
-    permission_roles_dict[permission] = ['Assignor']
+    workflow.state_current.setPermission(permission, ('Assignor',))
     workflow.state_current.setAcquirePermissionList([])
     workflow.updateRoleMappingsFor(text_document)
     self.assertEqual(getattr(text_document, permission_key), ('Assignor',))
@@ -267,14 +277,13 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     self.assertEqual(getattr(text_document, permission_key), ['Assignor'])
 
     # add role for permission, and verify it was changed on the text document
-    permission_roles_dict[permission] = ['Assignor', 'Auditor']
+    workflow.state_current.setPermission(permission, ('Assignor', 'Auditor'))
     workflow.updateRoleMappingsFor(text_document)
     self.assertEqual(getattr(text_document, permission_key), ['Assignor', 'Auditor'])
 
     # remove permission from the workflow, it should be removed from state
     workflow.setWorkflowManagedPermissionList([])
     self.assertEqual(workflow.state_current.getAcquirePermissionList(), [])
-
 
   def test_14_multiple_workflow_different_permission_roles(self):
     workflow1 = self.createERP5Workflow('edit_workflow', 'temporary_workflow1')
@@ -298,8 +307,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     # create document
     text_document = self.getTestObject()
 
-    permission_roles_dict1 = workflow1.state_current.getStatePermissionRolesDict()
-    permission_roles_dict1[permission] = ['Assignor', 'Assignee', 'Auditor', 'Author']
+    workflow1.state_current.setPermission(permission, ['Assignor', 'Assignee', 'Auditor', 'Author'])
     text_portal_type.setTypeWorkflowList(['temporary_workflow1'])
     workflow1.updateRoleMappingsFor(text_document)
     self.assertEqual(getattr(text_document, permission_key),
@@ -308,8 +316,13 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     # a few workflows define different roles for the same permission, it should
     # perform an intersection of the role sets to get the common values of the
     # sets
-    permission_roles_dict2 = workflow2.state_current.getStatePermissionRolesDict()
-    permission_roles_dict2[permission] = ['Auditor', 'Author', 'Manager', 'Member', 'Owner', 'Reviewer']
+    workflow2.state_current.setPermission(permission,
+                                          ['Auditor',
+                                           'Author',
+                                           'Manager',
+                                           'Member',
+                                           'Owner',
+                                           'Reviewer'])
     text_portal_type.setTypeWorkflowList(['temporary_workflow1',
                                           'temporary_workflow2'])
     workflow2.updateRoleMappingsFor(text_document)
@@ -324,12 +337,12 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     self.assertEqual(getattr(text_document, permission_key), ('Auditor',))
 
     # add role to workflow1 should change the roles on text document
-    permission_roles_dict1[permission].append('Owner')
+    workflow1.state_current.setPermission(permission,
+                                          ['Owner', 'Assignor', 'Assignee', 'Auditor', 'Author'])
     # also add acquisition
     workflow1.state_current.setAcquirePermissionList([permission])
     workflow1.updateRoleMappingsFor(text_document)
-    self.assertEqual(getattr(text_document, permission_key),
-                     ['Auditor', 'Owner'])
+    self.assertEqual(getattr(text_document, permission_key), ['Auditor', 'Owner'])
 
   def test_15_testGuardsAreNotMessingUpBase_viewDict(self):
     # check Base_viewDict is available on workflow's transition

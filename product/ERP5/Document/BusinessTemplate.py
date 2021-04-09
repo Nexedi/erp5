@@ -2409,8 +2409,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     removed_workflow_id_list = {x.split('/', 1)[1] for x in object_keys}
 
     for portal_type in context.getPortalObject().portal_types.listTypeInfo():
-      workflow_set = set(portal_type.getTypeWorkflowList()) - \
-                      removed_workflow_id_list
+      workflow_set = set(portal_type.getTypeWorkflowList()) - removed_workflow_id_list
       portal_type.setTypeWorkflowList(workflow_set)
     ObjectTemplateItem.uninstall(self, context, **kw)
 

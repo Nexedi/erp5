@@ -1237,7 +1237,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
 
-            self.tic(not quiet)
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
             self.tic(not quiet)
 

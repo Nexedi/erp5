@@ -114,25 +114,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           return True
     return False
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'copyWorkflow')
-  def copyWorkflow(self, old_workflow_id, new_workflow_id):
-    """
-      Create a copy of old_workflow_id workflow
-      (overwrites existing object with new_workflow_id ID if any)
-    """
-
-    # Copy old_workflow_id
-    copy = self.manage_copyObjects(ids=[old_workflow_id])
-    pasted = self.manage_pasteObjects(copy)
-    pasted_workflow_id = pasted[0]['new_id']
-
-    # Delete possibly existing object with new_workflow_id ID
-    if getattr(self, new_workflow_id, None):
-      self.manage_delObjects(new_workflow_id)
-
-    self.manage_renameObjects(ids=[pasted_workflow_id,],
-                              new_ids=[new_workflow_id,])
-
   security.declarePrivate('getCatalogVariablesFor')
   def getCatalogVariablesFor(self, ob):
     """ Get a mapping of "workflow-relevant" attributes.
@@ -621,6 +602,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         cache_factory = 'erp5_ui_short',
       )())
     return actions
+
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+if WITH_LEGACY_WORKFLOW:
+  # DCWorkflow copy/paste: WorkflowTool inherits from but CMFCore.WorkflowTool,
+  # ObjectManager ends up before IFAwareObjectManager in mro()...
+  from OFS.ObjectManager import IFAwareObjectManager
+  WorkflowTool.all_meta_types = IFAwareObjectManager.all_meta_types
 
 InitializeClass(WorkflowTool)
 
