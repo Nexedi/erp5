@@ -244,7 +244,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           h = HBTreeFolder2()
           # whatever value, as long as it has an __of__
           h._setOb('foo', HBTreeFolder2())
-          script = PythonScript('script')
+          script = PythonScript('test_script')
           script.ZPythonScript_edit('h', dedent("""
             for dummy in h.objectIds():
               pass
