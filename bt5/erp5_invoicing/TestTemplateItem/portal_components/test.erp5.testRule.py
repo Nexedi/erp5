@@ -29,6 +29,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from erp5.component.test.testOrder import TestOrderMixin
+from zExceptions import BadRequest
 
 class TestRuleMixin(TestOrderMixin):
   """
@@ -52,13 +53,19 @@ class TestRuleMixin(TestOrderMixin):
     return rule
 
   def _wipe(self, folder):
-    folder.manage_delObjects(list(folder.objectIds()))
+    try:
+      folder.manage_delObjects(list(folder.objectIds()))
+    except BadRequest:
+      pass
 
   def afterSetUp(self):
     # delete rules
     rule_tool = self.portal.portal_rules
-    rule_tool.manage_delObjects(ids=[x.getId() for x in rule_tool.objectValues()
-                                     if x.getVersion().startswith('testRule.')])
+    try:
+      rule_tool.manage_delObjects(ids=[x.getId() for x in rule_tool.objectValues()
+                                       if x.getVersion().startswith('testRule.')])
+    except BadRequest:
+      pass
     # recreate rules
     self.createRule('default_order_rule', '1')
     self.createRule('default_delivery_rule', '1')
