@@ -7,7 +7,6 @@ for line in context.getMovementList(
   related_object = line.getAggregateValue(portal_type=portal_type)
 
   if related_object is not None:
-    url = related_object.absolute_url()
     return related_object.Base_redirect('view', keep_items=dict(
       portal_status_message=translateString(
       # first, try to get a full translated message with portal types
