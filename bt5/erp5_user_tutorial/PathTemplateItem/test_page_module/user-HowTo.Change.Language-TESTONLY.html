@@ -26,15 +26,52 @@
               </tr>
               <tr>
                 <td>open</td>
-                <td>${base_url}/fr/</td>
+                <td>${base_url}/</td>
                 <td></td>
               </tr>
               <tr>
                 <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt;&lt;/tal:block&gt;</td>
               </tr>
               <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
                 <td>waitForElementPresent</td>
-                <td>//h3[contains(text(), &quot;Campagnes&quot;)]</td>
+                <td>//a[contains(text(), &quot;Language&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;Language&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//select[@id="field_language"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name=&quot;field_language&quot;]</td>
+                <td>value=fr</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//input[@value="Update"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//label[contains(text(), &quot;Utilisateur&quot;)]</td>
                 <td>&nbsp;</td>
               </tr>
               <tr>
@@ -59,9 +96,40 @@
                 <td></td>
               </tr>
               <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/</td>
-                <td></td>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;Langue&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;Langue&quot;)]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//select[@id="field_language"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>select</td>
+                <td>//select[@name=&quot;field_language&quot;]</td>
+                <td>English</td>
+              </tr>
+              <tr>
+                <td>click</td>
+                <td>//input[@value="Actualiser"]</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+              </tr>
+              <tr>
+                <td>waitForElementPresent</td>
+                <td>//label[contains(text(), &quot;User&quot;)]</td>
+                <td>&nbsp;</td>
               </tr>
             </tbody>
           </table>
