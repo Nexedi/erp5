@@ -20,7 +20,7 @@
                                                              'field_your_response_event_notification_message': '',
                                                              'field_your_response_workflow_action': 'send',
                                                              'field_my_default_destination': 'person_module/erp5_crm_renderjs_ui_test_agent',
-                                                             'field_your_response_event_text_content': '<p><br></p>'}">
+                                                             'field_your_response_event_text_content': '<p><br></p><blockquote type=&quot;cite&quot;>Hello, I have an issue</blockquote><p><br></p>'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_create_response_dialog_content" />
 </tal:block>
 
