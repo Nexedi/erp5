@@ -45,9 +45,7 @@ for software_product in software_product_list:
         i+=1
 
 json_data = json.dumps(appstore_data)
-json_document = portal.portal_catalog.getResultValue(
-                         portal_type = 'File',
-                         reference = 'data/application_sample.json')
+json_document = portal.document_module['store_officejs_data_application_sample_json']
 
 if (json_data != json_document.getData()):
   # Do not modify document history with edit if nothing changed
