@@ -54,11 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CRMRJSZuite_setPreference</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Set Test Runner Preferences</string> </value>
+            <value> <string>ERP5Site_createCRMUiTestEvent</string> </value>
         </item>
       </dictionary>
     </pickle>
