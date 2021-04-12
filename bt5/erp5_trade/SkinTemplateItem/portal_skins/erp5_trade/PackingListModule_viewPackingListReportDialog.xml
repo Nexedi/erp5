@@ -112,6 +112,8 @@
                       <list>
                         <string>your_aggregation_level</string>
                         <string>your_group_by</string>
+                        <string>your_product_line</string>
+                        <string>your_price_type</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>

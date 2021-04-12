@@ -11,8 +11,12 @@ simulation_state = request.get('simulation_state', ())
 # define some parameter dependings on module
 if "Sale" in context.getPortalType():
   report_type = "sale"
-  line_portal_type = "Sale Order Line"
-  doc_portal_type = "Sale Order"
+  if 'Sale Order' in context.getPortalType():
+    line_portal_type = "Sale Order Line"
+    doc_portal_type = "Sale Order"
+  else:
+    line_portal_type = "Sale Packing List Line"
+    doc_portal_type = "Sale Packing List"
 elif "Purchase" in context.getPortalType():
   report_type = "purchase"
   line_portal_type = "Purchase Order Line"

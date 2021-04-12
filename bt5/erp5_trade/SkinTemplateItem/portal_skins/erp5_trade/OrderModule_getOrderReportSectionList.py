@@ -15,8 +15,12 @@ simulation_state = request.get('simulation_state', ())
 # define some parameter dependings on module
 if "Sale" in context.getPortalType():
   report_type = "sale"
-  line_portal_type = "Sale Order Line"
-  doc_portal_type = "Sale Order"
+  if 'Sale Order' in context.getPortalType():
+    doc_portal_type = "Sale Order"
+    line_portal_type = "Sale Order Line"
+  else:
+    line_portal_type = "Sale Packing List Line"
+    doc_portal_type = "Sale Packing List"
 elif "Purchase" in context.getPortalType():
   report_type = "purchase"
   line_portal_type = "Purchase Order Line"
@@ -43,7 +47,7 @@ if from_date is None:
   from_date = DateTime()
   result_list = context.portal_catalog(
     sort_on=(('delivery.start_date','ascending'),),
-    portal_type='Sale Order',
+    portal_type=doc_portal_type,
     query=q,
     limit=1)
   if result_list:

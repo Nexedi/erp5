@@ -103,6 +103,8 @@
                         <string>your_incoterm</string>
                         <string>your_order</string>
                         <string>your_section_category</string>
+                        <string>your_price_type</string>
+                        <string>your_product_line</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>

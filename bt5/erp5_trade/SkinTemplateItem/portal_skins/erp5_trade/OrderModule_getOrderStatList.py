@@ -15,6 +15,8 @@ incoterm = request.get('incoterm', None)
 section_category = request.get('section_category', None)
 order = request.get('order', None)
 delivery_mode = request.get('delivery_mode', None)
+product_line = request.get('product_line', None)
+price_type = request.get('price_type', 'sale_price')
 
 catalog_params = {}
 
@@ -76,7 +78,16 @@ else:
                                                    simulation_state=simulation_state,
                                                    sort_on=sort_on_list,
                                                    **catalog_params)
-
+def Sale_getTotalPrice(sale):
+  total_price = 0
+  for line in sale.contentValues(filter = {'portal_type':line_portal_type}):
+    if product_line and line.getResourceValue().getProductLine() == product_line:
+      if price_type == 'sale_price':
+        total_price = total_price + line.getTotalPrice()
+      else:
+        purchase_price = resource_value.getPurchaseSupplyLineBasePrice() or 0
+        total_price = total_price + line.getTotalQuantity() * purchase_price
+  return total_price
 
 # we build two dict, one that store amount per period per client
 # and another that either store amount per period per product and per client
@@ -98,9 +109,9 @@ for result in result_list:
     if not client_dict.has_key(client_title):
       client_dict[client_title] = {}
     if client_dict[client_title].has_key(period):
-      client_dict[client_title][period]['amount'] = client_dict[client_title][period]['amount'] + result.getTotalPrice()
+      client_dict[client_title][period]['amount'] = client_dict[client_title][period]['amount'] + Sale_getTotalPrice(result)
     else:
-      client_dict[client_title][period] = {'amount' : result.getTotalPrice()}
+      client_dict[client_title][period] = {'amount' : Sale_getTotalPrice(result)}
     if not product_dict.has_key(client_title):
       line_dict = product_dict[client_title] = {}
     else:
@@ -112,6 +123,9 @@ for result in result_list:
     # client_title -> product_title -> period -> amount/quantity...
     # or product_title -> period -> amount/quantity...
     for line in result.contentValues(filter = {'portal_type':line_portal_type}):
+      if product_line:
+        if line.getResourceValue().getProductLine() != product_line:
+          continue
       # Filter by quantity_unit
       if quantity_unit:
         if line.getQuantityUnit() != quantity_unit:
@@ -124,18 +138,26 @@ for result in result_list:
           product_title = line.getDestinationFunctionTitle()
       else:
         product_title = line.getResourceTitle()
-      resource_title_dict[product_title] = line.getResourceReference()
+      resource_value = line.getResourceValue()
+      resource_title_dict[product_title] = resource_value.getReference()
+
+      if price_type == 'sale_price':
+        total_price = line.getTotalPrice()
+      else:
+        purchase_price = resource_value.getPurchaseSupplyLineBasePrice() or 0
+        total_price = line.getTotalQuantity() * purchase_price
+
       if not line_dict.has_key(product_title):
-        line_dict[product_title] = {period :{"amount" : line.getTotalPrice(),
+        line_dict[product_title] = {period :{"amount" : total_price,
                                              "quantity" : line.getTotalQuantity(),
                                              "quantity_unit" : line.getQuantityUnitTranslatedTitle()}}
       else:
         if not line_dict[product_title].has_key(period):
-          line_dict[product_title][period] = {"amount" : line.getTotalPrice(),
+          line_dict[product_title][period] = {"amount" : total_price,
                                                "quantity" : line.getTotalQuantity(),
                                                "quantity_unit" : line.getQuantityUnitTranslatedTitle()}
         else:
-          line_dict[product_title][period]['amount'] = line_dict[product_title][period]['amount'] + line.getTotalPrice()
+          line_dict[product_title][period]['amount'] = line_dict[product_title][period]['amount'] + total_price
           line_dict[product_title][period]['quantity'] = line_dict[product_title][period]['quantity'] + line.getTotalQuantity()
 
 
