@@ -75,7 +75,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                     , PropertySheet.Reference
                     )
 
-  def _substituteTextContent(self, text, safe_substitute=True, **kw):
+  def _substituteTextContent(self, text, safe_substitute=_MARKER, **kw):
     # If a method for string substitutions of the text content, perform it.
     # Decode everything into unicode before the substitutions, in order to
     # avoid encoding errors.
@@ -104,6 +104,8 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           return v
       unicode_mapping = UnicodeMapping()
 
+      if safe_substitute is _MARKER:
+        safe_substitute = self.isTextContentSubstitutionMappingIgnoreMissing()
       if safe_substitute:
         text = Template(text).safe_substitute(unicode_mapping)
       else:
@@ -116,7 +118,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     return text
 
   security.declareProtected(Permissions.AccessContentsInformation, 'asSubjectText')
-  def asSubjectText(self, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
+  def asSubjectText(self, substitution_method_parameter_dict=None, safe_substitute=_MARKER, **kw):
     """
       Converts the subject of the document to a textual representation.
     """
@@ -127,7 +129,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
                                        **substitution_method_parameter_dict)
 
   def _convert(self, format, substitution_method_parameter_dict=None, # pylint: disable=redefined-builtin
-              safe_substitute=True, charset=None, text_content=None, substitute=True, **kw):
+              safe_substitute=_MARKER, charset=None, text_content=None, substitute=True, **kw):
     """
       Convert text using portal_transforms or oood
     """

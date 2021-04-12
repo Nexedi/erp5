@@ -20,12 +20,15 @@ if notification_message is not None:
   target_format = "txt"
   if context.getContentType() == 'text/html':
     target_format = "html"
-  _, text_content = notification_message.convert(target_format,
-      substitution_method_parameter_dict=substitution_method_parameter_dict)
+  _, text_content = notification_message.convert(
+      target_format,
+      substitution_method_parameter_dict=substitution_method_parameter_dict,
+      safe_substitute=notification_message.isTextContentSubstitutionMappingIgnoreMissing())
   context.setTextContent(text_content)
   context.setAggregateSet(
       context.getAggregateList() + notification_message.getProperty('aggregate_list', []))
 
   if not context.hasTitle():
     context.setTitle(notification_message.asSubjectText(
-      substitution_method_parameter_dict=substitution_method_parameter_dict))
+        substitution_method_parameter_dict=substitution_method_parameter_dict,
+        safe_substitute=notification_message.isTextContentSubstitutionMappingIgnoreMissing()))
