@@ -86,7 +86,10 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       site = getSite()
       # reconstruct the acquistion chain with an independant request.
       #   RequestContainer -> Application -> Site
-      from Testing.ZopeTestCase.utils import makerequest
+      try:
+        from ZServer.Testing.utils import makerequest
+      except ImportError:  # BBB Zope2
+        from Testing.ZopeTestCase.utils import makerequest
       portal = getattr(makerequest(site.aq_parent), site.getId())
 
       # Make the various get_request patches return this request.
