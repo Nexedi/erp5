@@ -54,7 +54,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CRMRJSZuite_deleteData</string> </value>
+            <value> <string>Zuite_setCRMUiTestPreference</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Set Test Runner Preferences</string> </value>
         </item>
       </dictionary>
     </pickle>
