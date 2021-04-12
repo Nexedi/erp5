@@ -14,13 +14,14 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/prepare_data" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/view_create_response_dialog" />
 
+  <br/>
 <tal:block tal:define="dialog_content_configuration python: {'field_your_response_event_title': 'Re: erp5_crm_renderjs_ui_test_event_title',
                                                              'field_your_response_event_portal_type': 'Note',
                                                              'field_your_response_event_resource': '',
                                                              'field_your_response_event_notification_message': '',
                                                              'field_your_response_workflow_action': 'send',
                                                              'field_my_default_destination': 'person_module/erp5_crm_renderjs_ui_test_agent',
-                                                             'field_your_response_event_text_content': '<p><br></p>'}">
+                                                             'field_your_response_event_text_content': '<p><br></p><blockquote type=&quot;cite&quot;>Hello, I have an issue</blockquote><p><br></p>'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_create_response_dialog_content" />
 </tal:block>
 
