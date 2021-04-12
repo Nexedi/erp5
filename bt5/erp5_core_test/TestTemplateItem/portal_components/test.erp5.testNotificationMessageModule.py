@@ -152,8 +152,9 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.assertEqual('substitution text: b', text.rstrip())
 
   def test_safe_substitution_content(self):
-    """Tests that 'safe' substitution is performed, unless safe_substitute is
-    explicitly passed to False.
+    """Tests that 'safe' substitution is performed, unless the notification
+    message is configured text_content_substitution_mapping_ignore_missing set
+    to false, or safe_substitute is passed as False.
     """
     module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
@@ -174,6 +175,23 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.assertRaises(KeyError, doc.convert, 'txt', safe_substitute=False)
     self.assertRaises(KeyError, doc.convert, 'html', safe_substitute=False)
     self.assertRaises(KeyError, doc.asSubjectText, safe_substitute=False)
+
+    doc.setTextContentSubstitutionMappingIgnoreMissing(False)
+    self.assertRaises(KeyError, doc.convert, 'txt')
+    self.assertRaises(KeyError, doc.convert, 'html')
+    self.assertRaises(KeyError, doc.asSubjectText)
+    mime, text = doc.convert('txt', safe_substitute=True)
+    self.assertEqual('substitution text: ${b}', text.rstrip())
+    self.assertEqual('${b}', doc.asSubjectText(safe_substitute=True))
+
+    self.tic()
+    # even when notification messages are configured to not ignore missing
+    # entries from mapping, they are indexed in full text.
+    self.assertEqual(
+        [brain.getObject() for brain in self.portal.portal_catalog(
+            SearchableText='substitution text',
+            uid=doc.getUid())],
+        [doc])
 
   def test_substitution_lazy_dict(self):
     """Substitution script just needs to return an object implementing

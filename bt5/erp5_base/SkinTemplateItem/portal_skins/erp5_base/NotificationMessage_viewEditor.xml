@@ -59,8 +59,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Page Properties)</string>
-                <string>right (Publication)</string>
+                <string>left</string>
+                <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
               </list>
@@ -85,18 +85,20 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Page Properties)</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_content_type</string>
-                        <string>my_text_content_substitution_mapping_method_id</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right (Publication)</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_text_content_substitution_mapping_method_id</string>
+                        <string>my_text_content_substitution_mapping_ignore_missing</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
