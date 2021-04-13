@@ -481,6 +481,34 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isBTree(), False)
       self.assertEqual(self.folder.isHBTree(), True)
 
+    def test_15_checkMigrationWorksIfIdsDontChange(self):
+      """
+      migrate folder using a script that leaves some objects with same ids
+      """
+      # Create some objects
+      self.assertEqual(self.folder.getIdGenerator(), '')
+      self.assertEqual(len(self.folder), 0)
+      obj1 = self.newContent()
+      self.assertEqual(obj1.getId(), '1')
+      obj2 = self.newContent()
+      self.assertEqual(obj2.getId(), '2')
+      obj3 = self.newContent(id='custom-id')
+      self.assertEqual(obj3.getId(), 'custom-id')
+      self.tic()
+      # call migration script Base_generateIdFromCreationDate that only changes int ids
+      self.folder.migrateToHBTree(migration_generate_id_method="Base_generateIdFromCreationDate",
+                                  new_generate_id_method="_generatePerDayId")
+      self.tic()
+      # check object ids
+      from DateTime import DateTime
+      date = DateTime().Date()
+      date = date.replace("/", "")
+      #1 y 2 should have new format id (because old ids were int)
+      self.assertEqual(obj1.getId(), '%s-1' % date)
+      self.assertEqual(obj2.getId(), '%s-2' % date)
+      #3 should have the same old id
+      self.assertEqual(obj3.getId(), 'custom-id')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFolderMigration))
