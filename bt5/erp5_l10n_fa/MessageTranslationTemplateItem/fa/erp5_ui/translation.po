@@ -5532,9 +5532,6 @@ msgstr "نام کاربر"
 msgid "Login and/or password is incorrect."
 msgstr "نام کاربر و/یا رمز عبور صحیح نیست."
 
-msgid "Long Title"
-msgstr "عنوان طولانی"
-
 msgid "Lost Password"
 msgstr "رمز عبپر گمشده"
 
