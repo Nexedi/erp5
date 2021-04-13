@@ -1321,39 +1321,16 @@ class Workflow(XMLObject):
     return res
 
   def _setWorkflowManagedPermissionList(self, permission_list):
-    self.workflow_managed_permission = permission_list
+    self._baseSetWorkflowManagedPermission(permission_list)
 
-    # add/remove the added/removed workflow permission to each state
+    # Add/remove the added/removed Workflow permissions to each state
     for state in self.getStateValueList():
-      state.setCellRange(sorted(permission_list),
-                         sorted(self.getManagedRoleList()),
-                         base_id='cell')
-      # get list of (unique) acquired permissions on state
-      acquired_permission_set = state.getAcquirePermissionSet()
+      state.setAcquirePermissionList(permission_list)
 
-      # get list of roles associated to each permission on state
-      permission_roles_dict = state.getStatePermissionRoleListDict()
-
-      # add permission from state_permission_role_list_dict when added on workflow
-      for permission in permission_list:
-        if permission not in permission_roles_dict:
-          if state.state_permission_role_list_dict is None:
-            state.state_permission_role_list_dict = PersistentMapping()
-          state.state_permission_role_list_dict[permission] = []
-          # a new permission should be acquired by default
-          acquired_permission_set.append(permission)
-          state.setAcquirePermissionList(list(acquired_permission_set))
-
-      permission_to_delete = [permission for permission in permission_roles_dict
-                              if permission not in permission_list]
-
-      # remove permission from state_permission_role_list_dict when removed on workflow
-      for permission in permission_to_delete:
-        del state.state_permission_role_list_dict[permission]
-        if permission in acquired_permission_set:
-          # in case it was acquired, remove from acquired permission list of the state
-          acquired_permission_set.remove(permission)
-          state.setAcquirePermissionList(list(acquired_permission_set))
+      permission_role_list_dict = state.getStatePermissionRoleListDict()
+      state.setStatePermissionRoleListDict({
+        permission: permission_role_list_dict.get(permission, [])
+        for permission in permission_list})
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSourceValue')

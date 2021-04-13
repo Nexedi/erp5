@@ -1021,10 +1021,6 @@ def convertToERP5Workflow(self, temp_object=False):
         state.setAcquirePermission(acquire_permission_list)
         state.setStatePermissionRoleListDict(permission_roles_dict)
 
-        state.setCellRange(sorted(permission_roles_dict.keys()),
-              sorted(workflow_managed_role_list),
-              base_id='cell')
-
       # default state using category setter
       state_path = getattr(workflow, 'state_' + self.initial_state).getPath()
       state_path = 'source/' + '/'.join(state_path.split('/')[2:])
