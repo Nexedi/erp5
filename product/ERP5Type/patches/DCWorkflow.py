@@ -540,9 +540,9 @@ def DCWorkflowDefinition_getVariableValueDict(self):
   if self.variables is not None:
     return self.variables
   return {}
-def DCWorkflowDefinition_getVariableValueByReference(self, variable_id):
+def DCWorkflowDefinition_getVariableValueByReference(self, reference):
   if self.variables is not None:
-    return self.variables.get(variable_id, None)
+    return self.variables.get(reference, None)
   return None
 def DCWorkflowDefinition_getVariableReferenceList(self):
   if self.variables is not None:
@@ -550,9 +550,9 @@ def DCWorkflowDefinition_getVariableReferenceList(self):
   return []
 def DCWorkflowDefinition_getStateVariable(self):
   return self.state_var
-def DCWorkflowDefinition_getStateValueByReference(self, state_id):
+def DCWorkflowDefinition_getStateValueByReference(self, reference):
   if self.states is not None:
-    return self.states.get(state_id, None)
+    return self.states.get(reference, None)
   return None
 def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
@@ -562,9 +562,9 @@ def DCWorkflowDefinition_getStateReferenceList(self):
   if self.states is not None:
     return self.states.objectIds()
   return []
-def DCWorkflowDefinition_getTransitionValueByReference(self, transition_id):
+def DCWorkflowDefinition_getTransitionValueByReference(self, reference):
   if self.transitions is not None:
-    return self.transitions.get(transition_id, None)
+    return self.transitions.get(reference, None)
   return None
 def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
@@ -577,8 +577,8 @@ def DCWorkflowDefinition_getTransitionReferenceList(self):
   if self.transitions is not None:
     return self.transitions.objectIds()
   return []
-def DCWorkflowDefinition_getWorklistValueByReference(self, worklist_id):
-  return self.worklists.get(worklist_id, None)
+def DCWorkflowDefinition_getWorklistValueByReference(self, reference):
+  return self.worklists.get(reference, None)
 def DCWorkflowDefinition_getWorklistValueList(self):
   return self.worklists.values()
 def DCWorkflowDefinition_getWorklistReferenceList(self):
@@ -587,9 +587,9 @@ def DCWorkflowDefinition_propertyIds(self):
   return sorted(self.__dict__.keys())
 def DCWorkflowDefinition_getScriptIdByReference(self, reference):
   return reference
-def DCWorkflowDefinition_getScriptValueByReference(self, script_id):
+def DCWorkflowDefinition_getScriptValueByReference(self, reference):
   if self.scripts is not None:
-    return self.scripts.get(script_id, None)
+    return self.scripts.get(reference, None)
   return None
 def DCWorkflowDefinition_getScriptValueList(self):
   if self.scripts is not None:

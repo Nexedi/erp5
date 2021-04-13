@@ -64,7 +64,7 @@ class InteractionWorkflow(Workflow):
   isManagerBypass = ConstantGetter('isManagerBypass', value=False)
 
   security.declarePrivate('notifyCreated')
-  def notifyCreated(self, document):
+  def notifyCreated(self, ob):
     pass
 
   security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
@@ -138,13 +138,13 @@ class InteractionWorkflow(Workflow):
     tdef = self.getTransitionValueByReference(tid)
     return tdef is not None and self._checkTransitionGuard(tdef, ob)
 
-  def _checkTransitionGuard(self, tdef, document, **kw):
+  def _checkTransitionGuard(self, tdef, ob, **kw):
     if tdef.getTemporaryDocumentDisallowed():
-      isTempDocument = getattr(document, 'isTempDocument', None)
+      isTempDocument = getattr(ob, 'isTempDocument', None)
       if isTempDocument is not None:
         if isTempDocument():
           return 0
-    return Workflow._checkTransitionGuard(self, tdef, document, **kw)
+    return Workflow._checkTransitionGuard(self, tdef, ob, **kw)
 
   security.declarePrivate('getValidRoleList')
   def getValidRoleList(self):
@@ -310,20 +310,20 @@ class InteractionWorkflow(Workflow):
         setSecurityManager(current_security_manager)
 
   security.declarePrivate('activeScript')
-  def activeScript(self, script_name, ob_url, former_status, tdef_id):
+  def activeScript(self, script_name, ob_url, status, tdef_id):
     ob = self.unrestrictedTraverse(ob_url)
     tdef = self.getTransitionValueByReference(tdef_id)
     sci = StateChangeInfo(
-          ob, self, former_status, tdef, None, None, None)
+          ob, self, status, tdef, None, None, None)
     self._getOb(script_name)(sci)
 
   security.declarePrivate('isActionSupported')
-  def isActionSupported(self, document, action, **kw):
+  def isActionSupported(self, ob, action, **kw):
     '''
     Returns a true value if the given action name
     is possible in the current state.
     '''
-    sdef = self._getWorkflowStateOf(document, id_only=0)
+    sdef = self._getWorkflowStateOf(ob, id_only=0)
     if sdef is None:
       return 0
 
@@ -331,7 +331,7 @@ class InteractionWorkflow(Workflow):
       tdef = self._getOb(action, None)
       if (tdef is not None and
         tdef.getTriggerType() == TRIGGER_USER_ACTION and
-        self._checkTransitionGuard(tdef, document, **kw)):
+        self._checkTransitionGuard(tdef, ob, **kw)):
         return 1
     return 0
 
