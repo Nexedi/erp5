@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in here.getParent().getManagedRoleList()]</string> </value>
+            <value> <string>python: [(x, x) for x in here.getParentValue().getManagedRoleList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

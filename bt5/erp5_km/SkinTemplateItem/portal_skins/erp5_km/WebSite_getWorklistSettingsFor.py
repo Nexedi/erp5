@@ -14,7 +14,7 @@ except AttributeError:
   return {}
 
 # If this is a worklist action, read the worklist definition
-worklist = workflow.getWorklistValueById(action['worklist_id'])
+worklist = workflow.getWorklistValueByReference(action['worklist_id'])
 for varkey in worklist.getVarMatchKeys():
   kw[varkey] = worklist.getVarMatch(varkey)
   

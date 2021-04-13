@@ -45,7 +45,7 @@
             <value> <string>State</string> </value>
         </item>
         <item>
-            <key> <string>state_permission_roles_dict</string> </key>
+            <key> <string>state_permission_role_list_dict</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>

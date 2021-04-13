@@ -184,8 +184,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   def getDescription(self):
     return self.description
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionValueById')
-  def getTransitionValueById(self, transition_id):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionValueByReference')
+  def getTransitionValueByReference(self, transition_id):
     if self.interactions is not None:
       return self.interactions.get(transition_id, None)
     return None
@@ -196,8 +196,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       return self.interactions.values()
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionIdList')
-  def getTransitionIdList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionReferenceList')
+  def getTransitionReferenceList(self):
     if self.interactions is not None:
       return self.interactions.objectIds()
     return []
