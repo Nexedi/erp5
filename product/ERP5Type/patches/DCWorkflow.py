@@ -540,17 +540,17 @@ def DCWorkflowDefinition_getVariableValueDict(self):
   if self.variables is not None:
     return self.variables
   return {}
-def DCWorkflowDefinition_getVariableValueById(self, variable_id):
+def DCWorkflowDefinition_getVariableValueByReference(self, variable_id):
   if self.variables is not None:
     return self.variables.get(variable_id, None)
   return None
-def DCWorkflowDefinition_getVariableIdList(self):
+def DCWorkflowDefinition_getVariableReferenceList(self):
   if self.variables is not None:
     return self.variables.objectIds()
   return []
 def DCWorkflowDefinition_getStateVariable(self):
   return self.state_var
-def DCWorkflowDefinition_getStateValueById(self, state_id):
+def DCWorkflowDefinition_getStateValueByReference(self, state_id):
   if self.states is not None:
     return self.states.get(state_id, None)
   return None
@@ -558,11 +558,11 @@ def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
     return self.states.values()
   return []
-def DCWorkflowDefinition_getStateIdList(self):
+def DCWorkflowDefinition_getStateReferenceList(self):
   if self.states is not None:
     return self.states.objectIds()
   return []
-def DCWorkflowDefinition_getTransitionValueById(self, transition_id):
+def DCWorkflowDefinition_getTransitionValueByReference(self, transition_id):
   if self.transitions is not None:
     return self.transitions.get(transition_id, None)
   return None
@@ -573,21 +573,21 @@ def DCWorkflowDefinition_getTransitionValueList(self):
     return []
 def DCWorkflowDefinition_getTransitionIdByReference(self, reference):
   return reference
-def DCWorkflowDefinition_getTransitionIdList(self):
+def DCWorkflowDefinition_getTransitionReferenceList(self):
   if self.transitions is not None:
     return self.transitions.objectIds()
   return []
-def DCWorkflowDefinition_getWorklistValueById(self, worklist_id):
+def DCWorkflowDefinition_getWorklistValueByReference(self, worklist_id):
   return self.worklists.get(worklist_id, None)
 def DCWorkflowDefinition_getWorklistValueList(self):
   return self.worklists.values()
-def DCWorkflowDefinition_getWorklistIdList(self):
+def DCWorkflowDefinition_getWorklistReferenceList(self):
   return self.worklists.objectIds()
 def DCWorkflowDefinition_propertyIds(self):
   return sorted(self.__dict__.keys())
 def DCWorkflowDefinition_getScriptIdByReference(self, reference):
   return reference
-def DCWorkflowDefinition_getScriptValueById(self, script_id):
+def DCWorkflowDefinition_getScriptValueByReference(self, script_id):
   if self.scripts is not None:
     return self.scripts.get(script_id, None)
   return None
@@ -1033,7 +1033,7 @@ def convertToERP5Workflow(self, temp_object=False):
           sdef.addPossibleTransition(transition_id)
       # set transition's destination state:
       for tid in dc_workflow_transition_value_list:
-        tdef = workflow.getTransitionValueById(tid)
+        tdef = workflow.getTransitionValueByReference(tid)
         state = getattr(workflow, 'state_' + dc_workflow_transition_value_list.get(tid).new_state_id, None)
         if state is None:
           # it's a remain in state transition.
@@ -1152,7 +1152,7 @@ def convertToERP5Workflow(self, temp_object=False):
       dc_workflow_transition_value_list = self.transitions
       for tid in dc_workflow_transition_value_list:
         origin_tdef = dc_workflow_transition_value_list[tid]
-        transition = workflow.getTransitionValueById(tid)
+        transition = workflow.getTransitionValueByReference(tid)
         if origin_tdef.var_exprs is None:
           var_exprs = {}
         else: var_exprs = origin_tdef.var_exprs
@@ -1216,10 +1216,10 @@ DCWorkflowDefinition.getWorklistValueById = DCWorkflowDefinition_getWorklistValu
 DCWorkflowDefinition.getWorklistValueList = DCWorkflowDefinition_getWorklistValueList
 DCWorkflowDefinition.getScriptValueList = DCWorkflowDefinition_getScriptValueList
 DCWorkflowDefinition.getScriptValueById = DCWorkflowDefinition_getScriptValueById
-DCWorkflowDefinition.getVariableIdList = DCWorkflowDefinition_getVariableIdList
-DCWorkflowDefinition.getStateIdList = DCWorkflowDefinition_getStateIdList
-DCWorkflowDefinition.getTransitionIdList = DCWorkflowDefinition_getTransitionIdList
-DCWorkflowDefinition.getWorklistIdList = DCWorkflowDefinition_getWorklistIdList
+DCWorkflowDefinition.getVariableReferenceList = DCWorkflowDefinition_getVariableReferenceList
+DCWorkflowDefinition.getStateReferenceList = DCWorkflowDefinition_getStateReferenceList
+DCWorkflowDefinition.getTransitionReferenceList = DCWorkflowDefinition_getTransitionReferenceList
+DCWorkflowDefinition.getWorklistReferenceList = DCWorkflowDefinition_getWorklistReferenceList
 DCWorkflowDefinition.setStateVariable = DCWorkflowDefinition_setStateVariable
 DCWorkflowDefinition.showAsXML = DCWorkflowDefinition_showAsXML
 DCWorkflowDefinition.showDict = DCWorkflowDefinition_showDict

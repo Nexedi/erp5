@@ -135,7 +135,7 @@ class InteractionWorkflow(Workflow):
     Returns a true value if the given workflow method
     is supported in the current state.
     '''
-    tdef = self.getTransitionValueById(tid)
+    tdef = self.getTransitionValueByReference(tid)
     return tdef is not None and self._checkTransitionGuard(tdef, ob)
 
   def _checkTransitionGuard(self, tdef, document, **kw):
@@ -162,7 +162,7 @@ class InteractionWorkflow(Workflow):
     return self.objectValues(portal_type='Workflow Script')
 
   security.declarePrivate('getTransitionValueById')
-  def getTransitionValueById(self, transition_id):
+  def getTransitionValueByReference(self, transition_id):
       return self._getOb('interaction_' + transition_id, default=None)
 
   security.declarePrivate('getTransitionValueList')
@@ -170,15 +170,15 @@ class InteractionWorkflow(Workflow):
     return self.objectValues(portal_type="Interaction")
 
   security.declarePrivate('getTransitionValueById')
-  def getTransitionValueById(self, transition_id):
+  def getTransitionValueByReference(self, transition_id):
       return self._getOb('interaction_' + transition_id, default=None)
 
   security.declarePrivate('getTransitionValueList')
   def getTransitionValueList(self):
     return self.objectValues(portal_type="Interaction")
 
-  security.declarePrivate('getTransitionIdList')
-  def getTransitionIdList(self):
+  security.declarePrivate('getTransitionReferenceList')
+  def getTransitionReferenceList(self):
     return [ob.getReference() for ob in self.objectValues(portal_type="Interaction")]
 
   security.declarePrivate('notifyWorkflowMethod')
@@ -208,7 +208,7 @@ class InteractionWorkflow(Workflow):
     filtered_transition_list = []
     append = filtered_transition_list.append
     for t_id in transition_list:
-      tdef = self.getTransitionValueById(t_id)
+      tdef = self.getTransitionValueByReference(t_id)
       assert tdef.getTriggerType() == TRIGGER_WORKFLOW_METHOD
       append(tdef.getId())
       former_status = self._getStatusOf(ob)
@@ -235,7 +235,7 @@ class InteractionWorkflow(Workflow):
 
     workflow_variable_list = self.getVariableValueList()
     for t_id in transition_list:
-      tdef = self.getTransitionValueById(t_id)
+      tdef = self.getTransitionValueByReference(t_id)
       assert tdef.getTriggerType() == TRIGGER_WORKFLOW_METHOD
 
       # Initialize variables
@@ -312,7 +312,7 @@ class InteractionWorkflow(Workflow):
   security.declarePrivate('activeScript')
   def activeScript(self, script_name, ob_url, former_status, tdef_id):
     ob = self.unrestrictedTraverse(ob_url)
-    tdef = self.getTransitionValueById(tdef_id)
+    tdef = self.getTransitionValueByReference(tdef_id)
     sci = StateChangeInfo(
           ob, self, former_status, tdef, None, None, None)
     self._getOb(script_name)(sci)
@@ -337,7 +337,7 @@ class InteractionWorkflow(Workflow):
 
   security.declareProtected(Permissions.AccessContentsInformation,
     'getStateValueById')
-  def getStateValueById(self, reference):
+  def getStateValueByReference(self, reference):
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,

@@ -25,7 +25,7 @@ def getWorkflowGraph(workflow):
 
     for transition in state.getDestinationValueList():
       transition_id = transition.getReference()
-      if transition_id in workflow.getTransitionIdList():
+      if transition_id in workflow.getTransitionReferenceList():
         if transition.getDestinationId():
           graph['edge']["%s_%s" % (state.getId(), transition.getId())] = ({
             '_class': 'workflow.transition',
