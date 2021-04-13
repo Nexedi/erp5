@@ -32,11 +32,9 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.mixin.matrix import Matrix
 
 class State(IdAsReferenceMixin("state_"),
-            XMLObject,
-            Matrix):
+            XMLObject):
   """
   A ERP5 State.
   """
