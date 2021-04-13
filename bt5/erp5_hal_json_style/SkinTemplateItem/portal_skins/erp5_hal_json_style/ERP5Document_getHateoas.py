@@ -461,7 +461,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     erp5_ui = portal.Localizer.erp5_ui
     selected_language = erp5_ui.get_selected_language()
     result["translate_title_href"] = '%s/manage_messages?%s' % (
-      '/'.join(erp5_ui.getPhysicalPath()),
+      '/'.join(erp5_ui.getPhysicalPath()[2:]),
       urllib.urlencode({"regex": "^%s$" % field.title(),
                         "lang": selected_language})
     )
@@ -469,7 +469,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     field_description = field.Field_getDescription()
     if field_description:
       result["translate_description_href"] = '%s/manage_messages?%s' % (
-        '/'.join(erp5_ui.getPhysicalPath()),
+        '/'.join(erp5_ui.getPhysicalPath()[2:]),
         urllib.urlencode({"regex": "^%s$" % field_description,
                           "lang": selected_language})
       )
@@ -1248,6 +1248,10 @@ def renderFormDefinition(form, response_dict):
       response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
         site_root.getId(),
         form.action)
+    if form.update_action:
+      response_dict["edit_form_update_href"] = '%s/%s/manage_main' % (
+        site_root.getId(),
+        form.update_action)
 
 
 def statusLevelToString(level):
