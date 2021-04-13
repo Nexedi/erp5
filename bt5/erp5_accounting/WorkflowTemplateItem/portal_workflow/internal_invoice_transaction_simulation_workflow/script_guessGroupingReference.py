@@ -1,1 +1,1 @@
-return sci.getPortal().portal_workflow.accounting_workflow.scripts[script.getId()](sci)
+return sci.getPortal().portal_workflow.accounting_workflow.getScriptValueByReference(script.getReference())(sci)

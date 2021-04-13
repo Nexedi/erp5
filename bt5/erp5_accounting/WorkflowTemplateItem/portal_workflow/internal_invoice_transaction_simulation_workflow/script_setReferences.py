@@ -1,1 +1,1 @@
-return state_change.getPortal().portal_workflow.accounting_workflow.scripts[script.getId()](state_change)
+return state_change.getPortal().portal_workflow.accounting_workflow.getScriptValueByReference(script.getReference())(state_change)

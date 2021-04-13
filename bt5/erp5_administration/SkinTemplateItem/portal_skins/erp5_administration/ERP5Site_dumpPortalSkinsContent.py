@@ -31,7 +31,7 @@ for skin_folder in portal.portal_skins.objectValues('Folder'):
 
 if include_workflow_scripts:
   for workflow in portal.portal_workflow.objectValues():
-    for skin in workflow.scripts.objectValues():
+    for skin in workflow.getScriptValueList():
       print getSkinHash(skin, workflow)
 
 container.REQUEST.RESPONSE.setHeader('content-type', 'text/plain')
