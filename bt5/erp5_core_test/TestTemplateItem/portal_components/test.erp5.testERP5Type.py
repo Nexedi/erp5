@@ -992,7 +992,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.assertTrue(wf in self.getWorkflowTool().getWorkflowValueListFor('Person'))
     self.assertEqual('validation_state', wf.getStateVariable())
     initial_state = wf.getSourceValue()
-    other_state = wf.getStateValueById('validated')
+    other_state = wf.getStateValueByReference('validated')
 
     self.assertTrue(hasattr(person, 'getValidationState'))
     self.assertTrue(hasattr(person, 'getValidationStateTitle'))

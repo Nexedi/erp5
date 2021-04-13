@@ -255,7 +255,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     workflow.setWorkflowManagedPermissionList([permission])
 
     # Verify permission roles dict on 'current' state"
-    permission_roles_dict = workflow.state_current.getStatePermissionRolesDict()
+    permission_roles_dict = workflow.state_current.getStatePermissionRoleListDict()
     self.assertIn(permission, permission_roles_dict)
 
     # Update document permissions/roles mapping
