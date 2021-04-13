@@ -9,9 +9,12 @@
 <tr><td rowspan="1" colspan="3">Test Module Access Portal Type Document</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-</tal:block>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
 <tr>
   <td>click</td>
