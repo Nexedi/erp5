@@ -157,12 +157,12 @@ class Workflow(XMLObject):
     return self.cb_userHasCopyOrMovePermission()
 
   security.declarePrivate('notifyCreated')
-  def notifyCreated(self, document):
+  def notifyCreated(self, ob):
     """
     Notifies this workflow after an object has been created and added.
     """
     try:
-      self._changeStateOf(document, None)
+      self._changeStateOf(ob, None)
     except (ObjectDeleted,ObjectMoved):
       pass
 
@@ -175,7 +175,7 @@ class Workflow(XMLObject):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStateChangeInformation')
-  def getStateChangeInformation(self, document, state, transition=None):
+  def getStateChangeInformation(self, ob, state, transition=None):
     """
     Return an object used for variable tales expression.
     """
@@ -183,13 +183,13 @@ class Workflow(XMLObject):
       transition_url = None
     else:
       transition_url = transition.getRelativeUrl()
-    return self.asContext(document=document,
+    return self.asContext(document=ob,
                           transition=transition,
                           transition_url=transition_url,
                           state=state)
 
   security.declarePrivate('isWorkflowMethodSupported')
-  def isWorkflowMethodSupported(self, document, transition_reference, state=None):
+  def isWorkflowMethodSupported(self, ob, transition_reference, state=None):
     """
     Returns a true value if the given workflow method
     is supported in the current state.
@@ -197,26 +197,26 @@ class Workflow(XMLObject):
     # The optional argument state is used to avoid multiple expensive calls to
     # _getWorkflowStateOf. This method should be kept private.
     if state is None:
-      state = self._getWorkflowStateOf(document)
+      state = self._getWorkflowStateOf(ob)
       if state is None:
         return False
     if (self.getTransitionIdByReference(transition_reference) in
         state.getDestinationIdList()):
-      transition = self.getTransitionValueById(transition_reference)
+      transition = self.getTransitionValueByReference(transition_reference)
       if (transition is not None and
           transition.getTriggerType() == TRIGGER_WORKFLOW_METHOD and
-          self._checkTransitionGuard(transition, document)):
+          self._checkTransitionGuard(transition, ob)):
         return True
     return False
 
   security.declarePrivate('isActionSupported')
-  def isActionSupported(self, document, action, state=None, **kw):
+  def isActionSupported(self, ob, action, state=None, **kw):
     """
     Returns a true value if the given action name
     is possible in the current state.
     """
     if state is None:
-      state = self._getWorkflowStateOf(document)
+      state = self._getWorkflowStateOf(ob)
       if state is None:
         return 0
 
@@ -225,7 +225,7 @@ class Workflow(XMLObject):
       transition = getattr(self, action_id, None)
       if (transition is not None and
         transition.getTriggerType() == TRIGGER_USER_ACTION and
-        self._checkTransitionGuard(transition, document, **kw)):
+        self._checkTransitionGuard(transition, ob, **kw)):
         return 1
     return 0
 
@@ -236,17 +236,17 @@ class Workflow(XMLObject):
     """
     if name == self.getStateVariable():
       return True
-    return name in self.getVariableIdList()
+    return name in self.getVariableReferenceList()
 
-  def _checkTransitionGuard(self, transition, document, **kw):
-    return transition.checkGuard(getSecurityManager(), self, document, **kw)
+  def _checkTransitionGuard(self, t, ob, **kw):
+    return t.checkGuard(getSecurityManager(), self, ob, **kw)
 
-  def _findAutomaticTransition(self, document, state):
+  def _findAutomaticTransition(self, ob, sdef):
     transition = None
     checkTransitionGuard = self._checkTransitionGuard
-    for possible_transition in state.getDestinationValueList():
+    for possible_transition in sdef.getDestinationValueList():
       if possible_transition.getTriggerType() == TRIGGER_AUTOMATIC:
-        if checkTransitionGuard(possible_transition, document):
+        if checkTransitionGuard(possible_transition, ob):
           transition = possible_transition
           break
     return transition
@@ -326,21 +326,21 @@ class Workflow(XMLObject):
           continue
         other_state = other_workflow._getWorkflowStateOf(ob)
         if other_state is not None:
-          other_state_permission_roles_dict = other_state.getStatePermissionRolesDict()
-          if other_state_permission_roles_dict is not None:
+          other_state_permission_role_list_dict = other_state.getStatePermissionRoleListDict()
+          if other_state_permission_role_list_dict is not None:
             other_data_list.append(
-              (other_workflow, other_state, other_state_permission_roles_dict,)
+              (other_workflow, other_state, other_state_permission_role_list_dict,)
             )
 
       # take care of the current state of ob for this workflow (self)
-      state_permission_roles_dict = state.getStatePermissionRolesDict()
+      state_permission_role_list_dict = state.getStatePermissionRoleListDict()
       acquired_permission_list = state.getAcquirePermissionList()
       for permission in self.getWorkflowManagedPermissionList():
         default_roles = []
         role_type = list
         other_role_type_list = []
-        if state_permission_roles_dict is not None:
-          roles = state_permission_roles_dict.get(permission, default_roles)
+        if state_permission_role_list_dict is not None:
+          roles = state_permission_role_list_dict.get(permission, default_roles)
           # store acquisition settings
           if acquired_permission_list is _marker or roles is default_roles:
             role_type = type(roles)
@@ -350,11 +350,11 @@ class Workflow(XMLObject):
           roles = set(roles)
           # in every other workflow activated on the current object, get the
           # roles associated to permission; in case of role defined
-          for (other_workflow, other_state, other_state_permission_roles_dict) \
+          for (other_workflow, other_state, other_state_permission_role_list_dict) \
           in other_data_list:
             other_acquired_permission_list = other_state.getAcquirePermissionList()
             if permission in other_workflow.getWorkflowManagedPermissionList():
-              other_roles = other_state_permission_roles_dict.get(permission, default_roles)
+              other_roles = other_state_permission_role_list_dict.get(permission, default_roles)
               if other_acquired_permission_list is _marker: # compatibility with DCWorkflow
                 other_role_type_list.append(type(other_roles))
               else: # ERP5 workflows
@@ -396,7 +396,7 @@ class Workflow(XMLObject):
       # action is not allowed from the current state
       raise Unauthorized(action)
 
-    transition = self.getTransitionValueById(action)
+    transition = self.getTransitionValueByReference(action)
 
     if transition is None or transition.getTriggerType() != TRIGGER_USER_ACTION:
       msg = _(u"Transition '${action_id}' is not triggered by a user "
@@ -406,7 +406,7 @@ class Workflow(XMLObject):
       raise Unauthorized(action)
     self._changeStateOf(ob, transition, kw)
 
-  def _changeStateOf(self, document, tdef=None, kwargs=None):
+  def _changeStateOf(self, ob, tdef=None, kwargs=None):
     """
     Changes state.  Can execute multiple transitions if there are
     automatic transitions. transition set to None means the object
@@ -416,14 +416,14 @@ class Workflow(XMLObject):
     transition = tdef
     while 1:
       try:
-        state = self._executeTransition(document, transition, kwargs)
+        state = self._executeTransition(ob, transition, kwargs)
       except ObjectMoved, moved_exc:
-        document = moved_exc.getNewObject()
-        state = self._getWorkflowStateOf(document)
+        ob = moved_exc.getNewObject()
+        state = self._getWorkflowStateOf(ob)
         # Re-raise after all transitions.
       if state is None:
         break
-      transition = self._findAutomaticTransition(document, state)
+      transition = self._findAutomaticTransition(ob, state)
       if transition is None:
         # No more automatic transitions.
         break
@@ -574,7 +574,7 @@ class Workflow(XMLObject):
     """
     if name == self.getStateVariable():
       return self._getWorkflowStateOf(ob, 1)
-    vdef = self.getVariableValueById(name)
+    vdef = self.getVariableValueByReference(name)
     if not vdef.checkGuard(getSecurityManager(), self, ob):
       return default
     status = self.getCurrentStatusDict(ob)
@@ -642,20 +642,20 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="Workflow Variable")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableIdList')
-  def getVariableIdList(self):
+                            'getVariableReferenceList')
+  def getVariableReferenceList(self):
     return [variable.getReference()
             for variable in self.objectValues(portal_type="Workflow Variable")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableValueById')
-  def getVariableValueById(self, variable_id):
-    return self._getOb('variable_' + variable_id, default=None)
+                            'getVariableValueByReference')
+  def getVariableValueByReference(self, reference):
+    return self._getOb('variable_' + reference, default=None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateValueById')
-  def getStateValueById(self, stated_id):
-    return self._getOb('state_' + stated_id, default=None)
+                            'getStateValueByReference')
+  def getStateValueByReference(self, reference):
+    return self._getOb('state_' + reference, default=None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStateValueList')
@@ -663,8 +663,8 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="State")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateIdList')
-  def getStateIdList(self):
+                            'getStateReferenceList')
+  def getStateReferenceList(self):
     return [state.getReference()
             for state in self.objectValues(portal_type="State")]
 
@@ -674,36 +674,36 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="Worklist")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistIdList')
-  def getWorklistIdList(self):
+                            'getWorklistReferenceList')
+  def getWorklistReferenceList(self):
     return [w.getReference() for w in self.objectValues(portal_type="Worklist")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTransitionIdByReference')
-  def getTransitionIdByReference(self, transition_reference):
-    return 'transition_' + transition_reference
+  def getTransitionIdByReference(self, reference):
+    return 'transition_' + reference
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getScriptIdByReference')
-  def getScriptIdByReference(self, script_reference):
+  def getScriptIdByReference(self, reference):
     from Products.ERP5Type.Core.WorkflowScript import SCRIPT_PREFIX
-    return SCRIPT_PREFIX + script_reference
+    return SCRIPT_PREFIX + reference
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getScriptValueById')
-  def getScriptValueById(self, script_reference):
+                            'getScriptValueByReference')
+  def getScriptValueByReference(self, reference):
     from Products.ERP5Type.Core.WorkflowScript import SCRIPT_PREFIX
-    return self._getOb(SCRIPT_PREFIX + script_reference, None)
+    return self._getOb(SCRIPT_PREFIX + reference, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistValueById')
-  def getWorklistValueById(self, worklist_reference):
-    return self._getOb('worklist_' + worklist_reference, None)
+                            'getWorklistValueByReference')
+  def getWorklistValueByReference(self, reference):
+    return self._getOb('worklist_' + reference, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionValueById')
-  def getTransitionValueById(self, transition_reference):
-    return self._getOb('transition_' + transition_reference, None)
+                            'getTransitionValueByReference')
+  def getTransitionValueByReference(self, reference):
+    return self._getOb('transition_' + reference, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTransitionValueList')
@@ -711,8 +711,8 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="Transition")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionIdList')
-  def getTransitionIdList(self):
+                            'getTransitionReferenceList')
+  def getTransitionReferenceList(self):
     return [transition.getReference() for transition
             in self.objectValues(portal_type="Transition")]
 
@@ -737,7 +737,7 @@ class Workflow(XMLObject):
     prefix_method_id = self.getTransitionIdByReference(method_id)
     if prefix_method_id not in sdef.getDestinationIdList():
       raise Unauthorized(method_id)
-    tdef = self.getTransitionValueById(method_id)
+    tdef = self.getTransitionValueByReference(method_id)
     if tdef is None or tdef.getTriggerType() != TRIGGER_WORKFLOW_METHOD:
       raise WorkflowException, (
          'Transition %s is not triggered by a workflow method'
@@ -776,7 +776,7 @@ class Workflow(XMLObject):
     """
     pass
 
-  def _executeTransition(self, document, tdef=None, form_kw=None):
+  def _executeTransition(self, ob, tdef=None, kwargs=None):
     """
     Execute transition.
     """
@@ -787,7 +787,7 @@ class Workflow(XMLObject):
     object_context = None
 
     # Figure out the old and new states.
-    old_state = self._getWorkflowStateOf(document)
+    old_state = self._getWorkflowStateOf(ob)
     if not old_state:
       # Do nothing if there is no initial state. We may want to create
       # workflows with no state at all, only for worklists.
@@ -796,7 +796,7 @@ class Workflow(XMLObject):
 
     tool = self.getParentValue()
     state_var = self.getStateVariable()
-    status_dict = self.getCurrentStatusDict(document)
+    status_dict = self.getCurrentStatusDict(ob)
 
     if tdef is None:
       new_state = old_state
@@ -815,8 +815,8 @@ class Workflow(XMLObject):
       script_value_list = tdef.getBeforeScriptValueList()
       if script_value_list:
         if sci is None:
-          sci = StateChangeInfo(document, self, former_status, tdef, old_state,
-                                new_state, form_kw)
+          sci = StateChangeInfo(ob, self, former_status, tdef, old_state,
+                                new_state, kwargs)
         for script in script_value_list:
           # Pass lots of info to the script in a single parameter.
           if script.getPortalType() != 'Workflow Script':
@@ -830,7 +830,7 @@ class Workflow(XMLObject):
             before_script_error_message = deepcopy(validation_exc.msg)
             validation_exc_traceback = sys.exc_traceback
           except ObjectMoved, moved_exc:
-            document = moved_exc.getNewObject()
+            ob = moved_exc.getNewObject()
             # Re-raise after transition
 
     transition_expression_dict = {}
@@ -841,11 +841,11 @@ class Workflow(XMLObject):
       }
 
     # Update all transition variables
-    if form_kw is not None:
+    if kwargs is not None:
       if object_context is None:
         # XXX(WORKFLOW): investigate: should I keep source value here, or can I use  old_state (see test results also)
-        object_context = self.getStateChangeInformation(document, self.getSourceValue())
-      object_context.REQUEST.other.update(form_kw)
+        object_context = self.getStateChangeInformation(ob, self.getSourceValue())
+      object_context.REQUEST.other.update(kwargs)
 
     for vdef in self.getVariableValueList():
       variable_id = vdef.getId()
@@ -872,7 +872,7 @@ class Workflow(XMLObject):
             expr = variable_default_expression
         else:
           if object_context is None:
-            object_context = self.getStateChangeInformation(document, self.getSourceValue())
+            object_context = self.getStateChangeInformation(ob, self.getSourceValue())
           value = vdef.getVariableDefaultValue(object=object_context)
 
       if expr not in (None, ''):
@@ -881,18 +881,18 @@ class Workflow(XMLObject):
           # Lazily create the expression context.
           if sci is None:
             sci = StateChangeInfo(
-                document, self, former_status, tdef,
-                old_state, new_state, form_kw)
+                ob, self, former_status, tdef,
+                old_state, new_state, kwargs)
           econtext = createExpressionContext(sci)
         value = expr(econtext)
       status_dict[variable_reference] = value
     # Do not proceed in case of failure of before script
     if not before_script_success:
       status_dict[state_var] = old_state_reference # Remain in state
-      tool.setStatusOf(self.getReference(), document, status_dict)
+      tool.setStatusOf(self.getReference(), ob, status_dict)
       if sci is None:
         sci = StateChangeInfo(
-          document, self, former_status, tdef, old_state, new_state, form_kw)
+          ob, self, former_status, tdef, old_state, new_state, kwargs)
       # put the error message in the workflow history
       sci.setWorkflowVariable(error_message=before_script_error_message)
       if validation_exc :
@@ -903,22 +903,22 @@ class Workflow(XMLObject):
     # update state
     status_dict[state_var] = new_state_reference
 
-    tool.setStatusOf(self.getReference(), document, status_dict)
-    self.updateRoleMappingsFor(document)
+    tool.setStatusOf(self.getReference(), ob, status_dict)
+    self.updateRoleMappingsFor(ob)
 
     # Execute the "after" script.
     if tdef is not None:
       script_value_list = tdef.getAfterScriptValueList()
       if script_value_list:
         if sci is None:
-          sci = StateChangeInfo(document, self, former_status, tdef, old_state,
-                              new_state, form_kw)
+          sci = StateChangeInfo(ob, self, former_status, tdef, old_state,
+                                new_state, kwargs)
         old_state_destination_list = old_state.getDestinationValueList()
         for script in script_value_list:
           # Script can be either script or workflow method
           if script in old_state_destination_list and \
               script.getTriggerType() == TRIGGER_WORKFLOW_METHOD:
-            getattr(document, convertToMixedCase(script.getReference()))()
+            getattr(ob, convertToMixedCase(script.getReference()))()
           else:
             # Pass lots of info to the script in a single parameter.
             if script.getPortalType() == 'Workflow Script':
@@ -941,9 +941,9 @@ class Workflow(XMLObject):
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
       raise WorkflowException, 'Object is in an undefined state'
-    if method_id not in sdef.getTransitionIdList():
+    if method_id not in sdef.getTransitionReferenceList():
       raise Unauthorized(method_id)
-    tdef = self.getTransitionValueById(method_id)
+    tdef = self.getTransitionValueByReference(method_id)
     if tdef is None or tdef.getTriggerType() != TRIGGER_WORKFLOW_METHOD:
       raise WorkflowException, (
         'Transition %s is not triggered by a workflow method'
@@ -1017,8 +1017,8 @@ class Workflow(XMLObject):
       state = SubElement(states, 'state', attrib=dict(reference=sdef.getReference(), portal_type=sdef.getPortalType()))
       for property_id in sorted(state_prop_id_to_show):
         if property_id == 'permission_roles':
-          property_value = sdef.getProperty('state_permission_roles_dict')
-          property_type = sdef.getPropertyType('state_permission_roles_dict')
+          property_value = sdef.getProperty('state_permission_role_list_dict')
+          property_type = sdef.getPropertyType('state_permission_role_list_dict')
         elif property_id == 'transitions':
           property_value = sdef.getDestinationIdList()
           destination_list = []
@@ -1321,39 +1321,16 @@ class Workflow(XMLObject):
     return res
 
   def _setWorkflowManagedPermissionList(self, permission_list):
-    self.workflow_managed_permission = permission_list
+    self._baseSetWorkflowManagedPermission(permission_list)
 
-    # add/remove the added/removed workflow permission to each state
+    # Add/remove the added/removed Workflow permissions to each state
     for state in self.getStateValueList():
-      state.setCellRange(sorted(permission_list),
-                         sorted(self.getManagedRoleList()),
-                         base_id='cell')
-      # get list of (unique) acquired permissions on state
-      acquired_permission_set = state.getAcquirePermissionSet()
+      state.setAcquirePermissionList(permission_list)
 
-      # get list of roles associated to each permission on state
-      permission_roles_dict = state.getStatePermissionRolesDict()
-
-      # add permission from state_permission_roles_dict when added on workflow
-      for permission in permission_list:
-        if permission not in permission_roles_dict:
-          if state.state_permission_roles_dict is None:
-            state.state_permission_roles_dict = PersistentMapping()
-          state.state_permission_roles_dict[permission] = []
-          # a new permission should be acquired by default
-          acquired_permission_set.append(permission)
-          state.setAcquirePermissionList(list(acquired_permission_set))
-
-      permission_to_delete = [permission for permission in permission_roles_dict
-                              if permission not in permission_list]
-
-      # remove permission from state_permission_roles_dict when removed on workflow
-      for permission in permission_to_delete:
-        del state.state_permission_roles_dict[permission]
-        if permission in acquired_permission_set:
-          # in case it was acquired, remove from acquired permission list of the state
-          acquired_permission_set.remove(permission)
-          state.setAcquirePermissionList(list(acquired_permission_set))
+      permission_role_list_dict = state.getStatePermissionRoleListDict()
+      state.setStatePermissionRoleListDict({
+        permission: permission_role_list_dict.get(permission, [])
+        for permission in permission_list})
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSourceValue')
