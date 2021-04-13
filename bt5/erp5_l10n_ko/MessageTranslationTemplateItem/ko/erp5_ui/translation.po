@@ -3198,9 +3198,6 @@ msgstr "아이디 및/또는 패스워드가 맞지 않습니다."
 msgid "Logo"
 msgstr "로고"
 
-msgid "Long Title"
-msgstr "긴 제목"
-
 msgid "Lost Password"
 msgstr "비밀번호 찾기"
 
