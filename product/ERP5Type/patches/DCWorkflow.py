@@ -420,7 +420,7 @@ DCWorkflowDefinition._executeMetaTransition = _executeMetaTransition
 
 DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.im_func
 
-def StateDefinition_getStatePermissionRolesDict(self):
+def StateDefinition_getStatePermissionRoleListDict(self):
   return self.permission_roles
 
 def StateDefinition_getAcquirePermissionList(self):
@@ -452,7 +452,7 @@ def updateRoleMappingsFor(self, ob):
     other_data_list = []
     for other_workflow in other_workflow_list:
       other_sdef = other_workflow._getWorkflowStateOf(ob)
-      if other_sdef is not None and other_sdef.getStatePermissionRolesDict() is not None:
+      if other_sdef is not None and other_sdef.getStatePermissionRoleListDict() is not None:
         other_data_list.append((other_workflow,other_sdef))
     # Be carefull, permissions_roles should not change
     # from list to tuple or vice-versa. (in modifyRolesForPermission,
@@ -472,7 +472,7 @@ def updateRoleMappingsFor(self, ob):
             # in each DCWorkflow
             for other_workflow,other_sdef in other_data_list:
               if p in other_workflow.getWorkflowManagedPermissionList():
-                other_roles = other_sdef.getStatePermissionRolesDict().get(p, [])
+                other_roles = other_sdef.getStatePermissionRoleListDict().get(p, [])
                 acquire_permission_list = other_sdef.getAcquirePermissionList()
                 if acquire_permission_list is _marker: # DC Workflow
                   other_role_type = 'tuple' if type(other_roles) is type(()) else 'list'
@@ -1019,7 +1019,7 @@ def convertToERP5Workflow(self, temp_object=False):
               permission_roles_dict[permission] = list(roles)
 
         state.setAcquirePermission(acquire_permission_list)
-        state.setStatePermissionRolesDict(permission_roles_dict)
+        state.setStatePermissionRoleListDict(permission_roles_dict)
 
         state.setCellRange(sorted(permission_roles_dict.keys()),
               sorted(workflow_managed_role_list),
@@ -1242,7 +1242,7 @@ StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdLi
 StateDefinition.showDict = DCWorkflowDefinition_showDict
 StateDefinition.getStateTypeList = StateDefinition_getStateTypeList
 StateDefinition.setStateTypeList = StateDefinition_setStateTypeList
-StateDefinition.getStatePermissionRolesDict = StateDefinition_getStatePermissionRolesDict
+StateDefinition.getStatePermissionRoleListDict = StateDefinition_getStatePermissionRoleListDict
 StateDefinition.getAcquirePermissionList = StateDefinition_getAcquirePermissionList
 TransitionDefinition.getParentValue = TransitionDefinition_getParentValue
 TransitionDefinition.getReference = method_getReference

@@ -326,21 +326,21 @@ class Workflow(XMLObject):
           continue
         other_state = other_workflow._getWorkflowStateOf(ob)
         if other_state is not None:
-          other_state_permission_roles_dict = other_state.getStatePermissionRolesDict()
-          if other_state_permission_roles_dict is not None:
+          other_state_permission_role_list_dict = other_state.getStatePermissionRoleListDict()
+          if other_state_permission_role_list_dict is not None:
             other_data_list.append(
-              (other_workflow, other_state, other_state_permission_roles_dict,)
+              (other_workflow, other_state, other_state_permission_role_list_dict,)
             )
 
       # take care of the current state of ob for this workflow (self)
-      state_permission_roles_dict = state.getStatePermissionRolesDict()
+      state_permission_role_list_dict = state.getStatePermissionRoleListDict()
       acquired_permission_list = state.getAcquirePermissionList()
       for permission in self.getWorkflowManagedPermissionList():
         default_roles = []
         role_type = list
         other_role_type_list = []
-        if state_permission_roles_dict is not None:
-          roles = state_permission_roles_dict.get(permission, default_roles)
+        if state_permission_role_list_dict is not None:
+          roles = state_permission_role_list_dict.get(permission, default_roles)
           # store acquisition settings
           if acquired_permission_list is _marker or roles is default_roles:
             role_type = type(roles)
@@ -350,11 +350,11 @@ class Workflow(XMLObject):
           roles = set(roles)
           # in every other workflow activated on the current object, get the
           # roles associated to permission; in case of role defined
-          for (other_workflow, other_state, other_state_permission_roles_dict) \
+          for (other_workflow, other_state, other_state_permission_role_list_dict) \
           in other_data_list:
             other_acquired_permission_list = other_state.getAcquirePermissionList()
             if permission in other_workflow.getWorkflowManagedPermissionList():
-              other_roles = other_state_permission_roles_dict.get(permission, default_roles)
+              other_roles = other_state_permission_role_list_dict.get(permission, default_roles)
               if other_acquired_permission_list is _marker: # compatibility with DCWorkflow
                 other_role_type_list.append(type(other_roles))
               else: # ERP5 workflows
@@ -1017,8 +1017,8 @@ class Workflow(XMLObject):
       state = SubElement(states, 'state', attrib=dict(reference=sdef.getReference(), portal_type=sdef.getPortalType()))
       for property_id in sorted(state_prop_id_to_show):
         if property_id == 'permission_roles':
-          property_value = sdef.getProperty('state_permission_roles_dict')
-          property_type = sdef.getPropertyType('state_permission_roles_dict')
+          property_value = sdef.getProperty('state_permission_role_list_dict')
+          property_type = sdef.getPropertyType('state_permission_role_list_dict')
         elif property_id == 'transitions':
           property_value = sdef.getDestinationIdList()
           destination_list = []
@@ -1332,14 +1332,14 @@ class Workflow(XMLObject):
       acquired_permission_set = state.getAcquirePermissionSet()
 
       # get list of roles associated to each permission on state
-      permission_roles_dict = state.getStatePermissionRolesDict()
+      permission_roles_dict = state.getStatePermissionRoleListDict()
 
-      # add permission from state_permission_roles_dict when added on workflow
+      # add permission from state_permission_role_list_dict when added on workflow
       for permission in permission_list:
         if permission not in permission_roles_dict:
-          if state.state_permission_roles_dict is None:
-            state.state_permission_roles_dict = PersistentMapping()
-          state.state_permission_roles_dict[permission] = []
+          if state.state_permission_role_list_dict is None:
+            state.state_permission_role_list_dict = PersistentMapping()
+          state.state_permission_role_list_dict[permission] = []
           # a new permission should be acquired by default
           acquired_permission_set.append(permission)
           state.setAcquirePermissionList(list(acquired_permission_set))
@@ -1347,9 +1347,9 @@ class Workflow(XMLObject):
       permission_to_delete = [permission for permission in permission_roles_dict
                               if permission not in permission_list]
 
-      # remove permission from state_permission_roles_dict when removed on workflow
+      # remove permission from state_permission_role_list_dict when removed on workflow
       for permission in permission_to_delete:
-        del state.state_permission_roles_dict[permission]
+        del state.state_permission_role_list_dict[permission]
         if permission in acquired_permission_set:
           # in case it was acquired, remove from acquired permission list of the state
           acquired_permission_set.remove(permission)

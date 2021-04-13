@@ -1,4 +1,4 @@
-state_permission_role_dict = context.getStatePermissionRolesDict()
+state_permission_role_dict = context.getStatePermissionRoleListDict()
 
 def getCell(permission, role, base_id):
   return context.asContext(
@@ -8,7 +8,7 @@ def getCell(permission, role, base_id):
 def newCell(permission, role, base_id, portal_type):
   def edit(edit_order, selected=False):
     roles_for_permission = set(
-        context.getStatePermissionRolesDict().get(permission, ()))
+        context.getStatePermissionRoleListDict().get(permission, ()))
     if selected:
       roles_for_permission.add(role)
     else:

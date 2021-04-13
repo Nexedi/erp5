@@ -44,7 +44,7 @@ class State(IdAsReferenceMixin("state_"),
   portal_type = 'State'
   add_permission = Permissions.AddPortalContent
 
-  state_permission_roles_dict = None
+  state_permission_role_list_dict = None
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -107,26 +107,26 @@ class State(IdAsReferenceMixin("state_"),
             self.getDestinationIdList()]
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                            'setStatePermissionRolesDict')
-  def setStatePermissionRolesDict(self, permission_roles):
+                            'setStatePermissionRoleListDict')
+  def setStatePermissionRoleListDict(self, permission_roles):
     """
     create a dict containing the state's permission (as key) and its
     associated role list (value)
     use a PersistentMapping so that the ZODB is updated
     when this dict is changed
     """
-    self.state_permission_roles_dict = PersistentMapping(
+    self.state_permission_role_list_dict = PersistentMapping(
         {k: tuple(v) for (k, v) in permission_roles.items()})
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStatePermissionRolesDict')
-  def getStatePermissionRolesDict(self):
+                            'getStatePermissionRoleListDict')
+  def getStatePermissionRoleListDict(self):
     """
     return the permission/roles dict
     """
-    if self.state_permission_roles_dict is None:
+    if self.state_permission_role_list_dict is None:
       return {}
-    return dict(self.state_permission_roles_dict.items())
+    return dict(self.state_permission_role_list_dict.items())
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setPermission')
@@ -134,7 +134,7 @@ class State(IdAsReferenceMixin("state_"),
     """
     Set a permission for this State.
     """
-    self.state_permission_roles_dict[permission] = tuple(roles)
+    self.state_permission_role_list_dict[permission] = tuple(roles)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAvailableTypeList')
