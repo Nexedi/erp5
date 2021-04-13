@@ -88,7 +88,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       found = False
       for workflow in workflow_list:
         if not isinstance(workflow, (InteractionWorkflowDefinition, InteractionWorkflow,)) and \
-          state_id in workflow.getStateIdList():
+          state_id in workflow.getStateReferenceList():
             found = True
             break
       if not found:
@@ -110,7 +110,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       if not isinstance(workflow, (InteractionWorkflowDefinition,
                                    InteractionWorkflow)):
-        if state_id in workflow.getStateIdList():
+        if state_id in workflow.getStateReferenceList():
           return True
     return False
 

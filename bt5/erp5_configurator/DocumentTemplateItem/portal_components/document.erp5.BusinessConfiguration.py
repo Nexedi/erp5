@@ -116,7 +116,7 @@ def undoTransition(state, document):
   state_bc_id = state.getParentValue().getStateBaseCategory()
   document.setCategoryMembership(
     state_bc_id,
-    workflow.getStateValueById(status_dict[state_bc_id]).getRelativeUrl())
+    workflow.getStateValueByReference(status_dict[state_bc_id]).getRelativeUrl())
   # Update workflow history
   status_dict['undo'] = 1
   _updateWorkflowHistory(workflow, document, status_dict)
@@ -481,7 +481,7 @@ class BusinessConfiguration(Item):
     next_state = self.unrestrictedTraverse(transition.getDestination())
     workflow = current_state.getParentValue()
     for wh in getWorkflowHistory(current_state, self):
-      if next_state == workflow.getStateValueById(wh['current_state']):
+      if next_state == workflow.getStateValueByReference(wh['current_state']):
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
@@ -493,7 +493,7 @@ class BusinessConfiguration(Item):
     workflow_history = getWorkflowHistory(current_state, self, remove_undo=1)
     workflow_history.reverse()
     for wh in workflow_history:
-      wh_state = workflow.getStateValueById(wh['current_state'])
+      wh_state = workflow.getStateValueByReference(wh['current_state'])
       for wh_transition in getAvailableTransitionList(wh_state, self):
         if wh_transition.getTransitionFormId() is not None and \
            wh_transition != transition:

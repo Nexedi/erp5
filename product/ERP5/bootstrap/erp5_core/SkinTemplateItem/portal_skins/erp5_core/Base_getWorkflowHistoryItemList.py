@@ -45,7 +45,7 @@ for workflow_item in workflow_item_list:
     if key == 'serial' and not can_view_history:
       continue
     if key == wf_state_variable:
-      state = workflow.getStateValueById(value)
+      state = workflow.getStateValueByReference(value)
       # Store locally the id of state, usefull for merging action and transition
       state_id = marker if state is None else value
       o.setProperty('state_id', state_id)
@@ -61,7 +61,7 @@ for workflow_item in workflow_item_list:
       if value != '' and value is not None:
         if value == "'edit'":
           value = "edit"
-        transition = workflow.getTransitionValueById(value)
+        transition = workflow.getTransitionValueByReference(value)
         if transition is not None:
           if display:
             value = transition.getTitle() or transition.getActionName() or value

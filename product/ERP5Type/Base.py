@@ -522,7 +522,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   for wf in portal_workflow.getWorkflowValueListFor(portal_type):
     wf_id = wf.getId()
     wf_type = wf.__class__.__name__
-    wf_transition_id_list = wf.getTransitionIdList()
+    wf_transition_reference_list = wf.getTransitionReferenceList()
     if wf_type in ['DCWorkflowDefinition', 'Workflow']:
       # Create state var accessor
       # and generate methods that support the translation of workflow states
@@ -544,7 +544,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
       storage = workflow_dict
 
-      for transition_id in wf_transition_id_list:
+      for transition_id in wf_transition_reference_list:
         list_method_id = 'get%sTransitionDateList' % UpperCase(transition_id)
         if not hasattr(ptype_klass, list_method_id):
           method = WorkflowHistoryAccessor.ListGetter(list_method_id, wf_id, transition_id, 'time')
@@ -563,11 +563,11 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       continue
 
     # extract Trigger transitions from workflow definitions for later
-    transition_id_set = set(wf_transition_id_list)
+    transition_id_set = set(wf_transition_reference_list)
 
     trigger_dict = {}
     for tr_id in transition_id_set:
-      tdef = wf.getTransitionValueById(tr_id)
+      tdef = wf.getTransitionValueByReference(tr_id)
       if tdef.getTriggerType() == TRIGGER_WORKFLOW_METHOD:
         trigger_dict[tr_id] = tdef
 

@@ -221,7 +221,7 @@ class SecurityTestCase(ERP5TypeTestCase):
             continue
           for wf_transition_id in wf._getWorkflowStateOf(
                                                 document).getTransitions():
-            wf_transition = wf.getTransitionValueById(wf_transition_id)
+            wf_transition = wf.getTransitionValueByReference(wf_transition_id)
             if wf_transition.trigger_type == TRIGGER_USER_ACTION:
               workflow_transitions_description.append(
                 "%s%s[%s]: %s" % (

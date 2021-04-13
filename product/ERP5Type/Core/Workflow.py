@@ -202,7 +202,7 @@ class Workflow(XMLObject):
         return False
     if (self.getTransitionIdByReference(transition_reference) in
         state.getDestinationIdList()):
-      transition = self.getTransitionValueById(transition_reference)
+      transition = self.getTransitionValueByReference(transition_reference)
       if (transition is not None and
           transition.getTriggerType() == TRIGGER_WORKFLOW_METHOD and
           self._checkTransitionGuard(transition, document)):
@@ -236,7 +236,7 @@ class Workflow(XMLObject):
     """
     if name == self.getStateVariable():
       return True
-    return name in self.getVariableIdList()
+    return name in self.getVariableReferenceList()
 
   def _checkTransitionGuard(self, transition, document, **kw):
     return transition.checkGuard(getSecurityManager(), self, document, **kw)
@@ -396,7 +396,7 @@ class Workflow(XMLObject):
       # action is not allowed from the current state
       raise Unauthorized(action)
 
-    transition = self.getTransitionValueById(action)
+    transition = self.getTransitionValueByReference(action)
 
     if transition is None or transition.getTriggerType() != TRIGGER_USER_ACTION:
       msg = _(u"Transition '${action_id}' is not triggered by a user "
@@ -574,7 +574,7 @@ class Workflow(XMLObject):
     """
     if name == self.getStateVariable():
       return self._getWorkflowStateOf(ob, 1)
-    vdef = self.getVariableValueById(name)
+    vdef = self.getVariableValueByReference(name)
     if not vdef.checkGuard(getSecurityManager(), self, ob):
       return default
     status = self.getCurrentStatusDict(ob)
@@ -642,19 +642,19 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="Workflow Variable")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableIdList')
-  def getVariableIdList(self):
+                            'getVariableReferenceList')
+  def getVariableReferenceList(self):
     return [variable.getReference()
             for variable in self.objectValues(portal_type="Workflow Variable")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVariableValueById')
-  def getVariableValueById(self, variable_id):
+                            'getVariableValueByReference')
+  def getVariableValueByReference(self, variable_id):
     return self._getOb('variable_' + variable_id, default=None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateValueById')
-  def getStateValueById(self, stated_id):
+                            'getStateValueByReference')
+  def getStateValueByReference(self, stated_id):
     return self._getOb('state_' + stated_id, default=None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -663,8 +663,8 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="State")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getStateIdList')
-  def getStateIdList(self):
+                            'getStateReferenceList')
+  def getStateReferenceList(self):
     return [state.getReference()
             for state in self.objectValues(portal_type="State")]
 
@@ -674,8 +674,8 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="Worklist")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistIdList')
-  def getWorklistIdList(self):
+                            'getWorklistReferenceList')
+  def getWorklistReferenceList(self):
     return [w.getReference() for w in self.objectValues(portal_type="Worklist")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -690,19 +690,19 @@ class Workflow(XMLObject):
     return SCRIPT_PREFIX + script_reference
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getScriptValueById')
-  def getScriptValueById(self, script_reference):
+                            'getScriptValueByReference')
+  def getScriptValueByReference(self, script_reference):
     from Products.ERP5Type.Core.WorkflowScript import SCRIPT_PREFIX
     return self._getOb(SCRIPT_PREFIX + script_reference, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getWorklistValueById')
-  def getWorklistValueById(self, worklist_reference):
+                            'getWorklistValueByReference')
+  def getWorklistValueByReference(self, worklist_reference):
     return self._getOb('worklist_' + worklist_reference, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionValueById')
-  def getTransitionValueById(self, transition_reference):
+                            'getTransitionValueByReference')
+  def getTransitionValueByReference(self, transition_reference):
     return self._getOb('transition_' + transition_reference, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -711,8 +711,8 @@ class Workflow(XMLObject):
     return self.objectValues(portal_type="Transition")
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionIdList')
-  def getTransitionIdList(self):
+                            'getTransitionReferenceList')
+  def getTransitionReferenceList(self):
     return [transition.getReference() for transition
             in self.objectValues(portal_type="Transition")]
 
@@ -737,7 +737,7 @@ class Workflow(XMLObject):
     prefix_method_id = self.getTransitionIdByReference(method_id)
     if prefix_method_id not in sdef.getDestinationIdList():
       raise Unauthorized(method_id)
-    tdef = self.getTransitionValueById(method_id)
+    tdef = self.getTransitionValueByReference(method_id)
     if tdef is None or tdef.getTriggerType() != TRIGGER_WORKFLOW_METHOD:
       raise WorkflowException, (
          'Transition %s is not triggered by a workflow method'
@@ -941,9 +941,9 @@ class Workflow(XMLObject):
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
       raise WorkflowException, 'Object is in an undefined state'
-    if method_id not in sdef.getTransitionIdList():
+    if method_id not in sdef.getTransitionReferenceList():
       raise Unauthorized(method_id)
-    tdef = self.getTransitionValueById(method_id)
+    tdef = self.getTransitionValueByReference(method_id)
     if tdef is None or tdef.getTriggerType() != TRIGGER_WORKFLOW_METHOD:
       raise WorkflowException, (
         'Transition %s is not triggered by a workflow method'
