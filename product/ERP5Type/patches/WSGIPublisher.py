@@ -411,7 +411,7 @@ def load_app(module_info):
     try:
         yield (app, realm, debug_mode, validated_hook)
     finally:
-        if transaction.manager._txn is not None:
+        if getattr(transaction.manager, '_txn', None) is not None:
             # Only abort a transaction, if one exists. Otherwise the
             # abort creates a new transaction just to abort it.
             transaction.abort()
@@ -496,4 +496,4 @@ def publish_module(environ, start_response,
     return result
 
 
-sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
+#sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
