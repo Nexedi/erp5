@@ -77,15 +77,19 @@
   }
 
   function addDeveloperAction(class_name, title_href, title, root_element) {
-    var field_href = domsugar("a", {
-      "class": class_name,
-      href: title_href,
-      title: title
-    });
+    var div,
+      field_href = domsugar("a", {
+        "class": class_name,
+        href: title_href,
+        title: title
+      });
     if (root_element.constructor === HTMLLabelElement) {
       root_element.appendChild(field_href);
-    } else {
-      root_element.insertBefore(field_href, root_element.querySelector("div"));
+      return;
+    }
+    div = root_element.querySelector("div");
+    if (div) {
+      root_element.insertBefore(field_href, div);
     }
   }
 
@@ -230,7 +234,12 @@
               field_gadget = declared_gadget;
             });
 
-          if (field_json && gadget.state.options.development_link !== false) {
+          /* Avoid to add development action to ParallelListField because this
+            field will instantiate a label field inside and this child will add
+            development actions.
+          */
+          if (options.field_type !== "ParallelListField" && field_json &&
+              gadget.state.options.development_link !== false) {
             queue
               .push(function () {
                 return gadget.getTranslationList([
@@ -246,7 +255,7 @@
                 if (gadget.state.label === true) {
                   root_element = gadget.props.label_element;
                 } else {
-                  root_element = field_gadget.element;
+                  root_element = gadget.element;
                 }
                 if (field_json.hasOwnProperty('edit_field_href') &&
                     !root_element.querySelector(".edit-field")) {
