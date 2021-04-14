@@ -1,2 +1,4 @@
+portal_tests/crm_action_zuite
+portal_tests/crm_action_zuite/**
 portal_tests/renderjs_ui_crm_action_zuite
 portal_tests/renderjs_ui_crm_action_zuite/**
