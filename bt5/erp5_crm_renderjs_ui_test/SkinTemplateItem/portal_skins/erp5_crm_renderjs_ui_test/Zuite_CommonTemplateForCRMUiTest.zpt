@@ -306,6 +306,158 @@
   </tal:block>
 
 
+  <tal:block metal:define-macro="view_create_new_event_dialog">
+    <tr>
+      <td colspan="3"><b>Display the create new event dialog</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/campaign_module/erp5_crm_renderjs_ui_test_campaign</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>select_action</td>
+      <td>Create New Event</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertText</td>
+      <td>dialog_submit_button</td>
+      <td>Create New Event</td>
+    </tr>
+      <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
+  <tal:block metal:define-macro="check_create_new_event_dialog_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the create new event dialog content'"></b></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_title</td>
+      <td tal:content="python: dialog_content_configuration['field_your_title']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_portal_type</td>
+      <td tal:content="python: dialog_content_configuration['field_your_portal_type']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_resource</td>
+      <td tal:content="python: dialog_content_configuration['field_your_resource']"></td>
+    </tr>
+    <tr tal:condition="python: 'field_your_start_date' in dialog_content_configuration">
+      <td>verifyValue</td>
+      <td>subfield_field_your_start_date_year</td>
+      <td tal:content="python: modules['DateTime'].DateTime(dialog_content_configuration['field_your_start_date']).year()"></td>
+    </tr>
+    <tr tal:condition="python: 'field_your_start_date' in dialog_content_configuration">
+      <td>verifyValue</td>
+      <td>subfield_field_your_start_date_month</td>
+      <td tal:content="python: modules['DateTime'].DateTime(dialog_content_configuration['field_your_start_date']).mm()"></td>
+    </tr>
+    <tr tal:condition="python: 'field_your_start_date' in dialog_content_configuration">
+      <td>verifyValue</td>
+      <td>subfield_field_your_start_date_day</td>
+      <td tal:content="python: modules['DateTime'].DateTime(dialog_content_configuration['field_your_start_date']).dd()"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_notification_message</td>
+      <td tal:content="python: dialog_content_configuration['field_your_notification_message']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//input[@name=\'field_your_event_workflow_action\' and @type=\'radio\' and @value=\'%s\']' % dialog_content_configuration['field_your_event_workflow_action']"></td>
+      <td>on</td>
+    </tr>
+    <tr>
+      <td>verifySelected</td>
+      <td>field_your_source</td>
+      <td tal:content="python: dialog_content_configuration['field_your_source']"></td>
+    </tr>
+    <tr>
+      <td>verifySelected</td>
+      <td>field_your_destination</td>
+      <td tal:content="python: dialog_content_configuration['field_your_destination']"></td>
+    </tr>
+    <tal:block tal:define="text_content python: dialog_content_configuration['field_your_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForCRMUiTest/macros/verify_ckeditor_text_content"/>
+    </tal:block>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
+  <tal:block metal:define-macro="fill_create_new_event_dialog_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Fill the create new event dialog content'"></b></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_title</td>
+      <td tal:content="python: dialog_content_configuration['field_your_title']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_portal_type</td>
+      <td tal:content="python: dialog_content_configuration['field_your_portal_type']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_resource</td>
+      <td tal:content="python: dialog_content_configuration['field_your_resource']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_your_start_date_year</td>
+      <td tal:content="python: modules['DateTime'].DateTime(dialog_content_configuration['field_your_start_date']).year()"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_your_start_date_month</td>
+      <td tal:content="python: modules['DateTime'].DateTime(dialog_content_configuration['field_your_start_date']).mm()"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_your_start_date_day</td>
+      <td tal:content="python: modules['DateTime'].DateTime(dialog_content_configuration['field_your_start_date']).dd()"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_notification_message</td>
+      <td tal:content="python: dialog_content_configuration['field_your_notification_message']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_event_workflow_action</td>
+      <td tal:content="python: dialog_content_configuration['field_your_event_workflow_action']"></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>field_your_source</td>
+      <td tal:content="python: dialog_content_configuration['field_your_source']"></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>field_your_destination</td>
+      <td tal:content="python: dialog_content_configuration['field_your_destination']"></td>
+    </tr>
+    <tal:block tal:define="text_content python: dialog_content_configuration['field_your_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForCRMUiTest/macros/type_ckeditor_text_content"/>
+    </tal:block>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
   <tal:block metal:define-macro="check_response_content">
     <tr>
       <td colspan="3"><b tal:content="python: 'Check the response content'"></b></td>

@@ -207,6 +207,163 @@
   </tal:block>
 
 
+  <tal:block metal:define-macro="view_create_new_event_dialog">
+    <tr>
+      <td colspan="3"><b>Display the create new event dialog</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${renderjs_url}/campaign_module/erp5_crm_renderjs_ui_test_campaign?editable=1</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <!-- Wait for gadget to be loaded -->
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+      <td></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Create New Event</td>
+      <td></td>
+    </tr>
+
+    <tal:block tal:define="click_configuration python: {'text': 'Create New Event'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Create New Event</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_create_new_event_dialog_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the create new event dialog content'"></b></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_title</td>
+      <td tal:content="python: dialog_content_configuration['field_your_title']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_portal_type</td>
+      <td tal:content="python: dialog_content_configuration['field_your_portal_type']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_resource</td>
+      <td tal:content="python: dialog_content_configuration['field_your_resource']"></td>
+    </tr>
+    <tr tal:condition="python: 'field_your_start_date' in dialog_content_configuration">
+      <td>verifyValue</td>
+      <td>field_your_start_date</td>
+      <td tal:content="python: dialog_content_configuration['field_your_start_date']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_notification_message</td>
+      <td tal:content="python: dialog_content_configuration['field_your_notification_message']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//input[@name=\'field_your_event_workflow_action\' and @type=\'radio\' and @value=\'%s\']' % dialog_content_configuration['field_your_event_workflow_action']"></td>
+      <td>on</td>
+    </tr>
+    <tr>
+      <td>verifySelected</td>
+      <td>field_your_source</td>
+      <td tal:content="python: dialog_content_configuration['field_your_source']"></td>
+    </tr>
+    <tr>
+      <td>verifySelected</td>
+      <td>field_your_destination</td>
+      <td tal:content="python: dialog_content_configuration['field_your_destination']"></td>
+    </tr>
+    <tal:block tal:define="text_content python: dialog_content_configuration['field_your_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+    </tal:block>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
+  <tal:block metal:define-macro="fill_create_new_event_dialog_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Fill the create new event dialog content'"></b></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_title</td>
+      <td tal:content="python: dialog_content_configuration['field_your_title']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_portal_type</td>
+      <td tal:content="python: dialog_content_configuration['field_your_portal_type']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_resource</td>
+      <td tal:content="python: dialog_content_configuration['field_your_resource']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_start_date</td>
+      <td tal:content="python: dialog_content_configuration['field_your_start_date']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_notification_message</td>
+      <td tal:content="python: dialog_content_configuration['field_your_notification_message']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_event_workflow_action</td>
+      <td tal:content="python: dialog_content_configuration['field_your_event_workflow_action']"></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>field_your_source</td>
+      <td tal:content="python: dialog_content_configuration['field_your_source']"></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>field_your_destination</td>
+      <td tal:content="python: dialog_content_configuration['field_your_destination']"></td>
+    </tr>
+    <tal:block tal:define="text_content python: dialog_content_configuration['field_your_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+    </tal:block>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
   <tal:block metal:define-macro="check_response_content">
     <tr>
       <td colspan="3"><b tal:content="python: 'Check the response content'"></b></td>

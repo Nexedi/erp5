@@ -20,6 +20,19 @@ agent = module.newContent(
   title=agent_title
 )
 
+campaign_portal_type = "Campaign"
+campaign_id = "erp5_crm_renderjs_ui_test_campaign"
+module = portal.getDefaultModule(campaign_portal_type)
+campaign = module.newContent(
+  portal_type=campaign_portal_type,
+  id=campaign_id,
+  title=campaign_id,
+  destination_section_value=customer,
+  source_trade_value=agent,
+)
+campaign.submit()
+
+
 notification_message_portal_type = "Notification Message"
 notification_message_id = "erp5_crm_renderjs_ui_test_notification"
 notification_message_title = "erp5_crm_renderjs_ui_test_notification_title"
