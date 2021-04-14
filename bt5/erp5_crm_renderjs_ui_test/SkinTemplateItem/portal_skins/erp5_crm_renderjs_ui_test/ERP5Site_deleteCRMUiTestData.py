@@ -15,6 +15,13 @@ module = portal.getDefaultModule(notification_message_portal_type)
 if getattr(module, notification_message_id, None) is not None:
   module.manage_delObjects([notification_message_id])
 
+campaign_portal_type = "Campaign"
+campaign_id = "erp5_crm_renderjs_ui_test_campaign"
+# Delete campaign
+module = portal.getDefaultModule(campaign_portal_type)
+if getattr(module, campaign_id, None) is not None:
+  module.manage_delObjects([campaign_id])
+
 person_portal_type = "Person"
 customer_id = "erp5_crm_renderjs_ui_test_customer"
 agent_id = "erp5_crm_renderjs_ui_test_agent"
