@@ -344,6 +344,68 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     workflow1.updateRoleMappingsFor(text_document)
     self.assertEqual(getattr(text_document, permission_key), ['Auditor', 'Owner'])
 
+  def test_15_multiple_workflow_acquired_permission_roles(self):
+    self.copyWorkflow(self.portal.portal_workflow, self.initial_dc_workflow_id, 'temporary_dc_workflow1')
+    dc_workflow1 = self.portal.portal_workflow._getOb('temporary_dc_workflow1')
+    self.copyWorkflow(self.portal.portal_workflow, self.initial_dc_workflow_id, 'temporary_dc_workflow2')
+    dc_workflow2 = self.portal.portal_workflow._getOb('temporary_dc_workflow2')
+    text_portal_type = self.portal.portal_types._getOb('Workflow Test Document')
+
+    permission = 'View management screens'
+    permission_key = '_' + permission.replace(' ', '_') + '_Permission'
+    dc_workflow1.addManagedPermission(permission)
+    dc_workflow2.addManagedPermission(permission)
+
+    # remove permissions managed by one
+    try:
+      del dc_workflow2.states.draft.permission_roles
+    except AttributeError:
+      pass
+    # add permission for the other
+    dc_workflow1.states.draft.setPermission(
+      permission=permission,
+      acquired=False,
+      roles=['Assignor', 'Assignee', 'Auditor', 'Author'],
+    )
+    self.tic()
+
+    # with only one workflow
+    text_portal_type.setTypeWorkflowList(['temporary_dc_workflow1'])
+
+    # create document
+    text_document1 = self.getTestObject()
+    text_document1_permission = getattr(text_document1, permission_key, None)
+
+ #    self.assertEqual(getattr(text_document1, permission_key),
+ #                     ['Assignee', 'Assignor', 'Auditor', 'Author'])
+
+    # add the second workflow
+    text_portal_type.setTypeWorkflowList(['temporary_dc_workflow1', 'temporary_dc_workflow2'])
+
+    # create document
+    text_document2 = self.getTestObject()
+    text_document2_permission = getattr(text_document2, permission_key, None)
+
+ #    self.assertEqual(getattr(text_document2, permission_key),
+ #                     ['Assignee', 'Assignor', 'Auditor', 'Author'])
+
+    # migrate workflows
+    self.portal.portal_workflow.WorkflowTool_convertWorkflow(
+      batch_mode=True,
+      workflow_id_list=['temporary_dc_workflow1', 'temporary_dc_workflow2'],
+    )
+    self.tic()
+
+    # create another document
+    text_document3 = self.getTestObject()
+    text_document3_permission = getattr(text_document3, permission_key, None)
+
+    print 'text_document1_permission: %r' % (text_document1_permission, )
+    print 'text_document2_permission: %r' % (text_document2_permission, )
+    print 'text_document3_permission: %r' % (text_document3_permission, )
+    self.assertEqual(tuple(getattr(text_document3, permission_key)),
+                     ('Assignee', 'Assignor', 'Auditor', 'Author'))
+ 
   def test_15_testGuardsAreNotMessingUpBase_viewDict(self):
     # check Base_viewDict is available on workflow's transition
     self.workflow.transition_delete_action.Base_viewDict()

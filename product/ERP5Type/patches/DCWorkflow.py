@@ -421,6 +421,8 @@ DCWorkflowDefinition._executeMetaTransition = _executeMetaTransition
 DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.im_func
 
 def StateDefinition_getStatePermissionRoleListDict(self):
+  if self.permission_roles is None:
+    return {}
   return self.permission_roles
 
 def StateDefinition_getAcquirePermissionList(self):
@@ -452,7 +454,7 @@ def updateRoleMappingsFor(self, ob):
     other_data_list = []
     for other_workflow in other_workflow_list:
       other_sdef = other_workflow._getWorkflowStateOf(ob)
-      if other_sdef is not None and other_sdef.getStatePermissionRoleListDict() is not None:
+      if other_sdef is not None and other_sdef.getStatePermissionRoleListDict():
         other_data_list.append((other_workflow,other_sdef))
     # Be carefull, permissions_roles should not change
     # from list to tuple or vice-versa. (in modifyRolesForPermission,
