@@ -327,7 +327,7 @@ class Workflow(XMLObject):
         other_state = other_workflow._getWorkflowStateOf(ob)
         if other_state is not None:
           other_state_permission_role_list_dict = other_state.getStatePermissionRoleListDict()
-          if other_state_permission_role_list_dict is not None:
+          if other_state_permission_role_list_dict:
             other_data_list.append(
               (other_workflow, other_state, other_state_permission_role_list_dict,)
             )
@@ -339,7 +339,7 @@ class Workflow(XMLObject):
         default_roles = []
         role_type = list
         other_role_type_list = []
-        if state_permission_role_list_dict is not None:
+        if state_permission_role_list_dict:
           roles = state_permission_role_list_dict.get(permission, default_roles)
           # store acquisition settings
           if acquired_permission_list is _marker or roles is default_roles:
