@@ -556,6 +556,8 @@
     var next_options;
     if (previous_options.hasOwnProperty('cancel')) {
       next_options = JSON.parse(previous_options.cancel);
+      // cancel may be outdated
+      gadget.props.is_cancelled = true;
     } else {
       next_options = {jio_key: previous_options.jio_key};
     }
@@ -1167,9 +1169,13 @@
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
             gadget.props.modified = false;
+            if (gadget.props.is_cancelled) {
+              route_result.options.is_cancelled = true;
+            }
             return gadget.renderApplication(route_result, gadget.props.keep_message)
               .push(function (result) {
                 gadget.props.keep_message = false;
+                gadget.props.is_cancelled = false;
                 return result;
               });
           }
