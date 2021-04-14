@@ -6,7 +6,7 @@ import Lifetime
 import transaction
 from Testing import ZopeTestCase
 try:
-  from ZServer.Testing import utils
+  from Testing import makerequest as utils
 except: # BBB Zope 2.12
   from Testing.ZopeTestCase import utils
 from ZODB.POSException import ConflictError
