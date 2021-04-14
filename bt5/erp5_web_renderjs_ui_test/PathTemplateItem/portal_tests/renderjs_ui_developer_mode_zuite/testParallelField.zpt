@@ -54,6 +54,16 @@
         <td>//label/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_category_list/manage_main"]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>assertElementPresent</td>
+        <td>//label/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_role_list/manage_main"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementPresent</td>
+        <td>//div[@data-gadget-scope="PARALLEL_SUB_FIELD_0"]//a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=%5ERoles%24&amp;lang=en"]</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </body>
