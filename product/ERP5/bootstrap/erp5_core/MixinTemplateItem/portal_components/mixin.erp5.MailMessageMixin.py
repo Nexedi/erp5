@@ -92,7 +92,6 @@ class MailMessageMixin:
       if part.is_multipart():
         if part.get_content_subtype() in ('alternative', 'mixed', 'related'):
           # Try to get the favourite text format defined on preference
-          favourite_part = None
           for subpart in part.get_payload():
             if subpart.get_content_maintype() == 'text' and not subpart.get_filename():
               if subpart.get_content_type() == preferred_content_type:
