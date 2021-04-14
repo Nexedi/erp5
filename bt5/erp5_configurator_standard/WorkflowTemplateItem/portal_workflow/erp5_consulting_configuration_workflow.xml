@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Organisation Configurator Item" module="erp5.portal_type"/>
+      <global name="Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,23 +10,6 @@
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>transition</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
             </value>
         </item>
         <item>
@@ -45,33 +28,37 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>group/my_group</string>
-                <string>site/main</string>
-                <string>price_currency/EUR</string>
+                <string>source/portal_workflow/erp5_consulting_configuration_workflow/state_start</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value> <string>A Business configuration where consultants upload a custom categories spreadsheet.</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Used by consultants to provide a flexible configuration of ERP5 for Small and Medium Businesses.</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>erp5_consulting_configuration_workflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Organisation Configurator Item</string> </value>
+            <value> <string>Workflow</string> </value>
         </item>
         <item>
-            <key> <string>sid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>state_base_category</string> </key>
+            <value> <string>current_state</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Scalability company</string> </value>
-        </item>
-        <item>
-            <key> <string>transition</string> </key>
-            <value> <string>portal_workflow/erp5_standard_configuration_workflow/transition_configure_organisation</string> </value>
+            <key> <string>state_variable</string> </key>
+            <value> <string>current_state</string> </value>
         </item>
       </dictionary>
     </pickle>
