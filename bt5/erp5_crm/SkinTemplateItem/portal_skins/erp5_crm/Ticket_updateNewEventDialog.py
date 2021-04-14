@@ -37,7 +37,7 @@ if notification_message:
   request.form['your_resource'] = temp_event.getResource()
   # BBB for legacy UI
   request.set('your_notification_message', '')
-  request.set('your_title', title)
+  request.set('your_title', temp_event.getTitle())
   request.set('your_text_content', temp_event.getTextContent())
   request.set('your_content_type', temp_event.getContentType())
   request.set('your_resource', temp_event.getResource())
