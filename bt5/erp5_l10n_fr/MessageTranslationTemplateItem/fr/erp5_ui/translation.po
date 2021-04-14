@@ -7180,9 +7180,6 @@ msgstr "Connexion réussie"
 msgid "Logout"
 msgstr "Déconnexion"
 
-msgid "Long Title"
-msgstr "Titre long"
-
 msgid "Looking For"
 msgstr "Recherche de"
 
@@ -11710,11 +11707,8 @@ msgstr "Une description de l'évènement."
 msgid "Short description that will appear in the search result list."
 msgstr "Description qui apparaît dans les résultats de recherche"
 
-msgid "Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
-msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre long sauf dans un Plan du Site."
-
-msgid "Short title is displayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
-msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre long sauf dans un Plan du Site."
+msgid "Short title is displayed in any navigation widget (breadcrumb, navigation menu, section list, ...) with a higher priority than title, except in Site Map"
+msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre sauf dans un Plan du Site."
 
 msgid "Short titles are a precision of Titles in ERP5"
 msgstr "Un titre court est un précision du titre d'un document."
