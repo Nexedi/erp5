@@ -63,13 +63,20 @@ def _setUserNameForAccessLog(username, REQUEST):
   """
   # Set the authorization header in the medusa http request
   # so that the username can be logged to the Z2.log
+  # Put the full-arm latex glove on now...
   try:
-    # Put the full-arm latex glove on now...
-    medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
-  except AttributeError:
-    pass
+    # Is this WSGI ?
+    REQUEST._orig_env['wsgi.input']
+  except KeyError:
+    # Not WSGI, maybe Medusa
+    try:
+      medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
+    except AttributeError:
+      pass
+    else:
+      medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
   else:
-    medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
+    REQUEST._orig_env['REMOTE_USER'] = username
 
 
 def initialize(context):
