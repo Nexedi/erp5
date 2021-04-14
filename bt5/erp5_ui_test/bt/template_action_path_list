@@ -41,6 +41,7 @@ Foo | view_crash_on_save
 Foo | view_developer_mode_action
 Foo | view_dialog_with_only_update
 Foo | view_dialog_with_validation_error
+Foo | view_draft
 Foo | view_duration_field
 Foo | view_editor_field
 Foo | view_float_field
