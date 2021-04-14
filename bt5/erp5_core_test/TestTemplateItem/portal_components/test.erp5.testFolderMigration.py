@@ -504,8 +504,8 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       date = DateTime().Date()
       date = date.replace("/", "")
       #1 y 2 should have new format id (because old ids were int)
-      self.assertEqual(obj1.getId(), '%s-1' %date)
-      self.assertEqual(obj2.getId(), '%s-2' %date)
+      self.assertEqual(obj1.getId(), '%s-1' % date)
+      self.assertEqual(obj2.getId(), '%s-2' % date)
       #3 should have the same old id
       self.assertEqual(obj3.getId(), 'custom-id')
 
