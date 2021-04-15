@@ -1018,8 +1018,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     part.set_payload(html_message)
     encoders.encode_base64(part)
 
-    part.add_header('Content-Disposition', 'attachment',
-                    filename=html_filename)
+    part.add_header('Content-Disposition', 'attachment')
     part.add_header('Content-ID', '<%s>' % \
                     ''.join(['%s' % ord(i) for i in html_filename]))
     message.attach(part)
@@ -1030,6 +1029,15 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertTrue(bool(event.getAttachmentData(1)))
     self.assertTrue(bool(event.getAttachmentData(2)))
 
+  def test_getMessageTextPart(self):
+    portal_type = 'Mail Message'
+    event = self.portal.getDefaultModule(portal_type).newContent(portal_type=portal_type)
+    for filename in ('gmail.eml', 'outlook.eml', 'roundcube.eml'):
+      file_path = '%s/test_data/%s' % (
+        os.path.dirname(Products.ERP5.tests.__file__),
+        filename)
+      event.setData(open(file_path).read())
+      self.assertTrue(event.getTextContent().startswith('<'))
 
 
 
