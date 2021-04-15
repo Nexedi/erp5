@@ -1,42 +1,46 @@
 """
 Set up an Workflow with defaults variables needed by ERP5
 """
-for state_id, state_title in (('draft', 'Draft'),):
-  state = context.newContent(portal_type='State')
-  state.setReference(state_id)
-  state.setTitle(state_title)
+state = context.newContent(portal_type='State', reference='draft', title='Draft')
 context.setSourceValue(state)
+
 for v, property_dict in (
       ('action', {
           'description': 'Transition id',
           'variable_default_expression': 'transition/getReference|nothing',
+          'for_catalog': 0,
           'for_status': 1,
           'automatic_update': 1,
         }),
       ('actor', {
           'description': 'Name of the user who performed transition',
           'variable_default_expression': 'user/getIdOrUserName',
+          'for_catalog': 0,
           'for_status': 1,
           'automatic_update': 1,
         }),
       ('comment', {
           'description': 'Comment about transition',
           'variable_default_expression': "python:state_change.kwargs.get('comment', '')",
+          'for_catalog': 0,
           'for_status': 1,
           'automatic_update': 1,
         }),
       ('history', {
           'description': 'Provides access to workflow history',
+          'for_catalog': 0,
           'variable_default_expression': 'state_change/getHistory',
         }),
       ('time', {
           'description': 'Transition timestamp',
           'variable_default_expression': 'state_change/getDateTime',
+          'for_catalog': 0,
           'for_status': 1,
           'automatic_update': 1,
         }),
       ('error_message', {
           'description': 'Error message if validation failed',
+          'for_catalog': 0,
           'for_status': 1,
           'automatic_update': 1,
         }),

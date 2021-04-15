@@ -944,7 +944,6 @@ def convertToERP5Workflow(self, temp_object=False):
       workflow_script.setReference(script.id)
       workflow_script.setTitle(script.title)
       workflow_script.setParameterSignature(script._params)
-      #workflow_script.setCallableType(script.callable_type)# not defined in python script?
       workflow_script.setBody(script._body)
       workflow_script.setProxyRole(script._proxy_roles)
 

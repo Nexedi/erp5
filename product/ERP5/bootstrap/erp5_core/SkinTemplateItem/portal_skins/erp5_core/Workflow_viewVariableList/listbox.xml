@@ -118,6 +118,18 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>automatic_update</string>
+                          <string>Update on every Transition</string>
+                        </tuple>
+                        <tuple>
+                          <string>for_catalog</string>
+                          <string>Available for Catalog</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

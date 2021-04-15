@@ -100,8 +100,28 @@ class TypesTool(TypeProvider):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  _bootstrap_type_list = (
+    'Business Template',
+    'Standard Property',
+    'Acquired Property',
+    # workflow (initializePortalTypeDynamicWorkflowMethods)
+    'State',
+    'Transition',
+    'Transition Variable',
+    'Workflow Script',
+    'Workflow Variable',
+    'Worklist',
+    'Workflow',
+    'Interaction',
+    'Interaction Workflow',
+    # the following ones are required to upgrade an existing site
+    'Category Property',
+    # the following is needed to bootstrap Catalog Tool and default catalog
+    'Catalog Tool',
+  )
+
   def _isBootstrapRequired(self):
-    if not self.has_key('Interaction Workflow'):
+    if [x for x in self._bootstrap_type_list if not self.has_key(x)]:
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates
@@ -128,24 +148,10 @@ class TypesTool(TypeProvider):
 
   def _bootstrap(self):
     from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
-      'Business Template',
-      'Standard Property',
-      'Acquired Property',
-      # workflow (initializePortalTypeDynamicWorkflowMethods)
-      'State',
-      'Transition',
-      'Workflow Script',
-      'Workflow Variable',
-      'Worklist',
-      'Workflow',
-      'Interaction',
-      'Interaction Workflow',
-      # the following ones are required to upgrade an existing site
-      'Category Property',
-      # the following is needed to bootstrap Catalog Tool and default catalog
-      'Catalog Tool',
-    ))
+    ERP5Generator.bootstrap(self,
+                            'erp5_core',
+                            'PortalTypeTemplateItem',
+                            self._bootstrap_type_list)
     ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
     ERP5Generator.bootstrap_allow_type(self, 'Workflow')
     ERP5Generator.bootstrap_allow_type(self, 'Interaction Workflow')

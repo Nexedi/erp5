@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: [\'Access contents information\', \'Add portal content\', \'Delete objects\', \'Modify portal content\', \'View\']</string> </value>
         </item>
         <item>
             <key> <string>select_variable</string> </key>

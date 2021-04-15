@@ -78,7 +78,12 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_for_catalog</string>
+                        <string>listbox_automatic_update</string>
+                        <string>listbox_title</string>
+                        <string>listbox_reference</string>
+                      </list>
                     </value>
                 </item>
                 <item>
