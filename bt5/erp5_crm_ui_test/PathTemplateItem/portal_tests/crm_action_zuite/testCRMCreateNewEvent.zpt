@@ -31,8 +31,8 @@
                                                              'field_your_start_date': '2010-01-01T00:00:00',
                                                              'field_your_notification_message': '',
                                                              'field_your_event_workflow_action': 'send',
-                                                             'field_your_source': 'erp5_crm_renderjs_ui_test_agent_title',
-                                                             'field_your_destination': 'erp5_crm_renderjs_ui_test_customer_title',
+                                                             'field_your_source': 'erp5_crm_ui_test_agent_title',
+                                                             'field_your_destination': 'erp5_crm_ui_test_customer_title',
                                                              'field_your_text_content': '<p>Foo<br>Bar</p>'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/fill_create_new_event_dialog_content" />
 </tal:block>
@@ -53,8 +53,8 @@
                                                        'field_my_resource': '',
                                                        'field_my_start_date': '2010-01-01T00:00:00',
                                                        'simulation_state': 'Sent',
-                                                       'field_my_source_title': 'erp5_crm_renderjs_ui_test_agent_title',
-                                                       'field_my_destination_title': 'erp5_crm_renderjs_ui_test_customer_title',
+                                                       'field_my_source_title': 'erp5_crm_ui_test_agent_title',
+                                                       'field_my_destination_title': 'erp5_crm_ui_test_customer_title',
                                                        'field_my_text_content': '<p>Foo<br>Bar</p>'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/check_response_content" />
 </tal:block>

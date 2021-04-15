@@ -145,7 +145,7 @@
   </tal:block>
 
   <tal:block metal:define-macro="prepare_data">
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/delete_data" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/delete_data" />
     <tr>
       <td colspan="3"><b>Create CRM Test Data</b></td>
     </tr>
@@ -171,7 +171,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/event_module/erp5_crm_renderjs_ui_test_event</td>
+      <td>${base_url}/event_module/erp5_crm_ui_test_event</td>
       <td></td>
     </tr>
     <tr>
@@ -312,7 +312,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/campaign_module/erp5_crm_renderjs_ui_test_campaign</td>
+      <td>${base_url}/campaign_module/erp5_crm_ui_test_campaign</td>
       <td></td>
     </tr>
     <tr>
@@ -508,7 +508,7 @@
       <td tal:content="python: response_configuration['field_my_destination_title']"></td>
     </tr>
     <tal:block tal:define="text_content python: response_configuration['field_my_text_content']">
-      <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForCRMUiTest/macros/verify_ckeditor_text_content"/>
     </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
