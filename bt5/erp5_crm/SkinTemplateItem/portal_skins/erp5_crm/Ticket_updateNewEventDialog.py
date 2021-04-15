@@ -1,5 +1,6 @@
 """Preview the response from notification message for ticket create response dialog.
 """
+keep_items = None
 if notification_message:
   temp_event = context.getPortalObject().event_module.newContent(
     temp_object=True,
@@ -27,10 +28,12 @@ if notification_message:
   if original_title and original_title not in title:
     title = '%s (%s)' % (title, original_title)
 
-return context.Base_renderForm(dialog_id, keep_items={
-  'your_notification_message': '',
-  'your_title': temp_event.getTitle(),
-  'your_text_content': temp_event.getTextContent(),
-  'your_content_type': temp_event.getContentType(),
-  'your_resource': temp_event.getResource()
-})
+  keep_items = {
+    'your_notification_message': '',
+    'your_title': temp_event.getTitle(),
+    'your_text_content': temp_event.getTextContent(),
+    'your_content_type': temp_event.getContentType(),
+    'your_resource': temp_event.getResource()
+  }
+
+return context.Base_renderForm(dialog_id, keep_items=keep_items)
