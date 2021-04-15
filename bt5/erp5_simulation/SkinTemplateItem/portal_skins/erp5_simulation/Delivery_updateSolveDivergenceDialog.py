@@ -20,8 +20,7 @@ for listbox_dict in listbox:
     else:
       line.setProperty(prop, value)
 
-request.form['your_dialog_updated'] = '1'
-# xhtml style Base_callDialogMethod does not redirected because of the listbox
-request.set('your_dialog_updated', '1')
-request.set('listbox', listbox)
-return context.Base_renderForm('Delivery_viewSolveDivergenceDialog')
+return context.Base_renderForm('Delivery_viewSolveDivergenceDialog', keep_items={
+  'your_dialog_updated': '1',
+  'listbox': listbox
+})
