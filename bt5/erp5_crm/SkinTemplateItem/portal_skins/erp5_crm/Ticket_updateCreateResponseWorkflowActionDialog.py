@@ -1,6 +1,7 @@
 """Preview the response from notification message for ticket create response dialog.
 """
 event = context.Ticket_getCausalityValue()
+keep_items = None
 
 if response_event_notification_message:
   temp_event = context.getPortalObject().event_module.newContent(
@@ -33,10 +34,12 @@ if response_event_notification_message:
   if reply_subject not in title:
     title = '%s (%s)' % (title, reply_subject)
 
-return context.Base_renderForm('Ticket_viewCreateResponseWorkflowActionDialog', keep_items={
-  'your_response_event_notification_message': '',
-  'your_response_event_title': title,
-  'your_response_event_text_content': temp_event.getTextContent(),
-  'your_response_event_content_type': temp_event.getContentType(),
-  'your_response_event_resource': temp_event.getResource()
-})
+  keep_items = {
+    'your_response_event_notification_message': '',
+    'your_response_event_title': title,
+    'your_response_event_text_content': temp_event.getTextContent(),
+    'your_response_event_content_type': temp_event.getContentType(),
+    'your_response_event_resource': temp_event.getResource()
+  }
+
+return context.Base_renderForm('Ticket_viewCreateResponseWorkflowActionDialog', keep_items=keep_items)
