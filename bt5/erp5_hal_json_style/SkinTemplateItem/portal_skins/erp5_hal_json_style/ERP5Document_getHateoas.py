@@ -1359,6 +1359,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'status': statusLevelToString(portal_status_level)
     }
 
+  if (mode == 'form') or (mode == 'traverse'):
+    # extra_param_json should be base64 encoded JSON at this point
+    # only for mode == 'form' it is already a dictionary
+    if not extra_param_json:
+      extra_param_json = {}
+
+    if isinstance(extra_param_json, str):
+      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
+
+    # Use extra param as request param
+    for k, v in byteify(extra_param_json.items()):
+      REQUEST.set(k, v)
+      REQUEST.form[k] = v
+
   if (mode == 'root') or (mode == 'traverse'):
     ##
     # Render ERP Document with a `view` specified
@@ -1382,19 +1396,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       "name": getRealRelativeUrl(traversed_document),
       "title": result_dict['title']
     }
-
-    # extra_param_json should be base64 encoded JSON at this point
-    # only for mode == 'form' it is already a dictionary
-    if not extra_param_json:
-      extra_param_json = {}
-
-    if isinstance(extra_param_json, str):
-      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
-
-    # Use extra param as request param
-    for k, v in byteify(extra_param_json.items()):
-      REQUEST.set(k, v)
-      REQUEST.form[k] = v
 
     # Add a link to the portal type if possible
     if not is_portal:
