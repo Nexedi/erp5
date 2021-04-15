@@ -33,19 +33,10 @@ if response_event_notification_message:
   if reply_subject not in title:
     title = '%s (%s)' % (title, reply_subject)
 
-  # XXX this relies on formulator internals, we force the variables in request and
-  # re-render the form.
-  request = container.REQUEST
-  request.set('your_response_event_notification_message', '')
-  request.set('your_response_event_title', title)
-  request.set('your_response_event_text_content', temp_event.getTextContent())
-  request.set('your_response_event_content_type', temp_event.getContentType())
-  request.set('your_response_event_resource', temp_event.getResource())
-  # for new UI
-  request.form['your_response_event_notification_message'] = ''
-  request.form['your_response_event_title'] = title
-  request.form['your_response_event_text_content'] = temp_event.getTextContent()
-  request.form['your_response_event_content_type'] = temp_event.getContentType()
-  request.form['your_response_event_resource'] = temp_event.getResource()
-
-return context.Base_renderForm('Ticket_viewCreateResponseWorkflowActionDialog')
+return context.Base_renderForm('Ticket_viewCreateResponseWorkflowActionDialog', keep_items={
+  'your_response_event_notification_message': '',
+  'your_response_event_title': title,
+  'your_response_event_text_content': temp_event.getTextContent(),
+  'your_response_event_content_type': temp_event.getContentType(),
+  'your_response_event_resource': temp_event.getResource()
+})
