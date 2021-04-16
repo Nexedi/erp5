@@ -7,6 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -23,6 +35,16 @@ data_protection_request_module?validation_state=open&portal_type=%(portal_type)s
             <value>
               <tuple>
                 <string>action_type/global</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>portal_type</string>
+                <string>validation_state</string>
+                <string>local_roles</string>
               </tuple>
             </value>
         </item>
@@ -45,14 +67,6 @@ data_protection_request_module?validation_state=open&portal_type=%(portal_type)s
             </value>
         </item>
         <item>
-            <key> <string>guard_role</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>icon</string> </key>
             <value>
               <none/>
@@ -63,22 +77,6 @@ data_protection_request_module?validation_state=open&portal_type=%(portal_type)s
             <value> <string>worklist_2_open_data_protection_request</string> </value>
         </item>
         <item>
-            <key> <string>matched_portal_type</string> </key>
-            <value>
-              <tuple>
-                <string>Data Protection Request</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>matched_validation_state</string> </key>
-            <value>
-              <tuple>
-                <string>open</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Worklist</string> </value>
         </item>
@@ -86,6 +84,61 @@ data_protection_request_module?validation_state=open&portal_type=%(portal_type)s
             <key> <string>title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>local_roles</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Data Protection Request</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>validation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>open</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

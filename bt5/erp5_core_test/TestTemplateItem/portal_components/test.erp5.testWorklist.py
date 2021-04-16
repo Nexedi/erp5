@@ -30,6 +30,7 @@
 import re
 
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
+from Products.ERP5Type.tests.utils import todo_erp5
 
 class TestWorklist(TestWorkflowMixin):
 
@@ -172,51 +173,23 @@ class TestWorklist(TestWorkflowMixin):
       worklist_value.setAction(str(actbox_url))
       worklist_value.setActionType('global')
 
-      props={k if k.startswith('guard_') else 'variable_' + k: v
-               for k, v in kw.iteritems()}
-      if 'variable_portal_type' in props:
-        v = props.get('variable_portal_type', None)
-        if v:
-          worklist_value.setMatchedPortalTypeList(v)
-      if 'variable_validation_state' in props:
-        v = props.get('variable_validation_state', None)
-        if v:
-          worklist_value.setMatchedValidationState(v)
-      if 'variable_' + self.int_catalogued_variable_id in props:
-        variable_ref = self.int_catalogued_variable_id
-        v = props.get('variable_'+self.int_catalogued_variable_id, None)
-        if v:
-          # Add a local worklist variable:
-          variable_value = worklist_value._getOb('variable_' + self.int_catalogued_variable_id, None)
-          if variable_value is None:
-            variable_value = worklist_value.newContent(portal_type='Worklist Variable')
-            variable_value.setReference(variable_ref)
-          variable_value.setVariableDefaultValue(str(v))
-      # test04 related key
-      if 'variable_region_uid' in props:
-        v = props.get('variable_region_uid', None)
-        if v:
-          variable_value = worklist_value._getOb('variable_region_uid', None)
-          if variable_value is None:
-            variable_value = worklist_value.newContent(portal_type='Worklist Variable')
-            variable_value.setReference('region_uid')
-          variable_value.setVariableDefaultExpression(v)
-      if 'variable_base_category_id' in props:
-        variable_value = worklist_value._getOb('variable_base_category_id', None)
-        v = props.get('variable_base_category_id', None)
-        if variable_value is None:
-          variable_value = worklist_value.newContent(portal_type='Worklist Variable')
-          variable_value.setReference('base_category_id')
-        variable_value.setVariableDefaultValue(v)
       # Update guard configuration for view and guard value.
-      if 'guard_roles' in props:
-        v = props.get('guard_roles', '')
-        if v:
-          worklist_value.setGuardRoleList([ var.strip() for var in v.split(';') ])
-      if 'guard_expr' in props:
-        v = props.get('guard_expr', '')
-        if v:
-          worklist_value.setGuardExpression(v)
+      from Products.ERP5Type.Tool.WorkflowTool import SECURITY_PARAMETER_ID
+      v = kw.pop('guard_expr', None)
+      if v:
+        worklist_value.setGuardExpression(v)
+      v = kw.pop('guard_roles', None)
+      if v:
+        worklist_value.setCriterion(SECURITY_PARAMETER_ID,
+                                    [var.strip() for var in v.split(';')])
+      for k, v in kw.iteritems():
+        if k not in (SECURITY_PARAMETER_ID, workflow_value.getStateVariable()):
+          variable_value = workflow_value.getVariableValueByReference(k)
+          if variable_value is None:
+            workflow_value.newContent(portal_type='Workflow Variable', reference=k)
+
+        worklist_value.setCriterion(k, (v,))
+
     else:
       worklists = workflow_value.worklists
       worklists.addWorklist(worklist_id)
@@ -238,25 +211,42 @@ class TestWorklist(TestWorkflowMixin):
       worklists.deleteWorklists(worklist_id_list)
 
   def createWorklists(self):
-    for worklist_id, actbox_name, role, expr, state, int_variable in [
-          (self.worklist_assignor_id, self.actbox_assignor_name,
-           'Assignor', None, self.checked_validation_state, None),
-          (self.worklist_owner_id, self.actbox_owner_name,
-           'Owner', None, self.checked_validation_state, None),
-          (self.worklist_desactivated_id, self.actbox_desactivated_by_expression,
-           'Owner', 'python: 0', self.checked_validation_state, None),
-          (self.worklist_wrong_state_id, self.actbox_wrong_state,
-           'Owner', None, self.not_checked_validation_state, None),
-          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name,
-           'Assignor; Owner', None, self.checked_validation_state, None),
-          (self.worklist_int_variable_id, self.actbox_int_variable_name,
-           None, None, None, str(self.int_value)),
-    ]:
-      self.createWorklist(self.checked_workflow, worklist_id, actbox_name,
-                          guard_roles=role, guard_expr=expr,
-                          portal_type=self.checked_portal_type,
-                          validation_state=state,
-                          **{self.int_catalogued_variable_id: int_variable})
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_assignor_id,
+                        self.actbox_assignor_name,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Assignor',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_owner_id,
+                        self.actbox_owner_name,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Owner',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_desactivated_id,
+                        self.actbox_desactivated_by_expression,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Owner',
+                        guard_expr='python: 0',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_wrong_state_id,
+                        self.actbox_wrong_state,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Owner',
+                        validation_state=self.not_checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_assignor_owner_id,
+                        self.actbox_assignor_owner_name,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Assignor; Owner',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_int_variable_id,
+                        self.actbox_int_variable_name,
+                        portal_type=self.checked_portal_type,
+                        **{self.int_catalogued_variable_id: str(self.int_value)})
 
   def removeWorklists(self):
     self.removeWorklist(self.checked_workflow, [
@@ -516,11 +506,11 @@ class TestWorklist(TestWorkflowMixin):
       self.removeWorklist(self.checked_workflow,
                           ['guard_expression_worklist'])
 
+  @todo_erp5
   def test_04_dynamic_variables(self):
     """
     Test related keys and TALES Expression
     """
-
     workflow_tool = self.getWorkflowTool()
     self.createManagerAndLogin()
 
