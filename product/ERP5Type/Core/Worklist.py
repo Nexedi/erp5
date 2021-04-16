@@ -35,15 +35,19 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.mixin.guardable import GuardableMixin
+from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5Type.Utils import deprecated
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
-class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
+class Worklist(IdAsReferenceMixin("worklist_"), GuardableMixin, Predicate):
     """
-    A ERP5 Worklist.
-    Four Variable: portal_type; simulation_state; validation_state; causality_state
-    can be accessed directly; other dynamic variables will be accessable through
-    content type "Worklist Variable".
+    ERP5 Worklist.
+
+    Variables:
+      - Workflow Variable where for_catalog == 1.
+      - State Variable.
+      - SECURITY_PARAMETER_ID (local_roles).
     """
     meta_type = 'ERP5 Worklist'
     portal_type = 'Worklist'
@@ -59,134 +63,23 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
       'DublinCore',
       'Reference',
       'Comment',
-      'Worklist',
       'Guard',
       'ActionInformation',
+      'Predicate',
     )
 
     security.declareProtected(Permissions.AccessContentsInformation,
-      'getAvailableCatalogVars')
-    def getAvailableCatalogVars(self):
-      parent = self.getParentValue()
-      res = [parent.getStateVariable()]
-      res += [variable.getId() for variable in self.objectValues()]
-      res += [variable for variable in
-              parent.contentValues(portal_type="Workflow Variable")
-              if variable.getForCatalog()]
-      res.sort()
-      return res
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-      'updateDynamicVariable')
-    def updateDynamicVariable(self):
-      # Keep worklist variables updating, correspond to workflow variables.
-      # In the new workflow, we may not need this function for the moment.
-      res = []
-      # XXX(WORKFLOW): is there a reason not to return self.objectValues() here?
-      for worklist_variable_value in self.objectValues():
-        res.append(worklist_variable_value)
-      return res
-
-    def _updateDynamicVariable(self):
-      # Keep worklist variables updating, correspond to workflow variables.
-      res = []
-      workflow_variable_id_list = []
-      default_variable_id_list = ['variable_action', 'variable_actor',\
-        'variable_comment', 'variable_error_message', 'variable_history',\
-        'variable_portal_type', 'variable_time']
-
-      # Check workflow variables:
-      for variable_value in self.getParentValue().objectValues(portal_type="Workflow Variable"):
-        variable_id = variable_value.getId()
-        workflow_variable_id_list.append(variable_id)
-        worklist_variable_value = self._getOb(variable_id, None)
-        if (worklist_variable_value is None
-            and variable_value.getForCatalog() == 1
-            and variable_id not in default_variable_id_list):
-          variable_value_ref = variable_value.getReference()
-          worklist_variable_value = self.newContent(portal_type='Worklist Variable')
-          worklist_variable_value.setReference(variable_value_ref)
-          worklist_variable_value.setVariableDefaultExpression(variable_value.getVariableDefaultExpression())
-          worklist_variable_value.setVariableDefaultValue(variable_value.getVariableDefaultValue())
-          res.append(worklist_variable_value)
-        if (worklist_variable_value and worklist_variable_value not in res
-            and variable_value.getForCatalog() == 1):
-          res.append(worklist_variable_value)
-        if (worklist_variable_value in res
-            and variable_value.getForCatalog() == 0):
-          self._delObject(variable_id)
-          res.remove(worklist_variable_value)
-
-      # Append user created worklist variables.
-      for worklist_variable_value in self.objectValues():
-        if worklist_variable_value.getId() not in workflow_variable_id_list:
-          res.append(worklist_variable_value)
-          workflow_variable_id_list.append(worklist_variable_value.getId())
-      return res
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVarMatchKeys')
-    def getVarMatchKeys(self):
-        key_list = []
-        if self.getMatchedPortalTypeList():
-          key_list.append('portal_type')
-        if self.getMatchedSimulationStateList():
-          key_list.append('simulation_state')
-        if self.getMatchedValidationStateList():
-          key_list.append('validation_state')
-        if self.getMatchedCausalityState():
-          key_list.append('causality_state')
-
-        key_list += [dynamic_variable.getReference() for dynamic_variable in self.objectValues()
-         if dynamic_variable.getVariableDefaultValue() or dynamic_variable.getVariableDefaultExpression()]
-
-        return key_list
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVarMatch')
-    def getVarMatch(self, id):
-        """ return value of matched keys"""
-        matches = None
-        if id == 'portal_type':
-          v = self.getMatchedPortalTypeList()
-          if v: matches = tuple(v)
-        elif id in ['validation_state', 'simulation_state', 'causality_state']:
-          if id == 'validation_state':
-            match_reference_list = self.getMatchedValidationStateList()
-          elif id == 'simulation_state':
-            match_reference_list = self.getMatchedSimulationStateList()
-          elif id == 'causality_state':
-            match_reference_list = self.getMatchedCausalityStateList()
-          matches = tuple(match_reference_list)
-        elif id:
-          # Local dynamic variable:
-          dynamic_variable = self._getOb('variable_'+id)
-          dynamic_variable_value = dynamic_variable.getVariableDefaultValue()
-          if dynamic_variable_value:
-            matches = [dynamic_variable_value]
-          # Override initial value if expression set:
-          dynamic_variable_default_expression = dynamic_variable.getVariableDefaultExpressionInstance()
-          if dynamic_variable_default_expression:
-            matches = dynamic_variable_default_expression
-
-        if matches not in ([], None):
-          if not isinstance(matches, (tuple, Expression)):
-            # Old version, convert it.
-            matches = tuple(matches)
-          return matches
-        else:
-          return ()
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVarMatchText')
-    def getVarMatchText(self, id):
-        values = self.getVarMatch(id)
-        if isinstance(values, Expression):
-            return values.text
-        return '; '.join(values)
+                              'getIdentityCriterionDict')
+    def getIdentityCriterionDict(self):
+      """
+      XXX: Move this to Predicate class?
+      """
+      try:
+        return dict(self._identity_criterion)
+      except AttributeError:
+        return {}
 
     # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionType')
     def getActionType(self):
@@ -197,3 +90,17 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
         return action_type_list[0]
       except IndexError:
         return None
+
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+if WITH_LEGACY_WORKFLOW:
+  Worklist.security.declareProtected(Permissions.AccessContentsInformation,
+                                     'getVarMatchKeys')
+  Worklist.getVarMatchkeys = \
+    deprecated('getVarMatchKeys() deprecated; use getCriterionPropertyList()')\
+              (lambda self: self.getCriterionPropertyList())
+
+  Worklist.security.declareProtected(Permissions.AccessContentsInformation,
+                                     'getVarMatch')
+  Worklist.getVarMatch = \
+    deprecated('getVarMatch() deprecated; use getIdentityCriterionDict()')\
+              (lambda self, id: tuple(self._identity_criterion.get(id, ())))

@@ -179,7 +179,6 @@ TransformedResource
 Transition
 TranslatableProperty
 Url
-Variable
 WorkflowVariable
 Guard
 Variation
@@ -194,4 +193,3 @@ AttributeBlacklistedConstraint
 CaptchaPreference
 GeographicalPoint
 Interaction
-Worklist
