@@ -50,7 +50,6 @@ class GuardableMixin(ExpressionMixin('guard_expression')):
                  security_manager,
                  workflow,
                  current_object,
-                 check_roles=True,
                  **kw):
     """
     Checks conditions in this guard. Original source code from DCWorkflow
@@ -78,17 +77,16 @@ class GuardableMixin(ExpressionMixin('guard_expression')):
           break
       else:
         return False
-    if check_roles:
-      guard_role_list = self.getGuardRoleList()
-      if guard_role_list:
-        # Require at least one of the given roles.
-        if user_roles is None:
-          user_roles = getRoles()
-        for role in guard_role_list:
-          if role in user_roles:
-            break
-        else:
-          return False
+    guard_role_list = self.getGuardRoleList()
+    if guard_role_list:
+      # Require at least one of the given roles.
+      if user_roles is None:
+        user_roles = getRoles()
+      for role in guard_role_list:
+        if role in user_roles:
+          break
+      else:
+        return False
     guard_group_list = self.getGuardGroupList()
     if guard_group_list:
       # Require at least one of the specified groups.

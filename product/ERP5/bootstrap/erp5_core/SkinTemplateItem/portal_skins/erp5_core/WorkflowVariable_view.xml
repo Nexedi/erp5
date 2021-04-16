@@ -70,7 +70,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -83,7 +85,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_reference</string>
+                        <string>my_title</string>
+                        <string>my_for_catalog</string>
+                        <string>my_status_included</string>
+                        <string>my_automatic_update</string>
                         <string>my_variable_default_value</string>
                         <string>my_variable_default_expression</string>
                       </list>
@@ -92,7 +99,13 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_guard_expression</string>
+                        <string>my_guard_group_list</string>
+                        <string>my_guard_permission_list</string>
+                        <string>my_guard_role_list</string>
+                        <string>my_comment</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -100,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WorklistVariable_view</string> </value>
+            <value> <string>WorkflowVariable_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

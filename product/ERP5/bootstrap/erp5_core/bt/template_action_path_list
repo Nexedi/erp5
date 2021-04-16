@@ -181,7 +181,6 @@ Workflow | update_security_roles
 Workflow | variable_view
 Workflow | view
 Workflow | worklist_view
-Worklist Variable | view
 Worklist | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
