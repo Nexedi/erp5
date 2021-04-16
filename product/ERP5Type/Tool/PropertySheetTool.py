@@ -89,9 +89,6 @@ class PropertySheetTool(BaseTool):
       'Comment',
       # for workflows
       'Guard',
-      'Variable',
-      'Variable/variable_default_expression_property',
-      'Variable/variable_default_value_property',
       'WorkflowVariable',
       'Interaction',
       'ActionInformation/action_name_property',
@@ -103,7 +100,7 @@ class PropertySheetTool(BaseTool):
       'State/acquire_permission_property',
       'State/selected_property',
       'State/state_type_property',
-      'Worklist',
+      'Predicate',
       'Workflow',
       'Workflow/manager_bypass_property',
       'Workflow/state_variable_property',

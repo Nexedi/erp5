@@ -26,7 +26,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Workflow-only properties (as opposed to Variable Property Sheet for properties shared by Worklist and Workflow variables) </string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
