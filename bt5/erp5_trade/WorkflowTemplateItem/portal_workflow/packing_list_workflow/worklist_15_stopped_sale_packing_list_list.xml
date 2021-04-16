@@ -7,6 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -23,6 +35,16 @@ sale_packing_list_module/view?simulation_state=stopped&portal_type=Sale+Packing+
             <value>
               <tuple>
                 <string>action_type/global</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>portal_type</string>
+                <string>simulation_state</string>
+                <string>local_roles</string>
               </tuple>
             </value>
         </item>
@@ -45,14 +67,6 @@ sale_packing_list_module/view?simulation_state=stopped&portal_type=Sale+Packing+
             </value>
         </item>
         <item>
-            <key> <string>guard_role</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>icon</string> </key>
             <value>
               <none/>
@@ -63,22 +77,6 @@ sale_packing_list_module/view?simulation_state=stopped&portal_type=Sale+Packing+
             <value> <string>worklist_15_stopped_sale_packing_list_list</string> </value>
         </item>
         <item>
-            <key> <string>matched_portal_type</string> </key>
-            <value>
-              <tuple>
-                <string>Sale Packing List</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>matched_simulation_state</string> </key>
-            <value>
-              <tuple>
-                <string>stopped</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Worklist</string> </value>
         </item>
@@ -86,6 +84,61 @@ sale_packing_list_module/view?simulation_state=stopped&portal_type=Sale+Packing+
             <key> <string>title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>local_roles</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Sale Packing List</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>stopped</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

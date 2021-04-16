@@ -875,6 +875,9 @@ def method_getGuardExpressionInstance(self):
 def method_checkGuard(self, *args, **kwargs):
   return ERP5Guardable.checkGuard.im_func(self, *args, **kwargs)
 
+def method_getIdentityCriterionDict(self):
+  return {k: self.getVarMatch(k) for k in self.getVarMatchKeys()}
+
 def method_getAction(self):
   return self.actbox_url
 def method_getActionType(self):
@@ -1045,35 +1048,24 @@ def convertToERP5Workflow(self, temp_object=False):
         worklist.setTitle(qdef.title)
         worklist.setReference(qdef.id)
         worklist.setDescription(qdef.description)
-        for key, values in qdef.var_matches.items():
-          if key == 'portal_type':
-            worklist.setMatchedPortalTypeList(values)
-          elif key == 'simulation_state':
-            worklist.setMatchedSimulationStateList(values)
-          elif key == 'validation_state':
-            worklist.setMatchedValidationStateList(values)
-          elif key == 'causality_state':
-            worklist.setMatchedCausalityState(values)
-          else:
-            # dynamic variable.
-            worklist_variable_value = worklist.newContent(portal_type='Worklist Variable',
-                                                          reference=key)
-            if isinstance(values, Expression):
-              worklist_variable_value.setVariableDefaultExpression(values.text)
-            else:
-              worklist_variable_value.setVariableDefaultValue(values[0]) #XXX(WORKFLOW): to be changed
-
+        criterion_property_list = qdef.var_matches.keys()
+        for key, value in qdef.var_matches.items():
+          worklist.setCriterion(key, value)
         worklist.setAction(qdef.actbox_url)
         worklist.setActionType(qdef.actbox_category)
         worklist.setIcon(qdef.actbox_icon)
         worklist.setActionName(qdef.actbox_name)
         # configure guard
         if qdef.guard:
-          worklist.setGuardRoleList(qdef.guard.roles)
+          from Products.ERP5Type.Tool.WorkflowTool import SECURITY_PARAMETER_ID
+          if qdef.guard.roles:
+            worklist.setCriterion(SECURITY_PARAMETER_ID, qdef.guard.roles)
+            criterion_property_list.append(SECURITY_PARAMETER_ID)
           worklist.setGuardPermissionList(qdef.guard.permissions)
           worklist.setGuardGroupList(qdef.guard.groups)
           if qdef.guard.expr is not None:
             worklist.setGuardExpression(qdef.guard.expr.text)
+        worklist.setCriterionPropertyList(criterion_property_list)
     elif workflow_class_name == 'InteractionWorkflowDefinition':
       dc_workflow_interaction_value_dict = self.interactions
       # create interactions (portal_type = Interaction)
@@ -1284,6 +1276,7 @@ WorklistDefinition.getGuardGroupList = method_getGuardGroupList
 WorklistDefinition.getGuardPermissionList = method_getGuardPermissionList
 WorklistDefinition.getGuardExpressionInstance = method_getGuardExpressionInstance
 WorklistDefinition.checkGuard = method_checkGuard
+WorklistDefinition.getIdentityCriterionDict = method_getIdentityCriterionDict
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD

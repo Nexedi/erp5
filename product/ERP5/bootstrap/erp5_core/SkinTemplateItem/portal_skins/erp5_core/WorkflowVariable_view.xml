@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Variable_view</string> </value>
+            <value> <string>WorkflowVariable_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
