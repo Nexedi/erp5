@@ -107,8 +107,10 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-if "next" not in safe_builtins: # BBB
-    add_builtins(next=guarded_next)
+#if "next" not in safe_builtins: # BBB
+# override the default next if exists
+safe_builtins.update(next=guarded_next)
+#    add_builtins()
 
 _safe_class_attribute_dict = {}
 import inspect
