@@ -78,8 +78,10 @@ del safe_builtins['list']
 
 add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
              dict=dict, list=list)
+BBB_ACCESS_CONTROL = False
 if "set" not in safe_builtins: # BBB
     add_builtins(set=set, frozenset=frozenset, slice=slice)
+    BBB_ACCESS_CONTROL = True
 
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              property=property, staticmethod=staticmethod,
@@ -106,10 +108,10 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-BBB_ACCESS_CONTROL = False
-if "next" not in safe_builtins: # BBB
-    add_builtins(next=guarded_next)
-    BBB_ACCESS_CONTROL = True
+#if "next" not in safe_builtins: # BBB
+# override the default next if exists
+safe_builtins.update(next=guarded_next)
+#    add_builtins()
 
 _safe_class_attribute_dict = {}
 import inspect
