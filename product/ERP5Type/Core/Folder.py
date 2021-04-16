@@ -16,7 +16,7 @@
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,d
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -823,19 +823,17 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       id_list  = list(self.objectIds())
       # set new id by bundle
       for x in xrange(len(self) / BUNDLE_COUNT):
-        self._recurseCallMethod(migration_generate_id_method)
-        #self.activate(activity="SQLQueue", tag=tag, priority=2).ERP5Site_setNewIdPerBundle(
-        #  self.getPath(),
-        #  id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],
-        #  migration_generate_id_method, tag)
+        self.activate(activity="SQLQueue", tag=tag, priority=2).ERP5Site_setNewIdPerBundle(
+          self.getPath(),
+          id_list[x*BUNDLE_COUNT:(x+1)*BUNDLE_COUNT],
+          migration_generate_id_method, tag)
 
       remaining_id_count = len(self) % BUNDLE_COUNT
       if remaining_id_count:
-        self._recurseCallMethod(migration_generate_id_method)
-        #self.activate(activity="SQLQueue", tag=tag, priority=2).ERP5Site_setNewIdPerBundle(
-        #  self.getPath(),
-        #  id_list[-remaining_id_count:],
-        #  migration_generate_id_method, tag)
+        self.activate(activity="SQLQueue", tag=tag, priority=2).ERP5Site_setNewIdPerBundle(
+          self.getPath(),
+          id_list[-remaining_id_count:],
+          migration_generate_id_method, tag)
     else:
       tag = 'nothing'
     # copy from btree to hbtree
