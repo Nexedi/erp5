@@ -132,7 +132,10 @@ class Worklist(IdAsReferenceMixin("worklist_"), GuardableMixin, Predicate):
       """
       XXX: Move this to Predicate class?
       """
-      return dict(self._identity_criterion)
+      try:
+        return dict(self._identity_criterion)
+      except AttributeError:
+        return {}
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getVarMatchKeys')

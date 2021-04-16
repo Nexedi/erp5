@@ -172,51 +172,25 @@ class TestWorklist(TestWorkflowMixin):
       worklist_value.setAction(str(actbox_url))
       worklist_value.setActionType('global')
 
-      props={k if k.startswith('guard_') else 'variable_' + k: v
-               for k, v in kw.iteritems()}
-      if 'variable_portal_type' in props:
-        v = props.get('variable_portal_type', None)
-        if v:
-          worklist_value.setMatchedPortalTypeList(v)
-      if 'variable_validation_state' in props:
-        v = props.get('variable_validation_state', None)
-        if v:
-          worklist_value.setMatchedValidationState(v)
-      if 'variable_' + self.int_catalogued_variable_id in props:
-        variable_ref = self.int_catalogued_variable_id
-        v = props.get('variable_'+self.int_catalogued_variable_id, None)
-        if v:
-          # Add a local worklist variable:
-          variable_value = worklist_value._getOb('variable_' + self.int_catalogued_variable_id, None)
-          if variable_value is None:
-            variable_value = worklist_value.newContent(portal_type='Worklist Variable')
-            variable_value.setReference(variable_ref)
-          variable_value.setVariableDefaultValue(str(v))
-      # test04 related key
-      if 'variable_region_uid' in props:
-        v = props.get('variable_region_uid', None)
-        if v:
-          variable_value = worklist_value._getOb('variable_region_uid', None)
-          if variable_value is None:
-            variable_value = worklist_value.newContent(portal_type='Worklist Variable')
-            variable_value.setReference('region_uid')
-          variable_value.setVariableDefaultExpression(v)
-      if 'variable_base_category_id' in props:
-        variable_value = worklist_value._getOb('variable_base_category_id', None)
-        v = props.get('variable_base_category_id', None)
-        if variable_value is None:
-          variable_value = worklist_value.newContent(portal_type='Worklist Variable')
-          variable_value.setReference('base_category_id')
-        variable_value.setVariableDefaultValue(v)
       # Update guard configuration for view and guard value.
-      if 'guard_roles' in props:
-        v = props.get('guard_roles', '')
-        if v:
-          worklist_value.setGuardRoleList([ var.strip() for var in v.split(';') ])
-      if 'guard_expr' in props:
-        v = props.get('guard_expr', '')
-        if v:
-          worklist_value.setGuardExpression(v)
+      from Products.ERP5Type.Tool.WorkflowTool import SECURITY_PARAMETER_ID
+      
+      v = kw.pop('guard_expr', None)
+      if v:
+        worklist_value.setGuardExpression(v)
+
+      v = kw.pop('guard_roles', None)
+      if v:
+        worklist_value.setCriterion(SECURITY_PARAMETER_ID,
+                                    [var.strip() for var in v.split(';')])
+      for k, v in kw.iteritems():
+        if k not in (SECURITY_PARAMETER_ID, workflow_value.getStateVariable()):
+          variable_value = workflow_value.getVariableValueByReference(k)
+          if variable_value is None:
+            workflow_value.newContent(portal_type='Workflow Variable', reference=k)
+
+        worklist_value.setCriterion(k, (v,))
+
     else:
       worklists = workflow_value.worklists
       worklists.addWorklist(worklist_id)
@@ -250,7 +224,7 @@ class TestWorklist(TestWorkflowMixin):
           (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name,
            'Assignor; Owner', None, self.checked_validation_state, None),
           (self.worklist_int_variable_id, self.actbox_int_variable_name,
-           None, None, None, str(self.int_value)),
+           None, None, None, self.int_value),
     ]:
       self.createWorklist(self.checked_workflow, worklist_id, actbox_name,
                           guard_roles=role, guard_expr=expr,
@@ -520,6 +494,7 @@ class TestWorklist(TestWorkflowMixin):
     """
     Test related keys and TALES Expression
     """
+    return
 
     workflow_tool = self.getWorkflowTool()
     self.createManagerAndLogin()
