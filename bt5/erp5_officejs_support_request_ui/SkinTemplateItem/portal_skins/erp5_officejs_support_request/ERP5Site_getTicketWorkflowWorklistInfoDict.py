@@ -13,9 +13,10 @@ workflow = portal.portal_workflow.ticket_workflow
 workflow_state_var = workflow.variables.getStateVar()
 
 for worklist in workflow.worklists.objectValues():
+  identity_criterion_dict = worklist.getIdentityCriterionDict()
   if portal_type \
-       and 'portal_type' in worklist.getVarMatchKeys() \
-       and portal_type not in worklist.getVarMatch('portal_type'):
+       and 'portal_type' in worklist.getCriterionPropertyList() \
+       and portal_type not in identity_criterion_dict.get('portal_type'):
     continue
 
   query_list = [{
@@ -27,8 +28,7 @@ for worklist in workflow.worklists.objectValues():
        'value': role, } for role in worklist.getGuardRoleList()]
   }]
 
-  for key in worklist.getVarMatchKeys():
-    value = worklist.getVarMatch(key)
+  for key, value in identity_criterion_dict.iteritems():
     if key == workflow_state_var:
       # instead of having {'validation_state': 'draft'}, we want to have
       #  {'translated_validation_state_title': 'Brouillon'}

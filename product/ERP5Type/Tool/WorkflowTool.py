@@ -46,8 +46,11 @@ from sets import ImmutableSet
 from zLOG import LOG, WARNING
 
 WORKLIST_METADATA_KEY = 'metadata'
-SECURITY_PARAMETER_ID = 'local_roles'
 COUNT_COLUMN_TITLE = 'count'
+
+SECURITY_PARAMETER_ID = 'local_roles'
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+ModuleSecurityInfo(__name__).declarePublic('SECURITY_PARAMETER_ID')
 
 class WorkflowTool(BaseTool, OriginalWorkflowTool):
   """

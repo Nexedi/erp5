@@ -1045,24 +1045,8 @@ def convertToERP5Workflow(self, temp_object=False):
         worklist.setTitle(qdef.title)
         worklist.setReference(qdef.id)
         worklist.setDescription(qdef.description)
-        for key, values in qdef.var_matches.items():
-          if key == 'portal_type':
-            worklist.setMatchedPortalTypeList(values)
-          elif key == 'simulation_state':
-            worklist.setMatchedSimulationStateList(values)
-          elif key == 'validation_state':
-            worklist.setMatchedValidationStateList(values)
-          elif key == 'causality_state':
-            worklist.setMatchedCausalityState(values)
-          else:
-            # dynamic variable.
-            worklist_variable_value = worklist.newContent(portal_type='Worklist Variable',
-                                                          reference=key)
-            if isinstance(values, Expression):
-              worklist_variable_value.setVariableDefaultExpression(values.text)
-            else:
-              worklist_variable_value.setVariableDefaultValue(values[0]) #XXX(WORKFLOW): to be changed
-
+        for key, value in qdef.var_matches.items():
+          worklist.setCriterion(key, value)
         worklist.setAction(qdef.actbox_url)
         worklist.setActionType(qdef.actbox_category)
         worklist.setIcon(qdef.actbox_icon)

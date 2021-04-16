@@ -35,10 +35,12 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.mixin.guardable import GuardableMixin
+from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5Type.Utils import deprecated
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
-class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
+class Worklist(IdAsReferenceMixin("worklist_"), GuardableMixin, Predicate):
     """
     A ERP5 Worklist.
     Four Variable: portal_type; simulation_state; validation_state; causality_state
@@ -59,9 +61,9 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
       'DublinCore',
       'Reference',
       'Comment',
-      'Worklist',
       'Guard',
       'ActionInformation',
+      'Predicate',
     )
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -125,68 +127,30 @@ class Worklist(IdAsReferenceMixin("worklist_"), XMLObject, GuardableMixin):
       return res
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVariableMatchDict')
+    def getIdentityCriterionDict(self):
+      """
+      XXX: Move this to Predicate class?
+      """
+      return dict(self._identity_criterion)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getVarMatchKeys')
+    @deprecated('getVarMatchKeys() deprecated; use getCriterionPropertyList()')
     def getVarMatchKeys(self):
-        key_list = []
-        if self.getMatchedPortalTypeList():
-          key_list.append('portal_type')
-        if self.getMatchedSimulationStateList():
-          key_list.append('simulation_state')
-        if self.getMatchedValidationStateList():
-          key_list.append('validation_state')
-        if self.getMatchedCausalityState():
-          key_list.append('causality_state')
-
-        key_list += [dynamic_variable.getReference() for dynamic_variable in self.objectValues()
-         if dynamic_variable.getVariableDefaultValue() or dynamic_variable.getVariableDefaultExpression()]
-
-        return key_list
+      """
+      DCWorkflow API
+      """
+      return self.getCriterionPropertyList()
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getVarMatch')
+    @deprecated('getVarMatch() deprecated; use getIdentityCriterionDict()')
     def getVarMatch(self, id):
-        """ return value of matched keys"""
-        matches = None
-        if id == 'portal_type':
-          v = self.getMatchedPortalTypeList()
-          if v: matches = tuple(v)
-        elif id in ['validation_state', 'simulation_state', 'causality_state']:
-          if id == 'validation_state':
-            match_reference_list = self.getMatchedValidationStateList()
-          elif id == 'simulation_state':
-            match_reference_list = self.getMatchedSimulationStateList()
-          elif id == 'causality_state':
-            match_reference_list = self.getMatchedCausalityStateList()
-          matches = tuple(match_reference_list)
-        elif id:
-          # Local dynamic variable:
-          dynamic_variable = self._getOb('variable_'+id)
-          dynamic_variable_value = dynamic_variable.getVariableDefaultValue()
-          if dynamic_variable_value:
-            matches = [dynamic_variable_value]
-          # Override initial value if expression set:
-          dynamic_variable_default_expression = dynamic_variable.getVariableDefaultExpressionInstance()
-          if dynamic_variable_default_expression:
-            matches = dynamic_variable_default_expression
-
-        if matches not in ([], None):
-          if not isinstance(matches, (tuple, Expression)):
-            # Old version, convert it.
-            matches = tuple(matches)
-          return matches
-        else:
-          return ()
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVarMatchText')
-    def getVarMatchText(self, id):
-        values = self.getVarMatch(id)
-        if isinstance(values, Expression):
-            return values.text
-        return '; '.join(values)
+      """ return value of matched keys"""
+      return tuple(self._identity_criterion.get(id, ()))
 
     # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getActionType')
     def getActionType(self):

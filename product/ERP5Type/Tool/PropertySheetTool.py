@@ -103,7 +103,7 @@ class PropertySheetTool(BaseTool):
       'State/acquire_permission_property',
       'State/selected_property',
       'State/state_type_property',
-      'Worklist',
+      'Predicate',
       'Workflow',
       'Workflow/manager_bypass_property',
       'Workflow/state_variable_property',
