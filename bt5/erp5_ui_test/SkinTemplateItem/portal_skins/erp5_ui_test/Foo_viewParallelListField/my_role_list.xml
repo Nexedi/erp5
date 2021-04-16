@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -71,15 +73,19 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_role_list</string> </value>
+                    <value> <string>my_view_mode_category_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Career_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Roles</string> </value>
                 </item>
               </dictionary>
             </value>
