@@ -46,7 +46,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title
       tal:define="
-        title title | string:ERP5;
+        title title | python:'ERP5';
         header_title header_title | nothing;
       "
       tal:content="python: header_title or '%s | %s' % (title, here.getPortalObject().title_or_id())"
