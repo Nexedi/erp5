@@ -7,6 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -27,6 +39,16 @@ expense_validation_request_module?simulation_state=validated&portal_type:list=%(
             </value>
         </item>
         <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>portal_type</string>
+                <string>simulation_state</string>
+                <string>local_roles</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Open Expense Validation Requests</string> </value>
         </item>
@@ -43,15 +65,6 @@ expense_validation_request_module?simulation_state=validated&portal_type:list=%(
             </value>
         </item>
         <item>
-            <key> <string>guard_role</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>icon</string> </key>
             <value>
               <none/>
@@ -62,22 +75,6 @@ expense_validation_request_module?simulation_state=validated&portal_type:list=%(
             <value> <string>worklist_1C_open_expense_validation_request_list</string> </value>
         </item>
         <item>
-            <key> <string>matched_portal_type</string> </key>
-            <value>
-              <tuple>
-                <string>Expense Validation Request</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>matched_simulation_state</string> </key>
-            <value>
-              <tuple>
-                <string>validated</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Worklist</string> </value>
         </item>
@@ -85,6 +82,62 @@ expense_validation_request_module?simulation_state=validated&portal_type:list=%(
             <key> <string>title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>local_roles</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Expense Validation Request</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>validated</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

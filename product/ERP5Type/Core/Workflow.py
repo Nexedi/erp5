@@ -510,21 +510,7 @@ class Workflow(XMLObject):
       action_box_name = worklist_definition.getActionName()
       guard_role_list = worklist_definition.getGuardRoleList()
       if action_box_name:
-        variable_match = {}
-        for key in worklist_definition.getVarMatchKeys():
-          var = worklist_definition.getVarMatch(key)
-          if isinstance(var, Expression):
-            if state_change_information is None:
-              state_change_information = StateChangeInfo(portal, self,
-                                         kwargs=info.__dict__.copy())
-              if expression_context is None:
-                expression_context = createExpressionContext(state_change_information)
-            evaluated_value = var(expression_context)
-            if isinstance(evaluated_value, (str, int, long)):
-              evaluated_value = [str(evaluated_value)]
-          else:
-            evaluated_value = [x % info for x in var]
-          variable_match[key] = evaluated_value
+        variable_match = worklist_definition.getIdentityCriterionDict()
         portal_type_match = variable_match.get('portal_type')
         if portal_type_match:
           # in case the current workflow is not associated with portal_types
@@ -540,8 +526,7 @@ class Workflow(XMLObject):
           not check_guard or
           worklist_definition.checkGuard(security_manager,
                                          self,
-                                         portal,
-                                         check_roles=False)
+                                         portal)
         ):
           format_data = TemplateDict()
           format_data._push(info)

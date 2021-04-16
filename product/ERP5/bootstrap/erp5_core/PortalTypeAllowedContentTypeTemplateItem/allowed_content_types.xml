@@ -151,7 +151,4 @@
   <item>Interaction Workflow</item>
   <item>Workflow</item>
  </portal_type>
- <portal_type id="Worklist">
-  <item>Worklist Variable</item>
- </portal_type>
 </allowed_content_type_list>
