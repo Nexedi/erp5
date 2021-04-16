@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_variable_default_expression</string> </value>
+            <value> <string>my_action_type2</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -34,10 +35,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -52,10 +49,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
@@ -72,14 +65,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The category of the transition displayed in Action Box.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_title</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -87,7 +78,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Variable Expression (Overrides Variable Value)</string> </value>
+                    <value> <string>Display in Action Box Category</string> </value>
                 </item>
               </dictionary>
             </value>
