@@ -49,7 +49,7 @@
         title title | string:ERP5;
         header_title header_title | nothing;
       "
-      tal:content="python: header_title or '%s | %s' % (title, here.getPortalObject().title_or_id())"
+      tal:content="python: header_title or '%s | %s' % (title, here.getPortalObject().title_or_id().decode('utf-8'))"
     ></title>
     <link rel="icon" tal:attributes="href python: portal_path + '/favicon.ico'" type="image/x-icon" />
     <link rel="shortcut icon" tal:attributes="href python: portal_path + '/favicon.ico'" type="image/x-icon" />

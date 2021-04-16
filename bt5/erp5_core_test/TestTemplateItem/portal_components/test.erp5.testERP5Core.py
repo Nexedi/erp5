@@ -647,6 +647,15 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(response.status, 401)
     self.assertEqual(response.getheader('WWW-Authenticate'), None)
 
+  def test_standardErrorMessageNonAscii(self):
+    # regression test for error message when portal title is not ASCII
+    self.portal.setTitle('文字化け')
+    self.assertIn(
+        '文字化け',
+        self.portal.standard_error_message(
+            error_type="MyErrorType",
+            error_message="my error message."))
+
   def test_standardErrorMessageShouldNotRaiseUnauthorizeOnUnauthorizeDocument(self):
     """
       When trying to show the `standard_error_message` on a document that user
