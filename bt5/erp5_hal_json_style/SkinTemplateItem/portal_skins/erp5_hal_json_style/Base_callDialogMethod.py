@@ -71,7 +71,7 @@ if dialog_method == 'Base_configureSortOn':
 # Exceptions for Workflow
 if dialog_method == 'Workflow_statusModify':
   return context.Workflow_statusModify(form_id=form_id,
-                                        dialog_id=dialog_id)
+                                        dialog_id=dialog_id, REQUEST=request)
 
 # Exception for edit relation
 if dialog_method == 'Base_editRelation':
