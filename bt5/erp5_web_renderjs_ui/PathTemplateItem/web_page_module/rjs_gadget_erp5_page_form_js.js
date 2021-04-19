@@ -237,11 +237,11 @@ and handling data send&receive.
                 });
             }
           })
-          .push(null, function (error) {
-            if (error.target.status === 404) {
-              return {};
+          .push(undefined, function (error) {
+            if ((error instanceof jIO.util.jIOError) && error.target.status === 404) {
+              return null;
             }
-            throw new jIO.util.jIOError("Cannot find document '" + options.view + "'", 404);
+            throw error;
           });
       }
 
