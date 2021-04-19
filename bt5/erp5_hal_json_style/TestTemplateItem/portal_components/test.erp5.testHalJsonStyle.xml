@@ -45,7 +45,10 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W:723,  4: Unused variable \'result\' (unused-variable)</string>
+                <string>W:745,  4: Unused variable \'response\' (unused-variable)</string>
+              </tuple>
             </value>
         </item>
         <item>

@@ -713,6 +713,50 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_draft_view(self):
+    document = self._makeDocument()
+
+    # (<HTTPRequest, URL=https://softinst120576.host.vifib.net/erp5/web_site_module/renderjs_runner/hateoas/ERP5Document_getHateoas>, WSGIResponse(''), 'view_draft', 'traverse', None, None, 10, None, None, None, 'foo_module/9', 1, None, None, None, '[]', None, None, None, None, '', None, None)
+    # (REQUEST, response, view, mode, query, select_list, limit, local_roles, form, form_data, relative_url, restricted, list_method, default_param_json, form_relative_url, bulk_list, group_by, sort_on, selection_domain, extra_param_json, portal_status_message, portal_status_level, keep_items)
+    # raise NotImplementedError(document.getRelativeUrl()) # 'foo_module/x',
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="validate_action")
+    fake_request = do_fake_request("POST")
+
+    # , data=(
+    #   ('field_your_comment', ''),
+    #   ('field_your_workflow_action', 'validate_action'),
+    #   ('form_id', 'Foo_view'),
+    #   ('selection_name', 'foo_selection'),
+    #   ('dialog_id', 'Base_viewWorkflowActionDialog'),
+    #   ('dialog_method', 'Workflow_statusModify'),
+    # ))
+
+    fake_request.set('field_your_comment', '')
+    fake_request.set('field_your_workflow_action', 'validate_action')
+    # fake_request.set('form_id', 'Foo_view')
+    # fake_request.set('selection_name', 'foo_selection')
+    # fake_request.set('dialog_id', 'Base_viewWorkflowActionDiDraft view access:alog')
+    # fake_request.set('dialog_method', 'Workflow_statusModify')
+    # fake_portal = replace_request(fake_request, self.portal)
+
+    # result = fake_portal.web_site_module.hateoas.foo_module.Draft view access:Base_callDialogMethod(
+
+    response = document.Base_callDialogMethod(
+      REQUEST=fake_request,
+      dialog_method='Workflow_statusModify',
+      dialog_id='Base_viewWorkflowActionDialog',
+      field_your_workflow_action='validate_action',
+      form_id='Foo_view',
+    )
+
+
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_disable_listbox_search_column(self):
     document = self._makeDocument()
 
