@@ -10,9 +10,9 @@
 <tr><td rowspan="1" colspan="3" tal:content="template/title_or_id"></td></tr>
 </thead><tbody>
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/init" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/prepare_data" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/view_create_response_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/view_create_response_dialog" />
 
 <tal:block tal:define="dialog_content_configuration python: {'field_your_response_event_title': 'Re: erp5_crm_ui_test_event_title',
                                                              'field_your_response_event_portal_type': 'Note',
@@ -21,28 +21,30 @@
                                                              'field_your_response_workflow_action': 'send',
                                                              'field_my_default_destination': 'person_module/erp5_crm_ui_test_agent',
                                                              'field_your_response_event_text_content': '<p><br></p><blockquote type=&quot;cite&quot;>Hello, I have an issue</blockquote><p><br></p>'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_create_response_dialog_content" />
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/check_create_response_dialog_content" />
 </tal:block>
 
 <tal:block tal:define="dialog_content_configuration python: {'field_your_response_event_title': 'erp5_crm_ui_test_response_title',
                                                              'field_your_response_event_portal_type': 'Letter',
                                                              'field_your_response_event_resource': '',
                                                              'field_your_response_event_start_date': '2010-01-01T00:00:00',
-                                                             'field_your_response_event_notification_message': '',
+                                                             'field_your_response_event_notification_message': 'erp5_crm_ui_test_notification_reference',
                                                              'field_your_response_workflow_action': 'draft',
                                                              'field_my_default_destination': 'person_module/erp5_crm_ui_test_agent',
                                                              'field_your_response_event_text_content': '<p>Foo<br>Bar</p>'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/fill_create_response_dialog_content" />
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/fill_create_response_dialog_content" />
 </tal:block>
 
-<!-- Header has a save button -->
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-
-<tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Response Created.'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Response Created.</td>
+  <td></td>
+</tr>
 
 <tal:block tal:define="response_configuration python: {'field_my_title': 'erp5_crm_ui_test_response_title',
                                                        'field_my_portal_type': 'Letter',
@@ -51,8 +53,8 @@
                                                        'simulation_state': 'Draft',
                                                        'field_my_source_title': 'erp5_crm_ui_test_agent_title',
                                                        'field_my_destination_title': 'erp5_crm_ui_test_customer_title',
-                                                       'field_my_text_content': '<p>Foo<br>Bar</p>'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_response_content" />
+                                                       'field_my_text_content': '<p>No pbl. We will solve your issue.</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/check_response_content" />
 </tal:block>
 
 </tbody></table>

@@ -3,10 +3,10 @@ from DateTime import DateTime
 portal = context.getPortalObject()
 
 person_portal_type = "Person"
-customer_id = "erp5_crm_renderjs_ui_test_customer"
-customer_title = "erp5_crm_renderjs_ui_test_customer_title"
-agent_id = "erp5_crm_renderjs_ui_test_agent"
-agent_title = "erp5_crm_renderjs_ui_test_agent_title"
+customer_id = "erp5_crm_ui_test_customer"
+customer_title = "erp5_crm_ui_test_customer_title"
+agent_id = "erp5_crm_ui_test_agent"
+agent_title = "erp5_crm_ui_test_agent_title"
 
 module = portal.getDefaultModule(person_portal_type)
 customer = module.newContent(
@@ -20,10 +20,23 @@ agent = module.newContent(
   title=agent_title
 )
 
+campaign_portal_type = "Campaign"
+campaign_id = "erp5_crm_ui_test_campaign"
+module = portal.getDefaultModule(campaign_portal_type)
+campaign = module.newContent(
+  portal_type=campaign_portal_type,
+  id=campaign_id,
+  title=campaign_id,
+  destination_section_value=customer,
+  source_trade_value=agent,
+)
+campaign.submit()
+
+
 notification_message_portal_type = "Notification Message"
-notification_message_id = "erp5_crm_renderjs_ui_test_notification"
-notification_message_title = "erp5_crm_renderjs_ui_test_notification_title"
-notification_message_reference = "erp5_crm_renderjs_ui_test_notification_reference"
+notification_message_id = "erp5_crm_ui_test_notification"
+notification_message_title = "erp5_crm_ui_test_notification_title"
+notification_message_reference = "erp5_crm_ui_test_notification_reference"
 notification_message_text_content = """No pbl.
 We will solve your issue.
 """
@@ -39,8 +52,8 @@ notification_message = module.newContent(
 notification_message.validate()
 
 event_portal_type = "Note"
-event_id = "erp5_crm_renderjs_ui_test_event"
-event_title = "erp5_crm_renderjs_ui_test_event_title"
+event_id = "erp5_crm_ui_test_event"
+event_title = "erp5_crm_ui_test_event_title"
 event_text_content = """Hello,
 I have an issue
 """
