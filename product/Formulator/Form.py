@@ -393,6 +393,10 @@ class Form:
         Everything that could be validated will be added to REQUEST.
         """
         try:
+            fuck = REQUEST.get('field_your_workflow_action')
+            form_id = REQUEST.get('form_id')
+            if form_id == "Foo_view":
+                raise NotImplementedError(fuck, key_prefix)
             result = self.validate_all(REQUEST, key_prefix=key_prefix)
         except FormValidationError, e:
             # put whatever result we have in REQUEST

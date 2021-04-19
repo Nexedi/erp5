@@ -97,7 +97,7 @@ class StringBaseValidator(Validator):
       value = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
       if value is None:
         if field.get_value('required'):
-          raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
+            raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups. key: %s, value: %s' % (repr(field.id), key, value)
         else:
           raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
       if isinstance(value, str):
