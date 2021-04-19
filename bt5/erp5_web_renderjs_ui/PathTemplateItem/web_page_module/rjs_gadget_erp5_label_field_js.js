@@ -233,9 +233,7 @@
             .push(function (declared_gadget) {
               field_gadget = declared_gadget;
             });
-
-          if (field_json && gadget.state.options.development_link !== false &&
-              (gadget.state.label === true || gadget.state.label_text)) {
+          if (field_json && gadget.state.options.development_link !== false) {
             queue
               .push(function () {
                 return gadget.getTranslationList([
@@ -250,7 +248,7 @@
 
                 if (gadget.state.label === true) {
                   root_element = gadget.props.label_element;
-                } else if (gadget.state.label_text) {
+                } else {
                   root_element = gadget.element;
                 }
 
