@@ -721,19 +721,17 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     # raise NotImplementedError(document.getRelativeUrl()) # 'foo_module/x',
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="validate_action")
-    fake_request = do_fake_request("POST")
+    fake_request = do_fake_request("POST" , data=(
+      ('field_your_comment', ''),
+      ('field_your_workflow_action', 'validate_action'),
+      # ('form_id', 'Foo_view'),
+      ('selection_name', 'foo_selection'),
+      # ('dialog_id', 'Base_viewWorkflowActionDialog'),
+      # ('dialog_method', 'Workflow_statusModify'),
+    ))
 
-    # , data=(
-    #   ('field_your_comment', ''),
-    #   ('field_your_workflow_action', 'validate_action'),
-    #   ('form_id', 'Foo_view'),
-    #   ('selection_name', 'foo_selection'),
-    #   ('dialog_id', 'Base_viewWorkflowActionDialog'),
-    #   ('dialog_method', 'Workflow_statusModify'),
-    # ))
-
-    fake_request.set('field_your_comment', '')
-    fake_request.set('field_your_workflow_action', 'validate_action')
+    # fake_request.set('field_your_comment', '')
+    # fake_request.set('field_your_workflow_action', 'validate_action')
     # fake_request.set('form_id', 'Foo_view')
     # fake_request.set('selection_name', 'foo_selection')
     # fake_request.set('dialog_id', 'Base_viewWorkflowActionDiDraft view access:alog')
@@ -746,10 +744,10 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       REQUEST=fake_request,
       dialog_method='Workflow_statusModify',
       dialog_id='Base_viewWorkflowActionDialog',
-      field_your_workflow_action='validate_action',
       form_id='Foo_view',
     )
-
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view_draft")
 
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',

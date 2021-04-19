@@ -70,8 +70,13 @@ if dialog_method == 'Base_configureSortOn':
                                       field_sort_order=kw['field_sort_order'])
 # Exceptions for Workflow
 if dialog_method == 'Workflow_statusModify':
+  fuck = request.get('field_your_workflow_action')
+  merde = request.get('form_id')
+  # if form_id == 'Foo_view':
+    # NotImplementedError: ('Foo_view', 'Base_viewWorkflowActionDialog', 'validate_action', None)
+    # raise NotImplementedError(form_id, dialog_id, fuck, merde)
   return context.Workflow_statusModify(form_id=form_id,
-                                        dialog_id=dialog_id)
+                                        dialog_id=dialog_id, REQUEST=request)
 
 # Exception for edit relation
 if dialog_method == 'Base_editRelation':

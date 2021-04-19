@@ -16,6 +16,12 @@ try:
   # This is the pending of form_dialog.
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
+  fuck = request.get('field_your_workflow_action')
+  merde = request.get('form_id')
+  if form_id == 'Foo_view':
+    # NotImplementedError: ('Foo_view', 'Base_viewWorkflowActionDialog', 'validate_action', None)
+    # raise NotImplementedError(form_id, dialog_id, fuck, merde)
+    pass
   form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
 except FormValidationError, validation_errors:
