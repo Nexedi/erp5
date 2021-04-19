@@ -1449,7 +1449,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         view_context = traversed_document
       else:
         view_context = traversed_document.restrictedTraverse(current_action['other_context'])
-      view_instance = getattr(view_context, current_action['view_id'])
+
+      view_instance = getattr(view_context, current_action['view_id'], None)
+      if view_instance is None:
+        response.setStatus(404)
+        return ""
       if (view_instance is not None):
         embedded_dict = {
           '_links': {
@@ -2385,7 +2389,6 @@ if mode == 'url_generator':
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
-response.setHeader('Content-Type', mime_type)
 hateoas = calculateHateoas(relative_url=relative_url,
                            REQUEST=REQUEST, response=response, view=view, mode=mode,
                            query=query, select_list=select_list, limit=limit, form=form,
@@ -2396,4 +2399,5 @@ hateoas = calculateHateoas(relative_url=relative_url,
 if hateoas == "":
   return hateoas
 else:
+  response.setHeader('Content-Type', mime_type)
   return json.dumps(hateoas, indent=2)
