@@ -246,6 +246,12 @@ and handling data send&receive.
                   }});
                 });
             }
+          })
+          .push(undefined, function (error) {
+            if ((error instanceof jIO.util.jIOError) && error.target.status === 404) {
+              return null;
+            }
+            throw error;
           });
       }
 
