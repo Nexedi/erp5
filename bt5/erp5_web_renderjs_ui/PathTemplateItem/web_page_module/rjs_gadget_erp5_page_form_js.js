@@ -236,6 +236,12 @@ and handling data send&receive.
                   }});
                 });
             }
+          })
+          .push(null, function (error) {
+            if (error.target.status === 404) {
+              return {};
+            }
+            throw new jIO.util.jIOError("Cannot find document '" + options.view + "'", 404);
           });
       }
 
