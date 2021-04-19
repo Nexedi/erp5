@@ -45,22 +45,22 @@
       </tal:block>
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
       <tr>
-        <td>assertElementNotPresent</td>
+        <td>assertElementPresent</td>
         <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_category_list/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
-        <td>assertElementPresent</td>
+        <td>assertElementNotPresent</td>
         <td>//label/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_category_list/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
-        <td>assertElementPresent</td>
+        <td>assertElementNotPresent</td>
         <td>//label/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_role_list/manage_main"]</td>
         <td></td>
       </tr>
       <tr>
-        <td>assertElementPresent</td>
+        <td>assertElementNotPresent</td>
         <td>//div[@data-gadget-scope="PARALLEL_SUB_FIELD_0"]//a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=%5ERoles%24&amp;lang=en"]</td>
         <td></td>
       </tr>
