@@ -1184,13 +1184,15 @@ class TestERP5Credential(ERP5TypeTestCase):
     reference = self._testMethodName
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
-        default_email_text='some@one.com',)
+        default_email_text='some@one.com',
+        password="secret")
     self.login()
     self.assertIn('Credential%20Request%20Created.', response)
     self.commit()
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
-        default_email_text='some@one.com',)
+        default_email_text='some@one.com',
+        password="secret")
     self.login()
     # Now is time to assert that even if no reindexation was done yet, another
     # request will already refuse to create new credential request.
