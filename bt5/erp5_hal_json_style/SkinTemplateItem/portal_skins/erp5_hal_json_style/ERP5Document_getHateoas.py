@@ -534,14 +534,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       else:
         result['subfield_list'] = [result.copy()]
         result['subfield_list'][0]['field_type'] = 'MultiListField'
-      if (preferred_html_style_developer_mode and
-           'edit_field_href' in result):
-        result['subfield_list'][0]["edit_field_href"] = result["edit_field_href"]
-      if preferred_html_style_translator_mode and 'subfield_list':
-        if "translate_title_href" in result:
-          result['subfield_list'][0]["translate_title_href"] = result["translate_title_href"]
-        if "translate_description_href" in result:
-          result['subfield_list'][0]["translate_description_href"] = result["translate_description_href"]
       result['title'] = ''
 
     return result
