@@ -713,6 +713,17 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_non_existing_action(self):
+    document = self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="not_existing_action")
+    self.assertEquals(fake_request.RESPONSE.status, 404)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_draft_view(self):
     document = self._makeDocument()
 
