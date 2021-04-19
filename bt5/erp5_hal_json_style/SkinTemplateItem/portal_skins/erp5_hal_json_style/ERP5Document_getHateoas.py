@@ -1450,7 +1450,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         view_context = traversed_document
       else:
         view_context = traversed_document.restrictedTraverse(current_action['other_context'])
-      view_instance = getattr(view_context, current_action['view_id'])
+
+      view_instance = getattr(view_context, current_action['view_id'], None)
+      if view_instance is None:
+        response.setStatus(404)
+        return ""
       if (view_instance is not None):
         embedded_dict = {
           '_links': {
