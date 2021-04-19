@@ -713,6 +713,31 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_draft_view(self):
+    document = self._makeDocument()
+
+    fake_request = do_fake_request("POST" , data=(
+      ('field_your_comment', ''),
+      ('field_your_workflow_action', 'validate_action'),
+      ('selection_name', 'foo_selection'),
+    ))
+
+    response = document.Base_callDialogMethod(
+      REQUEST=fake_request,
+      dialog_method='Workflow_statusModify',
+      dialog_id='Base_viewWorkflowActionDialog',
+      form_id='Foo_view',
+    )
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view_draft")
+
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_disable_listbox_search_column(self):
     document = self._makeDocument()
 
