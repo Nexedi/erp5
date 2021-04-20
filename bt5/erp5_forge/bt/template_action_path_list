@@ -42,5 +42,4 @@ Template Tool | bt_vcs_history
 Template Tool | migrate_business_template_list
 Template Tool | search_portal_type
 Types Tool | role_information_list_view
-Workflow Script | repository_history_view
 portal_actions | generate_pot_file

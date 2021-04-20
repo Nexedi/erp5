@@ -59,9 +59,9 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow.setReference('wf')
     # state variable
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
-    state2 = workflow.newContent(portal_type='State',
+    state2 = workflow.newContent(portal_type='Workflow State',
                              title='State 2')
     state1.setReference('state1')
     state2.setReference('state2')
@@ -86,7 +86,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow = self.workflow_module.newContent(portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
     state1.setReference('state1')
     workflow.setSourceValue(state1)
@@ -109,7 +109,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
                                 portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
     state1.setReference('state1')
     workflow.setSourceValue(state1)
@@ -141,9 +141,9 @@ class TestERP5Workflow(ERP5TypeTestCase):
       state_base_category='current_state'
     )
     workflow.setReference('wf')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
-    state2 = workflow.newContent(portal_type='State',
+    state2 = workflow.newContent(portal_type='Workflow State',
                              title='State 2')
     state1.setReference('state1')
     state2.setReference('state2')
@@ -174,8 +174,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow = self.workflow_module.newContent(portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State', title='State 1')
-    state2 = workflow.newContent(portal_type='State', title='State 2')
+    state1 = workflow.newContent(portal_type='Workflow State', title='State 1')
+    state2 = workflow.newContent(portal_type='Workflow State', title='State 2')
     state1.setReference('state1')
     state2.setReference('state2')
     transition1 = workflow.newContent(portal_type='Workflow Transition', title='Transition 1')
@@ -230,7 +230,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     verify that Base_viewDict view can be accessed
     """
     workflow = self.workflow_module.newContent(portal_type='Workflow')
-    state = workflow.newContent(portal_type='State', title='Some State')
+    state = workflow.newContent(portal_type='Workflow State', title='Some State')
     transition = workflow.newContent(portal_type='Workflow Transition',
                                      title='Some Transition')
     transition.setReference('change_something')

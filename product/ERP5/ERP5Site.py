@@ -1411,7 +1411,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     def getStateList():
       state_set = set()
       for wf in self.portal_workflow.objectValues():
-        if wf.getVariableValueDict() and wf.getStateVariable() == 'simulation_state':
+        if wf.getStateVariable() == 'simulation_state':
           for state in wf.getStateValueList():
             if state.getStateTypeList():
               state_set.add(state.getReference())
@@ -1870,47 +1870,6 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """Return true if self is an instance of a temporary document class.
     """
     return 0
-
-  security.declareProtected(Permissions.ManagePortal,
-                            'migrateToPortalWorkflowClass')
-  def migrateToPortalWorkflowClass(self):
-    """
-    Migrate portal_workflow from CMFCore to ERP5 Workflow. Also migrate
-    Workflow Chains not defined anymore on portal_workflow but on the Portal
-    Type.
-
-    Like other Tools migrations (ERP5CatalogTool...), this is called at
-    startup by synchronizeDynamicModules(), thus Workflows are *not* migrated
-    from DCWorkflow to ERP5 Workflow (ERP5 Workflow portal_workflow can work
-    with both DCWorkflows and ERP5 Workflows), because this is not needed at
-    this stage (handled by bt5 upgrade) and avoid making bootstrap more
-    complicated than it already is.
-    """
-    from Products.ERP5Type.Tool.WorkflowTool import WorkflowTool
-    current_tool = self.portal_workflow
-    if not isinstance(current_tool, WorkflowTool):
-      # CMFCore portal_workflow -> ERP5 Workflow portal_workflow
-      addERP5Tool(self, 'portal_workflow_new', 'Workflow Tool')
-      new_tool = self._getOb("portal_workflow_new")
-      LOG('ERP5Site', 0, 'migrateToPortalWorkflowClass: %r' % new_tool)
-      new_tool._chains_by_type = current_tool._chains_by_type
-
-      for workflow_id, workflow in current_tool.objectItems():
-        workflow_copy = workflow._getCopy(new_tool)
-        workflow_copy._setId(workflow_id)
-        new_tool._setObject(workflow_id, workflow_copy)
-
-        workflow_copy = new_tool._getOb(workflow_id)
-        workflow_copy._postCopy(new_tool, op=0)
-        workflow_copy.wl_clearLocks()
-
-      self.portal_workflow = new_tool
-      self.portal_workflow.id = 'portal_workflow'
-      self._delObject('portal_workflow_new')
-
-      # Migrate Workflow Chains to Portal Types
-      if getattr(new_tool, '_chains_by_type', None) is not None:
-        new_tool.reassignWorkflowWithoutConversion()
 
 Globals.InitializeClass(ERP5Site)
 
