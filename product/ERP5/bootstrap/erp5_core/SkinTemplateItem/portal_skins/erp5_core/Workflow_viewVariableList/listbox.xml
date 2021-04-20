@@ -90,7 +90,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>Variable_getNonEvaluatedVariableDefault</string>
+                          <string>WorkflowVariable_getNonEvaluatedVariableDefault</string>
                           <string>Default Value</string>
                         </tuple>
                         <tuple>

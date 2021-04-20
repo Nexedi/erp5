@@ -33,7 +33,7 @@ from AccessControl.SecurityManagement import setSecurityManager
 from Acquisition import aq_base
 from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Core.Transition import TRIGGER_WORKFLOW_METHOD
+from Products.ERP5Type.Core.WorkflowTransition import TRIGGER_WORKFLOW_METHOD
 from Products.ERP5Type.Core.Workflow import Workflow, createExpressionContext
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
@@ -167,7 +167,7 @@ class InteractionWorkflow(Workflow):
 
   security.declarePrivate('getTransitionValueList')
   def getTransitionValueList(self):
-    return self.objectValues(portal_type="Interaction")
+    return self.objectValues(portal_type="Interaction Workflow Interaction")
 
   security.declarePrivate('getTransitionValueByReference')
   def getTransitionValueByReference(self, transition_id):
@@ -175,11 +175,11 @@ class InteractionWorkflow(Workflow):
 
   security.declarePrivate('getTransitionValueList')
   def getTransitionValueList(self):
-    return self.objectValues(portal_type="Interaction")
+    return self.objectValues(portal_type="Interaction Workflow Interaction")
 
   security.declarePrivate('getTransitionReferenceList')
   def getTransitionReferenceList(self):
-    return [ob.getReference() for ob in self.objectValues(portal_type="Interaction")]
+    return [ob.getReference() for ob in self.objectValues(portal_type="Interaction Workflow Interaction")]
 
   security.declarePrivate('notifyWorkflowMethod')
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
@@ -370,7 +370,7 @@ class InteractionWorkflow(Workflow):
 
     # 1. Interaction as XML
     interaction_reference_list = []
-    interaction_list = self.objectValues(portal_type='Interaction')
+    interaction_list = self.objectValues(portal_type='Interaction Workflow Interaction')
     interaction_prop_id_to_show = sorted(['activate_script_name',
     'after_script_name', 'before_commit_script_name', 'description',
     'groups', 'roles', 'expr', 'permissions', 'trigger_method_id',

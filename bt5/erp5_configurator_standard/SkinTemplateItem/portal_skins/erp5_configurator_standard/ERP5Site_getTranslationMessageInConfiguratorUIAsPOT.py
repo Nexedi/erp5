@@ -53,7 +53,7 @@ for message, path in context.Base_findMessageListFromPythonInProduct(FUNC_NAME_L
 
 # Collect workflow transition documents from workflow module.
 for document in context.portal_workflow.express_setup_workflow.contentValues():
-  if document.portal_type=='Transition' and document.getTransitionFormId() is not None:
+  if document.portal_type=='Workflow Transition' and document.getTransitionFormId() is not None:
     add_message(document.getTitle(), portal_url.getRelativeContentURL(document))
 
 
