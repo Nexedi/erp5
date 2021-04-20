@@ -91,7 +91,6 @@
                         <string>my_for_catalog</string>
                         <string>my_status_included</string>
                         <string>my_automatic_update</string>
-                        <string>my_variable_default_value</string>
                         <string>my_variable_default_expression</string>
                       </list>
                     </value>

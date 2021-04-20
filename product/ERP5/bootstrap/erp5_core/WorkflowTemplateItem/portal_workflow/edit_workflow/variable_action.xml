@@ -39,8 +39,8 @@
             </value>
         </item>
         <item>
-            <key> <string>variable_default_value</string> </key>
-            <value> <string>edit</string> </value>
+            <key> <string>variable_default_expression</string> </key>
+            <value> <string>python: \'edit\'</string> </value>
         </item>
       </dictionary>
     </pickle>
