@@ -88,9 +88,9 @@ Extension Component | view
 Extension Component | web_view
 Folder | view
 Id Tool | view
+Interaction Workflow Interaction | view
 Interaction Workflow | script_view
 Interaction Workflow | view
-Interaction | view
 Interface Component | view
 Interface Component | web_view
 Memcached Plugin | view
@@ -137,8 +137,6 @@ SQL Non Continuous Increasing Id Generator | view
 Script Constraint | predicate
 Script Constraint | view
 Standard Property | view
-State | permission
-State | view
 String Attribute Match Constraint | predicate
 String Attribute Match Constraint | view
 System Preference | captcha
@@ -160,8 +158,6 @@ Test Component | view
 Test Component | web_view
 Tool Component | view
 Tool Component | web_view
-Transition Variable | view
-Transition | view
 Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view
@@ -171,8 +167,12 @@ Workflow Script | proxy_role_view
 Workflow Script | proxy_role_view
 Workflow Script | view
 Workflow Script | view
+Workflow State | permission
+Workflow State | view
 Workflow Tool | conversion
 Workflow Tool | view
+Workflow Transition Variable | view
+Workflow Transition | view
 Workflow Variable | view
 Workflow | permission_view
 Workflow | script_view

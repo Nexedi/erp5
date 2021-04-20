@@ -251,7 +251,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     for tid in interaction_id_list:
       tdef = self.interactions[tid]
       interaction = SubElement(interactions, 'interaction', attrib=dict(
-            reference=tdef.getReference(),portal_type='Interaction'))
+            reference=tdef.getReference(),portal_type='Interaction Workflow Interaction'))
       guard = SubElement(interaction, 'guard', attrib=dict(type='object'))
       for property_id in sorted(interaction_prop_id_to_show):
         # creationg guard
@@ -358,7 +358,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 addWorkflowFactory(InteractionWorkflowDefinition, id='interaction_workflow',
                    title='Web-configurable interaction workflow')
 
-## Avoid copy/paste from Products.ERP5Type.Core.Interaction
+## Avoid copy/paste from Products.ERP5Type.Core.InteractionWorkflowInteraction
 from functools import partial as _p
 from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow as ERP5InteractionWorkflow
 InteractionWorkflowDefinition.security = ClassSecurityInfo()

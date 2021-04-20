@@ -664,7 +664,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
                       number_of_element=str(len(state_reference_list))))
   for sid in state_id_list:
     sdef = self.states[sid]
-    state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type='State'))
+    state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type='Workflow State'))
     for property_id in sorted(state_prop_id_to_show):
       property_value = getattr(sdef, property_id, '')
       if property_value is None or property_value == [] or property_value ==():
@@ -689,7 +689,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   for tid in transition_id_list:
     tdef = self.transitions[tid]
     transition = SubElement(transitions, 'transition',
-          attrib=dict(reference=tid, portal_type='Transition'))
+          attrib=dict(reference=tid, portal_type='Workflow Transition'))
     guard = SubElement(transition, 'guard', attrib=dict(type='object'))
     transition_variables = SubElement(transition, 'transition_variables', attrib=dict(type='object'))
     for property_id in sorted(transition_prop_id_to_show):
@@ -964,7 +964,7 @@ def convertToERP5Workflow(self, temp_object=False):
       # create transition (portal_type = Transition)
       for tid in dc_workflow_transition_value_list:
         tdef = dc_workflow_transition_value_list.get(tid)
-        transition = workflow.newContent(portal_type='Transition', temp_object=temp_object)
+        transition = workflow.newContent(portal_type='Workflow Transition', temp_object=temp_object)
         if tdef.title == '' or tdef.title is None:
           tdef.title = UpperCase(tdef.id)
         transition.setTitle(tdef.title)
@@ -984,7 +984,7 @@ def convertToERP5Workflow(self, temp_object=False):
           if tdef.guard.expr is not None:
             transition.setGuardExpression(tdef.guard.expr.text)
 
-      for transition in workflow.objectValues(portal_type='Transition'):
+      for transition in workflow.objectValues(portal_type='Workflow Transition'):
         # configure after/before scripts
         # we have to loop again over transitions because some
         # before/after/... scripts are transitions and obviously, all of
@@ -1002,7 +1002,7 @@ def convertToERP5Workflow(self, temp_object=False):
       workflow_managed_role_list = workflow.getManagedRoleList()
       for sid in self.states:
         sdef = self.states.get(sid)
-        state = workflow.newContent(portal_type='State', temp_object=temp_object)
+        state = workflow.newContent(portal_type='Workflow State', temp_object=temp_object)
         if sdef.title == '' or sdef.title is None:
           sdef.title = UpperCase(sdef.id)
         if hasattr(sdef, 'type_list'):
@@ -1070,7 +1070,7 @@ def convertToERP5Workflow(self, temp_object=False):
       dc_workflow_interaction_value_dict = self.interactions
       # create interactions (portal_type = Interaction)
       for tid in dc_workflow_interaction_value_dict:
-        interaction = workflow.newContent(portal_type='Interaction', temp_object=temp_object)
+        interaction = workflow.newContent(portal_type='Interaction Workflow Interaction', temp_object=temp_object)
         tdef = dc_workflow_interaction_value_dict.get(tid)
         if tdef.title:
           interaction.setTitle(tdef.title)
@@ -1149,7 +1149,7 @@ def convertToERP5Workflow(self, temp_object=False):
           var_exprs = {}
         else: var_exprs = origin_tdef.var_exprs
         for key in var_exprs:
-          tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp_object)
+          tr_var = transition.newContent(portal_type='Workflow Transition Variable', temp_object=temp_object)
           tr_var.setReference(key)
           tr_var.setVariableDefaultExpression(var_exprs[key].text)
           tr_var_path = getattr(workflow, 'variable_'+key).getPath()
@@ -1165,7 +1165,7 @@ def convertToERP5Workflow(self, temp_object=False):
           var_exprs = {}
         else: var_exprs = origin_tdef.var_exprs
         for key in var_exprs:
-          tr_var = interaction.newContent(portal_type='Transition Variable', temp_object=temp_object)
+          tr_var = interaction.newContent(portal_type='Workflow Transition Variable', temp_object=temp_object)
           tr_var.setReference(key)
           tr_var.setVariableDefaultExpression(var_exprs[key].text)
           tr_var_path = getattr(workflow, 'variable_'+key).getPath()

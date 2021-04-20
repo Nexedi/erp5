@@ -226,8 +226,11 @@ def generatePortalTypeClass(site, portal_type_name):
   # Configurator Workflow implementation (workflow_module) used to have a
   # dedicated Portal Type for Transition Variable but this is now the same as
   # any other Workflow Variable.
-  if WITH_LEGACY_WORKFLOW and portal_type_name == 'Transition Variable':
-    type_class = 'WorkflowVariable'
+  if WITH_LEGACY_WORKFLOW:
+    if portal_type_name == 'Transition Variable':
+      type_class = 'WorkflowVariable'
+    elif portal_type_name in ('State', 'Transition'):
+      type_class = 'Workflow' + portal_type_name
 
   if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type ' + \

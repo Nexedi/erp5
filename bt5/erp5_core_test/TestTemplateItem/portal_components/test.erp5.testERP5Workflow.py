@@ -59,13 +59,13 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow.setReference('wf')
     # state variable
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
-    state2 = workflow.newContent(portal_type='State',
+    state2 = workflow.newContent(portal_type='Workflow State',
                              title='State 2')
     state1.setReference('state1')
     state2.setReference('state2')
-    transition1 = workflow.newContent(portal_type='Transition',
+    transition1 = workflow.newContent(portal_type='Workflow Transition',
                              title='Transition 1')
     transition1.setReference('transition1')
     state1.setDestinationValue(transition1)
@@ -86,14 +86,14 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow = self.workflow_module.newContent(portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
     state1.setReference('state1')
     workflow.setSourceValue(state1)
-    transition1 = workflow.newContent(portal_type='Transition',
+    transition1 = workflow.newContent(portal_type='Workflow Transition',
                              title='Transition 1')
     transition1.setReference('transition1')
-    transition2 = workflow.newContent(portal_type='Transition',
+    transition2 = workflow.newContent(portal_type='Workflow Transition',
                              title='Transition 2',
                              guard_expression='python: False')
     transition2.setReference('transition2')
@@ -109,11 +109,11 @@ class TestERP5Workflow(ERP5TypeTestCase):
                                 portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
     state1.setReference('state1')
     workflow.setSourceValue(state1)
-    transition1 = workflow.newContent(portal_type='Transition',
+    transition1 = workflow.newContent(portal_type='Workflow Transition',
                              title='Transition 1',
                              destination_value=state1)
     transition1.setReference('transition1')
@@ -141,13 +141,13 @@ class TestERP5Workflow(ERP5TypeTestCase):
       state_base_category='current_state'
     )
     workflow.setReference('wf')
-    state1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='Workflow State',
                              title='State 1')
-    state2 = workflow.newContent(portal_type='State',
+    state2 = workflow.newContent(portal_type='Workflow State',
                              title='State 2')
     state1.setReference('state1')
     state2.setReference('state2')
-    transition1 = workflow.newContent(portal_type='Transition',
+    transition1 = workflow.newContent(portal_type='Workflow Transition',
                                       title='Transition 1')
     transition1.setReference('transition1')
     state1.setDestinationValue(transition1)
@@ -174,11 +174,11 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow = self.workflow_module.newContent(portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    state1 = workflow.newContent(portal_type='State', title='State 1')
-    state2 = workflow.newContent(portal_type='State', title='State 2')
+    state1 = workflow.newContent(portal_type='Workflow State', title='State 1')
+    state2 = workflow.newContent(portal_type='Workflow State', title='State 2')
     state1.setReference('state1')
     state2.setReference('state2')
-    transition1 = workflow.newContent(portal_type='Transition', title='Transition 1')
+    transition1 = workflow.newContent(portal_type='Workflow Transition', title='Transition 1')
     transition1.setReference('transition1')
     state1.setDestinationValue(transition1)
     transition1.setDestinationValue(state2)
@@ -198,8 +198,8 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # FIXME: not passing parameter to an before script is probably too
     # restrictive
 
-  def test_TransitionGuards(self, transition_type='Transition'):
-    workflow_type = 'Workflow' if transition_type == 'Transition' else \
+  def test_TransitionGuards(self, transition_type='Workflow Transition'):
+    workflow_type = 'Workflow' if transition_type == 'Workflow Transition' else \
                     'Interaction Workflow'
     workflow = self.workflow_module.newContent(portal_type=workflow_type)
     transition = workflow.newContent(portal_type=transition_type)
@@ -223,15 +223,15 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertEqual(transition.getGuardExpressionInstance().text, 'python: "Hello, world"')
 
   def test_InteractionGuards(self):
-    self.test_TransitionGuards(transition_type='Interaction')
+    self.test_TransitionGuards(transition_type='Interaction Workflow Interaction')
 
   def test_Base_viewDict(self):
     """
     verify that Base_viewDict view can be accessed
     """
     workflow = self.workflow_module.newContent(portal_type='Workflow')
-    state = workflow.newContent(portal_type='State', title='Some State')
-    transition = workflow.newContent(portal_type='Transition',
+    state = workflow.newContent(portal_type='Workflow State', title='Some State')
+    transition = workflow.newContent(portal_type='Workflow Transition',
                                      title='Some Transition')
     transition.setReference('change_something')
     transition.setGuardRoleList(['Assignee', 'Assignor'])

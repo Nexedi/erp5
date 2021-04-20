@@ -135,8 +135,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Transition</string>
-                          <string>Transition</string>
+                          <string>Workflow Transition</string>
+                          <string>Workflow Transition</string>
                         </tuple>
                       </list>
                     </value>
