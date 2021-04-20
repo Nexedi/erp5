@@ -84,7 +84,6 @@
                     <value>
                       <list>
                         <string>my_causality</string>
-                        <string>my_variable_default_value</string>
                         <string>my_variable_default_expression</string>
                       </list>
                     </value>
