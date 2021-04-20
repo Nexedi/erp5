@@ -105,14 +105,14 @@ class TypesTool(TypeProvider):
     'Standard Property',
     'Acquired Property',
     # workflow (initializePortalTypeDynamicWorkflowMethods)
-    'State',
-    'Transition',
-    'Transition Variable',
+    'Workflow State',
+    'Workflow Transition',
+    'Workflow Transition Variable',
     'Workflow Script',
     'Workflow Variable',
     'Worklist',
     'Workflow',
-    'Interaction',
+    'Interaction Workflow Interaction',
     'Interaction Workflow',
     # the following ones are required to upgrade an existing site
     'Category Property',

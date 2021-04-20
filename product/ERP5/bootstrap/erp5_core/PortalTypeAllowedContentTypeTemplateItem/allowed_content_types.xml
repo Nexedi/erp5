@@ -74,7 +74,7 @@
   <item>ZODB Continuous Increasing Id Generator</item>
  </portal_type>
  <portal_type id="Interaction Workflow">
-  <item>Interaction</item>
+  <item>Interaction Workflow Interaction</item>
   <item>Workflow Script</item>
   <item>Workflow Variable</item>
  </portal_type>
@@ -126,8 +126,8 @@
  <portal_type id="Template Tool">
   <item>Business Template</item>
  </portal_type>
- <portal_type id="Transition">
-  <item>Transition Variable</item>
+ <portal_type id="Workflow Transition">
+  <item>Workflow Transition Variable</item>
  </portal_type>
  <portal_type id="Trash Tool">
   <item>Trash Bin</item>
@@ -138,9 +138,9 @@
   <item>Preference Type</item>
  </portal_type>
  <portal_type id="Workflow">
-  <item>State</item>
-  <item>Transition</item>
   <item>Workflow Script</item>
+  <item>Workflow State</item>
+  <item>Workflow Transition</item>
   <item>Workflow Variable</item>
   <item>Worklist</item>
  </portal_type>

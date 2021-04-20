@@ -67,7 +67,7 @@ class PropertySheetTool(BaseTool):
     'template_tool_component_id_property')
 
   def _isBootstrapRequired(self):
-    if not self.has_key('Interaction'):
+    if not self.has_key('InteractionWorkflowInteraction'):
       return True
 
     bt_has_key = self.BusinessTemplate.has_key
@@ -90,16 +90,10 @@ class PropertySheetTool(BaseTool):
       # for workflows
       'Guard',
       'WorkflowVariable',
-      'Interaction',
+      'InteractionWorkflowInteraction',
       'ActionInformation/action_name_property',
-      'Transition',
-      'Transition/before_script_category,'
-      'Transition/after_script_category',
-      'Transition/trigger_type_property',
-      'State',
-      'State/acquire_permission_property',
-      'State/selected_property',
-      'State/state_type_property',
+      'WorkflowState',
+      'WorkflowTransition',
       'Predicate',
       'Workflow',
       'Workflow/manager_bypass_property',

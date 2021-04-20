@@ -33,7 +33,7 @@ Extension Component | component_validation_workflow
 Extension Component | dynamic_class_generation_interaction_workflow
 Extension Component | edit_workflow
 Interaction Workflow | dynamic_class_generation_interaction_workflow
-Interaction | dynamic_class_generation_interaction_workflow
+Interaction Workflow Interaction | dynamic_class_generation_interaction_workflow
 Interface Component | component_validation_workflow
 Interface Component | dynamic_class_generation_interaction_workflow
 Interface Component | edit_workflow
@@ -67,5 +67,5 @@ Test Component | edit_workflow
 Tool Component | component_validation_workflow
 Tool Component | dynamic_class_generation_interaction_workflow
 Tool Component | edit_workflow
-Transition | dynamic_class_generation_interaction_workflow
 Workflow | dynamic_class_generation_interaction_workflow
+Workflow Transition | dynamic_class_generation_interaction_workflow
