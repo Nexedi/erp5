@@ -1357,8 +1357,6 @@ if WITH_LEGACY_WORKFLOW:
       return self._getOb(prefixed_name)
   Workflow.__getattr__ = __getattr__
 
-  Workflow._isAWorkflow = True # DCWorkflow Tool compatibility
-
   from Products.ERP5Type.Utils import deprecated
   from ComputedAttribute import ComputedAttribute
   from Products.PythonScripts.Utility import allow_class
@@ -1431,5 +1429,16 @@ if WITH_LEGACY_WORKFLOW:
               (lambda self: _ContainerTabWorkflowVariable(self, self.getWorklistValueList())),
     1) # must be Acquisition-wrapped
   Workflow.security.declareProtected(Permissions.AccessContentsInformation, 'worklists')
+
+  # CMFCore methods checking that Workflows implement IWorkflowDefinition, not
+  # implemented by ERP5 Workflow
+  Workflow.getWorkflowIds = \
+    deprecated('getWorkflowIds() is deprecated; use objectIds()')\
+              (lambda self: self.objectIds())
+  Workflow.security.declarePrivate('getWorkflowIds')
+  Workflow.getWorkflowById = \
+    deprecated('getWorkflowIds() is deprecated; use objectIds()')\
+              (lambda self, wf_id: self._getOb(wf_id, None))
+  Workflow.security.declarePrivate('getWorkflowById')
 
 InitializeClass(Workflow)

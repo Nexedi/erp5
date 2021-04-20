@@ -90,7 +90,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -110,7 +110,6 @@
                         <string>my_reference</string>
                         <string>my_title</string>
                         <string>my_criterion_property_list</string>
-                        <string>my_description</string>
                         <string>my_action_name</string>
                         <string>my_action</string>
                         <string>my_icon</string>
@@ -127,6 +126,7 @@
                         <string>my_guard_role_list</string>
                         <string>my_guard_group_list</string>
                         <string>my_guard_expression</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
