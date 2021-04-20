@@ -125,7 +125,7 @@ class InteractionWorkflow(Workflow):
       ec = createExpressionContext(StateChangeInfo(ob, self, status))
       value = variable_default_expression(ec)
     else:
-      value = vdef.getVariableDefaultValue()
+      value = ''
 
     return value
 
@@ -250,6 +250,7 @@ class InteractionWorkflow(Workflow):
         if not vdef.getStatusIncluded():
           continue
         expression = None
+        value = ''
         if not vdef.getAutomaticUpdate() and id_ in former_status:
           # Preserve former value
           value = former_status[id_]
@@ -257,18 +258,16 @@ class InteractionWorkflow(Workflow):
           variable_default_expression = vdef.getVariableDefaultExpression()
           if variable_default_expression is not None:
             expression = variable_default_expression
-          else:
-            value = vdef.getVariableDefaultValue()
-        if expression is not None:
-          # Evaluate an expression.
-          if econtext is None:
-            # Lazily create the expression context.
-            if sci is None:
-              sci = StateChangeInfo(
-                  ob, self, former_status, tdef,
-                  None, None, None)
-            econtext = createExpressionContext(sci)
-          value = expression(econtext)
+            if expression is not None:
+              # Evaluate an expression.
+              if econtext is None:
+                # Lazily create the expression context.
+                if sci is None:
+                  sci = StateChangeInfo(
+                      ob, self, former_status, tdef,
+                      None, None, None)
+                econtext = createExpressionContext(sci)
+              value = expression(econtext)
         status[id_] = value
 
       sci = StateChangeInfo(
@@ -436,7 +435,7 @@ class InteractionWorkflow(Workflow):
     # 2. Variable as XML
     variable_reference_list = []
     variable_list = self.objectValues(portal_type='Workflow Variable')
-    variable_prop_id_to_show = ['description', 'variable_default_value', 'variable_default_expression',
+    variable_prop_id_to_show = ['description', 'variable_default_expression',
           'for_catalog', 'for_status', 'automatic_update']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
@@ -449,9 +448,6 @@ class InteractionWorkflow(Workflow):
         if property_id == 'automatic_update':
           property_value = vdef.getAutomaticUpdate()
           sub_object = SubElement(variable, property_id, attrib=dict(type='int'))
-        elif property_id == 'variable_default_value':
-          property_value = vdef.getVariableDefaultValue()
-          sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
         else:
           property_value = vdef.getProperty(property_id)
           property_type = vdef.getPropertyType(property_id)
