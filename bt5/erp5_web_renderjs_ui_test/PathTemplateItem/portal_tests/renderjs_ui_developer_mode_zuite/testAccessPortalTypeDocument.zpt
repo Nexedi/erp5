@@ -12,6 +12,11 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
+  <td>${base_url}/ERP5Site_createPersonWhoHasPermissionToAccess</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
   <td tal:content="website_url"></td>
   <td></td>
 </tr>
