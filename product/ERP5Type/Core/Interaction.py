@@ -117,11 +117,3 @@ class Interaction(IdAsReferenceMixin('interaction_'),
     prefix_length = len('before_commit_script/')
     return [path[prefix_length:] for path in self.getCategoryList()
             if path.startswith('before_commit_script/')]
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTransitionVariableValueList')
-  def getTransitionVariableValueList(self):
-    """
-    Return Transition Variables
-    """
-    return self.objectValues(portal_type='Transition Variable')
