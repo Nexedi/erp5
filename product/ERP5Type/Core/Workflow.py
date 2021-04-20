@@ -1357,8 +1357,6 @@ if WITH_LEGACY_WORKFLOW:
       return self._getOb(prefixed_name)
   Workflow.__getattr__ = __getattr__
 
-  Workflow._isAWorkflow = True # DCWorkflow Tool compatibility
-
   from Products.ERP5Type.Utils import deprecated
   from ComputedAttribute import ComputedAttribute
   from Products.PythonScripts.Utility import allow_class

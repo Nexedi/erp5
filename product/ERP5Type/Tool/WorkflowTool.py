@@ -613,6 +613,17 @@ if WITH_LEGACY_WORKFLOW:
   from OFS.ObjectManager import IFAwareObjectManager
   WorkflowTool.all_meta_types = IFAwareObjectManager.all_meta_types
 
+  # CMFCore methods checking that Workflows implement IWorkflowDefinition, not
+  # implemented by ERP5 Workflow
+  WorkflowTool.getWorkflowIds = \
+    deprecated('getWorkflowIds() is deprecated; use objectIds()')\
+              (lambda self: self.objectIds())
+  WorkflowTool.security.declarePrivate('getWorkflowIds')
+  WorkflowTool.getWorkflowById = \
+    deprecated('getWorkflowById() is deprecated')\
+              (lambda self, wf_id: self._getOb(wf_id, None))
+  WorkflowTool.security.declarePrivate('getWorkflowById')
+
 InitializeClass(WorkflowTool)
 
 class ExclusionList(list):
