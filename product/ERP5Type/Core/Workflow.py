@@ -572,7 +572,7 @@ class Workflow(XMLObject):
       ec = createExpressionContext(StateChangeInfo(ob, self, status))
       value = variable_default_expression(ec)
     else:
-      value = vdef.getVariableDefaultValue()
+      value = ''
 
     return value
 
@@ -856,9 +856,7 @@ class Workflow(XMLObject):
           else:
             expr = variable_default_expression
         else:
-          if object_context is None:
-            object_context = self.getStateChangeInformation(ob, self.getSourceValue())
-          value = vdef.getVariableDefaultValue(object=object_context)
+            value = ''
 
       if expr not in (None, ''):
         # Evaluate an expression.
@@ -1091,7 +1089,7 @@ class Workflow(XMLObject):
     # 3. Variable as XML
     variable_reference_list = []
     variable_list = self.getVariableValueList()
-    variable_prop_id_to_show = ['description', 'variable_default_value', 'variable_default_expression',
+    variable_prop_id_to_show = ['description', 'variable_default_expression',
           'for_catalog', 'for_status', 'automatic_update']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
@@ -1104,9 +1102,6 @@ class Workflow(XMLObject):
         if property_id == 'automatic_update':
           property_value = vdef.getAutomaticUpdate()
           sub_object = SubElement(variable, property_id, attrib=dict(type='int'))
-        elif property_id == 'variable_default_value':
-          property_value = vdef.getVariableDefaultValue()
-          sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
         else:
           property_value = vdef.getProperty(property_id)
           property_type = vdef.getPropertyType(property_id)
@@ -1246,7 +1241,7 @@ class Workflow(XMLObject):
         if variable_default_expression is not None:
           expr = variable_default_expression
         else:
-          value = vdef.getVariableDefaultValue()
+          value = ''
       if expr is not None:
         # Evaluate an expression.
         if econtext is None:
@@ -1290,7 +1285,7 @@ class Workflow(XMLObject):
           # convert string to expression before execute it.
           value = variable_default_expression(ec)
         else:
-          value = variable.getVariableDefaultValue()
+          value = ''
 
         res[variable_id] = value
 
