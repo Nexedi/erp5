@@ -89,9 +89,6 @@ class PropertySheetTool(BaseTool):
       'Comment',
       # for workflows
       'Guard',
-      'Variable',
-      'Variable/variable_default_expression_property',
-      'Variable/variable_default_value_property',
       'WorkflowVariable',
       'Interaction',
       'ActionInformation/action_name_property',

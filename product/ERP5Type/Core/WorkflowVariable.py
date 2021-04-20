@@ -54,7 +54,6 @@ class WorkflowVariable(IdAsReferenceMixin("variable_"),
       'DublinCore',
       'Reference',
       'Comment',
-      'Variable',
       'Guard',
       'WorkflowVariable',
     )
