@@ -244,16 +244,13 @@ class InteractionWorkflow(Workflow):
       sci = None
 
       # Update variables.
-      tdef_exprs = {v.getId(): v for v in tdef.getTransitionVariableValueList()}
       status = {}
       for vdef in workflow_variable_list:
         id_ = vdef.getId()
         if not vdef.getStatusIncluded():
           continue
         expression = None
-        if id_ in tdef_exprs:
-          expression = tdef_exprs[id_]
-        elif not vdef.getAutomaticUpdate() and id_ in former_status:
+        if not vdef.getAutomaticUpdate() and id_ in former_status:
           # Preserve former value
           value = former_status[id_]
         else:

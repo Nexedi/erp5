@@ -311,11 +311,6 @@ class InteractionDefinition (SimpleItem):
             return []
         return self.portal_type_group_filter
 
-    def getTransitionVariableValueList(self):
-        if self.var_exprs is None:
-            return []
-        return self.var_exprs
-
     showDict = Base.showDict
     convertToERP5Workflow = convertToERP5Workflow
 
