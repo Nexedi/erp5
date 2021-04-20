@@ -11,11 +11,8 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>default_params</string>
-                <string>editable_columns</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -82,53 +79,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
+                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>causality_title</string>
+                          <string>Causality</string>
                         </tuple>
                         <tuple>
                           <string>WorkflowVariable_getNonEvaluatedVariableDefault</string>
-                          <string>Default Value</string>
-                        </tuple>
-                        <tuple>
-                          <string>automatic_update</string>
-                          <string>Update on every Transition</string>
-                        </tuple>
-                        <tuple>
-                          <string>for_catalog</string>
-                          <string>Available for Catalog</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>automatic_update</string>
-                          <string>Update on every Transition</string>
-                        </tuple>
-                        <tuple>
-                          <string>for_catalog</string>
-                          <string>Available for Catalog</string>
+                          <string>Value</string>
                         </tuple>
                       </list>
                     </value>
@@ -146,26 +106,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Workflow Variable</string>
-                          <string>Workflow Variable</string>
+                          <string>Workflow Transition Variable</string>
+                          <string>Workflow Transition Variable</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_variable_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>transition_variable_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -173,7 +122,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Variables</string> </value>
+                    <value> <string>Transition Variables</string> </value>
                 </item>
               </dictionary>
             </value>

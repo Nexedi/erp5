@@ -108,11 +108,11 @@
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Interaction</type>
+  <type>Interaction Workflow</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Interaction Workflow</type>
+  <type>Interaction Workflow Interaction</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
@@ -192,11 +192,11 @@
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Transition</type>
+  <type>Workflow</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Workflow</type>
+  <type>Workflow Transition</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

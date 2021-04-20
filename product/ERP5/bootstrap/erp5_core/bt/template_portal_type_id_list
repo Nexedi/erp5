@@ -49,8 +49,8 @@ Event
 Extension Component
 Folder
 Id Tool
-Interaction
 Interaction Workflow
+Interaction Workflow Interaction
 Interface Component
 Mapped Value
 Memcached Plugin
@@ -83,7 +83,6 @@ Session Tool
 Simulation Movement
 Simulation Tool
 Standard Property
-State
 String Attribute Match Constraint
 System Preference
 TALES Constraint
@@ -91,8 +90,6 @@ Template Tool
 Test Component
 Test Tool
 Tool Component
-Transition
-Transition Variable
 Trash Bin
 Trash Folder
 Trash Tool
@@ -100,7 +97,10 @@ Types Tool
 Workflow
 Workflow Script
 Workflow Script
+Workflow State
 Workflow Tool
+Workflow Transition
+Workflow Transition Variable
 Workflow Variable
 Worklist
 ZODB Continuous Increasing Id Generator
