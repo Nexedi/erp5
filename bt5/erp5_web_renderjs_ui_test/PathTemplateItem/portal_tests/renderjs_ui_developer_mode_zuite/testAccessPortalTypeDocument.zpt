@@ -76,6 +76,21 @@
   <td>Done.</td>
   <td></td>
 </tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>logged_in_as</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>logged_in_as</td>
+  <td>Logged In as : user_logout_test</td>
+</tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
