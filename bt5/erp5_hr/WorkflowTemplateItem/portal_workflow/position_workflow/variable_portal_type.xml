@@ -39,7 +39,7 @@
             </value>
         </item>
         <item>
-            <key> <string>variable_default_value</string> </key>
+            <key> <string>variable_default_expression</string> </key>
             <value> <string>here/getPortalType</string> </value>
         </item>
       </dictionary>
