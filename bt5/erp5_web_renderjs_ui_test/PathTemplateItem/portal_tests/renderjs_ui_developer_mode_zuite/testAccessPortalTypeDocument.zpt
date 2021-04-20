@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
-<body>
+<body tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="3">Test Access Portal Type Document</td></tr>
@@ -30,12 +30,7 @@
   <td>Done.</td>
   <td></td>
 </tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tal:block tal:define="click_configuration python: {'text': 'Preferences'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
 </tal:block>
