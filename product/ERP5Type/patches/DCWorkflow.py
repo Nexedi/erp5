@@ -1131,6 +1131,13 @@ def convertToERP5Workflow(self, temp_object=False):
           variable.setVariableDefaultExpression('transition/getReference|nothing')
         else:
           variable.setVariableDefaultExpression(variable_definition.default_expr.text)
+      # default_expr has precedence over default_value if defined...
+      elif variable_definition.default_value:
+        if '/' not in variable_definition.default_value:
+          default_value = "python: '%s'" % variable_definition.default_value
+        else:
+          default_value = variable_definition.default_value
+        variable.setVariableDefaultExpression(default_value)
       if variable_definition.info_guard:
         variable.info_guard = variable_definition.info_guard
         variable.setGuardRoleList(variable_definition.info_guard.roles)
@@ -1141,12 +1148,6 @@ def convertToERP5Workflow(self, temp_object=False):
           variable.setGuardExpression(tdef.info_guard.expr.text)
       variable.setForCatalog(variable_definition.for_catalog)
       variable.setStatusIncluded(variable_definition.for_status)
-      # setVariableValue sets the value to None if the parameter is an empty
-      # string. This change the expected behaviour.
-      # XXX(WORKFLOW): you need to be aware that if someone saves a variable
-      # without editing this field, variable_value may be None again
-      if variable_definition.default_value:
-        variable.setVariableDefaultValue(variable_definition.default_value)
       variable.setDescription(variable_definition.description)
     # Configure transition variable:
     if getattr(self, 'transitions', None) is not None:
@@ -1266,7 +1267,6 @@ VariableDefinition.getId = method_getId
 VariableDefinition.getTitle = method_getTitle
 VariableDefinition.getDescription = method_getDescription
 VariableDefinition.getVariableDefaultExpression = lambda self: self.var_expr
-VariableDefinition.getVariableDefaultValue = lambda self: self.default_value
 VariableDefinition.checkGuard = method_checkGuard
 VariableDefinition.showDict = DCWorkflowDefinition_showDict
 VariableDefinition.getStatusIncluded = lambda self: self.for_status

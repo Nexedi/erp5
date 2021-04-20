@@ -90,8 +90,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>WorkflowVariable_getNonEvaluatedVariableDefault</string>
-                          <string>Default Value</string>
+                          <string>variable_default_expression</string>
+                          <string>Default Expression</string>
                         </tuple>
                         <tuple>
                           <string>automatic_update</string>
@@ -115,12 +115,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>variable_default_expression</string>
+                          <string>Default Expression</string>
                         </tuple>
                         <tuple>
                           <string>automatic_update</string>

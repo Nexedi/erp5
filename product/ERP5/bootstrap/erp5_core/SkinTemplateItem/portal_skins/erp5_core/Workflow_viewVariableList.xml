@@ -81,7 +81,7 @@
                       <list>
                         <string>listbox_for_catalog</string>
                         <string>listbox_automatic_update</string>
-                        <string>listbox_title</string>
+                        <string>listbox_variable_default_expression</string>
                         <string>listbox_reference</string>
                       </list>
                     </value>

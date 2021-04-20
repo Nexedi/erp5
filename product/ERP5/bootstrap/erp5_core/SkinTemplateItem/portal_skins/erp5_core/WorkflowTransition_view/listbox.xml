@@ -87,7 +87,7 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>WorkflowVariable_getNonEvaluatedVariableDefault</string>
+                          <string>variable_default_expression</string>
                           <string>Value</string>
                         </tuple>
                       </list>
