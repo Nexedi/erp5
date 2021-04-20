@@ -507,7 +507,7 @@ from Products.ERP5Type.Accessor import WorkflowHistory as WorkflowHistoryAccesso
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
-  from Products.ERP5Type.Core.Transition import TRIGGER_WORKFLOW_METHOD
+  from Products.ERP5Type.Core.WorkflowTransition import TRIGGER_WORKFLOW_METHOD
 
   # aq_inner is required to prevent extra name lookups from happening
   # infinitely. For instance, if a workflow is missing, and the acquisition

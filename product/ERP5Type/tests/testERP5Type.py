@@ -129,7 +129,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       wf = self.portal.portal_workflow.delivery_causality_workflow
       from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-      dummy_transition = wf.newContent(portal_type='Transition',
+      dummy_transition = wf.newContent(portal_type='Workflow Transition',
                                        reference='dummy_workflow_method',
                                        trigger_type=TRIGGER_WORKFLOW_METHOD)
       self.commit()

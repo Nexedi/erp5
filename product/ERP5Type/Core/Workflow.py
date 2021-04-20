@@ -92,9 +92,9 @@ from Products.ERP5Type.patches.WorkflowTool import (SECURITY_PARAMETER_ID,
                                                     WORKLIST_METADATA_KEY)
 from Products.ERP5Type.Utils import convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Core.Transition import (TRIGGER_AUTOMATIC,
-                                               TRIGGER_USER_ACTION,
-                                               TRIGGER_WORKFLOW_METHOD)
+from Products.ERP5Type.Core.WorkflowTransition import (TRIGGER_AUTOMATIC,
+                                                       TRIGGER_USER_ACTION,
+                                                       TRIGGER_WORKFLOW_METHOD)
 
 _marker = ''
 
@@ -645,13 +645,13 @@ class Workflow(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStateValueList')
   def getStateValueList(self):
-    return self.objectValues(portal_type="State")
+    return self.objectValues(portal_type="Workflow State")
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStateReferenceList')
   def getStateReferenceList(self):
     return [state.getReference()
-            for state in self.objectValues(portal_type="State")]
+            for state in self.objectValues(portal_type="Workflow State")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWorklistValueList')
@@ -693,13 +693,13 @@ class Workflow(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTransitionValueList')
   def getTransitionValueList(self):
-    return self.objectValues(portal_type="Transition")
+    return self.objectValues(portal_type="Workflow Transition")
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTransitionReferenceList')
   def getTransitionReferenceList(self):
     return [transition.getReference() for transition
-            in self.objectValues(portal_type="Transition")]
+            in self.objectValues(portal_type="Workflow Transition")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getScriptValueList')
@@ -822,7 +822,7 @@ class Workflow(XMLObject):
     if tdef is not None:
       transition_expression_dict = {
         variable.getCausalityId(): variable.getVariableDefaultExpressionInstance()
-        for variable in tdef.objectValues(portal_type='Transition Variable')
+        for variable in tdef.objectValues(portal_type='Workflow Transition Variable')
       }
 
     # Update all transition variables
@@ -1073,7 +1073,7 @@ class Workflow(XMLObject):
               property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
             sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
           elif property_id =='transition_variable':
-            tr_var_list = tdef.objectValues(portal_type='Transition Variable')
+            tr_var_list = tdef.objectValues(portal_type='Workflow Transition Variable')
             for tr_var in tr_var_list:
               reference = self._getOb(tr_var.getCausalityId()).getReference()
               transition_variable = SubElement(transition_variables, property_id, attrib=dict(id=reference,type='variable'))

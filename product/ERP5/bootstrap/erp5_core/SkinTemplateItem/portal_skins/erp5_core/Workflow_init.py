@@ -1,7 +1,7 @@
 """
 Set up an Workflow with defaults variables needed by ERP5
 """
-state = context.newContent(portal_type='State', reference='draft', title='Draft')
+state = context.newContent(portal_type='Workflow State', reference='draft', title='Draft')
 context.setSourceValue(state)
 
 for v, property_dict in (

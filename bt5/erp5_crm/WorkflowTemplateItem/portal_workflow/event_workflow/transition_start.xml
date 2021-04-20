@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Transition" module="erp5.portal_type"/>
+      <global name="Workflow Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +65,7 @@ If this event is a mail message, and the user checked the option to send the mes
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Transition</string> </value>
+            <value> <string>Workflow Transition</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

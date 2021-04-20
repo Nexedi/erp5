@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Interaction" module="Products.ERP5.Interaction"/>
+      <global name="Interaction Workflow Interaction" module="Products.ERP5.Interaction"/>
     </pickle>
     <pickle>
       <dictionary>
