@@ -24,7 +24,11 @@ import six
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 
 # Load all monkey patches
-#from Products.ERP5Type.patches import WSGIPublisher
+try:
+  from ZPublisher.WSGIPublisher import _MODULES
+except ImportError:
+  # BBB Zope2
+  from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
 from Products.ERP5Type.patches import Restricted
