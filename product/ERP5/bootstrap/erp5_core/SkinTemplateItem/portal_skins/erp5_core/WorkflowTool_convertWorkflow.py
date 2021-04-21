@@ -18,7 +18,7 @@ else:
 
 for workflow in selected_workflow_list:
   if workflow is not None and not workflow.isTempObject() and workflow.getPortalType() in ('Workflow', 'Interaction Workflow'):
-    if batch:
+    if batch_mode:
       raise RuntimeError('Workflow(s) already exist.')
     else:
       return context.Base_redirect(

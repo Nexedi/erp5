@@ -104,3 +104,6 @@ if WITH_LEGACY_WORKFLOW:
   Worklist.getVarMatch = \
     deprecated('getVarMatch() deprecated; use getIdentityCriterionDict()')\
               (lambda self, id: tuple(self._identity_criterion.get(id, ())))
+
+from Products.ERP5Type.Globals import InitializeClass
+InitializeClass(Worklist)
