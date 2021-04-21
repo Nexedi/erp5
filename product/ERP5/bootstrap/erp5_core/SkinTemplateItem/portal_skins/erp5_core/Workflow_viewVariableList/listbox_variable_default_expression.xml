@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_title</string> </value>
+            <value> <string>listbox_variable_default_expression</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -249,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_title</string> </value>
+                    <value> <string>Default Expression</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
