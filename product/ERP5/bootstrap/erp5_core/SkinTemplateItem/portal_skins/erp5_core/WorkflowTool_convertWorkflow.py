@@ -2,7 +2,7 @@ workflow_list = kw.get('workflow_list')
 selected_workflow_list = []
 selected_workflow_id_list = []
 
-if batch_mode == False and workflow_id_list is None:
+if not batch_mode and workflow_id_list is None:
   if workflow_list:
     for workflow in workflow_list:
       if workflow.get('listbox_selected'):
@@ -18,7 +18,10 @@ else:
 
 for workflow in selected_workflow_list:
   if workflow is not None and not workflow.isTempObject() and workflow.getPortalType() in ('Workflow', 'Interaction Workflow'):
-    return context.Base_redirect(
+    if batch:
+      raise RuntimeError('Workflow(s) already exist.')
+    else:
+      return context.Base_redirect(
         'WorkflowTool_viewWorkflowConversionDialog',
         keep_items=dict(portal_status_message='Workflow(s) already exist.'))
 
@@ -27,10 +30,8 @@ for workflow in selected_workflow_list:
   context.reassignWorkflow(new_workflow.getId())
   selected_workflow_id_list.append(new_workflow.getId())
 
-if batch_mode:
-  return
-
-return context.Base_redirect(
+if not batch_mode:
+  return context.Base_redirect(
     'view',
      keep_items=dict(portal_status_message="Workflows converted: %s" %
                      ' '.join(selected_workflow_id_list)))
