@@ -15,8 +15,6 @@ for portal_type in context.allowedContentTypes():
     state_list = workflow.getStateValueList()
     if len(state_list) > 1:
       state_var = workflow.getStateVariable()
-      if state_var is None:
-        state_var = 'state'
       workflow_id = workflow.getId()
       workflow_translated_title_dict[workflow_id] = translateString(workflow.title)
       type_state_variable_workflow_dict[(portal_type_id, state_var)] = workflow_id
