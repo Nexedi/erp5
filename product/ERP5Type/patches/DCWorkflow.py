@@ -1124,7 +1124,7 @@ def convertToERP5Workflow(self, temp_object=False):
       # default_expr has precedence over default_value if defined...
       elif variable_definition.default_value:
         if '/' not in variable_definition.default_value:
-          default_value = 'python: %s' % variable_definition.default_value
+          default_value = "python: '%s'" % variable_definition.default_value
         else:
           default_value = variable_definition.default_value
         variable.setVariableDefaultExpression(default_value)
