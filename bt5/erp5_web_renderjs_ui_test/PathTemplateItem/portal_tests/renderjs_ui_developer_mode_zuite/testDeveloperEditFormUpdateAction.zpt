@@ -63,7 +63,7 @@
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//a[@href="/erp5/web_site_module/renderjs_runner/hateoas/Foo_viewDialogWithOnlyUpdateDialog/manage_workspace"]</td>
+        <td>//a[contains(@href, "/web_site_module/renderjs_runner/hateoas/Foo_viewDialogWithOnlyUpdateDialog/manage_workspace")]</td>
         <td></td>
       </tr>
     </tbody>

@@ -64,7 +64,7 @@
       </tr>
       <tr>
         <td>assertElementNotPresent</td>
-        <td>//div[@data-gadget-scope="PARALLEL_SUB_FIELD_0"]//a[@href="/erp5/Localizer/erp5_ui/manage_messages?regex=%5ERoles%24&amp;lang=en"]</td>
+        <td>//div[@data-gadget-scope="PARALLEL_SUB_FIELD_0"]//a[contains(@href, "/Localizer/erp5_ui/manage_messages?regex=%5ERoles%24&amp;lang=en")]</td>
         <td></td>
       </tr>
     </tbody>
