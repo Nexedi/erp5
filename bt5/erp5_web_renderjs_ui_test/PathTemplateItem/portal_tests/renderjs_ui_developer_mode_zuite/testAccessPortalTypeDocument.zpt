@@ -3,31 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
-<body tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
+<body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="3">Test Access Portal Type Document</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_preferences/AccessTabZuite_setPreference</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Set Preference Successfully.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/portal_preferences/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
