@@ -983,6 +983,9 @@ def convertToERP5Workflow(self, temp_object=False):
           transition.setGuardGroupList(tdef.guard.groups)
           if tdef.guard.expr is not None:
             transition.setGuardExpression(tdef.guard.expr.text)
+        else:
+          # Override value set in WorkflowTransition_init
+          transition.setGuardPermissionList([])
 
       for transition in workflow.objectValues(portal_type='Workflow Transition'):
         # configure after/before scripts
