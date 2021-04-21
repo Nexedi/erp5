@@ -57,3 +57,6 @@ class WorkflowVariable(IdAsReferenceMixin("variable_"),
       'Guard',
       'WorkflowVariable',
     )
+
+from Products.ERP5Type.Globals import InitializeClass
+InitializeClass(WorkflowVariable)

@@ -251,7 +251,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getWorkflowManagedPermissionList()</string> </value>
+            <value> <string>python: [(x, x) for x in context.getWorkflowManagedPermissionList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
