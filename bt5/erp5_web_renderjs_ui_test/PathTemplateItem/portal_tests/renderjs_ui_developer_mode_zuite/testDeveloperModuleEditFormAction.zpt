@@ -38,7 +38,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@href="hateoas/Base_doSelect/manage_main"]</td>
   <td></td>
 </tr>

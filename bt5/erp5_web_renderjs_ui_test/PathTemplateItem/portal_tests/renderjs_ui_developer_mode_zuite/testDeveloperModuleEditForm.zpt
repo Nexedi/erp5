@@ -90,7 +90,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//div[@data-gadget-scope="field_listbox"]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
   <td></td>
 </tr>
