@@ -49,6 +49,7 @@ from Products.ERP5Type.Core.Workflow import (Workflow as ERP5Workflow,
                                              ValidationFailed,
                                              _marker,
                                              userGetIdOrUserNameExpression)
+from Products.ERP5Type.Tool.WorkflowTool import SECURITY_PARAMETER_ID
 from Products.ERP5Type.mixin.guardable import GuardableMixin as ERP5Guardable
 
 # Patch WorkflowUIMixin to add description on workflows
@@ -877,9 +878,6 @@ def method_getGuardExpressionInstance(self):
 def method_checkGuard(self, *args, **kwargs):
   return ERP5Guardable.checkGuard.im_func(self, *args, **kwargs)
 
-def method_getIdentityCriterionDict(self):
-  return {k: self.getVarMatch(k) for k in self.getVarMatchKeys()}
-
 def method_getAction(self):
   return self.actbox_url
 def method_getActionType(self):
@@ -1068,7 +1066,6 @@ def convertToERP5Workflow(self, temp_object=False):
         worklist.setActionName(qdef.actbox_name)
         # configure guard
         if qdef.guard:
-          from Products.ERP5Type.Tool.WorkflowTool import SECURITY_PARAMETER_ID
           if qdef.guard.roles:
             worklist.setCriterion(SECURITY_PARAMETER_ID, qdef.guard.roles)
             criterion_property_list.append(SECURITY_PARAMETER_ID)
@@ -1272,6 +1269,16 @@ VariableDefinition.checkGuard = method_checkGuard
 VariableDefinition.showDict = DCWorkflowDefinition_showDict
 VariableDefinition.getStatusIncluded = lambda self: self.for_status
 VariableDefinition.getAutomaticUpdate = lambda self: self.update_always
+def WorklistDefinition_getGuardRoleList(self):
+  """
+  For Worklists only, guard.roles has been migrated to SECURITY_PARAMETER_ID
+  """
+  return []
+def WorklistDefinition_getIdentityCriterionDict(self):
+  identity_criterion_dict = {k: self.getVarMatch(k) for k in self.getVarMatchKeys()}
+  if self.guard is not None and self.guard.roles:
+    identity_criterion_dict[SECURITY_PARAMETER_ID] = self.guard.roles
+  return identity_criterion_dict
 WorklistDefinition.getReference = method_getReference
 WorklistDefinition.getId = method_getId
 WorklistDefinition.getTitle = method_getTitle
@@ -1282,12 +1289,12 @@ WorklistDefinition.getActionName = method_getActionName
 WorklistDefinition.getIcon = method_getIcon
 WorklistDefinition.showDict = DCWorkflowDefinition_showDict
 WorklistDefinition.isGuarded = method_isGuarded
-WorklistDefinition.getGuardRoleList = method_getGuardRoleList
+WorklistDefinition.getGuardRoleList = WorklistDefinition_getGuardRoleList
 WorklistDefinition.getGuardGroupList = method_getGuardGroupList
 WorklistDefinition.getGuardPermissionList = method_getGuardPermissionList
 WorklistDefinition.getGuardExpressionInstance = method_getGuardExpressionInstance
 WorklistDefinition.checkGuard = method_checkGuard
-WorklistDefinition.getIdentityCriterionDict = method_getIdentityCriterionDict
+WorklistDefinition.getIdentityCriterionDict = WorklistDefinition_getIdentityCriterionDict
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
