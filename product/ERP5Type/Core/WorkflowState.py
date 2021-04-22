@@ -132,6 +132,8 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     """
     Set a permission for this State.
     """
+    if self.state_permission_role_list_dict is None:
+      self.state_permission_role_list_dict = PersistentMapping()
     self.state_permission_role_list_dict[permission] = tuple(roles)
 
   security.declareProtected(Permissions.AccessContentsInformation,
