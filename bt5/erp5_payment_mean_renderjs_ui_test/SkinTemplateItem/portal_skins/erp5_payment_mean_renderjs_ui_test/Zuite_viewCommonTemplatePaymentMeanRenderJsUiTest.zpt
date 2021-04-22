@@ -1,0 +1,114 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/portal_preferences/ERP5Site_setPaymentMeanUiTestPreference</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Set Payment Mean Preference Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#</td>
+      <td>renderjs_url</td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="delete_data">
+    <tr>
+      <td colspan="3"><b>Delete Payment Mean Test Data</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_deletePaymentMeanUiTestData</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Deleted Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="prepare_data">
+    <tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanRenderJsUiTest/macros/delete_data" />
+    <tr>
+      <td colspan="3"><b>Create Payment Mean Test Data</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ERP5Site_createPaymentMeanUiTestData</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Test Data Created.</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="view_fast_input">
+    <tr>
+      <td colspan="3"><b>Display the fast input</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${renderjs_url}/payment_transaction_group_module/erp5_payment_mean_ui_test_payment_transaction_group</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <!-- Wait for gadget to be loaded -->
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+      <td></td>
+    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Select Payments</td>
+      <td></td>
+    </tr>
+
+    <tal:block tal:define="click_configuration python: {'text': 'Select Payments'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Select Payments</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+</tal:block>
