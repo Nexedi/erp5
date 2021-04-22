@@ -29,7 +29,7 @@ BEFORE for possible transitions was:  Enter Number of User</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>State</string> </value>
+            <value> <string>Workflow State</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
