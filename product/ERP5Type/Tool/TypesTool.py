@@ -105,6 +105,7 @@ class TypesTool(TypeProvider):
     'Standard Property',
     'Acquired Property',
     # workflow (initializePortalTypeDynamicWorkflowMethods)
+    'Workflow Tool',
     'Workflow State',
     'Workflow Transition',
     'Workflow Transition Variable',
@@ -152,8 +153,11 @@ class TypesTool(TypeProvider):
                             'erp5_core',
                             'PortalTypeTemplateItem',
                             self._bootstrap_type_list)
+    getattr(self, 'Workflow Transition Variable').base_category_list = ('causality',)
     ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow Tool')
     ERP5Generator.bootstrap_allow_type(self, 'Workflow')
+    ERP5Generator.bootstrap_allow_type(self, 'Workflow Transition')
     ERP5Generator.bootstrap_allow_type(self, 'Interaction Workflow')
 
   def listContentTypes(self, container=None):
