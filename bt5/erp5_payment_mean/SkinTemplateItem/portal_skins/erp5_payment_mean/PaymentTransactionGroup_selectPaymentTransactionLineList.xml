@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, **kw</string> </value>
+            <value> <string>form_id=\'view\', select_limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

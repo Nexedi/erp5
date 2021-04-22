@@ -8,7 +8,7 @@ if context.getPortalObject().portal_activities.countMessageWithTag(tag,):
     "Some payments are still beeing processed in the background, please retry later")))
 
 context.activate(tag=tag).PaymentTransactionGroup_selectPaymentTransactionLineListActive(
-  limit=limit,
+  select_limit=select_limit,
   start_date_range_min=start_date_range_min,
   start_date_range_max=start_date_range_max,
   sign=sign,

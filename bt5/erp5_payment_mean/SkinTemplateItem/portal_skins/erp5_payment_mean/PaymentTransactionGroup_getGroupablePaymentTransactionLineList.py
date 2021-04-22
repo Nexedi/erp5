@@ -17,8 +17,8 @@ search_kw = dict(
 if context.getPaymentMode():
   search_kw['payment_transaction_line_payment_mode_uid'] = context.getPaymentModeUid()
 
-if limit:
-  search_kw['limit'] = limit
+if select_limit:
+  search_kw['limit'] = select_limit
 
 if start_date_range_max:
   search_kw['at_date'] = start_date_range_max.latestTime()

@@ -10,6 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
+                <string>end</string>
+                <string>required</string>
                 <string>start</string>
                 <string>title</string>
               </list>
@@ -17,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_limit</string> </value>
+            <value> <string>your_select_limit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,7 +65,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>start</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -73,12 +84,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string>50</string> </value>
+                </item>
+                <item>
+                    <key> <string>end</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>start</string> </key>
