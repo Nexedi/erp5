@@ -907,6 +907,12 @@ def convertToERP5Workflow(self, temp_object=False):
   portal = self.getPortalObject()
   workflow_tool = portal.portal_workflow
 
+  # XXX: These _init scripts are not available before upgrading erp5_core and
+  #      are only use to set default values which is not needed here as all
+  #      properties are copied from DCWorkflows...
+  for x in ('Workflow', 'Workflow Script', 'Workflow Transition'):
+    getattr(portal.portal_types, x).setTypeInitScriptId(None)
+
   workflow_class_name = self.__class__.__name__
   if temp_object:
     new_id = self.id
