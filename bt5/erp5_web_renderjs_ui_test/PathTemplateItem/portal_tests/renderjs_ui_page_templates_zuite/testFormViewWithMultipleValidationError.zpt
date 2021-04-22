@@ -1,0 +1,80 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Workflow Transition with Invalid Form</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Workflow Transition with Invalid Form</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>store</td>
+  <td>${base_url}/web_site_module/renderjs_runner</td>
+  <td>renderjs_url</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${renderjs_url}/#/foo_module/1?editable=1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block tal:define="click_configuration python: {'text': 'View With Validation Error'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_third_failure"]</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_third_failure"]</td>
+  <td>blur</td>
+</tr>
+<!-- Fill long string to provoke form validation failure -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Please fill all required fields to submit'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_third_failure"]</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "Please fill out this field.")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_third_failure"]</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "Please fill out this field.")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_third_failure</td>
+  <td>ABCD</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+</tbody>
+</table>
+</body>
+</html>
