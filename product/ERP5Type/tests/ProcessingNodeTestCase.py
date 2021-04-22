@@ -6,6 +6,7 @@ import Lifetime
 import transaction
 from Testing import ZopeTestCase
 try:
+  from Testing.makerequest import _Z2HOST # XXX only on Zope4
   from Testing import makerequest as utils
 except: # BBB Zope 2.12
   from Testing.ZopeTestCase import utils
