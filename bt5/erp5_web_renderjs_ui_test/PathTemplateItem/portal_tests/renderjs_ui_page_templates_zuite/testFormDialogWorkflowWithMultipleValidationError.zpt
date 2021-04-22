@@ -48,16 +48,9 @@
 </tr>
 <!-- Fill long string to provoke form validation failure -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name="field_your_sixth_failure"]</td>
-  <td>focus</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][6]/div/span</td>
-  <td></td>
-</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Please fill all required fields to submit'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][6]/div/span[contains(text(), "Please fill out this field.")]</td>
@@ -78,11 +71,10 @@
   <td>field_your_sixth_failure</td>
   <td>ABCD</td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][1]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Please fill all required fields to submit'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][1]</td>
@@ -91,16 +83,6 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][2]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name="field_your_eighth_failure" and @value="A"]</td>
-  <td>focus</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/span[contains(text(), "Input is required but no input given.")]</td>
   <td></td>
 </tr>
 <tr>

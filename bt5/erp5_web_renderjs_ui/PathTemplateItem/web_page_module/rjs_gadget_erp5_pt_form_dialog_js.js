@@ -1,7 +1,7 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, calculatePageTitle, domsugar,
+/*global window, document, rJS, RSVP, calculatePageTitle, domsugar,
          ensureArray */
-(function (window, rJS, RSVP, calculatePageTitle, domsugar,
+(function (window, document, rJS, RSVP, calculatePageTitle, domsugar,
            ensureArray) {
   "use strict";
 
@@ -45,7 +45,34 @@
       .push(function (is_valid) {
         if (!is_valid) {
           enableButton();
-          return;
+          return new RSVP.Queue()
+            .push(function () {
+              return gadget.getTranslationList([
+                "Please fill all required fields to submit"
+              ]);
+            })
+            .push(function (result_list) {
+              var i,
+                event,
+                element,
+                element_list = gadget.element.querySelectorAll(
+                  "input[class='is-invalid']"
+                );
+              for (i = 0; i < element_list.length; i += 1) {
+                element = element_list[i];
+                if (!element.checkValidity() || element.type === "radio") {
+                  // call focus() does not work to radio inputs
+                  event = document.createEvent('Event');
+                  event.initEvent('focus', true, true);
+                  element.dispatchEvent(event);
+                  break;
+                }
+              }
+              return gadget.notifyChange({
+                "message": result_list[0],
+                "status": "error"
+              });
+            });
         }
         return getContent.apply(gadget)
           .push(function (content_dict) {
@@ -154,6 +181,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("submitContent", "submitContent")
     .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
                             submitDialogWithCustomDialogMethod)
@@ -367,4 +395,4 @@
       }
     });
 
-}(window, rJS, RSVP, calculatePageTitle, domsugar, ensureArray));
+}(window, document, rJS, RSVP, calculatePageTitle, domsugar, ensureArray));

@@ -1,4 +1,4 @@
-/*global window, document, rJS, domsugar, HTMLLabelElement*/
+/*global window, document, rJS, domsugar, HTMLLabelElement, RSVP*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS, domsugar, HTMLLabelElement) {
+(function (window, document, rJS, domsugar, HTMLLabelElement, RSVP) {
   "use strict";
 
   var SCOPE = 'field';
@@ -102,6 +102,7 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
 
     .declareMethod('render', function render(options) {
       var state_dict = {
@@ -345,7 +346,19 @@
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
       // Label doesn't know when a subgadget calls notifyInvalid
       // Prevent mutex dead lock by defering the changeState call
-      return this.deferErrorTextRender(param_list[0]);
+      var message;
+      if (this.state.label_text) {
+        message = this.state.label_text + ": " + param_list[0];
+      } else {
+        message = param_list[0];
+      }
+      return RSVP.all([
+        this.deferErrorTextRender(param_list[0]),
+        this.notifyChange({
+          "message": message,
+          "status": "error"
+        })
+      ]);
     })
 
     .allowPublicAcquisition("notifyValid", function notifyValid() {
@@ -358,4 +371,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS, domsugar, HTMLLabelElement));
+}(window, document, rJS, domsugar, HTMLLabelElement, RSVP));
