@@ -1,0 +1,133 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_or_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_or_id"></td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanUiTest/macros/init" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanUiTest/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanUiTest/macros/view_fast_input" />
+
+<tr>
+  <td>assertSelected</td>
+  <td>field_your_sign</td>
+  <td>Outgoing</td>
+</tr>
+
+<!-- update dialog -->
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_update_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- choose sign -->
+<tr>
+  <td>select</td>
+  <td>field_your_sign</td>
+  <td>Incoming</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_update_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- choose limit -->
+<tr>
+  <td>select</td>
+  <td>field_your_sign</td>
+  <td>Incoming</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_limit']</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_update_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <!-- XXX this is not cool to have "sample of " here, but since we pass a limit, listbox detects that the limit was reached --> 
+  <td>sample of 1 records</td>
+</tr>
+
+<!-- choose dates -->
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_limit']</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='subfield_field_your_start_date_range_max_year']</td>
+  <td>2019</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='subfield_field_your_start_date_range_max_month']</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='subfield_field_your_start_date_range_max_day']</td>
+  <td>20</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_update_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<!-- select -->
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Payment selection in progress.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/payment_transaction_group_module/erp5_payment_mean_ui_test_payment_transaction_group</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
