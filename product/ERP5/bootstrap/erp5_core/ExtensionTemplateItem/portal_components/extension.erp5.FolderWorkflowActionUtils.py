@@ -84,7 +84,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
       for brain in selection_tool.callSelectionFor(selection_name, params=params):
         doc = brain.getObject()
         for workflow in wf_tool.getWorkflowValueListFor(doc):
-          if workflow.getId() in skipped_workflow_id_list:
+          if workflow.getPortalType() == 'Interaction Workflow' or workflow.getId() in skipped_workflow_id_list:
             continue
           state_var = workflow.getStateVariable()
           translated_workflow_state_title = doc.getProperty(
@@ -115,7 +115,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
     for document in selected_document_list:
       for state_var in possible_state_list:
         for workflow in wf_tool.getWorkflowValueListFor(document):
-          if workflow.getId() in skipped_workflow_id_list:
+          if workflow.getPortalType() == 'Interaction Workflow' or workflow.getId() in skipped_workflow_id_list:
             continue
           if state_var == workflow.getStateVariable():
             key = (document.getPortalTypeName(), workflow.getId(),

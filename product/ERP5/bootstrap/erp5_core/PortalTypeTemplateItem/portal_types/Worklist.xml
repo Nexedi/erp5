@@ -16,9 +16,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>\n
-    A ERP5 Worklist.\n
-</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>erp5workflow_list</string> </key>
@@ -36,9 +36,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Worklist_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

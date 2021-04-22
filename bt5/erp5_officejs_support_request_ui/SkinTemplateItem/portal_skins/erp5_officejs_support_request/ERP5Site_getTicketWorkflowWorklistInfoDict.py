@@ -45,7 +45,7 @@ for worklist in workflow.worklists.objectValues():
       'type': 'simple',
     })
 
-  query_dict[worklist.getId()] = {
+  query_dict[worklist.getReference()] = {
     'type': 'complex',
     'query_list': query_list
   }
