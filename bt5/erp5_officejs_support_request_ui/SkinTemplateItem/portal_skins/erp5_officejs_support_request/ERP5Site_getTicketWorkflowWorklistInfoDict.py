@@ -19,15 +19,7 @@ for worklist in workflow.worklists.objectValues():
        and portal_type not in identity_criterion_dict.get('portal_type'):
     continue
 
-  query_list = [{
-    'type': 'complex',
-    'operator': 'OR',
-    'query_list': [
-      {'key': 'local_roles',
-       'type': 'simple',
-       'value': role, } for role in worklist.getGuardRoleList()]
-  }]
-
+  query_list = []
   for key, value in identity_criterion_dict.iteritems():
     if key == workflow_state_var:
       # instead of having {'validation_state': 'draft'}, we want to have
@@ -39,11 +31,20 @@ for worklist in workflow.worklists.objectValues():
         '%s [state in %s]' % (state_title, workflow.getId()),
         default=unicode(translateString(state_title))))
 
-    query_list.append({
-      'key': key,
-      'value': value,
-      'type': 'simple',
-    })
+    if isinstance(value, (tuple, list)):
+      query_list.extend([{
+        'type': 'complex',
+        'operator': 'OR',
+        'query_list': [{'key': key,
+                       'type': 'simple',
+                       'value': v, } for v in value]
+      }])
+    else:
+      query_list.append({
+        'key': key,
+        'value': value,
+        'type': 'simple',
+      })
 
   query_dict[worklist.getReference()] = {
     'type': 'complex',
