@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, **kw</string> </value>
+            <value> <string>limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, mode=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

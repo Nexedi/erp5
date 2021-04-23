@@ -12,6 +12,7 @@ context.activate(tag=tag).PaymentTransactionGroup_selectPaymentTransactionLineLi
   start_date_range_min=start_date_range_min,
   start_date_range_max=start_date_range_max,
   sign=sign,
+  mode=mode,
   tag=tag)
 
 return context.Base_redirect(form_id,
