@@ -1,0 +1,95 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_or_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_or_id"></td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanRenderJsUiTest/macros/init" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanRenderJsUiTest/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanRenderJsUiTest/macros/view_fast_input" />
+
+
+<tr>
+  <td>assertSelected</td>
+  <td>field_your_mode</td>
+  <td>Select already Posted to General Ledger or Closed Payments</td>
+</tr>
+
+<!-- update dialog -->
+<tr>
+  <td>select</td>
+  <td>field_your_mode</td>
+  <td>Select Planned or Confirmed Payments and Post them to General Ledger</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<!-- out of the 3, one is not consistent -->
+<tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+
+<!-- select -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Payment selection in progress.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${renderjs_url}/payment_transaction_group_module/erp5_payment_mean_ui_test_payment_transaction_group</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<!-- the not consistent transaction was not selected, we selected and validated the two consistent ones -->
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Posted to General Ledger</td>
+  <td></td>
+</tr>
+
+<!-- XXX we don't really need to wait for activities here, but we need to `open` a different page so that we can
+open erp5_payment_mean_ui_test_confirmed_not_consistent_outgoing_payment later.
+selenium open command expect that a new page is loaded, without this we would just re-open the same page with
+a different fragment and selenium would never notice with open is executed.
+-->
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- the not consistent transaction is left separately, there's a note in history explaining why it could not be selected -->
+<tr>
+  <td>open</td>
+  <td>${renderjs_url}/accounting_module/erp5_payment_mean_ui_test_confirmed_not_consistent_outgoing_payment</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="click_configuration python: {'text': 'History'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>assertTextPresent</td>
+  <td>Transaction is not balanced for erp5_payment_mean_ui_test_organisation</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

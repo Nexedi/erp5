@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title tal:replace="template/title_or_id"></title>
+<title tal:content="template/title_or_id"></title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3" tal:replace="template/title_or_id"></td></tr>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_or_id"></td></tr>
 </thead><tbody>
 
 <tal:block metal:use-macro="here/Zuite_viewCommonTemplatePaymentMeanUiTest/macros/init" />
@@ -16,50 +16,17 @@
 
 <tr>
   <td>assertSelected</td>
-  <td>field_your_sign</td>
-  <td>Outgoing</td>
+  <td>field_your_mode</td>
+  <td>Select already Posted to General Ledger or Closed Payments</td>
 </tr>
 
 <!-- update dialog -->
 <tr>
-  <td>clickAndWait</td>
-  <td>dialog_update_button</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
-
-<!-- choose sign -->
-<tr>
   <td>select</td>
-  <td>field_your_sign</td>
-  <td>Incoming</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>dialog_update_button</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>1 records</td>
+  <td>field_your_mode</td>
+  <td>Select Planned or Confirmed Payments and Post them to General Ledger</td>
 </tr>
 
-<!-- choose limit -->
-<tr>
-  <td>select</td>
-  <td>field_your_sign</td>
-  <td>Incoming</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name='field_your_limit']</td>
-  <td>1</td>
-</tr>
 <tr>
   <td>clickAndWait</td>
   <td>dialog_update_button</td>
@@ -68,40 +35,8 @@
 <tr>
   <td>assertText</td>
   <td>//span[@class="listbox-current-page-total-number"]</td>
-  <!-- XXX this is not cool to have "sample of " here, but since we pass a limit, listbox detects that the limit was reached --> 
-  <td>sample of 1 records</td>
-</tr>
-
-<!-- choose dates -->
-<tr>
-  <td>type</td>
-  <td>//input[@name='field_your_limit']</td>
-  <td>10</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name='subfield_field_your_start_date_range_max_year']</td>
-  <td>2019</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name='subfield_field_your_start_date_range_max_month']</td>
-  <td>10</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name='subfield_field_your_start_date_range_max_day']</td>
-  <td>20</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>dialog_update_button</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>1 records</td>
+  <!-- out of the 3, one is not consistent -->
+  <td>3 records</td>
 </tr>
 
 <!-- select -->
@@ -122,12 +57,28 @@
   <td>${base_url}/payment_transaction_group_module/erp5_payment_mean_ui_test_payment_transaction_group</td>
   <td></td>
 </tr>
+<!-- the not consistent transaction was not selected, we selected and validated the two consistent ones -->
 <tr>
   <td>assertText</td>
   <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>1 records</td>
+  <td>2 records</td>
 </tr>
-
+<tr>
+  <td>assertTextPresent</td>
+  <td>Posted to General Ledger</td>
+  <td></td>
+</tr>
+<!-- the not consistent transaction is left separately, there's a note in history explaining why it could not be selected -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/accounting_module/erp5_payment_mean_ui_test_confirmed_not_consistent_outgoing_payment/Base_viewHistory</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Transaction is not balanced for erp5_payment_mean_ui_test_organisation</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

@@ -50,11 +50,19 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, mode=None, **kw</string> </value>
+            <value> <string>aggregate, activate_kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentTransactionGroup_selectPaymentTransactionLineList</string> </value>
+            <value> <string>AccountingTransactionLine_stopAndSetAggregate</string> </value>
         </item>
       </dictionary>
     </pickle>
