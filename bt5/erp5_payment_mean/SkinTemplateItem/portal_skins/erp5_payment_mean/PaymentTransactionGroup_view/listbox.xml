@@ -108,7 +108,7 @@
                         </tuple>
                         <tuple>
                           <string>Movement_getSpecificReference</string>
-                          <string>Specific Reference</string>
+                          <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
                           <string>Movement_getExplanationTitle</string>
