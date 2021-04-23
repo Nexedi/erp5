@@ -5,7 +5,19 @@
 
   rJS(window)
     .declareMethod('render', function (options) {
-      var field_json = options.field_json || {};
+      var gadget = this,
+        field_json = options.field_json || {},
+        relative_url = field_json.relative_url;
+      if (relative_url) {
+        return gadget.getUrlFor({command: 'display', options: {jio_key: relative_url}})
+          .push(function (href) {
+            return gadget.changeState({
+              text: field_json.value || field_json.default || "",
+              extra: field_json.extra || "",
+              href: href
+            });
+          });
+      }
       return this.changeState({
         text: field_json.value || field_json.default || "",
         extra: field_json.extra || "",

@@ -6,20 +6,31 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
 
 class HyperLinkWidget(LabelWidget):
-    property_names = LabelWidget.property_names + ['href']
+    property_names = LabelWidget.property_names + ['href'] + ['relative_url']
 
     href = fields.LinkField('href',
                            title='Href',
                            description='Address of this link',
                            default="",
-                           required=1)
+                           required=0)
+
+    relative_url = fields.StringField('relative_url',
+                                       title='Relative URL',
+                                       description='Relative URL of an ERP5 object',
+                                       default="",
+                                       required=0)
 
     def render(self, field, key, value, REQUEST, render_prefix=None):
         return self.render_view(field, value, REQUEST, render_prefix)
 
     def render_view(self, field, value, REQUEST=None, render_prefix=None):
+        relative_url = field.get_value('relative_url')
+        if relative_url:
+            href = field.getPortalObject().unrestrictedTraverse(relative_url).absolute_url()
+        else:
+            href = field.get_value('href')
         return render_element("a",
-                              href=field.get_value('href'),
+                              href=href,
                               css_class=field.get_value('css_class'),
                               contents=field.get_value('default'),
                               extra=field.get_value('extra'))
