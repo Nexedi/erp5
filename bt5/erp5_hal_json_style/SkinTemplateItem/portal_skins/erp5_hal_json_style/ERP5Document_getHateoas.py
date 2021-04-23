@@ -558,6 +558,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       result.update({
         "extra": field.get_value("extra"),
         "href": field.get_value("href"),
+        "is_internal_path": field.get_value("is_internal_path"),
       })
     if meta_type == "ImageField":
       options = {
