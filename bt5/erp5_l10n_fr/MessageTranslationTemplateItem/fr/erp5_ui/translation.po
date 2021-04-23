@@ -1531,8 +1531,17 @@ msgstr "Domiciliation bancaire"
 msgid "Bank Account Type"
 msgstr "Type de compte en banque"
 
+msgid "Bank Account must belong to Section"
+msgstr "Le compte en banque doit appartenir à la section"
+
 msgid "Bank Accounts"
 msgstr "Comptes bancaires"
+
+msgid "Bank Accounts must be validated"
+msgstr "Les comptes en banque doivent être validés"
+
+msgid "Bank Accounts must have IBAN and BIC"
+msgstr "Les comptes en banque doivent avoir un IBAN et un BIC"
 
 msgid "Bank Branch"
 msgstr "Code guichet"
@@ -5575,6 +5584,9 @@ msgstr "Id du script de générateur de prévision"
 msgid "Generate References"
 msgstr "Générer les références"
 
+msgid "Generate SEPA Credit Transfer File"
+msgstr "Générer un fichier de virements SEPA"
+
 msgid "Generate Web Section Structure from Category"
 msgstr "Générer une section web à partir des catégories"
 
@@ -6871,8 +6883,14 @@ msgstr "Délai max. (jours)"
 msgid "Max. delay (day)"
 msgstr "Délai Max (jours)"
 
+msgid "Maximum Date"
+msgstr "Date maximale"
+
 msgid "Maximum Delay (Day)"
 msgstr "Délai maximum (jours)"
+
+msgid "Maximum Number of Payments"
+msgstr "Nombre maximum de règlements"
 
 msgid "Maximum User Inactivity Duration"
 msgstr "Durée maximale d'inactivité"
@@ -7158,6 +7176,9 @@ msgstr "Minimiser le prix"
 
 msgid "Minimize"
 msgstr "Minimiser"
+
+msgid "Minimum Date"
+msgstr "Date minimale"
 
 msgid "Minimum Delay (Day)"
 msgstr "Délai minimum (jours)"
@@ -7569,6 +7590,9 @@ msgstr "Aucun document correspondant n'a été trouvé."
 
 msgid "No trade condition."
 msgstr "Pas de condition commerciale trouvée."
+
+msgid "No valid payment transaction group found"
+msgstr "Pas de groupe d'écritures de trésorerie valide trouvé"
 
 msgid "No valid transaction in your selection."
 msgstr "Pas d'écritures valides dans votre sélection."
@@ -8431,6 +8455,9 @@ msgstr "Date d'échéance du paiement"
 msgid "Payment Delay (days)"
 msgstr "Délai de paiement"
 
+msgid "Payment Group Manager"
+msgstr "Responsable du groupe d'écritures de trésorerie"
+
 msgid "Payment Mode"
 msgstr "Moyen de paiement"
 
@@ -8464,8 +8491,23 @@ msgstr "Groupe d'écritures de trésorerie"
 msgid "Payment Transaction Group Type"
 msgstr "Type de groupe d'écritures de trésorerie"
 
+msgid "Payment Transaction Group Type must be defined"
+msgstr "Le type de groupe d'écritures de trésorerie doit être défini"
+
+msgid "Payment Transaction Group Workflow"
+msgstr "Workflow des groupes d'écritures de trésorerie"
+
 msgid "Payment Transaction Groups"
 msgstr "Groupes d'écritures de trésorerie"
+
+msgid "Payment Transaction Groups to Close"
+msgstr "Groupes d'écritures de trésorerie à clôturer"
+
+msgid "Payment Transaction Groups to Deliver"
+msgstr "Groupes d'écritures de trésorerie à livrer"
+
+msgid "Payment Transaction Groups to Open"
+msgstr "Groupes d'écritures de trésorerie à ouvrir"
 
 msgid "Payment Transaction Lines"
 msgstr "Lignes comptables"
@@ -8481,6 +8523,9 @@ msgstr "Écritures de trésorerie à l'état brouillard"
 
 msgid "Payment Transaction related to Sale Invoice Transaction."
 msgstr "Écriture de paiement liée à l'écriture de vente."
+
+msgid "Payment Transactions"
+msgstr "Écritures de trésorerie"
 
 msgid "Payment additional term (day)"
 msgstr "le"
@@ -8499,6 +8544,9 @@ msgstr "Mode de règlement"
 
 msgid "Payment of ${invoice_title}"
 msgstr "Paiement de ${invoice_title}"
+
+msgid "Payment selection in progress."
+msgstr "Sélection des règlements en cours."
 
 msgid "Payment term (day)"
 msgstr "Terme du payement"
@@ -8856,6 +8904,9 @@ msgstr "Posté"
 
 msgid "Posted [state in query_workflow]"
 msgstr "Posté"
+
+msgid "Posted automatically with payment transaction group ${payment_transaction_group_reference}"
+msgstr "Brouillard validé automatiquement depuis le groupe d'écritures de trésorerie ${payment_transaction_group_reference}"
 
 msgid "Posted to General Ledger"
 msgstr "Brouillard validé"
@@ -9973,6 +10024,9 @@ msgstr "Écriture de trésorerie correspondante créée"
 msgid "Related Payment Transaction"
 msgstr "Écriture de trésorerie correspondante"
 
+msgid "Related Payment Transaction Group"
+msgstr "Groupe d'écritures de trésorerie lié"
+
 msgid "Related Person"
 msgstr "Personne liée"
 
@@ -10074,6 +10128,12 @@ msgstr "Mémoriser mon nom"
 
 msgid "Remove"
 msgstr "Enlever"
+
+msgid "Remove from Payment Transaction Group"
+msgstr "Supprimer du groupe d'écritures de trésorerie"
+
+msgid "Removed from payment transaction group"
+msgstr "Supprimé du groupe d'écritures de trésorerie"
 
 msgid "Rename"
 msgstr "Renommer"
@@ -10431,6 +10491,9 @@ msgstr "Lancer les tests unitaires"
 
 msgid "Running Balance"
 msgstr "Net"
+
+msgid "SEPA Credit Transfer File generated."
+msgstr "Fichier de virements SEPA généré"
 
 msgid "SQL Cache"
 msgstr "Cache SQL"
@@ -10810,6 +10873,12 @@ msgstr "Sélectionner un module"
 msgid "Select Non Reconciled Transactions"
 msgstr "Sélectionner les écritures non rapprochées"
 
+msgid "Select Payments"
+msgstr "Sélectionner des règlements"
+
+msgid "Select Planned or Confirmed Payments and Post them to General Ledger"
+msgstr "Sélectionner des écritures planifiées ou confirmées et les passer au brouillard"
+
 msgid "Select Print"
 msgstr "Type d'impression"
 
@@ -10824,6 +10893,9 @@ msgstr "Sélectionner un filtre prédéfini"
 
 msgid "Select Variation"
 msgstr "Variantes à commander"
+
+msgid "Select already Posted to General Ledger or Closed Payments"
+msgstr "Sélectionner des écritures au brouillard validé ou clôturées"
 
 msgid "Select appropriate document in the list."
 msgstr "Sélectionnez le document approprié dans la liste."
@@ -11058,6 +11130,9 @@ msgstr "Montrer les écritures rapprochées"
 
 msgid "Show tabs"
 msgstr "Montrer les onglets"
+
+msgid "Sign"
+msgstr "Signe"
 
 msgid "Signature Preview"
 msgstr "Aperçu de la signature"
@@ -11351,7 +11426,7 @@ msgid "Source Ref"
 msgstr "Réf Fournisseur."
 
 msgid "Source Reference"
-msgstr "Référence"
+msgstr "Référence de source"
 
 msgid "Source Section"
 msgstr "Section Source"
