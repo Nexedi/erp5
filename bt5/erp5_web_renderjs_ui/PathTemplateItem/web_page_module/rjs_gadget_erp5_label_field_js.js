@@ -102,6 +102,7 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
 
     .declareMethod('render', function render(options) {
       var state_dict = {
