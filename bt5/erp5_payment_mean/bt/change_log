@@ -1,3 +1,6 @@
+2021-04-23
+* New "Select Planned or Confirmed Payments and Post them to General Ledger" mode to select payments.
+
 2011-07-13 Gabriel:
 * Add field on PaymentTransactionGroup_view to display the source_administration property
 

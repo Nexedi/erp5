@@ -1,9 +1,15 @@
 portal = context.getPortalObject()
 
+if mode == 'stopped_or_delivered':
+  simulation_state = ('delivered', 'stopped')
+else:
+  assert mode == 'planned_or_confirmed', "Unknown mode, %r" % mode
+  simulation_state = ('planned', 'confirmed')
+
 search_kw = dict(
   parent_portal_type='Payment Transaction',
   limit=None,
-  simulation_state=('delivered', 'stopped'),
+  simulation_state=simulation_state,
   section_uid=context.getSourceSectionUid(),
   payment_uid=context.getSourcePaymentUid(),
   resource_uid=context.getPriceCurrencyUid(),
