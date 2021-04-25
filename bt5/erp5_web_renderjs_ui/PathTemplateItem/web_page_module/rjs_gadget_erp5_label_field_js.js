@@ -346,19 +346,7 @@
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
       // Label doesn't know when a subgadget calls notifyInvalid
       // Prevent mutex dead lock by defering the changeState call
-      var message;
-      if (this.state.label_text) {
-        message = this.state.label_text + ": " + param_list[0];
-      } else {
-        message = param_list[0];
-      }
-      return RSVP.all([
-        this.deferErrorTextRender(param_list[0]),
-        this.notifyChange({
-          "message": message,
-          "status": "error"
-        })
-      ]);
+      return this.deferErrorTextRender(param_list[0]);
     })
 
     .allowPublicAcquisition("notifyValid", function notifyValid() {
