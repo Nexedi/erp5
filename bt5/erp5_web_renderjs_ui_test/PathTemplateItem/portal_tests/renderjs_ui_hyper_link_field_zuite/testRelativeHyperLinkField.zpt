@@ -1,0 +1,78 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI Relative Hyperlink</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test int:0 in items and as default</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Foo_createObjects?num:int=1&amp;start:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr><td colspan="3">Click relative HyperLinkField</td></tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, "gadget_erp5_field_hyperlink.html")]/a[text()='Parent']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, "gadget_erp5_field_hyperlink.html")]/a[text()='Parent']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr><td colspan="3">Back to the previous page</td></tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//h1/a[text()='Foos']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//h1/a[text()='Foos']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, "gadget_erp5_field_hyperlink.html")]/a[text()='Parent']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
