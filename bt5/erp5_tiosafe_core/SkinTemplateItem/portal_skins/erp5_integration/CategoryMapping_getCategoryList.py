@@ -13,7 +13,7 @@ def getERP5CategoryUrl(category):
   if category.getPortalType() == "Base Category":
     return category.getTitle()
   else:
-    return "%s/%s" % (getERP5CategoryUrl(category.getParent()), category.getTitle())
+    return "%s/%s" % (getERP5CategoryUrl(category.getParentValue()), category.getTitle())
 
 def isUrlInTupleList(tuple_list, url):
   for (k,v) in tuple_list:
@@ -23,14 +23,14 @@ def isUrlInTupleList(tuple_list, url):
 
 if context.getPortalType() == "Integration Category Mapping":
   try:
-    uid = "_".join(context.getParent().getRelativeUrl().split("/")[2:])
+    uid = "_".join(context.getParentValue().getRelativeUrl().split("/")[2:])
     category_url = request.form["field_listbox_destination_reference_new_%s" % uid]
   except:
-    category_url = context.getParent().getDestinationReference()  
+    category_url = context.getParentValue().getDestinationReference()
   if category_url is not None and category_url != "":    
     container = context.restrictedTraverse("portal_categories/%s" % category_url)
   try:
-    uid = "_".join(context.getParent().getRelativeUrl().split("/")[2:])
+    uid = "_".join(context.getParentValue().getRelativeUrl().split("/")[2:])
     new_destination_reference = request.form["field_listbox_destination_reference_new_%s" % uid]
     if new_destination_reference == "":
       value = request.form["field_listbox_destination_reference_new_%s" % context.getId()]

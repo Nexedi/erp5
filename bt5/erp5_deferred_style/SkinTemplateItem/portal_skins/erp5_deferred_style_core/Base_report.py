@@ -1,7 +1,8 @@
 # pylint: disable=redefined-builtin
 
 request = container.REQUEST
-request.other.update(request_other)
+request.form.update(report_request)
+request.other.update(report_request)
 
 portal = context.getPortalObject()
 ap = portal.restrictedTraverse(active_process_url)
@@ -51,9 +52,11 @@ with portal.Localizer.translationContext(localizer_language):
      'content': '%s' % report_data,
      'name': attachment_name},)
 
-portal.ERP5Site_notifyReportComplete(
+getattr(portal, notify_report_complete_script_id)(
   user_name=user_name,
   subject=title,
   message='',
   attachment_list=attachment_list,
-  format=format)
+  format=format,
+  **notify_report_complete_kwargs
+)

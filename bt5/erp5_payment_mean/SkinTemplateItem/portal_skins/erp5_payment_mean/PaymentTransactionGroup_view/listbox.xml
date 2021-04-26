@@ -134,10 +134,6 @@
                           <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
-                          <string>Mandate</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

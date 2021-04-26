@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.PythonScripts.PythonScript import \
   PythonScript as ZopePythonScript
 from Products.ZSQLMethods.SQL import SQL as ZSQL
-from Products.ERP5.mixin.expression import ExpressionMixin
+from Products.ERP5Type.mixin.expression import ExpressionMixin
 
 # New ZSQLMethod addition function
 def manage_addSQLMethod(self, id, title='',

@@ -97,6 +97,7 @@ HtmlStylePreference
 IndividualCalendarConstraint
 IndustrialDescription
 IntegrationModule
+InteractionWorkflowInteraction
 InternetProtocolAddress
 Inventory
 InventoryLine
@@ -154,7 +155,6 @@ SortIndex
 SQLIdGenerator
 StandardBT5ConfiguratorItem
 StandardProperty
-State
 StockCapacity
 SupplyLine
 SupplyLink
@@ -176,10 +176,11 @@ TradeOrderLine
 TradePreference
 Transformation
 TransformedResource
-Transition
+WorkflowTransition
 TranslatableProperty
 Url
-Variable
+WorkflowVariable
+Guard
 Variation
 VariationRange
 Version
@@ -187,6 +188,7 @@ VcsPreference
 WebSection
 WebSite
 Workflow
+WorkflowState
 XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference

@@ -3908,9 +3908,6 @@ msgstr "商标编号"
 msgid "Logout"
 msgstr "退出"
 
-msgid "Long Title"
-msgstr "长标题"
-
 msgid "Longitude"
 msgstr "经度"
 
@@ -4894,7 +4891,7 @@ msgstr "门户类型"
 msgid "Portal type"
 msgstr "门户类型"
 
-msgid "Possibles Transition"
+msgid "Possible Transitions"
 msgstr "可能过渡流程"
 
 msgid "Post"

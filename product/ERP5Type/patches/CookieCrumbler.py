@@ -31,6 +31,7 @@ from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.CookieCrumbler import CookieCrumblerDisabled
 from urllib import quote, unquote
 from zExceptions import Redirect
+from zope.globalrequest import getRequest
 from ZPublisher.HTTPRequest import HTTPRequest
 
 ATTEMPT_NONE = 0       # No attempt at authentication

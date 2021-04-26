@@ -9,7 +9,7 @@ len_line_list = len(line_list)
 if len_line_list!=0:
   for line in line_list:
     container = integration_site
-    parent = line.getParent()
+    parent = line.getParentValue()
     if line.getPortalType() == "Integration Category Mapping" and parent is not None:
       container = parent
     obj=container.newContent(portal_type=line.getPortalType(),

@@ -1,9 +1,12 @@
 # pylint: disable=redefined-builtin
 portal = context.getPortalObject()
+if notify_report_complete_kwargs is None:
+  notify_report_complete_kwargs = {}
 
 form = context.restrictedTraverse(form)
 request = container.REQUEST
-request.other.update(request_other)
+request.form.update(report_request)
+request.other.update(report_request)
 
 with portal.Localizer.translationContext(localizer_language):
   if form.meta_type == 'ERP5 Report':
@@ -18,8 +21,8 @@ with portal.Localizer.translationContext(localizer_language):
 
   report_title = portal.Base_translateString((form.getProperty('title')))
 
-# Rebuild request_other as report section can have modify request content
-request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
+# Rebuild request as report section can have modified request content
+report_request = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 active_process = portal.portal_activities.newActiveProcess()
 
@@ -37,7 +40,8 @@ for idx, report_section in enumerate(report_section_list):
                                          localizer_language=localizer_language,
                                          report_section=report_section,
                                          report_section_idx=idx,
-                                         request_other=request_other)
+                                         report_request=report_request,
+                                         )
 
 activity_context = context
 if activity_context == portal:
@@ -54,9 +58,11 @@ activity_context.activate(
            skin_name=skin_name,
            localizer_language=localizer_language,
            title=report_title,
-           request_other=request_other,
+           report_request=report_request,
            form_path=form.getPhysicalPath(),
            user_name=user_name,
            format=format,
-           report_section_count=len(report_section_list)
-          )
+           report_section_count=len(report_section_list),
+           notify_report_complete_script_id=notify_report_complete_script_id,
+           notify_report_complete_kwargs=notify_report_complete_kwargs,
+)

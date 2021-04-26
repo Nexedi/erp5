@@ -738,7 +738,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     redirect_url = urlparse.urlparse(response.getHeader("Location"))
     self.assertEqual(redirect_url.path, '{}/ERP5Site_viewNewPersonCredentialUpdateDialog'.format(portal.absolute_url_path()))
     redirect_url_params = urlparse.parse_qs(redirect_url.query)
-    self.assertIn('Your password will expire', redirect_url_params['portal_status_message'][0])
+    # status message contain the password expiration date
+    self.assertIn('Your password will expire at 20', redirect_url_params['portal_status_message'][0])
     self.assertIn('You are advised to change it as soon as possible', redirect_url_params['portal_status_message'][0])
 
     # test proper login

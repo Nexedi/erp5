@@ -46,7 +46,7 @@ from Products.PluggableAuthService.interfaces.plugins \
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 from Products import ERP5Security
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 AUTO_LOGIN = object()
 

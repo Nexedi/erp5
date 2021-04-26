@@ -27,10 +27,12 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+import re
 
-class TestWorklist(ERP5TypeTestCase):
+from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
+from Products.ERP5Type.tests.utils import todo_erp5
+
+class TestWorklist(TestWorkflowMixin):
 
   run_all_test = 1
   quiet = 1
@@ -142,53 +144,109 @@ class TestWorklist(ERP5TypeTestCase):
     assert result.getValidationState() == self.checked_validation_state
     return result
 
-  def getWorklistDocumentCountFromActionName(self, action_name):
-    self.assertEqual(action_name[-1], ')')
-    left_parenthesis_offset = action_name.rfind('(')
-    self.assertNotEquals(left_parenthesis_offset, -1)
-    return int(action_name[left_parenthesis_offset + 1:-1])
-
   def associatePropertySheet(self):
     self._addPropertySheet(self.checked_portal_type, 'SortIndex')
 
   def addWorkflowCataloguedVariable(self, workflow_id, variable_id):
-    variables = self.getWorkflowTool()[workflow_id].variables
-    variables.addVariable(variable_id)
-    assert variables[variable_id].for_catalog == 1
+    # add new workflow compatibility
+    workflow_value = self.getWorkflowTool()[workflow_id]
+    if workflow_value.__class__.__name__ == 'Workflow':
+      # Will add dynamic variable in worklist.
+      pass
+    else:
+      variables = workflow_value.variables
+      variables.addVariable(variable_id)
+      variable_value = variables[variable_id]
+      assert variable_value.for_catalog == 1
 
   def createWorklist(self, workflow_id, worklist_id, actbox_name,
                      actbox_url=None, **kw):
-    worklists = self.getWorkflowTool()[workflow_id].worklists
-    worklists.addWorklist(worklist_id)
-    worklists._getOb(worklist_id).setProperties('',
+    # add new workflow compatibility
+    tales_re = re.compile(r'(\w+:)?(.*)')
+    workflow_value = self.getWorkflowTool()[workflow_id]
+    if workflow_value.__class__.__name__ == 'Workflow':
+      worklist_value = workflow_value.newContent(portal_type='Worklist')
+      worklist_value.setReference(worklist_id)
+      # Configure new workflow:
+      actbox_name='%s (%%(count)s)' % actbox_name
+      worklist_value.setActionName(str(actbox_name))
+      worklist_value.setAction(str(actbox_url))
+      worklist_value.setActionType('global')
+
+      # Update guard configuration for view and guard value.
+      from Products.ERP5Type.Tool.WorkflowTool import SECURITY_PARAMETER_ID
+      v = kw.pop('guard_expr', None)
+      if v:
+        worklist_value.setGuardExpression(v)
+      v = kw.pop('guard_roles', None)
+      if v:
+        worklist_value.setCriterion(SECURITY_PARAMETER_ID,
+                                    [var.strip() for var in v.split(';')])
+      for k, v in kw.iteritems():
+        if k not in (SECURITY_PARAMETER_ID, workflow_value.getStateVariable()):
+          variable_value = workflow_value.getVariableValueByReference(k)
+          if variable_value is None:
+            workflow_value.newContent(portal_type='Workflow Variable', reference=k)
+
+        worklist_value.setCriterion(k, (v,))
+
+    else:
+      worklists = workflow_value.worklists
+      worklists.addWorklist(worklist_id)
+      worklist_value = worklists._getOb(worklist_id)
+      worklist_value.setProperties('',
         actbox_name='%s (%%(count)s)' % actbox_name, actbox_url=actbox_url,
         props={k if k.startswith('guard_') else 'var_match_' + k: v
                for k, v in kw.iteritems()})
 
+
   def removeWorklist(self, workflow_id, worklist_id_list):
-    worklists = self.getWorkflowTool()[workflow_id].worklists
-    worklists.deleteWorklists(worklist_id_list)
+    # add new workflow compatibility
+    workflow_value = self.getWorkflowTool()[workflow_id]
+    if workflow_value.__class__.__name__ == 'Workflow':
+      for worklist_id in worklist_id_list:
+        workflow_value._delObject('worklist_'+worklist_id)
+    else:
+      worklists = self.getWorkflowTool()[workflow_id].worklists
+      worklists.deleteWorklists(worklist_id_list)
 
   def createWorklists(self):
-    for worklist_id, actbox_name, role, expr, state, int_variable in [
-          (self.worklist_assignor_id, self.actbox_assignor_name,
-           'Assignor', None, self.checked_validation_state, None),
-          (self.worklist_owner_id, self.actbox_owner_name,
-           'Owner', None, self.checked_validation_state, None),
-          (self.worklist_desactivated_id, self.actbox_desactivated_by_expression,
-           'Owner', 'python: 0', self.checked_validation_state, None),
-          (self.worklist_wrong_state_id, self.actbox_wrong_state,
-           'Owner', None, self.not_checked_validation_state, None),
-          (self.worklist_assignor_owner_id, self.actbox_assignor_owner_name,
-           'Assignor; Owner', None, self.checked_validation_state, None),
-          (self.worklist_int_variable_id, self.actbox_int_variable_name,
-           None, None, None, str(self.int_value)),
-    ]:
-      self.createWorklist(self.checked_workflow, worklist_id, actbox_name,
-                          guard_roles=role, guard_expr=expr,
-                          portal_type=self.checked_portal_type,
-                          validation_state=state,
-                          **{self.int_catalogued_variable_id: int_variable})
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_assignor_id,
+                        self.actbox_assignor_name,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Assignor',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_owner_id,
+                        self.actbox_owner_name,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Owner',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_desactivated_id,
+                        self.actbox_desactivated_by_expression,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Owner',
+                        guard_expr='python: 0',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_wrong_state_id,
+                        self.actbox_wrong_state,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Owner',
+                        validation_state=self.not_checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_assignor_owner_id,
+                        self.actbox_assignor_owner_name,
+                        portal_type=self.checked_portal_type,
+                        guard_roles='Assignor; Owner',
+                        validation_state=self.checked_validation_state)
+    self.createWorklist(self.checked_workflow,
+                        self.worklist_int_variable_id,
+                        self.actbox_int_variable_name,
+                        portal_type=self.checked_portal_type,
+                        **{self.int_catalogued_variable_id: str(self.int_value)})
 
   def removeWorklists(self):
     self.removeWorklist(self.checked_workflow, [
@@ -199,30 +257,6 @@ class TestWorklist(ERP5TypeTestCase):
           self.worklist_assignor_owner_id,
           self.worklist_int_variable_id,
     ])
-
-  def clearCache(self):
-    self.portal.portal_caches.clearAllCache()
-
-  def checkWorklist(self, result, name, count, url_parameter_dict=None):
-    entry_list = [x for x in result if x['name'].startswith(name)]
-    self.assertEqual(len(entry_list), count and 1)
-    if count:
-      self.assertEqual(count,
-        self.getWorklistDocumentCountFromActionName(entry_list[0]['name']))
-    if not entry_list:
-      return
-    url = entry_list[0].get('url')
-    if url_parameter_dict:
-      self.assertTrue(url, 'Can not check url parameters without url')
-      url = '%s%s' % (self.portal.getId(), url[len(self.portal.absolute_url()):])
-      # Touch URL to save worklist parameters in listbox selection
-      # XXX which user ?
-      self.assertEqual(200, self.publish(url, user='manager').getStatus())
-      selection_parameter_dict = self.portal.portal_selections.getSelectionParamsFor(
-                                                    self.module_selection_name)
-      for parameter, value in url_parameter_dict.iteritems():
-        self.assertTrue(parameter in selection_parameter_dict)
-        self.assertEqual(value, selection_parameter_dict[parameter])
 
   def test_01_permission(self, quiet=0, run=run_all_test):
     """
@@ -262,7 +296,22 @@ class TestWorklist(ERP5TypeTestCase):
         self.logMessage("Check %s worklist" % user_id)
         self.loginByUserName(user_id)
         result = workflow_tool.listActions(object=document)
-        self.assertEqual(result, [])
+        self.assertEqual(len(result), 2)
+        action, = [r for r in result if r["id"] == "onlyjio_validation_workflow"]
+        self.assertEqual(action["name"], "Validation Workflow")
+        self.assertTrue(
+          action["url"].endswith("/portal_workflow/validation_workflow/manage_properties"),
+          action
+        )
+        self.assertEqual(action["category"], "object_onlyjio_jump_raw")
+
+        action, = [r for r in result if r["id"] == "onlyjio_edit_workflow"]
+        self.assertEqual(action["name"], "Edit Workflow")
+        self.assertTrue(
+          action["url"].endswith("/portal_workflow/edit_workflow/manage_properties"),
+          action
+        )
+        self.assertEqual(action["category"], "object_onlyjio_jump_raw")
 
       for role, user_id_list in (('Assignor', ('foo', 'manager')),
                                  ('Assignee', ('foo', 'bar'))):
@@ -457,11 +506,11 @@ class TestWorklist(ERP5TypeTestCase):
       self.removeWorklist(self.checked_workflow,
                           ['guard_expression_worklist'])
 
+  @todo_erp5
   def test_04_dynamic_variables(self):
     """
     Test related keys and TALES Expression
     """
-
     workflow_tool = self.getWorkflowTool()
     self.createManagerAndLogin()
 

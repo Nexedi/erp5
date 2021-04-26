@@ -35,7 +35,7 @@ from Products.CMFCore.utils import _checkPermission
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Form.PreferenceTool import Priority
@@ -267,9 +267,22 @@ class TestAccounts(AccountingTestCase):
   def test_AccountValidation(self):
     # Accounts need an account_type category to be valid
     account = self.portal.account_module.newContent(portal_type='Account')
-    self.assertEqual(1, len(account.checkConsistency()))
+    self.assertEqual(
+        [str(m.getMessage()) for m in account.checkConsistency()],
+        ['Account Type must be set'])
     account.setAccountType('equity')
-    self.assertEqual(0, len(account.checkConsistency()))
+    self.assertEqual([str(m.getMessage()) for m in account.checkConsistency()], [])
+
+    # non regression: this constraint is also properly verified during workflow
+    account.setAccountType(None)
+    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+      self.portal.portal_workflow.doActionFor(account, 'validate_action')
+    account.setAccountType('equity')
+    self.portal.portal_workflow.doActionFor(account, 'validate_action')
+    self.portal.portal_workflow.doActionFor(account, 'invalidate_action')
+    account.setAccountType(None)
+    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+      self.portal.portal_workflow.doActionFor(account, 'validate_action')
 
   def test_AccountWorkflow(self):
     account = self.portal.account_module.newContent(portal_type='Account')

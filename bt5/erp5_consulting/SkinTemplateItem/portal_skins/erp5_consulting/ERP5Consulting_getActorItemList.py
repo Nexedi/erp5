@@ -19,7 +19,7 @@ if item_portal_type[0] is not None:
   while context_obj is not None \
    and hasattr(context_obj, 'getPortalType') \
    and context_obj.getPortalType() != item_portal_type[1]:
-    context_obj = context_obj.getParent()
+    context_obj = context_obj.getParentValue()
   if context_obj is not None \
    and hasattr(context_obj, 'getPortalType') \
    and context_obj.getPortalType() == item_portal_type[1]:

@@ -2543,7 +2543,11 @@ return 1
     document.reject()
     document.share()
     logged_in_user = self.portal.portal_membership.getAuthenticatedMember().getId()
-    event_list = document.Base_getWorkflowEventInfoList()
+    # on the new document, during initialization, some workflow set the event's
+    # action to None, but they are not interesting in this test, just filter
+    # them
+    event_list = [event for event in document.Base_getWorkflowEventInfoList()
+                  if event.action is not None]
     event_list.reverse()
     # all actions by logged in user
     for event in event_list:
@@ -2895,6 +2899,44 @@ return 1
     document_format = None
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
+
+  def test_Base_getRelatedDocumentList(self):
+    """
+      Checks Base_getRelatedDocumentList works correctly with both
+      related (follow_up) Documents and with sub-object Embedded Files
+    """
+    uploaded_file = makeFileUpload('TEST-001-en.dummy')
+    document_value = self.portal.Base_contribute(
+      file=uploaded_file,
+      synchronous_metadata_discovery=True,
+      portal_type='File'
+    )
+    person_value = self.portal.person_module.newContent(portal_type='Person')
+    getRelatedDocumentList = person_value.Base_getRelatedDocumentList
+    self.tic()
+    # No related document
+    self.assertEqual(len(getRelatedDocumentList()), 0)
+    document_value.setFollowUpValue(person_value)
+    self.tic()
+    # Only related follow_up File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [document_value]
+    )
+    sub_document_value = person_value.newContent(portal_type='Embedded File')
+    self.tic()
+    # Related follow_up File and Embedded File
+    self.assertEqual(
+      sorted([brain.getObject() for brain in getRelatedDocumentList()], key=lambda doc: doc.getPath()),
+      sorted([sub_document_value, document_value], key=lambda doc: doc.getPath())
+    )
+    document_value.setFollowUpValue(None)
+    self.tic()
+    # Only related Embedded File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [sub_document_value]
+    )
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 

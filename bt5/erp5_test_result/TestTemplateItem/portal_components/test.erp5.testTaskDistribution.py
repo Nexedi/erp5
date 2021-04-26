@@ -1,4 +1,4 @@
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
@@ -739,6 +739,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.tool.reportTaskFailure(test_result_path, {}, "UnitTestNode 1")
     self.assertEqual("failed", test_result.getSimulationState())
     checkNodeState("failed", "failed")
+    self.assertEqual("FAIL", test_result.getStringIndex())
 
   def test_07b_reportTaskFailureWithRunningTest(self):
     """

@@ -18,6 +18,6 @@ for i in xrange(0, object_list_len, batch_size):
   current_path_list = payment_relative_url_list[i:i+batch_size]
   activate(activity='SQLQueue', activate_kw=activate_kw,).callMethodOnObjectList(
       current_path_list,
-      'PaymentTransactionLine_setAggregate',
+      'AccountingTransactionLine_setAggregate',
       aggregate=aggregate,
       activate_kw=activate_kw)

@@ -28,6 +28,7 @@ Base Type | role_view
 Base Type | translation_view
 Base Type | update_local_roles
 Base Type | view
+Business Template | convert_to_ERP5_workflows
 Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
@@ -87,6 +88,9 @@ Extension Component | view
 Extension Component | web_view
 Folder | view
 Id Tool | view
+Interaction Workflow Interaction | view
+Interaction Workflow | script_view
+Interaction Workflow | view
 Interface Component | view
 Interface Component | web_view
 Memcached Plugin | view
@@ -159,6 +163,25 @@ Trash Bin | view
 Trash Folder | view
 Trash Tool | view
 Types Tool | view
+Workflow Script | proxy_role_view
+Workflow Script | proxy_role_view
+Workflow Script | view
+Workflow Script | view
+Workflow State | permission
+Workflow State | view
+Workflow Tool | conversion
+Workflow Tool | view
+Workflow Transition Variable | view
+Workflow Transition | view
+Workflow Variable | view
+Workflow | permission_view
+Workflow | script_view
+Workflow | transition_view
+Workflow | update_security_roles
+Workflow | variable_view
+Workflow | view
+Workflow | worklist_view
+Worklist | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | callable_tool
@@ -169,6 +192,7 @@ portal_actions | create_module
 portal_actions | diff_multiple_object_action
 portal_actions | diff_object_action
 portal_actions | history
+portal_actions | jump_to_portal_type
 portal_actions | list_ui
 portal_actions | make_template
 portal_actions | mass_workflow

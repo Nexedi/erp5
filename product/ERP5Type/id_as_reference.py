@@ -33,8 +33,10 @@ from Products.CMFActivity.Errors import ActivityPendingError
 from zLOG import LOG, WARNING
 from Acquisition import aq_base
 
-def IdAsReferenceMixin(suffix):
-  suffix_index = - len(suffix)
+def IdAsReferenceMixin(affix):
+  # Prefix or suffix
+  is_suffix = (affix[0] == '_')
+  affix_len = len(affix)
 
   class IdAsReferenceMixin(object):
     # Declarative security
@@ -45,17 +47,25 @@ def IdAsReferenceMixin(suffix):
       return self.cb_userHasCopyOrMovePermission()
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getIdAsReferenceSuffix')
+                              'getIdAsReferenceAffix')
     @staticmethod
-    def getIdAsReferenceSuffix():
-      return suffix
+    def getIdAsReferenceAffix():
+      return affix
+
+    # Backward-compatibility: Use getIdAsReferenceAffix instead
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getIdAsReferenceSuffix')
+    getIdAsReferenceSuffix = getIdAsReferenceAffix
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getReference')
     def getReference(self, *args):
       id = self.id
-      if id[suffix_index:] == suffix:
-        return id[:suffix_index]
+      if is_suffix:
+        if id[-affix_len:] == affix:
+          return id[:-affix_len]
+      elif id[:affix_len] == affix: # prefix
+        return id[affix_len:]
       try:
         return self._baseGetReference(*args)
       except AttributeError:
@@ -63,7 +73,7 @@ def IdAsReferenceMixin(suffix):
 
     def _setReference(self, value):
       self.__dict__.pop('default_reference', None) # BBB
-      self.setId(value + suffix)
+      self.setId((value + affix) if is_suffix else (affix + value))
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setReference')
     setReference = _setReference

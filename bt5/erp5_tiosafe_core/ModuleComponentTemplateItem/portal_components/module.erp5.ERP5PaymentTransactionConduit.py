@@ -127,7 +127,7 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
         sub_object.setPriceCurrencyValue(link_object)
         bank_account_object = integration_site.getDefaultSourcePaymentValue()
         sub_object.setDefaultSourcePaymentValue(bank_account_object)
-        sub_object.setSourceSectionValue(bank_account_object.getParent())
+        sub_object.setSourceSectionValue(bank_account_object.getParentValue())
 
         # Mapping between tag and element
         node_dict = {

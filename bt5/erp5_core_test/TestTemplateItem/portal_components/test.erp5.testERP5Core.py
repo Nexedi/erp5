@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# coding: utf-8
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
@@ -32,6 +32,7 @@ import httplib
 import urlparse
 import base64
 import urllib
+import lxml.html
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -646,6 +647,31 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = connection.getresponse()
     self.assertEqual(response.status, 401)
     self.assertEqual(response.getheader('WWW-Authenticate'), None)
+
+  def test_non_ascii_site_title(self):
+    self.portal.setTitle('文字化け')
+    self.assertEqual(
+        lxml.html.fromstring(self.portal.view()).find('.//div[@id="breadcrumb"]/a').text,
+        u'文字化け')
+    self.assertEqual(
+        lxml.html.fromstring(
+            self.portal.person_module.view()
+        ).find('.//div[@id="breadcrumb"]/a').text,
+        u'文字化け')
+    self.assertEqual(
+        lxml.html.fromstring(
+            self.portal.person_module.newContent(portal_type='Person').view()
+        ).find('.//div[@id="breadcrumb"]/a').text,
+        u'文字化け')
+
+  def test_standard_error_message_non_ascii(self):
+    # regression test for error message when portal title is not ASCII
+    self.portal.setTitle('文字化け')
+    self.assertIn(
+        u'文字化け',
+        self.portal.standard_error_message(
+            error_type="MyErrorType",
+            error_message="my error message."))
 
   def test_standardErrorMessageShouldNotRaiseUnauthorizeOnUnauthorizeDocument(self):
     """

@@ -114,6 +114,7 @@
                         <string>my_empty_mode_default_address_region</string>
                         <string>my_empty_mode_default_address_zip_code</string>
                         <string>my_view_mode_reference</string>
+                        <string>my_view_mode_transition_form_id</string>
                       </list>
                     </value>
                 </item>
