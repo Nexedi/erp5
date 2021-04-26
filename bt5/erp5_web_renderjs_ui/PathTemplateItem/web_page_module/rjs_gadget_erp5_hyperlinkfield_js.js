@@ -4,6 +4,8 @@
   "use strict";
 
   rJS(window)
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+
     .declareMethod('render', function (options) {
       var gadget = this,
         field_json = options.field_json || {};
