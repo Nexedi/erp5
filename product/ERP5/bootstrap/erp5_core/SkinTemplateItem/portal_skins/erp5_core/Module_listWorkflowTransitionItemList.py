@@ -22,36 +22,39 @@ for document_portal_type_id in module_portal_type.getTypeAllowedContentTypeList(
   if (filter_portal_type_list is not None) and (document_portal_type_id not in filter_portal_type_list):
     continue
   for workflow in workflow_tool.getWorkflowsFor(document_portal_type_id):
-    if workflow.id not in checked_workflow_id_dict:
+    workflow_reference = workflow.getReference()
+    if workflow_reference not in checked_workflow_id_dict:
       # Do not check the same workflow twice
-      checked_workflow_id_dict[workflow.id] = None
+      checked_workflow_id_dict[workflow_reference] = None
 
-      state_variable = workflow.state_var
+      state_variable = workflow.getStateVariable()
 
       allowed_state_dict = {}
 
-      if getattr(workflow, 'states', None) is not None:
-        for state_id, state in workflow.states.items():
-          for possible_transition_id in state.transitions:
+      if workflow.getPortalType() == 'Workflow':
+        for state in workflow.contentValues(portal_type='Workflow State'):
+          state_reference = state.getReference()
+          for possible_transition_id in state.getDestinationIdList():
             if possible_transition_id in allowed_state_dict:
-              allowed_state_dict[possible_transition_id].append(state_id)
+              allowed_state_dict[possible_transition_id].append(state_reference)
             else:
-              allowed_state_dict[possible_transition_id] = [state_id]
-        for transition_id in allowed_state_dict:
-          transition = workflow.transitions.get(transition_id, None)
+              allowed_state_dict[possible_transition_id] = [state_reference]
+        for possible_transition_id in allowed_state_dict:
+          transition = workflow.restrictedTraverse(possible_transition_id)
           if transition is None:
             continue
+          transition_reference = transition.getReference()
           # Only display user action transition with a dialog to show to user
           if (transition.trigger_type == TRIGGER_USER_ACTION) and (transition.actbox_url) and (transition.actbox_name):
             action_form_id = transition.actbox_url.rsplit('/', 1)[1].split('?')[0]
 
-            result['transition_item_list'].append((translate(transition.actbox_name), transition_id))
-            result['form_id_dict'][transition_id] = action_form_id
+            result['transition_item_list'].append((translate(transition.actbox_name), transition_reference))
+            result['form_id_dict'][transition_reference] = action_form_id
             # XXX portal_type parameter must also probably be added too
             # This would required to detect identical transition id for different workflow
-            result['listbox_parameter_dict'][transition_id] = [(state_variable, allowed_state_dict[transition_id])]
-          elif (transition.trigger_type == TRIGGER_USER_ACTION) and (transition_id == 'delete_action'):
-            result['listbox_parameter_dict'][transition_id] = [(state_variable, allowed_state_dict[transition_id])]
+            result['listbox_parameter_dict'][transition_reference] = [(state_variable, allowed_state_dict[possible_transition_id])]
+          elif (transition.trigger_type == TRIGGER_USER_ACTION) and (transition_reference == 'delete_action'):
+            result['listbox_parameter_dict'][transition_reference] = [(state_variable, allowed_state_dict[possible_transition_id])]
 
 result['transition_item_list'].sort()
 result['transition_item_list'].insert(0, ('', ''))
