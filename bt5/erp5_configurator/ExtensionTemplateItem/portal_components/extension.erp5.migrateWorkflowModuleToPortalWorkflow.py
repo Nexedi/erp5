@@ -32,7 +32,7 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
 
     if subobject.getPortalType() == 'State':
       state = workflow.newContent(
-        portal_type='State',
+        portal_type='Workflow State',
         reference=reference,
         title=title,
         destination_list=getCategoryList('transition_', subobject.getDestinationValueList()),
@@ -42,7 +42,7 @@ def migrateToERP5Workflow(portal_workflow, configurator_workflow):
           portal_type='Business Configuration'):
         business_configuration.setCurrentStateValue(state)
 
-    elif subobject.getPortalType() == 'Workflow Transition':
+    elif subobject.getPortalType() == 'Transition':
 # XXX_1: Workflows only call Workflow Script and do not call Python Script in
 #        portal_skins but Configurator Workflows do. For now leave them as they
 #        ({before,after}_script_id property) but they should be migrated later on.
