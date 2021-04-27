@@ -27,8 +27,6 @@
 #
 ##############################################################################
 
-import re
-
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
 from Products.ERP5Type.tests.utils import todo_erp5
 
@@ -162,7 +160,6 @@ class TestWorklist(TestWorkflowMixin):
   def createWorklist(self, workflow_id, worklist_id, actbox_name,
                      actbox_url=None, **kw):
     # add new workflow compatibility
-    tales_re = re.compile(r'(\w+:)?(.*)')
     workflow_value = self.getWorkflowTool()[workflow_id]
     if workflow_value.__class__.__name__ == 'Workflow':
       worklist_value = workflow_value.newContent(portal_type='Worklist')
@@ -300,18 +297,18 @@ class TestWorklist(TestWorkflowMixin):
         action, = [r for r in result if r["id"] == "onlyjio_validation_workflow"]
         self.assertEqual(action["name"], "Validation Workflow")
         self.assertTrue(
-          action["url"].endswith("/portal_workflow/validation_workflow/manage_properties"),
+          action["url"].endswith("/portal_workflow/validation_workflow/Base_redirectToWorkflowDocument?workflow_id=validation_workflow"),
           action
         )
-        self.assertEqual(action["category"], "object_onlyjio_jump_raw")
+        self.assertEqual(action["category"], "object_onlyjio_jump")
 
         action, = [r for r in result if r["id"] == "onlyjio_edit_workflow"]
         self.assertEqual(action["name"], "Edit Workflow")
         self.assertTrue(
-          action["url"].endswith("/portal_workflow/edit_workflow/manage_properties"),
+          action["url"].endswith("/portal_workflow/edit_workflow/Base_redirectToWorkflowDocument?workflow_id=edit_workflow"),
           action
         )
-        self.assertEqual(action["category"], "object_onlyjio_jump_raw")
+        self.assertEqual(action["category"], "object_onlyjio_jump")
 
       for role, user_id_list in (('Assignor', ('foo', 'manager')),
                                  ('Assignee', ('foo', 'bar'))):
