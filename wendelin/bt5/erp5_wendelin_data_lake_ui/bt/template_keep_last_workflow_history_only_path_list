@@ -4,4 +4,4 @@ web_site_module/default_wendelin_data_lake
 web_site_module/default_wendelin_data_lake/**
 web_page_module/fif_*
 web_page_module/gadget_fif_*
-document_module/latest_ebulk_deb_package
+document_module/ebulk-1.1.9.deb
