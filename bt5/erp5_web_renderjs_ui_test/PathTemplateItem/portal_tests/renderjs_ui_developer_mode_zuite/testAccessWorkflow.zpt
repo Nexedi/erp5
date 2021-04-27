@@ -29,15 +29,17 @@
   <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<!-- Not sure why, but without waitForElementPresent, assertValue is not finding the element -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value="Edit Workflow"]</td>
+  <td>//input[@id="field_my_title"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//input[@value="Edit Workflow"]</td>
-  <td></td>
+  <td>assertValue</td>
+  <td>//input[@id="field_my_title"]</td>
+  <td>Edit Workflow</td>
 </tr>
 </tbody></table>
 </body>
