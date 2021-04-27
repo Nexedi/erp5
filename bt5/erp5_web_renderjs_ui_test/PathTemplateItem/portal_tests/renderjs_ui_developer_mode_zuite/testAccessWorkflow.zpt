@@ -25,18 +25,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@value="Edit Workflow"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//input[@value="Edit Workflow"]</td>
+  <td>//option[@value="state_current"]</td>
   <td></td>
 </tr>
 </tbody></table>
