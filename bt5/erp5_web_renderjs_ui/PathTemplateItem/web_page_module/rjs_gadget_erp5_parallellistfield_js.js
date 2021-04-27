@@ -63,6 +63,7 @@
             sub_state = JSON.parse(JSON.stringify(gadget.state.field_list[i]));
             sub_state.editable = gadget.state.editable;
             promise_list.push(gadget_list[i].render({
+              development_link: false,
               field_json: sub_state,
               field_type: sub_state.field_type
             }));

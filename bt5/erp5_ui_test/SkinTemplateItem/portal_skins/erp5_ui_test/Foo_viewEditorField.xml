@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Display a parallel list field for selenium tests</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -78,7 +78,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -96,20 +98,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_category_list</string>
-                        <string>my_reference</string>
-                        <string>my_role_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>category_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -117,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Foo_viewParallelListField</string> </value>
+            <value> <string>Foo_viewEditorField</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -125,7 +120,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Foo_viewParallelListField</string> </value>
+            <value> <string>Foo_viewEditorField</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -141,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Parallel List Field</string> </value>
+            <value> <string>Editor Field</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
