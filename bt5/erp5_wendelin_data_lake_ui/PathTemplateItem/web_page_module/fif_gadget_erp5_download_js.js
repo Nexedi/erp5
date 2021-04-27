@@ -7,7 +7,7 @@
     .declareService(function () {
       var gadget = this,
         download_deb_element = document.querySelector("#deb_link"),
-        jio_key = 'document_module/latest_ebulk_deb_package';
+        jio_key = 'document_module/ebulk-1.1.9.deb';
       return gadget.jio_get(jio_key)
         .push(function (jio_document) {
           download_deb_element.download = jio_document.short_title;
