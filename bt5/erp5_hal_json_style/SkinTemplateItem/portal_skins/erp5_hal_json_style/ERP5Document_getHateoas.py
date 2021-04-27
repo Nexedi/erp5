@@ -1248,6 +1248,10 @@ def renderFormDefinition(form, response_dict):
       response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
         site_root.getId(),
         form.action)
+    if form.update_action:
+      response_dict["edit_form_update_href"] = '%s/%s/manage_main' % (
+        site_root.getId(),
+        form.update_action)
 
 
 def statusLevelToString(level):
