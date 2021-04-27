@@ -42,6 +42,7 @@ Foo | view_developer_mode_action
 Foo | view_dialog_with_only_update
 Foo | view_dialog_with_validation_error
 Foo | view_duration_field
+Foo | view_editor_field
 Foo | view_float_field
 Foo | view_formbox
 Foo | view_formbox_dialog

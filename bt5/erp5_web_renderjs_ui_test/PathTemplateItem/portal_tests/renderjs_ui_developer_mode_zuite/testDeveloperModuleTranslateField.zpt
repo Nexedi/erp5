@@ -9,9 +9,12 @@
 <tr><td rowspan="1" colspan="3">Test Module Translate Field</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-</tal:block>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tr>
   <td>check</td>
   <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
@@ -31,12 +34,12 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
-  <td>click</td>
-  <td>//div[@class="ui-field-contain"]/div/a[@href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EAccounting+Transactions%24&lang=en'></span>"]</td>
+  <td>clickAndWait</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/a[contains(@href, "<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EAccounting+Transactions%24&lang=en'></span>")]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//input[@name="regex" and @value="^Accounting Transactions$"]</td>
   <td></td>
 </tr>

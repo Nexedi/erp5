@@ -9,9 +9,12 @@
 <tr><td rowspan="1" colspan="3">Test Module Edit Form</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-</tal:block>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
 <tr>
   <td>click</td>
@@ -80,14 +83,15 @@
   <td>${current_location}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="ui-field-contain"]/div/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
+  <td>//div[@data-gadget-scope="field_listbox"]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//div[@class="ui-field-contain"]/div/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
+  <td>clickAndWait</td>
+  <td>//div[@data-gadget-scope="field_listbox"]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
   <td></td>
 </tr>
 <tr>

@@ -8,7 +8,7 @@
   <table cellpadding="1" cellspacing="1" border="1">
     <thead>
       <tr>
-        <td rowspan="1" colspan="3">Test Issue to Add Person
+        <td rowspan="1" colspan="3">Test Parallel Field
           <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" />
         </td>
       </tr>
@@ -43,19 +43,43 @@
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
       </tal:block>
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-      <tal:block tal:define="click_configuration python: {'text': 'FormBox'}">
+      <tal:block tal:define="click_configuration python: {'text': 'Parallel List Field'}">
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
       </tal:block>
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
       <tr>
-        <td>assertTextNotPresent</td>
-        <td>Failed to execute 'removeChild' on 'Node'</td>
+        <td>assertElementPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_category_list/manage_main"]</td>
         <td></td>
       </tr>
-      <!-- We should not display form action link if it is empty and this happens with Formbox. -->
       <tr>
         <td>assertElementNotPresent</td>
-        <td>//a[@class="edit-form-action" and @href="hateoas//manage_main"]</td>
+        <td>//label/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_category_list/manage_main"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//label/a[@href="portal_skins/erp5_ui_test/Foo_viewParallelListField/my_role_list/manage_main"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[@data-gadget-scope="PARALLEL_SUB_FIELD_0"]//a[contains(@href, "Localizer/erp5_ui/manage_messages?regex=%5ERoles%24&amp;lang=en")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/div[@class="ui-field-contain"]/a[contains(@href, 'portal_skins')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/div[@class="ui-field-contain"]/a[contains(@href, 'portal_skins')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_parallellist.html')]//a[contains(@href, 'portal_skins')]</td>
         <td></td>
       </tr>
     </tbody>

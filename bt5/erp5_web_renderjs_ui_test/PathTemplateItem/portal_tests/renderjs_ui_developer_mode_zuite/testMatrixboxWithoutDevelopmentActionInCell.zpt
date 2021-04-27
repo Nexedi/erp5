@@ -14,21 +14,25 @@
 <tr><td rowspan="1" colspan="3">Test MatrixBox Column Title</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-</tal:block>
-
-<tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <!-- Shortcut for full renderjs url and matrixbox gadget -->
 <tr><td>store</td>
     <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>store</td>
+    <td tal:content="python: len(here.getPortalObject().foo_module.objectIds()) + 1"></td>
+    <td>last_id</td></tr>
+<tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>listbox_table</td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=${last_id}<span tal:replace="string:&create_line:int=1"></span></td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
@@ -36,7 +40,7 @@
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+    <td>${renderjs_url}/#/foo_module/${last_id}/1?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
