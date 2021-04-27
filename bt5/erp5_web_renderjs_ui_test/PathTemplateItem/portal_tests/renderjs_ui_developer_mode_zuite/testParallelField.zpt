@@ -67,6 +67,21 @@
         <td>//div[@data-gadget-scope="PARALLEL_SUB_FIELD_0"]//a[contains(@href, "Localizer/erp5_ui/manage_messages?regex=%5ERoles%24&amp;lang=en")]</td>
         <td></td>
       </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/div[@class="ui-field-contain"]/a[contains(@href, 'portal_skins')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/div[@class="ui-field-contain"]/a[contains(@href, 'portal_skins')]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_parallellist.html')]//a[contains(@href, 'portal_skins')]</td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 </body>
