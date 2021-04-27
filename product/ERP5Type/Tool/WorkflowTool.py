@@ -455,9 +455,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             actions.append({
               "id": "onlyjio_%s" % wf.getReference(),
               "name": wf.getTitle(),
-              "url": "%s/manage_properties" % wf.absolute_url_path(),
+              "url": "%s/Base_redirectToWorkflowDocument?workflow_id=%s" % (
+                wf.absolute_url(),
+                wf.getId()),
               "icon": None,
-              "category": "object_onlyjio_jump_raw",
+              "category": "object_onlyjio_jump",
               "priority": 100
             })
             actions.extend(wf.listObjectActions(info))
