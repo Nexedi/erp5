@@ -744,6 +744,14 @@ class TestPASAPI(UserManagementTestCase):
     verifyClass(IAuthenticationPlugin, ERP5UserManager)
     verifyClass(IUserEnumerationPlugin, ERP5UserManager)
 
+  def test_LoginUserManagerInterfaces(self):
+    """Tests login user manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, IUserEnumerationPlugin
+    from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
+    verifyClass(IAuthenticationPlugin, ERP5LoginUserManager)
+    verifyClass(IUserEnumerationPlugin, ERP5LoginUserManager)
+
   def test_UserFolder(self):
     """Tests user folder has correct meta type."""
     self.assertTrue(isinstance(self.getUserFolder(),
