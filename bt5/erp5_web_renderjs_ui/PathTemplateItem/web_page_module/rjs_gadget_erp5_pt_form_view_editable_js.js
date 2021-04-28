@@ -161,6 +161,7 @@
             return gadget.translate("Please fill all required fields to submit")
               .push(function (message) {
                 return gadget.notifyChange({
+                  "modified": true,
                   "message": message,
                   "status": "error"
                 });
