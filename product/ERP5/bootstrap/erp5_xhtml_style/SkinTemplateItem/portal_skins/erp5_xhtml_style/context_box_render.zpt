@@ -22,7 +22,7 @@
           <tal:block tal:condition="portal/portal_workflow/Base_getSourceVisibility">
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>
             <tal:block tal:repeat="workflow python: portal.portal_workflow.getWorkflowValueListFor(here)">
-              <option tal:attributes="value string:${workflow/absolute_url}/manage_properties" tal:content="workflow/title" />
+              <option tal:attributes="value string:${workflow/absolute_url}/manage_main" tal:content="workflow/title" />
             </tal:block>
           </tal:block>
         </tal:block>
