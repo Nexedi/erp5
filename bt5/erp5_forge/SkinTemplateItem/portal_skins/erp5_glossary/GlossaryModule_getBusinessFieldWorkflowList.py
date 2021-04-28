@@ -77,7 +77,7 @@ for business_field in business_field_list:
     line.edit(wf_item_path=wf_item_path,
               wf_item_type=type_,
               wf_item_title=wf_item_title,
-              wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),
+              wf_item_edit_url = "%s/manage_main" % wf_item.absolute_url(),
               wf_item_description = wf_item_description,
               reference=reference,
               term_list=term_list
