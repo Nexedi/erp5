@@ -300,7 +300,7 @@ class TestWorklist(TestWorkflowMixin):
         action, = [r for r in result if r["id"] == "onlyjio_validation_workflow"]
         self.assertEqual(action["name"], "Validation Workflow")
         self.assertTrue(
-          action["url"].endswith("/portal_workflow/validation_workflow/manage_properties"),
+          action["url"].endswith("/portal_workflow/validation_workflow/manage_main"),
           action
         )
         self.assertEqual(action["category"], "object_onlyjio_jump_raw")
@@ -308,7 +308,7 @@ class TestWorklist(TestWorkflowMixin):
         action, = [r for r in result if r["id"] == "onlyjio_edit_workflow"]
         self.assertEqual(action["name"], "Edit Workflow")
         self.assertTrue(
-          action["url"].endswith("/portal_workflow/edit_workflow/manage_properties"),
+          action["url"].endswith("/portal_workflow/edit_workflow/manage_main"),
           action
         )
         self.assertEqual(action["category"], "object_onlyjio_jump_raw")
