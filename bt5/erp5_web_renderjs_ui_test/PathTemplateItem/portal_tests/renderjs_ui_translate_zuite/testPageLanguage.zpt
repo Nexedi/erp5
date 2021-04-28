@@ -22,11 +22,6 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@id='field_language']</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
   <td>//select[@id='field_language']</td>
   <td></td>
@@ -47,24 +42,97 @@
 </tr>
 
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>yuyan</td>
   <td></td>
 </tr>
 
+<tr>
+ <td>type</td>
+ <td>//select[@name="field_language"]</td>
+ <td>en</td>
+</tr>
+
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name="field_language"]</td>
+  <td colspan="3"><b>Submit the dialog</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
   <td></td>
 </tr>
- 
- 
- <tr>
-   <td>type</td>
-   <td>//select[@name="field_language"]</td>
-   <td>en</td>
- </tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><p></p></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-home"]</td>
+ <td>Home</td>
+</tr>
+
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-puzzle-piece"]</td>
+ <td>Modules</td>
+</tr>
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-tasks"]</td>
+ <td>Worklists</td>
+</tr>
+
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-history"]</td>
+ <td>History</td>
+</tr>
+
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-search"]</td>
+ <td>Search</td>
+</tr>
+
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-sliders"]</td>
+ <td>Preferences</td>
+</tr>
+
+
+<tr>
+ <td>verifyText</td>
+ <td>//a[@class="ui-btn-icon-left ui-icon-power-off"]</td>
+ <td>Logout</td>
+</tr>
+
+
+
+<tr>
+ <td>assertElementPresent</td>
+ <td>//select[@name="field_language"]/option[@selected='selected' and @value='en']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>type</td>
+ <td>//select[@name="field_language"]</td>
+ <td>wo</td>
+</tr>
 
 
 <tr>
@@ -87,95 +155,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Language</td>
-  <td></td>
-</tr>
-
-
-
- <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-home"]</td>
-   <td>Home</td>
- </tr>
-
-
- <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-puzzle-piece"]</td>
-   <td>Modules</td>
- </tr>
- 
-  <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-tasks"]</td>
-   <td>Worklists</td>
- </tr>
- 
- 
-  <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-history"]</td>
-   <td>History</td>
- </tr>
- 
- 
-  <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-search"]</td>
-   <td>Search</td>
- </tr>
- 
- 
-  <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-sliders"]</td>
-   <td>Preferences</td>
- </tr>
- 
- 
-  <tr>
-   <td>verifyText</td>
-   <td>//a[@class="ui-btn-icon-left ui-icon-power-off"]</td>
-   <td>Logout</td>
- </tr>
-
-
-
-<tr>
-   <td>waitForElementPresent</td>
-   <td>//select[@name="field_language"]/option[@selected='selected' and @value='en']</td>
-   <td></td>
- </tr>
- <tr>
-   <td>type</td>
-   <td>//select[@name="field_language"]</td>
-   <td>wo</td>
- </tr>
-
-
-<tr>
-  <td colspan="3"><b>Submit the dialog</b></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td colspan="3"><p></p></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-
-<tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>yuyan</td>
   <td></td>
 </tr>
