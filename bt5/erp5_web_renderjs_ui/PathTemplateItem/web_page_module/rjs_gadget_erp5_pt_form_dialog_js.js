@@ -48,6 +48,7 @@
           return gadget.translate("Please fill all required fields to submit")
             .push(function (message) {
               return gadget.notifyChange({
+                "modified": true,
                 "message": message,
                 "status": "error"
               });
@@ -165,7 +166,9 @@
     .declareAcquiredMethod("submitContent", "submitContent")
     .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
                             submitDialogWithCustomDialogMethod)
-
+    .allowPublicAcquisition("notifyChange", function notifyChange() {
+      return this.notifyChange({modified: true});
+    })
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
