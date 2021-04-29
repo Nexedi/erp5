@@ -44,6 +44,7 @@ from Products.ERP5Type.Utils import deprecated
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from sets import ImmutableSet
 from zLOG import LOG, WARNING
+from six import reraise
 
 WORKLIST_METADATA_KEY = 'metadata'
 COUNT_COLUMN_TITLE = 'count'
