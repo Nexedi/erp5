@@ -16,13 +16,13 @@
 # GNU General Public License for more details.
 #
 ##############################################################################
+from __future__ import absolute_import
 """
 DCWorkflow implementation *deprecated* in favor of ERP5 Workflow.
 """
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 assert WITH_LEGACY_WORKFLOW
 
-from __future__ import absolute_import
 import transaction
 from Products.ERP5Type import Globals
 import App

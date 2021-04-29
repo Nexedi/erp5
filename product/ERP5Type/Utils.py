@@ -254,7 +254,7 @@ def convertToUpperCase(key):
     return _cached_convertToUpperCase[key]
   except KeyError:
     if not isinstance(key, basestring):
-      raise TypeError, '%r is not a string' % (key,)
+      raise TypeError('%r is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
 

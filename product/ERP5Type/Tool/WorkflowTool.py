@@ -166,7 +166,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for w in wfs:
           w.notifyException(ob, action, exc)
           notify(ActionRaisedExceptionEvent(ob, w, action, exc))
-        raise exc[0], exc[1], exc[2]
+        reraise(*exc)
       finally:
         exc = None
     for w in wfs:

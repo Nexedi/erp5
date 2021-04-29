@@ -32,6 +32,8 @@ from Acquisition import aq_parent, aq_inner
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from AccessControl import getSecurityManager
 from Products.PageTemplates.Expressions import getEngine
+from six import reraise
+
 def createExpressionContext(sci):
     '''
     An expression context provides names for TALES expressions.
@@ -718,13 +720,13 @@ class Workflow(XMLObject):
       raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
-      raise WorkflowException, 'Object is in an undefined state'
+      raise WorkflowException('Object is in an undefined state')
     prefix_method_id = self.getTransitionIdByReference(method_id)
     if prefix_method_id not in sdef.getDestinationIdList():
       raise Unauthorized(method_id)
     tdef = self.getTransitionValueByReference(method_id)
     if tdef is None or tdef.getTriggerType() != TRIGGER_WORKFLOW_METHOD:
-      raise WorkflowException, (
+      raise WorkflowException(
          'Transition %s is not triggered by a workflow method'
              % method_id)
     if not self._checkTransitionGuard(tdef, ob):
@@ -880,7 +882,7 @@ class Workflow(XMLObject):
       sci.setWorkflowVariable(error_message=before_script_error_message)
       if validation_exc :
         # reraise validation failed exception
-        raise validation_exc, None, validation_exc_traceback
+        reraise(validation_exc, None, validation_exc_traceback)
       return new_state
 
     # update state
@@ -923,12 +925,12 @@ class Workflow(XMLObject):
     """
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
-      raise WorkflowException, 'Object is in an undefined state'
+      raise WorkflowException('Object is in an undefined state')
     if method_id not in sdef.getTransitionReferenceList():
       raise Unauthorized(method_id)
     tdef = self.getTransitionValueByReference(method_id)
     if tdef is None or tdef.getTriggerType() != TRIGGER_WORKFLOW_METHOD:
-      raise WorkflowException, (
+      raise WorkflowException(
         'Transition %s is not triggered by a workflow method'
         % method_id)
     if not self._checkTransitionGuard(tdef, ob):
@@ -1223,7 +1225,7 @@ class Workflow(XMLObject):
 
     new_sdef = self._getOb(new_state_id, None)
     if new_sdef is None:
-      raise WorkflowException, ('Destination state undefined: ' + new_state_id)
+      raise WorkflowException('Destination state undefined: ' + new_state_id)
 
     tdef_exprs = {}
     status = {}
@@ -1380,7 +1382,7 @@ if WITH_LEGACY_WORKFLOW:
       try:
         return self[name]
       except KeyError, e:
-        raise AttributeError, e
+        raise AttributeError(e)
   allow_class(_ContainerTab)
 
   Workflow.states = ComputedAttribute(
