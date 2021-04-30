@@ -28,9 +28,10 @@
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from erp5.component.test.testAccounting import AccountingTestCase
 
 
-class TestPaymentTransactionGroup(ERP5TypeTestCase):
+class TestPaymentTransactionGroupReferences(ERP5TypeTestCase):
   def test_source_reference_generated(self):
     ptg = self.portal.payment_transaction_group_module.newContent(
         portal_type='Payment Transaction Group')
@@ -141,3 +142,100 @@ class TestPaymentTransactionGroupConstraint(ERP5TypeTestCase):
     self.assertEqual(
         sorted([str(m.getMessage()) for m in ptg.checkConsistency()]),
         [])
+
+
+class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase, ERP5TypeTestCase):
+
+  def afterSetUp(self):
+    AccountingTestCase.afterSetUp(self)
+    self.bank_account = self.main_section.newContent(
+        portal_type='Bank Account',
+        price_currency_value=self.portal.currency_module.euro)
+    self.bank_account.validate()
+    self.tic()
+
+  # TODO: more PaymentTransactionGroup_getGroupablePaymentTransactionLineList test
+
+  def test_PaymentTransactionGroup_getGroupablePaymentTransactionLineList_mapping_organisation(self):
+    account_module = self.account_module
+    payment_main_section = self._makeOne(
+        portal_type='Payment Transaction',
+        simulation_state='delivered',
+        title='main section',
+        reference='P1',
+        source_section_value=self.main_section,
+        source_payment_value=self.bank_account,
+        destination_section_value=self.organisation_module.client_1,
+        start_date=DateTime(2014, 1, 1),
+        lines=(
+            dict(
+                source_value=account_module.bank,
+                source_debit=100,
+                id='bank'),
+            dict(
+                source_value=account_module.receivable,
+                source_credit=100)))
+
+    payment_section = self._makeOne(
+        portal_type='Payment Transaction',
+        simulation_state='delivered',
+        title='section',
+        reference='P2',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        destination_section_value=self.organisation_module.client_2,
+        start_date=DateTime(2014, 1, 2),
+        lines=(
+            dict(
+                source_value=account_module.bank,
+                source_debit=200,
+                id='bank'),
+            dict(
+                source_value=account_module.receivable,
+                source_credit=200)))
+
+    ptg = self.portal.payment_transaction_group_module.newContent(
+        portal_type='Payment Transaction Group',
+        source_section_value=self.main_section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31),)
+    self.tic()
+
+    line_list = ptg.PaymentTransactionGroup_getGroupablePaymentTransactionLineList(
+        limit=None,
+        start_date_range_min=None,
+        start_date_range_max=None,
+        sign='incoming',
+        mode='stopped_or_delivered',
+    )
+    self.assertEqual(
+        sorted([line.getObject().getRelativeUrl() for line in line_list]),
+        sorted([payment_main_section.bank.getRelativeUrl(), payment_section.bank.getRelativeUrl()]))
+
+    # Add a payment to the group
+    payment_section.bank.setAggregateValue(ptg)
+    self.tic()
+    # Now the listbox only remaining transactions
+    line_list = ptg.PaymentTransactionGroup_getGroupablePaymentTransactionLineList(
+        limit=None,
+        start_date_range_min=None,
+        start_date_range_max=None,
+        sign='incoming',
+        mode='stopped_or_delivered',
+    )
+    self.assertEqual(
+        sorted([line.getObject().getRelativeUrl() for line in line_list]),
+        sorted([payment_main_section.bank.getRelativeUrl()]))
+
+    # Add the other payment to the group
+    payment_main_section.bank.setAggregateValue(ptg)
+    self.tic()
+    # the listbox of the payment transaction group correctly show both payments.
+    line_list = ptg.PaymentTransactionGroup_view.listbox.get_value(
+        'default',
+        render_format='list',)
+    self.assertEqual(
+        sorted([(line.is_stat_line, line['Movement_getMirrorSectionTitle'], line['total_quantity']) 
+                 for line in line_list if not line.is_title_line]),
+        [(0, 'Client 1', 100.0), (0, 'Client 2', 200.0), (1, None, 300.0)],
+    )
