@@ -10,7 +10,9 @@ search_kw = dict(
   parent_portal_type='Payment Transaction',
   limit=None,
   simulation_state=simulation_state,
-  section_uid=context.getSourceSectionUid(),
+  section_uid=context.getSourceSection()
+     and portal.Base_getSectionUidListForSectionCategory(
+       context.getSourceSectionValue().getGroup(base=True)),
   payment_uid=context.getSourcePaymentUid(),
   resource_uid=context.getPriceCurrencyUid(),
   node_category='account_type/asset/cash/bank',
