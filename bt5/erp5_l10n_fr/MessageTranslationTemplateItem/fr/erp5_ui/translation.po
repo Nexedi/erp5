@@ -8258,7 +8258,7 @@ msgid "Online Payment"
 msgstr "Paiement en ligne"
 
 msgid "Open"
-msgstr "Ouvert"
+msgstr "Ouvrir"
 
 msgid "Open Account"
 msgstr "Ouvrir"
@@ -8329,7 +8329,19 @@ msgstr "Ouvrir le ticket (action)"
 msgid "Open Ticket [transition in ticket_workflow]"
 msgstr "Ouvrir le ticket"
 
+msgid "Open [state in bank_reconciliation_validation_workflow]"
+msgstr "Ouvert"
+
 msgid "Open [state in bug_workflow]"
+msgstr "Ouvert"
+
+msgid "Open [state in data_protection_request_workflow]"
+msgstr "Ouvert"
+
+msgid "Open [state in officejs_software_publication_workflow]"
+msgstr "Ouvert"
+
+msgid "Open [state in payment_transaction_group_validation_workflow]"
 msgstr "Ouvert"
 
 msgid "Open [state in project_workflow]"

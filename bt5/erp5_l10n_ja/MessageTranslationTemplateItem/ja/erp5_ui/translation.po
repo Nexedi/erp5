@@ -3406,7 +3406,7 @@ msgid "Offers to Send (%(count)s)"
 msgstr "送るべき提案 (%(count)s)"
 
 msgid "Open"
-msgstr "開始"
+msgstr "開始する"
 
 msgid "Open Account"
 msgstr "勘定科目を利用可能にする"
@@ -3464,6 +3464,24 @@ msgstr "開始アクション"
 
 msgid "Open Ticket [transition in ticket_workflow]"
 msgstr "開始する"
+
+msgid "Open [state in bank_reconciliation_validation_workflow]"
+msgstr "開始"
+
+msgid "Open [state in bug_workflow]"
+msgstr "開始"
+
+msgid "Open [state in data_protection_request_workflow]"
+msgstr "開始"
+
+msgid "Open [state in officejs_software_publication_workflow]"
+msgstr "開始"
+
+msgid "Open [state in payment_transaction_group_validation_workflow]"
+msgstr "開始"
+
+msgid "Open [state in project_workflow]"
+msgstr "開始"
 
 msgid "Open [state in ticket_workflow]"
 msgstr "開始"
@@ -5574,9 +5592,6 @@ msgstr "アップロード用モジュール"
 msgid "User"
 msgstr "ユーザ"
 
-msgid "Username"
-msgstr "ユーザ名"
-
 msgid "User Account Workflow"
 msgstr "ユーザアカウントワークフロー"
 
@@ -5593,6 +5608,9 @@ msgid "User Password"
 msgstr "パスワード"
 
 msgid "User name"
+msgstr "ユーザ名"
+
+msgid "Username"
 msgstr "ユーザ名"
 
 msgid "Using category for section is invalid."
