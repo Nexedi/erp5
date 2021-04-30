@@ -30,7 +30,13 @@ if person is None:
   login.validate()
 
   # XXX (lucas): These tests must be able to run on an instance without security.
+  # BBB for PAS 1.9.0 we pass a response and undo the redirect
+  response = container.REQUEST.RESPONSE
   for role in ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Owner'):
-    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, person.Person_getUserId())
+    portal.acl_users.zodb_roles.manage_assignRoleToPrincipals(
+        role,
+        (person.Person_getUserId(),),
+        RESPONSE=response)
+    response.setStatus(200)
 
 return 'Done.'

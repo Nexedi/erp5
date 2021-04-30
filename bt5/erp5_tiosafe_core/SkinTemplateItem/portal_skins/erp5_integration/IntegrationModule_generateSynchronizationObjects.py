@@ -11,7 +11,13 @@ if not acl_users.getUserById('tiosafe_sync_user'):
       password='tiosafe_sync_user',
       confirm='tiosafe_sync_user',
   )
-  acl_users.zodb_roles.assignRoleToPrincipal('Manager', 'tiosafe_sync_user')
+  # BBB for PAS 1.9.0 we pass a response and undo the redirect
+  response = container.REQUEST.RESPONSE
+  acl_users.zodb_roles.manage_assignRoleToPrincipals(
+      'Manager',
+      ('tiosafe_sync_user',),
+      RESPONSE=response)
+  response.setStatus(200)
 
 node_list = ['invoiced_person_module', 'person_module', 'organisation_module']
 resource_list = ['product_module',]
