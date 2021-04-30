@@ -274,13 +274,13 @@ class TestUserManagement(UserManagementTestCase):
     self._assertUserExists(login, password)
     self._assertUserDoesNotExists('case_test_User', password)
 
-  def test_PersonLoginIsNotStripped(self):
-    """Make sure 'foo ', ' foo' and ' foo ' do not match user 'foo'. """
+  def test_PersonLoginIsStripped(self):
+    """Make sure 'foo ', ' foo' and ' foo ' match user 'foo'. """
     _, login, password = self._makePerson()
     self._assertUserExists(login, password)
-    self._assertUserDoesNotExists(login + ' ', password)
-    self._assertUserDoesNotExists(' ' + login, password)
-    self._assertUserDoesNotExists(' ' + login + ' ', password)
+    self._assertUserExists(login + ' ', password)
+    self._assertUserExists(' ' + login, password)
+    self._assertUserExists(' ' + login + ' ', password)
 
   def test_PersonLoginCannotBeComposed(self):
     """Make sure ZSQLCatalog keywords cannot be used at login time"""
@@ -487,6 +487,18 @@ class DuplicatePrevention(UserManagementTestCase):
     login2_value = self.portal.restrictedTraverse(pas_login2['path'])
     login2_value.invalidate()
     login2_value.setReference(login1)
+    self.commit()
+    self.assertRaises(ValidationFailed, login2_value.validate)
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
+
+  def test_duplicateLoginReference_stripped(self):
+    _, login1, _ = self._makePerson()
+    _, login2, _ = self._makePerson()
+    pas_user2, = self.portal.acl_users.searchUsers(login=login2, exact_match=True)
+    pas_login2, = pas_user2['login_list']
+    login2_value = self.portal.restrictedTraverse(pas_login2['path'])
+    login2_value.invalidate()
+    login2_value.setReference(login1 + ' ')
     self.commit()
     self.assertRaises(ValidationFailed, login2_value.validate)
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
