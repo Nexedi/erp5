@@ -31,6 +31,6 @@ if person is None:
 
   # XXX (lucas): These tests must be able to run on an instance without security.
   for role in ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Owner'):
-    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, person.Person_getUserId())
+    portal.acl_users.zodb_roles.manage_assignRoleToPrincipals(role, (person.Person_getUserId(),))
 
 return 'Done.'
