@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Document
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.02"
+    tal:define="data context/PaymentTransactionGroup_getSEPACreditTransferDataDict">
+  <pain.001.001.02>
+    <GrpHdr>
+      <MsgId tal:content="data/GrpHdr/MsgId"></MsgId>
+      <CreDtTm tal:content="data/GrpHdr/CreDtTm">2001-02-03T04:05:06</CreDtTm>
+      <BtchBookg>true</BtchBookg>
+      <NbOfTxs tal:content="data/GrpHdr/NbOfTxs">1</NbOfTxs>
+      <CtrlSum tal:content="data/GrpHdr/CtrlSum">1000</CtrlSum>
+      <Grpg>MIXD</Grpg>
+      <InitgPty>
+        <Nm tal:content="data/GrpHdr/InitgPty/Nm"></Nm>
+        <Id tal:condition="data/GrpHdr/InitgPty/Id/OrgId/PrtryId/Id">
+          <OrgId>
+            <PrtryId>
+              <Id tal:content="data/GrpHdr/InitgPty/Id/OrgId/PrtryId/Id">???</Id>
+            </PrtryId>
+          </OrgId>
+        </Id>
+      </InitgPty>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId tal:content="data/PmtInf/PmtInfId"></PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <PmtTpInf>
+        <SvcLvl>
+          <Cd>SEPA</Cd>
+        </SvcLvl>
+      </PmtTpInf>
+      <ReqdExctnDt tal:content="data/PmtInf/ReqdExctnDt">1970-01-01</ReqdExctnDt>
+      <Dbtr>
+        <Nm tal:content="data/PmtInf/Dbtr/Nm"></Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <IBAN tal:content="data/PmtInf/DbtrAcct/Id/IBAN"></IBAN>
+        </Id>
+        <Ccy>EUR</Ccy>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BIC tal:content="data/PmtInf/DbtrAgt/FinInstnId/BIC"></BIC>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtTrfTxInf tal:repeat="transaction data/transaction_list">
+        <PmtId>
+          <EndToEndId tal:content="transaction/PmtId/EndToEndId"></EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="EUR" tal:content="transaction/Amt/InstdAmt">123.45</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BIC tal:content="transaction/CdtrAgt/FinInstnId/BIC">XXX</BIC>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm tal:content="transaction/Cdtr/Nm"></Nm>
+          <PstlAdr tal:condition="transaction/Cdtr/Ctry">
+            <tal:block tal:repeat="line transaction/Cdtr/PstlAdr">
+              <AdrLine tal:content="line"></AdrLine>
+            </tal:block>
+            <Ctry tal:content="transaction/Cdtr/Ctry"></Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN tal:content="transaction/CdtrAcct/Id/IBAN">FR76...</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd tal:content="transaction/RmtInf/Ustrd"></Ustrd>
+        </RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+  </pain.001.001.02>
+</Document>
