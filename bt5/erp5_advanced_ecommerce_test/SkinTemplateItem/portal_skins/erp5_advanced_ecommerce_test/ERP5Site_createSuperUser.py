@@ -6,5 +6,8 @@ if not acl_users.getUserById('super_user'):
       password='super_user',
       confirm='super_user',
   )
-  acl_users.zodb_roles.assignRoleToPrincipal('Manager', 'super_user')
+  acl_users.zodb_roles.manage_assignRoleToPrincipals(
+      'Manager',
+      ('super_user',),
+      RESPONSE=None)
 return 'Done'

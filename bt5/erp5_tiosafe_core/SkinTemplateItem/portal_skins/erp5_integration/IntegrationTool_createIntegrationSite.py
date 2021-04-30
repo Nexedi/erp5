@@ -14,7 +14,10 @@ if not acl_users.getUserById('tiosafe_sync_user'):
       password='tiosafe_sync_user',
       confirm='tiosafe_sync_user',
   )
-  acl_users.zodb_roles.assignRoleToPrincipal('Manager', 'tiosafe_sync_user')
+  acl_users.zodb_roles.manage_assignRoleToPrincipals(
+      'Manager',
+      ('tiosafe_sync_user',),
+      RESPONSE=None)
 
 # this dict map the portal type with their type
 mapping_type_dict = {

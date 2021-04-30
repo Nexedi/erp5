@@ -6,5 +6,8 @@ if not acl_users.getUserById('user_logout_test'):
       password='user_logout_test',
       confirm='user_logout_test',
   )
-  acl_users.zodb_roles.assignRoleToPrincipal('Manager', 'user_logout_test')
+  acl_users.zodb_roles.manage_assignRoleToPrincipals(
+      'Manager',
+      ('user_logout_test',),
+      RESPONSE=None)
 return 'done'
