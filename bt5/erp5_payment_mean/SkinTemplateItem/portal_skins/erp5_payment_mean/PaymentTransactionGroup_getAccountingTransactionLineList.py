@@ -1,6 +1,10 @@
 portal = context.getPortalObject()
 
-kw['section_uid'] = context.getSourceSectionUid()
+kw['section_uid'] = -1
+if context.getSourceSection():
+  kw['section_uid'] = portal.Base_getSectionUidListForSectionCategory(
+       context.getSourceSectionValue().getGroup(base=True))
+
 kw['default_aggregate_uid'] = context.getUid()
 kw['parent_portal_type'] = ('Payment Transaction', 'Accounting Transaction')
 
