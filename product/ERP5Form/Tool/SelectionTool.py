@@ -162,13 +162,13 @@ class SelectionTool( BaseTool, SimpleItem ):
         self.storage = storage
         self.clearCachedContainer()
       else:
-        raise ValueError, 'Given storage type (%s) is now supported.' % (storage,)
+        raise ValueError('Given storage type (%s) is now supported.' % (storage,))
       anonymous_storage = anonymous_storage or None
       if anonymous_storage in [item[1] for item in self.getStorageItemList()] + [None]:
         self.anonymous_storage = anonymous_storage
         self.clearCachedContainer(is_anonymous=True)
       else:
-        raise ValueError, 'Given storage type (%s) is now supported.' % (anonymous_storage,)
+        raise ValueError('Given storage type (%s) is now supported.' % (anonymous_storage,))
       if RESPONSE is not None:
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
@@ -1258,8 +1258,8 @@ class SelectionTool( BaseTool, SimpleItem ):
               relation_index += 1
       if not relation_field_found:
         # We didn't find the field...
-        raise SelectionError, "SelectionTool: can not find the relation" \
-                              " field %s" % index
+        raise SelectionError("SelectionTool: can not find the relation field %s"
+                             % index)
       else:
         # Field found
         field_key = field.generate_field_key()

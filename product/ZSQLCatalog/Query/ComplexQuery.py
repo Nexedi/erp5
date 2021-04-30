@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from Query import Query
+from .Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
@@ -158,7 +159,7 @@ class ComplexQuery(Query):
         assert len(search_text_list) == 1
         result = 'NOT %s' % (search_text_list[0], )
       else:
-        raise ValueError, 'Unknown operator %r' % (self.logical_operator, )
+        raise ValueError('Unknown operator %r' % (self.logical_operator, ))
       if column not in (None, ''):
         if self_is_composed:
           result = '(%s)' % (result, )

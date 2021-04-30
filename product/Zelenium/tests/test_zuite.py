@@ -131,11 +131,11 @@ class ZuiteTests( unittest.TestCase ):
 
         for name in names:
             if name not in contents:
-                raise AssertionError, 'Extra name in archive: %s' % name
+                raise AssertionError('Extra name in archive: %s' % name)
 
         for name in contents:
             if name not in names:
-                raise AssertionError, 'Missing name in archive: %s' % name
+                raise AssertionError('Missing name in archive: %s' % name)
 
     def _verifyManifest( self, bits, name, contents ):
 

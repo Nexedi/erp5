@@ -172,7 +172,7 @@ class PayzenService(XMLObject, PayzenREST):
         # backward compatibility:
         message_list.append(err[3])
     if message_list:
-      raise ValidationFailed, message_list
+      raise ValidationFailed(message_list)
 
     temp_document = self.newContent(temp_object=True, portal_type='Document', id='id')
     temp_document.edit(

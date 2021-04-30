@@ -29,6 +29,7 @@
 ##############################################################################
 
 
+from __future__ import absolute_import
 import os, re, string, sys
 from Products.ERP5Type import document_class_registry
 from Products.ERP5Type.Globals import package_home, InitializeClass
@@ -55,7 +56,7 @@ def InitializeInteractor(interactor_class, interactor_path=None):
   product_interactor_registry.append(((interactor_class, interactor_path)))
 
 def initializeProductDocumentRegistry():
-  from Utils import importLocalDocument
+  from .Utils import importLocalDocument
   count = len(product_document_registry)
   for (class_id, class_path) in product_document_registry.iteritems():
     importLocalDocument(class_id, class_path=class_path)
@@ -68,7 +69,7 @@ def initializeProductDocumentRegistry():
   assert count == len(product_document_registry)
 
 def initializeProductInteractorRegistry():
-  from Utils import importLocalInteractor
+  from .Utils import importLocalInteractor
   for (class_id, interactor_path) in product_interactor_registry:
     if class_id != 'Interactor': # Base class can not be global and placeless
       importLocalInteractor(class_id, path=interactor_path)

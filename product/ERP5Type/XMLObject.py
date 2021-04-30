@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -33,7 +34,7 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.Utils import convertToUpperCase
 
-from Core.Folder import Folder
+from .Core.Folder import Folder
 from zLOG import LOG
 
 class XMLObject( Folder ):

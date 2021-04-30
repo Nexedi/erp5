@@ -135,7 +135,7 @@ class Url(Coordinate, UrlMixin):
     if to_url is None:
       to_url = self.getUrlString(None)
     if from_url is None or to_url is None:
-      raise AttributeError, "No mail defined"
+      raise AttributeError("No mail defined")
 
     portal_notifications = getToolByName(self, 'portal_notifications')
 

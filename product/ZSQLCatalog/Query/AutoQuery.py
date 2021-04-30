@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from Query import Query
+from .Query import Query
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
@@ -59,7 +60,7 @@ class AutoQuery(Query):
     self.operator = operator
     self.ignore_empty_string = kw.pop('ignore_empty_string', True)
     if 'key' in kw and len(kw) > 2:
-      raise ValueError, '"key" parameter cannot be used when more than one column is given. key=%r' % (kw['key'], )
+      raise ValueError('"key" parameter cannot be used when more than one column is given. key=%(key)r' % kw)
     self.search_key = kw.pop('key', None)
 
   def _createWrappedQuery(self, sql_catalog):
@@ -106,7 +107,7 @@ class AutoQuery(Query):
     if self.table_alias_list is not None:
       query.setTableAliasList(self.table_alias_list)
     if query is None:
-      raise ValueError, '%r failed generating a query from its parameters.' % (self, )
+      raise ValueError('%r failed generating a query from its parameters.' % self)
     self.wrapped_query = query
 
   def _asSearchTextExpression(self, sql_catalog, column=None):

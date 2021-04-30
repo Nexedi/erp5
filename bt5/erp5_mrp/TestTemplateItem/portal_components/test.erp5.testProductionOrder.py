@@ -696,8 +696,8 @@ class TestProductionOrderMixin(TestOrderMixin):
         LOG('object.getDeliveryValue()', 0, delivery_value)
         if delivery_value is not None:
           LOG('object.getDeliveryValue().getQuantity()',0,delivery_value.getQuantity())
-        raise AssertionError, "Attribute: %s, Value: %s, Result: %s" %\
-                    (attribute, value, getattr(object, attribute)())
+        raise AssertionError("Attribute: %s, Value: %s, Result: %s"
+          % (attribute, value, getattr(object, attribute)()))
 
   def stepCheckProductionSimulation(self, sequence=None, sequence_list=None,
                                     **kw):

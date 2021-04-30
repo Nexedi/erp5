@@ -183,11 +183,9 @@ class IntrospectionTool(LogMixin, BaseTool):
       It should return the local file compacted or not as tar.gz.
     """
     if file_path.startswith('/'):
-      raise IOError, 'The file path must be relative not absolute'
+      raise IOError('The file path must be relative not absolute')
     instance_home = getConfiguration().instancehome
     file_path = os.path.join(instance_home, file_path)
-    if not os.path.exists(file_path):
-      raise IOError, 'The file: %s does not exist.' % file_path
 
     if compressed:
       tmp_file_path = tempfile.mktemp(dir=tmp_file_path)
@@ -235,9 +233,6 @@ class IntrospectionTool(LogMixin, BaseTool):
     Do a 'tail -f -n line_number filename'
     """
     log_file = os.path.join(getConfiguration().instancehome, file_name)
-    if not os.path.exists(log_file):
-      raise IOError, 'The file: %s does not exist.' % log_file
-
     char_per_line = 75
 
     with open(log_file,'r') as tailed_file:

@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from __future__ import absolute_import
 from urlparse import urlparse
 
 # Import from itools
@@ -26,8 +27,8 @@ from App.Management import Tabs
 from AccessControl import ClassSecurityInfo
 
 # Import from Localizer
-from LocalFiles import LocalDTMLFile
-from utils import lang_negotiator, _
+from .LocalFiles import LocalDTMLFile
+from .utils import lang_negotiator, _
 
 
 class LanguageManager(Tabs):

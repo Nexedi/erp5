@@ -36,6 +36,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, INFO
+from six import reraise
 
 def popenCommunicate(command_list, input_=None, **kwargs):
   kwargs.update(stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -220,7 +221,7 @@ class CertificateAuthorityTool(BaseTool):
           certificate=open(cert).read(),
           id=new_id,
           common_name=common_name)
-      except:
+      except Exception:
         e = sys.exc_info()
         try:
           for p in key, csr, cert:
@@ -229,7 +230,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        reraise(*e)
     finally:
       self._unlockCertificateAuthority()
 
@@ -260,7 +261,7 @@ class CertificateAuthorityTool(BaseTool):
         created.append(alias)
         os.symlink(os.path.basename(crl), alias)
         return dict(crl=open(crl).read())
-      except:
+      except Exception:
         e = sys.exc_info()
         try:
           for p in 'index.txt', 'crlnumber':
@@ -272,7 +273,7 @@ class CertificateAuthorityTool(BaseTool):
         except Exception:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        reraise(*e)
     finally:
       self._unlockCertificateAuthority()
 

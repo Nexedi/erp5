@@ -546,7 +546,7 @@ class BaseTemplateItem(Implicit, Persistent):
         else:
           # As the list of available actions is not strictly defined,
           # prevent mistake if an action is not handled
-          raise ValueError, 'Unknown action "%s"' % action
+          raise ValueError('Unknown action "%s"' % action)
 
 
   def trash(self, context, new_item, **kw):
@@ -963,11 +963,11 @@ class ObjectTemplateItem(BaseTemplateItem):
       try:
         obj = p.unrestrictedTraverse(relative_url)
       except ValueError:
-        raise ValueError, "Can not access to %s" % relative_url
+        raise ValueError("Can not access to %s" % relative_url)
       try:
         obj = obj._getCopy(context)
       except AttributeError:
-        raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
+        raise AttributeError("Could not find object '%s' during business template processing." % relative_url)
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj, 1,
                                   self.isKeepWorkflowObject(relative_url),
@@ -1118,7 +1118,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       # As the list of available actions is not strictly defined,
       # prevent mistake if an action is not handled
-      raise NotImplementedError, 'Unknown action "%s"' % action
+      raise NotImplementedError('Unknown action "%s"' % action)
     return p.portal_trash.backupObject(trashbin, container_path, object_id,
                                        save=save, **kw)
 
@@ -1707,7 +1707,7 @@ class PathTemplateItem(ObjectTemplateItem):
       # If the id has no meta character, do not have to check all objects.
       obj = folder._getOb(id, None)
       if obj is None:
-        raise AttributeError, "Could not resolve '%s' during business template processing." % id
+        raise AttributeError("Could not resolve '%s' during business template processing." % id)
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
@@ -1954,7 +1954,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
         if self.is_bt_for_diff:
           continue
         else:
-          raise ValueError, "%s not found" % relative_url
+          raise ValueError("%s not found" % relative_url)
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj, 1,
                                   self.isKeepWorkflowObject(relative_url),
@@ -2063,8 +2063,8 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       if skin_selection_id in selection_list:
         self._objects.setdefault(skin_folder_id, []).append(skin_selection_id)
       else:
-        raise NotFound, 'No skin selection %s found for skin folder %s.' \
-                          % (skin_selection_id, skin_folder_id)
+        raise NotFound('No skin selection %s found for skin folder %s.'
+                          % (skin_selection_id, skin_folder_id))
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2543,9 +2543,9 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                        'in chain for portal_type %s' % (workflow_name, portal_type))
         self._objects.setdefault(portal_type, []).append(workflow)
       elif not self.is_bt_for_diff:
-        raise NotFound, 'No workflow chain found for portal type %s. This '\
-                        'is probably a sign of a missing dependency.'\
-                                                    % portal_type
+        raise NotFound('No workflow chain found for portal type %s.'
+                       ' This is probably a sign of a missing dependency.'
+                       % portal_type)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2648,8 +2648,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
             # improve the error message
             for wf_id in self._objects[path]:
               if wf_id.startswith('-'):
-                raise ValueError, '"%s" is not a workflow ID for %s' % \
-                                  (wf_id, portal_type)
+                raise ValueError('"%s" is not a workflow ID for %s'
+                                 % (wf_id, portal_type))
             changed = workflow_id_set != old_workflow_id_set
             type_object.setTypeWorkflowList(workflow_id_set)
         else:
@@ -2751,7 +2751,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       ob = types_tool.getTypeInfo(portal_type)
       # check properties corresponds to what is defined in site
       if ob is None:
-        raise ValueError, "Portal Type %r not found in site" %(portal_type,)
+        raise ValueError("Portal Type %r not found in site" %(portal_type,))
       prop_value = getattr(ob, self.class_property, ())
       if allowed_type in prop_value:
         if self.class_property not in portal_type:
@@ -2760,9 +2760,9 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           key = portal_type
         self._objects.setdefault(key, []).append(allowed_type)
       elif not self.is_bt_for_diff:
-        raise ValueError, "%s %s not found in portal type %s" % (
+        raise ValueError("%s %s not found in portal type %s" % (
                              getattr(self, 'name', self.__class__.__name__),
-                             allowed_type, portal_type)
+                             allowed_type, portal_type))
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2855,8 +2855,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         if type_information is None:
           if not property_list:
             continue
-          raise AttributeError, "Portal type '%s' not found while " \
-              "installing %s" % (portal_id, self.getTitle())
+          raise AttributeError("Portal type '%s' not found while installing %s"
+                               % (portal_id, self.getTitle()))
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(type_information, self.class_property, ())
         # merge differences between portal types properties
@@ -3583,7 +3583,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       else:
         obj = None
       if obj is None and not self.is_bt_for_diff:
-        raise NotFound, 'the property %s is not found' % id
+        raise NotFound('the property %s is not found' % id)
       self._objects[id] = (prop_type, obj)
 
   def _importFile(self, file_name, file):
@@ -4556,7 +4556,7 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       if key in catalog_key_list:
         key_list.append(key)
       elif not self.is_bt_for_diff:
-        raise NotFound, '%s %r not found in catalog' %(self.key_title, key)
+        raise NotFound('%s %r not found in catalog' %(self.key_title, key))
     if len(key_list) > 0:
       self._objects[self.key_list_title] = key_list
 
@@ -5423,7 +5423,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       trash_tool = getToolByName(site, 'portal_trash', None)
       if trash_tool is None:
-        raise AttributeError, 'Trash Tool is not installed'
+        raise AttributeError('Trash Tool is not installed')
 
       if not force and check_dependencies:
         self.checkDependencies()
@@ -5858,8 +5858,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Export this Business Template
       """
       if self.getBuildingState() != 'built':
-        raise TemplateConditionError, \
-              'Business Template must be built before export'
+        raise TemplateConditionError('Business Template must be built before export')
       return self._export(path, local, bta)
 
     def _export(self, path=None, local=0, bta=None):
@@ -5989,9 +5988,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       missing_dep_list = self.getMissingDependencyList()
       if len(missing_dep_list) != 0:
-        raise BusinessTemplateMissingDependency, \
-          'Impossible to install %s, please install the following dependencies before: %s' \
-          %(self.getTitle(), repr(missing_dep_list))
+        raise BusinessTemplateMissingDependency(
+          'Impossible to install %s, please install the following dependencies before: %r'
+          % (self.getTitle(), missing_dep_list))
 
     security.declareProtected(Permissions.ManagePortal, 'getMissingDependencyList')
     def getMissingDependencyList(self):
@@ -6328,7 +6327,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       bt_module_id_list = list(self.getTemplateModuleIdList())
       if len(bt_module_id_list) == 0:
-        raise TemplateConditionError, 'No module defined in business template'
+        raise TemplateConditionError('No module defined in business template')
 
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
 

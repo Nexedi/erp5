@@ -165,7 +165,7 @@ class IndexableDocument(ObjectManager):
     if name.startswith('is') or \
        name.startswith('provides'):
       return lambda: 0
-    raise AttributeError, name
+    raise AttributeError(name)
 
   def getProperty(self, prop, default=None):
     return getattr(aq_base(self), prop, default)
@@ -2155,7 +2155,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "%s:%%" AND uid = %i' % (line['allowedRolesAndUsers'], uid) )
         self.assertNotEqual(len(result), 0, 'No line found for allowedRolesAndUsers=%r and uid=%i' % (line['allowedRolesAndUsers'], uid))
       else:
-        raise Exception, 'Malformed allowedRolesAndUsers value: %r' % (line['allowedRolesAndUsers'], )
+        raise Exception('Malformed allowedRolesAndUsers value: %(allowedRolesAndUsers)r' % line)
 
     # Check that object that 'bar' can view because of 'Author' role can *not*
     # be found when searching for his other 'Whatever' role.

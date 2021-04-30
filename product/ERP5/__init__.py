@@ -29,10 +29,12 @@
 """
     ERP5 Free Software ERP
 """
+from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
+import sys
+from . import Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 from AccessControl import ModuleSecurityInfo
@@ -41,12 +43,12 @@ from Products.ERP5Type.Globals import package_home
 product_path = package_home( globals() )
 
 # Define object classes and tools
-from Tool import CategoryTool, IdTool, TemplateTool,\
+from .Tool import CategoryTool, IdTool, TemplateTool,\
                  AlarmTool,\
                  TrashTool,\
                  SolverTool
-import ERP5Site
-from Document import PythonScript, SQLMethod
+from . import ERP5Site
+from .Document import PythonScript, SQLMethod
 object_classes = ( ERP5Site.ERP5Site,
                    PythonScript.PythonScriptThroughZMI,
                    SQLMethod.SQLMethod,
@@ -63,7 +65,7 @@ content_constructors = ()
 
 # Finish installation
 def initialize( context ):
-  import Document
+  from . import Document
   # Initialize
   initializeProduct(context, this_module, globals(),
                          document_module = Document,

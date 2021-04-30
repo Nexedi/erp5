@@ -153,4 +153,4 @@ def setGuard(self, guard):
   if isinstance(self, TransitionDefinition):
     self.guard = guard
   else:
-    raise ValueError, "not a TransitionDefinition"
+    raise ValueError("not a TransitionDefinition")

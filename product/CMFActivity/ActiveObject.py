@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -33,7 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
+from .ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
 from AccessControl import Unauthorized
 from Products.CMFCore import permissions
 

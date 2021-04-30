@@ -20,6 +20,7 @@
 This module provides the MessageCatalog base class, which
 provides message catalogs for the web.
 """
+from __future__ import absolute_import
 
 # Import from the Standard Library
 from base64 import encodestring, decodestring
@@ -49,10 +50,10 @@ from zLOG import LOG, INFO
 from zExceptions import Forbidden
 
 # Import from Localizer
-from interfaces import IMessageCatalog
-from LanguageManager import LanguageManager
-from LocalFiles import LocalDTMLFile
-from utils import charsets, lang_negotiator, _
+from .interfaces import IMessageCatalog
+from .LanguageManager import LanguageManager
+from .LocalFiles import LocalDTMLFile
+from .utils import charsets, lang_negotiator, _
 
 
 
@@ -739,7 +740,7 @@ class POFile(SimpleItem):
     def PUT(self, REQUEST, RESPONSE):
         """ """
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-            raise Forbidden, 'REQUEST_METHOD should be PUT.'
+            raise Forbidden('REQUEST_METHOD should be PUT.')
         body = REQUEST['BODY']
         self.po_import(self.id, body)
         RESPONSE.setStatus(204)

@@ -27,8 +27,9 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 import unittest
-from testIngestion import TestIngestion
+from Products.ERP5OOo.tests.testIngestion import TestIngestion
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict
 
 class TestIngestionWithFlare(TestIngestion):

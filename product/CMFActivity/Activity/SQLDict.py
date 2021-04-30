@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002,2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -30,7 +31,7 @@ from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
 import sys
 #from time import time
-from SQLBase import SQLBase, sort_message_key
+from .SQLBase import SQLBase, sort_message_key
 
 import transaction
 

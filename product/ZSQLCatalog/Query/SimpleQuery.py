@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from Query import Query
+from .Query import Query
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
@@ -66,7 +67,7 @@ class SimpleQuery(Query):
     """
     self.search_key = search_key
     if len(kw) != 1:
-      raise ValueError, 'SimpleQuery can support one and one only column. Got %r.' % (kw, )
+      raise ValueError('SimpleQuery can support one and one only column. Got %r.' % kw)
     self.column, value = kw.popitem()
     # Usability improvement code (those changes should not be needed when
     # this Query is instanciated by a SearchKey, as operator should be correct
@@ -75,7 +76,7 @@ class SimpleQuery(Query):
     if comparison_operator == 'in':
       if isinstance(value, list_type_list):
         if len(value) == 0:
-          raise ValueError, 'Empty lists are not allowed.'
+          raise ValueError('Empty lists are not allowed.')
         elif len(value) == 1:
           value, = value
           comparison_operator = '='
@@ -84,7 +85,7 @@ class SimpleQuery(Query):
     elif comparison_operator == '=':
       if isinstance(value, list_type_list):
         if len(value) == 0:
-          raise ValueError, 'Empty lists are not allowed.'
+          raise ValueError('Empty lists are not allowed.')
         elif len(value) == 1:
           value, = value
         else:
@@ -97,7 +98,7 @@ class SimpleQuery(Query):
         raise ValueError('Unexpected comparison_operator %r for None value.'
           % (comparison_operator, ))
     elif comparison_operator == 'is':
-      raise ValueError, 'Non-None value (%r) with "is" comparison_operator. Not sure what to do.' % (value, )
+      raise ValueError('Non-None value (%r) with "is" comparison_operator. Not sure what to do.' % (value, ))
     self.value = value
     self.comparison_operator = comparison_operator
     self.group = group

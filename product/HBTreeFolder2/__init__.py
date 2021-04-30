@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2001, 2002 Zope Corporation and Contributors.
@@ -12,7 +13,7 @@
 #
 ##############################################################################
 
-import HBTreeFolder2
+from . import HBTreeFolder2
 
 def initialize(context):
 
@@ -33,7 +34,7 @@ def initialize(context):
         pass
     else:
         # CMF installed; make available a special folder type.
-        import CMFHBTreeFolder
+        from . import CMFHBTreeFolder
         ADD_FOLDERS_PERMISSION = 'Add portal folders'
 
         utils.ContentInit(

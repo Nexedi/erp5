@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -38,9 +39,9 @@ from urllib import quote
 from warnings import warn
 from Products.ERP5Type import PropertySheet
 
-from Form import ERP5Form
-from Form import create_settings_form as Form_create_settings_form
-from Selection import Selection
+from .Form import ERP5Form
+from .Form import create_settings_form as Form_create_settings_form
+from .Selection import Selection
 
 def create_settings_form():
     form = Form_create_settings_form()
@@ -127,7 +128,7 @@ class ERP5Report(ERP5Form):
     def __call__(self, *args, **kwargs):
         warn("ERP5Report to be obsolete, please use ReportBox and normal ERP5Form instead.", DeprecationWarning)
         if not self.report_method:
-          raise KeyError, 'report method is not set on the report'
+          raise KeyError('report method is not set on the report')
 
         if not kwargs.has_key('args'):
           kwargs['args'] = args
@@ -284,7 +285,7 @@ class ReportSection:
   def pushRequest(self):
     self = aq_base(self)
     if hasattr(self, '_REQUEST'):
-      raise ValueError, "can not replace the backupped REQUEST"
+      raise ValueError("can not replace the backupped REQUEST")
     self._REQUEST = {'form': {}, 'other': {},}
     REQUEST = get_request()
     self._REQUEST['form'].update(REQUEST.form)
@@ -294,7 +295,7 @@ class ReportSection:
   def popRequest(self):
     self = aq_base(self)
     if not hasattr(self, '_REQUEST'):
-      raise ValueError, "no backupped REQUEST"
+      raise ValueError("no backupped REQUEST")
     REQUEST = get_request()
     REQUEST.form.clear()
     REQUEST.other.clear()
