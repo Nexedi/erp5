@@ -228,6 +228,8 @@ class ERP5LoginUserManager(BasePlugin):
         login = (login, )
       login_list = []
       for user_login in login:
+        # Ignore leading or trailing space in login name
+        user_login = user_login.strip()
         if user_login in SPECIAL_USER_NAME_SET:
           special_user_name_set.add(user_login)
         else:
