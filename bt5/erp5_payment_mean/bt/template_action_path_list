@@ -1,4 +1,6 @@
 Payment Transaction Group Module | view
+Payment Transaction Group | document_list
+Payment Transaction Group | jump_to_document
 Payment Transaction Group | select_payment_list
 Payment Transaction Group | view
 Payment Transaction | jump_payment_transaction_group
