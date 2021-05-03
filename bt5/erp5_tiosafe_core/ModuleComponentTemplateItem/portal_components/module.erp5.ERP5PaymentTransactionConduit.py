@@ -151,7 +151,7 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
             if tag in node_dict:
               node_dict[tag](document=sub_object, xml=node, **kw)
             else:
-              raise ValueError, "This is an unknown sub-element %s on %s" %(tag, sub_object.getPath())
+              raise ValueError("This is an unknown sub-element %s on %s" %(tag, sub_object.getPath()))
           elif tag in ['start_date', 'stop_date']:
             if not node.text:
               node.text = None

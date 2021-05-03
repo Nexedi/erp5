@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2012 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,7 +29,7 @@
 #
 ##############################################################################
 
-from Constraint import Constraint
+from .Constraint import Constraint
 from DateTime import DateTime
 
 boolean_type_list = (int, bool)

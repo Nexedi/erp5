@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
@@ -15,9 +16,9 @@ from ZODB.broken import Broken, PersistentBroken
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
-from portal_type_class import generatePortalTypeClass
-from accessor_holder import AccessorHolderType
-import persistent_migration
+from .portal_type_class import generatePortalTypeClass
+from .accessor_holder import AccessorHolderType
+from . import persistent_migration
 from ZODB.POSException import ConflictError
 
 class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):

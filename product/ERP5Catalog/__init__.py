@@ -29,17 +29,19 @@
     ERP5Catalog provides an extended catalog based on ZSQLCatalog
     and extended local roles management
 """
+from __future__ import absolute_import
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
+import sys
+from . import Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-from Tool import ERP5CatalogTool
+from .Tool import ERP5CatalogTool
 
-import CatalogTool
+from . import CatalogTool
 object_classes = ()
 portal_tools = (CatalogTool.CatalogTool,
                 ERP5CatalogTool.ERP5CatalogTool)

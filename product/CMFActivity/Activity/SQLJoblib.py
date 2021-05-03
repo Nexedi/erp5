@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002,2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -30,12 +31,12 @@ from random import getrandbits
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 import MySQLdb
 from MySQLdb.constants.ER import DUP_ENTRY
-from SQLBase import (
+from .SQLBase import (
   SQLBase, sort_message_key,
   UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
 )
 from Products.CMFActivity.ActivityTool import Message
-from SQLDict import SQLDict
+from .SQLDict import SQLDict
 
 class SQLJoblib(SQLDict):
   """

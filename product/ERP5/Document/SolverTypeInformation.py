@@ -221,7 +221,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
       solver_portal_type = portal_type
       solver = configurable
     else:
-      raise NotImplementedError, '%s is not supported for configurable argument' % portal_type
+      raise NotImplementedError('%s is not supported for configurable argument' % portal_type)
 
     method = getattr(solver, method_id)
     return method()

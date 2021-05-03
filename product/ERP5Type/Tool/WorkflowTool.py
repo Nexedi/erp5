@@ -44,6 +44,7 @@ from Products.ERP5Type.Utils import deprecated
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from sets import ImmutableSet
 from zLOG import LOG, WARNING
+from six import reraise
 
 WORKLIST_METADATA_KEY = 'metadata'
 COUNT_COLUMN_TITLE = 'count'
@@ -166,7 +167,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for w in wfs:
           w.notifyException(ob, action, exc)
           notify(ActionRaisedExceptionEvent(ob, w, action, exc))
-        raise exc[0], exc[1], exc[2]
+        reraise(*exc)
       finally:
         exc = None
     for w in wfs:
@@ -455,9 +456,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             actions.append({
               "id": "onlyjio_%s" % wf.getReference(),
               "name": wf.getTitle(),
-              "url": "%s/manage_properties" % wf.absolute_url_path(),
+              "url": "%s/Base_redirectToWorkflowDocument?workflow_id=%s" % (
+                wf.absolute_url(),
+                wf.getId()),
               "icon": None,
-              "category": "object_onlyjio_jump_raw",
+              "category": "object_onlyjio_jump",
               "priority": 100
             })
             actions.extend(wf.listObjectActions(info))

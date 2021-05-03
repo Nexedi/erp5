@@ -20,21 +20,8 @@
   <td>${base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
   <td></td>
 </tr>
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Title 1</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Title 1</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
   <td>verifyText</td>
@@ -42,16 +29,13 @@
   <td>foo_mokuai</td>
 </tr>
 
+<tal:block tal:define="click_configuration python: {'text': 'Title 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>click</td>
-  <td>link=Title 1</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//a[text() = 'bianxue']</td>
   <td></td>
 </tr>

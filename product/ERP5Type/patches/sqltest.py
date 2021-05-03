@@ -32,13 +32,13 @@ if 1: # For easy diff with original
         except (KeyError, NameError):
             if args.has_key('optional') and args['optional']:
                 return ''
-            raise ValueError, 'Missing input variable, <em>%s</em>' % name
+            raise ValueError('Missing input variable, <em>%s</em>' % name)
 
         # PATCH: use isinstance instead of type comparison, to allow
         # subclassing.
         if isinstance(v, list_type_list):
             if len(v) > 1 and not self.multiple:
-                raise ValueError, (
+                raise ValueError(
                     'multiple values are not allowed for <em>%s</em>'
                     % name)
         else: v=[v]
@@ -54,7 +54,7 @@ if 1: # For easy diff with original
                         int(v)
                     else: v=str(int(v))
                 except ValueError:
-                    raise ValueError, (
+                    raise ValueError(
                         'Invalid integer value for <em>%s</em>' % name)
             elif t=='float':
                 if not v and type(v) is StringType: continue
@@ -62,7 +62,7 @@ if 1: # For easy diff with original
                     if type(v) is StringType: float(v)
                     else: v=str(float(v))
                 except ValueError:
-                    raise ValueError, (
+                    raise ValueError(
                         'Invalid floating-point value for <em>%s</em>' % name)
             elif t.startswith('datetime'):
                 # For subsecond precision, use 'datetime(N)' MySQL type,
@@ -84,13 +84,12 @@ if 1: # For easy diff with original
             if args.has_key('optional') and args['optional']:
                 return ''
             else:
-                err = 'Invalid empty string value for <em>%s</em>' % name
-                raise ValueError, err
-
+                raise ValueError(
+                    'Invalid empty string value for <em>%s</em>' % name)
 
         if not vs:
             if self.optional: return ''
-            raise ValueError, (
+            raise ValueError(
                 'No input was provided for <em>%s</em>' % name)
 
         if len(vs) > 1:

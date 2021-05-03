@@ -8,9 +8,13 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test Developer Edit Form</td></tr>
 </thead><tbody>
-<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@title="Edit this form"]</td>

@@ -15,9 +15,12 @@
     </thead>
     <tbody>
       <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-      <tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-      </tal:block>
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
       <tr>
         <td>check</td>
         <td>//input[@id='field_my_preferred_html_style_translator_mode']</td>
@@ -50,7 +53,7 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
+        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tr>
@@ -60,7 +63,7 @@
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
+        <td>//label[@for="field_listbox_left"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tr>
@@ -70,7 +73,7 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
+        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tr>
@@ -80,7 +83,7 @@
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
+        <td>//label[@for="field_listbox_right"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tr>
@@ -90,7 +93,7 @@
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_my_title"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5ETitle%24&lang=en'></span>"]</td>
+        <td>//label[@for="field_my_title"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5ETitle%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tr>
@@ -100,7 +103,7 @@
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//label[@for="field_your_description"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EDescription%24&lang=en'></span>"]</td>
+        <td>//label[@for="field_your_description"]/a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EDescription%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tr>
@@ -110,7 +113,7 @@
       </tr>
       <tr>
         <td>assertElementPresent</td>
-        <td>//a[contains(@class, 'translate-title') and @href="<span tal:replace='string:/erp5/Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
+        <td>//a[contains(@class, 'translate-title') and @href="<span tal:replace='string:Localizer/erp5_ui/manage_messages?regex=%5EListbox%24&lang=en'></span>"]</td>
         <td></td>
       </tr>
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />

@@ -78,7 +78,7 @@ class IntegrationSite(Folder):
     """
     if not category:
       LOG("getCategoryFromMapping", ERROR, "empty category provided")
-      raise ValueError, "Empty category provided"
+      raise ValueError("Empty category provided")
 
     # Split the category to have the base and the variation category
     _, variation_category = category.split('/', 1)
@@ -110,7 +110,7 @@ class IntegrationSite(Folder):
             # only the base category has to be mapped
             if missing_mapping or current_object.getDestinationReference() is None:
               # We do not want the process to go on if base category mappings is missing
-              raise ValueError, "Mapping not defined for %s" % category
+              raise ValueError("Mapping not defined for %s" % category)
             return current_object.getDestinationReference() +'/'+ category.split('/', 1)[1]
           else:
             # Create default line that has to be mapped by user later
@@ -125,12 +125,12 @@ class IntegrationSite(Folder):
             missing_mapping = True
           else:
             LOG("getCategoryFromMapping", ERROR, "Mapping object for %s not found" %(cat,))
-            raise ValueError, "Mapping object for %s not found" %(cat,)
+            raise ValueError("Mapping object for %s not found" % cat)
 
       mapped_category = cat_object.getDestinationReference()
       if mapped_category in ("", None) and cat_object.getPortalType() == "Integration Category Mapping":
         LOG("getCategoryFromMapping", ERROR, "Mapping not defined for %s" % (cat,))
-        raise ValueError, "Mapping not defined for %s" % cat
+        raise ValueError("Mapping not defined for %s" % cat)
       if mapped_base_category is None:
         mapped_base_category = mapped_category
       else:
@@ -143,7 +143,7 @@ class IntegrationSite(Folder):
 ##                                                                                        category))
     if missing_mapping:
       # We do not want the process to go on if mappings are missing
-      raise ValueError, "Mapping not defined for %s" % category
+      raise ValueError("Mapping not defined for %s" % category)
     return mapped_variation_category[-1]
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -165,7 +165,7 @@ class IntegrationSite(Folder):
         destination_reference=base_category,
     )
     if len(mapping) != 1:
-      raise IndexError, 'The integration base category mapping %s must be mapped and with only one base_category' % (base_category)
+      raise IndexError('The integration base category mapping %s must be mapped and with only one base_category' % base_category)
 
     mapping = mapping[0].getObject()
     # retrieve the corresponding category integration mapping
@@ -174,7 +174,7 @@ class IntegrationSite(Folder):
         destination_reference=category,
     )
     if len(mapping_line) > 1:
-      raise IndexError, 'The integration category mapping %s must be mapped with only one category' % (variation)
+      raise IndexError('The integration category mapping %s must be mapped with only one category' % variation)
     try:
       # shared variation
       return '/'.join(
@@ -204,7 +204,7 @@ class IntegrationSite(Folder):
                                              destination_reference=property_name,
                                              )
     if len(mapping_line) > 1:
-      raise IndexError, 'The integration property mapping %s must be mapped with only one category' % (property_name)
+      raise IndexError('The integration property mapping %s must be mapped with only one category' % property_name)
     elif len(mapping_line) == 0:
       return property_name
     else:

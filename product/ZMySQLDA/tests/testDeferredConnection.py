@@ -55,7 +55,7 @@ def fake_db_query(self, *args, **kw):
   """
   global GLOBAL_DB_CONNECTED_FLAG
   if GLOBAL_DB_CONNECTED_FLAG == UNCONNECTED_STATE:
-    raise OperationalError, (hosed_connection[0], 'dummy exception')
+    raise OperationalError(hosed_connection[0], 'dummy exception')
   return self.original_query(*args, **kw)
 
 class TestDeferredConnection(ERP5TypeTestCase):

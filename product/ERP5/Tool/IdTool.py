@@ -114,7 +114,7 @@ class IdTool(BaseTool):
       Generate the next id in the sequence of ids of a particular group
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid id_group' % (repr(id_group), )
+      raise ValueError('%r is not a valid id_group' % id_group)
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
@@ -174,7 +174,7 @@ class IdTool(BaseTool):
       Generate a list of next ids in the sequence of ids of a particular group
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid id_group' % (repr(id_group), )
+      raise ValueError('%r is not a valid id_group' % id_group)
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
@@ -208,17 +208,13 @@ class IdTool(BaseTool):
         # XXX It's temporary, a New API will be implemented soon
         #     the code will be change
         portal = self.getPortalObject()
-        query = getattr(portal, 'IdTool_zGenerateId', None)
-        commit = getattr(portal, 'IdTool_zCommit', None)
-
-        if query is None or commit is None:
-          portal_catalog = getattr(self, 'portal_catalog').getSQLCatalog()
-          query = getattr(portal_catalog, 'z_portal_ids_generate_id')
-          commit = getattr(portal_catalog, 'z_portal_ids_commit')
-        if None in (query, commit):
-          raise AttributeError, 'Error while generating Id: ' \
-            'idTool_zGenerateId and/or idTool_zCommit could not ' \
-            'be found.'
+        try:
+          query = portal.IdTool_zGenerateId
+          commit = portal.IdTool_zCommit
+        except AttributeError:
+          portal_catalog = portal.portal_catalog.getSQLCatalog()
+          query = portal_catalog.z_portal_ids_generate_id
+          commit = portal_catalog.z_portal_ids_commit
         try:
           result = query(id_group=id_group, id_count=id_count, default=default)
         finally:
@@ -304,14 +300,10 @@ class IdTool(BaseTool):
     # XXX It's temporary, a New API will be implemented soon
     #     the code will be change
     portal = self.getPortalObject()
-    query = getattr(portal, 'IdTool_zGetLastId', None)
-    if query is None:
-      portal_catalog = getattr(self, 'portal_catalog').getSQLCatalog()
-      query = getattr(portal_catalog, 'z_portal_ids_get_last_id')
-    if query is None:
-      raise AttributeError, 'Error while getting last Id: ' \
-            'IdTool_zGetLastId could not ' \
-            'be found.'
+    try:
+      query = portal.IdTool_zGetLastId
+    except AttributeError:
+      query = portal.portal_catalog.getSQLCatalog().z_portal_ids_get_last_id
     result = query(id_group=id_group)
     if len(result):
       try:

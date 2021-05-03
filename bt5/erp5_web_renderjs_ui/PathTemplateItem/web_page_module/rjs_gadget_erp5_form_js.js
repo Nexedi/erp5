@@ -183,6 +183,10 @@
       if (options.form_definition.hasOwnProperty("edit_form_action_href")) {
         hash += "edit_form_action";
       }
+      if (options.form_definition.hasOwnProperty("edit_form_update_href")) {
+        hash += "edit_form_update_action";
+      }
+
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
@@ -233,6 +237,7 @@
             dev_element_list,
             parent_element,
             field_href,
+            developer_action_mapping,
             j;
 
           if (modification_dict.hasOwnProperty('hash')) {
@@ -252,22 +257,30 @@
             for (j = 0; j < dev_element_list.length; j += 1) {
               form_gadget.element.removeChild(dev_element_list[j]);
             }
-            if (form_definition.hasOwnProperty("edit_form_href")) {
-              field_href = addDeveloperAction(
+            developer_action_mapping = {
+              "edit_form_href": [
                 "edit-form ui-icon-edit ui-btn-icon-left",
-                form_definition.edit_form_href,
                 "Edit this form"
-              );
-              form_gadget.element.insertBefore(field_href, dom_element);
-            }
-
-            if (form_definition.hasOwnProperty("edit_form_action_href")) {
-              field_href = addDeveloperAction(
+              ],
+              "edit_form_action_href": [
                 "edit-form-action ui-icon-external-link ui-btn-icon-left",
-                form_definition.edit_form_action_href,
                 "Edit this form's action"
-              );
-              form_gadget.element.insertBefore(field_href, dom_element);
+              ],
+              "edit_form_update_href": [
+                "edit-form-action ui-icon-external-link-square ui-btn-icon-left",
+                "Edit this form's update action"
+              ]
+            };
+            for (j in developer_action_mapping) {
+              if (developer_action_mapping.hasOwnProperty(j) &&
+                    form_definition.hasOwnProperty(j)) {
+                field_href = addDeveloperAction(
+                  developer_action_mapping[j][0],
+                  form_definition[j],
+                  developer_action_mapping[j][1]
+                );
+                form_gadget.element.insertBefore(field_href, dom_element);
+              }
             }
           }
         });

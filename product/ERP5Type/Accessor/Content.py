@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,8 +27,8 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
-import Base
+from .Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from . import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 
 Setter = Base.Setter

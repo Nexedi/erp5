@@ -67,11 +67,8 @@
   <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
   <td>blur</td>
 </tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
-
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//input[@name="field_my_stop_date" and @class="is-invalid"]</td>
   <td></td>
 </tr>
@@ -84,6 +81,34 @@
   <td>waitForTextPresent</td>
   <td>Invalid DateTime</td>
   <td></td>
+</tr>
+<tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
+  <td>222222-02-22T22:22</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_stop_date" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_stop_date" and @class="is-invalid"]</td>
+  <td>focus</td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
@@ -105,36 +130,25 @@
   <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
   <td>222222-02-22T22:22</td>
 </tr>
-
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Please fill all required fields to submit'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 <tr>
   <td>chooseOkOnNextConfirmation</td>
   <td></td>
   <td></td>
 </tr>
-
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
-
-
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_stop_date']</td>
   <td></td>
 </tr>
-
-
 <tr>
   <td>verifyValue</td>
   <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>

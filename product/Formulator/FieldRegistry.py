@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import os
 import OFS
 from App.ImageFile import ImageFile
@@ -63,8 +64,8 @@ def initializeFieldForm(field_class):
     """Initialize the properties (fields and values) on a particular
     field class. Also add the tales and override methods.
     """
-    from Form import BasicForm
-    from DummyField import fields
+    from .Form import BasicForm
+    from .DummyField import fields
 
     form = BasicForm()
     override_form = BasicForm()

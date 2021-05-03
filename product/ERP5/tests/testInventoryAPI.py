@@ -3001,12 +3001,12 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       # Leads to rasing exception instead of calling self.assert[...] method.
       if not success:
         if ordered_check:
-          raise AssertionError, 'Line %r\ndo not match\n %r' % \
+          raise AssertionError('Line %r\ndo not match\n %r' %
                                 (inventory_list[inventory_position],
-                                 criterion_dict)
+                                 criterion_dict))
         else:
-          raise AssertionError, 'No line in %r\n match\n %r' % \
-                                (inventory_list, criterion_dict)
+          raise AssertionError('No line in %r\n match\n %r' %
+                                (inventory_list, criterion_dict))
     # Check all expected lines have been found.
     self.assertFalse(inventory_list)
 

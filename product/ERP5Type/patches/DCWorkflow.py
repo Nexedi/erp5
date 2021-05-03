@@ -42,6 +42,7 @@ from Products.ERP5Type.Utils import convertToMixedCase
 import sys
 from Acquisition import aq_base
 from copy import deepcopy
+from six import reraise
 
 # Avoid copy/paste of code from ERP5 Workflow by dynamically adding methods to
 # DCWorkflow classes
@@ -313,7 +314,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         sci.setWorkflowVariable(error_message=before_script_error_message)
         if validation_exc :
             # reraise validation failed exception
-            raise validation_exc, None, validation_exc_traceback
+            reraise(validation_exc, None, validation_exc_traceback)
         return new_sdef
 
     # Update state.
@@ -372,7 +373,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
   new_sdef = self.states.get(new_state_id, None)
   if new_sdef is None:
-    raise WorkflowException, ('Destination state undefined: ' + new_state_id)
+    raise WorkflowException('Destination state undefined: ' + new_state_id)
 
   # Update variables.
   state_values = new_sdef.var_values

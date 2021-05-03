@@ -116,7 +116,7 @@ class ArchiveTool(BaseTool):
     """
     # First check parameter for destination catalog
     if destination_archive_id == archive_id:
-      raise ValueError, "Archive and destination archive can't be the same"
+      raise ValueError("Archive and destination archive can't be the same")
     portal_catalog =self.portal_catalog
     # Guess connection id from current catalog
     source_catalog = portal_catalog.getSQLCatalog()
@@ -126,7 +126,7 @@ class ArchiveTool(BaseTool):
     source_deferred_connection_id = source_catalog.getConnectionId(deferred=True)
 
     if source_connection_id is None or source_deferred_connection_id is None:
-      raise ValueError, "Unable to determine connection id for the current catalog"
+      raise ValueError("Unable to determine connection id for the current catalog")
 
     # Get destination property from archive
     destination_archive_id = destination_archive_id.split(' - ')[0]
@@ -144,25 +144,25 @@ class ArchiveTool(BaseTool):
 
     # Check we don't use same connection id for source and destination
     if destination_sql_catalog_id == source_catalog_id:
-      raise ValueError, "Destination and source catalog can't be the same"
+      raise ValueError("Destination and source catalog can't be the same")
     if destination_connection_id == source_connection_id:
-      raise ValueError, "Destination and source connection can't be the same"
+      raise ValueError("Destination and source connection can't be the same")
     if destination_deferred_connection_id == source_deferred_connection_id:
-      raise ValueError, "Destination and source deferred connection can't be the same"
+      raise ValueError("Destination and source deferred connection can't be the same")
     # Same for source and archive
     if archive_sql_catalog_id == source_catalog_id:
-      raise ValueError, "Archive and source catalog can't be the same"
+      raise ValueError("Archive and source catalog can't be the same")
     if archive_connection_id == source_connection_id:
-      raise ValueError, "Archive and source connection can't be the same"
+      raise ValueError("Archive and source connection can't be the same")
     if archive_deferred_connection_id == source_deferred_connection_id:
-      raise ValueError, "Archive and source deferred connection can't be the same"
+      raise ValueError("Archive and source deferred connection can't be the same")
     # Same for destination and archive
     if archive_sql_catalog_id == destination_sql_catalog_id:
-      raise ValueError, "Archive and destination catalog can't be the same"
+      raise ValueError("Archive and destination catalog can't be the same")
     if archive_connection_id == destination_connection_id:
-      raise ValueError, "Archive and destination connection can't be the same"
+      raise ValueError("Archive and destination connection can't be the same")
     if archive_deferred_connection_id == destination_deferred_connection_id:
-      raise ValueError, "Archive and destination deferred connection can't be the same"
+      raise ValueError("Archive and destination deferred connection can't be the same")
 
     # Update connection id in destination and archive catalog if asked
     destination_sql_catalog = getattr(portal_catalog, destination_sql_catalog_id)

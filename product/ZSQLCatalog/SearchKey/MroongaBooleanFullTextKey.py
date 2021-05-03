@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from MroongaFullTextKey import MroongaFullTextKey
+from __future__ import absolute_import
+from .MroongaFullTextKey import MroongaFullTextKey
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 

@@ -9,9 +9,12 @@
 <tr><td rowspan="1" colspan="3">Test Access Workflow</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="website_url python: '{}/web_site_module/renderjs_runner/'.format(here.getPortalObject().absolute_url())">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
-</tal:block>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
@@ -26,15 +29,17 @@
   <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<!-- Not sure why, but without waitForElementPresent, assertValue is not finding the element -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value="Edit Workflow"]</td>
+  <td>//input[@id="field_my_title"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//input[@value="Edit Workflow"]</td>
-  <td></td>
+  <td>assertValue</td>
+  <td>//input[@id="field_my_title"]</td>
+  <td>Edit Workflow</td>
 </tr>
 </tbody></table>
 </body>

@@ -130,7 +130,7 @@ def getFieldDict(field, value_type):
         elif value_type=='tales':
             get_method = getattr(field, 'get_recursive_tales')
         else:
-            raise ValueError, 'value_type must be values or tales'
+            raise ValueError('value_type must be values or tales')
         template_field = field.getRecursiveTemplateField()
         for ui_field_id in template_field.form.fields.keys():
             result[ui_field_id] = get_method(ui_field_id)
@@ -140,7 +140,7 @@ def getFieldDict(field, value_type):
         elif value_type=='tales':
             get_method = getattr(field, 'get_tales')
         else:
-            raise ValueError, 'value_type must be values or tales'
+            raise ValueError('value_type must be values or tales')
         for ui_field_id in field.form.fields.keys():
             result[ui_field_id] = get_method(ui_field_id)
     return result
@@ -798,7 +798,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         self.dav__init(REQUEST, RESPONSE)
         self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-            raise Forbidden, 'REQUEST_METHOD should be PUT.'
+            raise Forbidden('REQUEST_METHOD should be PUT.')
         body=REQUEST.get('BODY', '')
         # Empty the form (XMLToForm is unable to empty things before reopening)
         for k in self.get_field_ids():
@@ -1402,9 +1402,10 @@ def get_field_meta_type_and_proxy_flag(field):
         try:
             return field.getRecursiveTemplateField().meta_type, True
         except AttributeError:
-            raise AttributeError, 'The proxy target of %s.%s field does not '\
-                  'exists. Please check the field setting.' % \
-                  (field.aq_parent.id, field.getId())
+            raise AttributeError(
+                'The proxy target of %s.%s field does not exist.'
+                ' Please check the field settings.'
+                % (field.aq_parent.id, field.getId()))
     else:
         return field.meta_type, False
 

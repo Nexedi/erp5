@@ -4,6 +4,7 @@ Zuite instances are collections of Zelenium test cases.
 
 $Id$
 """
+from __future__ import absolute_import
 import glob
 import logging
 import os
@@ -27,9 +28,9 @@ from OFS.Image import File
 from OFS.OrderedFolder import OrderedFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from interfaces import IZuite
-from permissions import ManageSeleniumTestCases
-from permissions import View
+from .interfaces import IZuite
+from .permissions import ManageSeleniumTestCases
+from .permissions import View
 
 logger = logging.getLogger('event.Zelenium')
 
@@ -201,7 +202,7 @@ class Zuite( OrderedFolder ):
         if value is not _MARKER:
             return value
 
-        raise KeyError, key
+        raise KeyError(key)
 
 
     security.declareProtected( View, 'listTestCases' )
@@ -678,7 +679,7 @@ class ZuiteResults( Folder ):
         if default is not _MARKER:
             return default
 
-        raise KeyError, key
+        raise KeyError(key)
 
 InitializeClass( ZuiteResults )
 
@@ -712,13 +713,14 @@ class _FilesystemProxy( Folder ):
             return self.__class__( key, self._fsobjs[ 'subdirs' ][ key ]
                                  ).__of__( self.aq_parent )
 
-        if key in _SUPPORT_FILES.keys():
-            return _SUPPORT_FILES[ key ].__of__( self )
-
-        if default is not _MARKER:
+        try:
+            file = _SUPPORT_FILES[key]
+        except KeyError:
+            if default is _MARKER:
+                raise
             return default
 
-        raise KeyError, key
+        return file.__of__(self)
 
     security.declareProtected( View, 'listTestCases' )
     def listTestCases( self, prefix=() ):

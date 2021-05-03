@@ -1,9 +1,10 @@
-from Form import BasicForm
-from Field import ZMIField
-from DummyField import fields
-from MethodField import BoundMethod
+from __future__ import absolute_import
+from .Form import BasicForm
+from .Field import ZMIField
+from .DummyField import fields
+from .MethodField import BoundMethod
 from DateTime import DateTime
-import Validator, Widget
+from . import Validator, Widget
 import OFS
 
 class StringField(ZMIField):

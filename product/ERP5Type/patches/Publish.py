@@ -84,7 +84,7 @@ def publish(request, module_name, after_list, debug=0,
                             cancel = ''
                             break
                 if cancel:
-                    raise Redirect, cancel
+                    raise Redirect(cancel)
 
             after_list[0]=bobo_after
             if debug_mode:

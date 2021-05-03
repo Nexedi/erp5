@@ -100,7 +100,7 @@ class StaticWebSection(WebSection):
     try:
       request.RESPONSE.notFoundError("%s\n%s" % (name, method))
     except AttributeError:
-      raise KeyError, name
+      raise KeyError(name)
 
 
   security.declareProtected(Permissions.View, '__bobo_traverse__')
