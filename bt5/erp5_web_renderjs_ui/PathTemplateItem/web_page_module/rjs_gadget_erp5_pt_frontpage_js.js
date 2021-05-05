@@ -52,7 +52,7 @@
       // First, get the list of modules
       return gadget.jio_allDocs({
         select_list: select_list,
-        query: '(parent_uid:"0" AND (meta_type:"ERP5 Folder" AND id:"%_module") OR (join_tool_if_developer_mode:true))',
+        query: '(parent_uid:"0" AND (meta_type:"ERP5 Folder" AND id:"%_module") OR (id_if_developer_mode:"portal_%"))',
         limit: 1000
       })
         .push(function (result_list) {
