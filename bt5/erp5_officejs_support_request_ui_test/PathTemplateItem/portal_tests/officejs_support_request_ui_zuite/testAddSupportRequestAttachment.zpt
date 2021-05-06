@@ -44,11 +44,6 @@
           <td>FeatureRequire</td>
           <td></td>
         </tr>
-        <tr>
-          <td>select</td>
-          <td>field_your_resource</td>
-          <td>FeatureRequire</td>
-        </tr>
         <tal:block tal:define="text_content string:Post test">
           <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
         </tal:block>
@@ -56,6 +51,16 @@
           <td>setFile</td>
           <td>field_your_file</td>
           <td>portal_skins/erp5_officejs_support_request_test/test_support_request_text.pdf test_support_request_text.pdf</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="field_your_resource"]/option[text()="FeatureRequire"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>field_your_resource</td>
+          <td>FeatureRequire</td>
         </tr>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
         <tal:block tal:define="notification_configuration python: {'class': 'success',
