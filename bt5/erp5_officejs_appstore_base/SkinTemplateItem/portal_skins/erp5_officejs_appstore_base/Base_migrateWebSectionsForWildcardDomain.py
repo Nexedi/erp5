@@ -21,7 +21,6 @@ app_list_dict = {
                  'Web Table' : 'webtable', #osp-12
                  'PDF Viewer' : 'pdfreader', #osp-5
                  'OfficeJS Monitor' : 'monitor', #osp-22
-                 'Roque Test App' : 'roqueapp' #for dev instance REMOVE
 }
 
 app_list_web_site = portal.web_site_module['application-list']
@@ -29,11 +28,9 @@ app_web_section_dict = {x.getId(): x for x in app_list_web_site.objectValues(por
 
 for software_product in portal_catalog(portal_type="Software Product"):
   if software_product.getReference().lower() in app_web_section_dict:
-    print "software product has app!"
     web_site = software_product.getFollowUpValue(portal_type="Web Section")
     app_url_prefix = app_list_dict[web_site.getTitle()]
     software_product.setReference(app_url_prefix)
-    #use update script instead?
     web_site.setId(app_url_prefix)
     software_product.setFollowUpValue(web_site)
 
