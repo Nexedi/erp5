@@ -3,6 +3,7 @@ Software Product | application_version_list_view
 Software Product | document_view
 Software Product | jump_to_document
 Software Product | update_application
+Software Product | update_application_url
 Software Release | document_view
 Software Release | jump_to_document
 System Preference | appstore_preference
