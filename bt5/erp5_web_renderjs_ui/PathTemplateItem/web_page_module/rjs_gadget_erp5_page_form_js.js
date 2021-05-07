@@ -224,6 +224,15 @@ and handling data send&receive.
             }
             return result;
           })
+          .push(undefined, function (error) {
+            if ((error instanceof jIO.util.jIOError) &&
+                error.status_code === 404) {
+              // If the view does not exist when coming back with the navigation history
+              // Switch back to the default view
+              return {};
+            }
+            throw error;
+          })
           .push(function (result) {
             new_state.erp5_document = result;
 
@@ -236,12 +245,6 @@ and handling data send&receive.
                   }});
                 });
             }
-          })
-          .push(undefined, function (error) {
-            if ((error instanceof jIO.util.jIOError) && error.target.status === 404) {
-              return null;
-            }
-            throw error;
           });
       }
 
