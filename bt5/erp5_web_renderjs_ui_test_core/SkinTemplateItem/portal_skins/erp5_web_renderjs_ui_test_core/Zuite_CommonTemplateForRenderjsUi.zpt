@@ -1242,6 +1242,25 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="wait_for_no_notification">
+    <tr>
+      <td colspan="3"><b>Wait for the notification message to be hidden</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[@data-gadget-scope='notification' and @class='visible']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[@data-gadget-scope='notification' and @class='visible']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="verify_ckeditor_text_content"><tal:comment tal:replace="nothing"><!--
   
     this macro needs globals: text_content
