@@ -303,5 +303,16 @@ class ERP5LoginUserManager(BasePlugin):
       })
     return tuple(result)
 
+  security.declarePrivate('updateUser')
+  def updateUser(self, user_id, login_name):
+    # Operation not supported here
+    return False
+
+  security.declarePrivate('updateEveryLoginName')
+  def updateEveryLoginName(self, quit_on_first_error=True):
+    # Operation not supported here
+    raise NotImplementedError()
+
+
 classImplements(ERP5LoginUserManager, IAuthenticationPlugin, IUserEnumerationPlugin)
 InitializeClass(ERP5LoginUserManager)

@@ -744,6 +744,45 @@ class TestPASAPI(UserManagementTestCase):
     verifyClass(IAuthenticationPlugin, ERP5UserManager)
     verifyClass(IUserEnumerationPlugin, ERP5UserManager)
 
+  def test_LoginUserManagerInterfaces(self):
+    """Tests login user manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, IUserEnumerationPlugin
+    from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
+    verifyClass(IAuthenticationPlugin, ERP5LoginUserManager)
+    verifyClass(IUserEnumerationPlugin, ERP5LoginUserManager)
+
+  def test_ERP5AccessTokenExtractionPluginInterfaces(self):
+    """Tests access token extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5AccessTokenExtractionPlugin import\
+                ERP5AccessTokenExtractionPlugin
+    verifyClass(IAuthenticationPlugin, ERP5AccessTokenExtractionPlugin)
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5AccessTokenExtractionPlugin)
+
+  def test_ERP5BearerExtractionPluginInterfaces(self):
+    """Tests bearer extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5BearerExtractionPlugin import\
+                ERP5BearerExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5BearerExtractionPlugin)
+
+  def test_ERP5DumbHTTPExtractionPluginInterfaces(self):
+    """Tests dumb HTTP extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import\
+                ERP5DumbHTTPExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5DumbHTTPExtractionPlugin)
+
+  def test_RoleManagerInterfaces(self):
+    """Tests role manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
+    from Products.ERP5Security.ERP5RoleManager import ERP5RoleManager
+    verifyClass(IRolesPlugin, ERP5RoleManager)
+
   def test_UserFolder(self):
     """Tests user folder has correct meta type."""
     self.assertTrue(isinstance(self.getUserFolder(),

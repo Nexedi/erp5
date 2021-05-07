@@ -278,6 +278,16 @@ class ERP5UserManager(BasePlugin):
       for user in user_list
     ])
 
+  security.declarePrivate( 'updateUser' )
+  def updateUser(self, user_id, login_name):
+    # Operation not supported here
+    return False
+
+  security.declarePrivate( 'updateEveryLoginName' )
+  def updateEveryLoginName(self, quit_on_first_error=True):
+    # Operation not supported here
+    raise NotImplementedError()
+
   def getUserByLogin(self, login, exact_match=True):
     # Search the Catalog for login and return a list of person objects
     # login can be a string or a list of strings
