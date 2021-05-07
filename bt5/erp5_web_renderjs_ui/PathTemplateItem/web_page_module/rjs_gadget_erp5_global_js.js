@@ -262,8 +262,10 @@
           } else {
             command = command_mapping[group] || default_command_mapping[group];
             options = {
-              title: group_mapping[group][i].title,
-              class_name: class_name,
+              // XXX XXX Didn't spot this change
+              // https://lab.nexedi.com/nexedi/erp5/commit/e21968ba1a2c3a05ab4d3f2e7a420fe06cbc0808
+              // title: group_mapping[group][i].title,
+              // class_name: class_name,
               jio_key: jio_key,
               view: group_mapping[group][i].href,
               editable: editable_mapping[group]
