@@ -101,7 +101,7 @@
 
           for (i = 0; i < group_list.length; i += 2) {
             for (j = 0; j < group_list[i].length; j += 1) {
-              url_for_kw_list.push(group_list[i][j]);
+              url_for_kw_list.push(group_list[i][j].url_kw);
             }
           }
 
@@ -125,7 +125,7 @@
             link_list = [];
             for (j = 0; j < group_list[i].length; j += 1) {
               link_list.push({
-                title: group_list[i][j].options.title,
+                title: group_list[i][j].extra_options.title,
                 link: result_dict.url_list[k]
               });
               k += 1;
