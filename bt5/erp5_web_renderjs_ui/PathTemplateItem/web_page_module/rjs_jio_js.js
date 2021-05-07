@@ -13684,6 +13684,13 @@ return new Parser;
             );
           }
           return evt.target.response;
+        }, function (error) {
+          if ((error.target !== undefined) &&
+              (error.target.status === 404)) {
+            throw new jIO.util.jIOError("Cannot find attachment: " + action,
+                                        404);
+          }
+          throw error;
         });
     }
     throw new jIO.util.jIOError("ERP5: not support get attachment: " + action,
@@ -15000,10 +15007,7 @@ return new Parser;
         } catch (error) {
           reject(error);
         }
-        return new RSVP.Queue()
-          .push(function () {
-            return result;
-          })
+        return new RSVP.Queue(result)
           .push(function (final_result) {
             canceller();
             resolve(final_result);
@@ -15035,10 +15039,7 @@ return new Parser;
         reject(error);
       }
       tx.oncomplete = function () {
-        return new RSVP.Queue()
-          .push(function () {
-            return result;
-          })
+        return new RSVP.Queue(result)
           .push(resolve, function (error) {
             canceller();
             reject(error);
