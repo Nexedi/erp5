@@ -5,7 +5,7 @@ is_developer_mode = (context.getPortalObject().portal_preferences
 
 simple_query = SimpleQuery(parent_uid=0)
 module_query = ComplexQuery(
-  SimpleQuery(id=value, comparison_operator="like"),
+  SimpleQuery(id="%\\_module", comparison_operator="like"),
   SimpleQuery(meta_type="ERP5 Folder"),
   logical_operator='AND'
 )
@@ -26,4 +26,7 @@ else:
     module_query,
     logical_operator='AND')
 
-return query
+return ComplexQuery(
+  query,
+  SimpleQuery(id=value, comparison_operator="like"),
+  logical_operator='AND')

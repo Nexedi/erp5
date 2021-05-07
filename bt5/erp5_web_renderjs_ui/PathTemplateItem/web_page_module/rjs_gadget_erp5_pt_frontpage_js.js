@@ -52,7 +52,7 @@
       // First, get the list of modules
       return gadget.jio_allDocs({
         select_list: select_list,
-        query: 'module_id:"%_module"',
+        query: 'module_id:%',
         limit: 1000
       })
         .push(function (result_list) {
