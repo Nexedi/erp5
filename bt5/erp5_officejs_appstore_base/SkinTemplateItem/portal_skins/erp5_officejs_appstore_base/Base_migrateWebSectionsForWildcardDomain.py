@@ -24,7 +24,7 @@ app_list_dict = {
 }
 
 app_list_web_site = portal.web_site_module['application-list']
-app_web_section_dict = {x.getId(): x for x in app_list_web_site.objectValues(portal_type="Web Section")}
+app_web_section_dict = {x.getId(): x for x in app_list_web_site.objectValues(portal_type="Web Section") if x.getTitle() in app_list_dict}
 
 for software_product in portal_catalog(portal_type="Software Product"):
   if software_product.getReference().lower() in app_web_section_dict:
@@ -33,5 +33,3 @@ for software_product in portal_catalog(portal_type="Software Product"):
     software_product.setReference(app_url_prefix)
     web_site.setId(app_url_prefix)
     software_product.setFollowUpValue(web_site)
-
-return printed

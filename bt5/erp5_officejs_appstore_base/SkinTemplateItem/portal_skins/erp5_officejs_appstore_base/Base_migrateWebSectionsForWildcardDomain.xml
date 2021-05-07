@@ -56,14 +56,6 @@
             <key> <string>id</string> </key>
             <value> <string>Base_migrateWebSectionsForWildcardDomain</string> </value>
         </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple>
-                <string>Doesn\'t print, but reads \'printed\' variable.</string>
-              </tuple>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
