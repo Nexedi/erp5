@@ -2390,7 +2390,6 @@ if mode == 'url_generator':
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
-response.setHeader('Content-Type', mime_type)
 hateoas = calculateHateoas(relative_url=relative_url,
                            REQUEST=REQUEST, response=response, view=view, mode=mode,
                            query=query, select_list=select_list, limit=limit, form=form,
@@ -2401,4 +2400,5 @@ hateoas = calculateHateoas(relative_url=relative_url,
 if hateoas == "":
   return hateoas
 else:
+  response.setHeader('Content-Type', mime_type)
   return json.dumps(hateoas, indent=2)
