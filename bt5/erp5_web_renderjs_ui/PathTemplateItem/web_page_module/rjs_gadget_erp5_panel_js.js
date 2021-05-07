@@ -24,12 +24,12 @@
       dd_element = document.createElement('dd');
       dd_element.setAttribute('class', 'document-listview');
       a_element = document.createElement('a');
-      if (action_list[i].options && action_list[i].options.class_name) {
+      if (action_list[i].class_name) {
         // Avoid add class='undefined' in HTML
-        a_element.setAttribute('class', action_list[i].options.class_name);
+        a_element.setAttribute('class', action_list[i].class_name);
       }
       a_element.href = href_list[index + i];
-      a_element.textContent = action_list[i].options.title;
+      a_element.textContent = action_list[i].title;
       dd_element.appendChild(a_element);
       fragment.appendChild(dd_element);
     }
@@ -277,7 +277,9 @@
 
               parameter_list = view_list.concat(workflow_list).concat(
                 action_list
-              ).concat(clone_list).concat(jump_list);
+              ).concat(clone_list).concat(jump_list).map(function (options) {
+                return options.url_kw;
+              });
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
@@ -311,11 +313,11 @@
               var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
                 href_list = [];
               for (i = 0; i < extra_menu_list.length; i += 1) {
-                extra_menu_list[i].options = {
+                href_list.push(extra_menu_list[i].href);
+                extra_menu_list[i] = {
                   "class_name": extra_menu_list[i].active ? "active" : "",
                   "title": extra_menu_list[i].title
                 };
-                href_list.push(extra_menu_list[i].href);
               }
               appendDt(dl_fragment, translation_list[0], 'globe',
                        extra_menu_list, href_list, 0);
