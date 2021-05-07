@@ -13,12 +13,17 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?view=view_not_exist</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?view=${base_url}%2Fweb_site_module%2Frenderjs_runner%2Fhateoas%2FERP5Document_getHateoas%3Fmode%3Dtraverse%26relative_url%3Dfoo_module%252F1%26view%3Dnot_existing_view</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Cannot find attachment:</td>
+  <td>Cannot find attachment: ${base_url}/web_site_module/renderjs_runner/hateoas/ERP5Document_getHateoas?mode=traverse</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>view=not_existing_view</td>
   <td></td>
 </tr>
 </tbody></table>
