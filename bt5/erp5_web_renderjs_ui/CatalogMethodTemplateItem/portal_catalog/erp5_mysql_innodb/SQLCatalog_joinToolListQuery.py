@@ -1,11 +1,11 @@
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, Query, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 
 is_developer_mode = (context.getPortalObject().portal_preferences
                      .getPreferredHtmlStyleDevelopperMode())
 
 simple_query = SimpleQuery(parent_uid=0)
 module_query = ComplexQuery(
-  Query(id=value),
+  SimpleQuery(id=value, comparison_operator="like"),
   SimpleQuery(meta_type="ERP5 Folder"),
   logical_operator='AND'
 )
@@ -15,7 +15,7 @@ if is_developer_mode:
     simple_query,
     ComplexQuery(
       module_query,
-      Query(id="portal\\_%"),
+      SimpleQuery(id="portal\\_%", comparison_operator="like"),
       logical_operator='OR'
     ),
     logical_operator='AND')
