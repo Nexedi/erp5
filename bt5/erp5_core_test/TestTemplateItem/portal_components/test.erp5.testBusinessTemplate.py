@@ -6886,6 +6886,77 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       'This path should not be reinstalled during update',
       portal_categories.test_category.modified_category.container_in_which_child_is_added.getTitle())
 
+  def test_update_business_template_with_recursively_removed_documents(self):
+    """Non regression test for a case when a subtree is removed
+
+    Updating from:
+        portal_categories/test_category
+        portal_categories/test_category/removed_container
+        portal_categories/test_category/removed_container/removed_document
+
+    to:
+
+        portal_categories/test_category
+
+    was causing error when removed_container was backup by portal trash
+    """
+    portal_categories = self.portal.portal_categories
+    if 'test_category' in portal_categories.objectIds():
+      portal_categories.manage_delObjects(['test_category'])
+    base_category = portal_categories.newContent(portal_type='Base Category', id='test_category')
+
+    removed_container = base_category.newContent(portal_type='Category', id='removed_container')
+    removed_container.newContent(portal_type='Category', id='removed_document')
+
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/test_category/**'
+      ),
+      template_base_category_list=['test_category'],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      new_business_template_version_1 = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # Apply the changes and build a second version of business template
+    base_category.manage_delObjects(['removed_container'])
+
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_categories.manage_delObjects(['test_category'])
+      self.tic()
+      new_business_template_version_1.install()
+      self.portal.portal_categories.test_category.removed_container.setTitle(
+        'modifications are saved in trash')
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+        download_url='file://%s' % export_dir
+      )
+    finally:
+      shutil.rmtree(export_dir)
+    self.tic()
+    # documents are removed
+    self.assertEqual(list(self.portal.portal_categories.test_category.objectValues()), [])
+    # and they are saved in portal trash
+    trash_bin, = [x for x in self.portal.portal_trash.contentValues() if x.getId().startswith(self.id())]
+    self.assertEqual(
+        trash_bin.restrictedTraverse('portal_categories_items/test_category/removed_container').getTitle(),
+        'modifications are saved in trash')
+
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
     """Tests for `template_keep_path_list` feature for the special case of catalog methods
     """
