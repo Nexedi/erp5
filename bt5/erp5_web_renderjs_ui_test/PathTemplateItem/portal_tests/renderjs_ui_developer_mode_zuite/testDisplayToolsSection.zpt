@@ -24,6 +24,11 @@
   <td>//ul[@class="ui-list-grid"]/li[2]/h2[text()="Tools"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//a[text()="Business Templates" and href=contains(text(), "n.jio_key=portal_templates")]</td>
+  <td></td>
+</tr>
 <tal:block tal:define="click_configuration python: {'text': 'Preferences'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
 </tal:block>
