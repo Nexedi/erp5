@@ -281,14 +281,13 @@
             // OfficeJS we keep it empty for different default
             options.page = undefined;
           }
-          url_mapping[group].push({
-            url_kw: {
-              command: command,
-              absolute_url: command === "raw" ? true : false,
-              options: options
-            },
-            extra_options: extra_options
-          });
+
+          extra_options.url_kw = {
+            command: command,
+            absolute_url: command === "raw" ? true : false,
+            options: options
+          };
+          url_mapping[group].push(extra_options);
         }
       }
     }

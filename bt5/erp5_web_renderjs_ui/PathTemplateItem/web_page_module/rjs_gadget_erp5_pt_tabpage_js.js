@@ -131,14 +131,14 @@
 
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
-              title: view_list[i].extra_options.title,
+              title: view_list[i].title,
               link: result_dict.url_list[j]
             });
             j += 1;
           }
           for (i = 0; i < jump_list.length; i += 1) {
             jump_action_list.push({
-              title: jump_list[i].extra_options.title,
+              title: jump_list[i].title,
               link: result_dict.url_list[j]
             });
             j += 1;

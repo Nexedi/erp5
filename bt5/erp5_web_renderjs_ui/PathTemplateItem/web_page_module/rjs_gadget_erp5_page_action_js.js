@@ -125,7 +125,7 @@
             link_list = [];
             for (j = 0; j < group_list[i].length; j += 1) {
               link_list.push({
-                title: group_list[i][j].extra_options.title,
+                title: group_list[i][j].title,
                 link: result_dict.url_list[k]
               });
               k += 1;
