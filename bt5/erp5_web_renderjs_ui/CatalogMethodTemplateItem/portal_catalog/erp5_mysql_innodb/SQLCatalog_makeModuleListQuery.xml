@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_joinToolListQuery</string> </value>
+            <value> <string>SQLCatalog_makeModuleListQuery</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -85,11 +85,11 @@
         </item>
         <item>
             <key> <string>reference</string> </key>
-            <value> <string>SQLCatalog_joinToolListQuery</string> </value>
+            <value> <string>SQLCatalog_makeModuleListQuery</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>SQLCatalog_joinToolListQuery</string> </value>
+            <value> <string>SQLCatalog_makeModuleListQuery</string> </value>
         </item>
       </dictionary>
     </pickle>
