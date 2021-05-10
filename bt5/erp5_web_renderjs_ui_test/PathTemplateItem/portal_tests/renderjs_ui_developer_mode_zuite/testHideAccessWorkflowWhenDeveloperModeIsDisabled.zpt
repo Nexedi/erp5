@@ -1,0 +1,63 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Access Workflow</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<!-- Not sure why, but without waitForElementPresent, assertValue is not finding the element -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@id="field_my_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@id="field_my_title"]</td>
+  <td>Edit Workflow</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/enable_developer_mode" />
+<tr>
+  <td>uncheck</td>
+  <td>//input[@id='field_my_preferred_html_style_developper_mode']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//ul[@class="document-listview"]//li/a[text()="Edit Workflow"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
