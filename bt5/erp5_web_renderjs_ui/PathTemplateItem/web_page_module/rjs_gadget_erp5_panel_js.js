@@ -313,11 +313,11 @@
               var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
                 href_list = [];
               for (i = 0; i < extra_menu_list.length; i += 1) {
+                href_list.push(extra_menu_list[i].href);
                 extra_menu_list[i] = {
                   "class_name": extra_menu_list[i].active ? "active" : "",
                   "title": extra_menu_list[i].title
                 };
-                href_list.push(extra_menu_list[i].href);
               }
               appendDt(dl_fragment, translation_list[0], 'globe',
                        extra_menu_list, href_list, 0);
