@@ -1164,10 +1164,7 @@
         }
         result = routeMethodLess(gadget, command_options.args);
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return result;
-        })
+      return new RSVP.Queue(result)
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
             gadget.props.modified = false;
