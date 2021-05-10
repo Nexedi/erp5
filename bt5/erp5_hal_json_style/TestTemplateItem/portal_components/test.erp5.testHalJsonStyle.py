@@ -16,6 +16,7 @@ import json
 import re
 import urllib
 
+import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
@@ -2858,6 +2859,33 @@ return msg"
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasWorklist_portal_workflow_worklist_translation(self, document):
+    # Non regression test that traversing portal_workflow does not translate
+    # worklists with the actual count of document
+    fake_request = do_fake_request("GET")
+
+    default_gettext = self.portal.Localizer.erp5_ui.gettext
+    def gettext(message, **kw):
+      return default_gettext(message, **kw)
+
+    with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext) as gettext_mock:
+      self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+        REQUEST=fake_request,
+        mode='traverse',
+        relative_url='portal_workflow'
+      )
+    self.assertEqual(
+        [x[1][0] for x in gettext_mock.mock_calls if x[1][0].startswith('Draft')],
+        ['Draft To Validate'])
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')

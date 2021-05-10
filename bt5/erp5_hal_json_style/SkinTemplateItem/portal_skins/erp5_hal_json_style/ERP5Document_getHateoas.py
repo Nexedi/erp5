@@ -1515,7 +1515,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title']),
+          'title': Base_translateString(
+              re.sub(r' \(\d+\)$', '', view_action['title'])
+              if 'worklist_id' in view_action
+              else view_action['title']),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
