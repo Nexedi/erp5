@@ -110,8 +110,6 @@ url_list = [
   'gadget_erp5_panel.html',
   'gadget_erp5_panel.js',
   'gadget_erp5_panel.png',
-  'gadget_panel.html',
-  'gadget_panel.js',
   'gadget_erp5_pt_embedded_form_render.html',
   'gadget_erp5_pt_embedded_form_render.js',
   'gadget_erp5_pt_form_dialog.html',
