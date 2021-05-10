@@ -1062,7 +1062,7 @@
         options: {}
       };
       return RSVP.all([
-        function createJioSelection() {
+        (function createJioSelection() {
           return gadget.getDeclaredGadget("jio_selection")
             .push(function (jio_gadget) {
               gadget.props.jio_gadget = jio_gadget;
@@ -1074,8 +1074,8 @@
                 }
               });
             });
-        }(),
-        function createJioNavigationHistory() {
+        }()),
+        (function createJioNavigationHistory() {
           return gadget.getDeclaredGadget("jio_navigation_history")
             .push(function (jio_gadget) {
               gadget.props.jio_navigation_gadget = jio_gadget;
@@ -1087,8 +1087,8 @@
                 }
               });
             });
-        }(),
-        function createJioDocumentState() {
+        }()),
+        (function createJioDocumentState() {
           return gadget.getDeclaredGadget("jio_document_state")
             .push(function (jio_gadget) {
               gadget.props.jio_state_gadget = jio_gadget;
@@ -1097,8 +1097,8 @@
                 database: "document_state"
               });
             });
-        }(),
-        function createJioForContent() {
+        }()),
+        (function createJioForContent() {
           return gadget.getDeclaredGadget("jio_form_content")
             .push(function (jio_form_content) {
               gadget.props.jio_form_content = jio_form_content;
@@ -1107,7 +1107,7 @@
                 sessiononly: true
               });
             });
-        }()
+        }())
       ]);
     })
 
