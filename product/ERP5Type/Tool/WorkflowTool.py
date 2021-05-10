@@ -446,6 +446,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     if object is not None or info is None:
       info = self._getOAI(object)
     actions = []
+    portal = self.getPortalObject()
+    developer_mode_enabled = portal.portal_preferences.getPreferredHtmlStyleDevelopperMode()
 
     if info.object is not None:
       object_portal_type = info.object.getTypeInfo()
@@ -453,19 +455,19 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for wf_id in object_portal_type.getTypeWorkflowList():
           wf = self._getOb(wf_id, None)
           if wf is not None:
-            actions.append({
-              "id": "onlyjio_%s" % wf.getReference(),
-              "name": wf.getTitle(),
-              "url": "%s/Base_redirectToWorkflowDocument?workflow_id=%s" % (
-                wf.absolute_url(),
-                wf.getId()),
-              "icon": None,
-              "category": "object_onlyjio_jump",
-              "priority": 100
-            })
+            if developer_mode_enabled:
+              actions.append({
+                "id": "onlyjio_%s" % wf.getReference(),
+                "name": wf.getTitle(),
+                "url": "%s/Base_redirectToWorkflowDocument?workflow_id=%s" % (
+                  wf.absolute_url(),
+                  wf.getId()),
+                "icon": None,
+                "category": "object_onlyjio_jump",
+                "priority": 100
+              })
             actions.extend(wf.listObjectActions(info))
 
-    portal = self.getPortalObject()
     portal_url = portal.portal_url()
     def _getWorklistActionList():
       worklist_dict = {}
