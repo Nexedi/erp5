@@ -293,22 +293,7 @@ class TestWorklist(TestWorkflowMixin):
         self.logMessage("Check %s worklist" % user_id)
         self.loginByUserName(user_id)
         result = workflow_tool.listActions(object=document)
-        self.assertEqual(len(result), 2)
-        action, = [r for r in result if r["id"] == "onlyjio_validation_workflow"]
-        self.assertEqual(action["name"], "Validation Workflow")
-        self.assertTrue(
-          action["url"].endswith("/portal_workflow/validation_workflow/Base_redirectToWorkflowDocument?workflow_id=validation_workflow"),
-          action
-        )
-        self.assertEqual(action["category"], "object_onlyjio_jump")
-
-        action, = [r for r in result if r["id"] == "onlyjio_edit_workflow"]
-        self.assertEqual(action["name"], "Edit Workflow")
-        self.assertTrue(
-          action["url"].endswith("/portal_workflow/edit_workflow/Base_redirectToWorkflowDocument?workflow_id=edit_workflow"),
-          action
-        )
-        self.assertEqual(action["category"], "object_onlyjio_jump")
+        self.assertEqual(result, [])
 
       for role, user_id_list in (('Assignor', ('foo', 'manager')),
                                  ('Assignee', ('foo', 'bar'))):

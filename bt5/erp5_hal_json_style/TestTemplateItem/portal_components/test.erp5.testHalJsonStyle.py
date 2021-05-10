@@ -612,12 +612,12 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['href'],
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['title'], "Queries")
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['name'], "jump_query")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['title'], "Queries")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['name'], "jump_query")
 
     self.assertEqual(result_dict['_links']['portal']['href'], 'urn:jio:get:%s' % document.getPortalObject().getId())
     self.assertEqual(result_dict['_links']['portal']['name'], document.getPortalObject().getTitle())
@@ -972,12 +972,12 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['href'],
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['title'], "Queries")
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['name'], "jump_query")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['title'], "Queries")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['name'], "jump_query")
 
     self.assertEqual(result_dict['_links']['portal']['href'], 'urn:jio:get:%s' % document.getPortalObject().getId())
     self.assertEqual(result_dict['_links']['portal']['name'], document.getPortalObject().getTitle())
