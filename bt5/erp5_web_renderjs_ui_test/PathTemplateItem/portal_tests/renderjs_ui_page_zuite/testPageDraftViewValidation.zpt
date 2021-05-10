@@ -60,7 +60,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@text="Title 1"]</td>
+  <td>//p[text()="Title 1"]</td>
   <td></td>
 </tr>
 
