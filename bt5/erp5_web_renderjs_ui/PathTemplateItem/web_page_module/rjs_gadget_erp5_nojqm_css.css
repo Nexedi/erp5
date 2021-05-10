@@ -466,7 +466,7 @@ img {
 /**********************************************
 * Gadget: panel
 **********************************************/
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] {
+div[data-gadget-scope='panel'] {
   background-color: #393939;
   color: #FFFFFF;
   width: 180pt;
@@ -482,29 +482,29 @@ div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] {
   transform: translate3d(0, 0, 0);
 }
 @media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
-  div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] {
+  div[data-gadget-scope='panel'] {
     box-shadow: 5px 0 5px rgba(0, 0, 0, 0.15);
   }
 }
 @media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
-  div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] {
+  div[data-gadget-scope='panel'] {
     left: -186pt;
   }
-  div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"].visible {
+  div[data-gadget-scope='panel'].visible {
     transform: translate3d(186pt, 0, 0);
   }
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] {
+div[data-gadget-scope='panel'] div[data-role="header"] {
   display: flex;
   justify-content: flex-start;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] .panel_img {
+div[data-gadget-scope='panel'] div[data-role="header"] .panel_img {
   text-align: center;
   flex: 1;
   height: 30pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] button,
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] a {
+div[data-gadget-scope='panel'] div[data-role="header"] button,
+div[data-gadget-scope='panel'] div[data-role="header"] a {
   width: 3em;
   overflow: hidden;
   text-indent: -9999px;
@@ -514,49 +514,49 @@ div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[d
   line-height: 30pt;
   color: #FFFFFF;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] button::before,
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] a::before {
+div[data-gadget-scope='panel'] div[data-role="header"] button::before,
+div[data-gadget-scope='panel'] div[data-role="header"] a::before {
   float: left;
   text-indent: 0;
   margin-left: 12pt;
 }
 @media not screen and (max-width: 85em) {
-  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] button[data-i18n="Close"],
-  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-role="header"] a[data-i18n="Close"] {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
     display: none;
   }
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope='erp5_searchfield'] {
+div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] {
   padding: 3pt 12pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope='erp5_searchfield'] button {
+div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] button {
   color: #FFFFFF;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope='erp5_searchfield'] input[type="search"] {
+div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] input[type="search"] {
   color: #FFFFFF !important;
   background-color: #767676 !important;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] img {
+div[data-gadget-scope='panel'] img {
   text-align: left;
   height: 100%;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope="erp5_checkbox"] {
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] {
   padding: 3pt;
   padding-left: 12pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope="erp5_checkbox"] label,
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope="erp5_checkbox"] span,
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope="erp5_checkbox"] input {
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] label,
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] span,
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] input {
   cursor: pointer;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] div[data-gadget-scope="erp5_checkbox"] span {
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] span {
   width: 24pt;
   display: inline-block;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul:first-child {
+div[data-gadget-scope='panel'] ul:first-child {
   margin-top: 30pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul li a {
+div[data-gadget-scope='panel'] ul li a {
   color: #FFFFFF;
   display: block;
   padding: 1.5pt;
@@ -565,29 +565,29 @@ div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul li
   overflow: hidden;
   white-space: nowrap;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul li a.active {
+div[data-gadget-scope='panel'] ul li a.active {
   color: #1F1F1F;
   background-color: #FFFFFF;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul li a:hover,
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul li a:active {
+div[data-gadget-scope='panel'] ul li a:hover,
+div[data-gadget-scope='panel'] ul li a:active {
   color: #FFFFFF;
   background-color: #1F1F1F;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] ul li a::before {
+div[data-gadget-scope='panel'] ul li a::before {
   width: 24pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl {
+div[data-gadget-scope='panel'] dl {
   background-color: #767676;
   color: #1F1F1F;
   transform-origin: 50% 0;
   transform: scaleY(0);
   transition: transform 0.2s ease-out;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl:not(:empty) {
+div[data-gadget-scope='panel'] dl:not(:empty) {
   transform: scaleY(1);
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dt {
+div[data-gadget-scope='panel'] dl dt {
   padding: 1.5pt;
   padding-left: 12pt;
   text-overflow: ellipsis;
@@ -595,10 +595,10 @@ div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dt
   white-space: nowrap;
   text-transform: uppercase;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dt::before {
+div[data-gadget-scope='panel'] dl dt::before {
   width: 24pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dd a {
+div[data-gadget-scope='panel'] dl dd a {
   color: #FFFFFF;
   display: block;
   padding: 1.5pt;
@@ -608,16 +608,16 @@ div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dd
   white-space: nowrap;
   padding-left: 36pt;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dd a.active {
+div[data-gadget-scope='panel'] dl dd a.active {
   color: #1F1F1F;
   background-color: #FFFFFF;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dd a:hover,
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dd a:active {
+div[data-gadget-scope='panel'] dl dd a:hover,
+div[data-gadget-scope='panel'] dl dd a:active {
   color: #1F1F1F;
   background-color: #FFFFFF;
 }
-div[data-gadget-scope='panel'] > div[data-gadget-url$="gadget_panel.html"] dl dd a::before {
+div[data-gadget-scope='panel'] dl dd a::before {
   width: 24pt;
 }
 /**********************************************
