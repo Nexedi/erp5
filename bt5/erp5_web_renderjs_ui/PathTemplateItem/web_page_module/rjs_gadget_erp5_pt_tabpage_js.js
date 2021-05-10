@@ -113,7 +113,8 @@
           view_list = group_mapping.view;
           jump_list = group_mapping.action_object_jio_jump;
 
-          url_for_kw_list = url_for_kw_list.concat(view_list).concat(jump_list).map(function (options) {return options.url_kw;});
+          url_for_kw_list = url_for_kw_list.concat(view_list).concat(jump_list)
+            .map(function (options) {return options.url_kw; });
 
           url_for_kw_list.push({command: 'cancel_dialog_with_history'});
           return RSVP.hash({

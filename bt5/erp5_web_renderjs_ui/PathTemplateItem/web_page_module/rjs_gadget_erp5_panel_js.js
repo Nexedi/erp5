@@ -277,7 +277,9 @@
 
               parameter_list = view_list.concat(workflow_list).concat(
                 action_list
-              ).concat(clone_list).concat(jump_list).map(function (options) {return options.url_kw;});
+              ).concat(clone_list).concat(jump_list).map(function (options) {
+                return options.url_kw;
+              });
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
                 gadget.getTranslationList(['Views', 'Workflows', 'Actions',
