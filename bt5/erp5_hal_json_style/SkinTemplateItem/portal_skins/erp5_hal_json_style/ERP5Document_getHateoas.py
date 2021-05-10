@@ -343,6 +343,14 @@ portal_absolute_url = portal.absolute_url()
 preference_tool = portal.portal_preferences
 Base_translateString = portal.Base_translateString
 
+def translateWorklistActionName(worklist_action_name):
+  """Translate a worklist action name, that may contain the document count.
+
+  Instead of translating "Draft to Validate (123)", we translate "Draft to Validate".
+  """
+  return Base_translateString(re.sub(r' \(\d+\)$', '', worklist_action_name))
+
+
 preferred_html_style_developer_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
 preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
@@ -1519,7 +1527,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title']),
+          'title': Base_translateString(
+              translateWorklistActionName(view_action['title'])
+              if 'worklist_id' in view_action
+              else view_action['title']),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
@@ -2321,7 +2332,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'href': url_template_dict["jio_search_template"] % {
           "query": make_query({"query": query})
         },
-        'name': Base_translateString(re.sub(r' \(\d+\)$', '', action['name'])),
+        'name': translateWorklistActionName(action['name']),
         'count': action['count']
       }
 
