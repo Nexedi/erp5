@@ -313,7 +313,7 @@
               var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
                 href_list = [];
               for (i = 0; i < extra_menu_list.length; i += 1) {
-                extra_menu_list[i].options = {
+                extra_menu_list[i] = {
                   "class_name": extra_menu_list[i].active ? "active" : "",
                   "title": extra_menu_list[i].title
                 };
