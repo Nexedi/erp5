@@ -16,20 +16,20 @@ Ensure empty listbox does not show stat line even though it receives stat data.
 
 <!-- Clean Up -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <!-- Let's set up the default sort correctly: id | ASC -->
 <tr><td>open</td>
-    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=FooModule_statMethod</td><td></td></tr>
+    <td>&#36;{base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=FooModule_statMethod</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 

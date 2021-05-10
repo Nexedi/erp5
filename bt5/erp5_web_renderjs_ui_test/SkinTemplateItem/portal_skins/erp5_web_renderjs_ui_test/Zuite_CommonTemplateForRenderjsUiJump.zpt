@@ -5,7 +5,7 @@
     <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/bar_module/BarModule_createObjects?num:int=1</td>
+      <td>&#36;{base_url}/bar_module/BarModule_createObjects?num:int=1</td>
       <td></td>
     </tr>
     <tr>
@@ -18,7 +18,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td tal:content="python: '${base_url}/bar_module/0/Bar_createRelatedObjects?num:int=%(jump_count)i' % jump_configuration"></td>
+      <td tal:content="python: '&#36;{base_url}/bar_module/0/Bar_createRelatedObjects?num:int=%(jump_count)i' % jump_configuration"></td>
       <td></td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/renderjs_runner/#/bar_module</td>
+      <td>&#36;{base_url}/web_site_module/renderjs_runner/#/bar_module</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -57,7 +57,7 @@
     <!-- One loader for the form jump dialog submission -->
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_jump.html']</td>
+      <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_jump.html']</td>
       <td></td>
     </tr>
     <tr>

@@ -14,7 +14,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+      <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
       <td></td>
     </tr>
     <tr>
@@ -25,7 +25,7 @@
     <tr>
       <td>open</td>
       <!-- create a Bar -->
-      <td>${base_url}/bar_module/BarModule_createObjects?start:int=1&amp;num:int=1</td>
+      <td>&#36;{base_url}/bar_module/BarModule_createObjects?start:int=1&amp;num:int=1</td>
       <td></td>
     </tr>
     <tr>
@@ -35,7 +35,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/bar_module/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -46,7 +46,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/1</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/bar_module/1</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -54,7 +54,7 @@
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
   <td></td>
 </tr>
 

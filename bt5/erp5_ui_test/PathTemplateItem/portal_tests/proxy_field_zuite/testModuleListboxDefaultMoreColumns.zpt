@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>
+  <td>&#36;{base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module</td>
+  <td>&#36;{base_url}/bar_module</td>
   <td></td>
 </tr>
 
@@ -67,7 +67,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/0/Bar_viewCreationDateModificationDateAndOwner</td>
+  <td>&#36;{base_url}/bar_module/0/Bar_viewCreationDateModificationDateAndOwner</td>
   <td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/</td>
+  <td>&#36;{base_url}/bar_module/</td>
   <td></td>
 </tr>
 <!-- check the columns displayed values -->

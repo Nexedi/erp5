@@ -14,7 +14,7 @@
 <!-- Clean Up and prepare documents -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -36,7 +36,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -83,7 +83,7 @@
 <!-- go back to module from stored state -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#!display_stored_state?p.page=front&amp;n.jio_key=foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#!display_stored_state?p.page=front&amp;n.jio_key=foo_module</td>
   <td></td>
 </tr>
 

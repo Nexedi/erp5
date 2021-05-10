@@ -22,7 +22,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 
@@ -35,7 +35,7 @@
 <!-- Create Foo objects with IDs 0-9 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects</td>
   <td></td>
 </tr>
 
@@ -49,7 +49,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 
@@ -164,13 +164,13 @@ Test whether search query stays if we change the sort order
 
 <tr>
   <td>type</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
   <td>Title</td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
   <td>Title</td>
 </tr>
 
@@ -185,7 +185,7 @@ Test whether search query stays if we change the sort order
 
 <tr>
   <td>verifyValue</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
   <td>Title</td>
 </tr>
 

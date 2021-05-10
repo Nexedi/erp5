@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/person_module/Zuite_setupDMS</td>
+  <td>&#36;{base_url}/person_module/Zuite_setupDMS</td>
   <td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@ Wait for activities</span>
 <!-- Contribute ODP document -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td>&#36;{base_url}/view?erp5_site_selected_tab=contribution_tab</td>
   <td></td>
 </tr>
 <tr>
@@ -38,7 +38,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive-001-en.odp tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive-001-en.odp tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -94,7 +94,7 @@ Wait for activities</span>
 -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td>&#36;{base_url}/view?erp5_site_selected_tab=contribution_tab</td>
   <td></td>
 </tr>
 <tr>
@@ -105,7 +105,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive-001-en.odp tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive-001-en.odp tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -161,7 +161,7 @@ Wait for activities</span>
 <!-- Contribute PDF -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td>&#36;{base_url}/view?erp5_site_selected_tab=contribution_tab</td>
   <td></td>
 </tr>
 <tr>
@@ -172,7 +172,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -208,7 +208,7 @@ Wait for activities</span>
 <!-- Contribute Image -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td>&#36;{base_url}/view?erp5_site_selected_tab=contribution_tab</td>
   <td></td>
 </tr>
 <tr>
@@ -219,7 +219,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Logo-001-en.png tiolive-ERP5.Freedom.TioLive.Logo-001-en.png</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Logo-001-en.png tiolive-ERP5.Freedom.TioLive.Logo-001-en.png</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -255,7 +255,7 @@ Wait for activities</span>
 <!-- Contribute Spreadsheet -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td>&#36;{base_url}/view?erp5_site_selected_tab=contribution_tab</td>
   <td></td>
 </tr>
 <tr>
@@ -266,7 +266,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -312,7 +312,7 @@ Wait for activities</span>
 <!-- Contribute Drawing -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>
+  <td>&#36;{base_url}/view?erp5_site_selected_tab=contribution_tab</td>
   <td></td>
 </tr>
 <tr>
@@ -323,7 +323,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>
 </tr>
 <tr>
   <td>clickAndWait</td>

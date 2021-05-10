@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
 
 <tr><td>open</td>
-    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+    <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
 
 <!-- reset filter is disabled -->
 <tr><td>waitForElementPresent</td>

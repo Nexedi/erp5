@@ -11,7 +11,7 @@
 <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
 <tr>
@@ -58,7 +58,7 @@
 <tr>
   <td>assertValue</td>
   <td>//div[@data-gadget-scope="text_field"]/input</td>
-  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss</td>
+  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss</td>
 </tr>
 <!--
 Firefox RSS compatibility issue:
@@ -85,7 +85,7 @@ will open the RSS as plain text.
 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_callMethodAsPlainText?method_id=SupportRequestModule_viewLastSupportRequestListAsRss</td>
+  <td>&#36;{base_url}/Zuite_callMethodAsPlainText?method_id=SupportRequestModule_viewLastSupportRequestListAsRss</td>
   <td></td>
 </tr>
 <tr>

@@ -13,7 +13,7 @@
     </tr>
     <tr> <!-- reset language to en, in case previous test failed and left the language changed -->
       <td>open</td>
-      <td>${base_url}/Base_setLanguageWithoutRedirect?select_language=en</td>
+      <td>&#36;{base_url}/Base_setLanguageWithoutRedirect?select_language=en</td>
       <td></td>
     </tr>
   </tal:block>
@@ -22,7 +22,7 @@
   <!-- Wait for activities to finish -->
   <tr>
     <td>openAndWait</td>
-    <td>${base_url}/Zuite_waitForActivities</td>
+    <td>&#36;{base_url}/Zuite_waitForActivities</td>
     <td></td>
   </tr>
   <tr>

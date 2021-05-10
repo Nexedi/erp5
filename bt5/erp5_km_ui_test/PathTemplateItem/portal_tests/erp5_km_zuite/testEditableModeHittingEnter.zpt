@@ -17,7 +17,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/km_test_web_site/web_page_module/test_km_web_site_page/view?editable_mode:int=1</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/web_page_module/test_km_web_site_page/view?editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>

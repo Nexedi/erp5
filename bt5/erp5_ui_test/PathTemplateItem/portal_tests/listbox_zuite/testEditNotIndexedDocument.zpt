@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects</td>
   <td></td>
   <td>Create a new object</td>
 </tr>
@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/view</td>
+  <td>&#36;{base_url}/foo_module/0/view</td>
   <td></td>
   <td>Go to first line</td>
 </tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewListBox</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewListBox</td>
   <td></td>
   <td>Go to first line</td>
 </tr>

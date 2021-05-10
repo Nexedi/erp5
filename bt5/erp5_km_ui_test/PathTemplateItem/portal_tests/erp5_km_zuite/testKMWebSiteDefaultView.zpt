@@ -17,12 +17,12 @@
 <!-- open default KM root site -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/WebSite_unsetLayoutForceAnonymousGadget</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/WebSite_unsetLayoutForceAnonymousGadget</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -44,7 +44,7 @@
 <!-- open default 'view' on KM root site -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/view</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/view</td>
   <td></td>
 </tr>
 <tr>
@@ -66,7 +66,7 @@
 <!-- open default 'view' on KM section -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/2</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/2</td>
   <td></td>
 </tr>
 <tr>
@@ -76,7 +76,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/2/view</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/2/view</td>
   <td></td>
 </tr>
 <tr>

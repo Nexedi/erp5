@@ -16,7 +16,7 @@
     <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/ListBoxZuite_resetReportSelections</td>
+      <td>&#36;{base_url}/ListBoxZuite_resetReportSelections</td>
       <td></td>
     </tr>
     <tr>
@@ -27,7 +27,7 @@
     <!-- Land at first page -->
     <tr>
       <td>open</td>
-      <td>${base_url}/portal_skins/erp5_ui_test/Foo_viewDummyReturningOnlyWhatShownListBox</td>
+      <td>&#36;{base_url}/portal_skins/erp5_ui_test/Foo_viewDummyReturningOnlyWhatShownListBox</td>
       <td></td>
     </tr>
     <tr>

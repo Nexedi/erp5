@@ -13,7 +13,7 @@ to set categories</td></tr>
 <tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ to set categories</td></tr>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -34,7 +34,7 @@ to set categories</td></tr>
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewProxyField</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewProxyField</td>
   <td></td>
 </tr>
 

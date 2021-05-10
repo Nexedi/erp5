@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/1/Foo_viewParallelListField</td>
+  <td>&#36;{base_url}/foo_module/1/Foo_viewParallelListField</td>
   <td></td>
 </tr>
 

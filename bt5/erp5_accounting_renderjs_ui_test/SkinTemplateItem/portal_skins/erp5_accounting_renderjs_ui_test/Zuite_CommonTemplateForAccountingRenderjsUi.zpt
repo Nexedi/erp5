@@ -5,7 +5,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/ERP5Site_resetConfigurationForAccountingTest</td>
+      <td>&#36;{base_url}/ERP5Site_resetConfigurationForAccountingTest</td>
       <td></td>
     </tr>
     <tr>
@@ -17,7 +17,7 @@
     <tal:block tal:condition="init_method">
     <tr>
       <td>open</td>
-      <td tal:content="string:$${base_url}/accounting_module/$init_method" />
+      <td tal:content="string:$&#36;{base_url}/accounting_module/$init_method" />
       <td></td>
     </tr>
     <tr>
@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -39,7 +39,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/renderjs_runner/</td>
+      <td>&#36;{base_url}/web_site_module/renderjs_runner/</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

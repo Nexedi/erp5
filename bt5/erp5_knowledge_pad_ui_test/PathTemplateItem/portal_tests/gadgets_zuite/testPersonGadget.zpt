@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
 	<td>openAndWait</td>
-	<td>${base_url}/view</td>
+	<td>&#36;{base_url}/view</td>
 	<td></td>
 </tr>
 <tr>
@@ -57,7 +57,7 @@
 
 <tr>
 	<td>openAndWait</td>
-	<td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>
+	<td>&#36;{base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,7 +72,7 @@
 </tr>
 <tr>
 	<td>openAndWait</td>
-	<td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_url}</td>
+	<td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_url}</td>
 	<td></td>
 </tr>
 <tr>

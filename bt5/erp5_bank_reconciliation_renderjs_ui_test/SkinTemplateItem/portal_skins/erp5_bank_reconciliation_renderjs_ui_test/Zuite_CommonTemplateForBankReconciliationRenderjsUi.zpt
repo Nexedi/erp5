@@ -5,7 +5,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/portal_preferences/BankReconciliationRJSZuite_setPreference</td>
+      <td>&#36;{base_url}/portal_preferences/BankReconciliationRJSZuite_setPreference</td>
       <td></td>
     </tr>
     <tr>
@@ -15,7 +15,7 @@
     </tr>
     <tr>
       <td>store</td>
-      <td>${base_url}/web_site_module/renderjs_runner/#</td>
+      <td>&#36;{base_url}/web_site_module/renderjs_runner/#</td>
       <td>renderjs_url</td>
     </tr>
   </tal:block>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/BankReconciliationRJSZuite_deleteData</td>
+      <td>&#36;{base_url}/BankReconciliationRJSZuite_deleteData</td>
       <td></td>
     </tr>
     <tr>
@@ -46,7 +46,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/BankReconciliationRJSZuite_createData</td>
+      <td>&#36;{base_url}/BankReconciliationRJSZuite_createData</td>
       <td></td>
     </tr>
     <tr>
@@ -73,7 +73,7 @@
     <!-- Wait for gadget to be loaded -->
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+      <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
       <td></td>
     </tr>
     <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
@@ -82,7 +82,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
+      <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
       <td></td>
     </tr>
     <tr>
@@ -98,7 +98,7 @@
 
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
+      <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
       <td></td>
     </tr>
     <tr>

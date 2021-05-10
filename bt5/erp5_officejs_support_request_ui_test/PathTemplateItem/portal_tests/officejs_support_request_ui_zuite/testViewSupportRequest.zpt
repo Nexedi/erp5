@@ -11,7 +11,7 @@
 <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
 <tr>
@@ -26,28 +26,28 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>type</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
   <td>SR-9</td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
   <td></td>
 </tr>
 <tr>

@@ -23,7 +23,7 @@
   <!-- Initialize -->
   <tr>
     <td>open</td>
-    <td>${base_url}/document_module/test_officejs_onlyoffice_spreadsheet_replication_xlsy</td>
+    <td>&#36;{base_url}/document_module/test_officejs_onlyoffice_spreadsheet_replication_xlsy</td>
     <td></td>
   </tr>
   <tr>
@@ -73,7 +73,7 @@
   </tr>
   <tr>
     <td>open</td>
-    <td>${base_url}/document_module/Zuite_waitForActivities</td>
+    <td>&#36;{base_url}/document_module/Zuite_waitForActivities</td>
     <td></td>
   </tr>
   <tr>

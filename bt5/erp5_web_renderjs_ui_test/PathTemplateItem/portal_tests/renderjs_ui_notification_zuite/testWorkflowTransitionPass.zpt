@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -25,7 +25,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
   <td></td>
 </tr>
 
@@ -45,7 +45,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 

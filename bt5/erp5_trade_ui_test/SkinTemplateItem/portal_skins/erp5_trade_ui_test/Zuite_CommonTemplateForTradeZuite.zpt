@@ -9,7 +9,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_deleteDataForTradeZuite</td>
+      <td>&#36;{base_url}/Zuite_deleteDataForTradeZuite</td>
       <td></td>
     </tr>
     <tr>
@@ -20,7 +20,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -31,7 +31,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_resetForTradeZuite</td>
+      <td>&#36;{base_url}/Zuite_resetForTradeZuite</td>
       <td></td>
     </tr>
     <tr>
@@ -41,7 +41,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td tal:content="string:$${base_url}/sale_order_module/$init_method" />
+      <td tal:content="string:$&#36;{base_url}/sale_order_module/$init_method" />
       <td></td>
     </tr>
     <tr>
@@ -52,7 +52,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -62,7 +62,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/sale_order_module/erp5_trade_ui_test_sale_order_1</td>
+      <td>&#36;{base_url}/sale_order_module/erp5_trade_ui_test_sale_order_1</td>
       <td></td>
     </tr>
   </tal:block>

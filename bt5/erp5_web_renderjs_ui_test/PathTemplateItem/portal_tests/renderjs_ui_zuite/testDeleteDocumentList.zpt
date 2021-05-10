@@ -13,32 +13,32 @@
 
 <tr><th colspan="3">Set ListBox to show the State of Foo documents (and 10 documents at once)</th></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity%0Asimulation_state%7CState&amp;field_lines=10</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity%0Asimulation_state%7CState&amp;field_lines=10</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 
 <!-- Create 3 Foo objects relation, 2 with embedded documents and one empty -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=3&amp;big_category_related:bool=True</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=3&amp;big_category_related:bool=True</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=4&amp;num:int=2&amp;create_line:int=1</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=4&amp;num:int=2&amp;create_line:int=1</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=6&amp;num:int=1</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=6&amp;num:int=1</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr><td>store</td>
-  <td>${base_url}/web_site_module/renderjs_runner</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
   <td>renderjs_url</td></tr>
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>

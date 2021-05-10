@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 

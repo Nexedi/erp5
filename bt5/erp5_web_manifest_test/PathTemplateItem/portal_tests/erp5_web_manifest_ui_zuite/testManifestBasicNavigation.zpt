@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_tests/erp5_web_manifest_ui_zuite/testManifest_PreferenceReset</td>
+  <td>&#36;{base_url}/portal_tests/erp5_web_manifest_ui_zuite/testManifest_PreferenceReset</td>
   <td></td>
 </tr>
 <tr>
@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/manifest/</td>
+  <td>&#36;{base_url}/web_site_module/manifest/</td>
   <td></td>
 </tr>
 <tr>

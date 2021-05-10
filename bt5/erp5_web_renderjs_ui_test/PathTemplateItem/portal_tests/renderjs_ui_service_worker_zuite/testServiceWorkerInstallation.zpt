@@ -16,7 +16,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td tal:content="python: '${base_url}/web_site_module/renderjs_runner?ignore_layout:int=1&editable_mode:int=1'"></td>
+  <td tal:content="python: '&#36;{base_url}/web_site_module/renderjs_runner?ignore_layout:int=1&editable_mode:int=1'"></td>
   <td></td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/${install_url}/#/?page=test_service_worker</td>
+  <td>&#36;{base_url}/web_site_module/&#36;{install_url}/#/?page=test_service_worker</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

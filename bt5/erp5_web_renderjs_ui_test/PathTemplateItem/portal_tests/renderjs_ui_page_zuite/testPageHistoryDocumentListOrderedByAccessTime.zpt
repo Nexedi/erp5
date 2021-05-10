@@ -14,7 +14,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+      <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
       <td></td>
     </tr>
     <tr>
@@ -25,7 +25,7 @@
     <tr>
       <td>open</td>
       <!-- create a Foo -->
-      <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=2</td>
+      <td>&#36;{base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=2</td>
       <td></td>
     </tr>
     <tr>
@@ -35,7 +35,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -47,7 +47,7 @@
 <!-- Access both documents -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -55,7 +55,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -81,7 +81,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -102,7 +102,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 
@@ -118,7 +118,7 @@
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
   <td></td>
 </tr>
 
@@ -158,7 +158,7 @@
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
   <td></td>
 </tr>
 

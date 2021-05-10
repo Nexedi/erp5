@@ -19,18 +19,18 @@ Ensure Stat Column methods are executed correctly and result displayed in tfoot 
 
 <!-- Clean Up -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <!-- Create Foo objects with IDs 0-9 -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
@@ -38,7 +38,7 @@ Ensure Stat Column methods are executed correctly and result displayed in tfoot 
 
 <!-- Let's set up stat column property on listbox -->
 <tr><td>open</td>
-    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=getQuantity+%7C+FooModule_statQuantity+%0A+title+%7C+FooModule_statTitle</td><td></td></tr>
+    <td>&#36;{base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=getQuantity+%7C+FooModule_statQuantity+%0A+title+%7C+FooModule_statTitle</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 

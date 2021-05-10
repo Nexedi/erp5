@@ -25,7 +25,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td><td tal:content="python: '{:d}-{:0>#2d}-{:0>#2d}'.format(yesterday.year(), yesterday.month(), yesterday.day())"></td><td>yesterday</td></tr>
 
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>

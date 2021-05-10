@@ -10,7 +10,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/PdmZuite_deleteData</td>
+      <td>&#36;{base_url}/PdmZuite_deleteData</td>
       <td></td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -32,8 +32,8 @@
 
     <tr>
       <td>open</td>
-      <td tal:condition="not: set_node_category_preference">${base_url}/PdmZuite_reset</td>
-      <td tal:condition="set_node_category_preference">${base_url}/PdmZuite_reset?set_node_category_preference:bool=True</td>
+      <td tal:condition="not: set_node_category_preference">&#36;{base_url}/PdmZuite_reset</td>
+      <td tal:condition="set_node_category_preference">&#36;{base_url}/PdmZuite_reset?set_node_category_preference:bool=True</td>
       <td></td>
     </tr>
     <tr>
@@ -43,7 +43,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td tal:content="string:$${base_url}/internal_packing_list_module/$init_method" />
+      <td tal:content="string:$&#36;{base_url}/internal_packing_list_module/$init_method" />
       <td></td>
     </tr>
     <tr>
@@ -54,7 +54,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -64,7 +64,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/product_module/erp5_pdm_ui_test_product/</td>
+      <td>&#36;{base_url}/product_module/erp5_pdm_ui_test_product/</td>
       <td></td>
     </tr>
   </tal:block>
@@ -143,7 +143,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
   </tal:block>

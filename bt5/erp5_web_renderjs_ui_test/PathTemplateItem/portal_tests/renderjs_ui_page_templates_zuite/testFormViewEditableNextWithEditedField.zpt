@@ -39,7 +39,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
   <td></td>
 </tr>
 

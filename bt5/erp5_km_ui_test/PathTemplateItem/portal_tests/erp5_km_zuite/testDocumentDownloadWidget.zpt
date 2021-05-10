@@ -17,12 +17,12 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/web_page_module/test_km_web_site_page/view</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/web_page_module/test_km_web_site_page/view</td>
   <td></td>
 </tr>
 <tr>

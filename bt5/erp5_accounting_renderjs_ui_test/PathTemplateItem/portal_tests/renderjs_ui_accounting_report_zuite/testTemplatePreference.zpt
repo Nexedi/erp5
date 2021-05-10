@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -80,7 +80,7 @@
 <!-- go to the module, and create a document from the template -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

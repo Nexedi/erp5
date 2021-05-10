@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_preferences/AccessTabZuite_setPreference</td>
+  <td>&#36;{base_url}/portal_preferences/AccessTabZuite_setPreference</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_preferences/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/portal_preferences/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_preferences/access_tab_test_preference/view</td>
+  <td>&#36;{base_url}/portal_preferences/access_tab_test_preference/view</td>
   <td></td>
 </tr>
 <tr>
@@ -52,7 +52,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <!-- 
@@ -69,7 +69,7 @@
 </tal:block>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_preferences/access_tab_test_preference/view</td>
+  <td>&#36;{base_url}/portal_preferences/access_tab_test_preference/view</td>
   <td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <!-- Asserts goes here -->
@@ -107,7 +107,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_preferences/AccessTabZuite_disablePreference</td>
+  <td>&#36;{base_url}/portal_preferences/AccessTabZuite_disablePreference</td>
   <td></td>
 </tr>
 <tr>

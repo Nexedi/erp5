@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/1/view</td>
+  <td>&#36;{base_url}/foo_module/1/view</td>
   <td></td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>glob:${base_url}/foo_module/1/Foo_viewDialogWithOnlyUpdateDialog*</td>
+  <td>glob:&#36;{base_url}/foo_module/1/Foo_viewDialogWithOnlyUpdateDialog*</td>
   <td></td>
 </tr>
 <tr>

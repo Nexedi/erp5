@@ -48,7 +48,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tr>
     <td>open</td>
-    <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_officejs_create_bad_document.html</td>
+    <td>&#36;{base_url}/portal_skins/erp5_officejs_ui_test/gadget_officejs_create_bad_document.html</td>
     <td></td>
   </tr>
   <tr>

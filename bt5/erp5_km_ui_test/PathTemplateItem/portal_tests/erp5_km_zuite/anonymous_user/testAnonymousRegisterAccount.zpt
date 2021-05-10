@@ -18,7 +18,7 @@
 <!-- Logout -->
 <tr>
 	<td>openAndWait</td>
-	<td>${base_url}/web_site_module/km_test_web_site</td>
+	<td>&#36;{base_url}/web_site_module/km_test_web_site</td>
 	<td></td>
 </tr>
 <tr>
@@ -101,7 +101,7 @@ or through an alarm to "accept" created Credential Request. -->
 <!--
 <tr>
 	<td>openAndWait</td>
-	<td>${base_url}/web_site_module/km_test_web_site</td>
+	<td>&#36;{base_url}/web_site_module/km_test_web_site</td>
 	<td></td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@ or through an alarm to "accept" created Credential Request. -->
 <!-- Try to register again same account, should not be possible -->
 <tr>
 	<td>openAndWait</td>
-	<td>${base_url}/web_site_module/km_test_web_site</td>
+	<td>&#36;{base_url}/web_site_module/km_test_web_site</td>
 	<td></td>
 </tr>
 <tr>

@@ -14,7 +14,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/template_test_web_site/</td>
+  <td>&#36;{base_url}/web_site_module/template_test_web_site/</td>
   <td></td>
 </tr>
 
@@ -23,7 +23,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='ci-web-header-bar-navigation']//a[@href='${base_url}/web_site_module/template_test_web_site']/img[@src='images/favourite.png?format=png' and @alt=' Home']</td>
+  <td>//div[@class='ci-web-header-bar-navigation']//a[@href='&#36;{base_url}/web_site_module/template_test_web_site']/img[@src='images/favourite.png?format=png' and @alt=' Home']</td>
   <td></td>
 </tr>
 

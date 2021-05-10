@@ -34,7 +34,7 @@ Note:
                          no_file_update python: caller() if caller is not None else True;">
     <tr>
       <td>open</td>
-      <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+      <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
       <td></td>
     </tr>
     <tr>
@@ -44,7 +44,7 @@ Note:
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_setPreferredTextEditor</td>
+      <td>&#36;{base_url}/Zuite_setPreferredTextEditor</td>
       <td></td>
     </tr>
     <tr>
@@ -60,7 +60,7 @@ Note:
     <tal:block tal:condition="python: no_file_update == True">
       <tr>
         <td>open</td>
-        <td>${base_url}/Zuite_setConversionServerUrl</td>
+        <td>&#36;{base_url}/Zuite_setConversionServerUrl</td>
         <td></td>
       </tr>
       <tr>
@@ -87,7 +87,7 @@ Note:
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_page_module/</td>
+      <td>&#36;{base_url}/web_page_module/</td>
       <td></td>
     </tr>
     <tr>
@@ -1189,7 +1189,7 @@ Note:
 
     <tr>
       <td>open</td>
-      <td>${base_url}/web_page_module/</td>
+      <td>&#36;{base_url}/web_page_module/</td>
       <td></td>
     </tr>
     <tr>
@@ -1446,7 +1446,7 @@ Note:
 
     <tr>
       <td>open</td>
-      <td>${base_url}/web_page_module/</td>
+      <td>&#36;{base_url}/web_page_module/</td>
       <td></td>
     </tr>
     <tr>
@@ -1788,7 +1788,7 @@ Note:
 
     <tr>
       <td>open</td>
-      <td>${base_url}/web_page_module/</td>
+      <td>&#36;{base_url}/web_page_module/</td>
       <td></td>
     </tr>
     <tr>
@@ -2041,7 +2041,7 @@ Note:
 
     <tr>
       <td>open</td>
-      <td>${base_url}/web_page_module/</td>
+      <td>&#36;{base_url}/web_page_module/</td>
       <td></td>
     </tr>
     <tr>
@@ -2299,7 +2299,7 @@ Note:
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_page_module/</td>
+      <td>&#36;{base_url}/web_page_module/</td>
       <td></td>
     </tr>
     <tr>

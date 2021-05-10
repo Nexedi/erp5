@@ -15,7 +15,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog</td>
+  <td>&#36;{base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog</td>
   <td></td>
 </tr>
 <tr>
@@ -30,7 +30,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>
+  <td>&#36;{base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_templates/view</td>
+  <td>&#36;{base_url}/portal_templates/view</td>
   <td></td>
 </tr>
 <tr>

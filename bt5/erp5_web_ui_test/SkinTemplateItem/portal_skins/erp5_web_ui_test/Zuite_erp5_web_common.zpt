@@ -8,7 +8,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/WebSiteModule_resetWebZuite</td>
+      <td>&#36;{base_url}/web_site_module/WebSiteModule_resetWebZuite</td>
       <td></td>
     </tr>
     <tr>
@@ -18,7 +18,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/web_site_module/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>

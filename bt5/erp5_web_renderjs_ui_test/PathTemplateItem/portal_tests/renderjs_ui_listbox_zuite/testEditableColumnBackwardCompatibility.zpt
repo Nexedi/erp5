@@ -12,33 +12,33 @@
 
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/1/Foo_setCausality?value=foo_module/2</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/1/Foo_setCausality?value=foo_module/2</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 <!-- Set causality_reference_title as listbox columns
      Do not put it in editable columns because the template field resolution must work always (backward compatibility)
 -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Acausality_title%7CCausality</td>
+    <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Acausality_title%7CCausality</td>
   <td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>

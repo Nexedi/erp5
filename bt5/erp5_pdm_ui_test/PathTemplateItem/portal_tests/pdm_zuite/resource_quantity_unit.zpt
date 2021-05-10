@@ -57,7 +57,7 @@ Test setting quantity unit
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>

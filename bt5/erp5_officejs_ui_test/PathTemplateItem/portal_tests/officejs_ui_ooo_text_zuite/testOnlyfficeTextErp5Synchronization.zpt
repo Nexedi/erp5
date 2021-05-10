@@ -13,7 +13,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 <tr>
   <td>type</td>
   <td>name=erp5_url</td>
-  <td>${base_url}/web_site_module/</td>
+  <td>&#36;{base_url}/web_site_module/</td>
 </tr>
 <tr>
   <td>click</td>
@@ -253,7 +253,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/document_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/document_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -263,7 +263,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/document_module/</td>
+  <td>&#36;{base_url}/document_module/</td>
   <td></td>
 </tr>
 <tr>

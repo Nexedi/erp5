@@ -6,7 +6,7 @@
     <!-- create the web_site -->
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/WebSiteModule_createKMSite?site_id=km_test_web_site&amp;title=KM Test Web Site</td>
+      <td>&#36;{base_url}/web_site_module/WebSiteModule_createKMSite?site_id=km_test_web_site&amp;title=KM Test Web Site</td>
       <td></td>
       <td>Create a new site</td>
     </tr>
@@ -19,7 +19,7 @@
     <!-- Wait for activities to finish -->
     <tr>
       <td>openAndWait</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>

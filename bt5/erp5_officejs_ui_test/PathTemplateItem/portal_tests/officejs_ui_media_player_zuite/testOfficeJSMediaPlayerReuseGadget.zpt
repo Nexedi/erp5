@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/</td>
   <td></td>
 </tr>
 <tr>
@@ -44,7 +44,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -56,7 +56,7 @@
 <!-- Create entry -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
   <td></td>
 </tr>
 <tr>
@@ -72,7 +72,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -82,7 +82,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
   <td></td>
 </tr>
 <tr>
@@ -99,7 +99,7 @@
 <!-- Modify title -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />

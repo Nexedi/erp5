@@ -15,7 +15,7 @@
 <!-- Access an image provided by the ERP5JS UI -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/image_module/rjs_gadget_erp5_worklist_empty_svg</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/image_module/rjs_gadget_erp5_worklist_empty_svg</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

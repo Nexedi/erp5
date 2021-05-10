@@ -11,14 +11,14 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <tr><td colspan="3"><b>Set preferred text editor</b></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td><td></td></tr>
+    <td>&#36;{base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td><td></td></tr>
 <tr><td>click</td>
     <td>//input[@name="field_my_preferred_text_editor" and @value="monaco"]</td><td></td></tr>
 <tr><td>clickAndWait</td>
@@ -26,7 +26,7 @@
 
 <tr><td colspan="3"><b>Switch to renderjs UI and edit components</b></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/web_site_module/renderjs_runner/#/portal_components?editable=true</td><td></td></tr>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner/#/portal_components?editable=true</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tal:block tal:repeat="portal_type python: ('Document Component', 'Extension Component', 'Interface Component', 'Mixin Component', 'Module Component', 'Test Component', 'Tool Component')">

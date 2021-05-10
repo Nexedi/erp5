@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_second_project" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

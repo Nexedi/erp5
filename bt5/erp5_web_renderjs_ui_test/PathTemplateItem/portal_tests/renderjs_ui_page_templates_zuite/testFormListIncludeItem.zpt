@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 
@@ -26,7 +26,7 @@
 <!-- should create in new ui instead of using script -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects</td>
   <td></td>
 </tr>
 <tr>
@@ -40,7 +40,7 @@
 <!-- Initialize and sort by ID -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?field_listbox_sort_list%3Ajson=%5B%5B"id"%2C"ascending"%5D%5D&amp;page=form&amp;view=view</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module?field_listbox_sort_list%3Ajson=%5B%5B"id"%2C"ascending"%5D%5D&amp;page=form&amp;view=view</td>
   <td></td>
 </tr>
 

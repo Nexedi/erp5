@@ -130,7 +130,7 @@ Grouping from account transaction view
 <!-- mark the module as changed, reindex and come back to the account -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -140,7 +140,7 @@ Grouping from account transaction view
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -151,7 +151,7 @@ Grouping from account transaction view
 
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -244,7 +244,7 @@ Grouping from account transaction view
 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -254,7 +254,7 @@ Grouping from account transaction view
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>

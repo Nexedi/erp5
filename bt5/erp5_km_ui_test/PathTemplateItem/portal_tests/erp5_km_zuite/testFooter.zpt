@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 

@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=not_loading</td>
+  <td>&#36;{base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=not_loading</td>
   <td></td>
 </tr>
 <tr>
@@ -28,7 +28,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_web_js_style_test_site/</td>
   <td></td>
 </tr>
 

@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Person_invalidatePreviousPerson</td>
+  <td>&#36;{base_url}/Person_invalidatePreviousPerson</td>
   <td></td>
 </tr>
 
@@ -26,7 +26,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>

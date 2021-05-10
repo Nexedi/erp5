@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -58,7 +58,7 @@
 <!-- Wait for activities to finish -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 
@@ -115,12 +115,12 @@
 <!-- Add "My Contacts" gadget -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_contacts&amp;mode=web_front</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_contacts&amp;mode=web_front</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -130,7 +130,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>

@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
+  <td>&#36;{base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>
   <td></td>
   <td>Create a new site</td>
 </tr>
@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_site_module/Zuite_waitForActivities</td>
   <td></td>
   <td></td>
 </tr>
@@ -36,7 +36,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
+  <td>&#36;{base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
   <td></td>
 </tr>
 <tr>
@@ -46,13 +46,13 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site(\?|$)</td>
+  <td>regexp:&#36;{base_url}/web_site_module/test_web_site(\?|$)</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
  
-<td>${base_url}/web_site_module/WebSiteModule_createTestSite/?id=test_web_site_2&amp;title=Test Web Site II</td>
+<td>&#36;{base_url}/web_site_module/WebSiteModule_createTestSite/?id=test_web_site_2&amp;title=Test Web Site II</td>
   <td></td>
   <td>Create a second site</td>
 </tr>
@@ -64,7 +64,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_site_module/Zuite_waitForActivities</td>
   <td></td>
   <td></td>
 </tr>
@@ -76,7 +76,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
+  <td>&#36;{base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
   <td></td>
 </tr>
 <tr>
@@ -86,7 +86,7 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site_2(\?|$)</td>
+  <td>regexp:&#36;{base_url}/web_site_module/test_web_site_2(\?|$)</td>
   <td></td>
 </tr>
 <tr>
@@ -101,12 +101,12 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site/WebSite_view(\?|$)</td>
+  <td>regexp:&#36;{base_url}/web_site_module/test_web_site/WebSite_view(\?|$)</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
+  <td>&#36;{base_url}/web_site_module?reset:int=1&amp;ignore_layout:int=1&amp;id=test%</td>
   <td></td>
 </tr>
 <tr>
@@ -126,7 +126,7 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site_2/WebSite_view(\?|$)</td>
+  <td>regexp:&#36;{base_url}/web_site_module/test_web_site_2/WebSite_view(\?|$)</td>
   <td></td>
 </tr>
 </tbody></table>

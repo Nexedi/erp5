@@ -17,7 +17,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/bar_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -38,12 +38,12 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/FooModule_createObjects?portal_type=Bar&amp;num:int=1</td>
+  <td>&#36;{base_url}/bar_module/FooModule_createObjects?portal_type=Bar&amp;num:int=1</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/0</td>
+  <td>&#36;{base_url}/bar_module/0</td>
   <td></td>
 </tr>
 

@@ -22,13 +22,13 @@
 Wait for activities</span>
 <tr>
   <td>openAndWait</td>		 
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <!-- Add to pad few gadgets -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_web_section_random_page</td>
+  <td>&#36;{base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_web_section_random_page</td>
   <td></td>
 </tr>
 <tr>
@@ -38,7 +38,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_web_section_random_page_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_web_section_random_page_box_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -50,7 +50,7 @@ Wait for activities</span>
 <!-- erp5_persons -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>
+  <td>&#36;{base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>
   <td></td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_box_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -73,7 +73,7 @@ Wait for activities</span>
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -160,7 +160,7 @@ Wait for activities</span>
 Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -188,7 +188,7 @@ Wait for activities</span>
 Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>

@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=15</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_createObjects?num:int=15</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/view</td>
+  <td>&#36;{base_url}/foo_module/0/view</td>
   <td></td>
 </tr>
 <tr>
@@ -591,7 +591,7 @@
 <!-- Test show listbox of a form in "view" mode -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -601,7 +601,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_view&amp;proxy_field_id=listbox&amp;proxy_field_selection_name=foo_line_selection</td>
+  <td>&#36;{base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_view&amp;proxy_field_id=listbox&amp;proxy_field_selection_name=foo_line_selection</td>
   <td></td>
 </tr>
 <tr>
@@ -678,7 +678,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_viewWithListModeRenderer&amp;proxy_field_id=listbox&amp;proxy_field_selection_name=Foo_viewWithListModeRenderer_listbox_selection&amp;reset=1&amp;ignore_layout:int=1</td>
+  <td>&#36;{base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_viewWithListModeRenderer&amp;proxy_field_id=listbox&amp;proxy_field_selection_name=Foo_viewWithListModeRenderer_listbox_selection&amp;reset=1&amp;ignore_layout:int=1</td>
   <td></td>
 </tr>
 <tr>

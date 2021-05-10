@@ -15,7 +15,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/PurchasePackingList_deliver</td>
+  <td>&#36;{base_url}/PurchasePackingList_deliver</td>
   <td></td>
 </tr>
 
@@ -33,7 +33,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>
@@ -96,7 +96,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>
@@ -167,7 +167,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>
@@ -200,7 +200,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>
@@ -337,7 +337,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example/WebSection_finalizeShopping</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example/WebSection_finalizeShopping</td>
   <td></td>
 </tr>
 
@@ -349,7 +349,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example/SaleOrderModule_viewAsWebSaleOrderList</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example/SaleOrderModule_viewAsWebSaleOrderList</td>
   <td></td>
 </tr>
 
@@ -382,7 +382,7 @@
 <tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/sale_order_module</td>
+  <td>&#36;{base_url}/sale_order_module</td>
   <td></td>
 </tr>
 

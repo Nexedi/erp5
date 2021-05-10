@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>

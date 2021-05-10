@@ -44,7 +44,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -54,7 +54,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/accounting_module/view</td>
+  <td>&#36;{base_url}/accounting_module/view</td>
   <td></td>
 </tr>
 <!-- }}} -->
@@ -159,7 +159,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -211,7 +211,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -221,7 +221,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/accounting_module/view</td>
+  <td>&#36;{base_url}/accounting_module/view</td>
   <td></td>
 </tr>
 <!-- }}} -->

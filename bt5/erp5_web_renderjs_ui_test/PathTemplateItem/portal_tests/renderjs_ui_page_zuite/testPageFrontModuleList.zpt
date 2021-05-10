@@ -13,21 +13,21 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=front</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/?page=front</td>
   <td></td>
 </tr>
 
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']</td>
   <td></td>
 </tr>
 
 <!-- Check that there is a card -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']//ul/li/h2[text()='Others']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']//ul/li/h2[text()='Others']</td>
   <td></td>
 </tr>
 
@@ -52,7 +52,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tr>

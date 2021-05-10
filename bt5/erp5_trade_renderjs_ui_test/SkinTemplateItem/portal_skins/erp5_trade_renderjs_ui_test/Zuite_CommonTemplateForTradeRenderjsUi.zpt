@@ -5,7 +5,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>store</td>
-      <td>${base_url}/web_site_module/renderjs_runner/#</td>
+      <td>&#36;{base_url}/web_site_module/renderjs_runner/#</td>
       <td>renderjs_url</td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TradeRJSZuite_deleteData</td>
+      <td>&#36;{base_url}/TradeRJSZuite_deleteData</td>
       <td></td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TradeRJSZuite_createSaleOrder</td>
+      <td>&#36;{base_url}/TradeRJSZuite_createSaleOrder</td>
       <td></td>
     </tr>
     <tr>
@@ -64,7 +64,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TradeRJSZuite_createPackingList</td>
+      <td>&#36;{base_url}/TradeRJSZuite_createPackingList</td>
       <td></td>
     </tr>
     <tr>
@@ -76,7 +76,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/portal_deliveries/erp5_trade_renderjs_ui_test_spl_builder/build</td>
+      <td>&#36;{base_url}/portal_deliveries/erp5_trade_renderjs_ui_test_spl_builder/build</td>
       <td></td>
     </tr>
     <tr>

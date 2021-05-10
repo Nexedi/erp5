@@ -21,18 +21,18 @@ Frontend should not suppose default sorting
 
 <!-- Clean Up -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <!-- Create Foo objects with IDs 0-9 -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
@@ -55,7 +55,7 @@ Frontend should not suppose default sorting
 
 <!-- Let's set up the default sort correctly: id | ASC -->
 <tr><td>open</td>
-    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort=id+%7C+ASC</td><td></td></tr>
+    <td>&#36;{base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort=id+%7C+ASC</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 
@@ -80,7 +80,7 @@ Frontend should not suppose default sorting
 
 <!-- Let's set up the default sort correctly: title | DESC -->
 <tr><td>open</td>
-    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort=title+%7C+DESC</td><td></td></tr>
+    <td>&#36;{base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort=title+%7C+DESC</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 

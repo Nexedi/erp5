@@ -16,7 +16,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewListboxAsDomainTreeDialog</td>
+  <td>&#36;{base_url}/foo_module/FooModule_viewListboxAsDomainTreeDialog</td>
   <td></td>
 </tr>
 <tr>

@@ -13,7 +13,7 @@
 <tr><td colspan="3"><b>Post a new SR message</b></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+    <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr><td>click</td>
@@ -48,12 +48,12 @@
 <tr><td colspan="3"><b>Go back ot front page and check "latest post" columns</b></td></tr>
 
 <tr><td>openAndWait</td>
-    <td>${base_url}/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>waitForTextPresent</td>
     <td>Done.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+    <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 

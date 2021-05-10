@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_createTestStartedProject?home_page=true</td>
+  <td>&#36;{base_url}/portal_skins/erp5_web_project_test/ERP5Site_createTestStartedProject?home_page=true</td>
   <td></td>
 </tr>
 <tr>
@@ -37,14 +37,14 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/project_management/</td>
+  <td>&#36;{base_url}/web_site_module/project_management/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_page_project_front_page.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/project_management/gadget_erp5_page_project_front_page.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -71,7 +71,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_editor.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/project_management/gadget_editor.html']</td>
   <td></td>
 </tr>
 <tr>

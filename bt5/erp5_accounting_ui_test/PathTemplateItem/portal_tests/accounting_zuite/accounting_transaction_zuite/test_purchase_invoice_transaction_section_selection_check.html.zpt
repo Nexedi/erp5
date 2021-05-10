@@ -13,7 +13,7 @@ Test Section Selection for Purchase Invoice Transaction.
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
+  <td>&#36;{base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ Test Section Selection for Purchase Invoice Transaction.
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -67,7 +67,7 @@ Test Section Selection for Purchase Invoice Transaction.
 <!-- Modify Preference -->
 <tr>
   <td>open</td>
-  <td>${base_url}/PreferenceTool_resetAccountingTestDocumentSectionPreference</td>
+  <td>&#36;{base_url}/PreferenceTool_resetAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>
@@ -78,7 +78,7 @@ Test Section Selection for Purchase Invoice Transaction.
 <!-- Activity -->
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@ Test Section Selection for Purchase Invoice Transaction.
 <!-- Open the transaction view and check section value. -->
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -111,7 +111,7 @@ Test Section Selection for Purchase Invoice Transaction.
 <!-- Reset Preference -->
 <tr>
   <td>open</td>
-  <td>${base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
+  <td>&#36;{base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>

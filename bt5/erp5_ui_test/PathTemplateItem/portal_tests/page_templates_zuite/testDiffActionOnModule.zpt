@@ -32,12 +32,12 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/bar_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/view</td>
+  <td>&#36;{base_url}/bar_module/view</td>
   <td></td>
 </tr>
 <tr>

@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?page=extra_menu_test&#38;view=view</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module?page=extra_menu_test&#38;view=view</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -36,7 +36,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -48,13 +48,13 @@
 <!-- Open a diferent page to force open reload the page with extra_menu_test -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/</td>
+  <td>&#36;{base_url}/web_site_module/</td>
   <td></td>
 </tr>
 <!-- Open extra_menu_test page in the web site context instead of foo_module -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=extra_menu_test</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/?page=extra_menu_test</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

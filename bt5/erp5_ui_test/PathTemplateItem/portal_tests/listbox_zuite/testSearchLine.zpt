@@ -93,7 +93,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>
+  <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>
   <td></td>
 </tr>
 <tr>
@@ -103,7 +103,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
@@ -189,7 +189,7 @@
 </tal:block>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=checked&amp;field_search=</td>
+  <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=checked&amp;field_search=</td>
   <td></td>
 </tr>
 <tr>
@@ -199,7 +199,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tr>

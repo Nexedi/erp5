@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/portal_contributions/view</td>
+  <td>&#36;{base_url}/portal_contributions/view</td>
   <td></td>
 </tr>
 <tr>

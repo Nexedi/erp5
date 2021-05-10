@@ -13,33 +13,33 @@
 
 <!-- Clean Up -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><th colspan="3">Create Foo objects with distinguishible titles (Title 1%, Title 2%)</th></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=10&amp;num:int=2</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=10&amp;num:int=2</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=20&amp;num:int=2</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=20&amp;num:int=2</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=30&amp;num:int=2</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=30&amp;num:int=2</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr><td>open</td>
-    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Asimulation_state%7CState&field_lines=3</td><td></td></tr>
+    <td>&#36;{base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Asimulation_state%7CState&field_lines=3</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 
@@ -104,7 +104,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
 <tr><td>open</td>
-    <td>${base_url}/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 
@@ -201,7 +201,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
 <tr><td>open</td>
-    <td>${base_url}/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 

@@ -13,7 +13,7 @@
 
 <!-- Let's set up domain property on listbox -->
 <tr><td>open</td>
-    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=creation_date+%7C+Creation Date+%0A+modification_date+%7C+Modification Date+%0A+owner_title+%7C+Owner&amp;field_domain_root_list=foo_category+%7C+Foo%20Category+%0A+foo_domain+%7C+Foo%20Domain</td><td></td></tr>
+    <td>&#36;{base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=creation_date+%7C+Creation Date+%0A+modification_date+%7C+Modification Date+%0A+owner_title+%7C+Owner&amp;field_domain_root_list=foo_category+%7C+Foo%20Category+%0A+foo_domain+%7C+Foo%20Domain</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
 
@@ -21,7 +21,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

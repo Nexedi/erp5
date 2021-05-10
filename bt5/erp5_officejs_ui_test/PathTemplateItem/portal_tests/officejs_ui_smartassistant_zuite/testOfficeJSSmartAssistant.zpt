@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>

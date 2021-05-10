@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/Zuite_setupGadgets?remove_existing_pads=1&amp;mode=web_front</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/Zuite_setupGadgets?remove_existing_pads=1&amp;mode=web_front</td>
   <td></td>
 </tr>
 <tr>
@@ -28,13 +28,13 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/fr</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/fr</td>
   <td></td>
 </tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/fr</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/fr</td>
   <td></td>
 </tr>
 <tr>
@@ -45,7 +45,7 @@
 <!-- English -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/en</td>
   <td></td>
 </tr>
 <tr>

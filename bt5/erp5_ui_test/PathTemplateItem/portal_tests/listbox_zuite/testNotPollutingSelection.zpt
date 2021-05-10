@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/BarModule_createObjects?num:int=15</td>
+  <td>&#36;{base_url}/bar_module/BarModule_createObjects?num:int=15</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=15</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_createObjects?num:int=15</td>
   <td></td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 <!-- From here, the lines below are not copy pasted from testViewMode -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewWithListModeRenderer</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewWithListModeRenderer</td>
   <td></td>
 </tr>
 <!-- Click on the listbox title -->
@@ -65,19 +65,19 @@
 <!-- Go back -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewWithListModeRenderer</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewWithListModeRenderer</td>
   <td></td>
 </tr>
 <!-- Click on a listbox object (click on Title 1) -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/FooLine_viewWithFooBarListbox?ignore_layout:int=1&amp;editable_mode:int=1&amp;selection_name=Foo_viewWithListModeRenderer_listbox_selection&amp;selection_index=1&amp;reset:int=1</td>
+  <td>&#36;{base_url}/foo_module/0/1/FooLine_viewWithFooBarListbox?ignore_layout:int=1&amp;editable_mode:int=1&amp;selection_name=Foo_viewWithListModeRenderer_listbox_selection&amp;selection_index=1&amp;reset:int=1</td>
   <td></td>
 </tr>
 <!-- Go back -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewWithListModeRenderer</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewWithListModeRenderer</td>
   <td></td>
 </tr>
 <tr>

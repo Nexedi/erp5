@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//table</td>
@@ -23,11 +23,11 @@
     <td>listbox_table</td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 
@@ -64,7 +64,7 @@
 
 <!-- Test that exactly one record was created using general-purpose ListBox -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
@@ -116,7 +116,7 @@
 
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
@@ -144,11 +144,11 @@
 
 <!-- Matrix box editable fields can use the cell coordinates as "cell_index" in their TALES-->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/0/1/cell_0_0/getTitle</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/0/1/cell_0_0/getTitle</td><td></td></tr>
 <tr><td>verifyTextPresent</td>
     <td>c,four</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/0/1/cell_0_1/getTitle</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/0/1/cell_0_1/getTitle</td><td></td></tr>
 <tr><td>verifyTextPresent</td>
     <td>c,three</td><td></td></tr>
 
@@ -158,11 +158,11 @@ same values. The field must be in the 'bottom' group for this to work.
 Kato: I don't understand this part of the test - just copy&pasted from the old test.
 -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/0/1/cell_0_0/getFooCategoryTitleList</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/0/1/cell_0_0/getFooCategoryTitleList</td><td></td></tr>
 <tr><td>verifyTextPresent</td>
     <td>['a', 'b']</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/0/1/cell_0_1/getFooCategoryTitleList</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/0/1/cell_0_1/getFooCategoryTitleList</td><td></td></tr>
 <tr><td>verifyTextPresent</td>
     <td>['a', 'b']</td><td></td></tr>
 

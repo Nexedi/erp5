@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>
@@ -50,12 +50,12 @@
 <!-- upload no data-->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/app/#/?page=ojs_smart_assistant_upload_shared_file</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/app/#/?page=ojs_smart_assistant_upload_shared_file</td>
   <td></td>
 </tr>
 <tr>
@@ -76,12 +76,12 @@
 <!-- upload file -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/app/#/?page=ojs_smart_assistant_test_upload_shared_file</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/app/#/?page=ojs_smart_assistant_test_upload_shared_file</td>
   <td></td>
 </tr>
 <tr>
@@ -104,7 +104,7 @@
 <!-- ERP5 storage -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>
@@ -135,7 +135,7 @@
 <tr>
   <td>type</td>
   <td>name=erp5_url</td>
-  <td>${base_url}/web_site_module/</td>
+  <td>&#36;{base_url}/web_site_module/</td>
 </tr>
 <tr>
   <td>click</td>
@@ -155,12 +155,12 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/app/#/?page=ojs_smart_assistant_test_upload_shared_file</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/app/#/?page=ojs_smart_assistant_test_upload_shared_file</td>
   <td></td>
 </tr>
 <tr>
@@ -190,7 +190,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -200,7 +200,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/smart_assistant_file_module/</td>
+  <td>&#36;{base_url}/smart_assistant_file_module/</td>
   <td></td>
 </tr>
 <tr>

@@ -15,7 +15,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_tests/erp5_km_zuite/forum/testPredecessorCreateDiscussionThreadReset</td>
+  <td>&#36;{base_url}/portal_tests/erp5_km_zuite/forum/testPredecessorCreateDiscussionThreadReset</td>
   <td></td>
 </tr>
 <tr>
@@ -25,7 +25,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -38,7 +38,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -110,7 +110,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@
 <!-- add discussion thread to section with default page -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -184,7 +184,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -196,7 +196,7 @@
 <!-- add discsussion thread to web page  -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -278,7 +278,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -291,7 +291,7 @@
 <!-- threads created and redirects verified. now check the correct threads show -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -332,7 +332,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -370,7 +370,7 @@
 <!-- section with default should only display thread 2 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -413,7 +413,7 @@
 <!-- section with default should only display thread 2 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/predecessor_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/predecessor_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -476,7 +476,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_tests/erp5_km_zuite/forum/testPredecessorCreateDiscussionThreadReset</td>
+  <td>&#36;{base_url}/portal_tests/erp5_km_zuite/forum/testPredecessorCreateDiscussionThreadReset</td>
   <td></td>
 </tr>
 <tr>
@@ -486,7 +486,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>

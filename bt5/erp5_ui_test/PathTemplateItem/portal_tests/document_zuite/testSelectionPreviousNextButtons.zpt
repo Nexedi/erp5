@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=4</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=4</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module</td>
+  <td>&#36;{base_url}/foo_module</td>
   <td></td>
 </tr>
 <tr>
@@ -90,7 +90,7 @@
 </tr>
 <tr>
   <td>assertAbsoluteLocation</td>
-  <td>regexp:${base_url}/foo_module/FooModule_viewFooList(\?|$)</td>
+  <td>regexp:&#36;{base_url}/foo_module/FooModule_viewFooList(\?|$)</td>
   <td></td>
 </tr>
 <tr>

@@ -15,7 +15,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_tests/renderjs_ui_logout_translate_zuite/Base_createBaseLanguage</td>
+  <td>&#36;{base_url}/portal_tests/renderjs_ui_logout_translate_zuite/Base_createBaseLanguage</td>
   <td></td>
 </tr>
 
@@ -29,7 +29,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/wo/#/?page=logout</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/wo/#/?page=logout</td>
   <td></td>
 </tr>
 

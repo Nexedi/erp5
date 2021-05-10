@@ -14,7 +14,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/notebook_module/notebook_test_cell_error_handling</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/notebook_module/notebook_test_cell_error_handling</td>
   <td></td>
 </tr>
 <tr>

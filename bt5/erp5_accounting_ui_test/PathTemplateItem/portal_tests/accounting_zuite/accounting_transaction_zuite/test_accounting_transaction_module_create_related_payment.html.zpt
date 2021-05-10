@@ -13,7 +13,7 @@ Test for Creating Payment Transactions related to some Invoices
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ Test for Creating Payment Transactions related to some Invoices
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -120,7 +120,7 @@ Test for Creating Payment Transactions related to some Invoices
 <!-- Check accounting transactions are created {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -130,7 +130,7 @@ Test for Creating Payment Transactions related to some Invoices
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/accounting_module/view</td>
+  <td>&#36;{base_url}/accounting_module/view</td>
   <td></td>
 </tr>
 <tr>

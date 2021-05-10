@@ -22,7 +22,7 @@
 </tr>
 <tr>
 	<td>open</td>
-	<td>${base_url}/foo_module/FooModule_createObjects?num:int=2&amp;start:int=2</td>
+	<td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2&amp;start:int=2</td>
 	<td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
 	<td>open</td>
-	<td>${base_url}/foo_module/Zuite_waitForActivities</td>
+	<td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
 	<td></td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
 	<td>open</td>
-	<td>${base_url}/foo_module/view</td>
+	<td>&#36;{base_url}/foo_module/view</td>
 	<td></td>
 </tr>
 <tr>
@@ -186,7 +186,7 @@ Validated Foo -->
 </tr>
 <tr>
 	<td>open</td>
-	<td>${base_url}/foo_module/Zuite_waitForActivities</td>
+	<td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
 	<td></td>
 </tr>
 <tr>
@@ -198,7 +198,7 @@ Validated Foo -->
 script. -->
 <tr>
 	<td>open</td>
-	<td>${base_url}/foo_module/Zuite_testFolderWorkflowActionCheckWorkflowHistory</td>
+	<td>&#36;{base_url}/foo_module/Zuite_testFolderWorkflowActionCheckWorkflowHistory</td>
 	<td></td>
 </tr>
 <tr>

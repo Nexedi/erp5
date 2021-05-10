@@ -14,12 +14,12 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_document_history&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_document_history&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
   <td></td>
 </tr>
 
@@ -28,7 +28,7 @@
 <!-- "Save and Edit" -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 <!-- "Save and View" -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -75,7 +75,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/km_test_web_site/1/view?editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>

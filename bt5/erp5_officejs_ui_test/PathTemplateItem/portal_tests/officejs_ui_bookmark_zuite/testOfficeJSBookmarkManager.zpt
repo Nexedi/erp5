@@ -13,7 +13,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -52,7 +52,7 @@
 </tr>
 <tr>
   <td>store</td>
-  <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=cloud</td>
+  <td>&#36;{base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=cloud</td>
   <td>url_1</td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@
 </tr>
 <tr>
   <td>store</td>
-  <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=blog</td>
+  <td>&#36;{base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=blog</td>
   <td>url_2</td>
 </tr>
 <tr>
@@ -197,7 +197,7 @@
 <!-- Add bookmark With Dispatcher Command -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/${install_url}/</td>
+  <td>&#36;{base_url}/web_site_module/&#36;{install_url}/</td>
   <td></td>
 </tr>
 <tr>
@@ -223,7 +223,7 @@
 <tr>
   <td>type</td>
   <td>//div[@role='main']//input[@name='search']</td>
-  <td>!add ${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
+  <td>!add &#36;{base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
 </tr>
 <tr>
   <td>click</td>
@@ -299,7 +299,7 @@
 <!-- Set preferences -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/${install_url}/</td>
+  <td>&#36;{base_url}/web_site_module/&#36;{install_url}/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -331,7 +331,7 @@
 <tr>
   <td>type</td>
   <td>//input[@name='search_engine']</td>
-  <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
+  <td>&#36;{base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 <tr>

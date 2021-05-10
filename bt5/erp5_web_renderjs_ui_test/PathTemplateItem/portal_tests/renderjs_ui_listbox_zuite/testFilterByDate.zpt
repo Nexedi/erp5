@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ERP5Site_setTimezone?timezone=GMT%2D7</td>
+  <td>&#36;{base_url}/bar_module/ERP5Site_setTimezone?timezone=GMT%2D7</td>
   <td></td>
 </tr>
 <tr>
@@ -25,7 +25,7 @@
 <!-- be specific that we expect id DESC default sorting  -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset?field_sort=id+%7C+DESC</td> <!-- ?field_sort="id | DESC" -->
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset?field_sort=id+%7C+DESC</td> <!-- ?field_sort="id | DESC" -->
   <td></td>
 </tr>
 
@@ -37,7 +37,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_search_columns=delivery.start_date%0Aid&amp;field_columns=delivery.start_date%0Aid&amp;field_sort_columns=delivery.start_date%0Aid</td>
+  <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_search_columns=delivery.start_date%0Aid&amp;field_columns=delivery.start_date%0Aid&amp;field_sort_columns=delivery.start_date%0Aid</td>
   <td></td>
 </tr>
 <tr>
@@ -48,7 +48,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?set_datetimes:int=1&amp;start:int=1&amp;num:int=3</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?set_datetimes:int=1&amp;start:int=1&amp;num:int=3</td>
   <td></td>
 </tr>
 <tr>
@@ -59,7 +59,7 @@
   
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_getLocalTimezone</td>
+  <td>&#36;{base_url}/foo_module/FooModule_getLocalTimezone</td>
   <td></td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 

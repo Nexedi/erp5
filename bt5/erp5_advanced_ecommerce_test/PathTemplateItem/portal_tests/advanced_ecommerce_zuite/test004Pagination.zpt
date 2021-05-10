@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example/discount_sale</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example/discount_sale</td>
   <td></td>
 </tr>
 <tr>

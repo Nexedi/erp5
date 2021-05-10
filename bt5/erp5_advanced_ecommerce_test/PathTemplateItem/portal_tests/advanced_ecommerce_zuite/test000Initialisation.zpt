@@ -16,7 +16,7 @@ this selenium test is executed at first. so other tests are executed by anonymou
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/portal_skins/erp5_advanced_ecommerce/advanced_ecommerce_layout/product_list/manage_main</td>
+  <td>&#36;{base_url}/portal_skins/erp5_advanced_ecommerce/advanced_ecommerce_layout/product_list/manage_main</td>
   <td></td>
 </tr>
 
@@ -39,7 +39,7 @@ this selenium test is executed at first. so other tests are executed by anonymou
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Preference_initialisation</td>
+  <td>&#36;{base_url}/Preference_initialisation</td>
   <td></td>
 </tr>
 
@@ -51,7 +51,7 @@ this selenium test is executed at first. so other tests are executed by anonymou
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/ERP5Site_createSuperUser</td>
+  <td>&#36;{base_url}/ERP5Site_createSuperUser</td>
   <td></td>
 </tr>
 
@@ -63,7 +63,7 @@ this selenium test is executed at first. so other tests are executed by anonymou
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Base_validateRule</td>
+  <td>&#36;{base_url}/Base_validateRule</td>
   <td></td>
 </tr>
 

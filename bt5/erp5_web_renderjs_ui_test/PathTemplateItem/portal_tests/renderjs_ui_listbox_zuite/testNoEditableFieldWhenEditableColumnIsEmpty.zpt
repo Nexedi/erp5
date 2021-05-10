@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 
@@ -70,7 +70,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/Foo_setFooViewListbox</td>
+  <td>&#36;{base_url}/Foo_setFooViewListbox</td>
   <td></td>
 </tr>
 

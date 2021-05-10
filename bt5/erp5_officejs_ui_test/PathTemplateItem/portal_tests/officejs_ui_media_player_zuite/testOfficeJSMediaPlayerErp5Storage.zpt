@@ -15,7 +15,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/</td>
   <td></td>
 </tr>
 <tr>
@@ -46,7 +46,7 @@
 <tr>
   <td>type</td>
   <td>name=erp5_url</td>
-  <td>${base_url}/web_site_module/</td>
+  <td>&#36;{base_url}/web_site_module/</td>
 </tr>
 <tr>
   <td>click</td>
@@ -60,7 +60,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -71,7 +71,7 @@
 <!-- create entry -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
   <td></td>
 </tr>
 <tr>
@@ -87,7 +87,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_media_player/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_media_player/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
@@ -111,7 +111,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -121,7 +121,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/sound_module/</td>
+  <td>&#36;{base_url}/sound_module/</td>
   <td></td>
 </tr>
 <tr>

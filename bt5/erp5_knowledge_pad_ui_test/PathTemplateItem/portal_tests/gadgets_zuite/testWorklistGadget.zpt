@@ -22,7 +22,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
@@ -31,7 +31,7 @@ Wait for activities</span>
 <!-- Add to pad few gadgets -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_worklists</td>
+  <td>&#36;{base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_worklists</td>
   <td></td>
 </tr>
 <tr>
@@ -41,7 +41,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${workflist_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${workflist_box_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -54,7 +54,7 @@ Wait for activities</span>
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=10</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=10</td>
   <td></td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/view</td>
+  <td>&#36;{base_url}/foo_module/0/view</td>
   <td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -99,7 +99,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Base_clearCache</td>
+  <td>&#36;{base_url}/foo_module/Base_clearCache</td>
   <td></td>
 </tr>
 <tr>
@@ -109,7 +109,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 
@@ -135,7 +135,7 @@ Wait for activities</span>
 
 <tr>
   <td>open</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">

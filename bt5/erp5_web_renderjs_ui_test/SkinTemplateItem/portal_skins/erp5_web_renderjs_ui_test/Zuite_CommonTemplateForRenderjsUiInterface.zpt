@@ -5,7 +5,7 @@
   <tal:block metal:define-macro="run_app_interface_check">
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/gadget_interface_validator/</td>
+      <td>&#36;{base_url}/web_site_module/gadget_interface_validator/</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

@@ -234,7 +234,7 @@
     <tr>
       <td>type</td>
       <td>name=erp5_url</td>
-      <td><tal:block metal:define-slot="hateoas_url">${base_url}/web_site_module/</tal:block></td>
+      <td><tal:block metal:define-slot="hateoas_url">&#36;{base_url}/web_site_module/</tal:block></td>
     </tr>
     <tr>
       <td>click</td>
@@ -248,7 +248,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/document_module/manage_main</td>
+      <td>&#36;{base_url}/document_module/manage_main</td>
       <td></td>
     </tr>
     <tr>

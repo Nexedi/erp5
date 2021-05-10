@@ -14,7 +14,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -25,7 +25,7 @@
 <tr>
   <td>open</td>
   <!-- create a Foo -->
-  <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=2</td>
+  <td>&#36;{base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=2</td>
   <td></td>
 </tr>
 <tr>
@@ -35,7 +35,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -47,7 +47,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
   <td></td>
 </tr>
 

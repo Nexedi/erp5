@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <!-- Verify global "Browse" menu -->
@@ -74,12 +74,12 @@
 <!--  add "Browser" gadget to front-->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/web_site_browser&amp;mode=web_front</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/web_site_browser&amp;mode=web_front</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -146,7 +146,7 @@
 <!--  add "Browser" gadget to section -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/web_site_browser&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/web_site_browser&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
   <td></td>
 </tr>
 <tr>

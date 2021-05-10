@@ -16,7 +16,7 @@
 </tr>
 <tr>
         <td>open</td>
-        <td>${base_url}/image_module/view</td>
+        <td>&#36;{base_url}/image_module/view</td>
         <td></td>
 </tr>
 <tr>

@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects</td>
   <td></td>
   <td>Create a new object</td>
 </tr>
@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0</td>
+  <td>&#36;{base_url}/foo_module/0</td>
   <td></td>
   <td>Go to first line</td>
 </tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
   <td>Wait for reindexing</td>
 </tr>
@@ -54,13 +54,13 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0</td>
+  <td>&#36;{base_url}/foo_module/0</td>
   <td></td>
   <td>Go to first line</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//a[@href='${base_url}/foo_module/0/1?selection_index=0&amp;selection_name=foo_line_selection&amp;reset:int=1']</td>
+  <td>//a[@href='&#36;{base_url}/foo_module/0/1?selection_index=0&amp;selection_name=foo_line_selection&amp;reset:int=1']</td>
   <td></td>
   <td>Make sure no a tag is present in ListBox</td>
 </tr>

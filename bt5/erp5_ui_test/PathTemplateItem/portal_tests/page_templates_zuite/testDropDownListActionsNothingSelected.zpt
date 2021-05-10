@@ -13,7 +13,7 @@ Selected</td></tr>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/1</td>
+  <td>&#36;{base_url}/foo_module/1</td>
   <td></td>
 </tr>
 <!-- when clicking on the action button of a drop down when nothing is selected
@@ -37,7 +37,7 @@ shouldn't do anything. -->
   </tr>
   <tr>
     <td>assertAbsoluteLocation</td>
-    <td>${base_url}/foo_module/1</td>
+    <td>&#36;{base_url}/foo_module/1</td>
     <td/>
   </tr>
   <tr>

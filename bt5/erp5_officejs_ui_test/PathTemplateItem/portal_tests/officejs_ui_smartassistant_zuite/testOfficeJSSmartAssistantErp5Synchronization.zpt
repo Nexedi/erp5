@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
 <tr>
@@ -45,7 +45,7 @@
 <tr>
   <td>type</td>
   <td>name=erp5_url</td>
-  <td>${base_url}/web_site_module/</td>
+  <td>&#36;{base_url}/web_site_module/</td>
 </tr>
 <tr>
   <td>click</td>
@@ -140,7 +140,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -150,7 +150,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/smart_assistant_text_module/</td>
+  <td>&#36;{base_url}/smart_assistant_text_module/</td>
   <td></td>
 </tr>
 <tr>

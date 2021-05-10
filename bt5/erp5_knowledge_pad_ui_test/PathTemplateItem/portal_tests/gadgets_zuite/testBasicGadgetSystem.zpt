@@ -14,7 +14,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_setupGadgets</td>
+  <td>&#36;{base_url}/Zuite_setupGadgets</td>
   <td></td>
 </tr>
 <tr>
@@ -24,13 +24,13 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -74,7 +74,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -95,7 +95,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@
 <!-- Renaming pad -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -180,7 +180,7 @@
 <!-- Test removing pad -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -196,7 +196,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>

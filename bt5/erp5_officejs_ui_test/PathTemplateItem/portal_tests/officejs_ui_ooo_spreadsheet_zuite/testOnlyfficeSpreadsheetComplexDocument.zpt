@@ -40,7 +40,7 @@
 
   <tr>
     <td>open</td>
-    <td>${base_url}/web_site_module/${install_url}/</td>
+    <td>&#36;{base_url}/web_site_module/&#36;{install_url}/</td>
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>

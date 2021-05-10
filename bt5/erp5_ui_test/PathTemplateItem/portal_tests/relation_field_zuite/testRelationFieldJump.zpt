@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -35,7 +35,7 @@
 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Base_viewMetadata</td>
+  <td>&#36;{base_url}/foo_module/0/Base_viewMetadata</td>
   <td></td>
   <td></td>
 </tr>
@@ -53,7 +53,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewRelationField</td>
   <td></td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@
 </tr>
 <tr>
   <td>assertAbsoluteLocation</td>
-  <td>${base_url}/foo_module/1</td>
+  <td>&#36;{base_url}/foo_module/1</td>
   <td></td>
   <td></td>
 </tr>
@@ -74,7 +74,7 @@ will be shown
 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Base_viewMetadata</td>
+  <td>&#36;{base_url}/foo_module/0/Base_viewMetadata</td>
   <td></td>
   <td></td>
 </tr>
@@ -93,7 +93,7 @@ will be shown
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewRelationField</td>
   <td></td>
 </tr>
 <tr>
@@ -146,7 +146,7 @@ will be shown
 <!-- go back to the multi relation field -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td>&#36;{base_url}/foo_module/0/Foo_viewRelationField</td>
   <td></td>
 </tr>
 <!-- select again the jump -->

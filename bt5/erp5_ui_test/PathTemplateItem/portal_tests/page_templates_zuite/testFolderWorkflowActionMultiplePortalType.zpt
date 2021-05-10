@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/FooBarModule_createObjects?num:int=2&amp;start:int=1</td>
+  <td>&#36;{base_url}/foo_bar_module/FooBarModule_createObjects?num:int=2&amp;start:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_bar_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -71,7 +71,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_bar_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -82,7 +82,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/bar_1/getSimulationState</td>
+  <td>&#36;{base_url}/foo_bar_module/bar_1/getSimulationState</td>
   <td></td>
 </tr>
 <tr>
@@ -92,7 +92,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/bar_2/getSimulationState</td>
+  <td>&#36;{base_url}/foo_bar_module/bar_2/getSimulationState</td>
   <td></td>
 </tr>
 <tr>

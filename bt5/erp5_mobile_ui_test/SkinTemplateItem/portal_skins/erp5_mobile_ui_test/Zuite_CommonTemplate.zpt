@@ -8,7 +8,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TestTool_setSkinNameCookie?skin_name=Mobile</td>
+      <td>&#36;{base_url}/TestTool_setSkinNameCookie?skin_name=Mobile</td>
       <td></td>
     </tr>
   </tal:block>
@@ -16,7 +16,7 @@
   <tal:block metal:define-macro="goToFrontPage">
    <tr>
     <td>open</td>
-    <td>${base_url}/view</td>
+    <td>&#36;{base_url}/view</td>
     <td></td>
    </tr>
   </tal:block>

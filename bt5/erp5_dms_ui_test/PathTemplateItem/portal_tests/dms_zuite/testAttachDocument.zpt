@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/person_module/Zuite_setupDMS</td>
+  <td>&#36;{base_url}/person_module/Zuite_setupDMS</td>
   <td></td>
 </tr>
 <tr>
@@ -25,7 +25,7 @@
 Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/person_module/view?reset:int=1</td>
+  <td>&#36;{base_url}/person_module/view?reset:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>field_your_file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
 </tr>
 <tr>
   <td>type</td>

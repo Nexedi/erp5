@@ -19,7 +19,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/portal_contributions/view</td>
+  <td>&#36;{base_url}/portal_contributions/view</td>
   <td></td>
 </tr>
 <tr>
@@ -30,7 +30,7 @@
 <tr>
   <td>setFile</td>
   <td>field_your_file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -82,7 +82,7 @@ Wait for activities</span>
 <!-- check update with same filename -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/portal_contributions/view</td>
+  <td>&#36;{base_url}/portal_contributions/view</td>
   <td></td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@ Wait for activities</span>
 <tr>
   <td>setFile</td>
   <td>field_your_file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
 </tr>
 <tr>
   <td>clickAndWait</td>

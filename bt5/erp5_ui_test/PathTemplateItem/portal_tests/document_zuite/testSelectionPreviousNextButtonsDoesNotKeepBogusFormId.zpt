@@ -13,7 +13,7 @@ does not keep bogus `form_id`.</td></tr>
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/FooBarModule_createObjects?num:int=1</td>
+  <td>&#36;{base_url}/foo_bar_module/FooBarModule_createObjects?num:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ does not keep bogus `form_id`.</td></tr>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_bar_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@ does not keep bogus `form_id`.</td></tr>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_bar_module/view</td>
+  <td>&#36;{base_url}/foo_bar_module/view</td>
   <td></td>
 </tr>
 <tr>

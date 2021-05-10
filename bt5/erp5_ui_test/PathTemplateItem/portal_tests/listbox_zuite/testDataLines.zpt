@@ -17,7 +17,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects</td>
   <td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -37,7 +37,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tr>
@@ -151,7 +151,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>
+  <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>
   <td></td>
 </tr>
 <tr>
@@ -161,7 +161,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tr>

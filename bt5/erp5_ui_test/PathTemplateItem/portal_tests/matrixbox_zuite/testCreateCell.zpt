@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
+  <td>&#36;{base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
   <td></td>
 </tr>
 
@@ -70,7 +70,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -80,7 +80,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>
+  <td>&#36;{base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -105,7 +105,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
+  <td>&#36;{base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
   <td></td>
 </tr>
 <tr>
@@ -141,7 +141,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -151,7 +151,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>
+  <td>&#36;{base_url}/foo_module/0/1/Folder_viewContentList?reset:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -163,7 +163,7 @@
 <!-- Matrix box editable fields can use the cell coordinates as "cell_index" in their TALES-->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/cell_0_0/getTitle</td>
+  <td>&#36;{base_url}/foo_module/0/1/cell_0_0/getTitle</td>
   <td></td>
 </tr>
 <tr>
@@ -173,7 +173,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/cell_0_1/getTitle</td>
+  <td>&#36;{base_url}/foo_module/0/1/cell_0_1/getTitle</td>
   <td></td>
 </tr>
 <tr>
@@ -188,7 +188,7 @@ The field must be in the 'bottom' group for this to work.
 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/cell_0_0/getFooCategoryTitleList</td>
+  <td>&#36;{base_url}/foo_module/0/1/cell_0_0/getFooCategoryTitleList</td>
   <td></td>
 </tr>
 <tr>
@@ -198,7 +198,7 @@ The field must be in the 'bottom' group for this to work.
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/1/cell_0_1/getFooCategoryTitleList</td>
+  <td>&#36;{base_url}/foo_module/0/1/cell_0_1/getFooCategoryTitleList</td>
   <td></td>
 </tr>
 <tr>

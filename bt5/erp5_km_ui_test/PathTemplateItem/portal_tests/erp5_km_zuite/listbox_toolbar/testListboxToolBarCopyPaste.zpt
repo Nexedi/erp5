@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/document_module/view?reset:int=1</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/document_module/view?reset:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/document_module/view</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/document_module/view</td>
   <td></td>
 </tr>
 <tr>

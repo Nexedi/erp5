@@ -95,7 +95,7 @@ Grouping from entity transaction view
 <!-- mark the module as changed, reindex and come back to the entity -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -105,7 +105,7 @@ Grouping from entity transaction view
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -116,7 +116,7 @@ Grouping from entity transaction view
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -216,7 +216,7 @@ lines -->
 -->
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -227,7 +227,7 @@ lines -->
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

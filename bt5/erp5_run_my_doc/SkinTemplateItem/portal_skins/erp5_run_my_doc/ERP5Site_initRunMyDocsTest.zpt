@@ -7,7 +7,7 @@
   </tr>
   <tr>
     <td>open</td>
-    <td>${base_url}/login_form</td>
+    <td>&#36;{base_url}/login_form</td>
     <td></td>
   </tr>
 </tal:block>

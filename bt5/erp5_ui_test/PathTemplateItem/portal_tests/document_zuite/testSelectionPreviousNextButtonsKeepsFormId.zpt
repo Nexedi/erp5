@@ -13,7 +13,7 @@ keeps `form_id`. This test doesn't test problems from #217</td></tr>
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ keeps `form_id`. This test doesn't test problems from #217</td></tr>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@ keeps `form_id`. This test doesn't test problems from #217</td></tr>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module</td>
+  <td>&#36;{base_url}/foo_module</td>
   <td></td>
 </tr>
 <tr>
@@ -54,7 +54,7 @@ keeps `form_id`. This test doesn't test problems from #217</td></tr>
 </tr>
 <tr>
   <td>assertAbsoluteLocation</td>
-  <td>regexp:${base_url}/foo_module/0/Base_viewHistory(\?|$)</td>
+  <td>regexp:&#36;{base_url}/foo_module/0/Base_viewHistory(\?|$)</td>
   <td></td>
 </tr>
 

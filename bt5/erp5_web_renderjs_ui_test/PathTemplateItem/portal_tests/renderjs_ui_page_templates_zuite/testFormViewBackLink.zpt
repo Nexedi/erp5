@@ -14,7 +14,7 @@
 <!-- First, create a stored test on the module -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -24,18 +24,18 @@
 
 <!-- Then, display a child document without any history -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
   <td></td>
 </tr>
 
@@ -53,7 +53,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tal:block tal:define="parsed_query python: '';

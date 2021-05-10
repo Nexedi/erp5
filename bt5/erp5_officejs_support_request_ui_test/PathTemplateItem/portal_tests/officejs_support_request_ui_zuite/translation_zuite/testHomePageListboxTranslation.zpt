@@ -14,7 +14,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/fr/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/fr/</td>
   <td></td>
 </tr>
 <tr>

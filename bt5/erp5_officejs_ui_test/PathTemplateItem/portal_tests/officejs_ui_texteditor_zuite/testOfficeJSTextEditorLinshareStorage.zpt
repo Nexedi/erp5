@@ -13,7 +13,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_text_editor/</td>
+  <td>&#36;{base_url}/web_site_module/officejs_text_editor/</td>
   <td></td>
 </tr>
 <tr>
@@ -54,7 +54,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/officejs_text_editor/app/gadget_erp5_page_ojs_linshare_configurator.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/officejs_text_editor/app/gadget_erp5_page_ojs_linshare_configurator.html']</td>
 </tr>
 <tr>
   <td>assertElementPresent</td>

@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
   <td></td>
 </tr>
 

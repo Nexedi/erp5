@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=language</td>
+  <td>&#36;{base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=language</td>
   <td></td>
 </tr>
 <tr>
@@ -28,7 +28,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/</td>
   <td></td>
 </tr>
 <tr>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section_1/</td>
+  <td>&#36;{base_url}/web_site_module/erp5_web_js_style_test_site/fr/erp5_web_js_style_test_section_1/</td>
   <td></td>
 </tr>
 <tr>

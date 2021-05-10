@@ -13,7 +13,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/${install_url}/</td>
+      <td>&#36;{base_url}/web_site_module/&#36;{install_url}/</td>
       <td></td>
     </tr>
     <!-- Huge timout for onlyoffice_presentation ( includes configuration elements ) -->
@@ -35,7 +35,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td tal:content="python: '${base_url}/web_site_module/%s?ignore_layout:int=1&editable_mode:int=1' % web_site_name"></td>
+      <td tal:content="python: '&#36;{base_url}/web_site_module/%s?ignore_layout:int=1&editable_mode:int=1' % web_site_name"></td>
       <td></td>
     </tr>
     <tr>
@@ -70,7 +70,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/manage_main</td>
+      <td>&#36;{base_url}/web_site_module/manage_main</td>
       <td></td>
     </tr>
     <tr>
@@ -81,7 +81,7 @@
     <tr>
       <td>type</td>
       <td>name=ids:list</td>
-      <td>${install_url}</td>
+      <td>&#36;{install_url}</td>
     </tr>
     <tr>
       <td>clickAndWait</td>
@@ -93,7 +93,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/${install_url}/</td>
+      <td>&#36;{base_url}/web_site_module/&#36;{install_url}/</td>
       <td></td>
     </tr>
     <!-- as the app was already installed, bootloader must be skipped. Set a short timeout -->

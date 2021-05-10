@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?num:int=3</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=3</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tr>
@@ -83,7 +83,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_createObjects?start:int=3&amp;num:int=7</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=3&amp;num:int=7</td>
   <td></td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -103,7 +103,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tr>
@@ -289,12 +289,12 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/manage_delObjects?ids=9</td>
+  <td>&#36;{base_url}/foo_module/manage_delObjects?ids=9</td>
   <td></td>
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/view</td>
+  <td>&#36;{base_url}/foo_module/view</td>
   <td></td>
 </tr>
 <tr>

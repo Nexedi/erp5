@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
   <td></td>
 </tr>
 
@@ -25,7 +25,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -37,14 +37,14 @@
 <!-- Search bar -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//*[2][@data-gadget-scope='erp5_searchfield']//input[@type='search' and @name='search']</td>
+  <td>//div[@data-gadget-scope='m']//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//*[2][@data-gadget-scope='erp5_searchfield']//input[@type='search' and @name='search']</td>
   <td></td>
 </tr>
 
 <!-- And the form after -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//*[3][@data-gadget-scope='erp5_form']</td>
+  <td>//div[@data-gadget-scope='m']//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//*[3][@data-gadget-scope='erp5_form']</td>
   <td></td>
 </tr>
 
@@ -63,7 +63,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_listbox']//div[@data-gadget-scope='field' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_listbox.html']</td>
+  <td>//div[@data-gadget-scope='field_listbox']//div[@data-gadget-scope='field' and @data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_field_listbox.html']</td>
   <td></td>
 </tr>
 

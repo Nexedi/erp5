@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 
@@ -100,12 +100,12 @@
 <!-- Add Latest Content Gadget -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/1/view</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -116,13 +116,13 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_latest_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_latest_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>
   <td></td>
 </tr>
 <!-- Wait for activities to finish -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -132,7 +132,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/1/view</td>
   <td></td>
 </tr>
 <tr>

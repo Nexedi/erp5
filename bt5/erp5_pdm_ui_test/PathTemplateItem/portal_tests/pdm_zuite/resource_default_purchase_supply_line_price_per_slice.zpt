@@ -57,7 +57,7 @@ Test toggling price per slice updates purchase supply cells correctly
 <!-- Open Delivery Line with the product and check price is correct -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/purchase_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td tal:content="string:$&#36;{base_url}/purchase_packing_list_module/erp5_pdm_ui_test_delivery/1" />
   <td></td>
 </tr>
 <tr>
@@ -84,7 +84,7 @@ Test toggling price per slice updates purchase supply cells correctly
      and enter the prices again-->
 <tr>
   <td>open</td>
-  <td>${base_url}/product_module/erp5_pdm_ui_test_product</td>
+  <td>&#36;{base_url}/product_module/erp5_pdm_ui_test_product</td>
   <td></td>
 </tr>
 <tr>
@@ -97,7 +97,7 @@ Test toggling price per slice updates purchase supply cells correctly
 <!-- Open Delivery Line with the product and check price is correct -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/purchase_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td tal:content="string:$&#36;{base_url}/purchase_packing_list_module/erp5_pdm_ui_test_delivery/1" />
   <td></td>
 </tr>
 <tr>
@@ -124,7 +124,7 @@ Test toggling price per slice updates purchase supply cells correctly
      and enter the prices again-->
 <tr>
   <td>open</td>
-  <td>${base_url}/product_module/erp5_pdm_ui_test_product</td>
+  <td>&#36;{base_url}/product_module/erp5_pdm_ui_test_product</td>
   <td></td>
 </tr>
 <tr>
@@ -137,7 +137,7 @@ Test toggling price per slice updates purchase supply cells correctly
 <!-- Open Delivery Line with the product and check price is correct -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/purchase_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td tal:content="string:$&#36;{base_url}/purchase_packing_list_module/erp5_pdm_ui_test_delivery/1" />
   <td></td>
 </tr>
 <tr>

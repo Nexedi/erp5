@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 
@@ -26,7 +26,7 @@
 
 <!-- Create Foo objects and lines -->
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
 <tr>
   <td>assertTextPresent</td>
   <td>Created Successfully.</td>
@@ -34,7 +34,7 @@
 </tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/1/Foo_createObjects?start:int=1&amp;num:int=10&amp;</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/1/Foo_createObjects?start:int=1&amp;num:int=10&amp;</td><td></td></tr>
 <tr>
   <td>assertTextPresent</td>
   <td>Created Successfully.</td>
@@ -45,7 +45,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

@@ -13,7 +13,7 @@ Test Simple view of an Accounting Transaction
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ Test Simple view of an Accounting Transaction
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>

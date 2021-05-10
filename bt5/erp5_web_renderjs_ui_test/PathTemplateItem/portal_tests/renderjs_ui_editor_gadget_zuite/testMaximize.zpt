@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/web_page_module/rjs_gadget_erp5_launcher_html?editable=true</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/web_page_module/rjs_gadget_erp5_launcher_html?editable=true</td>
   <td></td>
 </tr>
 

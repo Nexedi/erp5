@@ -117,7 +117,7 @@
        title="Show more" class="expand"></a>
   </li>
   <li><a 
-         tal:attributes="href string:${base_url}/DiscussionThread_redirectCreateNewDiscussionPost?discussion_post_uid=${discussion_post/getId}"
+         tal:attributes="href string:&#36;{base_url}/DiscussionThread_redirectCreateNewDiscussionPost?discussion_post_uid=${discussion_post/getId}"
          title="Reply" class="reply"></a></li>
 </ul>
 -->

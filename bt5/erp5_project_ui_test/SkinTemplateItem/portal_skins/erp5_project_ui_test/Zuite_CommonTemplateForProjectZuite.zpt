@@ -9,7 +9,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_deleteDataForProjectZuite</td>
+      <td>&#36;{base_url}/Zuite_deleteDataForProjectZuite</td>
       <td></td>
     </tr>
     <tr>
@@ -20,7 +20,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -31,7 +31,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_resetForProjectZuite</td>
+      <td>&#36;{base_url}/Zuite_resetForProjectZuite</td>
       <td></td>
     </tr>
     <tr>
@@ -41,7 +41,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td tal:content="string:$${base_url}/project_module/$init_method" />
+      <td tal:content="string:$&#36;{base_url}/project_module/$init_method" />
       <td></td>
     </tr>
     <tr>
@@ -52,7 +52,7 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>
@@ -62,7 +62,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/project_module/view</td>
+      <td>&#36;{base_url}/project_module/view</td>
       <td></td>
     </tr>
   </tal:block>

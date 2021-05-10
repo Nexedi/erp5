@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=foobar</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/?page=foobar</td>
   <td></td>
 </tr>
 
@@ -109,7 +109,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
   <td></td>
 </tr>
 

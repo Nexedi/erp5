@@ -12,7 +12,7 @@ Test quantity steps for price on sale supply line
 <tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_deleteDataForTradeZuite</td>
+  <td>&#36;{base_url}/Zuite_deleteDataForTradeZuite</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ Test quantity steps for price on sale supply line
 
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -33,7 +33,7 @@ Test quantity steps for price on sale supply line
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_resetForTradeZuite</td>
+  <td>&#36;{base_url}/Zuite_resetForTradeZuite</td>
   <td></td>
 </tr>
 <tr>
@@ -43,7 +43,7 @@ Test quantity steps for price on sale supply line
 </tr>
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/Zuite_createTradeConditionForTradeZuite" />
+  <td tal:content="string:$&#36;{base_url}/Zuite_createTradeConditionForTradeZuite" />
   <td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@ Test quantity steps for price on sale supply line
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ Test quantity steps for price on sale supply line
 <!-- }}} -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/sale_trade_condition_module/erp5_trade_ui_test_trade_condition/1" />
+  <td tal:content="string:$&#36;{base_url}/sale_trade_condition_module/erp5_trade_ui_test_trade_condition/1" />
   <td></td>
 </tr>
 <tr>
@@ -118,7 +118,7 @@ Test quantity steps for price on sale supply line
 <!-- Open Delivery Line with the product and check price is correct -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/sale_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td tal:content="string:$&#36;{base_url}/sale_packing_list_module/erp5_pdm_ui_test_delivery/1" />
   <td></td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@ Test quantity steps for price on sale supply line
      and enter the prices again-->
 <tr>
   <td>open</td>
-  <td>${base_url}/sale_trade_condition_module/erp5_trade_ui_test_trade_condition/1/SaleSupplyLine_viewBasePrice</td>
+  <td>&#36;{base_url}/sale_trade_condition_module/erp5_trade_ui_test_trade_condition/1/SaleSupplyLine_viewBasePrice</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/toggleSupplyLineBasePricePerSlice" />
@@ -153,7 +153,7 @@ Test quantity steps for price on sale supply line
 <!-- Open Delivery Line with the product and check price is correct -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/sale_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td tal:content="string:$&#36;{base_url}/sale_packing_list_module/erp5_pdm_ui_test_delivery/1" />
   <td></td>
 </tr>
 <tr>
@@ -180,7 +180,7 @@ Test quantity steps for price on sale supply line
      and enter the prices again-->
 <tr>
   <td>open</td>
-  <td>${base_url}/sale_trade_condition_module/erp5_trade_ui_test_trade_condition/1/SaleSupplyLine_viewBasePrice</td>
+  <td>&#36;{base_url}/sale_trade_condition_module/erp5_trade_ui_test_trade_condition/1/SaleSupplyLine_viewBasePrice</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/toggleSupplyLineBasePricePerSlice" />
@@ -188,7 +188,7 @@ Test quantity steps for price on sale supply line
 <!-- Open Delivery Line with the product and check price is correct -->
 <tr>
   <td>open</td>
-  <td tal:content="string:$${base_url}/sale_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td tal:content="string:$&#36;{base_url}/sale_packing_list_module/erp5_pdm_ui_test_delivery/1" />
   <td></td>
 </tr>
 <tr>

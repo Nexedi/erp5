@@ -17,7 +17,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/PurchasePackingList_deliver</td>
+  <td>&#36;{base_url}/PurchasePackingList_deliver</td>
   <td></td>
 </tr>
 
@@ -30,7 +30,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example/WebSection_viewAdvancedECommerceThemeConfiguration?ignore_layout:int=1</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example/WebSection_viewAdvancedECommerceThemeConfiguration?ignore_layout:int=1</td>
   <td></td>
 </tr>
 
@@ -59,7 +59,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Person_invalidateLoyaltyAccount</td>
+  <td>&#36;{base_url}/Person_invalidateLoyaltyAccount</td>
   <td></td>
 </tr>
 
@@ -77,7 +77,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>
@@ -139,7 +139,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 <tr>
@@ -292,7 +292,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td>&#36;{base_url}/web_site_module/ecommerce_example</td>
   <td></td>
 </tr>
 

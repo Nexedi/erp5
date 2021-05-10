@@ -12,17 +12,17 @@
 
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr><td>open</td>
-    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_method=FooModule_listAsContext&amp;field_columns=id%7CID%0Astate%7CState</td>
+    <td>&#36;{base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_method=FooModule_listAsContext&amp;field_columns=id%7CID%0Astate%7CState</td>
     <td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Set Successfully.</td><td></td></tr>
@@ -31,7 +31,7 @@
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>

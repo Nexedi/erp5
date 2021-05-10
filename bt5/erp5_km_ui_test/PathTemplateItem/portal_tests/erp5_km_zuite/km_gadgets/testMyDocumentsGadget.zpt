@@ -21,7 +21,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 <tr>
   <td>setFile</td>
   <td>field_your_file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -51,7 +51,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -107,12 +107,12 @@
 <!--  add "My Documents" gadget -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_front</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_front</td>
   <td></td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>

@@ -14,7 +14,7 @@
 <!-- Access module, create a document, then create a sub document -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=front</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/?page=front</td>
   <td></td>
 </tr>
 <tr>
@@ -72,7 +72,7 @@
 <!-- Reindex document -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/bar_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -84,7 +84,7 @@
 <!-- History only show 1 of the 3 documents accessed -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/open_menu_panel" />
@@ -97,7 +97,7 @@
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
+  <td>//div[@data-gadget-url='&#36;{base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
   <td></td>
 </tr>
 

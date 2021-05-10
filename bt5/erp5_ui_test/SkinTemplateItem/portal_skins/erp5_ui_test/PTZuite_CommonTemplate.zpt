@@ -5,7 +5,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+      <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
       <td></td>
     </tr>
     <tr>
@@ -16,7 +16,7 @@
     <tr>
       <td>open</td>
       <!-- create a Foo -->
-      <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=1</td>
+      <td>&#36;{base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=1</td>
       <td></td>
     </tr>
     <tr>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+      <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
       <td></td>
     </tr>
     <tr>

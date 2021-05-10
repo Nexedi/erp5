@@ -12,7 +12,7 @@ Test for Creating reversal of multiple transactions
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -22,7 +22,7 @@ Test for Creating reversal of multiple transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -66,7 +66,7 @@ Test for Creating reversal of multiple transactions
 <!-- Check accounting transactions are created {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -76,7 +76,7 @@ Test for Creating reversal of multiple transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/accounting_module/view</td>
+  <td>&#36;{base_url}/accounting_module/view</td>
   <td></td>
 </tr>
 <tr>

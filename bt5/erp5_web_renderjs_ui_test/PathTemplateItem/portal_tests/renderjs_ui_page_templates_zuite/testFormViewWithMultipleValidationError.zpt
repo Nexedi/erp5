@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>store</td>
-  <td>${base_url}/web_site_module/renderjs_runner</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
   <td>renderjs_url</td>
 </tr>
 <tr>

@@ -15,7 +15,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_tests/erp5_web_e5g_eproject_ui_zuite/testE5gEproject_PreferenceReset</td>
+  <td>&#36;{base_url}/portal_tests/erp5_web_e5g_eproject_ui_zuite/testE5gEproject_PreferenceReset</td>
   <td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@
 <!-- create sample data -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_tests/erp5_web_e5g_eproject_ui_zuite/testE5gEproject_CreateDataSample</td>
+  <td>&#36;{base_url}/portal_tests/erp5_web_e5g_eproject_ui_zuite/testE5gEproject_CreateDataSample</td>
   <td></td>
 </tr>
 <tr>
@@ -37,7 +37,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 <!--
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/e5g_eproject/</td>
+  <td>&#36;{base_url}/web_site_module/e5g_eproject/</td>
   <td></td>
 </tr>
 <tr>

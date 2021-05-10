@@ -16,7 +16,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/wo/#/?page=search</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/wo/#/?page=search</td>
   <td></td>
 </tr>
 

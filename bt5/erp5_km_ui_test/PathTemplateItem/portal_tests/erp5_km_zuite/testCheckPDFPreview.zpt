@@ -16,7 +16,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/web_site_module/km_test_web_site</td>
+  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@
 <tr>
   <td>setFile</td>
   <td>field_your_file</td>
-  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf</td>
+  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf</td>
 </tr>
 <tr>
   <td>clickAndWait</td>

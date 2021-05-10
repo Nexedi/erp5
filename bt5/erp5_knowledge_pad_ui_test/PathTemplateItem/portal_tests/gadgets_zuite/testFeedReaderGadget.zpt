@@ -15,7 +15,7 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@
 <!--  add "Feed Reader" gadget to front-->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_rss</td>
+  <td>&#36;{base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_rss</td>
   <td></td>
 </tr>
 <tr>
@@ -37,7 +37,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_rss_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_rss_box_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -48,7 +48,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/view</td>
+  <td>&#36;{base_url}/view</td>
   <td></td>
 </tr>
 <tr>

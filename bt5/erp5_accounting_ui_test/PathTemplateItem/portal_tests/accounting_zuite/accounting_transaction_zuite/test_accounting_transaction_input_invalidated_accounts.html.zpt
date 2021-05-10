@@ -13,7 +13,7 @@ accounts.
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
+  <td>&#36;{base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@ accounts.
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <!-- invalidate an account.
@@ -50,7 +50,7 @@ accounts.
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
+  <td>&#36;{base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -63,14 +63,14 @@ accounts.
 <!-- Force clearing cache -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_caches/manage_clearAllCache</td>
+  <td>&#36;{base_url}/portal_caches/manage_clearAllCache</td>
   <td></td>
 </tr>
 <!-- Add a new accounting transaction and check this invalidated account cannot
 be selected {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -99,7 +99,7 @@ be selected {{{ -->
 <!-- Check that this account is still in the list for already posted transactions {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>&#36;{base_url}</td>
   <td></td>
 </tr>
 <tr>
