@@ -117,27 +117,27 @@
 <tr>
   <td>type</td>
   <td>//input[@name='title']</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='reference']</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='version']</td>
-  <td>${version}</td>
+  <td>&#36;{version}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='language']</td>
-  <td>${language}</td>
+  <td>&#36;{language}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//textarea[@name='description']</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 <tr>
  <td>waitForElementPresent</td>
@@ -181,7 +181,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -266,13 +266,13 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>${cloned_title}</td>
+  <td>&#36;{cloned_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -331,12 +331,12 @@
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>${cloned_title}</td>
+  <td>&#36;{cloned_title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -346,17 +346,17 @@
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>language</td>
-  <td>${language}</td>
+  <td>&#36;{language}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>version</td>
-  <td>${version}</td>
+  <td>&#36;{version}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -376,7 +376,7 @@
 <tr>
   <td>type</td>
   <td>name=search</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -400,7 +400,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -416,17 +416,17 @@
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 <tr>
   <td>open</td>
@@ -471,7 +471,7 @@
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -480,17 +480,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
   <td></td>
 </tr>
 <tr>
@@ -511,7 +511,7 @@
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>${cloned_title}</td>
+  <td>&#36;{cloned_title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -520,17 +520,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${cloned_title}</td>
+  <td>&#36;{cloned_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
   <td></td>
 </tr>
 </tbody></table>

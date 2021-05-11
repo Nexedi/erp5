@@ -101,17 +101,17 @@
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 
 <!-- Check that the columns are searchable.
@@ -120,7 +120,7 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>type</td>
   <td>//tr[@class="listbox-search-line"]/th[5]//input</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -130,17 +130,17 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 
 <tr>
@@ -151,7 +151,7 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>type</td>
   <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -161,17 +161,17 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 
 <tr>
@@ -182,7 +182,7 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>type</td>
   <td>//tr[@class="listbox-search-line"]/th[7]//input</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -192,17 +192,17 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 
 
@@ -221,17 +221,17 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -247,17 +247,17 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -273,17 +273,17 @@ XXX To be complete, this test would need to create data that should not match th
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
-  <td>${creation_date}</td>
+  <td>&#36;{creation_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
-  <td>${modification_date}</td>
+  <td>&#36;{modification_date}</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
-  <td>${owner}</td>
+  <td>&#36;{owner}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>

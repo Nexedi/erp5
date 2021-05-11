@@ -209,7 +209,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
       <!-- Can't fetch iframe source, so request page again -->
@@ -303,7 +303,7 @@ Note:
       <tr>
         <td>type</td>
         <td>//div[@class="input"]/div/textarea</td>
-        <td>${dump}</td>
+        <td>&#36;{dump}</td>
       </tr>
     </tal:block>
     <tr>
@@ -481,7 +481,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
       <!-- Can't fetch iframe source, so request page again -->
@@ -575,7 +575,7 @@ Note:
       <tr>
         <td>type</td>
         <td>//div[@class="input"]/div/textarea</td>
-        <td>${dump}</td>
+        <td>&#36;{dump}</td>
       </tr>
     </tal:block>
     <tr>
@@ -701,7 +701,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
       <!-- Can't access pdf source inside iframe, so request page again -->
@@ -799,12 +799,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -840,12 +840,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_release_input_page_0_001_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_release_input_page_0_001_en_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -972,7 +972,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
       <!-- Can't fetch pdf source, so request page again -->
@@ -1070,12 +1070,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -1111,12 +1111,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_release_input_page_0_002_de_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_release_input_page_0_002_de_bmp</td>
         <td></td>
       </tr>
       <tr>

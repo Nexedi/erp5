@@ -26,7 +26,7 @@
 
 <tr>
   <td>open</td>
-  <td>${runner_url}</td>
+  <td>&#36;{runner_url}</td>
   <td></td>
 </tr>
 

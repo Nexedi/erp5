@@ -159,7 +159,7 @@
           </tr>
           <tr>
             <td>open</td>
-            <td>${current_location}</td>
+            <td>&#36;{current_location}</td>
             <td></td>
           </tr>
           <tr>

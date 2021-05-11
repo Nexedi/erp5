@@ -54,7 +54,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${current_location}</td>
+  <td>&#36;{current_location}</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -80,7 +80,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${current_location}</td>
+  <td>&#36;{current_location}</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

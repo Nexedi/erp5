@@ -119,7 +119,7 @@
 
 <tr>
   <td>open</td>
-  <td>${url}</td>
+  <td>&#36;{url}</td>
   <td></td>
 </tr>
 

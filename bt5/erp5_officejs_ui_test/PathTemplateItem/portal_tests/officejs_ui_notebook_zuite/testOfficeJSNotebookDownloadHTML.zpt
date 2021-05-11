@@ -79,7 +79,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>

@@ -40,7 +40,7 @@ Ensure no stat line is displayed when no stat_method and no stat_columns are def
     <td>Set Successfully.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module</td><td></td></tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>

@@ -33,7 +33,7 @@
     <td>Done.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
@@ -46,19 +46,19 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr><td>assertElementPresent</td>
-    <td>${matrixbox_table}/tbody/tr/th</td><td></td></tr>
+    <td>&#36;{matrixbox_table}/tbody/tr/th</td><td></td></tr>
 
 <tr><td>verifyText</td>
-    <td>${matrixbox_table}/thead/tr/th[2]</td>
+    <td>&#36;{matrixbox_table}/thead/tr/th[2]</td>
     <td>Three</td></tr>
 <tr><td>verifyText</td>
-    <td>${matrixbox_table}/thead/tr/th[3]</td>
+    <td>&#36;{matrixbox_table}/thead/tr/th[3]</td>
     <td>Four</td></tr>
 <tr><td>verifyText</td>
-    <td>${matrixbox_table}/tbody/tr[1]/th</td>
+    <td>&#36;{matrixbox_table}/tbody/tr[1]/th</td>
     <td>C</td></tr>
 <tr><td>verifyText</td>
-    <td>${matrixbox_table}/tbody/tr[2]/th</td>
+    <td>&#36;{matrixbox_table}/tbody/tr[2]/th</td>
     <td>D</td></tr>
 
 </tbody>

@@ -63,12 +63,12 @@
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>${title_1}</td>
+  <td>&#36;{title_1}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=url_string</td>
-  <td>${url_1}</td>
+  <td>&#36;{url_1}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -104,12 +104,12 @@
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>${title_2}</td>
+  <td>&#36;{title_2}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=url_string</td>
-  <td>${url_2}</td>
+  <td>&#36;{url_2}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -130,7 +130,7 @@
 <tr>
   <td>type</td>
   <td>//div[@role='main']//div[@data-gadget-scope='erp5_searchfield']//input[@name='search']</td>
-  <td>${title_2}</td>
+  <td>&#36;{title_2}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -243,7 +243,7 @@
 <tr>
   <td>type</td>
   <td>//input[@name='reference']</td>
-  <td>${search_term}</td>
+  <td>&#36;{search_term}</td>
 </tr>
 <tr>
   <td>click</td>

@@ -49,7 +49,7 @@
   <tr>
     <td>type</td>
     <td>name=field_my_title</td>
-    <td>${title}</td>
+    <td>&#36;{title}</td>
   </tr>
   <tr>
     <td>clickAndWait</td>

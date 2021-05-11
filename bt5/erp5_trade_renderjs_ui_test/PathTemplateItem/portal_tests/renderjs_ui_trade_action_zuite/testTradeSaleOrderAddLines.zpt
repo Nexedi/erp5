@@ -18,7 +18,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${renderjs_url}/sale_order_module/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
+  <td>&#36;{renderjs_url}/sale_order_module/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

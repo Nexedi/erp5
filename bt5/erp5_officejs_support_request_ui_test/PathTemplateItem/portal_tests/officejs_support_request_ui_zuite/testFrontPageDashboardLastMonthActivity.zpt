@@ -134,7 +134,7 @@ and compare real click with simulated clicks.
 <!-- XXX shouldn't selenium "clickAt" do this ?
 <tr><td>clickAt</td>
     <td>//canvas/..</td>
-    <td>${x},${y}</td></tr> -->
+    <td>&#36;{x},${y}</td></tr> -->
 
 <tr><td colspan="3"><b>Recent updates listbox is updated with the clicked series.</b></td>
 

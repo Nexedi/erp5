@@ -181,7 +181,7 @@
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -195,7 +195,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 </tbody></table>

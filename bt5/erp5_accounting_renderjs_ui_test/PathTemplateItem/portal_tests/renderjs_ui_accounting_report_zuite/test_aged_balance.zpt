@@ -26,7 +26,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tal:block tal:define="click_configuration python: {'text': 'Export'}">
@@ -46,7 +46,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>value=account_type/asset/receivable</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>${year}-${month}-01</td></tr>
+    <td>&#36;{year}-${month}-01</td></tr>
 <tr><td>click</td><!-- Check because it is unchecked by default -->
     <td>//input[@type="checkbox" and @name="field_your_detailed"]</td><td></td></tr>
 <tr><td>type</td>
@@ -84,38 +84,38 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${table}/tbody/tr[1]</td>
+    <td>&#36;{table}/tbody/tr[1]</td>
     <td>current_row</td></tr>
 
 <tr><td>assertText</td>
-    <td>${current_row}/td[1]/a</td>
+    <td>&#36;{current_row}/td[1]/a</td>
     <td>Client 1</td></tr>
 <tr><td>assertText</td>
-    <td>${current_row}/td[2]/a</td>
+    <td>&#36;{current_row}/td[2]/a</td>
     <td>Sale invoice 2</td></tr>
 <!-- skip account_number field -->
 <!-- skip invoice_number field -->
 <!-- skip transaction_reference field -->
 <tr><td>verifyElementPresent</td>
-    <td>${current_row}/td[6]//p[@data-date="${last_year}-${last_month}-${last_day}"]</td><td></td></tr>
+    <td>&#36;{current_row}/td[6]//p[@data-date="${last_year}-${last_month}-${last_day}"]</td><td></td></tr>
 <tr><td>assertText</td>
-    <td>${current_row}/td[7]/a</td>
+    <td>&#36;{current_row}/td[7]/a</td>
     <td>Sale Invoice Transaction</td></tr>
 
 <tr><td>assertFloat</td>
-    <td>${current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>300</td></tr><!-- balance -->
 <tr><td>assertText</td>
-    <td>${current_row}/td[9]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[9]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td></td></tr><!-- future is empty -->
 <tr><td>assertFloat</td>
-    <td>${current_row}/td[10]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[10]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>300</td></tr><!-- period_1=300 -->
 </tbody>
 </table>

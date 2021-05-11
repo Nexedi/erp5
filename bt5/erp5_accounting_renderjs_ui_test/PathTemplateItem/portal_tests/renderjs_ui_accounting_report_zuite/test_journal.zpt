@@ -18,7 +18,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
@@ -77,7 +77,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}//../nav//span[text()="9 Records"]</td><td></td></tr>
+    <td>&#36;{table}//../nav//span[text()="9 Records"]</td><td></td></tr>
 
 <tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>

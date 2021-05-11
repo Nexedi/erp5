@@ -15,7 +15,7 @@ Check that user gets notified if there is an error on a hidden field.
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/1/?editable=1</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module/1/?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Originaly the field was required and we tested here an empty value. Problem is that Firefox

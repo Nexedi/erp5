@@ -10,7 +10,7 @@
     </tr>
     <tr>
       <td>store</td>
-      <td>${renderjs_url}/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
+      <td>&#36;{renderjs_url}/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
       <td>order_url</td>
     </tr>
   </tal:block>
@@ -98,7 +98,7 @@
 
     <tr>
       <td>open</td>
-      <td>${renderjs_url}/sale_packing_list_module/?extended_search=causality_relative_url%3A%20%20"sale_order_module%2Ferp5_trade_renderjs_ui_test_order"&amp;editable=true</td>
+      <td>&#36;{renderjs_url}/sale_packing_list_module/?extended_search=causality_relative_url%3A%20%20"sale_order_module%2Ferp5_trade_renderjs_ui_test_order"&amp;editable=true</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -124,7 +124,7 @@
 
     <tr>
       <td>open</td>
-      <td>${delivery_url}</td>
+      <td>&#36;{delivery_url}</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

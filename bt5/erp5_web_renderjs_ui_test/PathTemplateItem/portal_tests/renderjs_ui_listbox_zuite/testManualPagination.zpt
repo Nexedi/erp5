@@ -44,30 +44,30 @@ a damn about limits so it is perfect adept for testing.
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/1?editable=1</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module/1?editable=1</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td><!-- wait explicitely for the first listbox which holds the modification history -->
-    <td>${listbox}//a[text()="Next"]</td><td></td></tr>
+    <td>&#36;{listbox}//a[text()="Next"]</td><td></td></tr>
 <tr><td>assertElementNotPresent</td><!-- "Next" link must be enabled -->
-    <td>${listbox}//a[text()="Next" and contains(@class, "ui-disabled")]</td><td></td></tr>
+    <td>&#36;{listbox}//a[text()="Next" and contains(@class, "ui-disabled")]</td><td></td></tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 8)', 'footer': 'Records 1 - 3 / 8'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/paginate_next" />
 <tr><td>waitForElementPresent</td>
-    <td>${listbox}//a[text()="Next"]</td><td></td></tr>
+    <td>&#36;{listbox}//a[text()="Next"]</td><td></td></tr>
 <tr><td>assertElementNotPresent</td><!-- "Next" link must be enabled -->
-    <td>${listbox}//a[text()="Next" and contains(@class, "ui-disabled")]</td><td></td></tr>
+    <td>&#36;{listbox}//a[text()="Next" and contains(@class, "ui-disabled")]</td><td></td></tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 8)', 'footer': 'Records 4 - 6 / 8'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/paginate_next" />
 <tr><td>waitForElementPresent</td><!-- wait explicitely for the first listbox which holds the modification history -->
-    <td>${listbox}//a[text()="Next"]</td><td></td></tr>
+    <td>&#36;{listbox}//a[text()="Next"]</td><td></td></tr>
 <tr><td>assertElementPresent</td><!-- "Next" link must be disabled because we are at the end -->
-    <td>${listbox}//a[text()="Next" and contains(@class, "ui-disabled")]</td><td></td></tr>
+    <td>&#36;{listbox}//a[text()="Next" and contains(@class, "ui-disabled")]</td><td></td></tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(7 - 8 / 8)', 'footer': 'Records 7 - 8 / 8'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>

@@ -18,7 +18,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
@@ -40,10 +40,10 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 <tr><td>type</td>
     <td>//input[@name="field_your_from_date"]</td>
-    <td>${year}-01-01</td></tr>
+    <td>&#36;{year}-01-01</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>${year}-12-31</td></tr>
+    <td>&#36;{year}-12-31</td></tr>
 <!-- field_your_section_category_strict is False by default -->
 <!-- field_your_per_account_class_summary is False by default -->
 <!-- field_your_expand_accounts is False by default -->
@@ -58,13 +58,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@data-gadget-scope="field_your_simulation_state"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_multilist.html"]</td>
     <td>multi_select</td></tr>
 <tr><td>assertValue</td>
-    <td>${multi_select}/div[1]//select</td>
+    <td>&#36;{multi_select}/div[1]//select</td>
     <td>delivered</td></tr>
 <tr><td>assertValue</td>
-    <td>${multi_select}/div[2]//select</td>
+    <td>&#36;{multi_select}/div[2]//select</td>
     <td>stopped</td></tr>
 <tr><td>assertValue</td>
-    <td>${multi_select}/div[3]//select</td>
+    <td>&#36;{multi_select}/div[3]//select</td>
     <td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -79,7 +79,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}//../nav//span[text()="10 Records"]</td><td></td></tr>
+    <td>&#36;{table}//../nav//span[text()="10 Records"]</td><td></td></tr>
 
 <tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>

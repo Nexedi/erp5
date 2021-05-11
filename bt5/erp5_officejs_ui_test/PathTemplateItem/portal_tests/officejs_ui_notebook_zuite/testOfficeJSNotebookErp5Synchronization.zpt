@@ -114,17 +114,17 @@ This has been successfully tested with 59. -->
 <tr>
   <td>type</td>
   <td>name=reference</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>identifier=description</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 
 <tal:block tal:define="notebook_content python: 'content {}'.format(DateTime())">
@@ -200,12 +200,12 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 <tr>
   <td>type</td>
   <td>name=reference</td>
-  <td>${search}</td>
+  <td>&#36;{search}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>${search}</td>
+  <td>&#36;{search}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -227,7 +227,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
   <td></td>
 </tr>
 <tr>
@@ -252,18 +252,18 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -273,7 +273,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -293,7 +293,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 <tr>
   <td>type</td>
   <td>name=search</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -317,7 +317,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
   <td></td>
 </tr>
 <tr>
@@ -333,17 +333,17 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 
 <tr>
@@ -384,7 +384,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -393,22 +393,22 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${notebook_content}</td>
+  <td>&#36;{notebook_content}</td>
   <td></td>
 </tr>
 </tbody></table>

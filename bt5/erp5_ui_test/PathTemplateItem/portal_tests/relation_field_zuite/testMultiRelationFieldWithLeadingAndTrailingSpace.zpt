@@ -54,7 +54,7 @@
       <tr>
         <td>type</td>
         <td>field_my_bar_category_title_list</td>
-        <td>${space}${space}leading and trailing spaces 1${space}${space}</td>
+        <td>&#36;{space}${space}leading and trailing spaces 1${space}${space}</td>
       </tr>
       <tr>
         <td>clickAndWait</td>

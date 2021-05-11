@@ -115,7 +115,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 <tr>
   <td>open</td>
-  <td>${delivery_url}</td>
+  <td>&#36;{delivery_url}</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

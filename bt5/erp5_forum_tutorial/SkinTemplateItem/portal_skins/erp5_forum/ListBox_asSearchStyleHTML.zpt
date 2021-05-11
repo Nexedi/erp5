@@ -158,7 +158,7 @@
 
                 <span class="right">
                   <tal:block tal:condition="python: total_line > 0"
-                             tal:replace="structure python: real_context.Base_translateString('Results <em>${start} - ${stop}</em> of <em>${total}</em>.', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>
+                             tal:replace="structure python: real_context.Base_translateString('Results <em>&#36;{start} - ${stop}</em> of <em>${total}</em>.', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>
 
                   <span tal:condition="python: total_line == 0" 
                         class="warning" 

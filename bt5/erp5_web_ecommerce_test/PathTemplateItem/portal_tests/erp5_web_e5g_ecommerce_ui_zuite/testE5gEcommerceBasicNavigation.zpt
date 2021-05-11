@@ -76,7 +76,7 @@
 </tr>
 <tr>
   <td>echo</td>
-  <td>${my_global_text}</td>
+  <td>&#36;{my_global_text}</td>
   <td></td>
 </tr>
 <tr>

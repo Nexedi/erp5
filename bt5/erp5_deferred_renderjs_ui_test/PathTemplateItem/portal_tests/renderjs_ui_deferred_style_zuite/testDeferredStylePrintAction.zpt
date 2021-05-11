@@ -39,7 +39,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForDeferredRenderjsUi/macros/init" />
 <tr>
   <td>open</td>
-  <td>${renderjs_url}/foo_module/1</td>
+  <td>&#36;{renderjs_url}/foo_module/1</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

@@ -75,7 +75,7 @@
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>type</td>

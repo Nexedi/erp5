@@ -32,7 +32,7 @@
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
@@ -71,7 +71,7 @@
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
@@ -85,9 +85,9 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr><td>assertElementPresent</td>
-    <td>${listbox_table}/tbody/tr</td><td></td></tr>
+    <td>&#36;{listbox_table}/tbody/tr</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>${listbox_table}/tbody/tr[2]</td><td></td></tr>
+    <td>&#36;{listbox_table}/tbody/tr[2]</td><td></td></tr>
 
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
@@ -122,7 +122,7 @@
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
@@ -135,9 +135,9 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr><td>verifyElementPresent</td>
-    <td>${listbox_table}/tbody/tr[2]</td><td></td></tr>
+    <td>&#36;{listbox_table}/tbody/tr[2]</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>${listbox_table}/tbody/tr[3]</td><td></td></tr>
+    <td>&#36;{listbox_table}/tbody/tr[3]</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>2 Records</td><td></td></tr>
 

@@ -92,27 +92,27 @@
 <tr>
   <td>type</td>
   <td>//input[@name='title']</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='reference']</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='version']</td>
-  <td>${version}</td>
+  <td>&#36;{version}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='language']</td>
-  <td>${language}</td>
+  <td>&#36;{language}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//textarea[@name='description']</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save"/>
@@ -173,27 +173,27 @@
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='title']</td>
-  <td>${title}</td>
+  <td>&#36;{title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='reference']</td>
-  <td>${reference}</td>
+  <td>&#36;{reference}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='version']</td>
-  <td>${version}</td>
+  <td>&#36;{version}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='language']</td>
-  <td>${language}</td>
+  <td>&#36;{language}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>//textarea[@name='description']</td>
-  <td>${description}</td>
+  <td>&#36;{description}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>

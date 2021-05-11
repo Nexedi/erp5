@@ -32,7 +32,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
@@ -47,10 +47,10 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 <tr><td>type</td>
     <td>//input[@name="field_your_from_date"]</td>
-    <td>${year}-1-1</td></tr>
+    <td>&#36;{year}-1-1</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>${year}-12-31</td></tr>
+    <td>&#36;{year}-12-31</td></tr>
 
 <tr><td>select</td>
     <td>//select[@name="field_your_section_category"]</td>
@@ -87,13 +87,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@class="report_section_list"]/div/div[1]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${form}//h3[text()="A-BANK - Bank (Bank1)"]</td><td></td></tr>
+    <td>&#36;{form}//h3[text()="A-BANK - Bank (Bank1)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="5 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="5 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
     Movement_getExplanationTitleAndAnalytics string:Transaction 3 ref3;
@@ -157,13 +157,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@class="report_section_list"]/div/div[2]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${form}//h3[text()="A-PAY - Payable (Client 1)"]</td><td></td></tr>
+    <td>&#36;{form}//h3[text()="A-PAY - Payable (Client 1)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="2 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="2 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
    Movement_getExplanationTitleAndAnalytics string:Transaction 1 ref1;
@@ -197,13 +197,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@class="report_section_list"]/div/div[3]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${form}//h3[text()="A-REC - Receivable (Client 1)"]</td><td></td></tr>
+    <td>&#36;{form}//h3[text()="A-REC - Receivable (Client 1)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="5 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="5 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
           Movement_getSpecificReference string:1;
@@ -266,13 +266,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@class="report_section_list"]/div/div[4]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${form}//h3[text()="A-REC - Receivable (Client 2)"]</td><td></td></tr>
+    <td>&#36;{form}//h3[text()="A-REC - Receivable (Client 2)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
    Movement_getExplanationTitleAndAnalytics string:Transaction 4 ref4;
@@ -295,13 +295,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@class="report_section_list"]/div/div[5]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${form}//h3[text()="A-REC - Receivable (John Smith)"]</td><td></td></tr>
+    <td>&#36;{form}//h3[text()="A-REC - Receivable (John Smith)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
    Movement_getExplanationTitleAndAnalytics string:Transaction 5 ref5;
@@ -324,23 +324,23 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@class="report_section_list"]/div/div[6]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${form}//h3[text()="Total"]</td><td></td></tr>
+    <td>&#36;{form}//h3[text()="Total"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
+    <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>${table}/tbody/tr[1]</td>
+    <td>&#36;{table}/tbody/tr[1]</td>
     <td>current_row</td></tr>
 
 <tr><td>assertFloat</td><!-- debit -->
-    <td>${current_row}/td[1]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[1]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>2900</td></tr>
 <tr><td>assertFloat</td><!-- credit -->
-    <td>${current_row}/td[2]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[2]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>2900</td></tr>
 
 </tbody>

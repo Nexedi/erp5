@@ -116,7 +116,7 @@
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>
 <tr>
   <td>open</td>
-  <td>${thread_url}</td>
+  <td>&#36;{thread_url}</td>
   <td></td>
 </tr>
 <tr>

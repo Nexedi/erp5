@@ -304,7 +304,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -392,12 +392,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -433,12 +433,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_005_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_005_en_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -677,7 +677,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
       <!-- Can't access pdf source inside iframe, so request page again -->
@@ -766,12 +766,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -807,12 +807,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_006_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_006_en_bmp</td>
         <td></td>
       </tr>
       <tr>

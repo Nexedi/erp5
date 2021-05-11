@@ -143,7 +143,7 @@ Wait for activities</span>
 <!-- Check Person has it in his Documents tab -->
 <tr>
   <td>openAndWait</td>
-  <td>${person_url}</td>
+  <td>&#36;{person_url}</td>
   <td></td>
 </tr>
 <tr>

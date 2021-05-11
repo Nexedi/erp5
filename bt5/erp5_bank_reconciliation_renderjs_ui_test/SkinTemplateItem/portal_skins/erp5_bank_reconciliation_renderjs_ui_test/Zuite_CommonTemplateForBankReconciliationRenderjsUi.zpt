@@ -66,7 +66,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${renderjs_url}/bank_reconciliation_module/erp5_bank_reconciliation_renderjs_ui_test</td>
+      <td>&#36;{renderjs_url}/bank_reconciliation_module/erp5_bank_reconciliation_renderjs_ui_test</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

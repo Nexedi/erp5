@@ -57,11 +57,11 @@ Usage:
         <td tal:content="string:$mirror_section_title"></td></tr>
     <tr tal:condition="exists:debit">
         <td>assertFloat</td>
-        <td>${current_row}/td[7]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+        <td>&#36;{current_row}/td[7]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
         <td tal:content="string:$debit"></td></tr>
     <tr tal:condition="exists:credit">
         <td>assertFloat</td>
-        <td>${current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+        <td>&#36;{current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
         <td tal:content="string:$credit"></td></tr>
     </tal:block>
 
@@ -167,60 +167,60 @@ Usage:
     <tr><td>store</td><td>div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td><td>float_val</td></tr>
     <tr tal:condition="exists:node_id">
       <td>assertText</td>
-      <td>${current_row}/td[1]//a</td>
+      <td>&#36;{current_row}/td[1]//a</td>
       <td tal:content="string:$node_id"></td></tr><!-- not covered by the unittest -->
     <tr tal:condition="exists:node_title">
     	<td>assertText</td>
-    	<td>${current_row}/td[2]//a</td>
+    	<td>&#36;{current_row}/td[2]//a</td>
     	<td tal:content="string:$node_title"></td></tr>
     <tr tal:condition="exists:initial_debit_balance">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[3]//${float_val}</td>
+    	<td>&#36;{current_row}/td[3]//${float_val}</td>
     	<td tal:condition="exists:initial_debit_balance" tal:content="string:$initial_debit_balance"></td>
     	<td tal:condition="not:exists:initial_debit_balance">0</td></tr>
     <tr tal:condition="exists:initial_credit_balance">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[4]//${float_val}</td>
+    	<td>&#36;{current_row}/td[4]//${float_val}</td>
     	<td tal:condition="exists:initial_credit_balance" tal:content="string:$initial_credit_balance"></td>
     	<td tal:condition="not:exists:initial_credit_balance">0</td></tr>
     <tr tal:condition="exists:initial_balance">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[5]//${float_val}</td>
+    	<td>&#36;{current_row}/td[5]//${float_val}</td>
     	<td tal:condition="exists:initial_balance" tal:content="string:$initial_balance"></td>
     	<td tal:condition="not:exists:initial_balance">0</td></tr>
     <tr tal:condition="exists:debit">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[6]//${float_val}</td>
+    	<td>&#36;{current_row}/td[6]//${float_val}</td>
     	<td tal:condition="exists:debit" tal:content="string:$debit"></td>
     	<td tal:condition="not:exists:debit">0</td></tr>
     <tr tal:condition="exists:credit">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[7]//${float_val}</td>
+    	<td>&#36;{current_row}/td[7]//${float_val}</td>
     	<td tal:condition="exists:credit" tal:content="string:$credit"></td>
     	<td tal:condition="not:exists:credit">0</td></tr>
     <tr tal:condition="exists:final_debit_balance">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[8]//${float_val}</td>
+    	<td>&#36;{current_row}/td[8]//${float_val}</td>
     	<td tal:condition="exists:final_debit_balance" tal:content="string:$final_debit_balance"></td>
     	<td tal:condition="not:exists:final_debit_balance">0</td></tr>
     <tr tal:condition="exists:final_credit_balance">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[9]//${float_val}</td>
+    	<td>&#36;{current_row}/td[9]//${float_val}</td>
     	<td tal:condition="exists:final_credit_balance" tal:content="string:$final_credit_balance"></td>
     	<td tal:condition="not:exists:final_credit_balance">0</td></tr>
     <tr tal:condition="exists:final_balance">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[10]//${float_val}</td>
+    	<td>&#36;{current_row}/td[10]//${float_val}</td>
     	<td tal:condition="exists:final_balance" tal:content="string:$final_balance"></td>
     	<td tal:condition="not:exists:final_balance">0</td></tr>
     <tr tal:condition="exists:final_balance_if_debit">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[11]//${float_val}</td>
+    	<td>&#36;{current_row}/td[11]//${float_val}</td>
     	<td tal:condition="exists:final_balance_if_debit" tal:content="string:$final_balance_if_debit"></td>
     	<td tal:condition="not:exists:final_balance_if_debit">0</td></tr>
     <tr tal:condition="exists:final_balance_if_credit">
     	<td>assertFloat</td>
-    	<td>${current_row}/td[12]//${float_val}</td>
+    	<td>&#36;{current_row}/td[12]//${float_val}</td>
     	<td tal:condition="exists:final_balance_if_credit" tal:content="string:$final_balance_if_credit"></td>
     	<td tal:condition="not:exists:final_balance_if_credit">0</td></tr>
     </tal:block>

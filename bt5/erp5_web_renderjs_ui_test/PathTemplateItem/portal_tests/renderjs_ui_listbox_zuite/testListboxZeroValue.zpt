@@ -34,7 +34,7 @@
     <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 

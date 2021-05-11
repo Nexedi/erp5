@@ -112,7 +112,7 @@
 <tr>
   <td>verifyValue</td>
   <td>field_my_foo_category_title</td>
-  <td>${first_cell_text}</td>
+  <td>&#36;{first_cell_text}</td>
 </tr>
 
   </tbody></table>

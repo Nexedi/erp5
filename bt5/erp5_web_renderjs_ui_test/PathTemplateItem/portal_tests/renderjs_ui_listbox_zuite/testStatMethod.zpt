@@ -43,7 +43,7 @@ Ensure stat_method gets executed and result displayed in tfoot element of the li
     <td>Set Successfully.</td><td></td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module</td><td></td></tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
@@ -54,19 +54,19 @@ Ensure stat_method gets executed and result displayed in tfoot element of the li
 
 <!-- Default sort on ID column has to be ASCENDING -->
 <tr><td>assertFloat</td>
-    <td>${listbox_table}/tbody/tr[1]/td[3]/a</td>
+    <td>&#36;{listbox_table}/tbody/tr[1]/td[3]/a</td>
     <td>9</td></tr>
 <tr><td>assertFloat</td>
-    <td>${listbox_table}/tbody/tr[2]/td[3]/a</td>
+    <td>&#36;{listbox_table}/tbody/tr[2]/td[3]/a</td>
     <td>8</td></tr>
 <tr><td>assertFloat</td>
-    <td>${listbox_table}/tbody/tr[3]/td[3]/a</td>
+    <td>&#36;{listbox_table}/tbody/tr[3]/td[3]/a</td>
     <td>7</td></tr>
 <tr><td>assertFloat</td><!-- This tests that "Total" does not appear when first column has stat defined -->
-    <td>${listbox_table}/tfoot/tr[1]/td[1]</td>
+    <td>&#36;{listbox_table}/tfoot/tr[1]/td[1]</td>
     <td>6</td></tr>
 <tr><td>assertFloat</td>
-    <td>${listbox_table}/tfoot/tr[1]/td[3]</td>
+    <td>&#36;{listbox_table}/tfoot/tr[1]/td[3]</td>
     <td>24</td></tr>
 
 

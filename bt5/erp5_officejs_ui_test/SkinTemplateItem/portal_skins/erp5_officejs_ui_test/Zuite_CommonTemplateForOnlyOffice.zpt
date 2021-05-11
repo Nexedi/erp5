@@ -72,7 +72,7 @@
     <tr>
       <td>type</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
-      <td>${title}</td>
+      <td>&#36;{title}</td>
     </tr>
     <tr>
       <td>click</td>
@@ -259,7 +259,7 @@
     <tr>
       <td>type</td>
       <td>name=ids:list</td>
-      <td>${id}</td>
+      <td>&#36;{id}</td>
     </tr>
     <tr>
       <td>clickAndWait</td>

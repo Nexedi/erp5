@@ -219,7 +219,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -314,7 +314,7 @@ Note:
       <tr>
         <td>type</td>
         <td>//div[@class="input"]/div/textarea</td>
-        <td>${dump}</td>
+        <td>&#36;{dump}</td>
       </tr>
     </tal:block>
     <tr>
@@ -547,7 +547,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -642,7 +642,7 @@ Note:
       <tr>
         <td>type</td>
         <td>//div[@class="input"]/div/textarea</td>
-        <td>${dump}</td>
+        <td>&#36;{dump}</td>
       </tr>
     </tal:block>
     <tr>
@@ -810,7 +810,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -905,7 +905,7 @@ Note:
       <tr>
         <td>type</td>
         <td>//div[@class="input"]/div/textarea</td>
-        <td>${dump}</td>
+        <td>&#36;{dump}</td>
       </tr>
     </tal:block>
     <tr>
@@ -1068,7 +1068,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -1163,7 +1163,7 @@ Note:
       <tr>
         <td>type</td>
         <td>//div[@class="input"]/div/textarea</td>
-        <td>${dump}</td>
+        <td>&#36;{dump}</td>
       </tr>
     </tal:block>
     <tr>
@@ -1289,7 +1289,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -1388,12 +1388,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -1429,12 +1429,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=4&amp;doc_id=template_test_book_input_page_4_001_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=4&amp;doc_id=template_test_book_input_page_4_001_en_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -1607,7 +1607,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -1706,12 +1706,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -1751,12 +1751,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=4&amp;doc_id=template_test_book_input_page_4_002_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=4&amp;doc_id=template_test_book_input_page_4_002_en_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -1766,7 +1766,7 @@ Note:
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=5&amp;doc_id=template_test_book_input_page_5_002_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=5&amp;doc_id=template_test_book_input_page_5_002_en_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -1776,7 +1776,7 @@ Note:
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=10&amp;doc_id=template_test_book_input_page_10_002_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=10&amp;doc_id=template_test_book_input_page_10_002_en_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -1883,7 +1883,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -1982,12 +1982,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -2024,12 +2024,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=1&amp;doc_id=template_test_book_input_page_1_003_de_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=1&amp;doc_id=template_test_book_input_page_1_003_de_bmp</td>
         <td></td>
       </tr>
       <tr>
@@ -2136,7 +2136,7 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${url}</td>
+        <td>&#36;{url}</td>
         <td></td>
       </tr>
 
@@ -2235,12 +2235,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td></td>
       </tr>
       <tr>
         <td>verifyNotExpression</td>
-        <td>${pdf_dump}</td>
+        <td>&#36;{pdf_dump}</td>
         <td>null</td>
       </tr>
       <tr>
@@ -2277,12 +2277,12 @@ Note:
       </tr>
       <tr>
         <td>echo</td>
-        <td>${screenshot_url}</td>
+        <td>&#36;{screenshot_url}</td>
         <td></td>
       </tr>
       <tr>
         <td>open</td>
-        <td>${screenshot_url}/Document_createScreenshot?frame=7&amp;doc_id=template_test_book_input_page_7_004_en_bmp</td>
+        <td>&#36;{screenshot_url}/Document_createScreenshot?frame=7&amp;doc_id=template_test_book_input_page_7_004_en_bmp</td>
         <td></td>
       </tr>
       <tr>

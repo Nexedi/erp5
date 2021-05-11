@@ -40,7 +40,7 @@ Frontend should not suppose default sorting
 
 <!-- Verify ListBox behaviour with mal-formed sort definition -->
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
     <td>//a[text()='ID']</td><td></td></tr>
 <!-- No default sort must be shown because the definition is broken "id | id" -->
@@ -61,7 +61,7 @@ Frontend should not suppose default sorting
 
 <!-- Verify ListBox behaviour with valid ASC sort configuration -->
 <tr><td>open</td>
-    <td>${renderjs_url}//#/foo_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}//#/foo_module</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
     <td>//a[text()='ID']</td><td></td></tr>
 <!-- Default sort on ID column has to be ASCENDING -->
@@ -86,7 +86,7 @@ Frontend should not suppose default sorting
 
 <!-- Verify ListBox behaviour with valid DESC sort configuration -->
 <tr><td>open</td>
-    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/foo_module</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
     <td>//a[text()='Title']</td><td></td></tr>
 <!-- Default sort on Title column has to be DESCENDING -->

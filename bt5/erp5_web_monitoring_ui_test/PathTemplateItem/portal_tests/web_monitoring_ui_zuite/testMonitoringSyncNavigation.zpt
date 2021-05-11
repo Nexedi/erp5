@@ -115,17 +115,17 @@
 <tr>
   <td>type</td>
   <td>name=url</td>
-  <td>${opml_url}</td>
+  <td>&#36;{opml_url}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=username</td>
-  <td>${username}</td>
+  <td>&#36;{username}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=password</td>
-  <td>${password}</td>
+  <td>&#36;{password}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -174,7 +174,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${opml_url}</td>
+  <td>&#36;{opml_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -219,7 +219,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -239,17 +239,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${instance_root}</td>
+  <td>&#36;{instance_root}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${instance_1}</td>
+  <td>&#36;{instance_1}</td>
   <td></td>
 </tr>
 <tr>
@@ -265,7 +265,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -296,17 +296,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${instance_root}</td>
+  <td>&#36;{instance_root}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${instance_1}</td>
+  <td>&#36;{instance_1}</td>
   <td></td>
 </tr>
 <tr>
@@ -327,7 +327,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -378,7 +378,7 @@
 <tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -403,7 +403,7 @@
 <tr>
   <td>type</td>
   <td>name=password</td>
-  <td>${password}</td>
+  <td>&#36;{password}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -453,7 +453,7 @@
 <tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -487,12 +487,12 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>${opml_url}</td>
+  <td>&#36;{opml_url}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -507,7 +507,7 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>${hosting_title}</td>
+  <td>&#36;{hosting_title}</td>
   <td></td>
 </tr>
 </tbody></table>

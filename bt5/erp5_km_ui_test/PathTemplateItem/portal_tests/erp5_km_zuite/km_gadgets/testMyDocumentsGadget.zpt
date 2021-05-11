@@ -61,7 +61,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${file_url}?editable_mode:int=1</td>
+  <td>&#36;{file_url}?editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>

@@ -18,7 +18,7 @@ Check that use gets notified if they are using wrong 'Report Style' (UI) Prefere
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
 
 <!-- Select random Report and fill in just the necessary values for valid submission. -->
 

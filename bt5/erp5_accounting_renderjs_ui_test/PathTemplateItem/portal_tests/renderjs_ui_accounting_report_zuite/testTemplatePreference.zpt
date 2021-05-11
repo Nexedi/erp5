@@ -45,7 +45,7 @@
 <tr>
   <td>type</td>
   <td>name=field_my_title</td>
-  <td>${original_title}</td>
+  <td>&#36;{original_title}</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
@@ -70,7 +70,7 @@
 <tr>
   <td>type</td>
   <td>name=field_my_title</td>
-  <td>${original_title} old</td>
+  <td>&#36;{original_title} old</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
@@ -105,7 +105,7 @@
 <tr>
   <td>assertValue</td>
   <td>name=field_my_title</td>
-  <td>${original_title}</td>
+  <td>&#36;{original_title}</td>
 </tr>
 
 </tbody></table>

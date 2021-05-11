@@ -144,7 +144,7 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 <tr>
   <td>type</td>
   <td>listbox_specific_reference</td>
-  <td>${specific_reference}</td>
+  <td>&#36;{specific_reference}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>

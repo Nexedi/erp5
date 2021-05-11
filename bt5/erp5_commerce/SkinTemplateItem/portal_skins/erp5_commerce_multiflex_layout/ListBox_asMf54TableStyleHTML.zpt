@@ -98,7 +98,7 @@
                               current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;
                               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;">
                                 <tal:block condition="python: total_line > 0"
-                                  tal:replace="structure python: real_context.Base_translateString('Results <em>${start} - ${stop}</em> of <em>${total}</em>.', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>
+                                  tal:replace="structure python: real_context.Base_translateString('Results <em>&#36;{start} - ${stop}</em> of <em>${total}</em>.', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>
                   <span class="warning" tal:condition="python: here.total_size >= 1000"> - </span><span tal:condition="python: here.total_size >= 1000" class="warning" i18n:translate="" i18n:domain="ui">There is too much result for your search, please specify what you want.</span>
                   <span tal:condition="python: total_line == 0" class="warning" i18n:translate="" i18n:domain="ui">No result !</span>
                 </span>

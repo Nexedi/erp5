@@ -74,7 +74,7 @@
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='field_my_start_date']</td>
-  <td>${start_date_value}</td>
+  <td>&#36;{start_date_value}</td>
 </tr>
 
 </tbody></table>

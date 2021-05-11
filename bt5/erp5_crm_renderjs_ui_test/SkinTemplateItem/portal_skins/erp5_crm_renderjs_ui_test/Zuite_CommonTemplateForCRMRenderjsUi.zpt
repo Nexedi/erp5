@@ -66,7 +66,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${renderjs_url}/event_module/erp5_crm_ui_test_event?editable=1</td>
+      <td>&#36;{renderjs_url}/event_module/erp5_crm_ui_test_event?editable=1</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -213,7 +213,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${renderjs_url}/campaign_module/erp5_crm_ui_test_campaign?editable=1</td>
+      <td>&#36;{renderjs_url}/campaign_module/erp5_crm_ui_test_campaign?editable=1</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
