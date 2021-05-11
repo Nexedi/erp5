@@ -283,3 +283,40 @@ class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
                  for line in line_list if not line.is_title_line]),
         [(0, 'Client 1', 100.0), (0, 'Client 2', 200.0), (1, None, 300.0)],
     )
+
+  def test_adding_to_payment_transaction_set_reference(self):
+    account_module = self.account_module
+    payment = self._makeOne(
+        portal_type='Payment Transaction',
+        simulation_state='delivered',
+        source_section_value=self.main_section,
+        source_payment_value=self.bank_account,
+        payment_mode_value=self.portal.portal_categories.payment_mode.cash,
+        resource_value=self.portal.currency_module.euro,
+        destination_section_value=self.organisation_module.client_1,
+        start_date=DateTime(2014, 1, 1),
+        lines=(
+            dict(
+                source_value=account_module.bank,
+                source_debit=100,
+                id='bank'),
+            dict(
+                source_value=account_module.receivable,
+                source_credit=100)))
+    self.tic()
+    self.assertFalse(payment.getReference())
+
+    ptg = self.portal.payment_transaction_group_module.newContent(
+        portal_type='Payment Transaction Group',
+        source_section_value=self.main_section,
+        source_payment_value=self.bank_account,
+        payment_mode_value=self.portal.portal_categories.payment_mode.cash,
+        price_currency_value=self.portal.currency_module.euro,
+        stop_date=DateTime(2014, 1, 31),)
+    self.tic()
+    ptg.PaymentTransactionGroup_selectPaymentTransactionLineList(mode='stopped_or_delivered')
+    self.tic()
+    self.assertEqual(
+        payment.bank.getAggregateValueList(),
+        [ptg])
+    self.assertTrue(payment.getReference())
