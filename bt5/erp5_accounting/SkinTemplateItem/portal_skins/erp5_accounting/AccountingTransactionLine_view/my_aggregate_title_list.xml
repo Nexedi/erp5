@@ -175,7 +175,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: list(context.getPortalItemTypeList()) + [\'Payment Transaction Group\', ]</string> </value>
+            <value> <string>python: [(x, x) for x in list(context.getPortalItemTypeList()) + [\'Payment Transaction Group\', ]]</string> </value>
         </item>
       </dictionary>
     </pickle>
