@@ -2,6 +2,6 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 <a class="button button-submit" href="WebSection_viewAddBlogMessageDialog"
    tal:define="absolute_url here/absolute_url"
-   tal:attributes="href string:${absolute_url}/WebSection_viewAddBlogMessageDialog?cancel_url=${absolute_url}%s"
+   tal:attributes="href string:${absolute_url}/WebSection_viewAddBlogMessageDialog?cancel_url=&#36;{absolute_url}%s"
    i18n:translate="" i18n:domain="ui">Add Blog Message</a>
 </tal:block>

@@ -140,7 +140,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded_in_menu_page" />
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title_2}</td>
+  <td>link=&#36;{title_2}</td>
   <td></td>
 </tr>
 <tr>
@@ -150,7 +150,7 @@
 </tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>link=${title_1}</td>
+  <td>link=&#36;{title_1}</td>
   <td></td>
 </tr>
 <!-- Search With Dispatcher and default redirection on bookmark -->

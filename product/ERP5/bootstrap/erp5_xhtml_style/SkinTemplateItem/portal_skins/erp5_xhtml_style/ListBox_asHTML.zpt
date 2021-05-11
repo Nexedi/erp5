@@ -356,13 +356,13 @@
                               report_depth python: selection.getParams().get('report_depth', request.get('report_depth', 0))">
                 <tal:block tal:repeat="i python: range(0, 6)">&nbsp;
                   <a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"
-                     tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}${selection_key_param}&amp;report_depth:int=${i};
+                     tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}${selection_key_param}&amp;report_depth:int=&#36;{i};
                                      class python: test(i==report_depth, 'selected', '');"
                      tal:content="i"/>
                 </tal:block>&nbsp;-&nbsp;
                 <a 
                   href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"
-                  tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}${selection_key_param}&amp;is_report_opened:int=${is_report_opened}"
+                  tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}${selection_key_param}&amp;is_report_opened:int=&#36;{is_report_opened}"
                   tal:content="python: is_report_opened and 'Show' or 'Hide'"
                   i18n:domain="ui" i18n:translate="">Show</a>
               </th>
@@ -433,7 +433,7 @@
                         tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport';
                                     selection_key here/getSelectionKey;
                                     selection_key_param python:selection_key and ('&amp;selection_key=%s' % selection_key) or ''"
-                        tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}${selection_key_param};
+                        tal:attributes="href string:${method_id}?report_url=&#36;{line/getDomainUrl}&amp;form_id=&#36;{form_id}&amp;list_selection_name=${selection_name}${selection_key_param};
                                         class python:test(line.isOpen(), 'tree-open', 'tree-closed');
                                         style python:'white-space: nowrap;; margin-left: %spx' % (line.getDepth() * 15)"
                         tal:content="section_name"/>

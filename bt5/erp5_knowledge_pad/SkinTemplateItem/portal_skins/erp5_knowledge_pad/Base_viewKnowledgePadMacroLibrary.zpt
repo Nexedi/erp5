@@ -48,7 +48,7 @@
 
 <a metal:define-macro="add_new_gadget"
    tal:condition="python:active_knowledge_pad is not None and not isKnowledgePadTemplateUsed"
-   tal:attributes="href string:Base_viewGadgetListDialog?reset=1&amp;cancel_url=${cancel_url}&amp;mode=${mode}&amp;active_pad_relative_url=${active_knowledge_pad/getRelativeUrl}"
+   tal:attributes="href string:Base_viewGadgetListDialog?reset=1&amp;cancel_url=&#36;{cancel_url}&amp;mode=${mode}&amp;active_pad_relative_url=${active_knowledge_pad/getRelativeUrl}"
    title="Add gadgets"
    i18n:domain="ui"
    i18n:attributes="title"
@@ -164,7 +164,7 @@
 
             <!--                      
             <a tal:attributes="href string:
-                                 ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=${knowledge_pad_relative_url}&amp;mode=${mode}">
+                                 ERP5Site_toggleActiveKnowledgePad?knowledge_pad_url=&#36;{knowledge_pad_relative_url}&amp;mode=${mode}">
               <span tal:attributes="id pad_title_dom_id;"
                     tal:content="knowledge_pad/getTitle"/>
              </a>-->

@@ -9,7 +9,7 @@
     <item tal:repeat="error error_log/getLogEntries">
         <tal:block tal:define="error_time python:modules['DateTime'].DateTime(error['time'])">
           <title tal:content="string:${error/userid} ${error/type} ${error/value} ${error_time}"></title>
-          <link tal:content="string:${error_log/absolute_url}/showEntry?id=${error/id}"/>
+          <link tal:content="string:${error_log/absolute_url}/showEntry?id=&#36;{error/id}"/>
           <description>
             &lt;table&gt;
               &lt;tr&gt;&lt;th&gt;Login&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/userid"/>&lt;/td&gt;&lt;/tr&gt;
@@ -21,7 +21,7 @@
               &lt;tr&gt;&lt;th&gt;Request&lt;/th&gt;&lt;td&gt;<tal:block tal:replace="error/req_html"/>&lt;/td&gt;&lt;/tr&gt;
             &lt;/table&gt;
           </description>
-          <guid tal:content="string:${error_log/absolute_url}/showEntry?id=${error/id}"></guid>
+          <guid tal:content="string:${error_log/absolute_url}/showEntry?id=&#36;{error/id}"></guid>
         </tal:block>
     </item>
 </channel>

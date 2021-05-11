@@ -177,7 +177,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -187,7 +187,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -252,7 +252,7 @@
 </tal:block>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -302,17 +302,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${cloned_title}</td>
+  <td>link=&#36;{cloned_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${cloned_title}</td>
+  <td>link=&#36;{cloned_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -397,7 +397,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -407,7 +407,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>

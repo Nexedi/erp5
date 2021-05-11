@@ -153,12 +153,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -292,18 +292,18 @@
 <!-- check that previous document still exists -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <!-- check new cloned document -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${cloned_title}</td>
+  <td>link=&#36;{cloned_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${cloned_title}</td>
+  <td>link=&#36;{cloned_title}</td>
   <td></td>
 </tr>
 

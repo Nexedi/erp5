@@ -41,7 +41,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${workflist_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=&#36;{workflist_box_url}</td>
   <td></td>
 </tr>
 <tr>

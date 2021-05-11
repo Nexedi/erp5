@@ -544,7 +544,7 @@
       
        
       <a class="txtButn" title="Show more"
-         tal:attributes="href string:${forum_web_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>
+         tal:attributes="href string:${forum_web_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=&#36;{absolute_url}&amp;predecessor_url=${relative_url}">New</a>
       
     </h2>
 

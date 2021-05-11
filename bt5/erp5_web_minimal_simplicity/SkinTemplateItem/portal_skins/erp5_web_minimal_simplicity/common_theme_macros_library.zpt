@@ -68,7 +68,7 @@
       
        
       <a class="txtButn" title="Show more"
-         tal:attributes="href string:${forum_web_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>
+         tal:attributes="href string:${forum_web_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=&#36;{absolute_url}&amp;predecessor_url=${relative_url}">New</a>
       -->
     </h2>
 
@@ -104,7 +104,7 @@
   <li class="facebook">
     <tal:block tal:define="like_url python: here.Base_quote(base_url);
                            application_id python: '1442843545949100'">
-      <iframe tal:attributes="src string://www.facebook.com/plugins/like.php?href=${like_url}&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=${application_id}"
+      <iframe tal:attributes="src string://www.facebook.com/plugins/like.php?href=&#36;{like_url}&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=${application_id}"
               scrolling="no" 
               frameborder="0" 
               style="border:none; overflow:hidden; height:21px;" 
@@ -117,7 +117,7 @@
        title="Show more" class="expand"></a>
   </li>
   <li><a 
-         tal:attributes="href string:&#36;{base_url}/DiscussionThread_redirectCreateNewDiscussionPost?discussion_post_uid=${discussion_post/getId}"
+         tal:attributes="href string:&#36;{base_url}/DiscussionThread_redirectCreateNewDiscussionPost?discussion_post_uid=&#36;{discussion_post/getId}"
          title="Reply" class="reply"></a></li>
 </ul>
 -->
@@ -299,9 +299,9 @@ below.
   - should we use display ? redirect_url ?
 
   --></tal:comment>
-  <a target="_blank" tal:attributes="href string:http://www.facebook.com/dialog/share?app_id=${application_id}&href=${share_url}"><img src="web_images/facebook-button.png" style="width:2em;height:2em;" alt="[Share on Facebook]" /></a>
+  <a target="_blank" tal:attributes="href string:http://www.facebook.com/dialog/share?app_id=&#36;{application_id}&href=${share_url}"><img src="web_images/facebook-button.png" style="width:2em;height:2em;" alt="[Share on Facebook]" /></a>
   <tal:comment tal:replace="nothing"><!--
-  <iframe tal:attributes="src string://www.facebook.com/plugins/like.php?href=${share_url}&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=${application_id}"
+  <iframe tal:attributes="src string://www.facebook.com/plugins/like.php?href=&#36;{share_url}&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=${application_id}"
           scrolling="no" 
           frameborder="0" 
           style="border:none; overflow:hidden; height:21px;" 
@@ -323,7 +323,7 @@ below.
   - use source ? hl ? soc-platform ? soc-app ?
   - it lacks gplus-button image !
 
-  <a target="_blank" tal:attributes="href string:https://plus.google.com/share?url=${share_url}"><img src="web_images/gplus-button.png" style="width:2em;height:2em;" alt="[Share on Google+]" /></a>
+  <a target="_blank" tal:attributes="href string:https://plus.google.com/share?url=&#36;{share_url}"><img src="web_images/gplus-button.png" style="width:2em;height:2em;" alt="[Share on Google+]" /></a>
   <tal:comment tal:replace="nothing"><!--
   <!-- Place this tag where you want the +1 button to render. -- >
   <div class="g-plusone" data-annotation="none" data-width="300"></div>
@@ -349,7 +349,7 @@ below.
     related : YouTube,YouTubeTrends,YTCreators
 
   --></tal:comment>
-  <a target="_blank" tal:attributes="href string:http://twitter.com/intent/tweet?url=${share_url}&via=erp5&related=ERP5"><img src="web_images/twitter-button.png" style="width:2em;height:2em;" alt="[Share on Twitter]" /></a>
+  <a target="_blank" tal:attributes="href string:http://twitter.com/intent/tweet?url=&#36;{share_url}&via=erp5&related=ERP5"><img src="web_images/twitter-button.png" style="width:2em;height:2em;" alt="[Share on Twitter]" /></a>
   <tal:comment tal:replace="nothing"><!--
   <tal:block metal:define-macro="twitter">
     <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>

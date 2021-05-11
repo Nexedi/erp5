@@ -5,7 +5,7 @@
   <p tal:repeat="image_list python: here.Event_getAttachmentList()">
 
   <img src="" 
-      tal:attributes="src string:${image_list/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}&resolution:int=200">
+      tal:attributes="src string:${image_list/absolute_url}/index_html?display=&#36;{display}&format=${format}&frame=${frame}&resolution:int=200">
    </p>
    <tal:block tal:define="information_list here/getAttachmentInformationList | python:
     [{'To': 'erp5-report@erp5.org', 'uid': 'part_0', 'index': 0}, 

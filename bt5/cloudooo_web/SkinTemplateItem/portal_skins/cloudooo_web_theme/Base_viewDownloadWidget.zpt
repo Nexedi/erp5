@@ -10,7 +10,7 @@
   <div class="download-document-format-list-menu" id="donwload_choice">
     <ul>
       <li class="separator"><a tal:attributes="href document_url" i18n:translate="">Original File</a></li>
-      <li class="separator" tal:condition="python: len(context.getTargetFormatItemList())>0"><a tal:attributes="href string:${document_url}/Document_viewDownloadDialog?cancel_url=${document_url}/view" i18n:translate="">Other Format</a></li>
+      <li class="separator" tal:condition="python: len(context.getTargetFormatItemList())>0"><a tal:attributes="href string:${document_url}/Document_viewDownloadDialog?cancel_url=&#36;{document_url}/view" i18n:translate="">Other Format</a></li>
     </ul>
   </div>
 </div>

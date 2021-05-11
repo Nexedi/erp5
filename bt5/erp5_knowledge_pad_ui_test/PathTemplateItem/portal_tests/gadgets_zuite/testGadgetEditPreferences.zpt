@@ -38,7 +38,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_web_section_random_page_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=&#36;{erp5_web_section_random_page_box_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_box_url}</td>
+  <td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=&#36;{erp5_persons_box_url}</td>
   <td></td>
 </tr>
 <tr>

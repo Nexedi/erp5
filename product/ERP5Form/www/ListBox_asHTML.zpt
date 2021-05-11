@@ -63,10 +63,10 @@
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">
                     <a href="method"
                       tal:condition="report_tree/is_open"
-                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>
+                      tal:attributes="href string:foldDomain?domain_url=&#36;{report_tree/domain_url}&form_id=&#36;{form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>
                     <a href="method"
                       tal:condition="not: report_tree/is_open"
-                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>
+                      tal:attributes="href string:unfoldDomain?domain_url=&#36;{report_tree/domain_url}&form_id=&#36;{form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>
                   </td>
                 </tr>
               </table>
@@ -243,7 +243,7 @@
                                        title python: value[1];
                                        sort_order python: value[2]">
                   <td tal:condition="sql" class="Data">
-                    <a tal:attributes="href string:setSelectionQuickSortOrder?selection_name=${selection_name}&amp;sort_on=${sql}&amp;form_id=${form_id}"
+                    <a tal:attributes="href string:setSelectionQuickSortOrder?selection_name=&#36;{selection_name}&amp;sort_on=&#36;{sql}&amp;form_id=${form_id}"
                       tal:content="title" i18n:domain="ui" i18n:translate="">ID</a>
                     <img tal:condition="python: sort_order == 'ascending'"
                       src="1bottomarrow.png" alt="Ascending Display" title="Ascending Display"
@@ -271,9 +271,9 @@
                   tal:define="index python: selection_index is not None and '&amp;selection_index=%s' % selection_index or '';
                               is_report_opened python: int(not here.getSelection().isReportOpened());
                               url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"
-                            tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"
+                            tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}&amp;report_depth:int=&#36;{i}"
                             tal:content="i">0</a></tal:block>&nbsp;-&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"
-                                tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"
+                                tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}&amp;is_report_opened:int=&#36;{is_report_opened}"
                                 tal:content="python: is_report_opened and 'Show' or 'Hide'"
                                 i18n:domain="ui" i18n:translate="">Show</a>
                 </td>
@@ -311,7 +311,7 @@
                   tal:define="section_name python: line.getDomainTitle()">
                   <a tal:condition="section_name"
                     tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
-                    tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"
+                    tal:attributes="href string:${method_id}?report_url=&#36;{line/getDomainUrl}&amp;form_id=&#36;{form_id}&amp;list_selection_name=${selection_name}"
                     tal:content="structure python: '%s%s&nbsp;%s' % ('&nbsp;&nbsp;' * line.getDepth(), line.isOpen() and '-' or '+', section_name)" />
                 </td>
                 <td tal:condition="here/showSelectColumn"

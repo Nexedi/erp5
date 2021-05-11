@@ -169,7 +169,7 @@
               <li tal:condition="python:here.ERP5Site_isNewContentAllowed(portal_type, user)">
                 <a tal:content="portal_type"
                   i18n:translate="" i18n:domain="ui"
-                  tal:attributes="href string:ERP5Site_newContent?portal_type=${portal_type}">Toto</a>
+                  tal:attributes="href string:ERP5Site_newContent?portal_type=&#36;{portal_type}">Toto</a>
               </li>
             </tal:block>
           </ul>

@@ -8,7 +8,7 @@
     <h2>
       <a title="Show more" tal:attributes="href string:${discussion_thread_section/absolute_url}">Discussions</a>
       <a class="txtButn" title="Show more"
-         tal:attributes="href string:${discussion_thread_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>
+         tal:attributes="href string:${discussion_thread_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=&#36;{absolute_url}&amp;predecessor_url=${relative_url}">New</a>
     </h2>
     
     <div class="row" tal:repeat="discussion_thread discussion_thread_list">

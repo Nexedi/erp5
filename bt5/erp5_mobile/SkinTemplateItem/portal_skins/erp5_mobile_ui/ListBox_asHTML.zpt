@@ -64,10 +64,10 @@
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">
                     <a href="method"
                       tal:condition="report_tree/is_open"
-                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</b></a>
+                      tal:attributes="href string:foldDomain?domain_url=&#36;{report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</b></a>
                     <a href="method"
                       tal:condition="not: report_tree/is_open"
-                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</tal:block></a>
+                      tal:attributes="href string:unfoldDomain?domain_url=&#36;{report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</tal:block></a>
                   </div>
                 </div>
               </div>
@@ -184,9 +184,9 @@
                   tal:define="index python: selection_index is not None and '&amp;selection_index=%s' % selection_index or '';
                               is_report_opened python: int(not here.getSelection().isReportOpened());
                               url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"
-                            tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"
+                            tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}&amp;report_depth:int=${i}"
                             tal:content="i">0</a></tal:block>&nbsp;-&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"
-                                tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"
+                                tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"
                                 tal:content="python: is_report_opened and 'Show' or 'Hide'"
                                 i18n:domain="ui" i18n:translate="">Show</a>
                 </div>
@@ -237,7 +237,7 @@
                   <a tal:condition="section_name"
                     href="portal_selections/foldReport?report_url=base_domain&amp;form_id=form&amp;list_selection_name=default"
                     tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
-                    tal:attributes="href string:portal_selections/${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"
+                    tal:attributes="href string:portal_selections/${method_id}?report_url=&#36;{line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"
                     tal:content="structure python: '%s%s&nbsp;%s' % ('&nbsp;&nbsp;' * line.getDepth(), line.isOpen() and '-' or '+', section_name)" />
                 </div>
               <tal:block tal:repeat="valueY line/render">
@@ -264,7 +264,7 @@
                        <input tal:condition="python: not form_id=='Base_viewWorkflowHistory' and line.getObject() is not None"  type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"
                               tal:attributes="checked python: line.getUid() in checked_uid_set;
                                               value line/getUid; id string:${field_id}_cb_${line/getUid}" />
-                       <a tal:condition="python: not form_id=='Base_viewWorkflowHistory'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1; title python: line.getObject().getRelativeUrl()"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" i18n:translate="" i18n:domain="ui"/></a>
+                       <a tal:condition="python: not form_id=='Base_viewWorkflowHistory'" href="#"  tal:attributes="href string:${object_url}?selection_index=&#36;{selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1; title python: line.getObject().getRelativeUrl()"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" i18n:translate="" i18n:domain="ui"/></a>
                       <span tal:condition="original_value" tal:replace="structure html">value</span>
                   </div>
                    <div tal:attributes="id python: '%s_%s%s%s' % (field_id, foo2, 'data', foo)">

@@ -194,12 +194,12 @@
 </tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>link=${search}</td>
+  <td>link=&#36;{search}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -269,7 +269,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>
@@ -279,7 +279,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=&#36;{title}</td>
   <td></td>
 </tr>
 <tr>

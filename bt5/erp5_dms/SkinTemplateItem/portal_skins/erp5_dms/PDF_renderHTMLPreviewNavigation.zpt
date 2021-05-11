@@ -28,7 +28,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
            tal:attributes="class python: test(hide_left_side_links, 'first shaded', 'first')"/>
     </a>
     <a tal:omit-tag="hide_left_side_links"
-       tal:attributes="href string:&#36;{base_url}?selection_index=${previous_thunmbnail_index}">
+       tal:attributes="href string:&#36;{base_url}?selection_index=&#36;{previous_thunmbnail_index}">
       <img src="images/transparent-image.gif" 
            i18n:attributes="alt; title"
            i18n:domain="ui"
@@ -46,7 +46,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
     / <span tal:content="all_thunmbnails"/>
 
     <a tal:omit-tag="hide_right_side_links"
-       tal:attributes="href string:&#36;{base_url}?selection_index=${next_thunmbnail_index}">
+       tal:attributes="href string:&#36;{base_url}?selection_index=&#36;{next_thunmbnail_index}">
         <img src="images/transparent-image.gif" 
              i18n:attributes="alt; title"
              i18n:domain="ui"
@@ -56,7 +56,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
              tal:attributes="class python: test(hide_right_side_links, 'next shaded', 'next')"/>
     </a>
     <a tal:omit-tag="hide_right_side_links"
-       tal:attributes="href string:&#36;{base_url}?selection_index=${all_thunmbnails}">
+       tal:attributes="href string:&#36;{base_url}?selection_index=&#36;{all_thunmbnails}">
       <img src="images/transparent-image.gif" 
            i18n:attributes="alt; title"
            i18n:domain="ui"

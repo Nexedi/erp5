@@ -51,13 +51,13 @@
 	   <td tal:content="tr/output">
 	   </td>
 	   <td>
-             <a tal:attributes="href string:${here/absolute_url}/move_object_down?id=${tr/getId}"
+             <a tal:attributes="href string:${here/absolute_url}/move_object_down?id=&#36;{tr/getId}"
                 tal:condition="not:repeat/tr/end">
   	       <img tal:attributes="src string:${here/portal_url}/down.png"/>
              </a>
 	   </td>
 	   <td>
-             <a tal:attributes="href string:${here/absolute_url}/move_object_up?id=${tr/getId}"
+             <a tal:attributes="href string:${here/absolute_url}/move_object_up?id=&#36;{tr/getId}"
                 tal:condition="not:repeat/tr/start">
   	       <img tal:attributes="src string:${here/portal_url}/up.png"/>
              </a>

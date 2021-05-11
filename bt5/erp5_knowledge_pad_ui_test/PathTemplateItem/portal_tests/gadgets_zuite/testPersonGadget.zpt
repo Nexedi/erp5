@@ -72,7 +72,7 @@
 </tr>
 <tr>
 	<td>openAndWait</td>
-	<td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_url}</td>
+	<td>&#36;{base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=&#36;{erp5_persons_url}</td>
 	<td></td>
 </tr>
 <tr>

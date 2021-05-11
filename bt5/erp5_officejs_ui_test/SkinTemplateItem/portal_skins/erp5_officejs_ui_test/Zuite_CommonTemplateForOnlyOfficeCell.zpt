@@ -2,7 +2,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal">
   <tal:block metal:define-macro="current_cell">
     <tr>
-      <td colspan="3"><b tal:content="string:Check current cell=${check_value}"></b></td>
+      <td colspan="3"><b tal:content="string:Check current cell=&#36;{check_value}"></b></td>
     </tr>
     <tr>
       <td>assertValue</td>
@@ -10,7 +10,7 @@
       <td tal:content="check_value"></td>
     </tr>
     <tr>
-      <td colspan="3"><b tal:content="string:Set current cell=${set_value}"></b></td>
+      <td colspan="3"><b tal:content="string:Set current cell=&#36;{set_value}"></b></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>

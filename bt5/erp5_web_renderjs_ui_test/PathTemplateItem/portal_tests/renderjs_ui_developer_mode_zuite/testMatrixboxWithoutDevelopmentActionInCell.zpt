@@ -32,7 +32,7 @@
     <td>listbox_table</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=${last_id}<span tal:replace="string:&create_line:int=1"></span></td><td></td></tr>
+    <td>&#36;{base_url}/foo_module/FooModule_createObjects?start:int=&#36;{last_id}<span tal:replace="string:&create_line:int=1"></span></td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>

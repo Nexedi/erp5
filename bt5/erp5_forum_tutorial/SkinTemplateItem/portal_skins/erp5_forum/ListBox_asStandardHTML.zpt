@@ -164,9 +164,9 @@
                               is_report_opened python: int(not here.getSelection().isReportOpened());
                               requested_selection_name here/getRequestedSelectionName;
                               url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"
-                            tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"
+                            tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}&amp;report_depth:int=${i}"
                             tal:content="i">0</a></tal:block>&nbsp;-&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"
-                                tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"
+                                tal:attributes="href string:${url}?selection_name=&#36;{requested_selection_name}${index}&amp;is_report_opened:int=${is_report_opened}"
                                 tal:content="python: is_report_opened and 'Show' or 'Hide'"
                                 i18n:domain="ui" i18n:translate="">Show</a>
                 </td>
@@ -215,7 +215,7 @@
                   tal:define="section_name python: line.getDomainTitle()">
                   <a tal:condition="section_name"
                     tal:define="method_id python: line.isOpen() and 'foldReport' or 'unfoldReport'"
-                    tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name};
+                    tal:attributes="href string:${method_id}?report_url=&#36;{line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name};
                                     class python:test(line.isOpen(), 'tree_open', 'tree_closed');
                                     style python:'white-space: nowrap;; margin-left: %spx' % (line.getDepth() * 15)"
                     tal:content="section_name"/>

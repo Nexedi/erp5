@@ -22,7 +22,7 @@
                   <div class="input">
 
                     <!-- render gadget asynchronously -->
-                    <div tal:attributes="data-gadget string:${portal_url}/gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};
+                    <div tal:attributes="data-gadget string:${portal_url}/gadgets/form/${field_type}/gadget?field_name=&#36;{field_name}&form_id=${form_id};
                                          id string:${form_id}_${field_name};"></div>
 
                   </div>

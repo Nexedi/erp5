@@ -49,7 +49,7 @@
                     css_class python: current_language == language_id and 'selected_language'or 'unselected_language';
                     css_class string: ${css_class} lang_icon_${language_id}"
         tal:condition="python:language_id in available_language_list">
-      <a tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=${language_id};
+      <a tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=&#36;{language_id};
                          title language/title;
                          class css_class"
          tal:content="language/title"
@@ -69,14 +69,14 @@
 </div>
 <div class="features">
  <div class="header_login">
-   <a href="#" tal:attributes="href string:${portal_path}/login_form?came_from=${current_url}" tal:condition="isAnon"
+   <a href="#" tal:attributes="href string:${portal_path}/login_form?came_from=&#36;{current_url}" tal:condition="isAnon"
                 i18n:translate="" i18n:domain="ui">login</a>
    <a href="#" tal:attributes="href string:${portal_path}/WebSite_logout" tal:condition="not:isAnon"
                 i18n:translate="" i18n:domain="ui">logout</a>
  &nbsp; | &nbsp;
  </div>
  <div class="header_order">
-   <a href="#" tal:attributes="href string:${portal_path}/login_form?came_from=${portal_path}/SaleOrderModule_viewAsWebSaleOrderList"
+   <a href="#" tal:attributes="href string:${portal_path}/login_form?came_from=&#36;{portal_path}/SaleOrderModule_viewAsWebSaleOrderList"
                 tal:condition="isAnon"
                 i18n:translate="" i18n:domain="ui">order tracking</a>
 

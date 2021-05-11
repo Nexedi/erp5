@@ -23,7 +23,7 @@
         <tal:block metal:fill-slot="main">
 
           <div id="content"
-               tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}&current_form_id=${form_id}"></div>
+               tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=&#36;{object_path}&current_form_id=${form_id}"></div>
 
         </tal:block>
       </tal:block>

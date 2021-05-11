@@ -93,7 +93,7 @@
 <tr>
   <td>select</td>
   <td>//select[@name='field_your_select_action']</td>
-  <td>label=${original_title}</td>
+  <td>label=&#36;{original_title}</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />

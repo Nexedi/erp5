@@ -8,7 +8,7 @@
          name="portal_selections/viewSearchRelatedDocumentDialog0:method"
          value="update..." src="images/exec16.png">
 
-  <a tal:attributes="href string:Base_jumpToRelatedDocument?field_id=${field_name_stipped}&amp;form_id=${form_id}">
+  <a tal:attributes="href string:Base_jumpToRelatedDocument?field_id=&#36;{field_name_stipped}&amp;form_id=${form_id}">
     <img alt="jump" src="images/jump.png">
   </a>
 

@@ -9,7 +9,7 @@
     <li tal:define="language_id language/id"
         tal:condition="python:language_id in available_language_list">
       <a href="./Base_doLanguage?select_language=en" title="English"
-         tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=${language_id}">
+         tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=&#36;{language_id}">
         <img src="./mf54_image/icon_lang_en.gif" alt="Flag"
              tal:define="title python:here.Localizer.erp5_ui.gettext(language['title'], lang=language['id'])"
              tal:attributes="src string:${portal_path}/mf54_image/icon_lang_${language_id}.png;

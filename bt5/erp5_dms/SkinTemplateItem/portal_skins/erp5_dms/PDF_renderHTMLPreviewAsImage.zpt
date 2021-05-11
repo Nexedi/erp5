@@ -5,5 +5,5 @@
                  format python: request.get('format', context.portal_preferences.getPreference('preferred_image_format', 'png'))">
   <img src="" alt="" style="background-color:white;"
       tal:attributes="src
-        string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}"/>
+        string:${here/absolute_url}/index_html?display=&#36;{display}&format=${format}&frame=${frame}"/>
 </div>
