@@ -144,7 +144,51 @@ class TestPaymentTransactionGroupConstraint(ERP5TypeTestCase):
         [])
 
 
-class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase, ERP5TypeTestCase):
+class TestRemoveFromPaymentTransactionGroup(AccountingTestCase):
+  def afterSetUp(self):
+    AccountingTestCase.afterSetUp(self)
+    self.bank_account = self.main_section.newContent(
+        portal_type='Bank Account',
+        price_currency_value=self.portal.currency_module.euro)
+    self.bank_account.validate()
+    self.tic()
+
+  def test_other_item_types(self):
+    account_module = self.account_module
+    payment = self._makeOne(
+        portal_type='Payment Transaction',
+        source_section_value=self.main_section,
+        source_payment_value=self.bank_account,
+        destination_section_value=self.organisation_module.client_1,
+        start_date=DateTime(2014, 1, 1),
+        lines=(
+            dict(
+                source_value=account_module.bank,
+                source_debit=100,
+                id='bank'),
+            dict(
+                source_value=account_module.receivable,
+                source_credit=100)))
+    self.tic()
+    self.assertFalse(payment.getReference())
+
+    ptg = self.portal.payment_transaction_group_module.newContent(
+        portal_type='Payment Transaction Group',
+        source_section_value=self.main_section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31),)
+    self.tic()
+    item = self.portal.item_module.newContent(portal_type='Item')
+    payment.bank.setAggregateValueList([ptg, item])
+    self.tic()
+    payment.PaymentTransaction_removeFromPaymentTransactionGroup()
+    self.tic()
+    self.assertEqual(
+        payment.bank.getAggregateValueList(),
+        [item])
+
+
+class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
 
   def afterSetUp(self):
     AccountingTestCase.afterSetUp(self)
