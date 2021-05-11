@@ -52,7 +52,7 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
       )
     self.tic()
 
-  def _createPaymentsAndPTG(self):
+  def _createPTG(self):
     ptg = self.portal.payment_transaction_group_module.newContent(
         portal_type='Payment Transaction Group',
         source_section_value=self.section,
@@ -82,10 +82,11 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
         bic_code='TESTXXXX'
     )
     bank_account_supplier1.validate()
-    payment_1 = self._makeOne(
+    self._makeOne(
         portal_type='Payment Transaction',
         simulation_state='delivered',
         title='one',
+        reference='PT-1',
         causality_value=invoice_1,
         source_section_value=self.section,
         source_payment_value=self.bank_account,
@@ -112,10 +113,11 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
     )
     bank_account_supplier2.validate()
 
-    payment_2 = self._makeOne(
+    self._makeOne(
         portal_type='Payment Transaction',
         simulation_state='delivered',
         title='two',
+        reference='PT-2',
         destination_section_value=self.section,
         destination_payment_value=self.bank_account,
         source_section_value=supplier2,
@@ -130,10 +132,10 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
                 destination_credit=200,
                 aggregate_value=ptg)))
     self.tic()
-    return payment_1, payment_2, ptg
+    return ptg
 
   def test_PaymentTransactionGroup_viewAsSEPACreditTransferPain_001_001_02(self):
-    payment_1, payment_2, ptg = self._createPaymentsAndPTG()
+    ptg = self._createPTG()
     pain = lxml.etree.fromstring(
         getattr(ptg, 'PaymentTransactionGroup_viewAsSEPACreditTransferPain.001.001.02')().encode('utf-8'))
 
@@ -192,16 +194,14 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
         ['INVOICE1 Supplier1', 'Supplier2'],
     )
 
-    # generating the XML file set reference on payment transactions
-    self.assertTrue(payment_1.getReference())
-    self.assertTrue(payment_2.getReference())
     self.assertEqual(
         sorted([node.text for node in pain.findall('.//{*}CdtTrfTxInf/{*}PmtId/{*}EndToEndId')]),
-        sorted([payment_1.getReference(), payment_2.getReference()]),
+        ['PT-1', 'PT-2'],
     )
 
+
   def test_generate_sepa_credit_transfer_action(self):
-    _, _, ptg = self._createPaymentsAndPTG()
+    ptg = self._createPTG()
     ret = ptg.PaymentTransactionGroup_generateSEPACreditTransferFile(
       version='pain.001.001.02')
     self.assertEqual(
