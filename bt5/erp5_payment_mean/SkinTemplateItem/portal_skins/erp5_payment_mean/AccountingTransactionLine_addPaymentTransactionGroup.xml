@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionLine_stopAndSetAggregate</string> </value>
+            <value> <string>AccountingTransactionLine_addPaymentTransactionGroup</string> </value>
         </item>
       </dictionary>
     </pickle>
