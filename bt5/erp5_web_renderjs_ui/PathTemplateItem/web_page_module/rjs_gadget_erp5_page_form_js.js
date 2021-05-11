@@ -1,4 +1,4 @@
-/*global window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray, console */
+/*global window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /**
 Page Form is a top-level gadget (a "Page") taking care of rendering form
@@ -228,7 +228,6 @@ and handling data send&receive.
             if ((error instanceof jIO.util.jIOError) &&
                 (error.status_code === 404) &&
                 (options.is_cancelled)) {
-              console.warn(404, options.view);
               // If the view does not exist when coming back with the navigation history
               // Switch back to the default view
               return {};
