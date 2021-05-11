@@ -23,4 +23,7 @@ if payment_transaction.getSimulationState() == 'confirmed':
       batch_mode=True,
   )
   if payment_transaction.getSimulationState() == 'stopped':
-    context.setAggregateValue(payment_transaction_group)
+    context.AccountingTransactionLine_addPaymentTransactionGroup(
+        aggregate=aggregate,
+        activate_kw=activate_kw,
+    )
