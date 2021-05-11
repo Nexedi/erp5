@@ -14,10 +14,10 @@ payment_relative_url_list = [brain.relative_url for brain
       mode=mode,)]
 
 if mode == 'stopped_or_delivered':
-  method_id = 'AccountingTransactionLine_setAggregate'
+  method_id = 'AccountingTransactionLine_addPaymentTransactionGroup'
 else:
   assert mode == 'planned_or_confirmed', "Unknown mode, %r" % mode
-  method_id = 'AccountingTransactionLine_stopAndSetAggregate'
+  method_id = 'AccountingTransactionLine_stopAndAddPaymentTransactionGroup'
 
 
 object_list_len = len(payment_relative_url_list)
