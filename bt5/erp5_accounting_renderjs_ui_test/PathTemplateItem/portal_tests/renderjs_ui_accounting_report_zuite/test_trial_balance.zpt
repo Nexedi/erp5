@@ -55,7 +55,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 <!-- For simulation state only ensure that default values are still "delivered" and "stopped" -->
 <tr><td>store</td>
-    <td>//div[@data-gadget-scope="field_your_simulation_state"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_multilist.html"]</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_multilist.html"]</td>
     <td>multi_select</td></tr>
 <tr><td>assertValue</td>
     <td>&#36;{multi_select}/div[1]//select</td>
@@ -76,7 +76,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 </tal:block>
 
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}//../nav//span[text()="10 Records"]</td><td></td></tr>

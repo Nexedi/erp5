@@ -29,7 +29,7 @@ a damn about limits so it is perfect adept for testing.
     <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]</td>
+    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_listbox.html"]</td>
     <td>listbox</td></tr>
 
 <!-- Our listbox displays 3 lines so we want to test pagination twice -->
