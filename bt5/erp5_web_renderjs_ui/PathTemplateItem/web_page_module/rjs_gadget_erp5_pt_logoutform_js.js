@@ -60,7 +60,6 @@
                                type: 'submit',
                                value: result_dict.translation.Confirm})
           ]);
-          console.log(result_dict);
           return RSVP.all([
             gadget.updateHeader({
               page_title: 'Logout',

@@ -33,9 +33,8 @@
           ]);
         })
         .push(function (first_result_list) {
-          var user,
-            selected_language = first_result_list[1][1] ||
-                                first_result_list[1][2],
+          var selected_language = first_result_list[1][1] ||
+                                  first_result_list[1][2],
             key,
             list_item = [],
             options = JSON.parse(first_result_list[1][0]);
