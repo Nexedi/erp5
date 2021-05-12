@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BGR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>bulgaria</string> </value>
         </item>

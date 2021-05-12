@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>TTO</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>TT</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>trinidad_and_tobago</string> </value>
         </item>

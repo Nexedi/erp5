@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CMR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>cameroon</string> </value>
         </item>

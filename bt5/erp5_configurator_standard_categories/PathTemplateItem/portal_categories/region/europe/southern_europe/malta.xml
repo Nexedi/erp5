@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MLT</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MT</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>malta</string> </value>
         </item>

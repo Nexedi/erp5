@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KHM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KH</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>cambodia</string> </value>
         </item>

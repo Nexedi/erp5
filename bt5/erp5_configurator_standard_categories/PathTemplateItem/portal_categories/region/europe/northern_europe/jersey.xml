@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>JEY</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>JE</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>jersey</string> </value>
         </item>

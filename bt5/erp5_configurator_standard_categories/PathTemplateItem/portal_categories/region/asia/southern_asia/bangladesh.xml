@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BGD</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BD</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>bangladesh</string> </value>
         </item>

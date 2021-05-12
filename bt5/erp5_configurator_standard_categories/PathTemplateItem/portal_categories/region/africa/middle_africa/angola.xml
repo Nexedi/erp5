@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>AGO</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AO</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>angola</string> </value>
         </item>

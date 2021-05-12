@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SRB</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>RS</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>serbia</string> </value>
         </item>

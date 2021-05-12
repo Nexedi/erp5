@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>TUN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>TN</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>tunisia</string> </value>
         </item>

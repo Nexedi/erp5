@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>PRY</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PY</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>paraguay</string> </value>
         </item>

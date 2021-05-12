@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>COG</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>congo</string> </value>
         </item>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GNQ</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GQ</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>equatorial_guinea</string> </value>
         </item>

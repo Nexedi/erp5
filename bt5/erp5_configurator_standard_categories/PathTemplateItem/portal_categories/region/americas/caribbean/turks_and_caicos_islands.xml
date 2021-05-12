@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>TCA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>TC</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>turks_and_caicos_islands</string> </value>
         </item>

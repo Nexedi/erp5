@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SPM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>saint_pierre_and_miquelon</string> </value>
         </item>

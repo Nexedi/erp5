@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MDG</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>madagascar</string> </value>
         </item>

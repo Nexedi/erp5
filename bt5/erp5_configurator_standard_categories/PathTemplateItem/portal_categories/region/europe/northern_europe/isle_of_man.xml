@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>IMN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>IM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>isle_of_man</string> </value>
         </item>

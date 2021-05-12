@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BFA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BF</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>burkina_faso</string> </value>
         </item>

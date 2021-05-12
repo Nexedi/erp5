@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>NRU</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>NR</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>nauru</string> </value>
         </item>

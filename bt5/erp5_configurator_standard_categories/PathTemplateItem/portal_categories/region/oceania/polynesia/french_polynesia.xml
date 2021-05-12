@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>PYF</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PF</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>french_polynesia</string> </value>
         </item>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KGZ</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>kyrgyzstan</string> </value>
         </item>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>NPL</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>NP</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>nepal</string> </value>
         </item>

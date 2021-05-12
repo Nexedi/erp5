@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GHA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GH</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ghana</string> </value>
         </item>
