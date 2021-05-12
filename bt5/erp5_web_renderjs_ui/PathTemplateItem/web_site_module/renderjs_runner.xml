@@ -309,16 +309,6 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_icon_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
               </tuple>
             </value>
         </item>
@@ -379,17 +369,13 @@
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas20210512/</string> </value>
+            <value> <string>hateoas/</string> </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>configuration_icon_url</string> </key>
-            <value> <string>hobbes.png</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -425,7 +411,9 @@
         </item>
         <item>
             <key> <string>configuration_wallpaper_url</string> </key>
-            <value> <string>hobbes.png</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -690,7 +678,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.63585.48352.39799</string> </value>
+                      <value> <string>983.13214.25464.59101</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -708,7 +696,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1620824457.32</float>
+                              <float>1586874388.75</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
