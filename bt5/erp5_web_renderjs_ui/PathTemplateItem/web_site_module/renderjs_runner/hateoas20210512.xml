@@ -98,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/hateoas</string>
+                        <string>ERP5 Web Section/hateoas20210512</string>
                       </tuple>
                     </key>
                     <value>
@@ -235,7 +235,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>hateoas</string> </value>
+            <value> <string>hateoas20210512</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
