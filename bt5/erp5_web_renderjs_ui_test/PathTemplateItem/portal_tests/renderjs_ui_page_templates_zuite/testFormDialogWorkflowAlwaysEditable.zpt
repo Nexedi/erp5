@@ -30,12 +30,12 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td>
+  <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td>
+  <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 
@@ -52,7 +52,7 @@
 <!-- Textarea must be editable -->
 <tr>
   <td>type</td>
-  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td>
+  <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td>
   <td>QWERTY</td>
 </tr>
 
@@ -65,12 +65,12 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td>
+  <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td>
+  <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 </tbody></table>

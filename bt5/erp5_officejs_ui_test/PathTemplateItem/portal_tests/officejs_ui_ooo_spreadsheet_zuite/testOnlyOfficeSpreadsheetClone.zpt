@@ -317,7 +317,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value='${cloned_title}']</td>
+  <td>//input[@value='&#36;cloned_title}']</td>
   <td></td>
 </tr>
 <tr>

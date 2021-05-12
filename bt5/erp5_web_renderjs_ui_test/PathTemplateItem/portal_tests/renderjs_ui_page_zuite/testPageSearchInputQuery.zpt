@@ -35,7 +35,7 @@
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='${runner_url}gadget_erp5_searchfield.html']</td>
+  <td>//div[@data-gadget-url='&#36;runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='&#36;runner_url}gadget_erp5_searchfield.html']</td>
   <td></td>
 </tr>
 <!-- Type search query and submit using button -->
@@ -46,7 +46,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-url='${runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='${runner_url}gadget_erp5_searchfield.html']//button[@type='submit']</td>
+  <td>//div[@data-gadget-url='&#36;runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='&#36;runner_url}gadget_erp5_searchfield.html']//button[@type='submit']</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
@@ -54,12 +54,12 @@
 <!-- Verify that panel search query is empty but main search input is not --> 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='${runner_url}gadget_erp5_searchfield.html']</td>
+  <td>//div[@data-gadget-url='&#36;runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='&#36;runner_url}gadget_erp5_searchfield.html']</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//div[@data-gadget-url='${runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='${runner_url}gadget_erp5_searchfield.html']//input[@name='search']</td>
+  <td>//div[@data-gadget-url='&#36;runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='&#36;runner_url}gadget_erp5_searchfield.html']//input[@name='search']</td>
   <td></td>
 </tr>
 <tal:block tal:define="search_query python: 'Title 1';

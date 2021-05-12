@@ -261,7 +261,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value='${title}']</td>
+  <td>//input[@value='&#36;title}']</td>
   <td></td>
 </tr>
 <tr>

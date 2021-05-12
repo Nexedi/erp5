@@ -59,7 +59,7 @@
 <!-- Set an URL of ERP5 so test do not depend on external RSS provider -->
 <tr>
   <td>click</td>
-  <td>//div[@id='${erp5_rss_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='&#36;erp5_rss_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>

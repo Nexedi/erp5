@@ -49,9 +49,9 @@ Frontend should not suppose default sorting
 <!-- Make sure broken definitions don't appear in sort editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//button[@class="plus ui-icon-plus ui-btn-icon-left"]</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_sort_editor.html']//button[@class="plus ui-icon-plus ui-btn-icon-left"]</td><td></td></tr>
 <tr><td>assertElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
 
 <!-- Let's set up the default sort correctly: id | ASC -->
 <tr><td>open</td>

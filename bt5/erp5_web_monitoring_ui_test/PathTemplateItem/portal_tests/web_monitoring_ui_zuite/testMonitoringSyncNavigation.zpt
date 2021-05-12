@@ -387,7 +387,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='${hosting_title}']</td>
+  <td>//a[@data-i18n='&#36;hosting_title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -467,7 +467,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='${hosting_title}']</td>
+  <td>//a[@data-i18n='&#36;hosting_title}']</td>
   <td></td>
 </tr>
 <tr>

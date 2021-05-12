@@ -60,7 +60,7 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>assertElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
 
 
 <!-- Go to another page than search -->

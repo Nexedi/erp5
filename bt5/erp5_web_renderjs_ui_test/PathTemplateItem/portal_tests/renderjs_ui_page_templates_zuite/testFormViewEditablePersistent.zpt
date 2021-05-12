@@ -23,15 +23,15 @@
     <td>&#36;{renderjs_url}/#/foo_module/1?editable=true</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr><td>assertElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
 <tr><td>assertElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
 
 <!-- Unsuccessful save does not mingle with editability -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
@@ -41,9 +41,9 @@
 </tal:block>
 
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
 
 <!-- Successful save does not mingle with editability -->
 <tr><td>waitForElementPresent</td>
@@ -76,9 +76,9 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
 
 <!-- Passing through action does not mingle with editability -->
 <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
@@ -93,7 +93,7 @@
 
 <!-- Textarea must be editable -->
 <tr><td>type</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td>
     <td>QWERTY</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
@@ -102,9 +102,9 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+    <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
 
 </tbody></table>
 </body>

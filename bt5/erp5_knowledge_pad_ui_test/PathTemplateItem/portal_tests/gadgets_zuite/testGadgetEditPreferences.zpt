@@ -78,7 +78,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@id='${erp5_persons_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='&#36;erp5_persons_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>
@@ -103,7 +103,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@id='${erp5_web_section_random_page_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='&#36;erp5_web_section_random_page_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>
@@ -130,7 +130,7 @@ Wait for activities</span>
 <!-- Edit gadget form submit by pressing enter -->
 <tr>
   <td>click</td>
-  <td>//div[@id='${erp5_web_section_random_page_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='&#36;erp5_web_section_random_page_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>
@@ -165,7 +165,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@id='${erp5_web_section_random_page_box_id}']/h3/span/a[1]</td>
+  <td>//div[@id='&#36;erp5_web_section_random_page_box_id}']/h3/span/a[1]</td>
   <td></td>
 </tr>
 <tr>
