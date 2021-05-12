@@ -35,6 +35,7 @@ Foo | python_action_jio
 Foo | python_error_action_jio
 Foo | python_failing_action_jio
 Foo | select_bar
+Foo | update_request_content
 Foo | view
 Foo | view_action_title
 Foo | view_crash_on_save
