@@ -20,44 +20,25 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
-      var gadget = this,
-        first_result_list;
+      var gadget = this;
 
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getUrlForList([{command: 'display'}]),
-            gadget.getSettingList(['me', 'language_map', 'selected_language',
+            gadget.getSettingList(['language_map', 'selected_language',
                                    'default_selected_language']),
             gadget.getDeclaredGadget("erp5_form"),
-            gadget.getTranslationList(['Language', 'User', 'Update'])
+            gadget.getTranslationList(['Language', 'Update'])
           ]);
         })
-        .push(function (result_list) {
-          first_result_list = result_list;
-          var me = result_list[1][0];
-          if (me !== undefined) {
-            return gadget.jio_allDocs({
-              query: 'relative_url:"' + me + '"',
-              select_list: ['title']
-            });
-          }
-        })
-        .push(function (result) {
-          var user,
-            selected_language = first_result_list[1][2] ||
-                                first_result_list[1][3],
+        .push(function (first_result_list) {
+          var selected_language = first_result_list[1][1] ||
+                                  first_result_list[1][2],
             key,
             list_item = [],
-            options = JSON.parse(first_result_list[1][1]);
+            options = JSON.parse(first_result_list[1][0]);
           gadget.state.old_selected_lang = selected_language;
-
-          // Calculate user name
-          if (result === undefined) {
-            user = "Who are you?";
-          } else {
-            user = result.data.rows[0].value.title;
-          }
 
           // Calculate possible language list
           for (key in options) {
@@ -81,13 +62,6 @@
 
             first_result_list[2].render({
               erp5_document: {"_embedded": {"_view": {
-                'User': {
-                  "default": user,
-                  "editable": 0,
-                  "key": "field_user",
-                  "title": first_result_list[3][1],
-                  "type": "StringField"
-                },
                 'Language': {
                   "default": selected_language,
                   "editable": 1,
@@ -107,7 +81,7 @@
               form_definition: {
                 group_list: [[
                   "left",
-                  [["User"], ["Language"]]
+                  [["Language"]]
                 ]]
               }
             })
