@@ -21,6 +21,7 @@ app_list_dict = {
                  'Web Table' : 'webtable', #osp-12
                  'PDF Viewer' : 'pdfreader', #osp-5
                  'OfficeJS Monitor' : 'monitor', #osp-22
+                 'converse' : 'converse'
 }
 
 app_list_web_site = portal.web_site_module['application-list']
@@ -30,6 +31,12 @@ for software_product in portal_catalog(portal_type="Software Product"):
   if software_product.getReference().lower() in app_web_section_dict:
     web_site = software_product.getFollowUpValue(portal_type="Web Section")
     app_url_prefix = app_list_dict[web_site.getTitle()]
-    software_product.setReference(app_url_prefix)
-    web_site.setId(app_url_prefix)
-    software_product.setFollowUpValue(web_site)
+    if app_url_prefix != web_site.getId(): #if app is not migrated yet
+      software_product.setReference(app_url_prefix)
+      web_site.setId(app_url_prefix)
+      software_product.setFollowUpValue(web_site)
+
+print "The following apps were migrated:"
+for app in app_list_dict.keys():
+  print "- " + app
+return printed
