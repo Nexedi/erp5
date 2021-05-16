@@ -96,6 +96,7 @@
         model_language = 'css';
       } else if (
         options.portal_type === 'Python Script' ||
+        options.portal_type === 'Workflow Script' ||
         options.portal_type === 'Test Component' ||
         options.portal_type === 'Extension Component' ||
         options.portal_type === 'Document Component' ||
