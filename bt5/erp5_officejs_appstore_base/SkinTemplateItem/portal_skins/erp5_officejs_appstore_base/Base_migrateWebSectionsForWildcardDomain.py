@@ -21,7 +21,7 @@ app_list_dict = {
                  'Web Table' : 'webtable', #osp-12
                  'PDF Viewer' : 'pdfreader', #osp-5
                  'OfficeJS Monitor' : 'monitor', #osp-22
-                 'converse' : 'converse'
+                 'converse' : 'converse', #osp-35
 }
 
 app_list_web_site = portal.web_site_module['application-list']
