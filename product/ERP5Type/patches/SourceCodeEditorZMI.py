@@ -58,7 +58,7 @@ def manage_page_footer(self):
       else:
         mode = 'html'
     textarea_selector = 'textarea[name="filedata:text"]'
-  elif document.meta_type in ('Script (Python)', ):
+  elif document.meta_type in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script', ):
     mode = 'python'
     textarea_selector = 'textarea[name="body:text"]'
     # printed is from  RestrictedPython.RestrictionMutator the rest comes

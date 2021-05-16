@@ -61,7 +61,7 @@ def checkPythonScript(script_instance, script_path):
       Message(
         location="{script_path}:{row}:{column}".format(**annotation),
         message=annotation['text'],
-        edit_url="{script_path}/manage_main?line={row}".format(**annotation),))
+        edit_url="{script_path}/manage_workspace?line={row}".format(**annotation),))
 
 def checkComponent(component_instance):
   """Check a component, adding messages to global `line_list`

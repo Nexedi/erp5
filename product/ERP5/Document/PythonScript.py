@@ -77,9 +77,10 @@ class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin('expression')):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     #View content list, Force /view, Standart option in python scripts
-    manage_options = ( XMLObject.manage_options[0],
+    manage_options = ( ZopePythonScript.manage_options[0],
                        {'icon':'', 'label':'View','action':'view'}) \
-                       + ZopePythonScript.manage_options
+                       + ( XMLObject.manage_options[0], ) \
+                       + ZopePythonScript.manage_options[1:]
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
