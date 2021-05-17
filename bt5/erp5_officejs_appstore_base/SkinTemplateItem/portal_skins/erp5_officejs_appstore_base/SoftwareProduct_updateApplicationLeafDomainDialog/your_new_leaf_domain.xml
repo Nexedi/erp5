@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new_leaf_domain</string> </value>
+            <value> <string>your_new_leaf_domain</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
