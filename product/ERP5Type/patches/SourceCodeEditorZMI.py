@@ -81,6 +81,10 @@ def manage_page_footer(self):
       mode = 'xml'
     textarea_selector = 'textarea[name="text:text"]'
 
+  if mode == 'plain_text':
+    if document.getId().endswith('.less'):
+      mode = 'less'
+
   if not textarea_selector:
     return default
 
