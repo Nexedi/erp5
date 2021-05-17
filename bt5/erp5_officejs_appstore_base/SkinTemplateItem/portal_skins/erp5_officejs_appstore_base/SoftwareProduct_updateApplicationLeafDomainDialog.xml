@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SoftwareProduct_updateApplicationUrl</string> </value>
+            <value> <string>SoftwareProduct_updateApplicationLeafDomain</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
@@ -76,8 +76,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>current_url_domain</string>
-                        <string>new_url_domain</string>
+                        <string>your_current_leaf_domain</string>
+                        <string>new_leaf_domain</string>
                       </list>
                     </value>
                 </item>
@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareProduct_updateApplicationUrlDialog</string> </value>
+            <value> <string>SoftwareProduct_updateApplicationLeafDomainDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SoftwareProduct_updateApplicationUrl</string> </value>
+            <value> <string>SoftwareProduct_updateApplicationLeafDomain</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

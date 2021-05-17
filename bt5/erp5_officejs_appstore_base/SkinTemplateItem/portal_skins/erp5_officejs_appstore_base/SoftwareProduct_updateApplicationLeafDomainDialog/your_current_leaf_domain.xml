@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>current_url_domain</string> </value>
+            <value> <string>your_current_leaf_domain</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -130,7 +130,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Current Url Domain</string> </value>
+                    <value> <string>Current Leaf Domain</string> </value>
                 </item>
               </dictionary>
             </value>

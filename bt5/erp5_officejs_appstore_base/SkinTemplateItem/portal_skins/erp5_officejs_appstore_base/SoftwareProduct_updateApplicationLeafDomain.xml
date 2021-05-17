@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>new_url_domain, **kw</string> </value>
+            <value> <string>new_leaf_domain, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareProduct_updateApplicationUrl</string> </value>
+            <value> <string>SoftwareProduct_updateApplicationLeafDomain</string> </value>
         </item>
       </dictionary>
     </pickle>

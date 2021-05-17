@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>update_application_url</string> </value>
+            <value> <string>update_application_leaf_domain</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update Application Url</string> </value>
+            <value> <string>Update Application Leaf Domain</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SoftwareProduct_updateApplicationUrlDialog</string> </value>
+            <value> <string>string:${object_url}/SoftwareProduct_updateApplicationLeafDomainDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
