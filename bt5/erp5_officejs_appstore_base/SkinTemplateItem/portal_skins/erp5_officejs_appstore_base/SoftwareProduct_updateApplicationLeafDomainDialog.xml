@@ -77,7 +77,7 @@
                     <value>
                       <list>
                         <string>your_current_leaf_domain</string>
-                        <string>new_leaf_domain</string>
+                        <string>your_new_leaf_domain</string>
                       </list>
                     </value>
                 </item>
