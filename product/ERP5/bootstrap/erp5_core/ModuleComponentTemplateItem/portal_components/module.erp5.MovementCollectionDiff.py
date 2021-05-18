@@ -96,6 +96,8 @@ def _getPropertyAndCategoryList(document):
   property_dict.update(_getCategoryList(document))
   return property_dict
 
+getPropertyAndCategoryList = _getPropertyAndCategoryList
+
 def _getPropertyList(document, acquire=True):
   property_map = document.getPropertyMap()
   bad_property_list = ['id', 'uid', 'categories_list', 'last_id',]
@@ -125,3 +127,6 @@ def _getCategoryList(document, acquire=True):
                            for x in document.getCategoryList()}
   getPropertyList = document.getPropertyList
   return {x: getPropertyList(x) for x in document_category_set if x != 'solver'}
+
+from AccessControl.SecurityInfo import allow_module
+allow_module(__name__)
