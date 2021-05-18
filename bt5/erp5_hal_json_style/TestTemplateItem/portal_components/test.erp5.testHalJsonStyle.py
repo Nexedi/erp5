@@ -1432,6 +1432,34 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoas_select_list_avoid_accessor(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query="id:=hateoas AND uid:=%s" % self.portal.web_site_module.hateoas.getUid(),
+      select_list=["count(validation_state)",
+                   "getTranslatedValidationStateTitle",],
+      group_by="validation_state"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_select_list'],
+      ["count(validation_state)", "getTranslatedValidationStateTitle"])
+
+    self.assertEqual(result_dict['_embedded']['contents'][0]["getTranslatedValidationStateTitle"], "Published")
+    self.assertEqual(result_dict['_embedded']['contents'][0]["count(validation_state)"], 1)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoas_query_param(self):
     fake_request = do_fake_request("GET")
 
