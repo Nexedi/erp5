@@ -6558,6 +6558,9 @@ msgstr "社会保险号码"
 msgid "Software Installation:"
 msgstr "软件安装:"
 
+msgid "Software Logo"
+msgstr "软件标志"
+
 msgid "Software Products"
 msgstr "软件产品"
 
