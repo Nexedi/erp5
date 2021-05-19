@@ -67,9 +67,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Software Product</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
