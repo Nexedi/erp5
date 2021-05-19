@@ -33,7 +33,9 @@
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>SoftwareProduct_setReference</string>
+              </list>
             </value>
         </item>
         <item>
@@ -65,15 +67,15 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <none/>
+              <list>
+                <string>Software Product</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>portal_type_group_filter</string> </key>
             <value>
-              <list>
-                <string>accounting_movement</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
