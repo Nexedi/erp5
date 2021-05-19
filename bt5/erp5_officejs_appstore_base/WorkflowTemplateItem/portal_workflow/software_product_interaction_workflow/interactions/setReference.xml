@@ -21,7 +21,9 @@
         <item>
             <key> <string>activate_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>SoftwareProduct_setReference</string>
+              </list>
             </value>
         </item>
         <item>
@@ -33,9 +35,7 @@
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <list>
-                <string>SoftwareProduct_setReference</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
