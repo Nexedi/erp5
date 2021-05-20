@@ -19,7 +19,10 @@ if payment_transaction.getSimulationState() == 'confirmed':
       workflow_action='stop_action',
       comment=translateString(
           "Posted automatically with payment transaction group ${payment_transaction_group_reference}",
-          mapping={'payment_transaction_group_reference': payment_transaction_group.getReference()}),
+          mapping={
+            'payment_transaction_group_reference':
+                payment_transaction_group.getSourceReference()
+                 or payment_transaction_group.getReference()}),
       batch_mode=True,
   )
   if payment_transaction.getSimulationState() == 'stopped':
