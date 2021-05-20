@@ -57,11 +57,11 @@ Usage:
         <td tal:content="string:$mirror_section_title"></td></tr>
     <tr tal:condition="exists:debit">
         <td>assertFloat</td>
-        <td>&#36;{current_row}/td[7]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+        <td>&#36;{current_row}/td[7]//div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/p</td>
         <td tal:content="string:$debit"></td></tr>
     <tr tal:condition="exists:credit">
         <td>assertFloat</td>
-        <td>&#36;{current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+        <td>&#36;{current_row}/td[8]//div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/p</td>
         <td tal:content="string:$credit"></td></tr>
     </tal:block>
 
@@ -164,7 +164,7 @@ Usage:
     <tal:block metal:define-macro='check_row_in_balance_table'>
 
     <tr><td>store</td><td tal:content="string:$row_selector"></td><td>current_row</td></tr>
-    <tr><td>store</td><td>div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td><td>float_val</td></tr>
+    <tr><td>store</td><td>div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/p</td><td>float_val</td></tr>
     <tr tal:condition="exists:node_id">
       <td>assertText</td>
       <td>&#36;{current_row}/td[1]//a</td>

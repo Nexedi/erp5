@@ -28,7 +28,7 @@
     <td tal:content="python: len(here.getPortalObject().foo_module.objectIds()) + 1"></td>
     <td>last_id</td></tr>
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>listbox_table</td></tr>
 
 <tr><td>open</td>
@@ -52,9 +52,9 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr><td>assertElementNotPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"]//a[@class="edit-field"]</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_label_field.html"]//a[@class="edit-field"]</td><td></td></tr>
 <tr><td>assertElementPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//input[@name="field_matrixbox_quantity_cell_0_0_0"]</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_matrixbox.html"]//input[@name="field_matrixbox_quantity_cell_0_0_0"]</td><td></td></tr>
 </tbody>
 </table>
 </body>

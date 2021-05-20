@@ -90,7 +90,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>&#36;{form}//h3[text()="A-BANK - Bank (Bank1)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="5 Records"]</td><td></td></tr>
@@ -160,7 +160,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>&#36;{form}//h3[text()="A-PAY - Payable (Client 1)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="2 Records"]</td><td></td></tr>
@@ -200,7 +200,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>&#36;{form}//h3[text()="A-REC - Receivable (Client 1)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="5 Records"]</td><td></td></tr>
@@ -269,7 +269,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>&#36;{form}//h3[text()="A-REC - Receivable (Client 2)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
@@ -298,7 +298,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>&#36;{form}//h3[text()="A-REC - Receivable (John Smith)"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
@@ -327,7 +327,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>&#36;{form}//h3[text()="Total"]</td><td></td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>&#36;{form}//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
@@ -337,10 +337,10 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>current_row</td></tr>
 
 <tr><td>assertFloat</td><!-- debit -->
-    <td>&#36;{current_row}/td[1]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[1]//div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>2900</td></tr>
 <tr><td>assertFloat</td><!-- credit -->
-    <td>&#36;{current_row}/td[2]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[2]//div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>2900</td></tr>
 
 </tbody>

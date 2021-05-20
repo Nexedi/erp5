@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
+  <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
   <td></td>
 </tr>
 <tr>
@@ -52,7 +52,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "Please fill out this field.")]</td>
+  <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "Please fill out this field.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -62,7 +62,7 @@
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "Please fill out this field.")]</td>
+  <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "Please fill out this field.")]</td>
   <td></td>
 </tr>
 <tr>

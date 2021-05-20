@@ -21,7 +21,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
 <tr><td>type</td>
     <td>field_my_lines_list</td>
     <td>a
@@ -37,7 +37,7 @@ b
 <tr><td>click</td>
     <td>//div[@data-gadget-url='&#36;renderjs_url}/gadget_erp5_field_listbox.html']//table/tbody/tr[1]//a</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
 <tr><td>assertValue</td>
     <td>//textarea[@name='field_my_lines_list']</td>
     <td>a
@@ -47,13 +47,13 @@ b
 <tr><td>click</td>
     <td>//button[@name='panel']</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_panel.html"]//input[@name='editable' and @type='checkbox']</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_panel.html"]//input[@name='editable' and @type='checkbox']</td><td></td></tr>
 <tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_panel.html"]//input[@name='editable' and @type='checkbox']</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_panel.html"]//input[@name='editable' and @type='checkbox']</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/pre</td><td></td></tr>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_lines.html"]//div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/pre</td><td></td></tr>
 <tr><td>assertText</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/pre</td>
+    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_lines.html"]//div[@data-gadget-url="&#36;{renderjs_url}/gadget_html5_element.html"]/pre</td>
     <td>a
 b</td></tr>
 </body>
