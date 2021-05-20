@@ -1,0 +1,16 @@
+<allowed_content_type_list>
+ <portal_type id="Error Record Module">
+  <item>Error Record</item>
+ </portal_type>
+ <portal_type id="Web Section">
+  <item>jIO Web Section</item>
+ </portal_type>
+ <portal_type id="Web Site">
+  <item>jIO Web Section</item>
+ </portal_type>
+ <portal_type id="jIO Web Section">
+  <item>File</item>
+  <item>Image</item>
+  <item>Role Definition</item>
+ </portal_type>
+</allowed_content_type_list>
