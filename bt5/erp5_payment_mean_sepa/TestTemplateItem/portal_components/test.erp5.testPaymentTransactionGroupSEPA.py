@@ -50,7 +50,6 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
         title='France',
         reference='FR',
       )
-    self.tic()
 
   def _createPTG(self):
     ptg = self.portal.payment_transaction_group_module.newContent(
@@ -223,4 +222,112 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
     self.assertEqual(
         [node.text for node in pain.findall('.//{*}GrpHdr/{*}CtrlSum')],
         ['300.00'],
+    )
+
+
+class TestSEPAConstraints(AccountingTestCase):
+  def afterSetUp(self):
+    AccountingTestCase.afterSetUp(self)
+    ti = self.portal.portal_types['Accounting Transaction Line']
+    ti.setTypePropertySheetList(
+        ti.getTypePropertySheetList() + ['AccountingTransactionLineSEPACreditTransferConstraint'])
+    if 'wire_transfer' not in self.portal.portal_categories.payment_mode.objectIds():
+      self.portal.portal_categories.payment_mode.newContent(
+          portal_type='Category',
+          id='wire_transfer',
+          title='Wire Transfer',
+      )
+    self.portal.portal_preferences.getActiveSystemPreference().setPreferredSepaCreditTransferPaymentMode('wire_transfer')
+    self.tic()
+
+  def beforeTearDown(self):
+    self.abort()
+    ti = self.portal.portal_types['Accounting Transaction Line']
+    ti.setTypePropertySheetList(
+        [ps for ps in ti.getTypePropertySheetList() if ps != 'AccountingTransactionLineSEPACreditTransferConstraint'])
+    self.commit()
+
+  def test_payment_transaction_constraint(self):
+    section_bank_account = self.section.newContent(
+        portal_type='Bank Account',
+        bic_code='X',
+        iban='FR76...',
+    )
+    section_bank_account.validate()
+    supplier = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    )
+    supplier_bank_account = supplier.newContent(
+        portal_type='Bank Account',
+    )
+
+    payment_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        resource_value=self.currency_module.euro,
+        source_section_value=self.section,
+        source_payment_value=section_bank_account,
+        destination_section_value=supplier,
+        start_date=DateTime(2021, 1, 1),
+        lines=(
+            dict(
+                source_value=self.portal.account_module.payable,
+                source_debit=100),
+            dict(
+                source_value=self.portal.account_module.bank,
+                source_credit=100)))
+
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        [],
+    )
+    payment_transaction.setPaymentModeValue(self.portal.portal_categories.payment_mode.wire_transfer)
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        ['Bank Accounts must be validated', 'Bank Accounts must have IBAN and BIC', ],
+    )
+
+    payment_transaction.setDestinationPaymentValue(supplier_bank_account)
+    supplier_bank_account.setBicCode('X')
+    supplier_bank_account.setIban('FR76...')
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        ['Bank Accounts must be validated', ],
+    )
+    supplier_bank_account.validate()
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        [],
+    )
+
+    payment_transaction.setSourcePaymentValue(supplier_bank_account)
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        ['Bank Account must belong to Section', ],
+    )
+    payment_transaction.setSourcePaymentValue(section_bank_account)
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        [],
+    )
+    payment_transaction.setDestinationPaymentValue(section_bank_account)
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        ['Bank Account must belong to Section', ],
+    )
+    payment_transaction.setDestinationPaymentValue(supplier_bank_account)
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        [],
+    )
+
+    section_bank_account.setIban('')
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        ['Bank Accounts must have IBAN and BIC', ],
+    )
+
+    section_bank_account.invalidate()
+    self.assertEqual(
+        sorted([str(m.getMessage()) for m in payment_transaction.checkConsistency()]),
+        ['Bank Accounts must be validated', 'Bank Accounts must have IBAN and BIC', ],
     )
