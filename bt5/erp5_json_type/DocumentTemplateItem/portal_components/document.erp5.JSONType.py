@@ -28,13 +28,21 @@
 import json
 import jsonschema
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type import PropertySheet
 
 class JSONType(XMLObject):
   """
   Represents a portal type with JSON Schema
   """
-  
-  def validateJsonSchema(self):
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.TextDocument
+                    )
+
+  def validateJsonSchema(self, list_error=False):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
@@ -46,7 +54,10 @@ class JSONType(XMLObject):
       return False
     current_schema = json.loads(text_content)
     try:
-      jsonschema.validate(current_schema, defined_schema)
+      jsonschema.validate(current_schema, defined_schema, format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as err:
+      if list_error:
+        validator = jsonschema.validators.validator_for(defined_schema)(defined_schema, format_checker=jsonschema.FormatChecker())
+        return sorted(validator.iter_errors(current_schema), key=lambda e: e.path)
       return err
     return True
