@@ -52,6 +52,7 @@ class DummyFieldStorage:
     self.file = StringIO()
     self.filename = '<dummy field storage>'
     self.headers = {}
+    self.name = "Dummy Field Storage"
 
 class TestListBox(ERP5TypeTestCase):
   """
