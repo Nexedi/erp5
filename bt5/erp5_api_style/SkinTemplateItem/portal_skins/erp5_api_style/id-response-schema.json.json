@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kdportal.erp5.net/api/id-response-schema.json",
+  "title": "Document ID Response",
+  "properties": {
+    "id": {
+      "title": "ID",
+      "type": "string",
+      "description": "Unique Id of the object. It can be used to retrieve the document"
+    }
+  },
+}
