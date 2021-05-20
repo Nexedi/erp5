@@ -25,7 +25,7 @@ class tiff_to_text(commandtransform):
     def __init__(self):
         commandtransform.__init__(self, binary=self.binaryName)
 
-    def convert(self, data, cache, **kwargs):
+    def convert(self, data, cache, language=None, **kwargs):
       kwargs['filename'] = 'input.tiff'
       tmp_dir, input_file = self.initialize_tmpdir(data,
                                    filename='input.tiff')
@@ -34,6 +34,8 @@ class tiff_to_text(commandtransform):
       try:
         output_file_path = os.path.join(tmp_dir, 'output')
         cmd = self.binary, input_file, output_file_path
+        if language:
+          cmd += ('-l', language,)
         process = subprocess.Popen(cmd,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT,)
