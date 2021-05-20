@@ -71,9 +71,7 @@
         <item>
             <key> <string>portal_type_group_filter</string> </key>
             <value>
-              <list>
-                <string>accounting_movement</string>
-              </list>
+		<none/>
             </value>
         </item>
         <item>
