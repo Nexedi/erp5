@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "alldocs-response-schema.json",
+  "title": "allDocs: Response Payload",
+  "description": "Payload returned by allDocs method.",
+  "properties": {
+    "result_list": {
+      "title": "Result List",
+      "description": "Contains a representation of the items",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "title": "Item"
+      }
+    }
+  }
+}
+
