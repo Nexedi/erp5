@@ -139,7 +139,10 @@ for result in result_list:
       else:
         product_title = line.getResourceTitle()
       resource_value = line.getResourceValue()
-      resource_title_dict[product_title] = resource_value.getReference()
+      resource_title_dict[product_title] = {
+        'reference': resource_value.getReference(),
+        'ean13_code': resource_value.getEan13Code()
+      }
 
       if price_type == 'sale_price':
         total_price = line.getTotalPrice()
@@ -205,7 +208,9 @@ if len(client_dict):
         for product_title in line_product_dict.keys():
           obj = Object(uid="new_")
           obj['product'] = product_title
-          obj['product_reference'] = resource_title_dict.get(product_title)
+          obj['product_reference'] = resource_title_dict.get(product_title)['reference']
+          obj['ean13_code'] = resource_title_dict.get(product_title)['ean13_code']
+
           line_total_amount = 0
           line_total_quantity = 0
           for period in period_list:
@@ -257,7 +262,8 @@ else:
     for product_title in product_dict.keys():
       obj = Object(uid="new_")
       obj['product'] = product_title
-      obj['product_reference'] = resource_title_dict.get(product_title)
+      obj['product_reference'] = resource_title_dict.get(product_title)['reference']
+      obj['ean13_code'] = resource_title_dict.get(product_title)['ean13_code']
 
       line_total_amount = 0
       line_total_quantity = 0    

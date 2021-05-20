@@ -72,14 +72,14 @@ if group_by == "client":
   total_stat_list = [('total amount', 'total amount'),]
 else:
   if group_by == "product":
-    selection_columns = [('product_reference', "Product Reference", ), ('product', "Product")]
+    selection_columns = [('product_reference', "Product Reference", ), ('product', "Product"), ('ean13_code', 'Ean13 code')]
     stat_columns = [('product', "product")]
   elif group_by == "function":
     function_title = context.AccountingTransactionLine_getFunctionBaseCategoryTitle()
     selection_columns = [('product', function_title)]
     stat_columns = [('product', "product")]
   else:
-    selection_columns = [('client', "Client"), ('product_reference', "Product Reference", ), ('product', "Product")]
+    selection_columns = [('client', "Client"), ('product_reference', "Product Reference", ), ('product', "Product"), ('ean13_code', 'Ean13 code')]
     stat_columns = [('client', "client"), ('product', "product")]
   for x in interval_list:
     interval_column_list.extend([("Amount %s" %x,"Amount %s" %x), ("Quantity %s" %x,"Quantity %s" %x)])
