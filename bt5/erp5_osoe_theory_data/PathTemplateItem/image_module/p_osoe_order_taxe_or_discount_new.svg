@@ -1,0 +1,67 @@
+<svg width="800" height="565" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <marker orient="auto" refY="0" refX="0" id="Arrow1Mend">
+   <path id="path4154" d="m0,0l5,-5l-17.5,5l17.5,5l-5,-5z" transform="rotate(180 -655357.5,4.802970243744653e-10) scale(0.4000000059604645) translate(10,0) " stroke-width="1.0pt" stroke="#000000" fill-rule="evenodd"/>
+  </marker>
+  <marker orient="auto" refY="0" refX="0" id="Arrow1Mstart">
+   <path id="path3967" d="m4,0l2,-2l-7,2l7,2l-2,-2z" marker-start="none" stroke-width="1pt" stroke="#000000" fill-rule="evenodd"/>
+  </marker>
+  <pattern y="0" x="0" height="6" width="6" patternUnits="userSpaceOnUse" id="EMFhbasepattern"/>
+ </defs>
+ <metadata id="metadata7">image/svg+xml</metadata>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="802" height="567" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image y="322.66498" x="293.39197" id="image5312" xlink:href="http://www.erp5.com/P-OSOE-Order.Taxes.Or.Discount.Screenshot1.New?format=png" height="200" width="600"/>
+   <image y="58.37799" x="291.28342" id="image3108" xlink:href="http://www.erp5.com/P-OSOE-Order.Taxes.Or.Discount.Screenshot2.New?format=png" height="200" width="600"/>
+   <rect id="rect3115" width="178.66008" height="27.28639" x="599.72223" y="113.25855" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" fill="none" stroke="#04446a"/>
+   <rect id="rect3115-8" width="178.66008" height="29.98934" x="601.01544" y="378.05316" stroke-miterlimit="4" stroke-width="1.5" fill="none" stroke="#04446a"/>
+   <rect id="rect3115-4" width="178.66008" height="25.19183" x="598.92041" y="145.54492" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" fill="none" stroke="#04446a"/>
+   <path d="m7.22943,110.91423l218.97033,0" id="path3948" stroke-miterlimit="4" stroke-width="3.12815" stroke="#04446a" fill="none"/>
+   <path d="m226.19976,192.24607l62.56295,0" id="path3950" stroke-miterlimit="4" stroke-width="3.12815" stroke="#04446a" fill="none"/>
+   <path d="m7.22943,331.88456l281.53328,0" id="path3952" stroke-miterlimit="4" stroke-width="3.12815" stroke="#04446a" fill="none"/>
+   <path d="m288.76271,410.08825l62.56295,0" id="path3954" stroke-miterlimit="4" stroke-width="3.12815" stroke="#04446a" fill="none"/>
+   <path d="m7.22943,500.80473l344.09623,0" id="path3956" stroke-miterlimit="4" stroke-width="3.12815" stroke="#04446a" fill="none"/>
+   <path d="m7.22943,103.09386c0,15.64074 0,15.64074 0,15.64074" id="path4789" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m226.19976,103.09386l0,15.64074" id="path4791" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m226.19976,184.4257l0,15.64074" id="path4793" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m288.76271,184.4257l0,15.64074" id="path4795" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m7.22943,324.06419l0,15.64074" id="path4797" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m288.76271,324.06419l0,15.64074" id="path4799" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m288.76271,402.26788l0,15.64074" id="path4801" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m351.32566,402.26788l0,15.64074" id="path4803" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m7.22943,492.98432l0,15.6407" id="path4797-2" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <path d="m351.32566,492.98432l0,15.6407" id="path4797-0" stroke-width="1.56407px" stroke="#04446a" fill="none"/>
+   <text xml:space="preserve" x="58.84386" y="101.52985" id="text4855" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan id="tspan4857" x="58.84386" y="101.52985" fill="#04446a" text-anchor="start" font-family="sans-serif" font-size="21.897px" font-weight="normal" font-style="normal">Base price</tspan>
+   </text>
+   <text xml:space="preserve" x="33.78202" y="314.46442" id="text4855-5" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan id="tspan4857-5" x="33.78202" y="314.46442" fill="#04446a" text-anchor="start" font-family="sans-serif" font-size="21.897px" font-weight="normal" font-style="normal">Base price + Vat 1</tspan>
+   </text>
+   <text xml:space="preserve" x="135.44682" y="484.94849" id="text4855-4" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan id="tspan4857-7" x="135.44682" y="484.94849" fill="#04446a" text-anchor="start" font-family="sans-serif" font-size="21.897px" font-weight="normal" font-style="normal">Final price</tspan>
+   </text>
+   <text xml:space="preserve" x="230.83928" y="226.44037" id="text4855-5-6" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan id="tspan4857-5-5" x="230.83928" y="226.44037" fill="#04446a" text-anchor="start" font-family="sans-serif" font-size="21.897px" font-weight="normal" font-style="normal">Vat 1</tspan>
+   </text>
+   <text xml:space="preserve" x="291.31198" y="439.81183" id="text4855-5-6-6" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan id="tspan4857-5-5-9" x="291.31198" y="439.81183" fill="#04446a" text-anchor="start" font-family="sans-serif" font-size="21.897px" font-weight="normal" font-style="normal">Vat 2</tspan>
+   </text>
+   <text xml:space="preserve" x="170.87828" y="148.45819" id="text4855-5-6-3" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan id="tspan4964" x="170.87828" y="148.45819" font-family="sans-serif" font-size="21.897px">7%</tspan>
+   </text>
+   <text xml:space="preserve" x="244.50508" y="366.4447" id="text4855-5-6-3-5" fill="#04446a" text-anchor="start" font-family="sans-serif" font-weight="normal" font-style="normal">
+    <tspan y="366.4447" x="244.50508" id="tspan4964-4" font-family="sans-serif" font-size="21.897px">5%</tspan>
+   </text>
+   <path d="m689.12045,110.67238c-93.5049,-64.33444 -389.01786,-113.52843 -479.69411,-43.85979" id="path3111" marker-end="url(#Arrow1Mend)" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.471" fill="none" stroke="#04446a"/>
+   <path d="m690.31392,170.58291c11.26574,128.29431 -412.27964,-36.32835 -416.80471,145.51424" id="path5015" marker-end="url(#Arrow1Mend)" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" fill="none" stroke="#04446a"/>
+   <path d="m275.40623,316.98782c345.97593,-1.65114 408.03452,37.97534 410.0794,60.1361" id="path5315" marker-end="none" marker-start="url(#Arrow1Mstart)" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.50556" fill="none" stroke="#04446a"/>
+   <path d="m111.67504,111.67504c-3.8045,72.59989 147.46834,11.55337 147.63819,79.49749" id="path5929" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="#04446a" fill="none"/>
+   <path d="m172.27984,332.18591c-3.8045,72.59989 147.46834,11.55337 147.63819,79.49749" id="path5929-6" stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="#04446a" fill="none"/>
+  </g>
+ </g>
+</svg>
