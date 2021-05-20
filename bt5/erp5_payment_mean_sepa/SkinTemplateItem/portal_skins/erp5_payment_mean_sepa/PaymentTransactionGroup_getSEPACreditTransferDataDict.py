@@ -59,6 +59,11 @@ for brain in context.PaymentTransactionGroup_getAccountingTransactionLineList():
   assert creditor_bank_account.getValidationState() == 'validated', \
     '%s is not validated' % creditor_bank_account.getRelativeUrl() 
 
+  assert transaction_line.AccountingTransactionLine_checkPaymentBelongToSection(source=True), \
+    'source bank account on %s does not belong to section' % transaction_line.getRelativeUrl()
+  assert transaction_line.AccountingTransactionLine_checkPaymentBelongToSection(source=False), \
+    'destination bank account on %s does not belong to section' % transaction_line.getRelativeUrl()
+
   end_to_end_id = transaction.getReference()
   assert end_to_end_id
   assert end_to_end_id not in end_to_end_id_set
