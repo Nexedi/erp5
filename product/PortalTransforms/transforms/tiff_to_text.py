@@ -36,9 +36,11 @@ class tiff_to_text(commandtransform):
         cmd = self.binary, input_file, output_file_path
         if language:
           cmd += ('-l', language,)
-        process = subprocess.Popen(cmd,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.STDOUT,)
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=dict(os.environ, OMP_THREAD_LIMIT='1'))
         stdout = process.communicate()[0]
         err = process.returncode
         if err:
