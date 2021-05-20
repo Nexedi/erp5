@@ -38,7 +38,7 @@
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][6]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][6]/div/span</td>
   <td></td>
 </tr>
 <tr>
@@ -58,7 +58,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][6]/div/span[contains(text(), "Please fill out this field.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][6]/div/span[contains(text(), "Please fill out this field.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][6]/div/span[contains(text(), "Please fill out this field.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][6]/div/span[contains(text(), "Please fill out this field.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -82,12 +82,12 @@
 </tal:block>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][1]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][1]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][2]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/div/label[@class="is-invalid"][2]</td>
   <td></td>
 </tr>
 <tr>
@@ -98,7 +98,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][8]/div/span[contains(text(), "Input is required but no input given.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][8]/div/span[contains(text(), "Input is required but no input given.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -173,12 +173,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -188,22 +188,22 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -213,12 +213,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -228,22 +228,22 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -253,12 +253,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -268,22 +268,22 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][3]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][4]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][4]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][4]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][4]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -293,12 +293,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][4]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][4]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][4]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][4]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -308,12 +308,12 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][4]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][4]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][4]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][4]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -323,12 +323,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][5]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][5]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][5]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][5]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -338,12 +338,12 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][5]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][5]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][5]/div/span[contains(text(), "The input failed the external validator.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][5]/div/span[contains(text(), "The input failed the external validator.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -383,12 +383,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][9]/div/span</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][9]/div/span</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_label_field.html"][9]/div/span[contains(text(), "Input is required but no input given.")]</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][9]/div/span[contains(text(), "Input is required but no input given.")]</td>
   <td></td>
 </tr>
 <tr>

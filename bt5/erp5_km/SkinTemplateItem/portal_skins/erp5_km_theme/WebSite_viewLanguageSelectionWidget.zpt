@@ -20,7 +20,7 @@
             tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=&#36;{language_id};
                             class python:int(language['selected']) * 'selected' or 'not_selected'"
             tal:define="title python:here.Localizer.erp5_ui.gettext(language['title'], lang=language['id'])">
-          <img src="&#36;portal_path}/km_img/icon_lang_en.png"
+          <img src="${portal_path}/km_img/icon_lang_en.png"
                tal:condition="display_language_icons"
                tal:attributes="src string:${portal_path}/km_img/icon_lang_${language_id}.png;
                                title title;

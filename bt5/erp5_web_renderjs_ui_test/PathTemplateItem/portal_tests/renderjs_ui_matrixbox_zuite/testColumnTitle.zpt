@@ -46,16 +46,16 @@
 
 <!-- Verify presence of header and column texts -->
 <tr><td>verifyText</td>
-    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_matrixbox.html"]//thead/tr/th[2]</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//thead/tr/th[2]</td>
     <td>One</td></tr>
 <tr><td>verifyText</td>
-    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_matrixbox.html"]//thead/tr/th[3]</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//thead/tr/th[3]</td>
     <td>Two</td></tr>
 <tr><td>verifyText</td>
-    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_matrixbox.html"]//tbody/tr[1]/th</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//tbody/tr[1]/th</td>
     <td>A</td></tr>
 <tr><td>verifyText</td>
-    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_matrixbox.html"]//tbody/tr[2]/th</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//tbody/tr[2]/th</td>
     <td>B</td></tr>
 
 </tbody>

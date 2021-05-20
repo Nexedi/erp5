@@ -81,7 +81,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="&#36;renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
     <td>&#36;{table}/../nav//span[text()="1 Records"]</td><td></td></tr>
@@ -103,19 +103,19 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <!-- skip invoice_number field -->
 <!-- skip transaction_reference field -->
 <tr><td>verifyElementPresent</td>
-    <td>&#36;{current_row}/td[6]//p[@data-date="&#36;last_year}-${last_month}-${last_day}"]</td><td></td></tr>
+    <td>&#36;{current_row}/td[6]//p[@data-date="${last_year}-${last_month}-${last_day}"]</td><td></td></tr>
 <tr><td>assertText</td>
     <td>&#36;{current_row}/td[7]/a</td>
     <td>Sale Invoice Transaction</td></tr>
 
 <tr><td>assertFloat</td>
-    <td>&#36;{current_row}/td[8]//div[@data-gadget-url="&#36;renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>300</td></tr><!-- balance -->
 <tr><td>assertText</td>
-    <td>&#36;{current_row}/td[9]//div[@data-gadget-url="&#36;renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[9]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td></td></tr><!-- future is empty -->
 <tr><td>assertFloat</td>
-    <td>&#36;{current_row}/td[10]//div[@data-gadget-url="&#36;renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>&#36;{current_row}/td[10]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
     <td>300</td></tr><!-- period_1=300 -->
 </tbody>
 </table>
