@@ -1,4 +1,3 @@
-request = context.REQUEST
 from Products.ERP5Type.Message import translateString
 
 line_list = context.Delivery_getSolverDecisionList(listbox=listbox)
