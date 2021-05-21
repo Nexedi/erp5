@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Workflow Transition" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_configureWendelinCategories</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/workflow</string>
+                <string>destination/portal_workflow/erp5_wendelin_workflow/state_not_used_your_categories</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_permission</string> </key>
+            <value>
+              <tuple>
+                <string>Modify portal content</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>transition_not_used_configure_categories</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Workflow Transition</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>NOT USED Configure categories</string> </value>
+        </item>
+        <item>
+            <key> <string>transition_form_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Variable" module="erp5.portal_type"/>
+      <global name="Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25,30 +25,42 @@
             </value>
         </item>
         <item>
-            <key> <string>automatic_update</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_workflow/erp5_wendelin_workflow/state_start</string>
+              </tuple>
+            </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
+            <key> <string>comment</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>59</string> </value>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterWendelinConfiguration</string> </value>
         </item>
         <item>
-            <key> <string>initial_value</string> </key>
-            <value> <string>python: request.get(\'transition\', None)</string> </value>
+            <key> <string>description</string> </key>
+            <value> <string>Wendelin configuration workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_wendelin_workflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Variable</string> </value>
+            <value> <string>Workflow</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>transition</string> </value>
+            <key> <string>state_base_category</string> </key>
+            <value> <string>current_state</string> </value>
+        </item>
+        <item>
+            <key> <string>state_variable</string> </key>
+            <value> <string>current_state</string> </value>
         </item>
       </dictionary>
     </pickle>
