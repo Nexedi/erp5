@@ -227,7 +227,7 @@
           </tr>
           <tr>
             <td>waitForElementPresent</td>
-            <td>//p[contains(text(), '${current_reference}')]</td>
+            <td>//p[contains(text(), '&#36;{current_reference}')]</td>
             <td></td>
           </tr>
         </tal:block>
