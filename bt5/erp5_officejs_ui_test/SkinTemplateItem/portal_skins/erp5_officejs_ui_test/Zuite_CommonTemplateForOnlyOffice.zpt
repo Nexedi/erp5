@@ -139,34 +139,6 @@
       <td>2000</td>
       <td></td>
     </tr>
-    <!-- Second loader while updating the page -->
-    <!--
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
-      <td></td>
-    </tr>
-    <!-- Save Button is disabled  -->
-    <!--
-    <tr>
-      <td>verifyElementPresent</td>
-      <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementNotPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>verifyElementPresent</td>
-      <td>//button[@data-i18n="Save"][contains(@class, "ui-icon-check")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td colspan="3"><p></p></td>
-    </tr>
-    <-->
   </tal:block>
   <tal:block metal:define-macro="click_to_align_center">
     <tr>
