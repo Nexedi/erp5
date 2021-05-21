@@ -260,7 +260,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Instance: ${instance_root}']</td>
+  <td>//a[@data-i18n='Instance: &#36;{instance_root}']</td>
   <td></td>
 </tr>
 <tr>
@@ -322,7 +322,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Promise: ${promise_title}']</td>
+  <td>//a[@data-i18n='Promise: &#36;{promise_title}']</td>
   <td></td>
 </tr>
 <tr>
