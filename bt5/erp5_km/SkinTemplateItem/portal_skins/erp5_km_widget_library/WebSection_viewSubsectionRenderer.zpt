@@ -5,7 +5,7 @@
 
     <ul tal:define="exists_subsections python: section['subsection'] is not None;
                     show_collapse python: collapse_depth==section['level'] and exists_subsections;
-                    class_name string:level-${section/level};
+                    class_name string:level-&#36;{section/level};
                     class python: test(show_collapse, 'collapse-list-node %s' %class_name , class_name);
                     subsection_html python: here.WebSection_viewSubsectionRenderer(section_list = section['subsection'],
                                                                                    collapse_depth=collapse_depth);"

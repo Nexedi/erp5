@@ -48,7 +48,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>value=ledger/accounting/general</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>&#36;{year}-${month}-${day}</td></tr>
+    <td>&#36;{year}-&#36;{month}-&#36;{day}</td></tr>
 <tr><td>click</td><!-- Uncheck because it is checked by default -->
     <td>//input[@type="checkbox" and @name="field_your_omit_balanced_accounts"]</td><td></td></tr>
 

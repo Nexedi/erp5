@@ -46,7 +46,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>value=account_type/asset/receivable</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>&#36;{year}-${month}-01</td></tr>
+    <td>&#36;{year}-&#36;{month}-01</td></tr>
 <tr><td>click</td><!-- Check because it is unchecked by default -->
     <td>//input[@type="checkbox" and @name="field_your_detailed"]</td><td></td></tr>
 <tr><td>type</td>
@@ -103,7 +103,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <!-- skip invoice_number field -->
 <!-- skip transaction_reference field -->
 <tr><td>verifyElementPresent</td>
-    <td>&#36;{current_row}/td[6]//p[@data-date="&#36;{last_year}-${last_month}-${last_day}"]</td><td></td></tr>
+    <td>&#36;{current_row}/td[6]//p[@data-date="&#36;{last_year}-&#36;{last_month}-&#36;{last_day}"]</td><td></td></tr>
 <tr><td>assertText</td>
     <td>&#36;{current_row}/td[7]/a</td>
     <td>Sale Invoice Transaction</td></tr>

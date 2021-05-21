@@ -18,7 +18,7 @@
     <tal:block tal:repeat="column_index python: range(0, columns)">
       <div tal:condition="python: columns>=1+column_index"
            tal:attributes="class column_css_class;
-                          id string:portal-column-${column_index}">
+                          id string:portal-column-&#36;{column_index}">
 
         <tal:block tal:condition="python: len(layout)>=1+column_index"
                    tal:replace="structure python:
