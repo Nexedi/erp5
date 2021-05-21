@@ -94,6 +94,8 @@
         model_language = 'javascript';
       } else if (options.portal_type === 'Web Style') {
         model_language = 'css';
+      } else if (options.portal_type === 'SQL Method') {
+        model_language = 'sql';
       } else if (
         options.portal_type === 'Python Script' ||
         options.portal_type === 'Workflow Script' ||
