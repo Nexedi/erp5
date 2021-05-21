@@ -132,7 +132,7 @@
 <tr>
   <td>verifyValue</td>
   <td>//div[@data-gadget-scope='field_my_start_date']//input</td>
-  <td>glob:${now}*</td>
+  <td>glob:&#36;{now}*</td>
 </tr>
 
 <!-- Seconds should also be invisible in non-editable mode,
