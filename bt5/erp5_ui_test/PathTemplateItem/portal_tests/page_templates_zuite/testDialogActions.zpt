@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/portal_types/Foo/PortalType_addAction?id=test_action&amp;name=Dummy Exchange&amp;category=object_exchange&amp;action=string:${object_url}/Foo_viewDummyDialog</td>
+  <td>&#36;{base_url}/portal_types/Foo/PortalType_addAction?id=test_action&amp;name=Dummy Exchange&amp;category=object_exchange&amp;action=string:&#36;{object_url}/Foo_viewDummyDialog</td>
   <td></td>
 </tr>
 <tr>
