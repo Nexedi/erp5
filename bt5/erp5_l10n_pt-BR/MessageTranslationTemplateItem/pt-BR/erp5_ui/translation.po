@@ -1591,26 +1591,26 @@ msgstr "Criar Usuário"
 msgid "Create User [transition in user_account_workflow]"
 msgstr "Criar Usuário"
 
-msgid "Create your New Account"
-msgstr "Criar Sua Nova Conta"
-
 msgid "Create a New Event for Reply"
 msgstr "Criar um Novo Evento para Responder"
 
 msgid "Create a Task"
 msgstr "Criar uma Tarefa"
 
-msgid "Created after"
-msgstr "Criado Depois"
-
-msgid "Created before"
-msgstr "Criado Antes"
+msgid "Create your New Account"
+msgstr "Criar Sua Nova Conta"
 
 msgid "Created Clone ${portal_type}."
 msgstr "Criado o Clone de um ${portal_type}."
 
+msgid "Created after"
+msgstr "Criado Depois"
+
 msgid "Created and associated ${count} new events to the selected ticket."
 msgstr "Criado e Associado ${count} novos eventos para o ticket selecionado."
+
+msgid "Created before"
+msgstr "Criado Antes"
 
 msgid "Created by"
 msgstr "Criado por "
@@ -3368,11 +3368,11 @@ msgstr "Data de Modificação"
 msgid "Modified"
 msgstr "Modificado"
 
-msgid "Modified Files"
-msgstr "Arquivos Modificados"
-
 msgid "Modified Categories"
 msgstr "Categorias Modificadas."
+
+msgid "Modified Files"
+msgstr "Arquivos Modificados"
 
 msgid "Modules"
 msgstr "Módulos"
@@ -5900,17 +5900,17 @@ msgstr "Prazo (dias)"
 msgid "Text"
 msgstr "Texto"
 
-msgid "Text Editor"
-msgstr "Editor de Texto"
-
-msgid "Text Format"
-msgstr "Formato do texto"
-
 msgid "Text Area Field Height"
 msgstr "Altura do Campo de Texto"
 
 msgid "Text Area Field Width"
 msgstr "Largura do Campo de Texto"
+
+msgid "Text Editor"
+msgstr "Editor de Texto"
+
+msgid "Text Format"
+msgstr "Formato do texto"
 
 msgid "The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created."
 msgstr "O período de contabilidade está fechado. Não é mais possível adicionar transações contábeis no período. Uma transação de equilíbrio foi criado."
@@ -6372,9 +6372,6 @@ msgstr "Atualizar Campos a partir do Glossário em Inglês"
 msgid "Update File Metadata [transition in processing_status_workflow]"
 msgstr "Atualizar Metadados"
 
-msgid "Update my Credentials"
-msgstr "Atualizar Minhas Credências"
-
 msgid "Update Quantity from Container"
 msgstr "Atualizar Quantidade do Contêiner"
 
@@ -6398,6 +6395,9 @@ msgstr "Atualizar Workflows"
 
 msgid "Update Workflows by English Glossary"
 msgstr "Atualizar Workflows a partir do Glossário em Inglês"
+
+msgid "Update my Credentials"
+msgstr "Atualizar Minhas Credências"
 
 msgid "Update quantity"
 msgstr "Atualizar Quantidade"
@@ -6483,9 +6483,6 @@ msgstr "Utilize este estado para fechar a conta. Nenhuma transação pode ser de
 msgid "User"
 msgstr "Usuário"
 
-msgid "Username"
-msgstr "Usuário"
-
 msgid "User ${user} does not exist."
 msgstr "Usuário ${user} não existe."
 
@@ -6509,6 +6506,9 @@ msgstr "Usuário"
 
 msgid "User Password"
 msgstr "Senha"
+
+msgid "Username"
+msgstr "Usuário"
 
 msgid "Usual Name"
 msgstr "Nome Usual"

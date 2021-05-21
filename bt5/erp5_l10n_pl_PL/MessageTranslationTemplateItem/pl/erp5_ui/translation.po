@@ -1647,6 +1647,21 @@ msgstr "Zarządzaj użytkownikami"
 msgid "Manual Price"
 msgstr "Cena ręczna"
 
+msgid "Manufacturing Execution"
+msgstr "Raport produkcyjny"
+
+msgid "Manufacturing Execution Cell"
+msgstr "Komórka raportu produkcyjnego"
+
+msgid "Manufacturing Execution Line"
+msgstr "Linia raportu produkcyjnego"
+
+msgid "Manufacturing Execution Module"
+msgstr "Moduł raportów produkcyjnych"
+
+msgid "Manufacturing Executions"
+msgstr "Raporty produkcyjne"
+
 msgid "Marital Status"
 msgstr "Stan cywilny"
 
@@ -2208,21 +2223,6 @@ msgstr "Moduł listy paczek zamówień produkcyjnych"
 msgid "Production Packing Lists"
 msgstr "Listy paczek zamówień produkcyjnych"
 
-msgid "Manufacturing Execution"
-msgstr "Raport produkcyjny"
-
-msgid "Manufacturing Execution Cell"
-msgstr "Komórka raportu produkcyjnego"
-
-msgid "Manufacturing Execution Line"
-msgstr "Linia raportu produkcyjnego"
-
-msgid "Manufacturing Execution Module"
-msgstr "Moduł raportów produkcyjnych"
-
-msgid "Manufacturing Executions"
-msgstr "Raporty produkcyjne"
-
 msgid "Products"
 msgstr "Produkty"
 
@@ -2406,14 +2406,14 @@ msgstr "Dokumenty powiązane"
 msgid "Related Invoice"
 msgstr "Powiązana faktura"
 
+msgid "Related Manufacturing Execution"
+msgstr "Powiązany raport produkcyjny"
+
 msgid "Related Objects"
 msgstr "Obiekty powiązane"
 
 msgid "Related Production Packing List"
 msgstr "Powiązana lista paczek produkcyjnych"
-
-msgid "Related Manufacturing Execution"
-msgstr "Powiązany raport produkcyjny"
 
 msgid "Related Purchase Invoice"
 msgstr "Powiązana faktura zakupu"
@@ -3099,9 +3099,6 @@ msgstr "Klucz"
 msgid "User"
 msgstr "Użytkownik"
 
-msgid "Username"
-msgstr "Nazwa użytkownika"
-
 msgid "User Login"
 msgstr "Identyfikator użytkownika"
 
@@ -3112,6 +3109,9 @@ msgid "User Password"
 msgstr "Hasło użytkownika"
 
 msgid "User name"
+msgstr "Nazwa użytkownika"
+
+msgid "Username"
 msgstr "Nazwa użytkownika"
 
 msgid "Usual Name"
