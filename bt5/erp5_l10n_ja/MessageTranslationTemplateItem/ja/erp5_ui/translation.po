@@ -192,12 +192,6 @@ msgstr "受け付ける"
 msgid "Acknowledge Event Action"
 msgstr "受付アクション"
 
-msgid "Acknowledge Event Action [transition in event_workflow]"
-msgstr "受付アクション"
-
-msgid "Acknowledge Event [transition in event_workflow]"
-msgstr "受け付ける"
-
 msgid "Acknowledgeable Messages"
 msgstr "メッセージ"
 
@@ -380,12 +374,6 @@ msgstr "割り当てる"
 
 msgid "Assign Event Action"
 msgstr "割当アクション"
-
-msgid "Assign Event Action [transition in event_workflow]"
-msgstr "割当アクション"
-
-msgid "Assign Event [transition in event_workflow]"
-msgstr "割り当てる"
 
 msgid "Assign to Ticket"
 msgstr "チケットに割り当てる"
@@ -771,12 +759,6 @@ msgstr "キャンセルする"
 msgid "Cancel Event Action"
 msgstr "キャンセル・アクション"
 
-msgid "Cancel Event Action [transition in event_workflow]"
-msgstr "キャンセル・アクション"
-
-msgid "Cancel Event [transition in event_workflow]"
-msgstr "キャンセルする"
-
 msgid "Cancel Internal Packing List"
 msgstr "移送をキャンセルする"
 
@@ -798,12 +780,6 @@ msgstr "キャンセルする"
 msgid "Cancel Sale Opportunity Action"
 msgstr "キャンセルアクション"
 
-msgid "Cancel Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "キャンセルする"
-
-msgid "Cancel Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "キャンセルする"
-
 msgid "Cancel Task"
 msgstr "タスクをキャンセルする"
 
@@ -813,35 +789,11 @@ msgstr "キャンセルする"
 msgid "Cancel Ticket Action"
 msgstr "キャンセル・アクション"
 
-msgid "Cancel Ticket Action [transition in ticket_workflow]"
-msgstr "キャンセル・アクション"
-
-msgid "Cancel Ticket [transition in ticket_workflow]"
-msgstr "キャンセルする"
-
 msgid "Cancel Transaction"
 msgstr "取り消す"
 
 msgid "Cancel Transaction Action"
 msgstr "取り消す"
-
-msgid "Cancel Transaction Action [transition in accounting_workflow]"
-msgstr "取り消す"
-
-msgid "Cancel Transaction [transition in accounting_workflow]"
-msgstr "取り消す"
-
-msgid "Cancel [transition in bug_event_workflow]"
-msgstr "キャンセルする"
-
-msgid "Cancel [transition in bug_workflow]"
-msgstr "キャンセルする"
-
-msgid "Cancel [transition in production_order_workflow]"
-msgstr "キャンセルする"
-
-msgid "Cancel [transition in production_packing_list_workflow]"
-msgstr "キャンセルする"
 
 msgid "Canceled"
 msgstr "キャンセル済み"
@@ -1085,12 +1037,6 @@ msgstr "終了する"
 
 msgid "Close Ticket Action"
 msgstr "終了アクション"
-
-msgid "Close Ticket Action [transition in ticket_workflow]"
-msgstr "終了アクション"
-
-msgid "Close Ticket [transition in ticket_workflow]"
-msgstr "終了する"
 
 msgid "Closed"
 msgstr "終了"
@@ -1437,12 +1383,6 @@ msgstr "関連したイベントを作成する"
 msgid "Create Related Event Action"
 msgstr "関連イベント作成アクション"
 
-msgid "Create Related Event Action [transition in event_workflow]"
-msgstr "関連イベント作成アクション"
-
-msgid "Create Related Event [transition in event_workflow]"
-msgstr "関連したイベントを作成する"
-
 msgid "Create Related Payment"
 msgstr "関連した支払いを作成する"
 
@@ -1686,16 +1626,7 @@ msgstr "削除する"
 msgid "Delete Event Action"
 msgstr "削除アクション"
 
-msgid "Delete Event Action [transition in event_workflow]"
-msgstr "削除アクション"
-
-msgid "Delete Event [transition in event_workflow]"
-msgstr "削除する"
-
 msgid "Delete Invoice Action"
-msgstr "削除アクション"
-
-msgid "Delete Invoice Action [transition in invoice_workflow]"
 msgstr "削除アクション"
 
 msgid "Delete Objects"
@@ -1707,12 +1638,6 @@ msgstr "削除する"
 msgid "Delete Sale Opportunity Action"
 msgstr "削除アクション"
 
-msgid "Delete Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "削除アクション"
-
-msgid "Delete Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "削除する"
-
 msgid "Delete The Objects"
 msgstr "削除する"
 
@@ -1721,12 +1646,6 @@ msgstr "削除する"
 
 msgid "Delete Ticket Action"
 msgstr "削除アクション"
-
-msgid "Delete Ticket Action [transition in ticket_workflow]"
-msgstr "削除アクション"
-
-msgid "Delete Ticket [transition in ticket_workflow]"
-msgstr "削除する"
 
 msgid "Delete the objects"
 msgstr "オブジェクトを削除する"
@@ -1827,38 +1746,17 @@ msgstr "完了する"
 msgid "Deliver Event Action"
 msgstr "完了アクション"
 
-msgid "Deliver Event Action [transition in event_workflow]"
-msgstr "完了アクション"
-
-msgid "Deliver Event [transition in event_workflow]"
-msgstr "完了する"
-
 msgid "Deliver Invoice"
 msgstr "請求書を送る"
 
 msgid "Deliver Invoice Action"
 msgstr "請求書送付アクション"
 
-msgid "Deliver Invoice Action [transition in invoice_workflow]"
-msgstr "請求書送付アクション"
-
-msgid "Deliver Invoice [transition in invoice_workflow]"
-msgstr "請求書を送る"
-
 msgid "Deliver Packing List"
 msgstr "確定する"
 
 msgid "Deliver Packing List Action"
 msgstr "検収アクション"
-
-msgid "Deliver Packing List Action [transition in packing_list_workflow]"
-msgstr "検収アクション"
-
-msgid "Deliver Packing List [transition in packing_list_workflow]"
-msgstr "検収する"
-
-msgid "Deliver [transition in production_packing_list_workflow]"
-msgstr "配達する"
 
 msgid "Delivered [state in acknowledgement_workflow]"
 msgstr "受付済み"
@@ -2190,12 +2088,6 @@ msgstr "問い合わせる"
 msgid "Enquire Sale Opportunity Action"
 msgstr "問い合わせアクション"
 
-msgid "Enquire Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "問い合わせアクション"
-
-msgid "Enquire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "問い合わせる"
-
 msgid "Enquired"
 msgstr "問い合わせ済み"
 
@@ -2289,23 +2181,11 @@ msgstr "期限切れにする"
 msgid "Expire Event Action"
 msgstr "期限切れアクション"
 
-msgid "Expire Event Action [transition in event_workflow]"
-msgstr "期限切れアクション"
-
-msgid "Expire Event [transition in event_workflow]"
-msgstr "期限切れにする"
-
 msgid "Expire Sale Opportunity"
 msgstr "期限切れにする"
 
 msgid "Expire Sale Opportunity Action"
 msgstr "期限切れアクション"
-
-msgid "Expire Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "期限切れアクション"
-
-msgid "Expire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "期限切れにする"
 
 msgid "Expired"
 msgstr "期限切れ"
@@ -2523,16 +2403,7 @@ msgstr "連絡を受ける"
 msgid "Get Contacted Action"
 msgstr "連絡アクション"
 
-msgid "Get Contacted Action [transition in sale_opportunity_workflow]"
-msgstr "連絡アクション"
-
-msgid "Get Contacted [transition in sale_opportunity_workflow]"
-msgstr "連絡を受ける"
-
 msgid "Get Contacted by Prospect"
-msgstr "連絡を受ける"
-
-msgid "Get Contacted by Prospect [transition in sale_opportunity_workflow]"
 msgstr "連絡を受ける"
 
 msgid "Globally Enabled"
@@ -3063,23 +2934,11 @@ msgstr "提出済みにマークする"
 msgid "Mark Posted Action"
 msgstr "提出済みマーク・アクション"
 
-msgid "Mark Posted Action [transition in event_workflow]"
-msgstr "提出済みマーク・アクション"
-
-msgid "Mark Posted [transition in event_workflow]"
-msgstr "提出済みにマークする"
-
 msgid "Mark Responded"
 msgstr "回答済みにマークする"
 
 msgid "Mark Responded Action"
 msgstr "回答済みマーク・アクション"
-
-msgid "Mark Responded Action [transition in event_workflow]"
-msgstr "回答済みマーク・アクション"
-
-msgid "Mark Responded [transition in event_workflow]"
-msgstr "回答済みにマークする"
 
 msgid "Materials"
 msgstr "材料"
@@ -3420,9 +3279,6 @@ msgstr "割当を承認する"
 msgid "Open Bug"
 msgstr "バグを公開する"
 
-msgid "Open Bug [transition in bug_workflow]"
-msgstr "バグを公開する"
-
 msgid "Open Campaigns (%(count)s)"
 msgstr "開催中のキャンペーン (%(count)s)"
 
@@ -3458,12 +3314,6 @@ msgstr "開始する"
 
 msgid "Open Ticket Action"
 msgstr "開始アクション"
-
-msgid "Open Ticket Action [transition in ticket_workflow]"
-msgstr "開始アクション"
-
-msgid "Open Ticket [transition in ticket_workflow]"
-msgstr "開始する"
 
 msgid "Open [state in bank_reconciliation_validation_workflow]"
 msgstr "開始"
@@ -3750,12 +3600,6 @@ msgstr "注文を予定する"
 msgid "Plan Transaction"
 msgstr "予定する"
 
-msgid "Plan Transaction Action [transition in accounting_workflow]"
-msgstr "予定する"
-
-msgid "Plan Transaction [transition in accounting_workflow]"
-msgstr "予定する"
-
 msgid "Planned"
 msgstr "予定済み"
 
@@ -3791,12 +3635,6 @@ msgstr "出す"
 
 msgid "Post Event Action"
 msgstr "提出アクション"
-
-msgid "Post Event Action [transition in event_workflow]"
-msgstr "提出アクション"
-
-msgid "Post Event [transition in event_workflow]"
-msgstr "出す"
 
 msgid "Post Query"
 msgstr "質問を投稿する"
@@ -4224,20 +4062,11 @@ msgstr "受け取る"
 msgid "Receive Enquiry"
 msgstr "問い合わせを受ける"
 
-msgid "Receive Enquiry [transition in sale_opportunity_workflow]"
-msgstr "問い合わせを受ける"
-
 msgid "Receive Event"
 msgstr "受け取る"
 
 msgid "Receive Event Action"
 msgstr "受け取りアクション"
-
-msgid "Receive Event Action [transition in event_workflow]"
-msgstr "受け取りアクション"
-
-msgid "Receive Event [transition in event_workflow]"
-msgstr "受け取る"
 
 msgid "Receive Internal Packing List"
 msgstr "移送終了"
@@ -4295,18 +4124,6 @@ msgstr "却下する"
 
 msgid "Reject Offer Action"
 msgstr "却下アクション"
-
-msgid "Reject Offer Action [transition in order_workflow]"
-msgstr "却下アクション"
-
-msgid "Reject Offer Action [transition in sale_opportunity_workflow]"
-msgstr "却下アクション"
-
-msgid "Reject Offer [transition in order_workflow]"
-msgstr "却下する"
-
-msgid "Reject Offer [transition in sale_opportunity_workflow]"
-msgstr "却下する"
 
 msgid "Rejected"
 msgstr "却下"
@@ -4413,22 +4230,7 @@ msgstr "承認を求める"
 msgid "Request Approval Action"
 msgstr "承認要求アクション"
 
-msgid "Request Approval Action [transition in sale_opportunity_workflow]"
-msgstr "承認要求アクション"
-
-msgid "Request Approval Action [transition in ticket_workflow]"
-msgstr "承認要求アクション"
-
-msgid "Request Approval [transition in sale_opportunity_workflow]"
-msgstr "承認を求める"
-
-msgid "Request Approval [transition in ticket_workflow]"
-msgstr "承認を求める"
-
 msgid "Request Approval of Manager"
-msgstr "管理者の承認を求める"
-
-msgid "Request Approval of Manager [transition in ticket_workflow]"
 msgstr "管理者の承認を求める"
 
 msgid "Request Processing"
@@ -4436,12 +4238,6 @@ msgstr "対応を求める"
 
 msgid "Request Processing Action"
 msgstr "対応要求アクション"
-
-msgid "Request Processing Action [transition in event_workflow]"
-msgstr "対応要求アクション"
-
-msgid "Request Processing [transition in event_workflow]"
-msgstr "対応を求める"
 
 msgid "Requested Project"
 msgstr "要求されたプロジェクト"
@@ -4490,12 +4286,6 @@ msgstr "返答する"
 
 msgid "Respond Event Action"
 msgstr "返答アクション"
-
-msgid "Respond Event Action [transition in event_workflow]"
-msgstr "返答アクション"
-
-msgid "Respond Event [transition in event_workflow]"
-msgstr "返答する"
 
 msgid "Respond Workflow Action"
 msgstr "返答アクション"
@@ -4836,12 +4626,6 @@ msgstr "販売する"
 msgid "Sell Action"
 msgstr "販売アクション"
 
-msgid "Sell Action [transition in sale_opportunity_workflow]"
-msgstr "販売アクション"
-
-msgid "Sell [transition in sale_opportunity_workflow]"
-msgstr "販売"
-
 msgid "Seller"
 msgstr "担当者"
 
@@ -4856,12 +4640,6 @@ msgstr "提案する"
 
 msgid "Send Offer Action"
 msgstr "提案アクション"
-
-msgid "Send Offer Action [transition in sale_opportunity_workflow]"
-msgstr "提案アクション"
-
-msgid "Send Offer [transition in sale_opportunity_workflow]"
-msgstr "提案する"
 
 msgid "Sender"
 msgstr "送り元"
@@ -5150,12 +4928,6 @@ msgstr "提案する"
 
 msgid "Submit Event Action"
 msgstr "提案アクション"
-
-msgid "Submit Event Action [transition in event_workflow]"
-msgstr "提案アクション"
-
-msgid "Submit Event [transition in event_workflow]"
-msgstr "提案する"
 
 msgid "Submitted Campaigns (%(count)s)"
 msgstr "提案されたキャンペーン (%(count)s)"

@@ -331,12 +331,6 @@ msgstr "Reconhecer"
 msgid "Acknowledge Event"
 msgstr "Reconhecer Evento"
 
-msgid "Acknowledge Event Action [transition in event_workflow]"
-msgstr "Reconhecer Evento"
-
-msgid "Acknowledge Event [transition in event_workflow]"
-msgstr "Reconhecer Evento"
-
 msgid "Acknowledged"
 msgstr "Reconhecido"
 
@@ -484,10 +478,7 @@ msgstr "Uma Linha de Inventário pode ser encontrado em documentos do tipo Inven
 msgid "Answer"
 msgstr "Resposta"
 
-msgid "Answer Query Action [transition in query_workflow]"
-msgstr "Responder Pergunta"
-
-msgid "Answer Query [transition in query_workflow]"
+msgid "Answer Query"
 msgstr "Responder Pergunta"
 
 msgid "Answered"
@@ -523,17 +514,11 @@ msgstr "Abril"
 msgid "Archive"
 msgstr "Arquivar"
 
+msgid "Archive Document"
+msgstr "Arquivar Documento"
+
 msgid "Archive Document Action"
 msgstr "Arquivar Documento"
-
-msgid "Archive Document Action [transition in document_publication_workflow]"
-msgstr "Arquivar Documento"
-
-msgid "Archive Document [transition in document_publication_workflow]"
-msgstr "Arquivar Documento"
-
-msgid "Archive [transition in document_publication_workflow]"
-msgstr "Arquivar"
 
 msgid "Archive a document which has been replaced by a more recent version by setting the validation state to archived."
 msgstr "Arquiva um documento que tenha sido substituído por uma versão mais recente, definindo o estado como arquivado."
@@ -562,34 +547,16 @@ msgstr "Designar"
 msgid "Assign Bug"
 msgstr "Designar Bug"
 
-msgid "Assign Bug [transition in bug_workflow]"
-msgstr "Designar Bug"
-
-msgid "Assign Document Action [transition in document_ingestion_workflow]"
-msgstr "Designar"
-
-msgid "Assign Document [transition in document_ingestion_workflow]"
+msgid "Assign Document"
 msgstr "Designar"
 
 msgid "Assign Event"
-msgstr "Designar Evento"
-
-msgid "Assign Event Action [transition in event_workflow]"
-msgstr "Designar Evento"
-
-msgid "Assign Event [transition in event_workflow]"
 msgstr "Designar Evento"
 
 msgid "Assign Translation"
 msgstr "Designar Tradução"
 
 msgid "Assign Translation Action"
-msgstr "Designar Tradução"
-
-msgid "Assign Translation Action [transition in document_publication_workflow]"
-msgstr "Designar Tradução"
-
-msgid "Assign Translation [transition in document_publication_workflow]"
 msgstr "Designar Tradução"
 
 msgid "Assign for Translation"
@@ -754,12 +721,6 @@ msgstr "Bugs para Validar"
 msgid "Build Business Template"
 msgstr "Construir Business Template"
 
-msgid "Build Business Template Action [transition in business_template_building_workflow]"
-msgstr "Construir Business Template"
-
-msgid "Build Business Template [transition in business_template_building_workflow]"
-msgstr "Construir Business Template"
-
 msgid "Building"
 msgstr "Construindo"
 
@@ -841,22 +802,10 @@ msgstr "Cancelar"
 msgid "Cancel Accounting Period"
 msgstr "Cancelar Período Contábil"
 
-msgid "Cancel Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "Cancelar Período Contábil"
-
-msgid "Cancel Accounting Period [transition in accounting_period_workflow]"
-msgstr "Cancelar Período Contábil"
-
 msgid "Cancel Action"
 msgstr "Cancelar Ação"
 
 msgid "Cancel Assignment"
-msgstr "Cancelar Designação"
-
-msgid "Cancel Assignment Action [transition in assignment_workflow]"
-msgstr "Cancelar Designação"
-
-msgid "Cancel Assignment [transition in assignment_workflow]"
 msgstr "Cancelar Designação"
 
 msgid "Cancel Budget"
@@ -868,40 +817,16 @@ msgstr "Cancelar Orçamento"
 msgid "Cancel Career Step"
 msgstr "Cancelar Passo da Carreira"
 
-msgid "Cancel Career Step Action [transition in career_workflow]"
-msgstr "Cancelar Passo da Carreira"
-
-msgid "Cancel Career Step [transition in career_workflow]"
-msgstr "Cancelar Passo da Carreira"
-
 msgid "Cancel Document Publication"
 msgstr "Cancelar Publicação do Documento"
 
 msgid "Cancel Document Publication Action"
 msgstr "Cancelar Publicação do Documento"
 
-msgid "Cancel Document Publication Action [transition in document_publication_workflow]"
-msgstr "Cancelar Publicação do Documento"
-
-msgid "Cancel Document Publication [transition in document_publication_workflow]"
-msgstr "Cancelar Publicação do Documento"
-
 msgid "Cancel Event"
 msgstr "Cancelar Evento"
 
-msgid "Cancel Event Action [transition in event_workflow]"
-msgstr "Cancelar Evento"
-
-msgid "Cancel Event [transition in event_workflow]"
-msgstr "Cancelar Evento"
-
 msgid "Cancel Inventory"
-msgstr "Cancelar Inventário"
-
-msgid "Cancel Inventory Action [transition in inventory_workflow]"
-msgstr "Cancelar Inventário"
-
-msgid "Cancel Inventory [transition in inventory_workflow]"
 msgstr "Cancelar Inventário"
 
 msgid "Cancel Order"
@@ -910,40 +835,16 @@ msgstr "Cancelar Pedido"
 msgid "Cancel Order Action"
 msgstr "Cancelar Pedido"
 
-msgid "Cancel Order Action [transition in open_order_workflow]"
-msgstr "Cancelar Pedido"
-
-msgid "Cancel Order Action [transition in order_workflow]"
-msgstr "Cancelar Pedido"
-
-msgid "Cancel Order [transition in open_order_workflow]"
-msgstr "Cancelar Pedido"
-
-msgid "Cancel Order [transition in order_workflow]"
-msgstr "Cancelar Pedido"
-
 msgid "Cancel Packing List"
 msgstr "Cancelar Entrega"
 
 msgid "Cancel Packing List Action"
 msgstr "Cancelar Entrega"
 
-msgid "Cancel Packing List Action [transition in packing_list_workflow]"
-msgstr "Cancelar Entrega"
-
-msgid "Cancel Packing List [transition in packing_list_workflow]"
-msgstr "Cancelar Entrega"
-
-msgid "Cancel Query Action [transition in query_workflow]"
+msgid "Cancel Query"
 msgstr "Cancelar Pergunta"
 
-msgid "Cancel Query [transition in query_workflow]"
-msgstr "Cancelar Pergunta"
-
-msgid "Cancel Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "Cancelar Oportunidade de Venda"
-
-msgid "Cancel Sale Opportunity [transition in sale_opportunity_workflow]"
+msgid "Cancel Sale Opportunity"
 msgstr "Cancelar Oportunidade de Venda"
 
 msgid "Cancel Ticket"
@@ -952,29 +853,11 @@ msgstr "Cancelar"
 msgid "Cancel Ticket Action"
 msgstr "Cancelar"
 
-msgid "Cancel Ticket Action [transition in ticket_workflow]"
-msgstr "Cancelar"
-
-msgid "Cancel Ticket [transition in ticket_workflow]"
-msgstr "Cancelar"
-
 msgid "Cancel Transaction"
 msgstr "Cancelar Transação"
 
 msgid "Cancel Transaction Action"
 msgstr "Cancelar Transação"
-
-msgid "Cancel Transaction Action [transition in accounting_workflow]"
-msgstr "Cancelar Transação"
-
-msgid "Cancel Transaction [transition in accounting_workflow]"
-msgstr "Cancelar Transação"
-
-msgid "Cancel [transition in bug_event_workflow]"
-msgstr "Cancelar"
-
-msgid "Cancel [transition in bug_workflow]"
-msgstr "Cancelar"
 
 msgid "Cancel a document in ERP5"
 msgstr "Cancelar um document no ERP5."
@@ -1150,12 +1033,6 @@ msgstr "Classificação"
 msgid "Clean Business Template"
 msgstr "Limpar Business Template"
 
-msgid "Clean Business Template Action [transition in business_template_building_workflow]"
-msgstr "Limpar Business Template"
-
-msgid "Clean Business Template [transition in business_template_building_workflow]"
-msgstr "Limpar Business Template"
-
 msgid "Clean SVN Unversioned Files"
 msgstr "Limpar Arquivos não versionados no SVN"
 
@@ -1198,19 +1075,10 @@ msgstr "Fechar Período Contábil"
 msgid "Close Accounting Period Action"
 msgstr "Fechar Período Contábil"
 
-msgid "Close Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "Fechar Período Contábil"
-
-msgid "Close Accounting Period [transition in accounting_period_workflow]"
-msgstr "Fechar Período Contábil"
-
 msgid "Close Accounting Transaction"
 msgstr "Fechar Transação Contábil"
 
 msgid "Close Bug"
-msgstr "Fechar Bug"
-
-msgid "Close Bug [transition in bug_workflow]"
 msgstr "Fechar Bug"
 
 msgid "Close Project"
@@ -1223,12 +1091,6 @@ msgid "Close Ticket"
 msgstr "Fechar"
 
 msgid "Close Ticket Action"
-msgstr "Fechar"
-
-msgid "Close Ticket Action [transition in ticket_workflow]"
-msgstr "Fechar"
-
-msgid "Close Ticket [transition in ticket_workflow]"
 msgstr "Fechar"
 
 msgid "Closed"
@@ -1321,22 +1183,10 @@ msgstr "Confirmar Pedido"
 msgid "Confirm Order Action"
 msgstr "Confirmar Pedido"
 
-msgid "Confirm Order Action [transition in order_workflow]"
-msgstr "Confirmar Pedido"
-
-msgid "Confirm Order [transition in order_workflow]"
-msgstr "Confirmar Pedido"
-
 msgid "Confirm Packing List"
 msgstr "Confirmar Entrega"
 
 msgid "Confirm Packing List Action"
-msgstr "Confirmar Entrega"
-
-msgid "Confirm Packing List Action [transition in packing_list_workflow]"
-msgstr "Confirmar Entrega"
-
-msgid "Confirm Packing List [transition in packing_list_workflow]"
 msgstr "Confirmar Entrega"
 
 msgid "Confirm Transaction"
@@ -1344,15 +1194,6 @@ msgstr "Confirmar Transação"
 
 msgid "Confirm Transaction Action"
 msgstr "Confirmar Transação"
-
-msgid "Confirm Transaction Action [transition in accounting_workflow]"
-msgstr "Confirmar Transação"
-
-msgid "Confirm Transaction [transition in accounting_workflow]"
-msgstr "Confirmar Transação"
-
-msgid "Confirm [transition in packing_list_workflow]"
-msgstr "Confirmar"
 
 msgid "Confirmation"
 msgstr "Confirmação"
@@ -1441,7 +1282,7 @@ msgstr "Ferramenta de contribuição é um lugar único para conteúdo de contri
 msgid "Contributors"
 msgstr "Colaboradores"
 
-msgid "Convergent [transition in delivery_causality_workflow]"
+msgid "Convergent"
 msgstr "Convergir"
 
 msgid "Conversion"
@@ -1456,19 +1297,13 @@ msgstr "Endereço do Servidor de Conversão"
 msgid "Conversion Server Port"
 msgstr "Porta do Servidor de Conversão"
 
-msgid "Convert Action [transition in processing_status_workflow]"
-msgstr "Converter "
-
 msgid "Convert File"
-msgstr "Converter Arquivo"
-
-msgid "Convert File [transition in processing_status_workflow]"
 msgstr "Converter Arquivo"
 
 msgid "Convert Price"
 msgstr "Converter Preço"
 
-msgid "Convert to OpenDocument [transition in processing_status_workflow]"
+msgid "Convert to OpenDocument"
 msgstr "Converter para OpenDocument"
 
 msgid "Converted"
@@ -1558,12 +1393,6 @@ msgstr "Criar Nova Página Web"
 msgid "Create Related Event"
 msgstr "Criar Evento Relacionado"
 
-msgid "Create Related Event Action [transition in event_workflow]"
-msgstr "Criar Evento Relacionado"
-
-msgid "Create Related Event [transition in event_workflow]"
-msgstr "Criar Evento Relacionado"
-
 msgid "Create Related Payment"
 msgstr "Criar Pagamento Relacionado"
 
@@ -1583,12 +1412,6 @@ msgid "Create Terms from English Ones for Translation"
 msgstr "Criar Termos a partir do Inglês para Tradução"
 
 msgid "Create User"
-msgstr "Criar Usuário"
-
-msgid "Create User Action [transition in user_account_workflow]"
-msgstr "Criar Usuário"
-
-msgid "Create User [transition in user_account_workflow]"
 msgstr "Criar Usuário"
 
 msgid "Create a New Event for Reply"
@@ -1786,121 +1609,40 @@ msgstr "Define quem irá receber a fatura."
 msgid "Delete"
 msgstr "Apagar"
 
-msgid "Delete Account Action [transition in account_workflow]"
+msgid "Delete Account"
 msgstr "Apagar Conta"
 
-msgid "Delete Account [transition in account_workflow]"
-msgstr "Apagar Conta"
-
-msgid "Delete Accounting Period Action [transition in accounting_period_workflow]"
+msgid "Delete Accounting Period"
 msgstr "Apagar Período Contábil"
 
-msgid "Delete Accounting Period [transition in accounting_period_workflow]"
-msgstr "Apagar Período Contábil"
-
-msgid "Delete Action [transition in inventory_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Action [transition in open_order_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Action [transition in order_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Action [transition in packing_list_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Action [transition in rule_validation_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Action [transition in validation_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Assignment Action [transition in assignment_workflow]"
-msgstr "Apagar Designação"
-
-msgid "Delete Business Template Action [transition in business_template_installation_workflow]"
+msgid "Delete Business Template"
 msgstr "Apagar Business Template"
 
-msgid "Delete Business Template [transition in business_template_installation_workflow]"
-msgstr "Apagar Business Template"
-
-msgid "Delete Document Action [transition in document_ingestion_workflow]"
+msgid "Delete Document"
 msgstr "Apagar Documento"
 
-msgid "Delete Document Action [transition in document_publication_workflow]"
-msgstr "Apagar Documento"
-
-msgid "Delete Document [transition in document_ingestion_workflow]"
-msgstr "Apagar Documento"
-
-msgid "Delete Document [transition in document_publication_workflow]"
-msgstr "Apagar Documento"
-
-msgid "Delete Event Action [transition in event_workflow]"
+msgid "Delete Event"
 msgstr "Apagar Evento"
 
-msgid "Delete Event [transition in event_workflow]"
-msgstr "Apagar Evento"
-
-msgid "Delete Message Action [transition in notification_message_workflow]"
-msgstr "Apagar Mensagem"
-
-msgid "Delete Message [transition in notification_message_workflow]"
+msgid "Delete Message"
 msgstr "Apagar Mensagem"
 
 msgid "Delete Objects"
 msgstr "Apagar Objetos"
 
-msgid "Delete Preference Action [transition in preference_workflow]"
+msgid "Delete Preference"
 msgstr "Apagar Preferência"
 
-msgid "Delete Preference [transition in preference_workflow]"
-msgstr "Apagar Preferência"
-
-msgid "Delete Query Action [transition in query_workflow]"
+msgid "Delete Query"
 msgstr "Apagar Pergunta"
 
-msgid "Delete Query [transition in query_workflow]"
-msgstr "Apagar Pergunta"
-
-msgid "Delete Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "Apagar Oportunidade de Venda"
-
-msgid "Delete Sale Opportunity [transition in sale_opportunity_workflow]"
+msgid "Delete Sale Opportunity"
 msgstr "Apagar Oportunidade de Venda"
 
 msgid "Delete The Objects"
 msgstr "Apagar os Objetos"
 
-msgid "Delete Ticket Action [transition in ticket_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Ticket [transition in ticket_workflow]"
-msgstr "Apagar"
-
-msgid "Delete Transaction Action [transition in accounting_workflow]"
-msgstr "Apagar Transação"
-
-msgid "Delete [transition in bug_workflow]"
-msgstr "Apagar"
-
-msgid "Delete [transition in inventory_workflow]"
-msgstr "Apagar"
-
-msgid "Delete [transition in open_order_workflow]"
-msgstr "Apagar"
-
-msgid "Delete [transition in order_workflow]"
-msgstr "Apagar"
-
-msgid "Delete [transition in packing_list_workflow]"
-msgstr "Apagar"
-
-msgid "Delete [transition in rule_validation_workflow]"
-msgstr "Apagar"
-
-msgid "Delete [transition in validation_workflow]"
+msgid "Delete Ticket"
 msgstr "Apagar"
 
 msgid "Delete a document in ERP5"
@@ -1993,13 +1735,10 @@ msgstr "Objetos apagado: ${object_ids}"
 msgid "Deleted."
 msgstr "Apagado."
 
+msgid "Deliver"
+msgstr "Entregue"
+
 msgid "Deliver Event"
-msgstr "Entregar Evento"
-
-msgid "Deliver Event Action [transition in event_workflow]"
-msgstr "Entregar Evento"
-
-msgid "Deliver Event [transition in event_workflow]"
 msgstr "Entregar Evento"
 
 msgid "Deliver Packing List"
@@ -2007,15 +1746,6 @@ msgstr "Entregar"
 
 msgid "Deliver Packing List Action"
 msgstr "Entregar"
-
-msgid "Deliver Packing List Action [transition in packing_list_workflow]"
-msgstr "Entregar"
-
-msgid "Deliver Packing List [transition in packing_list_workflow]"
-msgstr "Entregar"
-
-msgid "Deliver [transition in bug_event_workflow]"
-msgstr "Entregue"
 
 msgid "Deliver to"
 msgstr "Entregue para"
@@ -2107,12 +1837,6 @@ msgstr "Desabilitar"
 msgid "Disable Preference"
 msgstr "Desabilitar Preferência"
 
-msgid "Disable Preference Action [transition in preference_workflow]"
-msgstr "Desabilitar Preferência "
-
-msgid "Disable Preference [transition in preference_workflow]"
-msgstr "Desabilitar Preferência "
-
 msgid "Disabled"
 msgstr "Desabilitado"
 
@@ -2158,7 +1882,7 @@ msgstr "Escopo da Divergência"
 msgid "Divergences"
 msgstr "Divergências"
 
-msgid "Divergent [transition in delivery_causality_workflow]"
+msgid "Divergent"
 msgstr "Divergente"
 
 msgid "Do not forget to logout or exit your browser when you are done."
@@ -2380,10 +2104,7 @@ msgstr "Editar"
 msgid "Edit ${portal_type}"
 msgstr "Editar ${portal_type}"
 
-msgid "Edit Action [transition in edit_workflow]"
-msgstr "Editar"
-
-msgid "Edit Business Template [transition in business_template_building_workflow]"
+msgid "Edit Business Template"
 msgstr "Editar Business Template"
 
 msgid "Edit Portal Type '${portal_type}'"
@@ -2391,15 +2112,6 @@ msgstr "Editar Portal Type '${portal_type}'"
 
 msgid "Edit Workflow"
 msgstr "Workflow de edição "
-
-msgid "Edit [transition in document_publication_workflow]"
-msgstr "Editar"
-
-msgid "Edit [transition in edit_workflow]"
-msgstr "Editar"
-
-msgid "Edit [transition in processing_status_workflow]"
-msgstr "Editar"
 
 msgid "Editable"
 msgstr "Editável"
@@ -2462,12 +2174,6 @@ msgid "Enable"
 msgstr "Habilitar"
 
 msgid "Enable Preference"
-msgstr "Habilitar Preferência"
-
-msgid "Enable Preference Action [transition in preference_workflow]"
-msgstr "Habilitar Preferência"
-
-msgid "Enable Preference [transition in preference_workflow]"
 msgstr "Habilitar Preferência"
 
 msgid "Enabled"
@@ -2572,35 +2278,20 @@ msgstr "Data de Expiração"
 msgid "Expire"
 msgstr "Expirar"
 
-msgid "Expire Category Action [transition in category_publication_workflow]"
-msgstr "Expirar Categoria"
-
-msgid "Expire Category [transition in category_publication_workflow]"
+msgid "Expire Category"
 msgstr "Expirar Categoria"
 
 msgid "Expire Event"
 msgstr "Expirar Evento"
 
-msgid "Expire Event Action [transition in event_workflow]"
-msgstr "Expirar Evento"
-
-msgid "Expire Event [transition in event_workflow]"
-msgstr "Expirar Evento"
-
-msgid "Expire Protected Category [transition in category_publication_workflow]"
+msgid "Expire Protected Category"
 msgstr "Expirar Categoria Protegida"
 
-msgid "Expire Published Category [transition in category_publication_workflow]"
+msgid "Expire Published Category"
 msgstr "Expirar Categoria Publicada"
 
-msgid "Expire Sale Opportunity Action [transition in sale_opportunity_workflow]"
+msgid "Expire Sale Opportunity"
 msgstr "Expirar Oportunidade de Vanda"
-
-msgid "Expire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "Expirar Oportunidade de Vanda"
-
-msgid "Expire [transition in category_publication_workflow]"
-msgstr "Expirar"
 
 msgid "Expired"
 msgstr "Expirado"
@@ -2647,7 +2338,7 @@ msgstr "Ramal"
 msgid "External Folder"
 msgstr "Pasta Externa"
 
-msgid "Extract [transition in document_publication_workflow]"
+msgid "Extract"
 msgstr "Extrair"
 
 msgid "FAX"
@@ -2738,12 +2429,6 @@ msgid "Finish Translation"
 msgstr "Terminar Tradução"
 
 msgid "Finish Translation Action"
-msgstr "Terminar Tradução"
-
-msgid "Finish Translation Action [transition in document_publication_workflow]"
-msgstr "Terminar Tradução"
-
-msgid "Finish Translation [transition in document_publication_workflow]"
 msgstr "Terminar Tradução"
 
 msgid "Finish the work"
@@ -2875,12 +2560,6 @@ msgstr "Ocultar Documento"
 msgid "Hide Document Action"
 msgstr "Ocultar Documento"
 
-msgid "Hide Document Action [transition in document_publication_workflow]"
-msgstr "Ocultar Documento"
-
-msgid "Hide Document [transition in document_publication_workflow]"
-msgstr "Ocultar Documento"
-
 msgid "Hide tabs"
 msgstr "Esconder abas"
 
@@ -2986,12 +2665,6 @@ msgstr "Instalar"
 msgid "Install Business Template"
 msgstr "Instalar Business Template"
 
-msgid "Install Business Template Action [transition in business_template_installation_workflow]"
-msgstr "Install Business Template"
-
-msgid "Install Business Template [transition in business_template_installation_workflow]"
-msgstr "Install Business Template"
-
 msgid "Install Business Templates from Repositories"
 msgstr "Install Business Template do Repositório"
 
@@ -3028,32 +2701,11 @@ msgstr "Invalidar"
 msgid "Invalidate Account"
 msgstr "Invalidar"
 
-msgid "Invalidate Account Action [transition in account_workflow]"
-msgstr "Invalidar Conta"
-
-msgid "Invalidate Account [transition in account_workflow]"
-msgstr "Invalidar Conta"
-
 msgid "Invalidate Action"
 msgstr "Invalidar"
 
-msgid "Invalidate Action [transition in rule_validation_workflow]"
-msgstr "Invalidar"
-
-msgid "Invalidate Action [transition in validation_workflow]"
-msgstr "Invalidar"
-
-msgid "Invalidate Message Action [transition in notification_message_workflow]"
+msgid "Invalidate Message"
 msgstr "Invalidar Mensagem"
-
-msgid "Invalidate Message [transition in notification_message_workflow]"
-msgstr "Invalidar Mensagem"
-
-msgid "Invalidate [transition in rule_validation_workflow]"
-msgstr "Invalidar"
-
-msgid "Invalidate [transition in validation_workflow]"
-msgstr "Invalidar"
 
 msgid "Invalidated"
 msgstr "Invalidado"
@@ -3085,11 +2737,11 @@ msgstr "Estado do Inventário"
 msgid "Inventory Variation Chart"
 msgstr "Gráfico de Variação do Inventário"
 
+msgid "Invisible"
+msgstr "Invisível"
+
 msgid "Invisible [state in knowledge_pad_validation_workflow]"
 msgstr "Tornar Invisível"
-
-msgid "Invisible [transition in knowledge_pad_validation_workflow]"
-msgstr "Invisível"
 
 msgid "Invoice"
 msgstr "Fatura"
@@ -3653,12 +3305,6 @@ msgstr "Abrir"
 msgid "Open Ticket Action"
 msgstr "Abrir"
 
-msgid "Open Ticket Action [transition in ticket_workflow]"
-msgstr "Abrir"
-
-msgid "Open Ticket [transition in ticket_workflow]"
-msgstr "Abrir"
-
 msgid "Open [state in bug_workflow]"
 msgstr "Abrir"
 
@@ -3980,18 +3626,6 @@ msgstr "Alocar Pedido"
 msgid "Place Order Action"
 msgstr "Alocar Pedido"
 
-msgid "Place Order Action [transition in open_order_workflow]"
-msgstr "Alocar Pedido"
-
-msgid "Place Order Action [transition in order_workflow]"
-msgstr "Alocar Pedido"
-
-msgid "Place Order [transition in open_order_workflow]"
-msgstr "Alocar Pedido"
-
-msgid "Place Order [transition in order_workflow]"
-msgstr "Alocar Pedido"
-
 msgid "Plain Text"
 msgstr "Texto Plano"
 
@@ -4004,32 +3638,11 @@ msgstr "Planejar Pedido"
 msgid "Plan Order Action"
 msgstr "Planejar Pedido"
 
-msgid "Plan Order Action [transition in open_order_workflow]"
-msgstr "Planejar Pedido"
-
-msgid "Plan Order Action [transition in order_workflow]"
-msgstr "Planejar Pedido"
-
-msgid "Plan Order [transition in open_order_workflow]"
-msgstr "Planejar Pedido"
-
-msgid "Plan Order [transition in order_workflow]"
-msgstr "Planejar Pedido"
-
 msgid "Plan Transaction"
 msgstr "Planejar Transação"
 
 msgid "Plan Transaction Action"
 msgstr "Planejar Transação"
-
-msgid "Plan Transaction Action [transition in accounting_workflow]"
-msgstr "Planejar Transação"
-
-msgid "Plan Transaction [transition in accounting_workflow]"
-msgstr "Planejar Transação"
-
-msgid "Plan [transition in bug_event_workflow]"
-msgstr "Planejar"
 
 msgid "Planned"
 msgstr "Planejado"
@@ -4076,23 +3689,8 @@ msgstr "Postar"
 msgid "Post Event"
 msgstr "Enviar Evento"
 
-msgid "Post Event Action [transition in event_workflow]"
-msgstr "Enviar Evento"
-
-msgid "Post Event [transition in event_workflow]"
-msgstr "Enviar Evento"
-
 msgid "Post Query"
 msgstr "Enviar Pergunta"
-
-msgid "Post Query Action [transition in query_workflow]"
-msgstr "Enviar Pergunta"
-
-msgid "Post Query [transition in query_workflow]"
-msgstr "Enviar Pergunta"
-
-msgid "Post [transition in bug_event_workflow]"
-msgstr "Postar"
 
 msgid "Post a Query"
 msgstr "Enviar uma Pergunta"
@@ -4220,7 +3818,7 @@ msgstr "Problema"
 msgid "Problem Detected"
 msgstr "Problema Detectado."
 
-msgid "Process file [transition in processing_status_workflow]"
+msgid "Process file"
 msgstr "Processar Arquivo"
 
 msgid "Product"
@@ -4313,14 +3911,11 @@ msgstr "Prospecto Contatado"
 msgid "Prospect Contacted [state in sale_opportunity_workflow]"
 msgstr "Prospecto Contatado"
 
-msgid "Protect Category Action [transition in category_publication_workflow]"
-msgstr "Proteger Categoria"
-
-msgid "Protect Category [transition in category_publication_workflow]"
-msgstr "Proteger Categoria"
-
-msgid "Protect [transition in category_publication_workflow]"
+msgid "Protect"
 msgstr "Proteger"
+
+msgid "Protect Category"
+msgstr "Proteger Categoria"
 
 msgid "Protected [state in category_publication_workflow]"
 msgstr "Protegido"
@@ -4341,9 +3936,6 @@ msgid "Public [state in external_document_publication_workflow]"
 msgstr "Publicar"
 
 msgid "Public [state in knowledge_pad_validation_workflow]"
-msgstr "Publicar"
-
-msgid "Public [transition in knowledge_pad_validation_workflow]"
 msgstr "Publicar"
 
 msgid "Public description of the document."
@@ -4367,10 +3959,7 @@ msgstr "Publicar"
 msgid "Publish Alive"
 msgstr "Publicar Ativo"
 
-msgid "Publish Category Action [transition in category_publication_workflow]"
-msgstr "Publicar Categoria"
-
-msgid "Publish Category [transition in category_publication_workflow]"
+msgid "Publish Category"
 msgstr "Publicar Categoria"
 
 msgid "Publish Document"
@@ -4379,38 +3968,8 @@ msgstr "Publicar Documento"
 msgid "Publish Document Action"
 msgstr "Publicar Documento"
 
-msgid "Publish Document Action [transition in document_publication_workflow]"
-msgstr "Publicar Documento"
-
-msgid "Publish Document Action [transition in external_document_publication_workflow]"
-msgstr "Publicar Documento"
-
-msgid "Publish Document Action [transition in publication_workflow]"
-msgstr "Publicar Documento"
-
 msgid "Publish Document Alive"
 msgstr "Publicar Documento Ativo"
-
-msgid "Publish Document Alive Action [transition in document_publication_workflow]"
-msgstr "Publicar Documento Ativo"
-
-msgid "Publish Document Alive [transition in document_publication_workflow]"
-msgstr "Publicar Documento Ativo"
-
-msgid "Publish Document [transition in document_publication_workflow]"
-msgstr "Publicar Documento"
-
-msgid "Publish Document [transition in external_document_publication_workflow]"
-msgstr "Publicar Documento"
-
-msgid "Publish Document [transition in publication_workflow]"
-msgstr "Publicar Documento"
-
-msgid "Publish [transition in category_publication_workflow]"
-msgstr "Publicar"
-
-msgid "Publish [transition in document_staging_workflow]"
-msgstr "Publicar"
 
 msgid "Published"
 msgstr "Publicado"
@@ -4577,9 +4136,6 @@ msgstr "Razão"
 msgid "Re-install Business Template"
 msgstr "Reinstalar Business Template"
 
-msgid "Re-install Business Template [transition in business_template_installation_workflow]"
-msgstr "Reinstalar Business Template"
-
 msgid "Ready"
 msgstr "Pronto"
 
@@ -4589,25 +4145,13 @@ msgstr "Cliente Real"
 msgid "Rebuild Business Template"
 msgstr "Reconstruir Business Template"
 
-msgid "Rebuild Business Template [transition in business_template_building_workflow]"
-msgstr "Preferências de contabilidade: "
-
 msgid "Receive"
 msgstr "Receber"
 
-msgid "Receive Document Action [transition in document_ingestion_workflow]"
-msgstr "Receber Documento"
-
-msgid "Receive Document [transition in document_ingestion_workflow]"
+msgid "Receive Document"
 msgstr "Receber Documento"
 
 msgid "Receive Event"
-msgstr "Receber Evento"
-
-msgid "Receive Event Action [transition in event_workflow]"
-msgstr "Receber Evento"
-
-msgid "Receive Event [transition in event_workflow]"
 msgstr "Receber Evento"
 
 msgid "Receive Packing List"
@@ -4615,15 +4159,6 @@ msgstr "Receber Entrega"
 
 msgid "Receive Packing List Action"
 msgstr "Receber Entrega"
-
-msgid "Receive Packing List Action [transition in packing_list_workflow]"
-msgstr "Receber Entrega"
-
-msgid "Receive Packing List [transition in packing_list_workflow]"
-msgstr "Receber Entrega"
-
-msgid "Receive [transition in document_ingestion_workflow]"
-msgstr "Receber"
 
 msgid "Received"
 msgstr "Recebido"
@@ -4679,10 +4214,7 @@ msgstr "Região"
 msgid "Register"
 msgstr "Registrar"
 
-msgid "Reinstall Business Template Action [transition in business_template_installation_workflow]"
-msgstr "Reinstalar Business Template"
-
-msgid "Reinstall Business Template [transition in business_template_installation_workflow]"
+msgid "Reinstall Business Template"
 msgstr "Reinstalar Business Template"
 
 msgid "Reject"
@@ -4694,37 +4226,10 @@ msgstr "Recusar Documento"
 msgid "Reject Document Action"
 msgstr "Recusar Documento"
 
-msgid "Reject Document Action [transition in document_publication_workflow]"
-msgstr "Recusar Documento"
-
-msgid "Reject Document [transition in document_publication_workflow]"
-msgstr "Recusar Documento"
-
-msgid "Reject Message Action [transition in notification_message_workflow]"
-msgstr "Recusar Mensagem"
-
-msgid "Reject Message [transition in notification_message_workflow]"
+msgid "Reject Message"
 msgstr "Recusar Mensagem"
 
 msgid "Reject Offer"
-msgstr "Recusar Oferta"
-
-msgid "Reject Offer Action [transition in open_order_workflow]"
-msgstr "Recusar Oferta"
-
-msgid "Reject Offer Action [transition in order_workflow]"
-msgstr "Recusar Oferta"
-
-msgid "Reject Offer Action [transition in sale_opportunity_workflow]"
-msgstr "Recusar Oferta"
-
-msgid "Reject Offer [transition in open_order_workflow]"
-msgstr "Recusar Oferta"
-
-msgid "Reject Offer [transition in order_workflow]"
-msgstr "Recusar Oferta"
-
-msgid "Reject Offer [transition in sale_opportunity_workflow]"
 msgstr "Recusar Oferta"
 
 msgid "Rejected"
@@ -4814,7 +4319,7 @@ msgstr "Arquivos removidos."
 msgid "Reopens a document that would have been closed previously, in order to modify it, such as an accounting period"
 msgstr "Reabre um documento que teria sido fechado anteriormente a fim de modificá-lo, como um período contabilístico"
 
-msgid "Replace Business Template [transition in business_template_installation_workflow]"
+msgid "Replace Business Template"
 msgstr "Substituir Business Template"
 
 msgid "Replaced"
@@ -4856,31 +4361,10 @@ msgstr "Solicitar Aprovação"
 msgid "Request Approval Action"
 msgstr "Solicitar Aprovação"
 
-msgid "Request Approval Action [transition in sale_opportunity_workflow]"
-msgstr "Solicitar Aprovação"
-
-msgid "Request Approval Action [transition in ticket_workflow]"
-msgstr "Solicitar Aprovação"
-
-msgid "Request Approval [transition in sale_opportunity_workflow]"
-msgstr "Solicitar Aprovação"
-
-msgid "Request Approval [transition in ticket_workflow]"
-msgstr "Solicitar Aprovação"
-
 msgid "Request Approval of Manager"
 msgstr "Solicitar Aprovação do Gerente"
 
-msgid "Request Approval of Manager [transition in ticket_workflow]"
-msgstr "Solicitar Aprovação do Gerente"
-
 msgid "Request Processing"
-msgstr "Solicitar Processamento"
-
-msgid "Request Processing Action [transition in event_workflow]"
-msgstr "Solicitar Processamento"
-
-msgid "Request Processing [transition in event_workflow]"
 msgstr "Solicitar Processamento"
 
 msgid "Request Subscription"
@@ -4890,12 +4374,6 @@ msgid "Request Translation"
 msgstr "Solicitar Tradução"
 
 msgid "Request Translation Action"
-msgstr "Solicitar Tradução"
-
-msgid "Request Translation Action [transition in document_publication_workflow]"
-msgstr "Solicitar Tradução"
-
-msgid "Request Translation [transition in document_publication_workflow]"
 msgstr "Solicitar Tradução"
 
 msgid "Requested Project"
@@ -4931,9 +4409,6 @@ msgstr "Resolver"
 msgid "Resolve SVN Conflicted Files"
 msgstr "Resolver Conflitos de Arquivos do SVN"
 
-msgid "Resolve [transition in bug_workflow]"
-msgstr "Resolver"
-
 msgid "Resolved"
 msgstr "Resolvido"
 
@@ -4958,12 +4433,6 @@ msgstr "Responder"
 msgid "Respond Event"
 msgstr "Responder Evento"
 
-msgid "Respond Event Action [transition in event_workflow]"
-msgstr "Responder Evento"
-
-msgid "Respond Event [transition in event_workflow]"
-msgstr "Responder Evento"
-
 msgid "Respond Workflow Action"
 msgstr "Responder"
 
@@ -4977,12 +4446,6 @@ msgid "Restart"
 msgstr "Reiniciar"
 
 msgid "Restart Accounting Period"
-msgstr "Reiniciar Período Contábil"
-
-msgid "Restart Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "Reiniciar Período Contábil"
-
-msgid "Restart Accounting Period [transition in accounting_period_workflow]"
 msgstr "Reiniciar Período Contábil"
 
 msgid "Restart Task"
@@ -5000,10 +4463,7 @@ msgstr "Resultados <em>${start} - ${stop}</em> de <em>${total}</em>."
 msgid "Retract"
 msgstr "Retrair"
 
-msgid "Retract Document Publication Action [transition in external_document_publication_workflow]"
-msgstr "Retrair Publicação do Documento"
-
-msgid "Retract Document Publication [transition in external_document_publication_workflow]"
+msgid "Retract Document Publication"
 msgstr "Retrair Publicação do Documento"
 
 msgid "Returned Sale Packing List"
@@ -5219,12 +4679,6 @@ msgstr "Selecione o documento apropriado na lista."
 msgid "Sell"
 msgstr "Vender"
 
-msgid "Sell Action [transition in sale_opportunity_workflow]"
-msgstr "Vender"
-
-msgid "Sell [transition in sale_opportunity_workflow]"
-msgstr "Vender"
-
 msgid "Seller"
 msgstr "Vendedor"
 
@@ -5235,12 +4689,6 @@ msgid "Send Mail"
 msgstr "Enviar Email"
 
 msgid "Send Offer"
-msgstr "Enviar Oferta"
-
-msgid "Send Offer Action [transition in sale_opportunity_workflow]"
-msgstr "Enviar Oferta"
-
-msgid "Send Offer [transition in sale_opportunity_workflow]"
 msgstr "Enviar Oferta"
 
 msgid "Send by Email"
@@ -5303,12 +4751,6 @@ msgstr "Definir Entrega Pronta"
 msgid "Set Packing List Ready Action"
 msgstr "Definir Entrega Pronta"
 
-msgid "Set Packing List Ready Action [transition in packing_list_workflow]"
-msgstr "Definir Entrega Pronta"
-
-msgid "Set Packing List Ready [transition in packing_list_workflow]"
-msgstr "Definir Entrega Pronta"
-
 msgid "Set Ready"
 msgstr "Definir como Pronto"
 
@@ -5345,19 +4787,7 @@ msgstr "Compartilhar Documento"
 msgid "Share Document Action"
 msgstr "Compartilhar"
 
-msgid "Share Document Action [transition in document_publication_workflow]"
-msgstr "Compartilhar"
-
 msgid "Share Document Alive"
-msgstr "Compartilhar Ativo"
-
-msgid "Share Document Alive Action [transition in document_publication_workflow]"
-msgstr "Compartilhar Ativo"
-
-msgid "Share Document Alive [transition in document_publication_workflow]"
-msgstr "Compartilhar Ativo"
-
-msgid "Share Document [transition in document_publication_workflow]"
 msgstr "Compartilhar Ativo"
 
 msgid "Shared"
@@ -5379,12 +4809,6 @@ msgid "Ship Packing List"
 msgstr "Enviar a Entrega"
 
 msgid "Ship Packing List Action"
-msgstr "Enviar a Entrega"
-
-msgid "Ship Packing List Action [transition in packing_list_workflow]"
-msgstr "Enviar a Entrega"
-
-msgid "Ship Packing List [transition in packing_list_workflow]"
 msgstr "Enviar a Entrega"
 
 msgid "Ship To"
@@ -5468,12 +4892,6 @@ msgstr "Resolver Divergência"
 msgid "Solve Divergences"
 msgstr "Resolver Divergências"
 
-msgid "Solve Divergences Action [transition in delivery_causality_workflow]"
-msgstr "Resolver Divergências"
-
-msgid "Solve Divergences [transition in delivery_causality_workflow]"
-msgstr "Resolver Divergências"
-
 msgid "Solved"
 msgstr "Resolvido"
 
@@ -5525,29 +4943,11 @@ msgstr "Iniciar"
 msgid "Start Accounting Period"
 msgstr "Iniciar Período Contábil"
 
-msgid "Start Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "Iniciar Período Contábil"
-
-msgid "Start Accounting Period [transition in accounting_period_workflow]"
-msgstr "Iniciar Período Contábil"
-
 msgid "Start Assignment"
-msgstr "Iniciar Designação"
-
-msgid "Start Assignment Action [transition in assignment_workflow]"
-msgstr "Iniciar Designação"
-
-msgid "Start Assignment [transition in assignment_workflow]"
 msgstr "Iniciar Designação"
 
 msgid "Start Career Step"
 msgstr "Iniciar Passo da Carreira"
-
-msgid "Start Career Step Action [transition in career_workflow]"
-msgstr "Iniciar Passo da Carreira"
-
-msgid "Start Career Step [transition in career_workflow]"
-msgstr "Iniciar Passo na Carreira"
 
 msgid "Start Date"
 msgstr "Data Inicial"
@@ -5639,20 +5039,8 @@ msgstr "Encerrar Período Contável"
 msgid "Stop Assignment"
 msgstr "Encerrar Designação"
 
-msgid "Stop Assignment Action [transition in assignment_workflow]"
-msgstr "Encerrar Designação"
-
-msgid "Stop Assignment [transition in assignment_workflow]"
-msgstr "Encerrar Designação"
-
 msgid "Stop Career Step"
 msgstr "Parar Carreira"
-
-msgid "Stop Career Step Action [transition in career_workflow]"
-msgstr "Parar Passo da Carreira"
-
-msgid "Stop Career Step [transition in career_workflow]"
-msgstr "Parar Passo da Carreira"
 
 msgid "Stop Date"
 msgstr "Data Final"
@@ -5693,13 +5081,7 @@ msgstr "Enviar Documento para Revisão"
 msgid "Submit Document for Review Action"
 msgstr "Enviar Documento para Revisão"
 
-msgid "Submit Document for Review Action [transition in document_publication_workflow]"
-msgstr "Enviar Documento para Revisão"
-
-msgid "Submit Document for Review [transition in document_publication_workflow]"
-msgstr "Enviar Documento para Revisão"
-
-msgid "Submit Doument for Review [transition in document_publication_workflow]"
+msgid "Submit Doument for Review"
 msgstr "Enviar Documento para Revisão"
 
 msgid "Submit Event"
@@ -5708,16 +5090,7 @@ msgstr "Enviar Evento para Revisão"
 msgid "Submit Event Action"
 msgstr "Enviar Evento para Revisão"
 
-msgid "Submit Event Action [transition in event_workflow]"
-msgstr "Enviar Evento para Revisão"
-
-msgid "Submit Event [transition in event_workflow]"
-msgstr "Enviar Evento para Revisão"
-
-msgid "Submit Message Action [transition in notification_message_workflow]"
-msgstr "Enviar Mensagem para Revisão"
-
-msgid "Submit Message [transition in notification_message_workflow]"
+msgid "Submit Message"
 msgstr "Enviar Mensagem para Revisão"
 
 msgid "Submit Project"
@@ -6312,12 +5685,6 @@ msgstr "Desagrupar"
 msgid "Uninstall Business Template"
 msgstr "Desinstalar Business Template"
 
-msgid "Uninstall Business Template Action [transition in business_template_installation_workflow]"
-msgstr "Desinstalar Business Template"
-
-msgid "Uninstall Business Template [transition in business_template_installation_workflow]"
-msgstr "Desinstalar Business Template"
-
 msgid "Unit"
 msgstr "Unidade"
 
@@ -6333,10 +5700,7 @@ msgstr "Desconhecido"
 msgid "Unpublish"
 msgstr "Despublicar"
 
-msgid "Unpublish Document Action [transition in publication_workflow]"
-msgstr "Despublicar"
-
-msgid "Unpublish Document [transition in publication_workflow]"
+msgid "Unpublish Document"
 msgstr "Despublicar"
 
 msgid "Unpublishes the document"
@@ -6354,12 +5718,6 @@ msgstr "Atualizar"
 msgid "Update Assignment"
 msgstr "Atualizar Designação"
 
-msgid "Update Assignment Action [transition in assignment_workflow]"
-msgstr "Atualizar Designação"
-
-msgid "Update Assignment [transition in assignment_workflow]"
-msgstr "Atualizar Designação"
-
 msgid "Update Business Template from SVN"
 msgstr "Atualizar Business Template a partir do SVN"
 
@@ -6369,14 +5727,11 @@ msgstr "Atualizar Campos"
 msgid "Update Fields by English Glossary"
 msgstr "Atualizar Campos a partir do Glossário em Inglês"
 
-msgid "Update File Metadata [transition in processing_status_workflow]"
+msgid "Update File Metadata"
 msgstr "Atualizar Metadados"
 
 msgid "Update Quantity from Container"
 msgstr "Atualizar Quantidade do Contêiner"
-
-msgid "Update Quantity from Container [transition in packing_list_container_workflow]"
-msgstr "Atualizar Quantidade a partir do Contêiner"
 
 msgid "Update Relation"
 msgstr "Atualizar Relação"
@@ -6400,12 +5755,6 @@ msgid "Update my Credentials"
 msgstr "Atualizar Minhas Credências"
 
 msgid "Update quantity"
-msgstr "Atualizar Quantidade"
-
-msgid "Update quantity Action [transition in packing_list_container_workflow]"
-msgstr "Atualizar Quantidade"
-
-msgid "Update quantity [transition in packing_list_container_workflow]"
 msgstr "Atualizar Quantidade"
 
 msgid "Update variations"
@@ -6437,9 +5786,6 @@ msgstr "Enviar Arquivo"
 
 msgid "Upload file"
 msgstr "Carregar Arquivo"
-
-msgid "Upload file [transition in processing_status_workflow]"
-msgstr "Enviar arquivoCarregar Arquivo"
 
 msgid "Uploaded"
 msgstr "Carregado"
@@ -6522,19 +5868,7 @@ msgstr "Validar"
 msgid "Validate Account"
 msgstr "Validar Conta"
 
-msgid "Validate Account Action [transition in account_workflow]"
-msgstr "Validar Conta"
-
-msgid "Validate Account [transition in account_workflow]"
-msgstr "Validar Conta"
-
 msgid "Validate Action"
-msgstr "Validar"
-
-msgid "Validate Action [transition in rule_validation_workflow]"
-msgstr "Validar"
-
-msgid "Validate Action [transition in validation_workflow]"
 msgstr "Validar"
 
 msgid "Validate Analysis"
@@ -6552,16 +5886,7 @@ msgstr "Validar Instalação"
 msgid "Validate Inventory"
 msgstr "Validar Inventário "
 
-msgid "Validate Inventory Action [transition in inventory_workflow]"
-msgstr "Validar Inventário"
-
-msgid "Validate Inventory [transition in inventory_workflow]"
-msgstr "Validar Inventário "
-
-msgid "Validate Message Action [transition in notification_message_workflow]"
-msgstr "Validar Mensagem"
-
-msgid "Validate Message [transition in notification_message_workflow]"
+msgid "Validate Message"
 msgstr "Validar Mensagem"
 
 msgid "Validate Transaction"
@@ -6569,12 +5894,6 @@ msgstr "Validar Transação"
 
 msgid "Validate Workflow Action"
 msgstr "Validar Ação de Workflow"
-
-msgid "Validate [transition in rule_validation_workflow]"
-msgstr "Validar"
-
-msgid "Validate [transition in validation_workflow]"
-msgstr "Validar"
 
 msgid "Validated"
 msgstr "Válido"
@@ -6633,10 +5952,10 @@ msgstr "Visualizar Informações do SVN"
 msgid "View SVN Repository Infos"
 msgstr "Visualizar Informações do SVN"
 
-msgid "Visible [state in knowledge_pad_validation_workflow]"
+msgid "Visible"
 msgstr "Visível"
 
-msgid "Visible [transition in knowledge_pad_validation_workflow]"
+msgid "Visible [state in knowledge_pad_validation_workflow]"
 msgstr "Visível"
 
 msgid "Visit"

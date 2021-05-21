@@ -188,29 +188,11 @@ msgstr "پذیرش پیشنهاد"
 msgid "Accept Offer Action"
 msgstr "عمل پذیرش پیشنهاد"
 
-msgid "Accept Offer Action [transition in open_order_workflow]"
-msgstr "عمل پذیرش پیشنهاد"
-
-msgid "Accept Offer Action [transition in order_workflow]"
-msgstr "عمل پذیرش پیشنهاد"
-
-msgid "Accept Offer [transition in open_order_workflow]"
-msgstr "پذیرش پیشنهاد"
-
-msgid "Accept Offer [transition in order_workflow]"
-msgstr "پذیرش پیشنهاد"
-
 msgid "Accept Translation"
 msgstr "پذیرش ترجمه"
 
 msgid "Accept Translation Action"
 msgstr "پذیرش عمل ترجمه"
-
-msgid "Accept Translation Action [transition in document_publication_workflow]"
-msgstr "پذیرش عمل ترجمه"
-
-msgid "Accept Translation [transition in document_publication_workflow]"
-msgstr "پذیرش ترجمه"
 
 msgid "Access ${portal_type} Details"
 msgstr "دسترسی به جزئیات ${portal_type}"
@@ -359,16 +341,7 @@ msgstr "اتفاق تصدیق"
 msgid "Acknowledge Event Action"
 msgstr "عمل اتفاق تصدیق"
 
-msgid "Acknowledge Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق تصدیق"
-
-msgid "Acknowledge Event [transition in event_workflow]"
-msgstr "اتفاق تصدیق"
-
 msgid "Acknowledge event"
-msgstr "اتفاق تصدیق"
-
-msgid "Acknowledge event [transition in event_workflow]"
 msgstr "اتفاق تصدیق"
 
 msgid "Acknowledged"
@@ -560,12 +533,6 @@ msgstr "به پرسش پاسخ دهید"
 msgid "Answer Query Action"
 msgstr "عمل پاسخ به پرسش"
 
-msgid "Answer Query Action [transition in query_workflow]"
-msgstr "عمل پاسخ به پرسش"
-
-msgid "Answer Query [transition in query_workflow]"
-msgstr "به پرسش پاسخ دهید"
-
 msgid "Answered"
 msgstr "پاسخ داده شد"
 
@@ -602,15 +569,6 @@ msgstr "بایگانی مدرک"
 msgid "Archive Document Action"
 msgstr "عمل بایگانی مدرک"
 
-msgid "Archive Document Action [transition in document_publication_workflow]"
-msgstr "عمل بایگانی مدرک"
-
-msgid "Archive Document [transition in document_publication_workflow]"
-msgstr "بایگانی مدرک"
-
-msgid "Archive [transition in document_publication_workflow]"
-msgstr "بایگانی"
-
 msgid "Archived"
 msgstr "بایگانی شده"
 
@@ -626,12 +584,6 @@ msgstr "درخواست اعلام حالت از مأمور"
 msgid "Ask Status to Assignee Action"
 msgstr "عمل درخواست اعلام حالت از مأمور"
 
-msgid "Ask Status to Assignee Action [transition in task_report_workflow]"
-msgstr "عمل درخواست اعلام حالت از مأمور"
-
-msgid "Ask Status to Assignee [transition in task_report_workflow]"
-msgstr "درخواست اعلام حالت از مأمور"
-
 msgid "Assessment"
 msgstr "ارزیابی"
 
@@ -644,23 +596,11 @@ msgstr "تخصیص خطا"
 msgid "Assign Bug Action"
 msgstr "عمل تخصیص خطا"
 
-msgid "Assign Bug Action [transition in bug_workflow]"
-msgstr "عمل تخصیص خطا"
-
-msgid "Assign Bug [transition in bug_workflow]"
-msgstr "تخصیص خطا"
-
 msgid "Assign Document"
 msgstr "تخصیص مدرک"
 
 msgid "Assign Document Action"
 msgstr "عمل تخصیص مدرک"
-
-msgid "Assign Document Action [transition in document_ingestion_workflow]"
-msgstr "عمل تخصیص مدرک"
-
-msgid "Assign Document [transition in document_ingestion_workflow]"
-msgstr "تخصیص مدرک"
 
 msgid "Assign Event"
 msgstr "تخصیص حالت"
@@ -668,23 +608,11 @@ msgstr "تخصیص حالت"
 msgid "Assign Event Action"
 msgstr "عمل تخصیص حالت"
 
-msgid "Assign Event Action [transition in event_workflow]"
-msgstr "عمل تخصیص حالت"
-
-msgid "Assign Event [transition in event_workflow]"
-msgstr "تخصیص اتفاق"
-
 msgid "Assign Translation"
 msgstr "تخصیص ترجمه"
 
 msgid "Assign Translation Action"
 msgstr "عمل تخصیص ترجمه"
-
-msgid "Assign Translation Action [transition in document_publication_workflow]"
-msgstr "عمل تخصیص ترجمه"
-
-msgid "Assign Translation [transition in document_publication_workflow]"
-msgstr "تخصیص ترجمه"
 
 msgid "Assign to Ticket"
 msgstr "تخصیص بلیط"
@@ -764,23 +692,11 @@ msgstr "مؤلف (ها) :"
 msgid "Auto Order Periodically"
 msgstr "سفارش خودکار دوره ای"
 
-msgid "Auto Order Periodically [transition in open_order_workflow]"
-msgstr "سفارش دوره ای خودکار"
-
 msgid "Auto Plan"
 msgstr "برنامه ریزی خودکار"
 
 msgid "Auto Plan Task"
 msgstr "تکلیف برنامه ریزی خودکار"
-
-msgid "Auto Plan Task [transition in task_workflow]"
-msgstr "تکلیف برنامه ریزی خودکار"
-
-msgid "Auto Plan [transition in open_order_workflow]"
-msgstr "برنامه ریزی خودکار"
-
-msgid "Auto Plan [transition in order_workflow]"
-msgstr "برنامه ریزی خودکار"
 
 msgid "Auto Planned"
 msgstr "برنامه ریزی شده خودکار"
@@ -965,12 +881,6 @@ msgstr "ساخت الگوی تجاری"
 msgid "Build Business Template Action"
 msgstr "عمل ساخت الگوی تجاری"
 
-msgid "Build Business Template Action [transition in business_template_building_workflow]"
-msgstr "عمل ساخت الگوی تجاری"
-
-msgid "Build Business Template [transition in business_template_building_workflow]"
-msgstr "ساخت الگوی تجاری"
-
 msgid "Building"
 msgstr "در حال ساخت"
 
@@ -1067,14 +977,8 @@ msgstr "محاسبه"
 msgid "Calculate Packing"
 msgstr "محاسبه بسته بندی"
 
-msgid "Calculate Packing [transition in packing_list_container_workflow]"
-msgstr "محاسبه بسته بندی"
-
 msgid "Calculate Pay Sheet"
 msgstr "محاسبه برگه پرداخت"
-
-msgid "Calculate [transition in delivery_causality_workflow]"
-msgstr "محاسبه"
 
 msgid "Calculating"
 msgstr "در حال محاسبه"
@@ -1109,12 +1013,6 @@ msgstr "ابطال دوره حسابداری"
 msgid "Cancel Accounting Period Action"
 msgstr "عمل ابطال دوره حسابداری"
 
-msgid "Cancel Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل ابطال دوره حسابداری"
-
-msgid "Cancel Accounting Period [transition in accounting_period_workflow]"
-msgstr "ابطال دوره حسابداری"
-
 msgid "Cancel Action"
 msgstr "توقف عمل"
 
@@ -1124,23 +1022,11 @@ msgstr "ابطال مأموریت"
 msgid "Cancel Assignment Action"
 msgstr "عمل ابطال مأموریت"
 
-msgid "Cancel Assignment Action [transition in assignment_workflow]"
-msgstr "عمل ابطال مأموریت"
-
-msgid "Cancel Assignment [transition in assignment_workflow]"
-msgstr "ابطال مأموریت"
-
 msgid "Cancel Bug"
 msgstr "ابطال خطا"
 
 msgid "Cancel Bug Action"
 msgstr "عمل ابطال خطا"
-
-msgid "Cancel Bug Action [transition in bug_workflow]"
-msgstr "عمل ابطال خطا"
-
-msgid "Cancel Bug [transition in bug_workflow]"
-msgstr "ابطال خطا"
 
 msgid "Cancel Career Step"
 msgstr "مرحله ابطال شغلی"
@@ -1148,16 +1034,7 @@ msgstr "مرحله ابطال شغلی"
 msgid "Cancel Career Step Action"
 msgstr "عمل مرحله ابطال شغلی"
 
-msgid "Cancel Career Step Action [transition in career_workflow]"
-msgstr "عمل مرحله ابطال شغلی"
-
-msgid "Cancel Career Step [transition in career_workflow]"
-msgstr "مرحله ابطال شغلی"
-
 msgid "Cancel Carrer Step"
-msgstr "ابطال مرحله شغلی"
-
-msgid "Cancel Carrer Step [transition in career_workflow]"
 msgstr "ابطال مرحله شغلی"
 
 msgid "Cancel Document Publication"
@@ -1166,23 +1043,11 @@ msgstr "ابطال انتشار مدرک"
 msgid "Cancel Document Publication Action"
 msgstr "عمل ابطال انتشار مدرک"
 
-msgid "Cancel Document Publication Action [transition in document_publication_workflow]"
-msgstr "عمل ابطال انتشار مدرک"
-
-msgid "Cancel Document Publication [transition in document_publication_workflow]"
-msgstr "ابطال انتشار مدرک"
-
 msgid "Cancel Event"
 msgstr "ابطال اتفاق"
 
 msgid "Cancel Event Action"
 msgstr "عمل ابطال اتفاق"
-
-msgid "Cancel Event Action [transition in event_workflow]"
-msgstr "عمل ابطال اتفاق"
-
-msgid "Cancel Event [transition in event_workflow]"
-msgstr "ابطال اتفاق"
 
 msgid "Cancel Inventory"
 msgstr "ابطال انبارگردانی"
@@ -1190,29 +1055,11 @@ msgstr "ابطال انبارگردانی"
 msgid "Cancel Inventory Action"
 msgstr "عمل ابطال انبارگردانی"
 
-msgid "Cancel Inventory Action [transition in inventory_workflow]"
-msgstr "عمل ابطال انبارگردانی"
-
-msgid "Cancel Inventory [transition in inventory_workflow]"
-msgstr "ابطال انبارگردانی"
-
 msgid "Cancel Order"
 msgstr "ابطال سفارش"
 
 msgid "Cancel Order Action"
 msgstr "عمل ابطال سفارش"
-
-msgid "Cancel Order Action [transition in open_order_workflow]"
-msgstr "عمل ابطال سفارش"
-
-msgid "Cancel Order Action [transition in order_workflow]"
-msgstr "عمل ابطال سفارش"
-
-msgid "Cancel Order [transition in open_order_workflow]"
-msgstr "ابطال سفارش"
-
-msgid "Cancel Order [transition in order_workflow]"
-msgstr "ابطال سفارش"
 
 msgid "Cancel Packing List"
 msgstr "ابطال لیست بسته بندی"
@@ -1220,23 +1067,11 @@ msgstr "ابطال لیست بسته بندی"
 msgid "Cancel Packing List Action"
 msgstr "عمل ابطال لیست بسته بندی"
 
-msgid "Cancel Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل ابطال لیست بسته بندی"
-
-msgid "Cancel Packing List [transition in packing_list_workflow]"
-msgstr "ابطال لیست بسته بندی"
-
 msgid "Cancel Query"
 msgstr "ابطال درخواست"
 
 msgid "Cancel Query Action"
 msgstr "عمل ابطال درخواست"
-
-msgid "Cancel Query Action [transition in query_workflow]"
-msgstr "عمل ابطال درخواست"
-
-msgid "Cancel Query [transition in query_workflow]"
-msgstr "ابطال درخواست"
 
 msgid "Cancel Requirement"
 msgstr "ابطال نیازمندی"
@@ -1244,23 +1079,11 @@ msgstr "ابطال نیازمندی"
 msgid "Cancel Requirement Action"
 msgstr "عمل ابطال نیازمندی"
 
-msgid "Cancel Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل ابطال نیازمندی"
-
-msgid "Cancel Requirement [transition in requirement_analysis_workflow]"
-msgstr "ابطال نیازمندی"
-
 msgid "Cancel Sale Opportunity"
 msgstr "ابطال شانس فروش"
 
 msgid "Cancel Sale Opportunity Action"
 msgstr "عمل ابطال شانس فروش"
-
-msgid "Cancel Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل ابطال شانس فروش"
-
-msgid "Cancel Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "ابطال شانس فروش"
 
 msgid "Cancel Task"
 msgstr "ابطال وظیفه"
@@ -1268,44 +1091,17 @@ msgstr "ابطال وظیفه"
 msgid "Cancel Task Action"
 msgstr "عمل ابطال وظیفه"
 
-msgid "Cancel Task Action [transition in task_report_workflow]"
-msgstr "عمل ابطال وظیفه"
-
-msgid "Cancel Task Action [transition in task_workflow]"
-msgstr "عمل ابطال وظیفه"
-
-msgid "Cancel Task [transition in task_report_workflow]"
-msgstr "ابطال وظیفه"
-
-msgid "Cancel Task [transition in task_workflow]"
-msgstr "ابطال وظیفه"
-
 msgid "Cancel Ticket"
 msgstr "ابطال بلیط"
 
 msgid "Cancel Ticket Action"
 msgstr "عمل ابطال بلیط"
 
-msgid "Cancel Ticket Action [transition in ticket_workflow]"
-msgstr "عمل ابطال بلیط"
-
-msgid "Cancel Ticket [transition in ticket_workflow]"
-msgstr "ابطال بلیط"
-
 msgid "Cancel Transaction"
 msgstr "ابطال معامله"
 
 msgid "Cancel Transaction Action"
 msgstr "عمل ابطال معامله"
-
-msgid "Cancel Transaction Action [transition in accounting_workflow]"
-msgstr "عمل ابطال معامله"
-
-msgid "Cancel Transaction [transition in accounting_workflow]"
-msgstr "ابطال معامله"
-
-msgid "Cancel [transition in bug_event_workflow]"
-msgstr "ابطال"
 
 msgid "Cancelled"
 msgstr "ابطال شد"
@@ -1496,12 +1292,6 @@ msgstr "الگوی تجاری تمیز"
 msgid "Clean Business Template Action"
 msgstr "عمل تمیز کردن الگوی تجاری"
 
-msgid "Clean Business Template Action [transition in business_template_building_workflow]"
-msgstr "عمل تمیز کردن الگوی تجاری"
-
-msgid "Clean Business Template [transition in business_template_building_workflow]"
-msgstr "الگوی تجاری تمیز"
-
 msgid "Clean SVN Unversioned Files"
 msgstr "فایل های ثبت نشده در SVN را تمیز کنید"
 
@@ -1529,35 +1319,17 @@ msgstr "دوره حسابداری را ببندید"
 msgid "Close Accounting Period Action"
 msgstr "عمل بستن دوره حسابداری"
 
-msgid "Close Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل بستن دوره حسابداری"
-
-msgid "Close Accounting Period [transition in accounting_period_workflow]"
-msgstr "دوره حسابداری را ببندید"
-
 msgid "Close Requirement"
 msgstr "بستن نیازمندی ها"
 
 msgid "Close Requirement Action"
 msgstr "عمل بستن نیازمندی ها"
 
-msgid "Close Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل بستن نیازمندی ها"
-
-msgid "Close Requirement [transition in requirement_analysis_workflow]"
-msgstr "بستن نیازمندی ها"
-
 msgid "Close Task"
 msgstr "بستن تکلیف"
 
 msgid "Close Task Action"
 msgstr "عمل بستن تکلیف"
-
-msgid "Close Task Action [transition in task_report_workflow]"
-msgstr "عمل بستن تکلیف"
-
-msgid "Close Task [transition in task_report_workflow]"
-msgstr "بستن تکلیف"
 
 msgid "Closed"
 msgstr "بسته شده"
@@ -1646,23 +1418,11 @@ msgstr "تأئید سفارش"
 msgid "Confirm Order Action"
 msgstr "عمل تأئید سفارش"
 
-msgid "Confirm Order Action [transition in order_workflow]"
-msgstr "عمل تأئید سفارش"
-
-msgid "Confirm Order [transition in order_workflow]"
-msgstr "تأئید سفارش"
-
 msgid "Confirm Packing List"
 msgstr "تأئید لیست بسته بندی"
 
 msgid "Confirm Packing List Action"
 msgstr "عمل تأئید لیست بسته بندی"
-
-msgid "Confirm Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل تأئید لیست بستخ بندی"
-
-msgid "Confirm Packing List [transition in packing_list_workflow]"
-msgstr "تأئید لیست بسته بندی"
 
 msgid "Confirm Requirement"
 msgstr "تأئید نیلزمندی ها"
@@ -1670,44 +1430,17 @@ msgstr "تأئید نیلزمندی ها"
 msgid "Confirm Requirement Action"
 msgstr "عمل تأئید نیازمندی ها"
 
-msgid "Confirm Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل تأئید نیازمندی ها"
-
-msgid "Confirm Requirement [transition in requirement_analysis_workflow]"
-msgstr "تأئید نیازمندی ها"
-
 msgid "Confirm Task"
 msgstr "تأئید تکلیف"
 
 msgid "Confirm Task Action"
 msgstr "عمل تأئید تکلیف"
 
-msgid "Confirm Task Action [transition in task_report_workflow]"
-msgstr "عمل تأئید تکلیف"
-
-msgid "Confirm Task Action [transition in task_workflow]"
-msgstr "عمل تأئید تکلیف"
-
-msgid "Confirm Task [transition in task_report_workflow]"
-msgstr "تأئید تکلیف"
-
-msgid "Confirm Task [transition in task_workflow]"
-msgstr "تأئید تکلیف"
-
 msgid "Confirm Transaction"
 msgstr "معامله تأئید"
 
 msgid "Confirm Transaction Action"
 msgstr "عمل معامله تأئید"
-
-msgid "Confirm Transaction Action [transition in accounting_workflow]"
-msgstr "عملل معامله تأئید"
-
-msgid "Confirm Transaction [transition in accounting_workflow]"
-msgstr "معامله تأئید"
-
-msgid "Confirm [transition in packing_list_workflow]"
-msgstr "تأئید"
 
 msgid "Confirmation"
 msgstr "تأئیدیه"
@@ -1841,25 +1574,16 @@ msgstr "اشتراک گذاران"
 msgid "Convergent"
 msgstr "همگرا"
 
-msgid "Convergent [transition in delivery_causality_workflow]"
-msgstr "همگرا"
-
 msgid "Conversion"
 msgstr "همگرایی"
 
 msgid "Convert Action"
 msgstr "عمل تبدیل"
 
-msgid "Convert Action [transition in processing_status_workflow]"
-msgstr "عمل تبدیل"
-
 msgid "Convert Destination Price"
 msgstr "تبدیل قیمت در مقصد"
 
 msgid "Convert File"
-msgstr "تبدیل پرونده"
-
-msgid "Convert File [transition in processing_status_workflow]"
 msgstr "تبدیل پرونده"
 
 msgid "Convert Price"
@@ -1870,9 +1594,6 @@ msgstr "تبدیل قیمت مرجع"
 
 msgid "Convert to OpenDocument"
 msgstr "تبدیل به OpenDocument"
-
-msgid "Convert to OpenDocument [transition in processing_status_workflow]"
-msgstr "تبدیل به  OpenDocument"
 
 msgid "Converted"
 msgstr "تبدیل شد"
@@ -1958,12 +1679,6 @@ msgstr "ایجاد اتفاق مرتبط"
 msgid "Create Related Event Action"
 msgstr "عمل ایجاد اتفاق مرتبط"
 
-msgid "Create Related Event Action [transition in event_workflow]"
-msgstr "عمل ایجاد اتفاق مرتبط"
-
-msgid "Create Related Event [transition in event_workflow]"
-msgstr "ایجاد اتفاق مرتبط"
-
 msgid "Create Related Payment"
 msgstr "ایجاد پرداخت مرتبط"
 
@@ -1990,12 +1705,6 @@ msgstr "ایجاد کاربر"
 
 msgid "Create User Action"
 msgstr "عمل ایجاد کاربر"
-
-msgid "Create User Action [transition in user_account_workflow]"
-msgstr "عمل ایجاد کاربر"
-
-msgid "Create User [transition in user_account_workflow]"
-msgstr "ایجاد کاربر"
 
 msgid "Create Your New Account"
 msgstr "حساب جدید خود را ایجاد کنید"
@@ -2129,9 +1838,6 @@ msgstr "تصمیم"
 msgid "Declare Container Missing"
 msgstr "اعلام گم شدن کانتینر"
 
-msgid "Declare Container Missing [transition in packing_list_container_workflow]"
-msgstr "اعلام گم شدن کانتینر"
-
 msgid "Default"
 msgstr "پیش فرض"
 
@@ -2177,12 +1883,6 @@ msgstr "معامله بسته شده قطعی"
 msgid "Definitively Close Transaction Action"
 msgstr "عمل معامله بسته شده قطعی"
 
-msgid "Definitively Close Transaction Action [transition in accounting_workflow]"
-msgstr "عمل معامله بسته شده قطعی"
-
-msgid "Definitively Close Transaction [transition in accounting_workflow]"
-msgstr "معامله بسته شده قطعی"
-
 msgid "Delete"
 msgstr "پاک کنید"
 
@@ -2192,61 +1892,16 @@ msgstr "حساب را پاک کنید"
 msgid "Delete Account Action"
 msgstr "عمل پاک کردن حساب"
 
-msgid "Delete Account Action [transition in account_workflow]"
-msgstr "عمل پاک کردن حساب"
-
-msgid "Delete Account [transition in account_workflow]"
-msgstr "پاک کردن حساب"
-
 msgid "Delete Accounting Period"
 msgstr "پاک کردن دوره حسابداری"
 
 msgid "Delete Accounting Period Action"
 msgstr "عمل پاک کردن دوره حسابداری"
 
-msgid "Delete Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل پاک کردن دوره حسابداری"
-
-msgid "Delete Accounting Period [transition in accounting_period_workflow]"
-msgstr "پاک کردن دوره حسابداری"
-
 msgid "Delete Action"
 msgstr "عمل پاک کردن"
 
-msgid "Delete Action [transition in inventory_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in open_order_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in order_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in packing_list_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in project_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in requirement_analysis_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in rule_validation_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in task_report_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in task_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in validation_workflow]"
-msgstr "عمل پاک کردن"
-
 msgid "Delete Assignment Action"
-msgstr "عمل پاک کردن مأموریت"
-
-msgid "Delete Assignment Action [transition in assignment_workflow]"
 msgstr "عمل پاک کردن مأموریت"
 
 msgid "Delete Bug"
@@ -2255,23 +1910,11 @@ msgstr "پاک کردن خطا"
 msgid "Delete Bug Action"
 msgstr "عمل پاک کردن خطا"
 
-msgid "Delete Bug Action [transition in bug_workflow]"
-msgstr "عمل پاک کردن خطا"
-
-msgid "Delete Bug [transition in bug_workflow]"
-msgstr "پاک کردن خطا"
-
 msgid "Delete Business Template"
 msgstr "پاک کردن الگوی تجاری"
 
 msgid "Delete Business Template Action"
 msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Delete Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Delete Business Template [transition in business_template_installation_workflow]"
-msgstr "پاک کردن الگوی تجاری"
 
 msgid "Delete Document"
 msgstr "پاک کردن مدرک"
@@ -2279,41 +1922,17 @@ msgstr "پاک کردن مدرک"
 msgid "Delete Document Action"
 msgstr "عمل پاک کردن مدرک"
 
-msgid "Delete Document Action [transition in document_ingestion_workflow]"
-msgstr "عمل پاک کردن مدرک"
-
-msgid "Delete Document Action [transition in document_publication_workflow]"
-msgstr "عمل پاک کردن مدرک"
-
-msgid "Delete Document [transition in document_ingestion_workflow]"
-msgstr "پاک کردن مدرک"
-
-msgid "Delete Document [transition in document_publication_workflow]"
-msgstr "پاک کردن مدرک"
-
 msgid "Delete Event"
 msgstr "پاک کردن اتفاق"
 
 msgid "Delete Event Action"
 msgstr "عمل پاک کردن اتفاق"
 
-msgid "Delete Event Action [transition in event_workflow]"
-msgstr "عمل پاک کردن اتفاق"
-
-msgid "Delete Event [transition in event_workflow]"
-msgstr "پاک کردن اتفاق"
-
 msgid "Delete Message"
 msgstr "پاک کردن پیام"
 
 msgid "Delete Message Action"
 msgstr "عمل پاک کردن پیام"
-
-msgid "Delete Message Action [transition in notification_message_workflow]"
-msgstr "عمل پاک کردن پبام"
-
-msgid "Delete Message [transition in notification_message_workflow]"
-msgstr "پاک کردن پیام"
 
 msgid "Delete Objects"
 msgstr "پاک کردن اشیاء"
@@ -2324,23 +1943,11 @@ msgstr "پاک کردن ارجحیت"
 msgid "Delete Preference Action"
 msgstr "عمل پاک کردن ارجحیت"
 
-msgid "Delete Preference Action [transition in preference_workflow]"
-msgstr "عمل پاک کردن ارجحیت"
-
-msgid "Delete Preference [transition in preference_workflow]"
-msgstr "پاک کردن ارجحیت"
-
 msgid "Delete Query"
 msgstr "پاک کردن پرسش"
 
 msgid "Delete Query Action"
 msgstr "عمل پاک کردن پرسش"
-
-msgid "Delete Query Action [transition in query_workflow]"
-msgstr "عمل پاک کردن پرسش"
-
-msgid "Delete Query [transition in query_workflow]"
-msgstr "پاک کردن پرسش"
 
 msgid "Delete Sale Opportunity"
 msgstr "پاک کردن شانس فروش"
@@ -2348,19 +1955,7 @@ msgstr "پاک کردن شانس فروش"
 msgid "Delete Sale Opportunity Action"
 msgstr "عمل پاک کردن شانس فروش"
 
-msgid "Delete Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل پاک کردن شانس فروش"
-
-msgid "Delete Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "پاک کردن شانس فروش"
-
 msgid "Delete Task"
-msgstr "پاک کردن وظیفه"
-
-msgid "Delete Task [transition in task_report_workflow]"
-msgstr "پاک کردن وظیفه"
-
-msgid "Delete Task [transition in task_workflow]"
 msgstr "پاک کردن وظیفه"
 
 msgid "Delete Ticket"
@@ -2369,44 +1964,8 @@ msgstr "پاک کردن بلیط"
 msgid "Delete Ticket Action"
 msgstr "عمل پاک کردن بلیط"
 
-msgid "Delete Ticket Action [transition in ticket_workflow]"
-msgstr "عمل پاک کردن بلیط"
-
-msgid "Delete Ticket [transition in ticket_workflow]"
-msgstr "پاک کردن بلیط"
-
 msgid "Delete Transaction Action"
 msgstr "عمل پاک کردن معامله"
-
-msgid "Delete Transaction Action [transition in accounting_workflow]"
-msgstr "عمل پاک کردن معامله"
-
-msgid "Delete [transition in inventory_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in open_order_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in order_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in packing_list_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in project_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in requirement_analysis_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in rule_validation_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in task_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in validation_workflow]"
-msgstr "پاک کردن"
 
 msgid "Deleted"
 msgstr "پاک شد"
@@ -2519,26 +2078,11 @@ msgstr "اتفاق تحویل دادن"
 msgid "Deliver Event Action"
 msgstr "عمل اتفاق تحویل دادن"
 
-msgid "Deliver Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق تحویل دادن"
-
-msgid "Deliver Event [transition in event_workflow]"
-msgstr "اتفاق تحویل دادن"
-
 msgid "Deliver Packing List"
 msgstr "تحویل دادن لیست بسته بندی"
 
 msgid "Deliver Packing List Action"
 msgstr "عمل تحویل  دادن لیست بسته بندی"
-
-msgid "Deliver Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل تحویل  دادن لیست بسته بندی"
-
-msgid "Deliver Packing List [transition in packing_list_workflow]"
-msgstr "تحویل دادن لیست بسته بندی"
-
-msgid "Deliver [transition in bug_event_workflow]"
-msgstr "تحویل دادن"
 
 msgid "Delivered"
 msgstr "تحویل شد"
@@ -2678,13 +2222,7 @@ msgstr "جزئیات"
 msgid "Detect Converted File"
 msgstr "شناسایی پرونده تبدیل شده"
 
-msgid "Detect Converted File [transition in processing_status_workflow]"
-msgstr "شناسایی پرونده تبدیل شده"
-
 msgid "Detect Uploaded File"
-msgstr "شناسایی پرونده آپلود شده"
-
-msgid "Detect Uploaded File [transition in processing_status_workflow]"
 msgstr "شناسایی پرونده آپلود شده"
 
 msgid "Dict"
@@ -2716,12 +2254,6 @@ msgstr "غیر فعال کردن ارجحیت"
 
 msgid "Disable Preference Action"
 msgstr "عمل غیر فعال کردن ارجحیت"
-
-msgid "Disable Preference Action [transition in preference_workflow]"
-msgstr "عمل غیر فعال کردن ارجحیت"
-
-msgid "Disable Preference [transition in preference_workflow]"
-msgstr "غیر فعال کردن ارجحیت"
 
 msgid "Disabled"
 msgstr "غیر فعال شده"
@@ -2781,9 +2313,6 @@ msgid "Divergences"
 msgstr "انشعاب ها"
 
 msgid "Divergent"
-msgstr "انشعاب پذیر"
-
-msgid "Divergent [transition in delivery_causality_workflow]"
 msgstr "انشعاب پذیر"
 
 msgid "Do not forget to logout or exit your browser when you are done."
@@ -3128,13 +2657,7 @@ msgstr "${portal_type} تصحیح"
 msgid "Edit Action"
 msgstr "عمل تصحیح"
 
-msgid "Edit Action [transition in edit_workflow]"
-msgstr "عمل تصحیح"
-
 msgid "Edit Business Template"
-msgstr "تصحیح الگوی تجاری"
-
-msgid "Edit Business Template [transition in business_template_building_workflow]"
 msgstr "تصحیح الگوی تجاری"
 
 msgid "Edit Parent ${portal_type}"
@@ -3145,15 +2668,6 @@ msgstr "'${portal_type}' تصحیح نوع پورتال."
 
 msgid "Edit Workflow"
 msgstr "تصحیح گردش کار"
-
-msgid "Edit [transition in document_publication_workflow]"
-msgstr "تصحیح"
-
-msgid "Edit [transition in edit_workflow]"
-msgstr "تصحیح"
-
-msgid "Edit [transition in processing_status_workflow]"
-msgstr "تصحیح"
 
 msgid "Editable"
 msgstr "قابل تصحیح"
@@ -3175,18 +2689,6 @@ msgstr "جا دادن گروه"
 
 msgid "Embed Category Action"
 msgstr "عمل جا دادن گروه"
-
-msgid "Embed Category Action [transition in category_publication_workflow]"
-msgstr "عمل جا دادن گروه"
-
-msgid "Embed Category [transition in category_publication_workflow]"
-msgstr "جا دادن گروه"
-
-msgid "Embed [transition in category_publication_workflow]"
-msgstr "جا دادن"
-
-msgid "Embed [transition in document_publication_workflow]"
-msgstr "جا دادن"
 
 msgid "Embedded"
 msgstr "جا داده شده"
@@ -3233,12 +2735,6 @@ msgstr "توانا کردن ارجحیت"
 msgid "Enable Preference Action"
 msgstr "عمل توانا کردن ارجحیت"
 
-msgid "Enable Preference Action [transition in preference_workflow]"
-msgstr "عمل توانا کردن ارجحیت"
-
-msgid "Enable Preference [transition in preference_workflow]"
-msgstr "توانا کردن ارجحیت"
-
 msgid "Enabled"
 msgstr "توانا شده"
 
@@ -3259,12 +2755,6 @@ msgstr "درخواست شانس فروش"
 
 msgid "Enquire Sale Opportunity Action"
 msgstr "عمل درخواست شانس فروش"
-
-msgid "Enquire Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل درخواست شانس فروش"
-
-msgid "Enquire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "درخواست شانس فروش"
 
 msgid "Enquired"
 msgstr "درخواست شده"
@@ -3377,34 +2867,16 @@ msgstr "منقضی کردن گروه"
 msgid "Expire Category Action"
 msgstr "عمل منقضی کردن گروه"
 
-msgid "Expire Category Action [transition in category_publication_workflow]"
-msgstr "عمل منقضی کردن گروه"
-
-msgid "Expire Category [transition in category_publication_workflow]"
-msgstr "منقضی کردن گروه"
-
 msgid "Expire Event"
 msgstr "منقضی کردن اتفاق"
 
 msgid "Expire Event Action"
 msgstr "عمل منقضی کردن اتفاق"
 
-msgid "Expire Event Action [transition in event_workflow]"
-msgstr "عمل منقضی کردن اتفاق"
-
-msgid "Expire Event [transition in event_workflow]"
-msgstr "منقضی کردن اتفاق"
-
 msgid "Expire Protected Category"
 msgstr "منقضی کردن گروه مصون شده"
 
-msgid "Expire Protected Category [transition in category_publication_workflow]"
-msgstr "منقضی کردن گروه مصون شده"
-
 msgid "Expire Published Category"
-msgstr "منقضی کردن گروه توزیع شده"
-
-msgid "Expire Published Category [transition in category_publication_workflow]"
 msgstr "منقضی کردن گروه توزیع شده"
 
 msgid "Expire Sale Opportunity"
@@ -3412,15 +2884,6 @@ msgstr "منقضی کردن شانس فروش"
 
 msgid "Expire Sale Opportunity Action"
 msgstr "عمل منقضی کردن شانس فروش"
-
-msgid "Expire Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل منقضی کردن شانس فروش"
-
-msgid "Expire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "منقضی کردن شانس فروش"
-
-msgid "Expire [transition in category_publication_workflow]"
-msgstr "منقضی کردن"
 
 msgid "Expired"
 msgstr "منقضی شده"
@@ -3501,9 +2964,6 @@ msgid "External Sources"
 msgstr "منابع خارجی"
 
 msgid "Extract"
-msgstr "استخراج"
-
-msgid "Extract [transition in document_publication_workflow]"
 msgstr "استخراج"
 
 msgid "FAX"
@@ -3599,23 +3059,11 @@ msgstr "تمام کردن وظیفه"
 msgid "Finish Task Action"
 msgstr "عمل تمام کردن وظیفه"
 
-msgid "Finish Task Action [transition in task_report_workflow]"
-msgstr "عمل تمام کردن وظیفه"
-
-msgid "Finish Task [transition in task_report_workflow]"
-msgstr "تمام کردن وظیفه"
-
 msgid "Finish Translation"
 msgstr "تمام کردن ترجمه"
 
 msgid "Finish Translation Action"
 msgstr "عمل تمام کردن ترجمه"
-
-msgid "Finish Translation Action [transition in document_publication_workflow]"
-msgstr "عمل تمام کردن ترجمه"
-
-msgid "Finish Translation [transition in document_publication_workflow]"
-msgstr "تمام کردن ترجمه"
 
 msgid "First"
 msgstr "اول"
@@ -3734,25 +3182,13 @@ msgstr "تماس گرفته شد"
 msgid "Get Contacted Action"
 msgstr "عمل تماس گرفتن"
 
-msgid "Get Contacted Action [transition in sale_opportunity_workflow]"
-msgstr "عمل تماس گرفتن"
-
-msgid "Get Contacted [transition in sale_opportunity_workflow]"
-msgstr "تماس گرفته شد"
-
 msgid "Get Contacted by Prospect"
-msgstr "مشتری احتمالی تماس گرفت"
-
-msgid "Get Contacted by Prospect [transition in sale_opportunity_workflow]"
 msgstr "مشتری احتمالی تماس گرفت"
 
 msgid "Globally Enabled"
 msgstr "به طور کامل ممکن شد"
 
 msgid "Globally Enabled Preference"
-msgstr "ارجحیت به طور کامل ممکن شد"
-
-msgid "Globally Enabled Preference [transition in preference_workflow]"
 msgstr "ارجحیت به طور کامل ممکن شد"
 
 msgid "Globally Enabled [state in preference_workflow]"
@@ -3832,12 +3268,6 @@ msgstr "مخفی کردن مدرک"
 
 msgid "Hide Document Action"
 msgstr "عمل مخفی کردن مدرک"
-
-msgid "Hide Document Action [transition in document_publication_workflow]"
-msgstr "عمل مخفی کردن مدرک"
-
-msgid "Hide Document [transition in document_publication_workflow]"
-msgstr "مخفی کردن مدرک"
 
 msgid "Hide tabs"
 msgstr "پنهان کردن زبانه"
@@ -3968,12 +3398,6 @@ msgstr "الگوی تجاری نصب کنید"
 msgid "Install Business Template Action"
 msgstr "عمل نصب الگوی تجاری"
 
-msgid "Install Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل نصب الگوی تجاری"
-
-msgid "Install Business Template [transition in business_template_installation_workflow]"
-msgstr "الگوی تجاری نصب کنید"
-
 msgid "Install Business Templates from Repositories"
 msgstr "الگوی تجاری را از مخازن نصب کنید"
 
@@ -4046,19 +3470,7 @@ msgstr "سلب اعتبار از حساب"
 msgid "Invalidate Account Action"
 msgstr "عمل سلب اعتبار از حساب"
 
-msgid "Invalidate Account Action [transition in account_workflow]"
-msgstr "عمل سلب اعتبار از حساب"
-
-msgid "Invalidate Account [transition in account_workflow]"
-msgstr "سلب اعتبار از حساب"
-
 msgid "Invalidate Action"
-msgstr "عمل سلب اعتبار"
-
-msgid "Invalidate Action [transition in rule_validation_workflow]"
-msgstr "عمل سلب اعتبار"
-
-msgid "Invalidate Action [transition in validation_workflow]"
 msgstr "عمل سلب اعتبار"
 
 msgid "Invalidate Message"
@@ -4066,18 +3478,6 @@ msgstr "سلب اعتبار پیام"
 
 msgid "Invalidate Message Action"
 msgstr "عمل سلب اعتبار پیام"
-
-msgid "Invalidate Message Action [transition in notification_message_workflow]"
-msgstr "عمل سلب اعتبار پیام"
-
-msgid "Invalidate Message [transition in notification_message_workflow]"
-msgstr "سلب اعتبار پیام"
-
-msgid "Invalidate [transition in rule_validation_workflow]"
-msgstr "سلب اعتبار"
-
-msgid "Invalidate [transition in validation_workflow]"
-msgstr "سلب اعتبار"
 
 msgid "Invalidated"
 msgstr "سلب اعتبار شده"
@@ -4207,12 +3607,6 @@ msgstr "ثبت دفتر روزنامه شدن معامله"
 
 msgid "Journalise Transaction Action"
 msgstr "عمل ثبت دفتر روزنامه شدن معامله"
-
-msgid "Journalise Transaction Action [transition in accounting_workflow]"
-msgstr "عمل ثبت دفتر روزنامه شدن معامله"
-
-msgid "Journalise Transaction [transition in accounting_workflow]"
-msgstr "ثبت دفتر روزنامه شدن معامله"
 
 msgid "Journalised"
 msgstr "ثبت دفتر روزنامه شد"
@@ -4367,18 +3761,6 @@ msgstr "ارائه پیشنهاد"
 msgid "Make Offer Action"
 msgstr "عمل ارائه پیشنهاد"
 
-msgid "Make Offer Action [transition in open_order_workflow]"
-msgstr "عمل ارائه پیشنهاد"
-
-msgid "Make Offer Action [transition in order_workflow]"
-msgstr "عمل ارائه پیشنهاد"
-
-msgid "Make Offer [transition in open_order_workflow]"
-msgstr "ارائه پیشنهاد"
-
-msgid "Make Offer [transition in order_workflow]"
-msgstr "ارائه پیشنهاد"
-
 msgid "Make a Template"
 msgstr "ایجاد الگو"
 
@@ -4403,23 +3785,11 @@ msgstr "علامت گذاری اعلام شد"
 msgid "Mark Posted Action"
 msgstr "عمل علامت گذاری اعلام شد"
 
-msgid "Mark Posted Action [transition in event_workflow]"
-msgstr "عمل علامت گذاری اعلام شد"
-
-msgid "Mark Posted [transition in event_workflow]"
-msgstr "علامت گذاری اعلام شد"
-
 msgid "Mark Responded"
 msgstr "به علامت گذاری واکنش نشان داده شد"
 
 msgid "Mark Responded Action"
 msgstr "عمل واکنش به علامت گذاری"
-
-msgid "Mark Responded Action [transition in event_workflow]"
-msgstr "عمل واکنش به علامت گذاری"
-
-msgid "Mark Responded [transition in event_workflow]"
-msgstr "به علامت گذاری واکنش نشان داده شد"
 
 msgid ""
 "Mark the beginning and the end of an Accounting Period.\n"
@@ -5047,12 +4417,6 @@ msgstr "تکلیف سفارش"
 msgid "Order Task Action"
 msgstr "عمل تکلیف سفارش"
 
-msgid "Order Task Action [transition in task_workflow]"
-msgstr "عمل تکلیف سفارش"
-
-msgid "Order Task [transition in task_workflow]"
-msgstr "تکلیف سفارش"
-
 msgid "Order Tool"
 msgstr "ابزار سفارش"
 
@@ -5154,9 +4518,6 @@ msgstr "PDM"
 
 msgid "Pack Container"
 msgstr "بسته بندی کانتیتر"
-
-msgid "Pack Container [transition in packing_list_container_workflow]"
-msgstr "بسته بندی کانتینر"
 
 msgid "Packed"
 msgstr "بسته بندی شد"
@@ -5383,18 +4744,6 @@ msgstr "انجام سفارش"
 msgid "Place Order Action"
 msgstr "عمل انجام سفارش"
 
-msgid "Place Order Action [transition in open_order_workflow]"
-msgstr "عمل انجام سفارش"
-
-msgid "Place Order Action [transition in order_workflow]"
-msgstr "عمل انجام سفارش"
-
-msgid "Place Order [transition in open_order_workflow]"
-msgstr "انجام سفارش"
-
-msgid "Place Order [transition in order_workflow]"
-msgstr "انجام سفارش"
-
 msgid "Placed Order"
 msgstr "سفارش انجام شد"
 
@@ -5410,29 +4759,11 @@ msgstr "طرح سفارش"
 msgid "Plan Order Action"
 msgstr "عمل سفارش طرح"
 
-msgid "Plan Order Action [transition in open_order_workflow]"
-msgstr "عمل سفارش طرح"
-
-msgid "Plan Order Action [transition in order_workflow]"
-msgstr "عمل سفارش طرح"
-
-msgid "Plan Order [transition in open_order_workflow]"
-msgstr "سفارش طرح"
-
-msgid "Plan Order [transition in order_workflow]"
-msgstr "سفارش طرح"
-
 msgid "Plan Requirement"
 msgstr "نیازمندی طرح"
 
 msgid "Plan Requirement Action"
 msgstr "عمل نیازمندی طرح"
-
-msgid "Plan Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل نیازمندی طرح"
-
-msgid "Plan Requirement [transition in requirement_analysis_workflow]"
-msgstr "نیازمندی طرح"
 
 msgid "Plan Task"
 msgstr "تکلیف برنامه ریزی"
@@ -5440,26 +4771,11 @@ msgstr "تکلیف برنامه ریزی"
 msgid "Plan Task Action"
 msgstr "عمل تکلیف برنامه ریزی"
 
-msgid "Plan Task Action [transition in task_workflow]"
-msgstr "عمل تکلیف برنامه ریزی"
-
-msgid "Plan Task [transition in task_workflow]"
-msgstr "تکلیف برنامه"
-
 msgid "Plan Transaction"
 msgstr "معامله برنامه ریزی"
 
 msgid "Plan Transaction Action"
 msgstr "عمل معامله برنامه ریزی"
-
-msgid "Plan Transaction Action [transition in accounting_workflow]"
-msgstr "عمل معامله برنامه ریزی"
-
-msgid "Plan Transaction [transition in accounting_workflow]"
-msgstr "برنامه ریزی معامله"
-
-msgid "Plan [transition in bug_event_workflow]"
-msgstr "برنامه ریزی"
 
 msgid "Planned"
 msgstr "برنامه ریزی شده"
@@ -5539,23 +4855,11 @@ msgstr "اعلام اتفاق"
 msgid "Post Event Action"
 msgstr "عمل اعلام اتفاق"
 
-msgid "Post Event Action [transition in event_workflow]"
-msgstr "عمل اعلام اتفاق"
-
-msgid "Post Event [transition in event_workflow]"
-msgstr "اعلام اتفاق"
-
 msgid "Post Query"
 msgstr "اعلام پرسش"
 
 msgid "Post Query Action"
 msgstr "عمل اعلام پرسش"
-
-msgid "Post Query Action [transition in query_workflow]"
-msgstr "عمل اعلام پرسش"
-
-msgid "Post Query [transition in query_workflow]"
-msgstr "اعلام پرسش"
 
 msgid "Post Transaction"
 msgstr "اعلام معامله"
@@ -5563,20 +4867,8 @@ msgstr "اعلام معامله"
 msgid "Post Transaction Action"
 msgstr "عمل اعلام معامله"
 
-msgid "Post Transaction Action [transition in accounting_workflow]"
-msgstr "عمل اعلام معامله"
-
-msgid "Post Transaction [transition in accounting_workflow]"
-msgstr "اعلام معامله"
-
 msgid "Post Transaction to General Ledger"
 msgstr "اعلام معامله در دفتر کل"
-
-msgid "Post Transaction to General Ledger [transition in accounting_workflow]"
-msgstr "ثبت معامله در دفتر کل"
-
-msgid "Post [transition in bug_event_workflow]"
-msgstr "اعلام"
 
 msgid "Post a Query"
 msgstr "اعلام یک پرسش"
@@ -5714,9 +5006,6 @@ msgid "Problem Detected"
 msgstr "مشکل پیدا شد"
 
 msgid "Process file"
-msgstr "پردازش پرونده"
-
-msgid "Process file [transition in processing_status_workflow]"
 msgstr "پردازش پرونده"
 
 msgid "Processing Node"
@@ -5890,15 +5179,6 @@ msgstr "گروه پروژه"
 msgid "Protect Category Action"
 msgstr "عمل گروه پروژه"
 
-msgid "Protect Category Action [transition in category_publication_workflow]"
-msgstr "عمل گروه پروژه"
-
-msgid "Protect Category [transition in category_publication_workflow]"
-msgstr "گروه پروژه"
-
-msgid "Protect [transition in category_publication_workflow]"
-msgstr "پروژه"
-
 msgid "Protected"
 msgstr "مصون شده"
 
@@ -5935,25 +5215,10 @@ msgstr "گروه انتشار"
 msgid "Publish Category Action"
 msgstr "عمل گروه انتشار"
 
-msgid "Publish Category Action [transition in category_publication_workflow]"
-msgstr "عمل گروه انتشار"
-
-msgid "Publish Category [transition in category_publication_workflow]"
-msgstr "گروه انتشار"
-
 msgid "Publish Document"
 msgstr "انتشار مدرک"
 
 msgid "Publish Document Action"
-msgstr "عمل انتشار مدرک"
-
-msgid "Publish Document Action [transition in document_publication_workflow]"
-msgstr "عمل انتشار مدرک"
-
-msgid "Publish Document Action [transition in external_document_publication_workflow]"
-msgstr "عمل انتشار مدرک"
-
-msgid "Publish Document Action [transition in publication_workflow]"
 msgstr "عمل انتشار مدرک"
 
 msgid "Publish Document Alive"
@@ -5961,27 +5226,6 @@ msgstr "انتشار مدرک زنده"
 
 msgid "Publish Document Alive Action"
 msgstr "عمل انتشار مدرک زنده"
-
-msgid "Publish Document Alive Action [transition in document_publication_workflow]"
-msgstr "عمل انتشار مدرک زنده"
-
-msgid "Publish Document Alive [transition in document_publication_workflow]"
-msgstr "عمل انتشار مدرک زنده"
-
-msgid "Publish Document [transition in document_publication_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish Document [transition in document_staging_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish Document [transition in external_document_publication_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish Document [transition in publication_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish [transition in category_publication_workflow]"
-msgstr "انتشار"
 
 msgid "Published"
 msgstr "منتشر شد"
@@ -6289,16 +5533,7 @@ msgstr "تخصیص دوباره خطا"
 msgid "Re Assign Bug Action"
 msgstr "عمل تخصیص دوباره خطا"
 
-msgid "Re Assign Bug Action [transition in bug_workflow]"
-msgstr "عمل تخصیص دوباره خطا"
-
-msgid "Re Assign Bug [transition in bug_workflow]"
-msgstr "تخصیص دوباره خطا"
-
 msgid "Re-install Business Template"
-msgstr "الگوی تجاری را دوباره نصب کنید"
-
-msgid "Re-install Business Template [transition in business_template_installation_workflow]"
 msgstr "الگوی تجاری را دوباره نصب کنید"
 
 msgid "Ready Packing List"
@@ -6319,9 +5554,6 @@ msgstr "زمان واقعی"
 msgid "Rebuild Business Template"
 msgstr "الگوی تجاری را دوباره بسازید"
 
-msgid "Rebuild Business Template [transition in business_template_building_workflow]"
-msgstr "الگوی تجاری را دوباره بسازید"
-
 msgid "Receive"
 msgstr "دریافت"
 
@@ -6331,17 +5563,8 @@ msgstr "دریافت مدرک"
 msgid "Receive Document Action"
 msgstr "عمل دریافت مدرک"
 
-msgid "Receive Document Action [transition in document_ingestion_workflow]"
-msgstr "عمل دریافت مدرک"
-
-msgid "Receive Document [transition in document_ingestion_workflow]"
-msgstr "دریافت مدرک"
-
 msgid "Receive Enquiry"
 msgstr "دریافت درخواست"
-
-msgid "Receive Enquiry [transition in sale_opportunity_workflow]"
-msgstr "درخواست دریافت"
 
 msgid "Receive Event"
 msgstr "اتفاق دریافت"
@@ -6349,26 +5572,11 @@ msgstr "اتفاق دریافت"
 msgid "Receive Event Action"
 msgstr "عمل اتفاق دریافت"
 
-msgid "Receive Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق دریافت"
-
-msgid "Receive Event [transition in event_workflow]"
-msgstr "اتفاق دریافت"
-
 msgid "Receive Packing List"
 msgstr "لیست بسته بندی دریافت"
 
 msgid "Receive Packing List Action"
 msgstr "عمل لیست بسته بندی دریافت"
-
-msgid "Receive Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل لیست بسته بندی دریافت"
-
-msgid "Receive Packing List [transition in packing_list_workflow]"
-msgstr "لیست بسته بندی دریافت"
-
-msgid "Receive [transition in document_ingestion_workflow]"
-msgstr "دریافت"
 
 msgid "Received Packing List"
 msgstr "لیست بسته بندی دریافت شد"
@@ -6427,23 +5635,11 @@ msgstr "نصب دوباره الگوی تجاری"
 msgid "Reinstall Business Template Action"
 msgstr "عمل نصب دوباره الگوی تجاری"
 
-msgid "Reinstall Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل نصب دوباره الگوی تجاری"
-
-msgid "Reinstall Business Template [transition in business_template_installation_workflow]"
-msgstr "نصب دوباره الگوی تجاری"
-
 msgid "Reject Document"
 msgstr "رد کردن مدرک"
 
 msgid "Reject Document Action"
 msgstr "عمل رد کردن مدرک"
-
-msgid "Reject Document Action [transition in document_publication_workflow]"
-msgstr "عمل رد کردن مدرک"
-
-msgid "Reject Document [transition in document_publication_workflow]"
-msgstr "رد کردن مدرک"
 
 msgid "Reject Message"
 msgstr "رد کردن پیام"
@@ -6451,35 +5647,11 @@ msgstr "رد کردن پیام"
 msgid "Reject Message Action"
 msgstr "عمل رد کردن پیام"
 
-msgid "Reject Message Action [transition in notification_message_workflow]"
-msgstr "عمل رد کردن پبام"
-
-msgid "Reject Message [transition in notification_message_workflow]"
-msgstr "رد کردن پیام"
-
 msgid "Reject Offer"
 msgstr "رد کردن پیشنهاد"
 
 msgid "Reject Offer Action"
 msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer Action [transition in open_order_workflow]"
-msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer Action [transition in order_workflow]"
-msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer Action [transition in sale_opportunity_workflow]"
-msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer [transition in open_order_workflow]"
-msgstr "رد کردن پیشنهاد"
-
-msgid "Reject Offer [transition in order_workflow]"
-msgstr "رد کردن پیشنهاد"
-
-msgid "Reject Offer [transition in sale_opportunity_workflow]"
-msgstr "رد کردن پیشنهاد"
 
 msgid "Rejected"
 msgstr "رد شد"
@@ -6577,23 +5749,11 @@ msgstr "پخش کردن مدرک"
 msgid "Release Document Action"
 msgstr "عمل پخش کردن مدرک"
 
-msgid "Release Document Action [transition in document_publication_workflow]"
-msgstr "عمل پخش کردن مدرک"
-
 msgid "Release Document Alive"
 msgstr "پخش زنده مدرک"
 
 msgid "Release Document Alive Action"
 msgstr "عمل پخش زنده مدرک"
-
-msgid "Release Document Alive Action [transition in document_publication_workflow]"
-msgstr "عمل پخش زنده مدرک"
-
-msgid "Release Document Alive [transition in document_publication_workflow]"
-msgstr "پخش زنده مدرک"
-
-msgid "Release Document [transition in document_publication_workflow]"
-msgstr "پخش زنده مدرک"
 
 msgid "Released"
 msgstr "منتشر شد"
@@ -6614,9 +5774,6 @@ msgid "Remember my name"
 msgstr "اسم من را بخاطر داشته باش"
 
 msgid "Replace Business Template"
-msgstr "الگوی تجاری را جایگزین کنید"
-
-msgid "Replace Business Template [transition in business_template_installation_workflow]"
 msgstr "الگوی تجاری را جایگزین کنید"
 
 msgid "Replaced"
@@ -6658,23 +5815,11 @@ msgstr "درخواست تأئیدیه"
 msgid "Request Approval Action"
 msgstr "عمل درخواست تأئیدیه"
 
-msgid "Request Approval Action [transition in sale_opportunity_workflow]"
-msgstr "عمل درخواست تأئیدیه"
-
-msgid "Request Approval [transition in sale_opportunity_workflow]"
-msgstr "درخواست تأئیدیه"
-
 msgid "Request Processing"
 msgstr "درخواست پردازش"
 
 msgid "Request Processing Action"
 msgstr "درخواست عمل پردازش"
-
-msgid "Request Processing Action [transition in event_workflow]"
-msgstr "عمل درخواست پردازش"
-
-msgid "Request Processing [transition in event_workflow]"
-msgstr "درخواست پردازش"
 
 msgid "Request Ticket Approval"
 msgstr "درخواست تأئید بلیط"
@@ -6682,35 +5827,17 @@ msgstr "درخواست تأئید بلیط"
 msgid "Request Ticket Approval "
 msgstr "درخواست تأئید بلیط."
 
-msgid "Request Ticket Approval  [transition in ticket_workflow]"
-msgstr "درخواست تأئید بلیط"
-
 msgid "Request Ticket Approval Action"
 msgstr "عمل درخواست تأئید بلیط"
 
-msgid "Request Ticket Approval Action [transition in ticket_workflow]"
-msgstr "عمل درخواست تأئید بلیط"
-
-msgid "Request Ticket Approval [transition in ticket_workflow]"
-msgstr "درخواست تأئید بلیط"
-
 msgid "Request Transaltion"
 msgstr "درخواست ترجمه"
-
-msgid "Request Transaltion [transition in document_publication_workflow]"
-msgstr "درخواست معامله"
 
 msgid "Request Translation"
 msgstr "درخواست ترجمه"
 
 msgid "Request Translation Action"
 msgstr "عمل درخواست ترجمه"
-
-msgid "Request Translation Action [transition in document_publication_workflow]"
-msgstr "عمل درخواست ترجمه"
-
-msgid "Request Translation [transition in document_publication_workflow]"
-msgstr "درخواست ترجمه"
 
 msgid "Requested Project"
 msgstr "پروژه درخواست شد"
@@ -6775,12 +5902,6 @@ msgstr "تصحیح خطا"
 msgid "Resolve Bug Action"
 msgstr "عمل تصحیح خطا"
 
-msgid "Resolve Bug Action [transition in bug_workflow]"
-msgstr "عمل تصحیح خطا"
-
-msgid "Resolve Bug [transition in bug_workflow]"
-msgstr "تصحیح خطا"
-
 msgid "Resolve SVN Conflicted Files"
 msgstr "تصحیح پرونده های متناقض شده SVN"
 
@@ -6808,12 +5929,6 @@ msgstr "اتفاق واکنش"
 msgid "Respond Event Action"
 msgstr "عمل اتفاق واکنش"
 
-msgid "Respond Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق واکنش"
-
-msgid "Respond Event [transition in event_workflow]"
-msgstr "اتفاق واکنش"
-
 msgid "Respond Workflow Action"
 msgstr "عمل گردش کار واکنش"
 
@@ -6829,23 +5944,11 @@ msgstr "شروع دوره حسابداری"
 msgid "Restart Accounting Period Action"
 msgstr "عمل شروع دوره حسابداری"
 
-msgid "Restart Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل شروع دوره حسابداری"
-
-msgid "Restart Accounting Period [transition in accounting_period_workflow]"
-msgstr "شروع دوره حسابداری"
-
 msgid "Restart Task"
 msgstr "شروع دوباره تکلیف"
 
 msgid "Restart Task Action"
 msgstr "عمل شروع دوباره تکلیف"
-
-msgid "Restart Task Action [transition in task_report_workflow]"
-msgstr "عمل شروع دوباره تکلیف"
-
-msgid "Restart Task [transition in task_report_workflow]"
-msgstr "شروع دوباره تکلیف"
 
 msgid "Restart Transaction"
 msgstr "شروع دوباره معامله"
@@ -6853,17 +5956,8 @@ msgstr "شروع دوباره معامله"
 msgid "Restart Transaction (journalise)"
 msgstr "شروع دوباره معامله"
 
-msgid "Restart Transaction (journalise) [transition in accounting_workflow]"
-msgstr "شروع دوباره معامله"
-
 msgid "Restart Transaction Action"
 msgstr "عمل شروع دوباره معامله"
-
-msgid "Restart Transaction Action [transition in accounting_workflow]"
-msgstr "عمل شروع دوباره معامله"
-
-msgid "Restart Transaction [transition in accounting_workflow]"
-msgstr "معامله تأئید"
 
 msgid "Result"
 msgstr "نتیجه"
@@ -6875,12 +5969,6 @@ msgid "Retract Document Publication"
 msgstr "بازیابی انتشار مدرک"
 
 msgid "Retract Document Publication Action"
-msgstr "عمل بازیابی انتشار مدرک"
-
-msgid "Retract Document Publication Action [transition in external_document_publication_workflow]"
-msgstr "عمل بازیابی انتشار مدرک"
-
-msgid "Retract Document Publication [transition in external_document_publication_workflow]"
 msgstr "عمل بازیابی انتشار مدرک"
 
 msgid "Returned Purchase Orders"
@@ -7300,23 +6388,11 @@ msgstr "فروش"
 msgid "Sell Action"
 msgstr "عمل فروش"
 
-msgid "Sell Action [transition in sale_opportunity_workflow]"
-msgstr "عمل فروش"
-
-msgid "Sell [transition in sale_opportunity_workflow]"
-msgstr "فروش"
-
 msgid "Send Offer"
 msgstr "ارسال پیشنهاد"
 
 msgid "Send Offer Action"
 msgstr "عمل ارسال پیشنهاد"
-
-msgid "Send Offer Action [transition in sale_opportunity_workflow]"
-msgstr "عمل ارسال پیشنهاد"
-
-msgid "Send Offer [transition in sale_opportunity_workflow]"
-msgstr "ارسال پیشنهاد"
 
 msgid "Send by Email"
 msgstr "توسط ایمیل ارسال شد"
@@ -7378,12 +6454,6 @@ msgstr "تعیین لیست بسته بندی به آماده"
 msgid "Set Packing List Ready Action"
 msgstr "عمل تعیین لیست بسته بندی به آماده"
 
-msgid "Set Packing List Ready Action [transition in packing_list_workflow]"
-msgstr "عمل تعیین لیست بسته بندی به آماده"
-
-msgid "Set Packing List Ready [transition in packing_list_workflow]"
-msgstr "تعیین لیست بسته بندی به آماده"
-
 msgid "Set Relation"
 msgstr "تعیین ارتباط"
 
@@ -7402,23 +6472,11 @@ msgstr "اشتراک مدرک"
 msgid "Share Document Action"
 msgstr "عمل اشتراک مدرک"
 
-msgid "Share Document Action [transition in document_publication_workflow]"
-msgstr "عمل اشتراک مدرک"
-
 msgid "Share Document Alive"
 msgstr "اشتراک مدرک زنده"
 
 msgid "Share Document Alive Action"
 msgstr "عمل اشتراک مدرک زنده"
-
-msgid "Share Document Alive Action [transition in document_publication_workflow]"
-msgstr "عمل اشتراک مدرک زنده"
-
-msgid "Share Document Alive [transition in document_publication_workflow]"
-msgstr "اشتراک مدرک زنده"
-
-msgid "Share Document [transition in document_publication_workflow]"
-msgstr "اشتراک مدرک"
 
 msgid "Shared"
 msgstr "اشتراک شده"
@@ -7437,12 +6495,6 @@ msgstr "لیست بسته بندی حمل"
 
 msgid "Ship Packing List Action"
 msgstr "عمل لیست بسته بندی حمل"
-
-msgid "Ship Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل لیست بسته بندی حمل"
-
-msgid "Ship Packing List [transition in packing_list_workflow]"
-msgstr "لیست بسته بندی حمل"
 
 msgid "Shipped Packing List"
 msgstr "لیست بسته بندی حمل شده"
@@ -7539,12 +6591,6 @@ msgstr "حل واگرایی"
 
 msgid "Solve Divergences Action"
 msgstr "عمل حل واگرایی"
-
-msgid "Solve Divergences Action [transition in delivery_causality_workflow]"
-msgstr "عمل حل واگرایی"
-
-msgid "Solve Divergences [transition in delivery_causality_workflow]"
-msgstr "حل واگرایی"
 
 msgid "Solved"
 msgstr "حل شد"
@@ -7660,12 +6706,6 @@ msgstr "ترجمه منشعب"
 msgid "Split Translation Action"
 msgstr "عمل ترجمه منشعب"
 
-msgid "Split Translation Action [transition in document_publication_workflow]"
-msgstr "عمل ترجمه منشعب"
-
-msgid "Split Translation [transition in document_publication_workflow]"
-msgstr "ترجمه منشعب"
-
 msgid "Split [state in document_publication_workflow]"
 msgstr "انشعاب"
 
@@ -7674,12 +6714,6 @@ msgstr "انشعاب و تأخیر"
 
 msgid "Split and Defer Action"
 msgstr "عمل انشعاب و تأخیر"
-
-msgid "Split and Defer Action [transition in delivery_causality_workflow]"
-msgstr "عمل انشعاب و تأخیر"
-
-msgid "Split and Defer [transition in delivery_causality_workflow]"
-msgstr "انشعاب و تأخیر"
 
 msgid "Spreadsheet"
 msgstr "برگه گسترده (Spreadsheet)"
@@ -7690,23 +6724,11 @@ msgstr "شروع دوره حسابداری"
 msgid "Start Accounting Period Action"
 msgstr "عمل شروع دوره حسابداری"
 
-msgid "Start Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل شروع دوره حسابداری"
-
-msgid "Start Accounting Period [transition in accounting_period_workflow]"
-msgstr "شروع دوره حسابداری"
-
 msgid "Start Assignment"
 msgstr "مأموریت شروع"
 
 msgid "Start Assignment Action"
 msgstr "عمل مأموریت شروع"
-
-msgid "Start Assignment Action [transition in assignment_workflow]"
-msgstr "عمل مأموریت شروع"
-
-msgid "Start Assignment [transition in assignment_workflow]"
-msgstr "مأموریت شروع"
 
 msgid "Start Bug"
 msgstr "خطای شروع"
@@ -7714,16 +6736,7 @@ msgstr "خطای شروع"
 msgid "Start Bug Action"
 msgstr "عمل خطای شروع"
 
-msgid "Start Bug Action [transition in bug_workflow]"
-msgstr "عمل خطای شروع"
-
-msgid "Start Bug [transition in bug_workflow]"
-msgstr "خطای شروع"
-
 msgid "Start Building"
-msgstr "ساخت شروع"
-
-msgid "Start Building [transition in delivery_causality_workflow]"
 msgstr "ساخت شروع"
 
 msgid "Start Career Step"
@@ -7731,12 +6744,6 @@ msgstr "مرحله شروع شغل"
 
 msgid "Start Career Step Action"
 msgstr "عمل مرحله شروع شغلی"
-
-msgid "Start Career Step Action [transition in career_workflow]"
-msgstr "عمل مرحله شروع شغلی"
-
-msgid "Start Career Step [transition in career_workflow]"
-msgstr "مرحله شروع شغلی"
 
 msgid "Start Date"
 msgstr "تاریخ شروع"
@@ -7747,23 +6754,11 @@ msgstr "شروع سفارش باز"
 msgid "Start Open Order Action"
 msgstr "عمل شروع سفارش باز"
 
-msgid "Start Open Order Action [transition in open_order_workflow]"
-msgstr "عمل شروع سفارش باز"
-
-msgid "Start Open Order [transition in open_order_workflow]"
-msgstr "شروع سفارش باز"
-
 msgid "Start Processing Requirement"
 msgstr "شروع فرآیند نیازمندی"
 
 msgid "Start Processing Requirement Action"
 msgstr "عمل شروع فرآیند نیازمندی"
-
-msgid "Start Processing Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل شروع فرآیند نیازمندی"
-
-msgid "Start Processing Requirement [transition in requirement_analysis_workflow]"
-msgstr "شروع فرآیند نیازمندی"
 
 msgid "Start Project"
 msgstr "شروع پروژه"
@@ -7771,35 +6766,17 @@ msgstr "شروع پروژه"
 msgid "Start Project Action"
 msgstr "عمل شروع پروژه"
 
-msgid "Start Project Action [transition in project_workflow]"
-msgstr "عمل شروع پروژه"
-
-msgid "Start Project [transition in project_workflow]"
-msgstr "شروع پروژه"
-
 msgid "Start Task"
 msgstr "شروع تکلیف"
 
 msgid "Start Task Action"
 msgstr "عمل شروع تکلیف"
 
-msgid "Start Task Action [transition in task_report_workflow]"
-msgstr "عمل شروع تکلیف"
-
-msgid "Start Task [transition in task_report_workflow]"
-msgstr "شروع تکلیف"
-
 msgid "Start Ticket"
 msgstr "شروع بلیط"
 
 msgid "Start Ticket Action"
 msgstr "عمل شروع بلیط"
-
-msgid "Start Ticket Action [transition in ticket_workflow]"
-msgstr "عمل شروع بلیط"
-
-msgid "Start Ticket [transition in ticket_workflow]"
-msgstr "شروع بلیط"
 
 msgid "Start date is after stop date."
 msgstr "تاریخ شروع بعد از تاریخ توقف است."
@@ -7876,35 +6853,17 @@ msgstr "توقف مأموریت"
 msgid "Stop Assignment Action"
 msgstr "عمل توقف مأموریت"
 
-msgid "Stop Assignment Action [transition in assignment_workflow]"
-msgstr "عمل توقف مأموریت"
-
-msgid "Stop Assignment [transition in assignment_workflow]"
-msgstr "توقف مأموریت"
-
 msgid "Stop Bug"
 msgstr "توقف خطا"
 
 msgid "Stop Bug Action"
 msgstr "عمل توقف خطا"
 
-msgid "Stop Bug Action [transition in bug_workflow]"
-msgstr "عمل توقف خطا"
-
-msgid "Stop Bug [transition in bug_workflow]"
-msgstr "توقف خطا"
-
 msgid "Stop Career Step"
 msgstr "مرحله توقف شغلی"
 
 msgid "Stop Career Step Action"
 msgstr "عمل مرحله توقف شغلی"
-
-msgid "Stop Career Step Action [transition in career_workflow]"
-msgstr "عمل مرحله توقف شغلی"
-
-msgid "Stop Career Step [transition in career_workflow]"
-msgstr "مرحله توقف شغلی"
 
 msgid "Stop Date"
 msgstr "تاریخ توقف"
@@ -7915,23 +6874,11 @@ msgstr "توقف سفارش باز"
 msgid "Stop Open Order Action"
 msgstr "عمل توقف سفارش باز"
 
-msgid "Stop Open Order Action [transition in open_order_workflow]"
-msgstr "عمل توقف سفارش باز"
-
-msgid "Stop Open Order [transition in open_order_workflow]"
-msgstr "توقف سفارش باز"
-
 msgid "Stop Processing Requirement"
 msgstr "توقف پردازش نبازمندی"
 
 msgid "Stop Processing Requirement Action"
 msgstr "توقف عمل پردازش نیازمندی"
-
-msgid "Stop Processing Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "توقف عمل پردازش نیازمندی"
-
-msgid "Stop Processing Requirement [transition in requirement_analysis_workflow]"
-msgstr "توقف پردازش نیازمندی"
 
 msgid "Stop Project"
 msgstr "توقف پروژه"
@@ -7939,23 +6886,11 @@ msgstr "توقف پروژه"
 msgid "Stop Project Action"
 msgstr "عمل توقف پروژه"
 
-msgid "Stop Project Action [transition in project_workflow]"
-msgstr "عمل توقف پروژه"
-
-msgid "Stop Project [transition in project_workflow]"
-msgstr "توقف پروژه"
-
 msgid "Stop Ticket"
 msgstr "توقف بلیط"
 
 msgid "Stop Ticket Action"
 msgstr "عمل توقف بلیط"
-
-msgid "Stop Ticket Action [transition in ticket_workflow]"
-msgstr "عمل توقف بلیط"
-
-msgid "Stop Ticket [transition in ticket_workflow]"
-msgstr "توقف بلیط"
 
 msgid "Stopped"
 msgstr "متوقف شد"
@@ -8011,25 +6946,13 @@ msgstr "زیرگروه ها"
 msgid "Submit Document"
 msgstr "تسلیم مدرک"
 
-msgid "Submit Document [transition in document_staging_workflow]"
-msgstr "تسلیم مدرک"
-
 msgid "Submit Document for Review"
 msgstr "تسلیم مدرک برای بازبینی"
 
 msgid "Submit Document for Review Action"
 msgstr "عمل تسلیم مدرک برای بازبینی"
 
-msgid "Submit Document for Review Action [transition in document_publication_workflow]"
-msgstr "عمل تسلیم مدرک برای بازبینی"
-
-msgid "Submit Document for Review [transition in document_publication_workflow]"
-msgstr "تسلیم مدرک برای بازبینی"
-
 msgid "Submit Doument for Review"
-msgstr "تسلیم مدرک برای بازبینی"
-
-msgid "Submit Doument for Review [transition in document_publication_workflow]"
 msgstr "تسلیم مدرک برای بازبینی"
 
 msgid "Submit Event"
@@ -8038,23 +6961,11 @@ msgstr "تسلیم اتفاق"
 msgid "Submit Event Action"
 msgstr "عمل تسلیم اتفاق"
 
-msgid "Submit Event Action [transition in event_workflow]"
-msgstr "عمل تسلیم اتفاق"
-
-msgid "Submit Event [transition in event_workflow]"
-msgstr "تسلیم اتفاق"
-
 msgid "Submit Message"
 msgstr "تسلیم پیام"
 
 msgid "Submit Message Action"
 msgstr "عمل تسلیم پیام"
-
-msgid "Submit Message Action [transition in notification_message_workflow]"
-msgstr "عمل تسلیم پبام"
-
-msgid "Submit Message [transition in notification_message_workflow]"
-msgstr "تسلیم پیام"
 
 msgid "Submitted"
 msgstr "تسلیم شد"
@@ -8182,23 +7093,11 @@ msgstr "تعلیق سفارش باز"
 msgid "Suspend Open Order Action"
 msgstr "عمل تعلیق سفارش باز"
 
-msgid "Suspend Open Order Action [transition in open_order_workflow]"
-msgstr "عمل تعلیق سفارش باز"
-
-msgid "Suspend Open Order [transition in open_order_workflow]"
-msgstr "تعلیق سفارش باز"
-
 msgid "Suspend Project"
 msgstr "تعلیق پروژه"
 
 msgid "Suspend Project Action"
 msgstr "عمل تعلیق پروژه"
-
-msgid "Suspend Project Action [transition in project_workflow]"
-msgstr "عمل تعلیق پروژه"
-
-msgid "Suspend Project [transition in project_workflow]"
-msgstr "تعلیق پروژه"
 
 msgid "Suspended"
 msgstr "تعلیق شد"
@@ -8448,12 +7347,6 @@ msgstr "توقف دوره حسابداری به طور موقت"
 
 msgid "Temporarily Stop Accounting Period Action"
 msgstr "عمل توقف دوره حسابداری به طور موقت"
-
-msgid "Temporarily Stop Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل توقف دوره حسابداری به طور موقت"
-
-msgid "Temporarily Stop Accounting Period [transition in accounting_period_workflow]"
-msgstr "توقف دوره حسابداری به طور موقت"
 
 msgid "Temporarily Stopped"
 msgstr "بطور موقت متوقف شد"
@@ -8743,12 +7636,6 @@ msgstr "الگوی تجاری را پاک کنید"
 msgid "Uninstall Business Template Action"
 msgstr "عمل پاک کردن الگوی تجاری"
 
-msgid "Uninstall Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Uninstall Business Template [transition in business_template_installation_workflow]"
-msgstr "پاک کردن الگوی تجاری"
-
 msgid "Unit"
 msgstr "واحد"
 
@@ -8767,12 +7654,6 @@ msgstr "مدرک را چاپ نکنید"
 msgid "Unpublish Document Action"
 msgstr "عمل چاپ نکردن مدرک"
 
-msgid "Unpublish Document Action [transition in publication_workflow]"
-msgstr "عمل چاپ نکردن مدرک"
-
-msgid "Unpublish Document [transition in publication_workflow]"
-msgstr "مدرک را چاپ نکنید"
-
 msgid "Until the end of month"
 msgstr "تا پایان ماه"
 
@@ -8788,12 +7669,6 @@ msgstr "به روز کردن مأموریت"
 msgid "Update Assignment Action"
 msgstr "عمل به روز کردن مأموریت"
 
-msgid "Update Assignment Action [transition in assignment_workflow]"
-msgstr "عمل به روز کردن مأموریت"
-
-msgid "Update Assignment [transition in assignment_workflow]"
-msgstr "ابطال مأموریت"
-
 msgid "Update Business Template from SVN"
 msgstr "به روز کردن الگوی تجاری از SVN"
 
@@ -8806,9 +7681,6 @@ msgstr "به روز کردن فیلد بوسیله واژه نامه انگلی�
 msgid "Update File Metadata"
 msgstr "به روز کردن پرونده متادیتا"
 
-msgid "Update File Metadata [transition in processing_status_workflow]"
-msgstr "به روز کردن پرونده متادیتا"
-
 msgid "Update PortalTypes"
 msgstr "به روز کردن نوع پورتال"
 
@@ -8816,9 +7688,6 @@ msgid "Update PortalTypes by English Glossary"
 msgstr "به روز کردن نوع پورتال بوسیله واژه نامه انگلیسی"
 
 msgid "Update Quantity from Container"
-msgstr "به روز کردن تعداد از کانتینر"
-
-msgid "Update Quantity from Container [transition in packing_list_container_workflow]"
 msgstr "به روز کردن تعداد از کانتینر"
 
 msgid "Update Repository Information"
@@ -8838,12 +7707,6 @@ msgstr "به روز کردن تعداد"
 
 msgid "Update quantity Action"
 msgstr "عمل به روز کردن تعداد"
-
-msgid "Update quantity Action [transition in packing_list_container_workflow]"
-msgstr "عمل به روز کردن تعداد"
-
-msgid "Update quantity [transition in packing_list_container_workflow]"
-msgstr "به روز کردن تعداد"
 
 msgid "Updated"
 msgstr "به روز کردن"
@@ -8867,9 +7730,6 @@ msgid "Upload Module"
 msgstr "ماژول آپلود"
 
 msgid "Upload file"
-msgstr "پرونده را آپلود کنید"
-
-msgid "Upload file [transition in processing_status_workflow]"
 msgstr "پرونده را آپلود کنید"
 
 msgid "Uploaded"
@@ -8926,19 +7786,7 @@ msgstr "تأئید کردن حساب"
 msgid "Validate Account Action"
 msgstr "عمل تأئید حساب"
 
-msgid "Validate Account Action [transition in account_workflow]"
-msgstr "عمل تأئید حساب"
-
-msgid "Validate Account [transition in account_workflow]"
-msgstr "تأئید حساب"
-
 msgid "Validate Action"
-msgstr "عمل تأئید"
-
-msgid "Validate Action [transition in rule_validation_workflow]"
-msgstr "عمل تأئید"
-
-msgid "Validate Action [transition in validation_workflow]"
 msgstr "عمل تأئید"
 
 msgid "Validate Installation"
@@ -8950,32 +7798,14 @@ msgstr "تأئید کردن انبارگردانی"
 msgid "Validate Inventory Action"
 msgstr "عمل تأئید موجودی"
 
-msgid "Validate Inventory Action [transition in inventory_workflow]"
-msgstr "عمل تأئید موجودی"
-
-msgid "Validate Inventory [transition in inventory_workflow]"
-msgstr "تأئید موجودی"
-
 msgid "Validate Message"
 msgstr "تأئید پیام"
 
 msgid "Validate Message Action"
 msgstr "عمل تأئید پیام"
 
-msgid "Validate Message Action [transition in notification_message_workflow]"
-msgstr "عمل تأئید پیام"
-
-msgid "Validate Message [transition in notification_message_workflow]"
-msgstr "تأئید پیام"
-
 msgid "Validate Workflow Action"
 msgstr "عمل تأئید گردش کار"
-
-msgid "Validate [transition in rule_validation_workflow]"
-msgstr "تأئید"
-
-msgid "Validate [transition in validation_workflow]"
-msgstr "تأئید"
 
 msgid "Validated"
 msgstr "تأئید شد"

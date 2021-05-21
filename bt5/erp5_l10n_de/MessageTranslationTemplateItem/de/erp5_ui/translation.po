@@ -308,12 +308,6 @@ msgstr "Übersetzung Akzeptieren"
 msgid "Accept Translation Action"
 msgstr "Akzeptiere Übersetzten Aktion"
 
-msgid "Accept Translation Action [transition in document_publication_workflow]"
-msgstr "Akzeptiere Übersetzten Aktion [transition in document_publication_Arbeitsablauf]"
-
-msgid "Accept Translation [transition in document_publication_workflow]"
-msgstr "Akzeptiere Übersetzung [transition in document_publication_Arbeitsablauf]"
-
 msgid "Accepts a translation and sets the validation state to submitted, waiting for further approval before publication."
 msgstr "Akzeptiert die Übersetzung, setzt den Validierung-Zustand auf \"eingereicht\"  und wartet anschließend auf nötige Genehmigungen zur Veröffentlichung."
 
@@ -2122,12 +2116,6 @@ msgstr "Registrieren"
 
 msgid "Finish Task Action"
 msgstr "Arbeits-Aktion beenden"
-
-msgid "Finish Task Action [transition in task_report_workflow]"
-msgstr "Arbeits-Aktion beenden [Transition im task_report_workflow]"
-
-msgid "Finish Task [transition in task_report_workflow]"
-msgstr "Registrieren [transition im task_report_workflow]"
 
 msgid "Finished"
 msgstr "Fertig"
@@ -4376,12 +4364,6 @@ msgstr "Freigeben"
 msgid "Restop Task Action"
 msgstr "Freigeben"
 
-msgid "Restop Task Action [transition in task_report_workflow]"
-msgstr "Freigeben"
-
-msgid "Restop Task [transition in task_report_workflow]"
-msgstr "Freigeben"
-
 msgid "Result"
 msgstr "Ergebnis"
 
@@ -4951,12 +4933,6 @@ msgstr "Projekt Starten"
 
 msgid "Start Project Action"
 msgstr "Projekt-Aktion Starten"
-
-msgid "Start Project Action [transition in project_workflow]"
-msgstr "Projekt-Aktion Starten [transition im project_workflow]"
-
-msgid "Start Project [transition in project_workflow]"
-msgstr "Projekt Starten [transition im project_workflow]"
 
 msgid "Start Task"
 msgstr "Arbeit starten"

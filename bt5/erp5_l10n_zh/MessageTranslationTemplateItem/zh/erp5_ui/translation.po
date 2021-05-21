@@ -1221,9 +1221,6 @@ msgstr "计算"
 msgid "Calculate Packing"
 msgstr "计算装箱"
 
-msgid "Calculate [transition in delivery_causality_workflow]"
-msgstr "计算 [transition in delivery_causality_workflow]"
-
 msgid "Calculating"
 msgstr "计算中"
 
@@ -1812,9 +1809,6 @@ msgstr "贡献者"
 msgid "Convergent"
 msgstr "趋同"
 
-msgid "Convergent [transition in delivery_causality_workflow]"
-msgstr "趋同 [transition in delivery_causality_workflow]"
-
 msgid "Conversion Format for reports."
 msgstr "报告转换格式"
 
@@ -2271,9 +2265,6 @@ msgstr "定义"
 msgid "Definitively Close Transaction"
 msgstr "彻底终止交易"
 
-msgid "Definitively Close Transaction Action [transition in accounting_workflow]"
-msgstr "彻底终止交易操作"
-
 msgid "Delete"
 msgstr "删除"
 
@@ -2527,9 +2518,6 @@ msgstr "后台分歧处理开始。"
 
 msgid "Divergent"
 msgstr "不匹配"
-
-msgid "Divergent [transition in delivery_causality_workflow]"
-msgstr "互异 [transition in delivery_causality_workflow]"
 
 msgid "Do you want to enable Periodical Check?"
 msgstr "您是否要启用定期检查？"
@@ -6652,9 +6640,6 @@ msgstr "解决分歧"
 msgid "Solve Divergences"
 msgstr "解决分歧"
 
-msgid "Solve Divergences [transition in delivery_causality_workflow]"
-msgstr "解决分歧 [transition in delivery_causality_workflow]"
-
 msgid "Solve Method"
 msgstr "解决方法"
 
@@ -6712,9 +6697,6 @@ msgstr "拆分文件"
 msgid "Split Prevision"
 msgstr "拆分预期文件"
 
-msgid "Split and Defer [transition in delivery_causality_workflow]"
-msgstr "拆分和推迟 [transition in delivery_causality_workflow]"
-
 msgid "Splits a document in multiple subdocuments to accelerate translation. Sets validation_state to split."
 msgstr "将一个文件拆分成若干子文件J以加速翻译,并将验证状态设为\"以拆分\"."
 
@@ -6729,9 +6711,6 @@ msgstr "开始"
 
 msgid "Start Accounting Period"
 msgstr "开启会计期间"
-
-msgid "Start Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "开启会计期间操作"
 
 msgid "Start After"
 msgstr "开始不早于"
