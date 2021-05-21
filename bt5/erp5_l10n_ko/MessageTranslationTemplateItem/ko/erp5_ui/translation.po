@@ -1443,29 +1443,29 @@ msgstr "영어로부터 번역을 위한 용어 만들기"
 msgid "Create User"
 msgstr "사용자 만들기"
 
-msgid "Create your New Account"
-msgstr "귀하의 새로운 계정 만들기"
-
 msgid "Create a New Event for Reply"
 msgstr "답장 이벤트 만들기"
 
 msgid "Create a Task"
 msgstr "테스크 만들기"
 
-msgid "Created after"
-msgstr "이후 생성"
-
-msgid "Created before"
-msgstr "이전 생성"
+msgid "Create your New Account"
+msgstr "귀하의 새로운 계정 만들기"
 
 msgid "Created Clone ${portal_type}."
 msgstr "생성된 클론 ${portal_type}."
+
+msgid "Created after"
+msgstr "이후 생성"
 
 msgid "Created and associated ${count} new events to the selected ticket."
 msgstr "선택된 티켓에 만들어 졌거나 할당된 ${count}개의 새로운 이벤트."
 
 msgid "Created and associated a new ${portal_type} to the ticket."
 msgstr "선택된 티켓에 만들어 졌거나 할당된 새로운 ${portal_type}."
+
+msgid "Created before"
+msgstr "이전 생성"
 
 msgid "Creation Date"
 msgstr "만든 날짜"
@@ -1848,11 +1848,11 @@ msgstr "할인율"
 msgid "Discounts"
 msgstr "할인"
 
-msgid "Distributed Ram Cache"
-msgstr "분산된 램 캐시"
-
 msgid "Distributed RAM Cache Plugin"
 msgstr "분산된 램 캐시 플럭인"
+
+msgid "Distributed Ram Cache"
+msgstr "분산된 램 캐시"
 
 msgid "Diverged"
 msgstr "달라짐"
@@ -2331,9 +2331,6 @@ msgstr "스프레드시트로 보내기"
 msgid "Express"
 msgstr "익스프레스"
 
-msgid "Express after Setup Script ID"
-msgstr "스크립트 ID를 설정한 뒤의 익스프레스"
-
 msgid "Express Configuration Status"
 msgstr "익스프레스 설정 상태"
 
@@ -2351,6 +2348,9 @@ msgstr "익스프레스 고유 고객 ID"
 
 msgid "Express Unique ERP5 ID"
 msgstr "익스프레스 고유 ERP5 ID"
+
+msgid "Express after Setup Script ID"
+msgstr "스크립트 ID를 설정한 뒤의 익스프레스"
 
 msgid "External Document Publication Workflow"
 msgstr "외부 문서 공표 워크플로우"
@@ -2379,11 +2379,11 @@ msgstr "빠른 입력"
 msgid "Fax Message"
 msgstr "Fax 메시지"
 
-msgid "Fields"
-msgstr "필드 리스트"
-
 msgid "Field Path"
 msgstr "필드 경로"
+
+msgid "Fields"
+msgstr "필드 리스트"
 
 msgid "Fields updated."
 msgstr "필드 갱신됨"
@@ -2484,6 +2484,12 @@ msgstr "폴더"
 msgid "Folder Contents"
 msgstr "폴더 컨텐트"
 
+msgid "Follow up must be set to acknowledge an Event."
+msgstr "따라가기는 이벤트를 알리도록 설정되어야 합니다."
+
+msgid "Follow-up"
+msgstr "따라가기"
+
 msgid "Follow-up Ticket"
 msgstr "소속된 티켓으로 가기"
 
@@ -2492,12 +2498,6 @@ msgstr "소속 티켓 이름"
 
 msgid "Follow-up Ticket Type"
 msgstr "소속 티켓 유형"
-
-msgid "Follow-up"
-msgstr "따라가기"
-
-msgid "Follow up must be set to acknowledge an Event."
-msgstr "따라가기는 이벤트를 알리도록 설정되어야 합니다."
 
 msgid "Forecasting Term Days"
 msgstr "예측 기간 (일)"
@@ -3230,6 +3230,9 @@ msgstr "응답된 마크"
 
 msgid "Materials"
 msgstr "자재"
+
+msgid "Matrixbox"
+msgstr "매트릭스 박스"
 
 msgid "Max Amount"
 msgstr "최대금액"
@@ -4020,6 +4023,9 @@ msgstr "지불 시트 모델 슬라이스"
 msgid "Pay Sheet Models"
 msgstr "지불 시트 모델"
 
+msgid "Pay Sheet Order"
+msgstr "지불 시트 주문"
+
 msgid "Pay Sheet Transaction"
 msgstr "지불 시트 트랜젝션"
 
@@ -4031,9 +4037,6 @@ msgstr "지불 시트 트랜젝션 갱신됨."
 
 msgid "Pay Sheet View"
 msgstr "지불 시트 뷰"
-
-msgid "Pay Sheet Order"
-msgstr "지불 시트 주문"
 
 msgid "Payable"
 msgstr "지불예정"
@@ -4275,11 +4278,11 @@ msgstr "전임자 테스크"
 msgid "Preference"
 msgstr "설정"
 
-msgid "Preference Tool"
-msgstr "설정 도구"
-
 msgid "Preference Priority"
 msgstr "설정 우선순위"
+
+msgid "Preference Tool"
+msgstr "설정 도구"
 
 msgid "Preferences"
 msgstr "설정"
@@ -4761,14 +4764,14 @@ msgstr "빠른 검색"
 msgid "Quote Original Message"
 msgstr "원래 메시지 인용"
 
+msgid "RAM Cache Plugin"
+msgstr "램 캐시 플럭인"
+
 msgid "RSS Feed"
 msgstr "RSS 피드"
 
 msgid "Ram Cache"
 msgstr "램 캐시"
-
-msgid "RAM Cache Plugin"
-msgstr "램 캐시 플럭인"
 
 msgid "Ratio"
 msgstr "비율"
@@ -6282,6 +6285,12 @@ msgstr "테스트한 속성"
 msgid "Text"
 msgstr "텍스트"
 
+msgid "Text Area Field Height"
+msgstr "문자영역 높이"
+
+msgid "Text Area Field Width"
+msgstr "문자영역 폭"
+
 msgid "Text Editor"
 msgstr "문자 편집기"
 
@@ -6290,12 +6299,6 @@ msgstr "텍스트 포맷"
 
 msgid "Text area field"
 msgstr "텍스트 영역 필드"
-
-msgid "Text Area Field Height"
-msgstr "문자영역 높이"
-
-msgid "Text Area Field Width"
-msgstr "문자영역 폭"
 
 msgid "The Date"
 msgstr "날짜"
@@ -7572,9 +7575,6 @@ msgstr "설치됨"
 
 msgid "invalidated"
 msgstr "확정 취소"
-
-msgid "Matrixbox"
-msgstr "매트릭스 박스"
 
 msgid "max"
 msgstr "최대"

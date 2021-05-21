@@ -1220,11 +1220,11 @@ msgstr "Раздел Баланса"
 msgid "First Name"
 msgstr "Имя"
 
-msgid "Follow-up"
-msgstr "Последующее Мероприятие"
-
 msgid "Follow Up Ticket"
 msgstr "Последующий Тикет"
+
+msgid "Follow-up"
+msgstr "Последующее Мероприятие"
 
 msgid "Format"
 msgstr "Формат"
@@ -1663,6 +1663,21 @@ msgstr "Скопировать Документ"
 
 msgid "Manual Price"
 msgstr "Заданная Цена"
+
+msgid "Manufacturing Execution"
+msgstr "Производственный Отчет"
+
+msgid "Manufacturing Execution Line"
+msgstr "Строка Производственного Отчета"
+
+msgid "Manufacturing Execution Lines"
+msgstr "Строки Производственного Отчета"
+
+msgid "Manufacturing Executions"
+msgstr "Производственные Отчеты"
+
+msgid "Manufacturing Executions to Confirm"
+msgstr "Производственные Отчеты к Подтверждению"
 
 msgid "Marital Status"
 msgstr "Семейное положение"
@@ -2270,21 +2285,6 @@ msgstr "Производственные Накладные"
 msgid "Production Packing Lists to Confirm"
 msgstr "Производственные Накладные к Подтверждению"
 
-msgid "Manufacturing Execution"
-msgstr "Производственный Отчет"
-
-msgid "Manufacturing Execution Line"
-msgstr "Строка Производственного Отчета"
-
-msgid "Manufacturing Execution Lines"
-msgstr "Строки Производственного Отчета"
-
-msgid "Manufacturing Executions"
-msgstr "Производственные Отчеты"
-
-msgid "Manufacturing Executions to Confirm"
-msgstr "Производственные Отчеты к Подтверждению"
-
 msgid "Products"
 msgstr "Товары"
 
@@ -2552,6 +2552,9 @@ msgstr "Соответствующий Инвойс"
 msgid "Related Invoice(s)"
 msgstr "Соответствующие Инвойсы"
 
+msgid "Related Manufacturing Execution"
+msgstr "Подчиненный Производственный Отчет"
+
 msgid "Related Objects"
 msgstr "Связанные Объекты"
 
@@ -2566,9 +2569,6 @@ msgstr "Подчиненная Оплата"
 
 msgid "Related Production Packing List"
 msgstr "Подчиненная Производственная Накладная"
-
-msgid "Related Manufacturing Execution"
-msgstr "Подчиненный Производственный Отчет"
 
 msgid "Related Purchase Invoice"
 msgstr "Соответствующий Инвойс на Закупку"
@@ -2963,17 +2963,17 @@ msgstr "Открыть"
 msgid "Start Accounting Period"
 msgstr "Открыть Бухгалтерский Период"
 
-msgid "Start after"
-msgstr "Начать не Ранее"
-
-msgid "Start before"
-msgstr "Начать не Позднее"
-
 msgid "Start Career Step"
 msgstr "Начать Этап Карьеры"
 
 msgid "Start Date"
 msgstr "Начальная Дата"
+
+msgid "Start after"
+msgstr "Начать не Ранее"
+
+msgid "Start before"
+msgstr "Начать не Позднее"
 
 msgid "Started"
 msgstr "Открыт"
@@ -2999,17 +2999,17 @@ msgstr "Запасы с Учетом Вариаций"
 msgid "Stock per Variation"
 msgstr "Запасы по Вариациям"
 
-msgid "Stop after"
-msgstr "Закончить не Ранее"
-
-msgid "Stop before"
-msgstr "Закончить не Позднее"
-
 msgid "Stop Career Step"
 msgstr "Закончить Этап Карьеры"
 
 msgid "Stop Date"
 msgstr "Конечная Дата"
+
+msgid "Stop after"
+msgstr "Закончить не Ранее"
+
+msgid "Stop before"
+msgstr "Закончить не Позднее"
 
 msgid "Street Address"
 msgstr "Адрес"
