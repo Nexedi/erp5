@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>3d71c28e2ae886381f737ac8ab5e3bcb</string> </value>
+            <value> <string>c58b46041ca8f986538229e5d6529057</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>erp5_campaign_0.png</string> </value>
+            <value> <string>user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program.New-001.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -307,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.56282.48769.7731</string> </value>
+                      <value> <string>991.58597.28995.26453</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -325,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1620363206.52</float>
+                              <float>1621608953.54</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
