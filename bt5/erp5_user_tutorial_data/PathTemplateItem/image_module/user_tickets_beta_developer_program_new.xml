@@ -83,41 +83,44 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/20160111-383FB92</string>
-                <string>publication_section/documentation/user</string>
+                <string>classification/collaborative/staff</string>
                 <string>group/nexedi</string>
-                <string>classification/collaborative/project</string>
-                <string>follow_up/project_module/7</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/2326</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>870063ef247065782c51297c47a3be30</string> </value>
+            <value> <string>72d078091c18d9f4f2869807578e3d97</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/png</string> </value>
+            <value> <string>image/svg+xml</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>user-Howto.Send.Outgoing.Events.Event.Sent.New</string> </value>
+            <value> <string>user-Tickets.Beta.Developer.Program.New</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>ta.svg</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The screenshot of the sent Event sheet.</string> </value>
+            <value> <string>Example of an Ticket the Beta Developer Program which shows the relation between an Event and a Ticket in ERP5 CRM system.</string> </value>
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>user-Howto.Send.Outgoing.Events.Event.Sent.New-001-en.png</string> </value>
+            <value> <string>user-Tickets.Example.Beta.Developer.Program.svg</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>969</int> </value>
+            <value> <int>-1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>user_howto_send_outgoing_events_event_sent_new</string> </value>
+            <value> <string>user_tickets_beta_developer_program_new</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -137,24 +140,25 @@
             <key> <string>subject</string> </key>
             <value>
               <tuple>
-                <string>send event</string>
-                <string>event sheet</string>
-                <string>state</string>
-                <string>sent</string>
+                <string>ticket</string>
+                <string>example</string>
+                <string>beta</string>
+                <string>developer</string>
+                <string>program</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Your Event has been sent</string> </value>
+            <value> <string>Tickets: Beta Developer Program</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>007</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>1396</int> </value>
+            <value> <int>-1</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -232,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>boxiang.sun</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -254,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1609266424.87</float>
+                              <float>1621612985.66</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -303,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.58623.38650.580</string> </value>
+                      <value> <string>992.13837.16158.56422</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -321,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1621609228.51</float>
+                              <float>1621612974.06</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

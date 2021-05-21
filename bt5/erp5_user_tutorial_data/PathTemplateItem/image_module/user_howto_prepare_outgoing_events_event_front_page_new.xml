@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>40df5ae382160057532f56c625392d23</string> </value>
+            <value> <string>889185db908948d09e71089d29a79196</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>erp5_campaign_13-3.png</string> </value>
+            <value> <string>user-Howto.Prepare.Outgoing.Events.Event.Front.Page.New-001-en.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -302,7 +302,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.56282.48769.7731</string> </value>
+                      <value> <string>991.58603.31449.43707</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -320,7 +320,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1620363568.77</float>
+                              <float>1621609193.39</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
