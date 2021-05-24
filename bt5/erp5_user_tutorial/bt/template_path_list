@@ -1,3 +1,5 @@
+portal_tests/osoe_rjs_zuite
+portal_tests/osoe_rjs_zuite/**
 test_page_module/developer-Test.Page.Sample
 test_page_module/user-HowTo.Change.Language-TESTONLY
 test_page_module/user-HowTo.Use.FullText.Search-TESTONLY
@@ -23,3 +25,6 @@ test_page_module/user-Howto.Manage.Packing.Lists/**
 test_page_module/user-Howto.Manage.Support.Request.007.en
 test_page_module/user-Howto.Manage.Support.Request.007.en/**
 test_page_module/user-Howto.Post.Outgoing.Events
+web_page_module/osoe_rjs_*
+web_site_module/osoe_runner
+web_site_module/osoe_runner/**
