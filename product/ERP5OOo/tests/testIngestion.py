@@ -31,7 +31,10 @@
 
 import unittest
 import os
+import StringIO
+from cgi import FieldStorage
 from lxml import etree
+from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
@@ -41,6 +44,7 @@ from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
+import ZPublisher.HTTPRequest
 from unittest import expectedFailure
 import urllib
 import urllib2
@@ -63,21 +67,8 @@ def makeFileUpload(name, as_name=None):
   path = makeFilePath(name)
   return FileUpload(path, as_name)
 
-class TestIngestion(ERP5TypeTestCase):
-  """
-    ERP5 Document Management System - test file ingestion mechanism
-  """
 
-  ##################################
-  ##  ZopeTestCase Skeleton
-  ##################################
-
-  def getTitle(self):
-    """
-      Return the title of the current test set.
-    """
-    return "ERP5 DMS - Ingestion"
-
+class IngestionTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
       Return the list of required business templates.
@@ -85,19 +76,6 @@ class TestIngestion(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy', 'erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_crm', 'erp5_dms')
-
-  def afterSetUp(self):
-    """
-      Initialize the ERP5 site.
-    """
-    self.login()
-    self.datetime = DateTime()
-    self.portal = self.getPortal()
-    self.portal_categories = self.getCategoryTool()
-    self.portal_catalog = self.getCatalogTool()
-    self.createDefaultCategoryList()
-    self.setSystemPreference()
-    self.setSimulatedNotificationScript()
 
   def beforeTearDown(self):
     # cleanup modules
@@ -124,6 +102,7 @@ class TestIngestion(ERP5TypeTestCase):
                       'Document_getPropertyDictFromFilename',
                       'Document_getPropertyDictFromUserLogin',
                       'Document_finishIngestion',
+                      'PDF_finishIngestion',
                       'Document_getPreferredDocumentMetadataDiscoveryOrderList',
                       'Text_getPropertyDictFromContent',
                       'Text_getPropertyDictFromInput',
@@ -136,6 +115,28 @@ class TestIngestion(ERP5TypeTestCase):
       if script_id in skin_tool.custom.objectIds():
         skin_tool.custom._delObject(script_id)
     self.commit()
+
+
+class TestIngestion(IngestionTestCase):
+  """
+    ERP5 Document Management System - test file ingestion mechanism
+  """
+
+  ##################################
+  ##  ZopeTestCase Skeleton
+  ##################################
+  def afterSetUp(self):
+    """
+      Initialize the ERP5 site.
+    """
+    self.login()
+    self.datetime = DateTime()
+    self.portal = self.getPortal()
+    self.portal_categories = self.getCategoryTool()
+    self.portal_catalog = self.getCatalogTool()
+    self.createDefaultCategoryList()
+    self.setSystemPreference()
+    self.setSimulatedNotificationScript()
 
   def setSystemPreference(self):
     default_pref = self.getDefaultSystemPreference()
@@ -2024,7 +2025,178 @@ return result
     self.assertTrue(document is not None)
     self.assertEqual(document.getData(), data)
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestIngestion))
-  return suite
+
+class Base_contributeMixin:
+  """Tests for Base_contribute script.
+  """
+  def test_Base_contribute(self):
+    """
+      Test contributing a file and attaching it to context.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     portal_type=None,
+                                     title=None,
+                                     reference=None,
+                                     short_title=None,
+                                     language=None,
+                                     version=None,
+                                     description=None,
+                                     attach_document_to_context=True,
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.assertEqual('Text', contributed_document.getPortalType())
+    self.tic()
+    document_list = person.getFollowUpRelatedValueList()
+    self.assertEqual(1, len(document_list))
+    document = document_list[0]
+    self.assertEqual('converted', document.getExternalProcessingState())
+    self.assertEqual('Text', document.getPortalType())
+    self.assertEqual('title', document.getTitle())
+    self.assertEqual(contributed_document, document)
+
+  def test_Base_contribute_empty(self):
+    """
+      Test contributing an empty file and attaching it to context.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
+                            fp=StringIO.StringIO(),
+                            environ=dict(REQUEST_METHOD='PUT'),
+                            headers={"content-disposition":
+                              "attachment; filename=empty;"}))
+
+    contributed_document = person.Base_contribute(
+                                    portal_type=None,
+                                    title=None,
+                                    reference=None,
+                                    short_title=None,
+                                    language=None,
+                                    version=None,
+                                    description=None,
+                                    attach_document_to_context=True,
+                                    file=empty_file_upload)
+    self.tic()
+    document_list = person.getFollowUpRelatedValueList()
+    self.assertEqual(1, len(document_list))
+    document = document_list[0]
+    self.assertEqual('File', document.getPortalType())
+    self.assertEqual(contributed_document, document)
+
+  def test_Base_contribute_forced_type(self):
+    """Test contributing while forcing the portal type.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     portal_type='PDF',
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.assertEqual('PDF', contributed_document.getPortalType())
+
+  def test_Base_contribute_input_parameter_dict(self):
+    """Test contributing while entering input parameters.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     title='user supplied title',
+                                     file=makeFileUpload('TEST-en-002.pdf'))
+    self.tic()
+    self.assertEqual('user supplied title', contributed_document.getTitle())
+
+  def test_Base_contribute_publication_state(self):
+    """Test contributing and choosing the publication state
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+          publication_state=None,
+          # we use as_name, to prevent regular expression from detecting a
+          # reference during ingestion, so that we can upload multiple documents
+          # in one test.
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'draft')
+    contributed_document.setReference(None)
+    self.tic()
+
+    contributed_document = person.Base_contribute(
+          publication_state='shared',
+          synchronous_metadata_discovery=False,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'shared')
+    contributed_document.setReference(None)
+    self.tic()
+
+    contributed_document = person.Base_contribute(
+          publication_state='shared',
+          synchronous_metadata_discovery=True,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'shared')
+    contributed_document.setReference(None)
+    self.tic()
+
+    contributed_document = person.Base_contribute(
+          publication_state='released',
+          synchronous_metadata_discovery=False,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'released')
+    contributed_document.setReference(None)
+    self.tic()
+
+    contributed_document = person.Base_contribute(
+          publication_state='released',
+          synchronous_metadata_discovery=True,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'released')
+
+  def test_Base_contribute_publication_state_vs_finishIngestion_script(self):
+    """Contribute dialog allow choosing a publication state, but there's
+    also a "finishIngestion" type based script that can be configured to
+    force change the state. If user selects a publication_state, the state is
+    changed before the finishIngestion can operate.
+    """
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        'PDF_finishIngestion',
+        '',
+        'if context.getValidationState() == "draft":\n'
+        '  context.publish()')
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+          publication_state='shared',
+          synchronous_metadata_discovery=True,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'shared')
+    contributed_document.setReference(None)
+    self.tic()
+
+    contributed_document = person.Base_contribute(
+          publication_state='shared',
+          synchronous_metadata_discovery=False,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'shared')
+    contributed_document.setReference(None)
+
+    contributed_document = person.Base_contribute(
+          publication_state=None,
+          file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'published')
+
+
+class TestBase_contribute(IngestionTestCase, Base_contributeMixin):
+  """Base_contribute tests as Manager (ie. without security restrictions)
+  """
+
+
+class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
+  """Base_contribute tests with security.
+  """
+  def login(self, *args, **kw):
+    uf = self.portal.acl_users
+    uf._doAddUser(self.id(), self.newPassword(), ['Associate', 'Assignor', 'Author'], [])
+    user = uf.getUserById(self.id()).__of__(uf)
+    newSecurityManager(None, user)
