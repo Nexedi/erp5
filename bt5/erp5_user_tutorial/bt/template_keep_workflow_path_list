@@ -23,3 +23,5 @@ test_page_module/user-Howto.Manage.Packing.Lists/**
 test_page_module/user-Howto.Manage.Support.Request.007.en
 test_page_module/user-Howto.Manage.Support.Request.007.en/**
 test_page_module/user-Howto.Post.Outgoing.Events
+web_page_module/osoe_rjs_*
+web_site_module/osoe_runner
