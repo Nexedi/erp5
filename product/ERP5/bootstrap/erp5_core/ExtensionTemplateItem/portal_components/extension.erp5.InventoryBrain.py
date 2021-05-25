@@ -41,7 +41,10 @@ class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
   # ComputedAttribute compatibility for __getitem__
   # pylint: disable=E0102
   def __getitem__(self, name):
-    item = self.__super__getitem__(name)
+    try:
+      item = self.__super__getitem__(name)
+    except KeyError:
+      item = self.__getattribute__(name)
     if isinstance(item, ComputedAttribute):
       return item.__of__(self)
     return item
