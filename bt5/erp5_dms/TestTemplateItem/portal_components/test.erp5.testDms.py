@@ -1251,16 +1251,51 @@ class TestDocument(TestDocumentMixin):
     self.assert_('I use reference to look up TEST' in
                  document.SearchableText())
 
-  def test_PDFToImage(self):
+  def test_PDFToPng(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
-    _, image_data = document.convert(format='png',
+    mime, image_data = document.convert(format='png',
                                      frame=0,
                                      display='thumbnail')
+    self.assertEqual(mime, 'image/png')
     # it's a valid PNG
-    self.assertEqual('PNG', image_data[1:4])
+    self.assertEqual(image_data[1:4], 'PNG')
+
+  def test_PDFToJpg(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    mime, image_data = document.convert(format='jpg',
+                                     frame=0,
+                                     display='thumbnail')
+    self.assertEqual(mime, 'image/jpeg')
+    self.assertEqual(image_data[6:10], 'JFIF')
+
+  def test_PDFToGif(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    mime, image_data = document.convert(format='gif',
+                                     frame=0,
+                                     display='thumbnail')
+    self.assertEqual(mime, 'image/gif')
+    self.assertEqual(image_data[0:4], 'GIF8')
+
+  def test_PDFToTiff(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    mime, image_data = document.convert(format='tiff',
+                                     frame=0,
+                                     display='thumbnail')
+    self.assertEqual(mime, 'image/tiff')
+    self.assertIn(image_data[0:2], ('II', 'MM'))
+
 
   def test_PDF_content_information(self):
     upload_file = makeFileUpload('REF-en-001.pdf')

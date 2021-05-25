@@ -430,7 +430,7 @@ class Image(TextConvertableMixin, File, OFSImage):
       quality = self.getDefaultImageQuality(format)
     width, height = image_size  # pylint: disable=unpacking-non-sequence
     base, ext = splitext(self.id)
-    id_ = '%s_%s_%s.%s'% (base, width, height, ext,)
+    id_ = '%s_%s_%s.%s'% (base, width, height, format or ext,)
     image = OFSImage(id_, self.getTitle(),
                      self._getDisplayData(format, quality, resolution,
                                                             frame, image_size,
