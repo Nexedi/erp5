@@ -188,14 +188,14 @@ class PDFDocument(Image):
       content_information = self.getContentInformation()
       page_count = int(content_information.get('Pages', 0))
       for page_number in range(page_count):
-        src_mimetype, tiff_data = self._convert(
-            'tiff', quality=100, resolution=300,
+        src_mimetype, png_data = self._convert(
+            'png', quality=100, resolution=300,
             frame=page_number, display='identical')
-        if not src_mimetype.endswith('tiff'):
+        if not src_mimetype.endswith('png'):
           continue
-        content = str(tiff_data)
+        content = str(png_data)
         if content is not None:
-          filename = self.getStandardFilename(format='tiff')
+          filename = self.getStandardFilename(format='png')
           result = portal_transforms.convertToData(mime_type, content,
                                                    context=self,
                                                    filename=filename,
