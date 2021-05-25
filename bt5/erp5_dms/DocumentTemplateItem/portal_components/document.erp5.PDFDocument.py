@@ -173,13 +173,34 @@ class PDFDocument(Image):
     mime_type = 'text/plain'
     portal_transforms = self.getPortalObject().portal_transforms
     filename = self.getFilename()
-    result = portal_transforms.convertToData(mime_type, str(self.getData()),
+    data = str(self.getData())
+    result = portal_transforms.convertToData(mime_type, data,
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
     if result:
       return result
     else:
-      # Try to use OCR
+      # Try to use OCR from ghostscript
+      command = ['gs', '-q', '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-dNOPROMPT', '-sDEVICE=ocr', '-r300x300', '-o', '-', '-f', '-']
+      try:
+        process = Popen(
+            command,
+            stdin=PIPE,
+            stdout=PIPE,
+            stderr=PIPE,
+            close_fds=True)
+        output = process.communicate(data)[0]
+        if process.returncode:
+          raise ConversionError("Error invoking gs:" + output)
+        return output.strip()
+      except OSError, e:
+        if e.errno != errno.ENOENT:
+          raise
+      finally:
+        del process
+
+      # We don't have ghostscript, fallback to an expensive pipeline using:
+      #   pdf -- (Image._convert) --> png -- (PortalTransforms' png_to_tiff) --> tiff -- (PortalTransforms' tiff_to_text) --> text.
       # As high dpi images are required, it may take some times to convert the
       # pdf.
       # It may be required to use activities to fill the cache and at the end,

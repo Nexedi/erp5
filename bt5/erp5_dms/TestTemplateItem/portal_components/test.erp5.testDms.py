@@ -2120,7 +2120,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
   def test_PDFDocument_asTextConversion(self):
     """Test a PDF document with embedded images
-    To force usage of Ocropus portal_transform chain
+    To force usage of ghostscript with embedded tesseract OCR device
     """
     portal_type = 'PDF'
     module = self.portal.getDefaultModule(portal_type)
