@@ -120,9 +120,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         folder.manage_delObjects(list(folder.objectIds()))
       except BadRequest:
         pass
-    self.portal.portal_skins.custom.manage_delObjects(
-      list(self.portal.portal_skins.custom.objectIds()))
-
+    try:
+      self.portal.portal_skins.custom.manage_delObjects(
+        list(self.portal.portal_skins.custom.objectIds()))
+    except BadRequest:
+      pass
     self.tic()
 
   def createCategory(self, parent, id_list):
