@@ -54,6 +54,7 @@ from erp5.component.test.testOrder import TestOrderMixin
 from Products.ERP5Form.Selection import DomainSelection
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from textwrap import dedent
+from zExceptions import BadRequest
 
 class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   """
@@ -115,7 +116,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     for module in [ 'portal_simulation',
                     'inventory_module']:
       folder = self.portal[module]
-      folder.manage_delObjects(list(folder.objectIds()))
+      try:
+        folder.manage_delObjects(list(folder.objectIds()))
+      except BadRequest:
+        pass
     self.portal.portal_skins.custom.manage_delObjects(
       list(self.portal.portal_skins.custom.objectIds()))
 
