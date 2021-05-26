@@ -1,5 +1,6 @@
 """Preview the response from notification message for ticket create response dialog.
 """
+keep_items = None
 if notification_message:
   temp_event = context.getPortalObject().event_module.newContent(
     temp_object=True,
@@ -27,19 +28,12 @@ if notification_message:
   if original_title and original_title not in title:
     title = '%s (%s)' % (title, original_title)
 
-  # XXX this relies on formulator internals, we force the variables in request and
-  # re-render the form.
-  request = container.REQUEST
-  request.form['your_notification_message'] = ''
-  request.form['your_title'] = temp_event.getTitle()
-  request.form['your_text_content'] = temp_event.getTextContent()
-  request.form['your_content_type'] = temp_event.getContentType()
-  request.form['your_resource'] = temp_event.getResource()
-  # BBB for legacy UI
-  request.set('your_notification_message', '')
-  request.set('your_title', temp_event.getTitle())
-  request.set('your_text_content', temp_event.getTextContent())
-  request.set('your_content_type', temp_event.getContentType())
-  request.set('your_resource', temp_event.getResource())
+  keep_items = {
+    'your_notification_message': '',
+    'your_title': temp_event.getTitle(),
+    'your_text_content': temp_event.getTextContent(),
+    'your_content_type': temp_event.getContentType(),
+    'your_resource': temp_event.getResource()
+  }
 
-return context.Base_renderForm(dialog_id)
+return context.Base_renderForm(dialog_id, keep_items=keep_items)

@@ -471,6 +471,10 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
+                          <string>quantity_unit_translated_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
                           <string>price</string>
                           <string>Price</string>
                         </tuple>

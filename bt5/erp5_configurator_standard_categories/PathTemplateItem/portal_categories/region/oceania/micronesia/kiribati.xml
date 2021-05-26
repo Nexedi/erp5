@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KIR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KI</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>kiribati</string> </value>
         </item>

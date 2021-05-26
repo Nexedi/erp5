@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MOZ</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MZ</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>mozambique</string> </value>
         </item>

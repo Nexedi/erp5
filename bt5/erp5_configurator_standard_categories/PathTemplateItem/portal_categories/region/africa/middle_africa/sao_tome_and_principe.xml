@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>STP</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ST</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>sao_tome_and_principe</string> </value>
         </item>

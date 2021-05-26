@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>JAM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>JM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>jamaica</string> </value>
         </item>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>TON</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>TO</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>tonga</string> </value>
         </item>

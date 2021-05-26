@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>AIA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AI</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>anguilla</string> </value>
         </item>

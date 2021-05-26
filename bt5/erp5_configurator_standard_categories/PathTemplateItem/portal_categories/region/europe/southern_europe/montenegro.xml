@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MNE</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ME</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>montenegro</string> </value>
         </item>

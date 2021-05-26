@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ZMB</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ZM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>zambia</string> </value>
         </item>

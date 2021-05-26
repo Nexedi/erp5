@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>IRN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>IR</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>iran</string> </value>
         </item>

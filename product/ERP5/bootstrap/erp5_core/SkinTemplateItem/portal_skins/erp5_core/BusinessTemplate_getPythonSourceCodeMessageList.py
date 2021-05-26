@@ -61,7 +61,7 @@ def checkPythonScript(script_instance, script_path):
       Message(
         location="{script_path}:{row}:{column}".format(**annotation),
         message=annotation['text'],
-        edit_url="{script_path}/manage_main?line={row}".format(**annotation),))
+        edit_url="{script_path}/manage_workspace?line={row}".format(**annotation),))
 
 def checkComponent(component_instance):
   """Check a component, adding messages to global `line_list`
@@ -93,9 +93,11 @@ for workflow_id in context.getTemplateWorkflowIdList():
 
 for script_container in script_container_list:
   for script_path, script_instance in portal.ZopeFind(
-      script_container,
-      obj_metatypes=['Script (Python)'],
-      search_sub=1):
+      script_container, obj_metatypes=[
+          'Script (Python)',
+          'ERP5 Python Script',
+          'ERP5 Workflow Script',
+      ], search_sub=1):
     checkPythonScript(script_instance, "%s/%s" % (
       portal.portal_url.getRelativeUrl(script_container), script_path))
 

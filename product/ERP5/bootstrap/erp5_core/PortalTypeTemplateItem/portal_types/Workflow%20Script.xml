@@ -8,9 +8,7 @@
       <dictionary>
         <item>
             <key> <string>content_icon</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>/misc_/PythonScripts/pyscript.gif</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

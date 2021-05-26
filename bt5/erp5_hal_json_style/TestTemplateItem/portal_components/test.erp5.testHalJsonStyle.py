@@ -16,6 +16,7 @@ import json
 import re
 import urllib
 
+import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
@@ -612,12 +613,12 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['href'],
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['title'], "Queries")
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['name'], "jump_query")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['title'], "Queries")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['name'], "jump_query")
 
     self.assertEqual(result_dict['_links']['portal']['href'], 'urn:jio:get:%s' % document.getPortalObject().getId())
     self.assertEqual(result_dict['_links']['portal']['name'], document.getPortalObject().getTitle())
@@ -707,6 +708,19 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
                                                                                      self.portal.absolute_url(),
                                                                                      document.getRelativeUrl()))
     self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['method'], 'POST')
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_non_existing_action(self):
+    document = self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="not_existing_action")
+    self.assertEquals(fake_request.RESPONSE.status, 404)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), None)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -972,12 +986,12 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['href'],
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=jump_query" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['title'], "Queries")
-    self.assertEqual(result_dict['_links']['action_object_jio_jump'][0]['name'], "jump_query")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['title'], "Queries")
+    self.assertEqual(result_dict['_links']['action_object_jio_jump']['name'], "jump_query")
 
     self.assertEqual(result_dict['_links']['portal']['href'], 'urn:jio:get:%s' % document.getPortalObject().getId())
     self.assertEqual(result_dict['_links']['portal']['name'], document.getPortalObject().getTitle())
@@ -1412,6 +1426,34 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:%s" % relative_url)
     # No count if not in the listbox context currently
     self.assertEqual(result_dict['_embedded'].get('count', None), None)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_select_list_avoid_accessor(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query="id:=hateoas AND uid:=%s" % self.portal.web_site_module.hateoas.getUid(),
+      select_list=["count(validation_state)",
+                   "getTranslatedValidationStateTitle",],
+      group_by="validation_state"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_select_list'],
+      ["count(validation_state)", "getTranslatedValidationStateTitle"])
+
+    self.assertEqual(result_dict['_embedded']['contents'][0]["getTranslatedValidationStateTitle"], "Published")
+    self.assertEqual(result_dict['_embedded']['contents'][0]["count(validation_state)"], 1)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -2858,6 +2900,33 @@ return msg"
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasWorklist_portal_workflow_worklist_translation(self, document):
+    # Non regression test that traversing portal_workflow does not translate
+    # worklists with the actual count of document
+    fake_request = do_fake_request("GET")
+
+    default_gettext = self.portal.Localizer.erp5_ui.gettext
+    def gettext(message, **kw):
+      return default_gettext(message, **kw)
+
+    with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext) as gettext_mock:
+      self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+        REQUEST=fake_request,
+        mode='traverse',
+        relative_url='portal_workflow'
+      )
+    self.assertEqual(
+        [x[1][0] for x in gettext_mock.mock_calls if x[1][0].startswith('Draft To Validate')],
+        ['Draft To Validate'])
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BTN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BT</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>bhutan</string> </value>
         </item>

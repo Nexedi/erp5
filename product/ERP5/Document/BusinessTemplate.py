@@ -530,12 +530,10 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     remove_dict = kw.get('remove_object_dict', {})
     keys = self._objects.keys()
-    keys.sort()
-    keys.reverse()
     # if you choose remove, the object and all its subobjects will be removed
     # even if you choose backup or keep for subobjects
     # it is same behaviour for backup_and_remove, all we be save
-    for path in keys:
+    for path in sorted(keys):
       if remove_dict.has_key(path):
         action = remove_dict[path]
         if action == 'save_and_remove':

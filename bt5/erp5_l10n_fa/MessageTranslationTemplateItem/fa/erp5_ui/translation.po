@@ -1,5 +1,6 @@
 msgid ""
-msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+msgstr ""
+"Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2017-10-06 03:10+UTC\n"
 "PO-Revision-Date: 2017-10-06 03:10+UTC\n"
 "Last-Translator:  <>\n"
@@ -7,7 +8,6 @@ msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 
 msgid "${count} documents created successfully."
 msgstr "${count} مدرک با موفقیت ایجاد شد."
@@ -84,9 +84,6 @@ msgstr "${ungrouped_line_count} خط مجزا گردیدند."
 msgid "${year} years old"
 msgstr "${year} سال"
 
-msgid "&nbsp;"
-msgstr ""
-
 msgid "- ${number} item(s) selected"
 msgstr "${number} قلم انتخاب شد"
 
@@ -150,8 +147,13 @@ msgstr "یک درخواست در مورد ${portal_type} جاری با شمار�
 msgid "A URL allows to represent in a standard way coordinates such as web sites, emails, ftp sites, etc."
 msgstr "یک URL مسیر رسیدن به یک وب سایت، ایمیل, ftp و نظایر آن را در خود دارد."
 
-msgid "A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account. It is owned by a Person or an Organisation. A Bank Account contains Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.\n\nBankAccount inherits from Base and from the mix-in Coordinate."
-msgstr "یک حساب بانکی شامل شماره ها و کد هایی می شود (برای مثال SWIFT, RIB\nو غیره) که از آنها می توان برای شناسایی یک حساب بانکی استفاده کرد. حساب بانکی میتواند متعلق به یک شخص یا سازمان باشد. یک حساب بانکی دارای نماینده با اختیارات داده شده توسط صاحب حساب است تا به این وسیله مدیریت حساب بانک را به شخص ثالث قابل اعتماد واگذار نماید. حساب بانک از \"پایه\" و مختصات متفاوت تاثیر می پزیرد."
+msgid ""
+"A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account. It is owned by a Person or an Organisation. A Bank Account contains Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.\n"
+"\n"
+"BankAccount inherits from Base and from the mix-in Coordinate."
+msgstr ""
+"یک حساب بانکی شامل شماره ها و کد هایی می شود (برای مثال SWIFT, RIB\n"
+"و غیره) که از آنها می توان برای شناسایی یک حساب بانکی استفاده کرد. حساب بانکی میتواند متعلق به یک شخص یا سازمان باشد. یک حساب بانکی دارای نماینده با اختیارات داده شده توسط صاحب حساب است تا به این وسیله مدیریت حساب بانک را به شخص ثالث قابل اعتماد واگذار نماید. حساب بانک از \"پایه\" و مختصات متفاوت تاثیر می پزیرد."
 
 msgid "A chat address is an identifier in an Instant Messaging service."
 msgstr "یک آدرس گفتگو, شناسه ای است از یک خدمت پیامهای فوری."
@@ -174,150 +176,6 @@ msgstr "پرونده به معنی عام کلمه"
 msgid "A geographic address holds the geographic address of a person or company."
 msgstr "یک آدرس جغرافیایی, آدرس موقعیت جغرافیایی شخص یا شرکت است."
 
-msgid "A list of ERP5Types for which we want to add the roles in the template"
-msgstr ""
-
-msgid "A list of Tool ids used by this template"
-msgstr ""
-
-msgid "A list of allowed content types for portal types"
-msgstr ""
-
-msgid "A list of base categories for portal types"
-msgstr ""
-
-msgid "A list of changes done on the document"
-msgstr ""
-
-msgid "A list of copyright holders"
-msgstr ""
-
-msgid "A list of hidden content types for portal types"
-msgstr ""
-
-msgid "A list of ids of actions used by this template"
-msgstr ""
-
-msgid "A list of ids of base categories used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog DateTime keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog full text keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog keyword keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog local role keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog methods used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog multivalue keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog related keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog request keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog result keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog result tables used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog role keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog scriptable keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog search keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog topic keys used by this template"
-msgstr ""
-
-msgid "A list of ids of constraints used by this template"
-msgstr ""
-
-msgid "A list of ids of documents used by this template"
-msgstr ""
-
-msgid "A list of ids of extensions used by this template"
-msgstr ""
-
-msgid "A list of ids of modules used by this template"
-msgstr ""
-
-msgid "A list of ids of portal types used by this template"
-msgstr ""
-
-msgid "A list of ids of products used by this template"
-msgstr ""
-
-msgid "A list of ids of property sheets used by this template"
-msgstr ""
-
-msgid "A list of ids of roles used by this template"
-msgstr ""
-
-msgid "A list of ids of site properties used by this template"
-msgstr ""
-
-msgid "A list of ids of skins used by this template"
-msgstr ""
-
-msgid "A list of ids of tests used by this template"
-msgstr ""
-
-msgid "A list of ids of workflows used by this template"
-msgstr ""
-
-msgid "A list of local roles used by this template"
-msgstr ""
-
-msgid "A list of maintainers"
-msgstr ""
-
-msgid "A list of message translations used by this template"
-msgstr ""
-
-msgid "A list of object paths that should be kept in installing this template"
-msgstr ""
-
-msgid "A list of object paths used by this template"
-msgstr ""
-
-msgid "A list of object paths where only the last workflow history will be kept"
-msgstr ""
-
-msgid "A list of object paths whose workflow history should be kept in installing this template"
-msgstr ""
-
-msgid "A list of preferences used by this template"
-msgstr ""
-
-msgid "A list of property sheet for portal types"
-msgstr ""
-
-msgid "A list of registered skin selections used by this template"
-msgstr ""
-
-msgid "A list of registered version priority used by this template"
-msgstr ""
-
-msgid "A list of workflow chains of portal types used by this template"
-msgstr ""
-
-msgid "A shortened hash of the contents of the Business Template. The hash is computed at download, build and export."
-msgstr ""
-
 msgid "A step in the career of a person."
 msgstr "یک مرحله از حرفه یک شخص."
 
@@ -330,35 +188,14 @@ msgstr "پذیرش پیشنهاد"
 msgid "Accept Offer Action"
 msgstr "عمل پذیرش پیشنهاد"
 
-msgid "Accept Offer Action [transition in open_order_workflow]"
-msgstr "عمل پذیرش پیشنهاد"
-
-msgid "Accept Offer Action [transition in order_workflow]"
-msgstr "عمل پذیرش پیشنهاد"
-
-msgid "Accept Offer [transition in open_order_workflow]"
-msgstr "پذیرش پیشنهاد"
-
-msgid "Accept Offer [transition in order_workflow]"
-msgstr "پذیرش پیشنهاد"
-
 msgid "Accept Translation"
 msgstr "پذیرش ترجمه"
 
 msgid "Accept Translation Action"
 msgstr "پذیرش عمل ترجمه"
 
-msgid "Accept Translation Action [transition in document_publication_workflow]"
-msgstr "پذیرش عمل ترجمه"
-
-msgid "Accept Translation [transition in document_publication_workflow]"
-msgstr "پذیرش ترجمه"
-
 msgid "Access ${portal_type} Details"
 msgstr "دسترسی به جزئیات ${portal_type}"
-
-msgid "Access Tab Front Page"
-msgstr ""
 
 msgid "Accessors"
 msgstr "Accessors"
@@ -369,32 +206,17 @@ msgstr "حساب"
 msgid "Account ${account_title} is not validated."
 msgstr "حساب ${account_title} تأئید نشده است."
 
-msgid "Account Configurator Item"
-msgstr ""
-
 msgid "Account Module"
 msgstr "ماژول حساب"
 
 msgid "Account Name"
 msgstr "نام حساب"
 
-msgid "Account Number Method"
-msgstr ""
-
-msgid "Account Reference"
-msgstr ""
-
 msgid "Account Statement"
 msgstr "صورت حساب"
 
 msgid "Account Type"
 msgstr "نوع حساب"
-
-msgid "Account Type Constraint"
-msgstr ""
-
-msgid "Account Type Constraint Line"
-msgstr ""
 
 msgid "Account Workflow"
 msgstr "گردش کار حساب"
@@ -408,9 +230,6 @@ msgstr "حساب عضوی از ${category} است، باید نوع حساب د�
 msgid "Accounting"
 msgstr "حسابداری"
 
-msgid "Accounting Line Report"
-msgstr ""
-
 msgid "Accounting Lines"
 msgstr "خطوط حسابداری"
 
@@ -420,17 +239,8 @@ msgstr "تاریخ عملیات حسابداری"
 msgid "Accounting Period"
 msgstr "دوره حسابداری"
 
-msgid "Accounting Period Configurator Item"
-msgstr ""
-
 msgid "Accounting Period Workflow"
 msgstr "گردش کار دوره حسابداری"
-
-msgid "Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions. To start using the system, you have to configure the first accounting period."
-msgstr ""
-
-msgid "Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions.<br/>To start using the system, you have to configure the first accounting period."
-msgstr ""
 
 msgid "Accounting Preference"
 msgstr "مرجع حسابداری"
@@ -447,9 +257,6 @@ msgstr "خط سلول قانون حسابداری"
 msgid "Accounting Transaction"
 msgstr "معامله حسابداری"
 
-msgid "Accounting Transaction Balance Constraint"
-msgstr ""
-
 msgid "Accounting Transaction Line"
 msgstr "خط معامله حسابداری"
 
@@ -461,9 +268,6 @@ msgstr "خطوط معامله حسابداری"
 
 msgid "Accounting Transaction Module"
 msgstr "ماژول معامله حسابداری"
-
-msgid "Accounting Transaction Root Simulation Rule"
-msgstr ""
 
 msgid "Accounting Transaction Title"
 msgstr "عنوان معامله حسابداری"
@@ -537,20 +341,8 @@ msgstr "اتفاق تصدیق"
 msgid "Acknowledge Event Action"
 msgstr "عمل اتفاق تصدیق"
 
-msgid "Acknowledge Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق تصدیق"
-
-msgid "Acknowledge Event [transition in event_workflow]"
-msgstr "اتفاق تصدیق"
-
 msgid "Acknowledge event"
 msgstr "اتفاق تصدیق"
-
-msgid "Acknowledge event [transition in event_workflow]"
-msgstr "اتفاق تصدیق"
-
-msgid "Acknowledgeable Messages"
-msgstr ""
 
 msgid "Acknowledged"
 msgstr "تصدیق شده"
@@ -564,35 +356,8 @@ msgstr "تصدیق"
 msgid "Acknowledgement Tool"
 msgstr "ابزار تصدیق"
 
-msgid "Acquire Local Roles"
-msgstr ""
-
-msgid "Acquired Property"
-msgstr ""
-
-msgid "Acquisition Accessor ID"
-msgstr ""
-
-msgid "Acquisition Base Category"
-msgstr ""
-
-msgid "Acquisition Copy Value"
-msgstr ""
-
-msgid "Acquisition Mask Value"
-msgstr ""
-
-msgid "Acquisition Object ID"
-msgstr ""
-
-msgid "Acquisition Portal Type"
-msgstr ""
-
 msgid "Action"
 msgstr "عمل"
-
-msgid "Action Information"
-msgstr ""
 
 msgid "Action..."
 msgstr "عمل ..."
@@ -600,23 +365,14 @@ msgstr "عمل ..."
 msgid "Action: (${task_count} total.)"
 msgstr "عمل: (${task_count} total.)"
 
-msgid "Actions"
-msgstr ""
-
 msgid "Active"
 msgstr "فعال"
 
 msgid "Active Preference"
 msgstr "ارجحیت فعال"
 
-msgid "Active Process"
-msgstr ""
-
 msgid "Active Processes"
 msgstr "پروسه فعال"
-
-msgid "Activities"
-msgstr ""
 
 msgid "Activity"
 msgstr "فعالیت"
@@ -624,14 +380,8 @@ msgstr "فعالیت"
 msgid "Activity Code"
 msgstr "کد فعالیت"
 
-msgid "Activity Kw"
-msgstr ""
-
 msgid "Activity Pending"
 msgstr "فعالیت معلق"
-
-msgid "Activity Tool"
-msgstr ""
 
 msgid "Actor"
 msgstr "عامل"
@@ -650,9 +400,6 @@ msgstr "مدرک به همراه نیازمندی ها را اضافه کنید"
 
 msgid "Add Gadgets"
 msgstr "افزودن ریزبرنامه"
-
-msgid "Add Permission"
-msgstr ""
 
 msgid "Add Requirements"
 msgstr "نیازمندی ها را اضافه کنید"
@@ -681,17 +428,8 @@ msgstr "آدرس"
 msgid "Advanced Document Search"
 msgstr "جستجوی پیشرفته مدرک"
 
-msgid "Advanced Purchase Trade Condition Configurator Item"
-msgstr ""
-
-msgid "Advanced Sale Trade Condition Configurator Item"
-msgstr ""
-
 msgid "Advanced Search"
 msgstr "جستجوی پیشرفته"
-
-msgid "Afghani"
-msgstr ""
 
 msgid "Aged Balance"
 msgstr "تراز قدیمی"
@@ -708,9 +446,6 @@ msgstr "نماینده ها"
 msgid "Alarm"
 msgstr "هشدار"
 
-msgid "Alarm Configurator Item"
-msgstr ""
-
 msgid "Alarm Report"
 msgstr "گزارش هشدار"
 
@@ -722,9 +457,6 @@ msgstr "تصحیح هشدار شروع شد."
 
 msgid "Alarms"
 msgstr "هشدارها"
-
-msgid "Algerian Dinar"
-msgstr ""
 
 msgid "All"
 msgstr ")تمامی - کلیه (همه"
@@ -738,17 +470,8 @@ msgstr "کلیه مدارک"
 msgid "All Related Documents"
 msgstr "کلیه مدارک مرتبط"
 
-msgid "Allowed Content Types"
-msgstr ""
-
 msgid "Also in:"
 msgstr "همچنین در:"
-
-msgid "Alt Accessor ID"
-msgstr ""
-
-msgid "Alternative accessor ids"
-msgstr ""
 
 msgid "Amortisation"
 msgstr "استهلاک"
@@ -783,9 +506,6 @@ msgstr "ادرس ایمیل ، صندوقی را که پیام ها به ان ا
 msgid "An email has been sent to you."
 msgstr "یک ایمیل برای شما ارسال شد."
 
-msgid "An error was encountered while publishing this resource."
-msgstr ""
-
 msgid "An inventory line can be found in inventory documents, and bears the available stock of a certain product reference. There will be one inventory line for each product reference of the inventory."
 msgstr "خط انبارگردانی را می توان در مدارک انبارگردانی یافت، و حاوی موجودی یک محصول مرجع خاص است. یک خط انبارگردانی برای هر محصول مرجع وجود خواهد داشت."
 
@@ -813,12 +533,6 @@ msgstr "به پرسش پاسخ دهید"
 msgid "Answer Query Action"
 msgstr "عمل پاسخ به پرسش"
 
-msgid "Answer Query Action [transition in query_workflow]"
-msgstr "عمل پاسخ به پرسش"
-
-msgid "Answer Query [transition in query_workflow]"
-msgstr "به پرسش پاسخ دهید"
-
 msgid "Answered"
 msgstr "پاسخ داده شد"
 
@@ -830,12 +544,6 @@ msgstr "هر مدرکی"
 
 msgid "Apparel Fabric Item Fast Input"
 msgstr "انتخاب سریع پارچه پوشش"
-
-msgid "Application Id Generator"
-msgstr ""
-
-msgid "Application preferences"
-msgstr ""
 
 msgid "Applied Rule"
 msgstr "قانون اعمال شده"
@@ -861,50 +569,20 @@ msgstr "بایگانی مدرک"
 msgid "Archive Document Action"
 msgstr "عمل بایگانی مدرک"
 
-msgid "Archive Document Action [transition in document_publication_workflow]"
-msgstr "عمل بایگانی مدرک"
-
-msgid "Archive Document [transition in document_publication_workflow]"
-msgstr "بایگانی مدرک"
-
-msgid "Archive [transition in document_publication_workflow]"
-msgstr "بایگانی"
-
 msgid "Archived"
 msgstr "بایگانی شده"
 
 msgid "Archived [state in document_publication_workflow]"
 msgstr "بایگانی شده"
 
-msgid "Archived [state in notification_message_workflow]"
-msgstr ""
-
-msgid "Argentine Peso"
-msgstr ""
-
 msgid "Arguments"
 msgstr "استدلال"
-
-msgid "Ariary"
-msgstr ""
-
-msgid "Aruban Guilder"
-msgstr ""
-
-msgid "Ascending Display"
-msgstr ""
 
 msgid "Ask Status to Assignee"
 msgstr "درخواست اعلام حالت از مأمور"
 
 msgid "Ask Status to Assignee Action"
 msgstr "عمل درخواست اعلام حالت از مأمور"
-
-msgid "Ask Status to Assignee Action [transition in task_report_workflow]"
-msgstr "عمل درخواست اعلام حالت از مأمور"
-
-msgid "Ask Status to Assignee [transition in task_report_workflow]"
-msgstr "درخواست اعلام حالت از مأمور"
 
 msgid "Assessment"
 msgstr "ارزیابی"
@@ -918,23 +596,11 @@ msgstr "تخصیص خطا"
 msgid "Assign Bug Action"
 msgstr "عمل تخصیص خطا"
 
-msgid "Assign Bug Action [transition in bug_workflow]"
-msgstr "عمل تخصیص خطا"
-
-msgid "Assign Bug [transition in bug_workflow]"
-msgstr "تخصیص خطا"
-
 msgid "Assign Document"
 msgstr "تخصیص مدرک"
 
 msgid "Assign Document Action"
 msgstr "عمل تخصیص مدرک"
-
-msgid "Assign Document Action [transition in document_ingestion_workflow]"
-msgstr "عمل تخصیص مدرک"
-
-msgid "Assign Document [transition in document_ingestion_workflow]"
-msgstr "تخصیص مدرک"
 
 msgid "Assign Event"
 msgstr "تخصیص حالت"
@@ -942,23 +608,11 @@ msgstr "تخصیص حالت"
 msgid "Assign Event Action"
 msgstr "عمل تخصیص حالت"
 
-msgid "Assign Event Action [transition in event_workflow]"
-msgstr "عمل تخصیص حالت"
-
-msgid "Assign Event [transition in event_workflow]"
-msgstr "تخصیص اتفاق"
-
 msgid "Assign Translation"
 msgstr "تخصیص ترجمه"
 
 msgid "Assign Translation Action"
 msgstr "عمل تخصیص ترجمه"
-
-msgid "Assign Translation Action [transition in document_publication_workflow]"
-msgstr "عمل تخصیص ترجمه"
-
-msgid "Assign Translation [transition in document_publication_workflow]"
-msgstr "تخصیص ترجمه"
 
 msgid "Assign to Ticket"
 msgstr "تخصیص بلیط"
@@ -1029,18 +683,6 @@ msgstr "مدرک ضمیمه کنید"
 msgid "Attachments"
 msgstr "ضمیمه ها"
 
-msgid "Attribute Blacklisted Constraint"
-msgstr ""
-
-msgid "Attribute Equality Constraint"
-msgstr ""
-
-msgid "Attribute Unicity Constraint"
-msgstr ""
-
-msgid "Australian Dollar"
-msgstr ""
-
 msgid "Author"
 msgstr "مؤلف"
 
@@ -1050,23 +692,11 @@ msgstr "مؤلف (ها) :"
 msgid "Auto Order Periodically"
 msgstr "سفارش خودکار دوره ای"
 
-msgid "Auto Order Periodically [transition in open_order_workflow]"
-msgstr "سفارش دوره ای خودکار"
-
 msgid "Auto Plan"
 msgstr "برنامه ریزی خودکار"
 
 msgid "Auto Plan Task"
 msgstr "تکلیف برنامه ریزی خودکار"
-
-msgid "Auto Plan Task [transition in task_workflow]"
-msgstr "تکلیف برنامه ریزی خودکار"
-
-msgid "Auto Plan [transition in open_order_workflow]"
-msgstr "برنامه ریزی خودکار"
-
-msgid "Auto Plan [transition in order_workflow]"
-msgstr "برنامه ریزی خودکار"
 
 msgid "Auto Planned"
 msgstr "برنامه ریزی شده خودکار"
@@ -1077,20 +707,11 @@ msgstr "سفارش برنامه ریزی شده به طور خودکار"
 msgid "Auto Planned Order [state in open_order_workflow]"
 msgstr "سفارش برنامه ریزی شده به طور خودکار"
 
-msgid "Auto Planned [state in accounting_workflow]"
-msgstr ""
-
-msgid "Auto Planned [state in internal_invoice_transaction_simulation_workflow]"
-msgstr ""
-
 msgid "Auto Planned [state in order_workflow]"
 msgstr "برنامه ریزی شده خودکار"
 
 msgid "Auto Planned [state in task_workflow]"
 msgstr "برنامه ریزی شده خودکار"
-
-msgid "Auto Select when Single Value"
-msgstr ""
 
 msgid "Automatically disabled when enabling ${preference_title}."
 msgstr "به طور خودکار از کار می افتد هنگامیکه ${preference_title} فعال می شود."
@@ -1101,26 +722,8 @@ msgstr "در دسترس"
 msgid "Available Budget"
 msgstr "بودجه در دسترس"
 
-msgid "Azerbaijani Manat"
-msgstr ""
-
-msgid "Backup And Remove"
-msgstr ""
-
-msgid "Backup And Upgrade"
-msgstr ""
-
 msgid "Bad login provided."
 msgstr "شناسه ورودی اشتباه ارائه شد."
-
-msgid "Bahamian Dollar"
-msgstr ""
-
-msgid "Bahraini Dinar"
-msgstr ""
-
-msgid "Baht"
-msgstr ""
 
 msgid "Balance"
 msgstr "تراز"
@@ -1134,9 +737,6 @@ msgstr "معامله تراز"
 msgid "Balance Transaction Line"
 msgstr "خط معامله تراز"
 
-msgid "Balboa"
-msgstr ""
-
 msgid "Bank Account"
 msgstr "حساب بانکی"
 
@@ -1146,32 +746,14 @@ msgstr "حساب بانکی ${bank_account_reference} معتبر نیست."
 msgid "Bank Account ${bank_account_reference} uses ${bank_account_currency} as default currency."
 msgstr "حساب بانکی ${bank_account_reference} از ${bank_account_currency} به عنوان واحد ارزی پیش فرض استفاده می کند."
 
-msgid "Bank Account Configurator Item"
-msgstr ""
-
-msgid "Bank Account Display Method"
-msgstr ""
-
-msgid "Bank Account Number"
-msgstr ""
-
-msgid "Bank Account Title"
-msgstr ""
-
 msgid "Bank Accounts"
 msgstr "حساب های بانکی"
-
-msgid "Barbados Dollar"
-msgstr ""
 
 msgid "Base"
 msgstr "پایه"
 
 msgid "Base Application"
 msgstr "برنامه کاربردی پایه"
-
-msgid "Base Categories"
-msgstr ""
 
 msgid "Base Category"
 msgstr "گروه پایه"
@@ -1185,29 +767,14 @@ msgstr "دامنه پایه"
 msgid "Base Price"
 msgstr "قیمت پایه"
 
-msgid "Base Type"
-msgstr ""
-
 msgid "Base Variant Movement Group"
 msgstr "گروه تحرک متغیر پایه"
-
-msgid "Basic Chinese Plan"
-msgstr ""
 
 msgid "Begin"
 msgstr "شروع"
 
 msgid "Begin Date"
 msgstr "تاریخ شروع"
-
-msgid "Belarusian Rouble"
-msgstr ""
-
-msgid "Belize Dollar"
-msgstr ""
-
-msgid "Bermuda Dollar"
-msgstr ""
 
 msgid "Bill of Materials and Operations"
 msgstr "صورت مواد و عملیات"
@@ -1224,26 +791,8 @@ msgstr "تاریخ تولد"
 msgid "Birthday"
 msgstr "روز تولد"
 
-msgid "Bolivar"
-msgstr ""
-
-msgid "Boliviano"
-msgstr ""
-
-msgid "Bosnian Convertible Mark"
-msgstr ""
-
-msgid "Boxes"
-msgstr ""
-
-msgid "Brazilian Real"
-msgstr ""
-
 msgid "Browse"
 msgstr "چرخیدن در اینترنت"
-
-msgid "Brunei Dollar"
-msgstr ""
 
 msgid "Budget Line"
 msgstr "خط بودجه"
@@ -1332,12 +881,6 @@ msgstr "ساخت الگوی تجاری"
 msgid "Build Business Template Action"
 msgstr "عمل ساخت الگوی تجاری"
 
-msgid "Build Business Template Action [transition in business_template_building_workflow]"
-msgstr "عمل ساخت الگوی تجاری"
-
-msgid "Build Business Template [transition in business_template_building_workflow]"
-msgstr "ساخت الگوی تجاری"
-
 msgid "Building"
 msgstr "در حال ساخت"
 
@@ -1350,23 +893,8 @@ msgstr "در حال ساخت"
 msgid "Built"
 msgstr "ساخت"
 
-msgid "Built [state in business_configuration_simulation_workflow]"
-msgstr ""
-
 msgid "Built [state in business_template_building_workflow]"
 msgstr "ساخت"
-
-msgid "Burundi Franc"
-msgstr ""
-
-msgid "Business Application"
-msgstr ""
-
-msgid "Business Configuration"
-msgstr ""
-
-msgid "Business Configuration Module"
-msgstr ""
 
 msgid "Business Configurations"
 msgstr "تنظیم های تجاری"
@@ -1374,20 +902,8 @@ msgstr "تنظیم های تجاری"
 msgid "Business Field"
 msgstr "فیلد تجاری"
 
-msgid "Business Link"
-msgstr ""
-
-msgid "Business Process"
-msgstr ""
-
-msgid "Business Process Configurator Item"
-msgstr ""
-
 msgid "Business Process Models"
 msgstr "مدل های پردازش تجاری"
-
-msgid "Business Process Module"
-msgstr ""
 
 msgid "Business Template"
 msgstr "الگوی تجاری"
@@ -1425,9 +941,6 @@ msgstr "C/State"
 msgid "CRM"
 msgstr "CRM"
 
-msgid "Cache Bag"
-msgstr ""
-
 msgid "Cache Duration"
 msgstr "دوره پر کردن کش"
 
@@ -1464,14 +977,8 @@ msgstr "محاسبه"
 msgid "Calculate Packing"
 msgstr "محاسبه بسته بندی"
 
-msgid "Calculate Packing [transition in packing_list_container_workflow]"
-msgstr "محاسبه بسته بندی"
-
 msgid "Calculate Pay Sheet"
 msgstr "محاسبه برگه پرداخت"
-
-msgid "Calculate [transition in delivery_causality_workflow]"
-msgstr "محاسبه"
 
 msgid "Calculating"
 msgstr "در حال محاسبه"
@@ -1497,9 +1004,6 @@ msgstr "حالت فعالیت تبلیغی"
 msgid "Campaigns"
 msgstr "فعالیت های تبلیغی"
 
-msgid "Canadian Dollar"
-msgstr ""
-
 msgid "Cancel"
 msgstr "ابطال"
 
@@ -1508,12 +1012,6 @@ msgstr "ابطال دوره حسابداری"
 
 msgid "Cancel Accounting Period Action"
 msgstr "عمل ابطال دوره حسابداری"
-
-msgid "Cancel Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل ابطال دوره حسابداری"
-
-msgid "Cancel Accounting Period [transition in accounting_period_workflow]"
-msgstr "ابطال دوره حسابداری"
 
 msgid "Cancel Action"
 msgstr "توقف عمل"
@@ -1524,23 +1022,11 @@ msgstr "ابطال مأموریت"
 msgid "Cancel Assignment Action"
 msgstr "عمل ابطال مأموریت"
 
-msgid "Cancel Assignment Action [transition in assignment_workflow]"
-msgstr "عمل ابطال مأموریت"
-
-msgid "Cancel Assignment [transition in assignment_workflow]"
-msgstr "ابطال مأموریت"
-
 msgid "Cancel Bug"
 msgstr "ابطال خطا"
 
 msgid "Cancel Bug Action"
 msgstr "عمل ابطال خطا"
-
-msgid "Cancel Bug Action [transition in bug_workflow]"
-msgstr "عمل ابطال خطا"
-
-msgid "Cancel Bug [transition in bug_workflow]"
-msgstr "ابطال خطا"
 
 msgid "Cancel Career Step"
 msgstr "مرحله ابطال شغلی"
@@ -1548,16 +1034,7 @@ msgstr "مرحله ابطال شغلی"
 msgid "Cancel Career Step Action"
 msgstr "عمل مرحله ابطال شغلی"
 
-msgid "Cancel Career Step Action [transition in career_workflow]"
-msgstr "عمل مرحله ابطال شغلی"
-
-msgid "Cancel Career Step [transition in career_workflow]"
-msgstr "مرحله ابطال شغلی"
-
 msgid "Cancel Carrer Step"
-msgstr "ابطال مرحله شغلی"
-
-msgid "Cancel Carrer Step [transition in career_workflow]"
 msgstr "ابطال مرحله شغلی"
 
 msgid "Cancel Document Publication"
@@ -1566,23 +1043,11 @@ msgstr "ابطال انتشار مدرک"
 msgid "Cancel Document Publication Action"
 msgstr "عمل ابطال انتشار مدرک"
 
-msgid "Cancel Document Publication Action [transition in document_publication_workflow]"
-msgstr "عمل ابطال انتشار مدرک"
-
-msgid "Cancel Document Publication [transition in document_publication_workflow]"
-msgstr "ابطال انتشار مدرک"
-
 msgid "Cancel Event"
 msgstr "ابطال اتفاق"
 
 msgid "Cancel Event Action"
 msgstr "عمل ابطال اتفاق"
-
-msgid "Cancel Event Action [transition in event_workflow]"
-msgstr "عمل ابطال اتفاق"
-
-msgid "Cancel Event [transition in event_workflow]"
-msgstr "ابطال اتفاق"
 
 msgid "Cancel Inventory"
 msgstr "ابطال انبارگردانی"
@@ -1590,29 +1055,11 @@ msgstr "ابطال انبارگردانی"
 msgid "Cancel Inventory Action"
 msgstr "عمل ابطال انبارگردانی"
 
-msgid "Cancel Inventory Action [transition in inventory_workflow]"
-msgstr "عمل ابطال انبارگردانی"
-
-msgid "Cancel Inventory [transition in inventory_workflow]"
-msgstr "ابطال انبارگردانی"
-
 msgid "Cancel Order"
 msgstr "ابطال سفارش"
 
 msgid "Cancel Order Action"
 msgstr "عمل ابطال سفارش"
-
-msgid "Cancel Order Action [transition in open_order_workflow]"
-msgstr "عمل ابطال سفارش"
-
-msgid "Cancel Order Action [transition in order_workflow]"
-msgstr "عمل ابطال سفارش"
-
-msgid "Cancel Order [transition in open_order_workflow]"
-msgstr "ابطال سفارش"
-
-msgid "Cancel Order [transition in order_workflow]"
-msgstr "ابطال سفارش"
 
 msgid "Cancel Packing List"
 msgstr "ابطال لیست بسته بندی"
@@ -1620,23 +1067,11 @@ msgstr "ابطال لیست بسته بندی"
 msgid "Cancel Packing List Action"
 msgstr "عمل ابطال لیست بسته بندی"
 
-msgid "Cancel Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل ابطال لیست بسته بندی"
-
-msgid "Cancel Packing List [transition in packing_list_workflow]"
-msgstr "ابطال لیست بسته بندی"
-
 msgid "Cancel Query"
 msgstr "ابطال درخواست"
 
 msgid "Cancel Query Action"
 msgstr "عمل ابطال درخواست"
-
-msgid "Cancel Query Action [transition in query_workflow]"
-msgstr "عمل ابطال درخواست"
-
-msgid "Cancel Query [transition in query_workflow]"
-msgstr "ابطال درخواست"
 
 msgid "Cancel Requirement"
 msgstr "ابطال نیازمندی"
@@ -1644,23 +1079,11 @@ msgstr "ابطال نیازمندی"
 msgid "Cancel Requirement Action"
 msgstr "عمل ابطال نیازمندی"
 
-msgid "Cancel Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل ابطال نیازمندی"
-
-msgid "Cancel Requirement [transition in requirement_analysis_workflow]"
-msgstr "ابطال نیازمندی"
-
 msgid "Cancel Sale Opportunity"
 msgstr "ابطال شانس فروش"
 
 msgid "Cancel Sale Opportunity Action"
 msgstr "عمل ابطال شانس فروش"
-
-msgid "Cancel Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل ابطال شانس فروش"
-
-msgid "Cancel Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "ابطال شانس فروش"
 
 msgid "Cancel Task"
 msgstr "ابطال وظیفه"
@@ -1668,44 +1091,17 @@ msgstr "ابطال وظیفه"
 msgid "Cancel Task Action"
 msgstr "عمل ابطال وظیفه"
 
-msgid "Cancel Task Action [transition in task_report_workflow]"
-msgstr "عمل ابطال وظیفه"
-
-msgid "Cancel Task Action [transition in task_workflow]"
-msgstr "عمل ابطال وظیفه"
-
-msgid "Cancel Task [transition in task_report_workflow]"
-msgstr "ابطال وظیفه"
-
-msgid "Cancel Task [transition in task_workflow]"
-msgstr "ابطال وظیفه"
-
 msgid "Cancel Ticket"
 msgstr "ابطال بلیط"
 
 msgid "Cancel Ticket Action"
 msgstr "عمل ابطال بلیط"
 
-msgid "Cancel Ticket Action [transition in ticket_workflow]"
-msgstr "عمل ابطال بلیط"
-
-msgid "Cancel Ticket [transition in ticket_workflow]"
-msgstr "ابطال بلیط"
-
 msgid "Cancel Transaction"
 msgstr "ابطال معامله"
 
 msgid "Cancel Transaction Action"
 msgstr "عمل ابطال معامله"
-
-msgid "Cancel Transaction Action [transition in accounting_workflow]"
-msgstr "عمل ابطال معامله"
-
-msgid "Cancel Transaction [transition in accounting_workflow]"
-msgstr "ابطال معامله"
-
-msgid "Cancel [transition in bug_event_workflow]"
-msgstr "ابطال"
 
 msgid "Cancelled"
 msgstr "ابطال شد"
@@ -1749,23 +1145,14 @@ msgstr "ابطال شد"
 msgid "Cancelled [state in document_publication_workflow]"
 msgstr "ابطال شد"
 
-msgid "Cancelled [state in event_simulation_workflow]"
-msgstr ""
-
 msgid "Cancelled [state in event_workflow]"
 msgstr "ابطال شد"
-
-msgid "Cancelled [state in internal_invoice_transaction_simulation_workflow]"
-msgstr ""
 
 msgid "Cancelled [state in inventory_workflow]"
 msgstr "ابطال شد"
 
 msgid "Cancelled [state in order_workflow]"
 msgstr "ابطال شد"
-
-msgid "Cancelled [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Cancelled [state in query_workflow]"
 msgstr "ابطال شد"
@@ -1782,17 +1169,8 @@ msgstr "ابطال شد"
 msgid "Cancelled [state in task_workflow]"
 msgstr "ابطال شد"
 
-msgid "Cancelled [state in ticket_workflow]"
-msgstr ""
-
 msgid "Cancelled."
 msgstr "ابطال شد."
-
-msgid "Cape Verde Escudo"
-msgstr ""
-
-msgid "Captcha"
-msgstr ""
 
 msgid "Career"
 msgstr "شغل"
@@ -1821,71 +1199,26 @@ msgstr "مشاغل"
 msgid "Cash Register"
 msgstr "صندوق پول"
 
-msgid "Catalog Keyword Key Configurator Item"
-msgstr ""
-
 msgid "Catalog Methods"
 msgstr "روش های فهرست بندی"
-
-msgid "Catalog Related Keys"
-msgstr ""
-
-msgid "Catalog Result Keys"
-msgstr ""
-
-msgid "Catalog Result Tables"
-msgstr ""
 
 msgid "Categories"
 msgstr "دسته بندی ها"
 
-msgid "Categories Spreadsheet Configurator Item"
-msgstr ""
-
 msgid "Category"
 msgstr "دسته بندی"
-
-msgid "Category Acquired Membership State Constraint"
-msgstr ""
-
-msgid "Category Configurator Item"
-msgstr ""
 
 msgid "Category Divergence Tester"
 msgstr "آزمایش گر واگرایی دسته بندی"
 
-msgid "Category Existence Constraint"
-msgstr ""
-
 msgid "Category Fast Input"
 msgstr "ورودی سریع دسته بندی"
-
-msgid "Category Item List Method"
-msgstr ""
-
-msgid "Category Membership Arity Constraint"
-msgstr ""
-
-msgid "Category Membership Divergence Tester"
-msgstr ""
-
-msgid "Category Membership State Constraint"
-msgstr ""
 
 msgid "Category Movement Group"
 msgstr "گروه دسته بندی متحرک"
 
-msgid "Category Property"
-msgstr ""
-
 msgid "Category Publication Workflow"
 msgstr "گردش کار انتشار دسته بندی"
-
-msgid "Category Related Membership Arity Constraint"
-msgstr ""
-
-msgid "Category Related Membership State Constraint"
-msgstr ""
 
 msgid "Category Tool"
 msgstr "ابزار دسته بندی"
@@ -1905,32 +1238,14 @@ msgstr "حالت علیت"
 msgid "Causality Workflow"
 msgstr "گردش کار علیت"
 
-msgid "Cayman Islands Dollar"
-msgstr ""
-
-msgid "Cedi"
-msgstr ""
-
 msgid "Cell Level Divergences"
 msgstr "همگرایی در سطح سلول"
 
 msgid "Cells"
 msgstr "سلول ها"
 
-msgid "Cfa Franc Bceao"
-msgstr ""
-
-msgid "Cfa Franc Beac"
-msgstr ""
-
-msgid "Cfp Franc"
-msgstr ""
-
 msgid "Change Function"
 msgstr "تغییر عملکرد"
-
-msgid "Change Log"
-msgstr ""
 
 msgid "Change Password"
 msgstr "تغییر رمز عبور"
@@ -1944,26 +1259,14 @@ msgstr "تغییر صورت عملیات"
 msgid "Chat Address"
 msgstr "آدرس مکالمه"
 
-msgid "Check All"
-msgstr ""
-
 msgid "Check Site Consistency"
 msgstr "ثبات سایت را چک کنید"
 
 msgid "Children"
 msgstr "بچه ها"
 
-msgid "Chilean Peso"
-msgstr ""
-
-msgid "Chinese"
-msgstr ""
-
 msgid "Choice"
 msgstr "انتخاب"
-
-msgid "City"
-msgstr ""
 
 msgid "Civil Status"
 msgstr "وضعیت تأهل"
@@ -1988,12 +1291,6 @@ msgstr "الگوی تجاری تمیز"
 
 msgid "Clean Business Template Action"
 msgstr "عمل تمیز کردن الگوی تجاری"
-
-msgid "Clean Business Template Action [transition in business_template_building_workflow]"
-msgstr "عمل تمیز کردن الگوی تجاری"
-
-msgid "Clean Business Template [transition in business_template_building_workflow]"
-msgstr "الگوی تجاری تمیز"
 
 msgid "Clean SVN Unversioned Files"
 msgstr "فایل های ثبت نشده در SVN را تمیز کنید"
@@ -2022,35 +1319,17 @@ msgstr "دوره حسابداری را ببندید"
 msgid "Close Accounting Period Action"
 msgstr "عمل بستن دوره حسابداری"
 
-msgid "Close Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل بستن دوره حسابداری"
-
-msgid "Close Accounting Period [transition in accounting_period_workflow]"
-msgstr "دوره حسابداری را ببندید"
-
 msgid "Close Requirement"
 msgstr "بستن نیازمندی ها"
 
 msgid "Close Requirement Action"
 msgstr "عمل بستن نیازمندی ها"
 
-msgid "Close Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل بستن نیازمندی ها"
-
-msgid "Close Requirement [transition in requirement_analysis_workflow]"
-msgstr "بستن نیازمندی ها"
-
 msgid "Close Task"
 msgstr "بستن تکلیف"
 
 msgid "Close Task Action"
 msgstr "عمل بستن تکلیف"
-
-msgid "Close Task Action [transition in task_report_workflow]"
-msgstr "عمل بستن تکلیف"
-
-msgid "Close Task [transition in task_report_workflow]"
-msgstr "بستن تکلیف"
 
 msgid "Closed"
 msgstr "بسته شده"
@@ -2061,17 +1340,8 @@ msgstr "بسته شده"
 msgid "Closed [state in accounting_workflow]"
 msgstr "بسته شده"
 
-msgid "Closed [state in bug_workflow]"
-msgstr ""
-
-msgid "Closed [state in internal_invoice_transaction_simulation_workflow]"
-msgstr ""
-
 msgid "Closed [state in task_report_workflow]"
 msgstr "بسته شده"
-
-msgid "Closed [state in ticket_workflow]"
-msgstr ""
 
 msgid "Closing Date"
 msgstr "تاریخ بسته شدن"
@@ -2082,29 +1352,14 @@ msgstr "Codification"
 msgid "Collect Order Group"
 msgstr "جمع آوری سفارش گروه"
 
-msgid "Colombian Peso"
-msgstr ""
-
 msgid "Column"
 msgstr "ستون"
 
 msgid "Comment"
 msgstr "نظر"
 
-msgid "Comments"
-msgstr ""
-
-msgid "Comments which can be read by internal users but unlike description, are not printed out on official documents."
-msgstr ""
-
-msgid "Comments will be stored in the workflow history of this document."
-msgstr ""
-
 msgid "Commit"
 msgstr "ارتکاب"
-
-msgid "Comorian Franc"
-msgstr ""
 
 msgid "Compare"
 msgstr "مقایسه"
@@ -2127,26 +1382,11 @@ msgstr "تنوع مؤلفه شخصی"
 msgid "Component Module"
 msgstr "ماژول مؤلفه"
 
-msgid "Component Tool"
-msgstr ""
-
 msgid "Components"
 msgstr "اجزاء"
 
-msgid "Conceptual Id Generator"
-msgstr ""
-
-msgid "Configuration Save"
-msgstr ""
-
 msgid "Configuration Status"
 msgstr "حالت تنظیمات"
-
-msgid "Configuration is over. Enjoy your new ERP5 system!"
-msgstr ""
-
-msgid "Configurator Tool"
-msgstr ""
 
 msgid "Configure"
 msgstr "شکل بندی"
@@ -2157,14 +1397,8 @@ msgstr "تنظیم اخطار"
 msgid "Configure Categories"
 msgstr "شکل بندی گروه ها"
 
-msgid "Configure ERP5 Preferences"
-msgstr ""
-
 msgid "Configure Gadgets"
 msgstr "تنظیم ریزبرنامه"
-
-msgid "Configure Organisation"
-msgstr ""
 
 msgid "Configure Portal Types"
 msgstr "تنظیم نوع پورتال"
@@ -2172,23 +1406,8 @@ msgstr "تنظیم نوع پورتال"
 msgid "Configure Property Sheets"
 msgstr "تنظیم برگه خواص"
 
-msgid "Configure accounting"
-msgstr ""
-
-msgid "Configure user accounts"
-msgstr ""
-
-msgid "Configure user accounts number"
-msgstr ""
-
 msgid "Configure your Site"
 msgstr "سایت را تنظیم کنید"
-
-msgid "Configure your accounting."
-msgstr ""
-
-msgid "Configure your organisation."
-msgstr ""
 
 msgid "Confirm"
 msgstr "تأئید"
@@ -2199,23 +1418,11 @@ msgstr "تأئید سفارش"
 msgid "Confirm Order Action"
 msgstr "عمل تأئید سفارش"
 
-msgid "Confirm Order Action [transition in order_workflow]"
-msgstr "عمل تأئید سفارش"
-
-msgid "Confirm Order [transition in order_workflow]"
-msgstr "تأئید سفارش"
-
 msgid "Confirm Packing List"
 msgstr "تأئید لیست بسته بندی"
 
 msgid "Confirm Packing List Action"
 msgstr "عمل تأئید لیست بسته بندی"
-
-msgid "Confirm Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل تأئید لیست بستخ بندی"
-
-msgid "Confirm Packing List [transition in packing_list_workflow]"
-msgstr "تأئید لیست بسته بندی"
 
 msgid "Confirm Requirement"
 msgstr "تأئید نیلزمندی ها"
@@ -2223,44 +1430,17 @@ msgstr "تأئید نیلزمندی ها"
 msgid "Confirm Requirement Action"
 msgstr "عمل تأئید نیازمندی ها"
 
-msgid "Confirm Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل تأئید نیازمندی ها"
-
-msgid "Confirm Requirement [transition in requirement_analysis_workflow]"
-msgstr "تأئید نیازمندی ها"
-
 msgid "Confirm Task"
 msgstr "تأئید تکلیف"
 
 msgid "Confirm Task Action"
 msgstr "عمل تأئید تکلیف"
 
-msgid "Confirm Task Action [transition in task_report_workflow]"
-msgstr "عمل تأئید تکلیف"
-
-msgid "Confirm Task Action [transition in task_workflow]"
-msgstr "عمل تأئید تکلیف"
-
-msgid "Confirm Task [transition in task_report_workflow]"
-msgstr "تأئید تکلیف"
-
-msgid "Confirm Task [transition in task_workflow]"
-msgstr "تأئید تکلیف"
-
 msgid "Confirm Transaction"
 msgstr "معامله تأئید"
 
 msgid "Confirm Transaction Action"
 msgstr "عمل معامله تأئید"
-
-msgid "Confirm Transaction Action [transition in accounting_workflow]"
-msgstr "عملل معامله تأئید"
-
-msgid "Confirm Transaction [transition in accounting_workflow]"
-msgstr "معامله تأئید"
-
-msgid "Confirm [transition in packing_list_workflow]"
-msgstr "تأئید"
 
 msgid "Confirmation"
 msgstr "تأئیدیه"
@@ -2277,17 +1457,8 @@ msgstr "لیست بسته بندی تأئید شد"
 msgid "Confirmed [state in accounting_workflow]"
 msgstr "تأئید شد"
 
-msgid "Confirmed [state in event_simulation_workflow]"
-msgstr ""
-
-msgid "Confirmed [state in internal_invoice_transaction_simulation_workflow]"
-msgstr ""
-
 msgid "Confirmed [state in order_workflow]"
 msgstr "تأئید شد"
-
-msgid "Confirmed [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Confirmed [state in requirement_analysis_workflow]"
 msgstr "تأئید شد"
@@ -2301,14 +1472,8 @@ msgstr "تأئید شد"
 msgid "Conflicted Files"
 msgstr "پرونده های متناقض شده"
 
-msgid "Congolese Franc"
-msgstr ""
-
 msgid "Consistency"
 msgstr "هماهنگی"
-
-msgid "Consistency Check information will be periodically updated."
-msgstr ""
 
 msgid "Constraints"
 msgstr "محدودیت ها"
@@ -2367,23 +1532,8 @@ msgstr "کانتینرها"
 msgid "Content"
 msgstr "محتوی"
 
-msgid "Content Acquired Property ID"
-msgstr ""
-
-msgid "Content Existence Constraint"
-msgstr ""
-
-msgid "Content Portal Type"
-msgstr ""
-
-msgid "Content Translation Acquired Property ID"
-msgstr ""
-
 msgid "Contents"
 msgstr "محتوی"
-
-msgid "Contextual Help"
-msgstr ""
 
 msgid "Contribute"
 msgstr "اشتراک"
@@ -2424,40 +1574,16 @@ msgstr "اشتراک گذاران"
 msgid "Convergent"
 msgstr "همگرا"
 
-msgid "Convergent [transition in delivery_causality_workflow]"
-msgstr "همگرا"
-
 msgid "Conversion"
 msgstr "همگرایی"
 
-msgid "Conversion Failed"
-msgstr ""
-
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
-msgid "Conversion Format for reports."
-msgstr ""
-
-msgid "Conversion Server Timeout"
-msgstr ""
-
-msgid "Conversion Server URL"
-msgstr ""
-
 msgid "Convert Action"
-msgstr "عمل تبدیل"
-
-msgid "Convert Action [transition in processing_status_workflow]"
 msgstr "عمل تبدیل"
 
 msgid "Convert Destination Price"
 msgstr "تبدیل قیمت در مقصد"
 
 msgid "Convert File"
-msgstr "تبدیل پرونده"
-
-msgid "Convert File [transition in processing_status_workflow]"
 msgstr "تبدیل پرونده"
 
 msgid "Convert Price"
@@ -2468,9 +1594,6 @@ msgstr "تبدیل قیمت مرجع"
 
 msgid "Convert to OpenDocument"
 msgstr "تبدیل به OpenDocument"
-
-msgid "Convert to OpenDocument [transition in processing_status_workflow]"
-msgstr "تبدیل به  OpenDocument"
 
 msgid "Converted"
 msgstr "تبدیل شد"
@@ -2490,9 +1613,6 @@ msgstr "تعداد تبدیل شده"
 msgid "Converted [state in processing_status_workflow]"
 msgstr "تبدیل شده"
 
-msgid "Converted to ${mime_type}."
-msgstr ""
-
 msgid "Converting"
 msgstr "در حال تبدیل"
 
@@ -2502,29 +1622,14 @@ msgstr "در حال تبدیل"
 msgid "Copy"
 msgstr "کپی"
 
-msgid "Copy Roles"
-msgstr ""
-
 msgid "Copy or cut one or more items to paste first."
 msgstr "ابتدا یک یا چند قلم را برای انتقال کپی کنید یا برش دهید."
-
-msgid "Copyright"
-msgstr ""
-
-msgid "Cordoba"
-msgstr ""
 
 msgid "Corporate Registration Code"
 msgstr "شماره ثبت شرکت"
 
-msgid "Costa Rican Colon"
-msgstr ""
-
 msgid "Count"
 msgstr "شمارش"
-
-msgid "Country"
-msgstr ""
 
 msgid "Crawl"
 msgstr "Crawl"
@@ -2574,12 +1679,6 @@ msgstr "ایجاد اتفاق مرتبط"
 msgid "Create Related Event Action"
 msgstr "عمل ایجاد اتفاق مرتبط"
 
-msgid "Create Related Event Action [transition in event_workflow]"
-msgstr "عمل ایجاد اتفاق مرتبط"
-
-msgid "Create Related Event [transition in event_workflow]"
-msgstr "ایجاد اتفاق مرتبط"
-
 msgid "Create Related Payment"
 msgstr "ایجاد پرداخت مرتبط"
 
@@ -2591,9 +1690,6 @@ msgstr "ایجاد گزارش"
 
 msgid "Create Reversal Transaction"
 msgstr "ایجاد معامله معکوس"
-
-msgid "Create Skin Folder"
-msgstr ""
 
 msgid "Create Snapshot"
 msgstr "ایجاد Snapshot"
@@ -2609,15 +1705,6 @@ msgstr "ایجاد کاربر"
 
 msgid "Create User Action"
 msgstr "عمل ایجاد کاربر"
-
-msgid "Create User Action [transition in user_account_workflow]"
-msgstr "عمل ایجاد کاربر"
-
-msgid "Create User [transition in user_account_workflow]"
-msgstr "ایجاد کاربر"
-
-msgid "Create Working Copy"
-msgstr ""
 
 msgid "Create Your New Account"
 msgstr "حساب جدید خود را ایجاد کنید"
@@ -2646,12 +1733,6 @@ msgstr "Credit Card"
 msgid "Credit Transactions"
 msgstr "معاملات بستانکار"
 
-msgid "Criterion Properties"
-msgstr ""
-
-msgid "Cuban Peso"
-msgstr ""
-
 msgid "Currencies"
 msgstr "واحد های پول"
 
@@ -2660,9 +1741,6 @@ msgstr "واحد پول"
 
 msgid "Currency Code"
 msgstr "کد واحد پول"
-
-msgid "Currency Configurator Item"
-msgstr ""
 
 msgid "Currency Exchange Cell"
 msgstr "سلول تبدیل واحد پول"
@@ -2709,17 +1787,8 @@ msgstr "مشتری"
 msgid "Customer Account"
 msgstr "حساب مشتری"
 
-msgid "Customer BT5 Configurator Item"
-msgstr ""
-
 msgid "Cut"
 msgstr "برش"
-
-msgid "Cyprus Pound"
-msgstr ""
-
-msgid "Czech Koruna"
-msgstr ""
 
 msgid "D/Err"
 msgstr "D/Err"
@@ -2733,20 +1802,11 @@ msgstr "DMS"
 msgid "DMS Preferences"
 msgstr "DMS Preferences"
 
-msgid "Dalasi"
-msgstr ""
-
-msgid "Danish Krone"
-msgstr ""
-
 msgid "Data updated."
 msgstr "دیتا به روز شد."
 
 msgid "Date"
 msgstr "تاریخ"
-
-msgid "Date Order"
-msgstr ""
 
 msgid "Date has expire."
 msgstr "تاریم منقضی شده است."
@@ -2756,15 +1816,6 @@ msgstr "تاریخ در دوره حسابداری شروع شده برای من�
 
 msgid "Date is not in an started Accounting Period for destination section."
 msgstr "تاریخ در دوره حسابداری شروع شده برای مقصد این بخش موجود نیست."
-
-msgid "DateTime Divergence Tester"
-msgstr ""
-
-msgid "Datetime Keys"
-msgstr ""
-
-msgid "Day / Month / Year"
-msgstr ""
 
 msgid "Day Movement Group"
 msgstr "گروه حرکت روزانه"
@@ -2786,15 +1837,6 @@ msgstr "تصمیم"
 
 msgid "Declare Container Missing"
 msgstr "اعلام گم شدن کانتینر"
-
-msgid "Declare Container Missing [transition in packing_list_container_workflow]"
-msgstr "اعلام گم شدن کانتینر"
-
-msgid "Declare as Delivered"
-msgstr ""
-
-msgid "Declare as Received"
-msgstr ""
 
 msgid "Default"
 msgstr "پیش فرض"
@@ -2820,26 +1862,11 @@ msgstr "قیمت فروش پیش فرض"
 msgid "Default Section Layout"
 msgstr "پیش فرض طرح بخش"
 
-msgid "Default Style used for reports."
-msgstr ""
-
-msgid "Default Telephone Area Number"
-msgstr ""
-
-msgid "Default Telephone City Number"
-msgstr ""
-
-msgid "Default Telephone Country Number"
-msgstr ""
-
 msgid "Default Theme Configuration"
 msgstr "ترکیب پیش فرض زمینه"
 
 msgid "Default Web Layout"
 msgstr "طرح پیش فرض وب"
-
-msgid "Default value if not set"
-msgstr ""
 
 msgid "Define Sale Order Lines"
 msgstr "تعریف خطوط سفارش فروش"
@@ -2847,38 +1874,14 @@ msgstr "تعریف خطوط سفارش فروش"
 msgid "Define Sort Order"
 msgstr "تعریف سفارش ترتیب"
 
-msgid "Define if this business template should always force reinstallation of this bt. This is mainly useful to patch other business templates."
-msgstr ""
-
-msgid "Define list of method Ids which will be used by catalog to generate searchable text for object."
-msgstr ""
-
-msgid "Define list of property Ids which will be used by catalog to generate searchable text for object."
-msgstr ""
-
-msgid "Define some global preferences for your ERP5 application."
-msgstr ""
-
-msgid "Define the translation domain"
-msgstr ""
-
 msgid "Defined Property IDs"
 msgstr "شناسه های خواص تعریف شده"
-
-msgid "Defines the base URL where portal type action documentation will be searched for."
-msgstr ""
 
 msgid "Definitively Close Transaction"
 msgstr "معامله بسته شده قطعی"
 
 msgid "Definitively Close Transaction Action"
 msgstr "عمل معامله بسته شده قطعی"
-
-msgid "Definitively Close Transaction Action [transition in accounting_workflow]"
-msgstr "عمل معامله بسته شده قطعی"
-
-msgid "Definitively Close Transaction [transition in accounting_workflow]"
-msgstr "معامله بسته شده قطعی"
 
 msgid "Delete"
 msgstr "پاک کنید"
@@ -2889,61 +1892,16 @@ msgstr "حساب را پاک کنید"
 msgid "Delete Account Action"
 msgstr "عمل پاک کردن حساب"
 
-msgid "Delete Account Action [transition in account_workflow]"
-msgstr "عمل پاک کردن حساب"
-
-msgid "Delete Account [transition in account_workflow]"
-msgstr "پاک کردن حساب"
-
 msgid "Delete Accounting Period"
 msgstr "پاک کردن دوره حسابداری"
 
 msgid "Delete Accounting Period Action"
 msgstr "عمل پاک کردن دوره حسابداری"
 
-msgid "Delete Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل پاک کردن دوره حسابداری"
-
-msgid "Delete Accounting Period [transition in accounting_period_workflow]"
-msgstr "پاک کردن دوره حسابداری"
-
 msgid "Delete Action"
 msgstr "عمل پاک کردن"
 
-msgid "Delete Action [transition in inventory_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in open_order_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in order_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in packing_list_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in project_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in requirement_analysis_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in rule_validation_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in task_report_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in task_workflow]"
-msgstr "عمل پاک کردن"
-
-msgid "Delete Action [transition in validation_workflow]"
-msgstr "عمل پاک کردن"
-
 msgid "Delete Assignment Action"
-msgstr "عمل پاک کردن مأموریت"
-
-msgid "Delete Assignment Action [transition in assignment_workflow]"
 msgstr "عمل پاک کردن مأموریت"
 
 msgid "Delete Bug"
@@ -2952,23 +1910,11 @@ msgstr "پاک کردن خطا"
 msgid "Delete Bug Action"
 msgstr "عمل پاک کردن خطا"
 
-msgid "Delete Bug Action [transition in bug_workflow]"
-msgstr "عمل پاک کردن خطا"
-
-msgid "Delete Bug [transition in bug_workflow]"
-msgstr "پاک کردن خطا"
-
 msgid "Delete Business Template"
 msgstr "پاک کردن الگوی تجاری"
 
 msgid "Delete Business Template Action"
 msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Delete Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Delete Business Template [transition in business_template_installation_workflow]"
-msgstr "پاک کردن الگوی تجاری"
 
 msgid "Delete Document"
 msgstr "پاک کردن مدرک"
@@ -2976,41 +1922,17 @@ msgstr "پاک کردن مدرک"
 msgid "Delete Document Action"
 msgstr "عمل پاک کردن مدرک"
 
-msgid "Delete Document Action [transition in document_ingestion_workflow]"
-msgstr "عمل پاک کردن مدرک"
-
-msgid "Delete Document Action [transition in document_publication_workflow]"
-msgstr "عمل پاک کردن مدرک"
-
-msgid "Delete Document [transition in document_ingestion_workflow]"
-msgstr "پاک کردن مدرک"
-
-msgid "Delete Document [transition in document_publication_workflow]"
-msgstr "پاک کردن مدرک"
-
 msgid "Delete Event"
 msgstr "پاک کردن اتفاق"
 
 msgid "Delete Event Action"
 msgstr "عمل پاک کردن اتفاق"
 
-msgid "Delete Event Action [transition in event_workflow]"
-msgstr "عمل پاک کردن اتفاق"
-
-msgid "Delete Event [transition in event_workflow]"
-msgstr "پاک کردن اتفاق"
-
 msgid "Delete Message"
 msgstr "پاک کردن پیام"
 
 msgid "Delete Message Action"
 msgstr "عمل پاک کردن پیام"
-
-msgid "Delete Message Action [transition in notification_message_workflow]"
-msgstr "عمل پاک کردن پبام"
-
-msgid "Delete Message [transition in notification_message_workflow]"
-msgstr "پاک کردن پیام"
 
 msgid "Delete Objects"
 msgstr "پاک کردن اشیاء"
@@ -3021,23 +1943,11 @@ msgstr "پاک کردن ارجحیت"
 msgid "Delete Preference Action"
 msgstr "عمل پاک کردن ارجحیت"
 
-msgid "Delete Preference Action [transition in preference_workflow]"
-msgstr "عمل پاک کردن ارجحیت"
-
-msgid "Delete Preference [transition in preference_workflow]"
-msgstr "پاک کردن ارجحیت"
-
 msgid "Delete Query"
 msgstr "پاک کردن پرسش"
 
 msgid "Delete Query Action"
 msgstr "عمل پاک کردن پرسش"
-
-msgid "Delete Query Action [transition in query_workflow]"
-msgstr "عمل پاک کردن پرسش"
-
-msgid "Delete Query [transition in query_workflow]"
-msgstr "پاک کردن پرسش"
 
 msgid "Delete Sale Opportunity"
 msgstr "پاک کردن شانس فروش"
@@ -3045,19 +1955,7 @@ msgstr "پاک کردن شانس فروش"
 msgid "Delete Sale Opportunity Action"
 msgstr "عمل پاک کردن شانس فروش"
 
-msgid "Delete Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل پاک کردن شانس فروش"
-
-msgid "Delete Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "پاک کردن شانس فروش"
-
 msgid "Delete Task"
-msgstr "پاک کردن وظیفه"
-
-msgid "Delete Task [transition in task_report_workflow]"
-msgstr "پاک کردن وظیفه"
-
-msgid "Delete Task [transition in task_workflow]"
 msgstr "پاک کردن وظیفه"
 
 msgid "Delete Ticket"
@@ -3066,44 +1964,8 @@ msgstr "پاک کردن بلیط"
 msgid "Delete Ticket Action"
 msgstr "عمل پاک کردن بلیط"
 
-msgid "Delete Ticket Action [transition in ticket_workflow]"
-msgstr "عمل پاک کردن بلیط"
-
-msgid "Delete Ticket [transition in ticket_workflow]"
-msgstr "پاک کردن بلیط"
-
 msgid "Delete Transaction Action"
 msgstr "عمل پاک کردن معامله"
-
-msgid "Delete Transaction Action [transition in accounting_workflow]"
-msgstr "عمل پاک کردن معامله"
-
-msgid "Delete [transition in inventory_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in open_order_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in order_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in packing_list_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in project_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in requirement_analysis_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in rule_validation_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in task_workflow]"
-msgstr "پاک کردن"
-
-msgid "Delete [transition in validation_workflow]"
-msgstr "پاک کردن"
 
 msgid "Deleted"
 msgstr "پاک شد"
@@ -3216,26 +2078,11 @@ msgstr "اتفاق تحویل دادن"
 msgid "Deliver Event Action"
 msgstr "عمل اتفاق تحویل دادن"
 
-msgid "Deliver Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق تحویل دادن"
-
-msgid "Deliver Event [transition in event_workflow]"
-msgstr "اتفاق تحویل دادن"
-
 msgid "Deliver Packing List"
 msgstr "تحویل دادن لیست بسته بندی"
 
 msgid "Deliver Packing List Action"
 msgstr "عمل تحویل  دادن لیست بسته بندی"
-
-msgid "Deliver Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل تحویل  دادن لیست بسته بندی"
-
-msgid "Deliver Packing List [transition in packing_list_workflow]"
-msgstr "تحویل دادن لیست بسته بندی"
-
-msgid "Deliver [transition in bug_event_workflow]"
-msgstr "تحویل دادن"
 
 msgid "Delivered"
 msgstr "تحویل شد"
@@ -3321,14 +2168,8 @@ msgstr "گره های تحویل"
 msgid "Delivery Ratio"
 msgstr "نسبت تحویل"
 
-msgid "Delivery Root Simulation Rule"
-msgstr ""
-
 msgid "Delivery Rule"
 msgstr "قانون تحویل"
-
-msgid "Delivery Simulation Rule"
-msgstr ""
 
 msgid "Delivery Tax Interaction Workflow"
 msgstr "گردش کار تعامل مالیات تحویل"
@@ -3339,26 +2180,14 @@ msgstr "عنوان تحویل"
 msgid "Delivery Tool"
 msgstr "ابزار تحویل"
 
-msgid "Delivery Type"
-msgstr ""
-
-msgid "Denar"
-msgstr ""
-
 msgid "Dependencies"
 msgstr "وابستگی ها"
-
-msgid "Descending Display"
-msgstr ""
 
 msgid "Description"
 msgstr "توصیف"
 
 msgid "Description of project line."
 msgstr "توصیف خط پروژه."
-
-msgid "Description of the property"
-msgstr ""
 
 msgid "Descriptions cleaned up."
 msgstr "توصیف ها تمیز شد."
@@ -3384,9 +2213,6 @@ msgstr "بخش مقصد"
 msgid "Destination conversion should not be set."
 msgstr "تبدیل مقصد نباید تثبیت شود."
 
-msgid "Detailed Diff Business Template"
-msgstr ""
-
 msgid "Detailed Report"
 msgstr "گزارش با جزئیات"
 
@@ -3396,41 +2222,11 @@ msgstr "جزئیات"
 msgid "Detect Converted File"
 msgstr "شناسایی پرونده تبدیل شده"
 
-msgid "Detect Converted File [transition in processing_status_workflow]"
-msgstr "شناسایی پرونده تبدیل شده"
-
 msgid "Detect Uploaded File"
 msgstr "شناسایی پرونده آپلود شده"
 
-msgid "Detect Uploaded File [transition in processing_status_workflow]"
-msgstr "شناسایی پرونده آپلود شده"
-
-msgid "Determines if acquired value should be copied"
-msgstr ""
-
-msgid "Determines if the local value have priority"
-msgstr ""
-
-msgid "Determines if the preference accessors should be created"
-msgstr ""
-
-msgid "Determines if the property is multivalued"
-msgstr ""
-
-msgid "Determines if the range accessors should be created"
-msgstr ""
-
-msgid "Determines if the value is translatable"
-msgstr ""
-
-msgid "Developer Mode"
-msgstr ""
-
 msgid "Dict"
 msgstr "Dict"
-
-msgid "Diff"
-msgstr ""
 
 msgid "Diff Business Template"
 msgstr "الگوی تجاری Diff"
@@ -3458,12 +2254,6 @@ msgstr "غیر فعال کردن ارجحیت"
 
 msgid "Disable Preference Action"
 msgstr "عمل غیر فعال کردن ارجحیت"
-
-msgid "Disable Preference Action [transition in preference_workflow]"
-msgstr "عمل غیر فعال کردن ارجحیت"
-
-msgid "Disable Preference [transition in preference_workflow]"
-msgstr "غیر فعال کردن ارجحیت"
 
 msgid "Disabled"
 msgstr "غیر فعال شده"
@@ -3525,26 +2315,14 @@ msgstr "انشعاب ها"
 msgid "Divergent"
 msgstr "انشعاب پذیر"
 
-msgid "Divergent [transition in delivery_causality_workflow]"
-msgstr "انشعاب پذیر"
-
-msgid "Djibouti Franc"
-msgstr ""
-
 msgid "Do not forget to logout or exit your browser when you are done."
 msgstr "فراموش نکنید بعد از اتمام کار از سیستم یا براوزر خارج شوید."
 
 msgid "Do nothing"
 msgstr "کاری انجام ندهید"
 
-msgid "Do we use strict section category membership by default."
-msgstr ""
-
 msgid "Do you Want to Enable Periodical Check?"
 msgstr "فعال کردن کنترل دوره ای"
-
-msgid "Dobra"
-msgstr ""
 
 msgid "Docstring"
 msgstr "رشته مستندات (\"\"\")"
@@ -3554,12 +2332,6 @@ msgstr "مدرک"
 
 msgid "Document Categories"
 msgstr "گروه های مدرک"
-
-msgid "Document Classes"
-msgstr ""
-
-msgid "Document Component"
-msgstr ""
 
 msgid "Document Ingestion Message"
 msgstr "پیام دریافت مدرک"
@@ -3618,9 +2390,6 @@ msgstr "مدرک با موفقیت آپلود شد."
 msgid "Documentation"
 msgstr "مستندات"
 
-msgid "Documentation URL"
-msgstr ""
-
 msgid "Documents"
 msgstr "مدارک"
 
@@ -3645,17 +2414,8 @@ msgstr "دامنه ساز"
 msgid "Domain Tool"
 msgstr "ابزار دامنه"
 
-msgid "Domain Tree"
-msgstr ""
-
 msgid "Domains"
 msgstr "دامنه ها"
-
-msgid "Dominican Peso"
-msgstr ""
-
-msgid "Dong"
-msgstr ""
 
 msgid "Download"
 msgstr "دانلود"
@@ -3752,9 +2512,6 @@ msgstr "پیش نویس"
 
 msgid "Draft [state in accounting_workflow]"
 msgstr "پیش نویس"
-
-msgid "Draft [state in acknowledgement_workflow]"
-msgstr ""
 
 msgid "Draft [state in assignment_workflow]"
 msgstr "پیش نویس"
@@ -3870,9 +2627,6 @@ msgstr "(%(count)s) پیش نویس برای توزیع"
 msgid "Drafts to Publish [worklist in publication_workflow]"
 msgstr "پیش نویس برای توزیع"
 
-msgid "Dram"
-msgstr ""
-
 msgid "Drawing"
 msgstr "ترسیم"
 
@@ -3882,32 +2636,14 @@ msgstr "ایجاد نسخه دوم"
 msgid "Duplicate Glossary Terms"
 msgstr "نسخه دوم عبارات واژه نامه ایجاد کردن"
 
-msgid "Duplicate Inventory Constraint"
-msgstr ""
-
 msgid "Duplicate id found: ${id}"
 msgstr "نسخه دوم شناسه پیدا شد: ${id}"
 
 msgid "Duration"
 msgstr "دوره"
 
-msgid "Dynamic Category Property"
-msgstr ""
-
 msgid "Dynamic Workflow Methods"
 msgstr "روش های گردش کار پویا"
-
-msgid "ERP5 Configuration"
-msgstr ""
-
-msgid "ERP5 Login"
-msgstr ""
-
-msgid "ERP5 configuration process is running."
-msgstr ""
-
-msgid "Eastern Caribbean Dollar"
-msgstr ""
 
 msgid "Economic Class"
 msgstr "کلاس اقتصادی"
@@ -3921,13 +2657,7 @@ msgstr "${portal_type} تصحیح"
 msgid "Edit Action"
 msgstr "عمل تصحیح"
 
-msgid "Edit Action [transition in edit_workflow]"
-msgstr "عمل تصحیح"
-
 msgid "Edit Business Template"
-msgstr "تصحیح الگوی تجاری"
-
-msgid "Edit Business Template [transition in business_template_building_workflow]"
 msgstr "تصحیح الگوی تجاری"
 
 msgid "Edit Parent ${portal_type}"
@@ -3939,15 +2669,6 @@ msgstr "'${portal_type}' تصحیح نوع پورتال."
 msgid "Edit Workflow"
 msgstr "تصحیح گردش کار"
 
-msgid "Edit [transition in document_publication_workflow]"
-msgstr "تصحیح"
-
-msgid "Edit [transition in edit_workflow]"
-msgstr "تصحیح"
-
-msgid "Edit [transition in processing_status_workflow]"
-msgstr "تصحیح"
-
 msgid "Editable"
 msgstr "قابل تصحیح"
 
@@ -3956,9 +2677,6 @@ msgstr "تاریخ تأثیر"
 
 msgid "Efficiency"
 msgstr "بهره وری"
-
-msgid "Egyptian Pound"
-msgstr ""
 
 msgid "Email"
 msgstr "ایمیل"
@@ -3972,26 +2690,8 @@ msgstr "جا دادن گروه"
 msgid "Embed Category Action"
 msgstr "عمل جا دادن گروه"
 
-msgid "Embed Category Action [transition in category_publication_workflow]"
-msgstr "عمل جا دادن گروه"
-
-msgid "Embed Category [transition in category_publication_workflow]"
-msgstr "جا دادن گروه"
-
-msgid "Embed [transition in category_publication_workflow]"
-msgstr "جا دادن"
-
-msgid "Embed [transition in document_publication_workflow]"
-msgstr "جا دادن"
-
 msgid "Embedded"
 msgstr "جا داده شده"
-
-msgid "Embedded File"
-msgstr ""
-
-msgid "Embedded Folder"
-msgstr ""
 
 msgid "Embedded [state in category_publication_workflow]"
 msgstr "جا داده شده"
@@ -4035,12 +2735,6 @@ msgstr "توانا کردن ارجحیت"
 msgid "Enable Preference Action"
 msgstr "عمل توانا کردن ارجحیت"
 
-msgid "Enable Preference Action [transition in preference_workflow]"
-msgstr "عمل توانا کردن ارجحیت"
-
-msgid "Enable Preference [transition in preference_workflow]"
-msgstr "توانا کردن ارجحیت"
-
 msgid "Enabled"
 msgstr "توانا شده"
 
@@ -4056,29 +2750,17 @@ msgstr "تذریخ پایان"
 msgid "End of Month"
 msgstr "پایان ماه"
 
-msgid "English"
-msgstr ""
-
 msgid "Enquire Sale Opportunity"
 msgstr "درخواست شانس فروش"
 
 msgid "Enquire Sale Opportunity Action"
 msgstr "عمل درخواست شانس فروش"
 
-msgid "Enquire Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل درخواست شانس فروش"
-
-msgid "Enquire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "درخواست شانس فروش"
-
 msgid "Enquired"
 msgstr "درخواست شده"
 
 msgid "Enquired [state in sale_opportunity_workflow]"
 msgstr "درخواست شده"
-
-msgid "Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account."
-msgstr ""
 
 msgid "Equal to"
 msgstr "برابر با"
@@ -4100,12 +2782,6 @@ msgstr "تاریخ تقریبی پایان"
 
 msgid "Estimated Time"
 msgstr "زمان تقریبی"
-
-msgid "Ethiopian Birr"
-msgstr ""
-
-msgid "Euro"
-msgstr ""
 
 msgid "Evaluate"
 msgstr "ارزیابی"
@@ -4130,9 +2806,6 @@ msgstr "ماهیت اتفاق"
 
 msgid "Event Origin"
 msgstr "مبدأ اتفاق"
-
-msgid "Event Path"
-msgstr ""
 
 msgid "Event Preview"
 msgstr "پیش نمایش اتفاق"
@@ -4194,34 +2867,16 @@ msgstr "منقضی کردن گروه"
 msgid "Expire Category Action"
 msgstr "عمل منقضی کردن گروه"
 
-msgid "Expire Category Action [transition in category_publication_workflow]"
-msgstr "عمل منقضی کردن گروه"
-
-msgid "Expire Category [transition in category_publication_workflow]"
-msgstr "منقضی کردن گروه"
-
 msgid "Expire Event"
 msgstr "منقضی کردن اتفاق"
 
 msgid "Expire Event Action"
 msgstr "عمل منقضی کردن اتفاق"
 
-msgid "Expire Event Action [transition in event_workflow]"
-msgstr "عمل منقضی کردن اتفاق"
-
-msgid "Expire Event [transition in event_workflow]"
-msgstr "منقضی کردن اتفاق"
-
 msgid "Expire Protected Category"
 msgstr "منقضی کردن گروه مصون شده"
 
-msgid "Expire Protected Category [transition in category_publication_workflow]"
-msgstr "منقضی کردن گروه مصون شده"
-
 msgid "Expire Published Category"
-msgstr "منقضی کردن گروه توزیع شده"
-
-msgid "Expire Published Category [transition in category_publication_workflow]"
 msgstr "منقضی کردن گروه توزیع شده"
 
 msgid "Expire Sale Opportunity"
@@ -4229,15 +2884,6 @@ msgstr "منقضی کردن شانس فروش"
 
 msgid "Expire Sale Opportunity Action"
 msgstr "عمل منقضی کردن شانس فروش"
-
-msgid "Expire Sale Opportunity Action [transition in sale_opportunity_workflow]"
-msgstr "عمل منقضی کردن شانس فروش"
-
-msgid "Expire Sale Opportunity [transition in sale_opportunity_workflow]"
-msgstr "منقضی کردن شانس فروش"
-
-msgid "Expire [transition in category_publication_workflow]"
-msgstr "منقضی کردن"
 
 msgid "Expired"
 msgstr "منقضی شده"
@@ -4290,26 +2936,14 @@ msgstr "صدور شرایط به عنوان پرونده PO"
 msgid "Export Terms as PO File"
 msgstr "صدور شرایط به عنوان پرونده PO"
 
-msgid "Export as TSV File"
-msgstr ""
-
 msgid "Export to Spreadsheet"
 msgstr "صدور به برگه گسترده (Spreadsheet)"
-
-msgid "Extension Component"
-msgstr ""
-
-msgid "Extensions"
-msgstr ""
 
 msgid "External Document Publication Workflow"
 msgstr "گردش کار توزیع مدرک خارجی"
 
 msgid "External Folder"
 msgstr "پوشه خارجی"
-
-msgid "External Identifier"
-msgstr ""
 
 msgid "External Processing Workflow"
 msgstr "گردش کار فرآیند خارجی"
@@ -4332,23 +2966,8 @@ msgstr "منابع خارجی"
 msgid "Extract"
 msgstr "استخراج"
 
-msgid "Extract [transition in document_publication_workflow]"
-msgstr "استخراج"
-
 msgid "FAX"
 msgstr "FAX"
-
-msgid "Failed"
-msgstr ""
-
-msgid "Failed [state in solver_process_workflow]"
-msgstr ""
-
-msgid "Failed [state in solver_workflow]"
-msgstr ""
-
-msgid "Falkland Islands Pound"
-msgstr ""
 
 msgid "Fast Input"
 msgstr "ورودی سریع"
@@ -4367,9 +2986,6 @@ msgstr "مسیر فیلد"
 
 msgid "Fields updated."
 msgstr "فیلدها به روز شد."
-
-msgid "Fiji Dollar"
-msgstr ""
 
 msgid "File"
 msgstr "پرونده"
@@ -4392,9 +3008,6 @@ msgstr "پرونده آپلود شد."
 msgid "FileName"
 msgstr "نام پرونده"
 
-msgid "Filename"
-msgstr ""
-
 msgid "Files committed successfully in revision ${revision}."
 msgstr "پرونده ها با موفقیت در بازبینی شماره ${revision} وارد شد."
 
@@ -4403,12 +3016,6 @@ msgstr "نام کاربری و رمز ورود جدید خود را وارد ک�
 
 msgid "Filter"
 msgstr "فیلتر"
-
-msgid "Filter Content Types"
-msgstr ""
-
-msgid "Filter Diff"
-msgstr ""
 
 msgid "Final Balance (Credit)"
 msgstr "باقیمانده نهایی (بستانکار)"
@@ -4452,47 +3059,20 @@ msgstr "تمام کردن وظیفه"
 msgid "Finish Task Action"
 msgstr "عمل تمام کردن وظیفه"
 
-msgid "Finish Task Action [transition in task_report_workflow]"
-msgstr "عمل تمام کردن وظیفه"
-
-msgid "Finish Task [transition in task_report_workflow]"
-msgstr "تمام کردن وظیفه"
-
 msgid "Finish Translation"
 msgstr "تمام کردن ترجمه"
 
 msgid "Finish Translation Action"
 msgstr "عمل تمام کردن ترجمه"
 
-msgid "Finish Translation Action [transition in document_publication_workflow]"
-msgstr "عمل تمام کردن ترجمه"
-
-msgid "Finish Translation [transition in document_publication_workflow]"
-msgstr "تمام کردن ترجمه"
-
 msgid "First"
 msgstr "اول"
-
-msgid "First Causality Movement Group"
-msgstr ""
 
 msgid "First Name"
 msgstr "نام"
 
-msgid "First Page"
-msgstr ""
-
 msgid "Fix Site Configuration"
 msgstr "تصحیح کردن تنظیمات سایت"
-
-msgid "Flat List"
-msgstr ""
-
-msgid "Float Divergence Tester"
-msgstr ""
-
-msgid "Float Number Style"
-msgstr ""
 
 msgid "Flow Capacity (obsolete - use Supply Line)"
 msgstr "ظرفیت جریان"
@@ -4518,26 +3098,14 @@ msgstr "پیگیری"
 msgid "Follow-up Ticket"
 msgstr "بیلیط پیگیری"
 
-msgid "Force Install"
-msgstr ""
-
 msgid "Force Reload Promises"
 msgstr "بارگذاری مجدد اجباری Promises"
-
-msgid "Forint"
-msgstr ""
 
 msgid "Format"
 msgstr "فورمت"
 
-msgid "Format in which the user want to export the document"
-msgstr ""
-
 msgid "Found"
 msgstr "پیدا شد"
-
-msgid "French"
-msgstr ""
 
 msgid "From Date"
 msgstr "از تاریخ"
@@ -4547,9 +3115,6 @@ msgstr "تصویر با اندازه کامل"
 
 msgid "Full Sized Image"
 msgstr "تصویر به اندازه کامل شد"
-
-msgid "Full Text Keys"
-msgstr ""
 
 msgid "Function"
 msgstr "تابع"
@@ -4575,17 +3140,8 @@ msgstr "GAP ID"
 msgid "GAP Number"
 msgstr "شماره GAP"
 
-msgid "GAP Root"
-msgstr ""
-
 msgid "Gadget"
 msgstr "ریزبرنامه"
-
-msgid "Gadget Tool"
-msgstr ""
-
-msgid "Gadget Type"
-msgstr ""
 
 msgid "Gadgets"
 msgstr "ریزبرنامه ها"
@@ -4598,9 +3154,6 @@ msgstr "دفتر کل"
 
 msgid "General Ledger Summary"
 msgstr "خلاصه دفتر کل"
-
-msgid "General description of a document in ERP5. Descriptions are not supposed to be internal, and in a case of certain documents such as invoices for example, will be seen by your customers."
-msgstr ""
 
 msgid "Generate POT File"
 msgstr "پرونده POT ایجاد کردن"
@@ -4623,49 +3176,19 @@ msgstr "ایجاد کردن اسکلت بخش وب از گروه"
 msgid "Geographic Address"
 msgstr "آدرس جغرافیایی"
 
-msgid "Geographical Area"
-msgstr ""
-
-msgid "Geographical Location"
-msgstr ""
-
-msgid "German"
-msgstr ""
-
 msgid "Get Contacted"
 msgstr "تماس گرفته شد"
 
 msgid "Get Contacted Action"
 msgstr "عمل تماس گرفتن"
 
-msgid "Get Contacted Action [transition in sale_opportunity_workflow]"
-msgstr "عمل تماس گرفتن"
-
-msgid "Get Contacted [transition in sale_opportunity_workflow]"
-msgstr "تماس گرفته شد"
-
 msgid "Get Contacted by Prospect"
 msgstr "مشتری احتمالی تماس گرفت"
-
-msgid "Get Contacted by Prospect [transition in sale_opportunity_workflow]"
-msgstr "مشتری احتمالی تماس گرفت"
-
-msgid "Gibraltar Pound"
-msgstr ""
-
-msgid "Git"
-msgstr ""
-
-msgid "Git Author"
-msgstr ""
 
 msgid "Globally Enabled"
 msgstr "به طور کامل ممکن شد"
 
 msgid "Globally Enabled Preference"
-msgstr "ارجحیت به طور کامل ممکن شد"
-
-msgid "Globally Enabled Preference [transition in preference_workflow]"
 msgstr "ارجحیت به طور کامل ممکن شد"
 
 msgid "Globally Enabled [state in preference_workflow]"
@@ -4682,9 +3205,6 @@ msgstr "عبارت واژه نامه"
 
 msgid "Go"
 msgstr "برو"
-
-msgid "Gourde"
-msgstr ""
 
 msgid "Greater than"
 msgstr "بزرگتر از"
@@ -4716,29 +3236,11 @@ msgstr "دسته بندی کردن"
 msgid "Grouping Reference Fast Input"
 msgstr "ورودی سریع دسته بندی مرجع"
 
-msgid "Groups"
-msgstr ""
-
-msgid "Guarani"
-msgstr ""
-
-msgid "Guatemalan Quetzal"
-msgstr ""
-
 msgid "Guess Portal Types from Modules"
 msgstr "نوع پورتال را از ماژول ها حدس بزنید"
 
 msgid "Guess Properties of Portal Types"
 msgstr "خواص انواع پورتال را حدس بزنید"
-
-msgid "Guinean Franc"
-msgstr ""
-
-msgid "Guyanese Dollar"
-msgstr ""
-
-msgid "HTML"
-msgstr ""
 
 msgid "HTML Representation"
 msgstr "بازنمایی HTML"
@@ -4758,9 +3260,6 @@ msgstr "کمک"
 msgid "Hidden"
 msgstr "مخفی"
 
-msgid "Hidden Content Types"
-msgstr ""
-
 msgid "Hidden [state in document_publication_workflow]"
 msgstr "مخفی"
 
@@ -4769,15 +3268,6 @@ msgstr "مخفی کردن مدرک"
 
 msgid "Hide Document Action"
 msgstr "عمل مخفی کردن مدرک"
-
-msgid "Hide Document Action [transition in document_publication_workflow]"
-msgstr "عمل مخفی کردن مدرک"
-
-msgid "Hide Document [transition in document_publication_workflow]"
-msgstr "مخفی کردن مدرک"
-
-msgid "Hide Listbox Rows (if no Search Criterion)"
-msgstr ""
 
 msgid "Hide tabs"
 msgstr "پنهان کردن زبانه"
@@ -4788,41 +3278,14 @@ msgstr "مقایسه تاریخی"
 msgid "History"
 msgstr "تاریخچه"
 
-msgid "Hong Kong Dollar"
-msgstr ""
-
-msgid "How long history to show in ZODB history view."
-msgstr ""
-
-msgid "Hryvnia"
-msgstr ""
-
 msgid "I forgot my password!"
 msgstr "رمز عبور خود را فراموش کردم!"
-
-msgid "IAS-IFRS Compliant"
-msgstr ""
 
 msgid "ID"
 msgstr "ID"
 
-msgid "Iceland Krona"
-msgstr ""
-
-msgid "Icon"
-msgstr ""
-
-msgid "Id Tool"
-msgstr ""
-
-msgid "Identification"
-msgstr ""
-
 msgid "Identity Criterion"
 msgstr "معیار شناسه"
-
-msgid "If enabled will not show any records if search criteria for a listbox is missing"
-msgstr ""
 
 msgid "Image"
 msgstr "تصویر"
@@ -4854,17 +3317,11 @@ msgstr "وارد کردن گروه ها"
 msgid "Import Csv File"
 msgstr "وارد کردن پرونده Csv"
 
-msgid "Import OpenOffice Document"
-msgstr ""
-
 msgid "Import Report"
 msgstr "آوردن گزارش"
 
 msgid "Import Signature"
 msgstr "وارد کردن امضا"
-
-msgid "Import from Spreadsheet"
-msgstr ""
 
 msgid "In a purchase/sale trade condition document, a discount model line defines the discount behaviour of an order towards certain products."
 msgstr "در یک مدرک شرایط خرید/فروش ، مدل خط تخفیف ، روش تخفیف در یک سفارش برای محصولات خاص را مشخص می کند."
@@ -4887,26 +3344,8 @@ msgstr "عنوان داخل خط"
 msgid "Index"
 msgstr "فهرست راهنما"
 
-msgid "Indian Rupee"
-msgstr ""
-
-msgid "Indicate if we display a link to contextual help or not"
-msgstr ""
-
-msgid "Indicate if we display link to translation system in interface or not"
-msgstr ""
-
-msgid "Indicate if we display useful link for developer in interface or not"
-msgstr ""
-
-msgid "Indicates if a confirmation dialog should be displayed when the user tries to navigate from a form that was partially changed"
-msgstr ""
-
 msgid "Individual Variation"
 msgstr "تنوع شخصی"
-
-msgid "Indonesian Rupiah"
-msgstr ""
 
 msgid "Industrial Phase"
 msgstr "فاز صنعتی"
@@ -4929,9 +3368,6 @@ msgstr "تعریف گردش کار تعامل جذب"
 msgid "Inherited Models"
 msgstr "مدل ها دریافت شد"
 
-msgid "Init Script ID"
-msgstr ""
-
 msgid "Initial Begin Date"
 msgstr "تاریخ شروع مقدماتی"
 
@@ -4950,32 +3386,17 @@ msgstr "تاریخ پایان مقدماتی"
 msgid "Initialised by Delivery Builder."
 msgstr "توسط سازنده تحویل آغاز شد."
 
-msgid "Input data has errors. Please look at error messages below."
-msgstr ""
-
 msgid "Input data has errors. Please look at the error messages below."
 msgstr "اطلاعات ورودی اشتباه دارد. لطفأ به پیام های خطای زیر دقت کنید."
 
-msgid "Input is required but no input given."
-msgstr ""
-
 msgid "Inspect Object"
 msgstr "شئ آزمایش شد"
-
-msgid "Install"
-msgstr ""
 
 msgid "Install Business Template"
 msgstr "الگوی تجاری نصب کنید"
 
 msgid "Install Business Template Action"
 msgstr "عمل نصب الگوی تجاری"
-
-msgid "Install Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل نصب الگوی تجاری"
-
-msgid "Install Business Template [transition in business_template_installation_workflow]"
-msgstr "الگوی تجاری نصب کنید"
 
 msgid "Install Business Templates from Repositories"
 msgstr "الگوی تجاری را از مخازن نصب کنید"
@@ -4985,12 +3406,6 @@ msgstr "انتخاب نصب"
 
 msgid "Installation State"
 msgstr "حالت نصب"
-
-msgid "Installation procedure may begin."
-msgstr ""
-
-msgid "Installation steps"
-msgstr ""
 
 msgid "Installed"
 msgstr "نصب شد"
@@ -5012,27 +3427,6 @@ msgstr "دستوالعمل ها"
 
 msgid "Interaction Workflow Definition"
 msgstr "تعریف گردش کار تعامل"
-
-msgid "Interfaces"
-msgstr ""
-
-msgid "Internal Invoice Transaction"
-msgstr ""
-
-msgid "Internal Invoice Transaction Line"
-msgstr ""
-
-msgid "Internal Order"
-msgstr ""
-
-msgid "Internal Order Cell"
-msgstr ""
-
-msgid "Internal Order Line"
-msgstr ""
-
-msgid "Internal Order Module"
-msgstr ""
 
 msgid "Internal Orders"
 msgstr "سفارش های داخلی"
@@ -5064,24 +3458,6 @@ msgstr "لیست های بسته بندی داخلی"
 msgid "Internal Supplies"
 msgstr "تدارکات داخلی"
 
-msgid "Internal Supply"
-msgstr ""
-
-msgid "Internal Supply Cell"
-msgstr ""
-
-msgid "Internal Supply Line"
-msgstr ""
-
-msgid "Internal Supply Module"
-msgstr ""
-
-msgid "Internal Trade Condition"
-msgstr ""
-
-msgid "Internal Trade Condition Module"
-msgstr ""
-
 msgid "Internal Trade Conditions"
 msgstr "شرایط تجارت داخلی"
 
@@ -5094,19 +3470,7 @@ msgstr "سلب اعتبار از حساب"
 msgid "Invalidate Account Action"
 msgstr "عمل سلب اعتبار از حساب"
 
-msgid "Invalidate Account Action [transition in account_workflow]"
-msgstr "عمل سلب اعتبار از حساب"
-
-msgid "Invalidate Account [transition in account_workflow]"
-msgstr "سلب اعتبار از حساب"
-
 msgid "Invalidate Action"
-msgstr "عمل سلب اعتبار"
-
-msgid "Invalidate Action [transition in rule_validation_workflow]"
-msgstr "عمل سلب اعتبار"
-
-msgid "Invalidate Action [transition in validation_workflow]"
 msgstr "عمل سلب اعتبار"
 
 msgid "Invalidate Message"
@@ -5114,18 +3478,6 @@ msgstr "سلب اعتبار پیام"
 
 msgid "Invalidate Message Action"
 msgstr "عمل سلب اعتبار پیام"
-
-msgid "Invalidate Message Action [transition in notification_message_workflow]"
-msgstr "عمل سلب اعتبار پیام"
-
-msgid "Invalidate Message [transition in notification_message_workflow]"
-msgstr "سلب اعتبار پیام"
-
-msgid "Invalidate [transition in rule_validation_workflow]"
-msgstr "سلب اعتبار"
-
-msgid "Invalidate [transition in validation_workflow]"
-msgstr "سلب اعتبار"
 
 msgid "Invalidated"
 msgstr "سلب اعتبار شده"
@@ -5193,12 +3545,6 @@ msgstr "نمودار تغییرات موجودی انبار"
 msgid "Inventory Workflow"
 msgstr "گردش کار انبار گردانی"
 
-msgid "Invisible"
-msgstr ""
-
-msgid "Invisible [state in knowledge_pad_validation_workflow]"
-msgstr ""
-
 msgid "Invoice Cell"
 msgstr "سلول صورتحساب"
 
@@ -5208,14 +3554,8 @@ msgstr "خط صورتحساب"
 msgid "Invoice Lines"
 msgstr "خطوط صورتحساب"
 
-msgid "Invoice Movement Group"
-msgstr ""
-
 msgid "Invoice Number"
 msgstr "شماره صورتحساب"
-
-msgid "Invoice Root Simulation Rule"
-msgstr ""
 
 msgid "Invoice Rule"
 msgstr "قانون صورتحساب"
@@ -5223,17 +3563,11 @@ msgstr "قانون صورتحساب"
 msgid "Invoice Rule object makes sure an Invoice in the simulation is consistent with the real invoice."
 msgstr "این قاعده تضمین میکند که صورتحساب در شبیه سازی مطابق با صورتحساب حقیقی است."
 
-msgid "Invoice Simulation Rule"
-msgstr ""
-
 msgid "Invoice Transaction Rule"
 msgstr "قانون معامله صورتحساب"
 
 msgid "Invoice Transaction Rule object make sure an Invoice in the simulation is consistent with the real invoice."
 msgstr "تضمین میکند که صورتحساب در شبیه سازی مطابق با صورتحساب حقیقی است."
-
-msgid "Invoice Transaction Simulation Rule"
-msgstr ""
 
 msgid "Invoice View"
 msgstr "نمایش صورتحساب"
@@ -5247,12 +3581,6 @@ msgstr "گزارش صورتحساب ها"
 msgid "Invoicing Rule"
 msgstr "قانون صدور صورتحساب"
 
-msgid "Iranian Rial"
-msgstr ""
-
-msgid "Iraqi Dinar"
-msgstr ""
-
 msgid "Item"
 msgstr "قلم (آیتم)"
 
@@ -5264,12 +3592,6 @@ msgstr "قلم (اقلام) بریده شد."
 
 msgid "Item(s) pasted."
 msgstr "قلم (اقلام) منتقل شد."
-
-msgid "Jamaica Dollar"
-msgstr ""
-
-msgid "Jordanian Dinar"
-msgstr ""
 
 msgid "Journal"
 msgstr "دفتر روزنامه"
@@ -5285,12 +3607,6 @@ msgstr "ثبت دفتر روزنامه شدن معامله"
 
 msgid "Journalise Transaction Action"
 msgstr "عمل ثبت دفتر روزنامه شدن معامله"
-
-msgid "Journalise Transaction Action [transition in accounting_workflow]"
-msgstr "عمل ثبت دفتر روزنامه شدن معامله"
-
-msgid "Journalise Transaction [transition in accounting_workflow]"
-msgstr "ثبت دفتر روزنامه شدن معامله"
 
 msgid "Journalised"
 msgstr "ثبت دفتر روزنامه شد"
@@ -5310,26 +3626,11 @@ msgstr "پرش به محل مرتبط"
 msgid "Jump..."
 msgstr "پرش ..."
 
-msgid "Kenyan Shilling"
-msgstr ""
-
 msgid "Keyword"
 msgstr "لغت کلیدی"
 
-msgid "Keyword Keys"
-msgstr ""
-
 msgid "Keywords"
 msgstr "لغت های کلیدی"
-
-msgid "Kina"
-msgstr ""
-
-msgid "Kip"
-msgstr ""
-
-msgid "Knowledge Box"
-msgstr ""
 
 msgid "Knowledge Pad"
 msgstr "صفحه اطلاعات"
@@ -5340,53 +3641,17 @@ msgstr "ماژول صفحه اطلاعات"
 msgid "Knowledge Pads"
 msgstr "صفحه های اطلاعات"
 
-msgid "Korean"
-msgstr ""
-
-msgid "Krona"
-msgstr ""
-
-msgid "Kroon"
-msgstr ""
-
-msgid "Kuna"
-msgstr ""
-
-msgid "Kuwaiti Dinar"
-msgstr ""
-
-msgid "Kyat"
-msgstr ""
-
-msgid "Landscape"
-msgstr ""
-
 msgid "Language"
 msgstr "زبان"
 
-msgid "Language of the term"
-msgstr ""
-
 msgid "Language:"
 msgstr "زبان:"
-
-msgid "Large Image Height"
-msgstr ""
-
-msgid "Large Image Width"
-msgstr ""
-
-msgid "Lari"
-msgstr ""
 
 msgid "Last"
 msgstr "آخر"
 
 msgid "Last Name"
 msgstr "نام فامیل"
-
-msgid "Last Page"
-msgstr ""
 
 msgid "Last career step terminated. New career step added."
 msgstr "آخرین مرحله شغلی متوقف شد. مرحله جدید شغلی اضافه شد."
@@ -5403,29 +3668,11 @@ msgstr "آخرین"
 msgid "Latest Content List"
 msgstr "آخرین لیست محتویات"
 
-msgid "Lats"
-msgstr ""
-
 msgid "Layout Configuration"
 msgstr "طرح پیکربندی"
 
-msgid "Layout of Contained Boxes"
-msgstr ""
-
 msgid "Learn"
 msgstr "یادگیری"
-
-msgid "Lebanese Pound"
-msgstr ""
-
-msgid "Lek"
-msgstr ""
-
-msgid "Lempira"
-msgstr ""
-
-msgid "Leone"
-msgstr ""
 
 msgid "Less than"
 msgstr "کمتر از"
@@ -5436,29 +3683,14 @@ msgstr "کمتر از یا برابر است"
 msgid "Letter"
 msgstr "نامه"
 
-msgid "Lev"
-msgstr ""
-
 msgid "Level"
 msgstr "سطح"
-
-msgid "Liberian Dollar"
-msgstr ""
-
-msgid "Libyan Dinar"
-msgstr ""
 
 msgid "License"
 msgstr "گواهینامه (پروانه)"
 
-msgid "Lilangeni"
-msgstr ""
-
 msgid "Line Level Divergences"
 msgstr "خط سطح واگرایی"
-
-msgid "Lines Report"
-msgstr ""
 
 msgid "Lines in the Period"
 msgstr "خطوط در دوره"
@@ -5486,21 +3718,6 @@ msgstr "لیست ظرف آشغال"
 
 msgid "List of Documents"
 msgstr "لیست مدارک"
-
-msgid "List of base categories used for optimized predicate category search.\n\nIf you change this preference, you must reindex all predicate documents. Otherwise this configuration will not be used."
-msgstr ""
-
-msgid "List of criterion properties used for predicate"
-msgstr ""
-
-msgid "Litas"
-msgstr ""
-
-msgid "Local ID of the object in its enclosing container"
-msgstr ""
-
-msgid "Local Role Keys"
-msgstr ""
 
 msgid "Local Roles"
 msgstr "نقش های محلی"
@@ -5535,14 +3752,8 @@ msgstr "نام کاربر و/یا رمز عبور صحیح نیست."
 msgid "Lost Password"
 msgstr "رمز عبپر گمشده"
 
-msgid "Loti"
-msgstr ""
-
 msgid "Mail Message"
 msgstr "ارسال پیام"
-
-msgid "Maintainers"
-msgstr ""
 
 msgid "Make Offer"
 msgstr "ارائه پیشنهاد"
@@ -5550,29 +3761,8 @@ msgstr "ارائه پیشنهاد"
 msgid "Make Offer Action"
 msgstr "عمل ارائه پیشنهاد"
 
-msgid "Make Offer Action [transition in open_order_workflow]"
-msgstr "عمل ارائه پیشنهاد"
-
-msgid "Make Offer Action [transition in order_workflow]"
-msgstr "عمل ارائه پیشنهاد"
-
-msgid "Make Offer [transition in open_order_workflow]"
-msgstr "ارائه پیشنهاد"
-
-msgid "Make Offer [transition in order_workflow]"
-msgstr "ارائه پیشنهاد"
-
 msgid "Make a Template"
 msgstr "ایجاد الگو"
-
-msgid "Malawian Kwacha"
-msgstr ""
-
-msgid "Malaysian Ringgit"
-msgstr ""
-
-msgid "Maltese Lira"
-msgstr ""
 
 msgid "Manage Business Templates"
 msgstr "مدیریت الگوهای تجاری"
@@ -5580,14 +3770,8 @@ msgstr "مدیریت الگوهای تجاری"
 msgid "Manage Components"
 msgstr "مدیریت اجزاء"
 
-msgid "Manage Field Library"
-msgstr ""
-
 msgid "Manual Price"
 msgstr "راهنمای قیمت"
-
-msgid "Mapped Property"
-msgstr ""
 
 msgid "Mapped Value"
 msgstr "ارزش طراحی شده"
@@ -5601,44 +3785,22 @@ msgstr "علامت گذاری اعلام شد"
 msgid "Mark Posted Action"
 msgstr "عمل علامت گذاری اعلام شد"
 
-msgid "Mark Posted Action [transition in event_workflow]"
-msgstr "عمل علامت گذاری اعلام شد"
-
-msgid "Mark Posted [transition in event_workflow]"
-msgstr "علامت گذاری اعلام شد"
-
 msgid "Mark Responded"
 msgstr "به علامت گذاری واکنش نشان داده شد"
 
 msgid "Mark Responded Action"
 msgstr "عمل واکنش به علامت گذاری"
 
-msgid "Mark Responded Action [transition in event_workflow]"
-msgstr "عمل واکنش به علامت گذاری"
-
-msgid "Mark Responded [transition in event_workflow]"
-msgstr "به علامت گذاری واکنش نشان داده شد"
-
-msgid "Mark the beginning and the end of an Accounting Period.\nOnce the period is closed (i.e. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period"
+msgid ""
+"Mark the beginning and the end of an Accounting Period.\n"
+"Once the period is closed (i.e. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period"
 msgstr "شروع و پایان یک دوره حساپداری رامشخص میکند به محض اتمام دوره (به عنوان نمونه, معرف دوره حسابداری در زمان تحویل است) دیگر نمی توان معامله ای را برای این دوره ثبت کرد"
 
 msgid "Materials"
 msgstr "مواد"
 
-msgid "Mauritanian Ouguiya"
-msgstr ""
-
-msgid "Mauritian Rupee"
-msgstr ""
-
 msgid "Max Criterion"
 msgstr "حداکثر معیار"
-
-msgid "Maximum User Inactivity Duration"
-msgstr ""
-
-msgid "Maximum user's inactivity duration in seconds before user is automatically logged out"
-msgstr ""
 
 msgid "Measure"
 msgstr "اندازه"
@@ -5648,12 +3810,6 @@ msgstr "سلول اندازه"
 
 msgid "Measures"
 msgstr "اندازه ها"
-
-msgid "Medium Image Height"
-msgstr ""
-
-msgid "Medium Image Width"
-msgstr ""
 
 msgid "Meeting"
 msgstr "جلسه"
@@ -5670,12 +3826,6 @@ msgstr "حالت جلسه"
 msgid "Meetings"
 msgstr "جلسات"
 
-msgid "Memcached Plugin"
-msgstr ""
-
-msgid "Memcached Tool"
-msgstr ""
-
 msgid "Memory Used"
 msgstr "حافظه استفاده شده"
 
@@ -5688,9 +3838,6 @@ msgstr "حمل ترکیب شد"
 msgid "Message"
 msgstr "پیام"
 
-msgid "Message Translations"
-msgstr ""
-
 msgid "Messages"
 msgstr "پیام ها"
 
@@ -5700,32 +3847,14 @@ msgstr "نوع متا"
 msgid "Metadata"
 msgstr "متادیتا"
 
-msgid "Method ID"
-msgstr ""
-
-msgid "Metical"
-msgstr ""
-
 msgid "Metric Type"
 msgstr "نوع متریک"
-
-msgid "Mexican Peso"
-msgstr ""
-
-msgid "Micro Image Height"
-msgstr ""
-
-msgid "Micro Image Width"
-msgstr ""
 
 msgid "Migrate Business Templates To New Format"
 msgstr "تبدیل الگوهای تجاری به فورمت جدید"
 
 msgid "Migrate Folder"
 msgstr "منتقل کردن پوشه"
-
-msgid "Migrate PropertySheets from File System"
-msgstr ""
 
 msgid "Migration to HBTree is running."
 msgstr "انتقال به HBTree در حال انجام است."
@@ -5748,9 +3877,6 @@ msgstr "مفقود شدن"
 msgid "Missing [state in packing_list_container_workflow]"
 msgstr "مفقود شدن"
 
-msgid "Mixins"
-msgstr ""
-
 msgid "Mobile Telephone"
 msgstr "تلفن موبایل"
 
@@ -5769,9 +3895,6 @@ msgstr "تغییر داده شده"
 msgid "Modified [state in business_template_building_workflow]"
 msgstr "تغییر داده شده"
 
-msgid "Modified [state in component_validation_workflow]"
-msgstr ""
-
 msgid "Modify UI"
 msgstr "تغییر دادن UI"
 
@@ -5787,26 +3910,11 @@ msgstr "نوع پورتال ماژول"
 msgid "Module Property"
 msgstr "خاصیت ماژول"
 
-msgid "Module Selection Name"
-msgstr ""
-
 msgid "Module Title"
 msgstr "عنوان ماژول"
 
 msgid "Modules"
 msgstr "ماژول ها"
-
-msgid "Moldovan Leu"
-msgstr ""
-
-msgid "Money Amounts Fields Width"
-msgstr ""
-
-msgid "Money Quantity Style"
-msgstr ""
-
-msgid "Month / Day / Year"
-msgstr ""
 
 msgid "Monthly Range Movement Group"
 msgstr "میزان تحرک ماهانه گروه"
@@ -5820,12 +3928,6 @@ msgstr "اخبار بیشتر ..."
 msgid "More tasks..."
 msgstr "وظایف بیشتر..."
 
-msgid "Moroccan Dirham"
-msgstr ""
-
-msgid "Movement"
-msgstr ""
-
 msgid "Movement Group"
 msgstr "گروه متحرک"
 
@@ -5837,15 +3939,6 @@ msgstr "تحرکات"
 
 msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "مدارک چندگانه () موجود است"
-
-msgid "Multiple Installation of Business Templates"
-msgstr ""
-
-msgid "Multivalue Keys"
-msgstr ""
-
-msgid "Multivalued"
-msgstr ""
 
 msgid "My Content List"
 msgstr "لیست محتویات من"
@@ -5871,44 +3964,17 @@ msgstr "اقلام مورد علاقه من"
 msgid "My Language"
 msgstr "زبان من"
 
-msgid "Naira"
-msgstr ""
-
-msgid "Nakfa"
-msgstr ""
-
 msgid "Name"
 msgstr "نام"
 
-msgid "Name to be used instead of the Reference"
-msgstr ""
-
-msgid "Named Parameters"
-msgstr ""
-
-msgid "Namibian Dollar"
-msgstr ""
-
-msgid "Nano Image Height"
-msgstr ""
-
-msgid "Nano Image Width"
-msgstr ""
-
 msgid "Nationality"
 msgstr "ملیت"
-
-msgid "Nepalese Rupee"
-msgstr ""
 
 msgid "Nested Line Movement Group"
 msgstr "خط گروه متحرک داخلی"
 
 msgid "Net"
 msgstr "خالص"
-
-msgid "Net Converted Quantity Divergence Tester"
-msgstr ""
 
 msgid "Net Loss"
 msgstr "ضرر خالص"
@@ -5924,9 +3990,6 @@ msgstr "گزارش حقوق خالص"
 
 msgid "Net Total Price"
 msgstr "قیمت کل خالص"
-
-msgid "Netherlands Antillean Guilder"
-msgstr ""
 
 msgid "New"
 msgstr "جدید"
@@ -5958,20 +4021,11 @@ msgstr "(%(count)s) اتفاق ورودی جدید"
 msgid "New Incoming Events [worklist in event_workflow]"
 msgstr "اتفاق ورودی جدید"
 
-msgid "New Sol"
-msgstr ""
-
-msgid "New Taiwan Dollar"
-msgstr ""
-
 msgid "New Value"
 msgstr "مقدار جدید"
 
 msgid "New Web Page of section ${web_section}."
 msgstr "صفحه جدید وب از بخش ${web_section}"
-
-msgid "New Zealand Dollar"
-msgstr ""
 
 msgid "New [state in document_ingestion_workflow]"
 msgstr "جدید"
@@ -5987,12 +4041,6 @@ msgstr "اتفاق جدید ایجاد شد."
 
 msgid "Next"
 msgstr "بعدی"
-
-msgid "Next Page"
-msgstr ""
-
-msgid "Ngultrum"
-msgstr ""
 
 msgid "No ${portal_type} related."
 msgstr "هیچ ${portal_type} مرتبط نیست."
@@ -6042,12 +4090,6 @@ msgstr "هیچ"
 msgid "Normal Balance"
 msgstr "باقیمانده نرمال"
 
-msgid "North Korean Won"
-msgstr ""
-
-msgid "Norwegian Krone"
-msgstr ""
-
 msgid "Not Grouped Lines in Beginning Balance"
 msgstr "خطوط در آغاز باقیمانده گروه بندی نشده"
 
@@ -6090,41 +4132,17 @@ msgstr "گردش کار پیام تذکر"
 msgid "Notification Messages"
 msgstr "پیام های تذکر"
 
-msgid "Notification Tool"
-msgstr ""
-
 msgid "Num of duplicates"
 msgstr "تعداد تکراری ها"
 
 msgid "Number"
 msgstr "تعداد"
 
-msgid "Number of Duplicates"
-msgstr ""
-
-msgid "Number of Lines Displayed in List Mode Listboxes"
-msgstr ""
-
-msgid "Number of Lines Displayed in View Mode Listboxes"
-msgstr ""
-
 msgid "Number of Related Objects"
 msgstr "تعداداقلام وابسته"
 
-msgid "Number of user accounts"
-msgstr ""
-
 msgid "O/Rat"
 msgstr "O/Rat"
-
-msgid "ODS Style"
-msgstr ""
-
-msgid "ODT Style"
-msgstr ""
-
-msgid "OOo Document"
-msgstr ""
 
 msgid "Object"
 msgstr "Object"
@@ -6218,15 +4236,6 @@ msgstr "مدرک اداری"
 
 msgid "Old Value"
 msgstr "ارزش گذشته"
-
-msgid "Omani Rial"
-msgstr ""
-
-msgid "Only consider transactions in those states."
-msgstr ""
-
-msgid "Open"
-msgstr ""
 
 msgid "Open Bugs"
 msgstr "خطای باز"
@@ -6342,21 +4351,6 @@ msgstr "(%(count)s) درخواست پشتیبانی باز"
 msgid "Open Support Requests [worklist in ticket_workflow]"
 msgstr "درخواست پشتیبانی باز"
 
-msgid "Open [state in bug_workflow]"
-msgstr ""
-
-msgid "OpenOffice Source File"
-msgstr ""
-
-msgid "OpenOffice Source File Example"
-msgstr ""
-
-msgid "Opened"
-msgstr ""
-
-msgid "Opened [state in ticket_workflow]"
-msgstr ""
-
 msgid "Opening Date"
 msgstr "تاریخ گشایش"
 
@@ -6411,9 +4405,6 @@ msgstr "نسبت سفارش"
 msgid "Order Report"
 msgstr "گزارش فروش"
 
-msgid "Order Root Simulation Rule"
-msgstr ""
-
 msgid "Order Rule"
 msgstr "قانون سفارش"
 
@@ -6425,12 +4416,6 @@ msgstr "تکلیف سفارش"
 
 msgid "Order Task Action"
 msgstr "عمل تکلیف سفارش"
-
-msgid "Order Task Action [transition in task_workflow]"
-msgstr "عمل تکلیف سفارش"
-
-msgid "Order Task [transition in task_workflow]"
-msgstr "تکلیف سفارش"
 
 msgid "Order Tool"
 msgstr "ابزار سفارش"
@@ -6452,9 +4437,6 @@ msgstr "سفارش شد"
 
 msgid "Organisation"
 msgstr "سازمان"
-
-msgid "Organisation Configurator Item"
-msgstr ""
 
 msgid "Organisation Module"
 msgstr "ماژول سازمان"
@@ -6504,9 +4486,6 @@ msgstr "اشخاص ثالث"
 msgid "Others"
 msgstr "بقیه"
 
-msgid "Outcome Path"
-msgstr ""
-
 msgid "Outgoing"
 msgstr "خروجی"
 
@@ -6531,23 +4510,14 @@ msgstr "مالک"
 msgid "Owners:"
 msgstr "مالک ها:"
 
-msgid "PCG (France)"
-msgstr ""
-
 msgid "PDF"
 msgstr "PDF"
 
 msgid "PDM"
 msgstr "PDM"
 
-msgid "Pa'Anga"
-msgstr ""
-
 msgid "Pack Container"
 msgstr "بسته بندی کانتیتر"
-
-msgid "Pack Container [transition in packing_list_container_workflow]"
-msgstr "بسته بندی کانتینر"
 
 msgid "Packed"
 msgstr "بسته بندی شد"
@@ -6570,20 +4540,8 @@ msgstr "گزارش لیست بسته بندی"
 msgid "Packing List Workflow"
 msgstr "گردش کار لیست بسته بندی"
 
-msgid "Pad Group"
-msgstr ""
-
-msgid "Pad Group is used to specify defaut pads"
-msgstr ""
-
 msgid "Page ${page} of ${total_pages}"
 msgstr "صفحه ${page} از ${total_pages}"
-
-msgid "Pakistani Rupee"
-msgstr ""
-
-msgid "Parent Delivery Property Movement Group"
-msgstr ""
 
 msgid "Parent Explanation Movement Group"
 msgstr "گروه تحرک متغیر پایه"
@@ -6591,17 +4549,11 @@ msgstr "گروه تحرک متغیر پایه"
 msgid "Password"
 msgstr "رمز عبور"
 
-msgid "Password Confirmation"
-msgstr ""
-
 msgid "Password Tool"
 msgstr "ابزار رمز عبور"
 
 msgid "Password changed."
 msgstr "رمز عبور تغییر کرد."
-
-msgid "Password for a user in ERP5"
-msgstr ""
 
 msgid "Password reset."
 msgstr "تغییر دادن رمز عبور."
@@ -6612,23 +4564,8 @@ msgstr "رمز عبور ها یکسان نیستند."
 msgid "Paste"
 msgstr "جایگزینی"
 
-msgid "Pataca"
-msgstr ""
-
 msgid "Path"
 msgstr "مسیر"
-
-msgid "Path of Objects whose Last Workflow History only should be Exported"
-msgstr ""
-
-msgid "Paths"
-msgstr ""
-
-msgid "Paths of Objects that should be Kept"
-msgstr ""
-
-msgid "Paths of Objects whose Workflow Histories should be Exported"
-msgstr ""
 
 msgid "Pay Sheet Cell"
 msgstr "سلول برگه پرداخت"
@@ -6695,9 +4632,6 @@ msgstr "مود پرداخت"
 
 msgid "Payment Rule"
 msgstr "قانون پرداخت"
-
-msgid "Payment Simulation Rule"
-msgstr ""
 
 msgid "Payment Transaction"
 msgstr "معامله پرداخت"
@@ -6771,15 +4705,6 @@ msgstr "خط تناوبی"
 msgid "Periodicity Lines"
 msgstr "خطوط تناوبی"
 
-msgid "Permission Configurator Item"
-msgstr ""
-
-msgid "Permission needed to access Getter"
-msgstr ""
-
-msgid "Permission needed to access Setter"
-msgstr ""
-
 msgid "Persian"
 msgstr "فارسی"
 
@@ -6788,9 +4713,6 @@ msgstr "شخص"
 
 msgid "Person Assignment View"
 msgstr "نمایش وظیفه شخصی"
-
-msgid "Person Configurator Item"
-msgstr ""
 
 msgid "Person Detailed Report"
 msgstr "گزارش شخصی با جزئیات"
@@ -6813,9 +4735,6 @@ msgstr "(%(count)s) شخص برای تأئید"
 msgid "Persons to Validate [worklist in validation_workflow]"
 msgstr "شخص برای تأئید"
 
-msgid "Philippine Peso"
-msgstr ""
-
 msgid "Phone Call"
 msgstr "تماس تلفنی"
 
@@ -6825,26 +4744,11 @@ msgstr "انجام سفارش"
 msgid "Place Order Action"
 msgstr "عمل انجام سفارش"
 
-msgid "Place Order Action [transition in open_order_workflow]"
-msgstr "عمل انجام سفارش"
-
-msgid "Place Order Action [transition in order_workflow]"
-msgstr "عمل انجام سفارش"
-
-msgid "Place Order [transition in open_order_workflow]"
-msgstr "انجام سفارش"
-
-msgid "Place Order [transition in order_workflow]"
-msgstr "انجام سفارش"
-
 msgid "Placed Order"
 msgstr "سفارش انجام شد"
 
 msgid "Placed Order [state in open_order_workflow]"
 msgstr "سفارش انجام شد"
-
-msgid "Plain Text"
-msgstr ""
 
 msgid "Plan"
 msgstr "طرح"
@@ -6855,29 +4759,11 @@ msgstr "طرح سفارش"
 msgid "Plan Order Action"
 msgstr "عمل سفارش طرح"
 
-msgid "Plan Order Action [transition in open_order_workflow]"
-msgstr "عمل سفارش طرح"
-
-msgid "Plan Order Action [transition in order_workflow]"
-msgstr "عمل سفارش طرح"
-
-msgid "Plan Order [transition in open_order_workflow]"
-msgstr "سفارش طرح"
-
-msgid "Plan Order [transition in order_workflow]"
-msgstr "سفارش طرح"
-
 msgid "Plan Requirement"
 msgstr "نیازمندی طرح"
 
 msgid "Plan Requirement Action"
 msgstr "عمل نیازمندی طرح"
-
-msgid "Plan Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل نیازمندی طرح"
-
-msgid "Plan Requirement [transition in requirement_analysis_workflow]"
-msgstr "نیازمندی طرح"
 
 msgid "Plan Task"
 msgstr "تکلیف برنامه ریزی"
@@ -6885,26 +4771,11 @@ msgstr "تکلیف برنامه ریزی"
 msgid "Plan Task Action"
 msgstr "عمل تکلیف برنامه ریزی"
 
-msgid "Plan Task Action [transition in task_workflow]"
-msgstr "عمل تکلیف برنامه ریزی"
-
-msgid "Plan Task [transition in task_workflow]"
-msgstr "تکلیف برنامه"
-
 msgid "Plan Transaction"
 msgstr "معامله برنامه ریزی"
 
 msgid "Plan Transaction Action"
 msgstr "عمل معامله برنامه ریزی"
-
-msgid "Plan Transaction Action [transition in accounting_workflow]"
-msgstr "عمل معامله برنامه ریزی"
-
-msgid "Plan Transaction [transition in accounting_workflow]"
-msgstr "برنامه ریزی معامله"
-
-msgid "Plan [transition in bug_event_workflow]"
-msgstr "برنامه ریزی"
 
 msgid "Planned"
 msgstr "برنامه ریزی شده"
@@ -6921,12 +4792,6 @@ msgstr "برنامه ریزی شده"
 msgid "Planned [state in bug_event_workflow]"
 msgstr "برنامه ریزی شده"
 
-msgid "Planned [state in event_simulation_workflow]"
-msgstr ""
-
-msgid "Planned [state in internal_invoice_transaction_simulation_workflow]"
-msgstr ""
-
 msgid "Planned [state in order_workflow]"
 msgstr "برنامه ریزی شده"
 
@@ -6938,18 +4803,6 @@ msgstr "برنامه ریزی شده"
 
 msgid "Planning"
 msgstr "طراحی"
-
-msgid "Plano Geral de Contas (Brazil)"
-msgstr ""
-
-msgid "Please be patient and do not move from current page until you get confirmation that the installation is over. It will last approximately 5 to 10 minutes."
-msgstr ""
-
-msgid "Please click link below. You will be redirected to a form in which you can login using one of yours newly created ERP5 user accounts."
-msgstr ""
-
-msgid "Please proceed using Install button below. In the next page you will receive automatically updated installation status report."
-msgstr ""
 
 msgid "Please select one (or more) object."
 msgstr "لطفأ یک قلم یا بیشتر انتخاب کنید."
@@ -6978,29 +4831,8 @@ msgstr "لطفأ یک پیام ChangeLog تعیین کنید."
 msgid "Please specify a URL before trying to start to crawl content."
 msgstr "لطفأ قبل از امتحان کردن محتویات crawl یک URL را مشخص کنید"
 
-msgid "Please use link (<b>Add gadgets</b>) to prepare it yourself."
-msgstr ""
-
-msgid "Please wait while your changes are being applied."
-msgstr ""
-
-msgid "Polish"
-msgstr ""
-
-msgid "Portal Skin Folder"
-msgstr ""
-
 msgid "Portal Type"
 msgstr "نوع پورتال"
-
-msgid "Portal Type Configurator Item"
-msgstr ""
-
-msgid "Portal Type Roles"
-msgstr ""
-
-msgid "Portal Type Roles Spreadsheet Configurator Item"
-msgstr ""
 
 msgid "Portal Types"
 msgstr "انواع پورتال"
@@ -7011,14 +4843,8 @@ msgstr "انواع پورتال به روز شد."
 msgid "Portal type"
 msgstr "نوع پرتال"
 
-msgid "Portal type of the object to create"
-msgstr ""
-
 msgid "PortalType List"
 msgstr "لیست نوع پورتال"
-
-msgid "Portuguese / Brazil"
-msgstr ""
 
 msgid "Post"
 msgstr "ارسال"
@@ -7029,23 +4855,11 @@ msgstr "اعلام اتفاق"
 msgid "Post Event Action"
 msgstr "عمل اعلام اتفاق"
 
-msgid "Post Event Action [transition in event_workflow]"
-msgstr "عمل اعلام اتفاق"
-
-msgid "Post Event [transition in event_workflow]"
-msgstr "اعلام اتفاق"
-
 msgid "Post Query"
 msgstr "اعلام پرسش"
 
 msgid "Post Query Action"
 msgstr "عمل اعلام پرسش"
-
-msgid "Post Query Action [transition in query_workflow]"
-msgstr "عمل اعلام پرسش"
-
-msgid "Post Query [transition in query_workflow]"
-msgstr "اعلام پرسش"
 
 msgid "Post Transaction"
 msgstr "اعلام معامله"
@@ -7053,26 +4867,11 @@ msgstr "اعلام معامله"
 msgid "Post Transaction Action"
 msgstr "عمل اعلام معامله"
 
-msgid "Post Transaction Action [transition in accounting_workflow]"
-msgstr "عمل اعلام معامله"
-
-msgid "Post Transaction [transition in accounting_workflow]"
-msgstr "اعلام معامله"
-
 msgid "Post Transaction to General Ledger"
 msgstr "اعلام معامله در دفتر کل"
 
-msgid "Post Transaction to General Ledger [transition in accounting_workflow]"
-msgstr "ثبت معامله در دفتر کل"
-
-msgid "Post [transition in bug_event_workflow]"
-msgstr "اعلام"
-
 msgid "Post a Query"
 msgstr "اعلام یک پرسش"
-
-msgid "Postal Code"
-msgstr ""
 
 msgid "Posted"
 msgstr "اعلام شد"
@@ -7101,12 +4900,6 @@ msgstr "در دفتر کل اعلام شد"
 msgid "Posted to General Ledger [state in accounting_workflow]"
 msgstr "ثبت شده در دفتر کل"
 
-msgid "Posted to General Ledger [state in internal_invoice_transaction_simulation_workflow]"
-msgstr ""
-
-msgid "Pound Sterling"
-msgstr ""
-
 msgid "Precision"
 msgstr "دقت"
 
@@ -7115,9 +4908,6 @@ msgstr "وظایف قبلی"
 
 msgid "Predicate"
 msgstr "پیش فرض"
-
-msgid "Predicate Categories"
-msgstr ""
 
 msgid "Predicate Group"
 msgstr "گروه پیش فرض"
@@ -7128,44 +4918,14 @@ msgstr "پیش فرض ها"
 msgid "Preference"
 msgstr "ارجحیت"
 
-msgid "Preference Configurator Item"
-msgstr ""
-
 msgid "Preference Priority"
 msgstr "اولویت ارجحیت"
 
 msgid "Preference Tool"
 msgstr "ابزار ارجحیت"
 
-msgid "Preference Tool Type"
-msgstr ""
-
-msgid "Preference Type"
-msgstr ""
-
 msgid "Preferences"
 msgstr "ارجحیت ها"
-
-msgid "Preferred Image Format"
-msgstr ""
-
-msgid "Preferred Image Quality"
-msgstr ""
-
-msgid "Preferred Image Size"
-msgstr ""
-
-msgid "Preferred image format."
-msgstr ""
-
-msgid "Preferred image quality."
-msgstr ""
-
-msgid "Preferred image size."
-msgstr ""
-
-msgid "Preferred timezone"
-msgstr ""
 
 msgid "Presentation"
 msgstr "عرضه"
@@ -7184,12 +4944,6 @@ msgstr "قبل"
 
 msgid "Previous Balance"
 msgstr "باقیمانده قبلی"
-
-msgid "Previous Causality Movement Group"
-msgstr ""
-
-msgid "Previous Page"
-msgstr ""
 
 msgid "Previous Period"
 msgstr "دوره قبلی"
@@ -7218,9 +4972,6 @@ msgstr "چاپ"
 msgid "Print Invoice"
 msgstr "چاپ صورتحساب"
 
-msgid "Print Mode"
-msgstr ""
-
 msgid "Print Order"
 msgstr "چاپ سفارش"
 
@@ -7229,9 +4980,6 @@ msgstr "چاپ لیست بسته بندی"
 
 msgid "Print Payslip"
 msgstr "چاپ فیش حقوقی"
-
-msgid "Printing format"
-msgstr ""
 
 msgid "Printouts"
 msgstr "چاپی"
@@ -7259,12 +5007,6 @@ msgstr "مشکل پیدا شد"
 
 msgid "Process file"
 msgstr "پردازش پرونده"
-
-msgid "Process file [transition in processing_status_workflow]"
-msgstr "پردازش پرونده"
-
-msgid "Processing"
-msgstr ""
 
 msgid "Processing Node"
 msgstr "گره پردازش"
@@ -7401,15 +5143,6 @@ msgstr "پروژه :"
 msgid "Projects"
 msgstr "پروژه ها"
 
-msgid "Properties"
-msgstr ""
-
-msgid "Properties to be synchronized with the current object"
-msgstr ""
-
-msgid "Properties to be translated"
-msgstr ""
-
 msgid "Property"
 msgstr "خاصیت"
 
@@ -7422,44 +5155,14 @@ msgstr "ویژگی وظایف گروه متحرک"
 msgid "Property Criteria"
 msgstr "ضوابط خاصیت"
 
-msgid "Property Default"
-msgstr ""
-
 msgid "Property Divergence Tester"
 msgstr "آزمایش گر انشعاب خاصیت"
-
-msgid "Property Existence Constraint"
-msgstr ""
-
-msgid "Property Grouping Movement Group"
-msgstr ""
 
 msgid "Property Movement Group"
 msgstr "گروه متحرک خواص"
 
 msgid "Property Name"
 msgstr "نام خاصیت"
-
-msgid "Property Sheet"
-msgstr ""
-
-msgid "Property Sheet Tool"
-msgstr ""
-
-msgid "Property Sheets"
-msgstr ""
-
-msgid "Property Type"
-msgstr ""
-
-msgid "Property Type Validity Constraint"
-msgstr ""
-
-msgid "Property name"
-msgstr ""
-
-msgid "Property to get from source"
-msgstr ""
 
 msgid "Prospect Contacted"
 msgstr "با مشتری احتمالی تماس گرفته شد"
@@ -7475,15 +5178,6 @@ msgstr "گروه پروژه"
 
 msgid "Protect Category Action"
 msgstr "عمل گروه پروژه"
-
-msgid "Protect Category Action [transition in category_publication_workflow]"
-msgstr "عمل گروه پروژه"
-
-msgid "Protect Category [transition in category_publication_workflow]"
-msgstr "گروه پروژه"
-
-msgid "Protect [transition in category_publication_workflow]"
-msgstr "پروژه"
 
 msgid "Protected"
 msgstr "مصون شده"
@@ -7521,25 +5215,10 @@ msgstr "گروه انتشار"
 msgid "Publish Category Action"
 msgstr "عمل گروه انتشار"
 
-msgid "Publish Category Action [transition in category_publication_workflow]"
-msgstr "عمل گروه انتشار"
-
-msgid "Publish Category [transition in category_publication_workflow]"
-msgstr "گروه انتشار"
-
 msgid "Publish Document"
 msgstr "انتشار مدرک"
 
 msgid "Publish Document Action"
-msgstr "عمل انتشار مدرک"
-
-msgid "Publish Document Action [transition in document_publication_workflow]"
-msgstr "عمل انتشار مدرک"
-
-msgid "Publish Document Action [transition in external_document_publication_workflow]"
-msgstr "عمل انتشار مدرک"
-
-msgid "Publish Document Action [transition in publication_workflow]"
 msgstr "عمل انتشار مدرک"
 
 msgid "Publish Document Alive"
@@ -7547,27 +5226,6 @@ msgstr "انتشار مدرک زنده"
 
 msgid "Publish Document Alive Action"
 msgstr "عمل انتشار مدرک زنده"
-
-msgid "Publish Document Alive Action [transition in document_publication_workflow]"
-msgstr "عمل انتشار مدرک زنده"
-
-msgid "Publish Document Alive [transition in document_publication_workflow]"
-msgstr "عمل انتشار مدرک زنده"
-
-msgid "Publish Document [transition in document_publication_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish Document [transition in document_staging_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish Document [transition in external_document_publication_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish Document [transition in publication_workflow]"
-msgstr "انتشار مدرک"
-
-msgid "Publish [transition in category_publication_workflow]"
-msgstr "انتشار"
 
 msgid "Published"
 msgstr "منتشر شد"
@@ -7589,9 +5247,6 @@ msgstr "منتشر شد"
 
 msgid "Published:"
 msgstr "منتشر شد:"
-
-msgid "Pula"
-msgstr ""
 
 msgid "Purchase"
 msgstr "خرید"
@@ -7773,9 +5428,6 @@ msgstr "ماژول خرید تدارکات"
 msgid "Purchase Trade Condition"
 msgstr "شرط خرید تجاری"
 
-msgid "Purchase Trade Condition Configurator Item"
-msgstr ""
-
 msgid "Purchase Trade Condition Module"
 msgstr "ماژول شرط خرید تجاری"
 
@@ -7794,18 +5446,6 @@ msgstr "(%(count)s) شرایط معامله خرید برای تأئید"
 msgid "Purchase Trade Conditions to Validate [worklist in validation_workflow]"
 msgstr "شرایط معامله خرید برای تأئید"
 
-msgid "Push Local Commits"
-msgstr ""
-
-msgid "PyData Script"
-msgstr ""
-
-msgid "Python Script"
-msgstr ""
-
-msgid "Qatari Riyal"
-msgstr ""
-
 msgid "Quantity"
 msgstr "تعداد"
 
@@ -7814,9 +5454,6 @@ msgstr "تعداد < ${max_quantity}"
 
 msgid "Quantity Divergence Tester"
 msgstr "آزمایش گر تعداد انشعاب"
-
-msgid "Quantity Fields Width"
-msgstr ""
 
 msgid "Quantity Precision"
 msgstr "دقت تعداد"
@@ -7835,15 +5472,6 @@ msgstr "تعداد علامت گروه متحرک"
 
 msgid "Quantity Unit"
 msgstr "واحد تعداد"
-
-msgid "Quantity Unit Conversion Definition"
-msgstr ""
-
-msgid "Quantity Unit Conversion Group"
-msgstr ""
-
-msgid "Quantity Unit Conversion Module"
-msgstr ""
 
 msgid "Queries"
 msgstr "پرسش ها"
@@ -7890,12 +5518,6 @@ msgstr "حافظه کش"
 msgid "Ram Cache Plugin"
 msgstr "پلاگین حافظه کش"
 
-msgid "Rand"
-msgstr ""
-
-msgid "Range"
-msgstr ""
-
 msgid "Ratio"
 msgstr "نسبت"
 
@@ -7911,35 +5533,14 @@ msgstr "تخصیص دوباره خطا"
 msgid "Re Assign Bug Action"
 msgstr "عمل تخصیص دوباره خطا"
 
-msgid "Re Assign Bug Action [transition in bug_workflow]"
-msgstr "عمل تخصیص دوباره خطا"
-
-msgid "Re Assign Bug [transition in bug_workflow]"
-msgstr "تخصیص دوباره خطا"
-
 msgid "Re-install Business Template"
 msgstr "الگوی تجاری را دوباره نصب کنید"
-
-msgid "Re-install Business Template [transition in business_template_installation_workflow]"
-msgstr "الگوی تجاری را دوباره نصب کنید"
-
-msgid "Read Permission"
-msgstr ""
-
-msgid "Readjusted Kwanza"
-msgstr ""
-
-msgid "Ready"
-msgstr ""
 
 msgid "Ready Packing List"
 msgstr "لیست بسته بندی آماده"
 
 msgid "Ready Packing List [state in packing_list_workflow]"
 msgstr "لیست بسته بندی آماده"
-
-msgid "Ready [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Real Begin Date"
 msgstr "تاریخ شروع واقعی"
@@ -7953,9 +5554,6 @@ msgstr "زمان واقعی"
 msgid "Rebuild Business Template"
 msgstr "الگوی تجاری را دوباره بسازید"
 
-msgid "Rebuild Business Template [transition in business_template_building_workflow]"
-msgstr "الگوی تجاری را دوباره بسازید"
-
 msgid "Receive"
 msgstr "دریافت"
 
@@ -7965,17 +5563,8 @@ msgstr "دریافت مدرک"
 msgid "Receive Document Action"
 msgstr "عمل دریافت مدرک"
 
-msgid "Receive Document Action [transition in document_ingestion_workflow]"
-msgstr "عمل دریافت مدرک"
-
-msgid "Receive Document [transition in document_ingestion_workflow]"
-msgstr "دریافت مدرک"
-
 msgid "Receive Enquiry"
 msgstr "دریافت درخواست"
-
-msgid "Receive Enquiry [transition in sale_opportunity_workflow]"
-msgstr "درخواست دریافت"
 
 msgid "Receive Event"
 msgstr "اتفاق دریافت"
@@ -7983,41 +5572,17 @@ msgstr "اتفاق دریافت"
 msgid "Receive Event Action"
 msgstr "عمل اتفاق دریافت"
 
-msgid "Receive Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق دریافت"
-
-msgid "Receive Event [transition in event_workflow]"
-msgstr "اتفاق دریافت"
-
 msgid "Receive Packing List"
 msgstr "لیست بسته بندی دریافت"
 
 msgid "Receive Packing List Action"
 msgstr "عمل لیست بسته بندی دریافت"
 
-msgid "Receive Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل لیست بسته بندی دریافت"
-
-msgid "Receive Packing List [transition in packing_list_workflow]"
-msgstr "لیست بسته بندی دریافت"
-
-msgid "Receive [transition in document_ingestion_workflow]"
-msgstr "دریافت"
-
-msgid "Received"
-msgstr ""
-
 msgid "Received Packing List"
 msgstr "لیست بسته بندی دریافت شد"
 
 msgid "Received Packing List [state in packing_list_workflow]"
 msgstr "لیست بسته بندی دریافت شد"
-
-msgid "Received [state in event_simulation_workflow]"
-msgstr ""
-
-msgid "Received [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Recent Changes"
 msgstr "به تازگی تغییر کرده"
@@ -8061,12 +5626,6 @@ msgstr "از پردازش بیش از 1000 قلم خودداری میشود، ا
 msgid "Region"
 msgstr "منطقه"
 
-msgid "Registered Skin Selection"
-msgstr ""
-
-msgid "Registered Version Priority Selection"
-msgstr ""
-
 msgid "Registration Field Library"
 msgstr "کتابخانه فیلد ثبت"
 
@@ -8076,23 +5635,11 @@ msgstr "نصب دوباره الگوی تجاری"
 msgid "Reinstall Business Template Action"
 msgstr "عمل نصب دوباره الگوی تجاری"
 
-msgid "Reinstall Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل نصب دوباره الگوی تجاری"
-
-msgid "Reinstall Business Template [transition in business_template_installation_workflow]"
-msgstr "نصب دوباره الگوی تجاری"
-
 msgid "Reject Document"
 msgstr "رد کردن مدرک"
 
 msgid "Reject Document Action"
 msgstr "عمل رد کردن مدرک"
-
-msgid "Reject Document Action [transition in document_publication_workflow]"
-msgstr "عمل رد کردن مدرک"
-
-msgid "Reject Document [transition in document_publication_workflow]"
-msgstr "رد کردن مدرک"
 
 msgid "Reject Message"
 msgstr "رد کردن پیام"
@@ -8100,35 +5647,11 @@ msgstr "رد کردن پیام"
 msgid "Reject Message Action"
 msgstr "عمل رد کردن پیام"
 
-msgid "Reject Message Action [transition in notification_message_workflow]"
-msgstr "عمل رد کردن پبام"
-
-msgid "Reject Message [transition in notification_message_workflow]"
-msgstr "رد کردن پیام"
-
 msgid "Reject Offer"
 msgstr "رد کردن پیشنهاد"
 
 msgid "Reject Offer Action"
 msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer Action [transition in open_order_workflow]"
-msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer Action [transition in order_workflow]"
-msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer Action [transition in sale_opportunity_workflow]"
-msgstr "عمل رد کردن پیشنهاد"
-
-msgid "Reject Offer [transition in open_order_workflow]"
-msgstr "رد کردن پیشنهاد"
-
-msgid "Reject Offer [transition in order_workflow]"
-msgstr "رد کردن پیشنهاد"
-
-msgid "Reject Offer [transition in sale_opportunity_workflow]"
-msgstr "رد کردن پیشنهاد"
 
 msgid "Rejected"
 msgstr "رد شد"
@@ -8196,9 +5719,6 @@ msgstr "سفارش فروش مرتبط"
 msgid "Related Sale Packing List"
 msgstr "لیست بسته بندی فروش مرتبط"
 
-msgid "Related Sale Packing Lists"
-msgstr ""
-
 msgid "Related Task Reports"
 msgstr "گزارش تکلیف مرتبط"
 
@@ -8223,16 +5743,10 @@ msgstr "ارتباط نتایج"
 msgid "Relation unchanged."
 msgstr "ارتباط تغییر نکرد."
 
-msgid "Relative URL"
-msgstr ""
-
 msgid "Release Document"
 msgstr "پخش کردن مدرک"
 
 msgid "Release Document Action"
-msgstr "عمل پخش کردن مدرک"
-
-msgid "Release Document Action [transition in document_publication_workflow]"
 msgstr "عمل پخش کردن مدرک"
 
 msgid "Release Document Alive"
@@ -8240,15 +5754,6 @@ msgstr "پخش زنده مدرک"
 
 msgid "Release Document Alive Action"
 msgstr "عمل پخش زنده مدرک"
-
-msgid "Release Document Alive Action [transition in document_publication_workflow]"
-msgstr "عمل پخش زنده مدرک"
-
-msgid "Release Document Alive [transition in document_publication_workflow]"
-msgstr "پخش زنده مدرک"
-
-msgid "Release Document [transition in document_publication_workflow]"
-msgstr "پخش زنده مدرک"
 
 msgid "Released"
 msgstr "منتشر شد"
@@ -8268,25 +5773,7 @@ msgstr "منتشر شد:"
 msgid "Remember my name"
 msgstr "اسم من را بخاطر داشته باش"
 
-msgid "Remove"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Rename Proxy Field"
-msgstr ""
-
-msgid "Rename tab"
-msgstr ""
-
-msgid "Renminbi-Yuan"
-msgstr ""
-
 msgid "Replace Business Template"
-msgstr "الگوی تجاری را جایگزین کنید"
-
-msgid "Replace Business Template [transition in business_template_installation_workflow]"
 msgstr "الگوی تجاری را جایگزین کنید"
 
 msgid "Replaced"
@@ -8307,15 +5794,6 @@ msgstr ".پاسخ به آدرس ایمیل از سربرگ تلخیص شده."
 msgid "Report"
 msgstr "گزارش"
 
-msgid "Report Format"
-msgstr ""
-
-msgid "Report Style"
-msgstr ""
-
-msgid "Report Tree"
-msgstr ""
-
 msgid "Report created."
 msgstr "گزارش ایجاد شد."
 
@@ -8328,9 +5806,6 @@ msgstr "گزارش ها"
 msgid "Repositories"
 msgstr "مخازن"
 
-msgid "Repository"
-msgstr ""
-
 msgid "Req. ID"
 msgstr "درخواست شناسه"
 
@@ -8340,26 +5815,11 @@ msgstr "درخواست تأئیدیه"
 msgid "Request Approval Action"
 msgstr "عمل درخواست تأئیدیه"
 
-msgid "Request Approval Action [transition in sale_opportunity_workflow]"
-msgstr "عمل درخواست تأئیدیه"
-
-msgid "Request Approval [transition in sale_opportunity_workflow]"
-msgstr "درخواست تأئیدیه"
-
-msgid "Request Keys"
-msgstr ""
-
 msgid "Request Processing"
 msgstr "درخواست پردازش"
 
 msgid "Request Processing Action"
 msgstr "درخواست عمل پردازش"
-
-msgid "Request Processing Action [transition in event_workflow]"
-msgstr "عمل درخواست پردازش"
-
-msgid "Request Processing [transition in event_workflow]"
-msgstr "درخواست پردازش"
 
 msgid "Request Ticket Approval"
 msgstr "درخواست تأئید بلیط"
@@ -8367,35 +5827,17 @@ msgstr "درخواست تأئید بلیط"
 msgid "Request Ticket Approval "
 msgstr "درخواست تأئید بلیط."
 
-msgid "Request Ticket Approval  [transition in ticket_workflow]"
-msgstr "درخواست تأئید بلیط"
-
 msgid "Request Ticket Approval Action"
 msgstr "عمل درخواست تأئید بلیط"
 
-msgid "Request Ticket Approval Action [transition in ticket_workflow]"
-msgstr "عمل درخواست تأئید بلیط"
-
-msgid "Request Ticket Approval [transition in ticket_workflow]"
-msgstr "درخواست تأئید بلیط"
-
 msgid "Request Transaltion"
 msgstr "درخواست ترجمه"
-
-msgid "Request Transaltion [transition in document_publication_workflow]"
-msgstr "درخواست معامله"
 
 msgid "Request Translation"
 msgstr "درخواست ترجمه"
 
 msgid "Request Translation Action"
 msgstr "عمل درخواست ترجمه"
-
-msgid "Request Translation Action [transition in document_publication_workflow]"
-msgstr "عمل درخواست ترجمه"
-
-msgid "Request Translation [transition in document_publication_workflow]"
-msgstr "درخواست ترجمه"
 
 msgid "Requested Project"
 msgstr "پروژه درخواست شد"
@@ -8460,17 +5902,8 @@ msgstr "تصحیح خطا"
 msgid "Resolve Bug Action"
 msgstr "عمل تصحیح خطا"
 
-msgid "Resolve Bug Action [transition in bug_workflow]"
-msgstr "عمل تصحیح خطا"
-
-msgid "Resolve Bug [transition in bug_workflow]"
-msgstr "تصحیح خطا"
-
 msgid "Resolve SVN Conflicted Files"
 msgstr "تصحیح پرونده های متناقض شده SVN"
-
-msgid "Resolve VCS Conflicted Files"
-msgstr ""
 
 msgid "Resolved"
 msgstr "تصحیح شد"
@@ -8484,9 +5917,6 @@ msgstr "منبع"
 msgid "Resource Inventory"
 msgstr "منبع موجودی انبار"
 
-msgid "Resource Measures Consistency Constraint"
-msgstr ""
-
 msgid "Resource Quantity Unit"
 msgstr "واحد تعداد منبع"
 
@@ -8499,12 +5929,6 @@ msgstr "اتفاق واکنش"
 msgid "Respond Event Action"
 msgstr "عمل اتفاق واکنش"
 
-msgid "Respond Event Action [transition in event_workflow]"
-msgstr "عمل اتفاق واکنش"
-
-msgid "Respond Event [transition in event_workflow]"
-msgstr "اتفاق واکنش"
-
 msgid "Respond Workflow Action"
 msgstr "عمل گردش کار واکنش"
 
@@ -8514,20 +5938,11 @@ msgstr "واکنش نشان داده شد"
 msgid "Responded [state in event_workflow]"
 msgstr "واکنش نشان داده شد"
 
-msgid "Restart"
-msgstr ""
-
 msgid "Restart Accounting Period"
 msgstr "شروع دوره حسابداری"
 
 msgid "Restart Accounting Period Action"
 msgstr "عمل شروع دوره حسابداری"
-
-msgid "Restart Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل شروع دوره حسابداری"
-
-msgid "Restart Accounting Period [transition in accounting_period_workflow]"
-msgstr "شروع دوره حسابداری"
 
 msgid "Restart Task"
 msgstr "شروع دوباره تکلیف"
@@ -8535,29 +5950,14 @@ msgstr "شروع دوباره تکلیف"
 msgid "Restart Task Action"
 msgstr "عمل شروع دوباره تکلیف"
 
-msgid "Restart Task Action [transition in task_report_workflow]"
-msgstr "عمل شروع دوباره تکلیف"
-
-msgid "Restart Task [transition in task_report_workflow]"
-msgstr "شروع دوباره تکلیف"
-
 msgid "Restart Transaction"
 msgstr "شروع دوباره معامله"
 
 msgid "Restart Transaction (journalise)"
 msgstr "شروع دوباره معامله"
 
-msgid "Restart Transaction (journalise) [transition in accounting_workflow]"
-msgstr "شروع دوباره معامله"
-
 msgid "Restart Transaction Action"
 msgstr "عمل شروع دوباره معامله"
-
-msgid "Restart Transaction Action [transition in accounting_workflow]"
-msgstr "عمل شروع دوباره معامله"
-
-msgid "Restart Transaction [transition in accounting_workflow]"
-msgstr "معامله تأئید"
 
 msgid "Result"
 msgstr "نتیجه"
@@ -8571,56 +5971,11 @@ msgstr "بازیابی انتشار مدرک"
 msgid "Retract Document Publication Action"
 msgstr "عمل بازیابی انتشار مدرک"
 
-msgid "Retract Document Publication Action [transition in external_document_publication_workflow]"
-msgstr "عمل بازیابی انتشار مدرک"
-
-msgid "Retract Document Publication [transition in external_document_publication_workflow]"
-msgstr "عمل بازیابی انتشار مدرک"
-
-msgid "Retry"
-msgstr ""
-
-msgid "Returned Purchase Order"
-msgstr ""
-
-msgid "Returned Purchase Order Cell"
-msgstr ""
-
-msgid "Returned Purchase Order Line"
-msgstr ""
-
-msgid "Returned Purchase Order Module"
-msgstr ""
-
 msgid "Returned Purchase Orders"
 msgstr "سفارش های خرید پس داده شده"
 
-msgid "Returned Purchase Packing List"
-msgstr ""
-
-msgid "Returned Purchase Packing List Cell"
-msgstr ""
-
-msgid "Returned Purchase Packing List Line"
-msgstr ""
-
-msgid "Returned Purchase Packing List Module"
-msgstr ""
-
 msgid "Returned Purchase Packing Lists"
 msgstr "لیست های بسته بندی خرید پس داده شده"
-
-msgid "Returned Sale Order"
-msgstr ""
-
-msgid "Returned Sale Order Cell"
-msgstr ""
-
-msgid "Returned Sale Order Line"
-msgstr ""
-
-msgid "Returned Sale Order Module"
-msgstr ""
 
 msgid "Returned Sale Orders"
 msgstr "سفارش های فروش پس داده شده"
@@ -8643,9 +5998,6 @@ msgstr "برگرداندن ماژول لیست بسته بندی فروش"
 msgid "Returned Sale Packing Lists"
 msgstr "برگرداندن لیست های بسته بندی فروش"
 
-msgid "Returner"
-msgstr ""
-
 msgid "Reversal Transaction for ${specific_reference} created."
 msgstr "معامله معکوس برای ${specific_reference} ایجاد شد."
 
@@ -8658,59 +6010,20 @@ msgstr "معامله معکوس برای ${title} (${specific_reference})"
 msgid "Revert & Update Business Template from SVN"
 msgstr "برعکس و به روز کردن الگوی تجاری از SVN"
 
-msgid "Revert & Update Business Template from VCS"
-msgstr ""
-
 msgid "Revision"
 msgstr "نسخه بازبین"
-
-msgid "Revision Number"
-msgstr ""
-
-msgid "Riel"
-msgstr ""
-
-msgid "Rights"
-msgstr ""
 
 msgid "Role"
 msgstr "نقش"
 
-msgid "Role Configurator Item"
-msgstr ""
-
 msgid "Role Definition"
 msgstr "تعریف نقش"
-
-msgid "Role Information"
-msgstr ""
-
-msgid "Role Keys"
-msgstr ""
-
-msgid "Roles"
-msgstr ""
-
-msgid "Romanian Leu"
-msgstr ""
 
 msgid "Root Applied Rule Causality Movement Group"
 msgstr "ریشه گروه تحرک قانون کاربردی"
 
-msgid "Rounding Model"
-msgstr ""
-
-msgid "Rounding Tool"
-msgstr ""
-
-msgid "Rufiyaa"
-msgstr ""
-
 msgid "Rule"
 msgstr "قانون"
-
-msgid "Rule Configurator Item"
-msgstr ""
 
 msgid "Rule Tool"
 msgstr "قانون ابزار"
@@ -8724,41 +6037,17 @@ msgstr "قانون گردش کار تأئید"
 msgid "Rules"
 msgstr "قوانین"
 
-msgid "Run Live Tests"
-msgstr ""
-
 msgid "Run Unit Tests"
 msgstr "اجرای آزمون واحد"
 
 msgid "Running Balance"
 msgstr "اجرای تراز"
 
-msgid "Russian"
-msgstr ""
-
-msgid "Russian Rouble"
-msgstr ""
-
-msgid "Rwandese Franc"
-msgstr ""
-
-msgid "SKR04 (Germany)"
-msgstr ""
-
 msgid "SQL Cache"
 msgstr "کش SQL"
 
 msgid "SQL Cache Plugin"
 msgstr "پلاگین کش SQL"
-
-msgid "SQL Non Continuous Increasing Id Generator"
-msgstr ""
-
-msgid "SYSCOA (West Africa)"
-msgstr ""
-
-msgid "Saint Helena Pound"
-msgstr ""
 
 msgid "Sale"
 msgstr "فروش"
@@ -9000,9 +6289,6 @@ msgstr "ماژول تدارکات فروش"
 msgid "Sale Trade Condition"
 msgstr "شرط فروش تجاری"
 
-msgid "Sale Trade Condition Configurator Item"
-msgstr ""
-
 msgid "Sale Trade Condition Module"
 msgstr "ماژول شرط فروش تجاری"
 
@@ -9021,12 +6307,6 @@ msgstr "(%(count)s) شرایط معامله فروش برای تأئید"
 msgid "Sale Trade Conditions to Validate [worklist in validation_workflow]"
 msgstr "شرایط معامله فروش برای تأئید"
 
-msgid "Salvadorian Colon"
-msgstr ""
-
-msgid "Saudi Riyal"
-msgstr ""
-
 msgid "Save"
 msgstr "ذخیره کردن"
 
@@ -9042,23 +6322,11 @@ msgstr "ذخیره الگوی تجاری"
 msgid "Saved in ${path} ."
 msgstr "ذخیره شده در ${path}."
 
-msgid "Script Constraint"
-msgstr ""
-
-msgid "Scriptable Keys"
-msgstr ""
-
-msgid "Scripts to filter what is displayed in diffs"
-msgstr ""
-
 msgid "Search"
 msgstr "جستجو"
 
 msgid "Search Key"
 msgstr "کلید جستجو"
-
-msgid "Search Keys"
-msgstr ""
 
 msgid "Search Portal Type Definition"
 msgstr "جستجوی تعریف نوع پورتال"
@@ -9075,12 +6343,6 @@ msgstr "جستجوی معاملات"
 msgid "Search results"
 msgstr "نتایج جستجو"
 
-msgid "Searchable Text Method IDs"
-msgstr ""
-
-msgid "Searchable Text Property IDs"
-msgstr ""
-
 msgid "Section"
 msgstr "بخش"
 
@@ -9093,14 +6355,8 @@ msgstr "گروه بخش"
 msgid "Section Content"
 msgstr "محتوی بخش"
 
-msgid "Security Category Mapping Configurator Item"
-msgstr ""
-
 msgid "Security Classification"
 msgstr "طبقه بندی امنیتی"
-
-msgid "Security UID Columns"
-msgstr ""
 
 msgid "See Tales"
 msgstr "شرح ماوقع"
@@ -9126,41 +6382,17 @@ msgstr "انتخاب گزارش"
 msgid "Select Template"
 msgstr "انتخاب الگو"
 
-msgid "Select a Repository"
-msgstr ""
-
-msgid "Select a repository in which your business template will be created."
-msgstr ""
-
-msgid "Select the Number of User Accounts you Want to Configure"
-msgstr ""
-
-msgid "Selection Tool"
-msgstr ""
-
 msgid "Sell"
 msgstr "فروش"
 
 msgid "Sell Action"
 msgstr "عمل فروش"
 
-msgid "Sell Action [transition in sale_opportunity_workflow]"
-msgstr "عمل فروش"
-
-msgid "Sell [transition in sale_opportunity_workflow]"
-msgstr "فروش"
-
 msgid "Send Offer"
 msgstr "ارسال پیشنهاد"
 
 msgid "Send Offer Action"
 msgstr "عمل ارسال پیشنهاد"
-
-msgid "Send Offer Action [transition in sale_opportunity_workflow]"
-msgstr "عمل ارسال پیشنهاد"
-
-msgid "Send Offer [transition in sale_opportunity_workflow]"
-msgstr "ارسال پیشنهاد"
 
 msgid "Send by Email"
 msgstr "توسط ایمیل ارسال شد"
@@ -9183,14 +6415,8 @@ msgstr "ارسال شد"
 msgid "Sent [state in event_simulation_workflow]"
 msgstr "ارسال شد"
 
-msgid "Serbian Dinar"
-msgstr ""
-
 msgid "Service"
 msgstr "خدمت"
-
-msgid "Service Configurator Item"
-msgstr ""
 
 msgid "Service Individual Variation"
 msgstr "تنوع شخصی خدمات"
@@ -9228,32 +6454,17 @@ msgstr "تعیین لیست بسته بندی به آماده"
 msgid "Set Packing List Ready Action"
 msgstr "عمل تعیین لیست بسته بندی به آماده"
 
-msgid "Set Packing List Ready Action [transition in packing_list_workflow]"
-msgstr "عمل تعیین لیست بسته بندی به آماده"
-
-msgid "Set Packing List Ready [transition in packing_list_workflow]"
-msgstr "تعیین لیست بسته بندی به آماده"
-
 msgid "Set Relation"
 msgstr "تعیین ارتباط"
 
 msgid "Set Resolved"
 msgstr "تعیین تصحیح"
 
-msgid "Set default value of \"Push\" checkbox in dialog to commit changes to a DVCS working copy, when there is no local commit"
-msgstr ""
-
 msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
 msgstr "تنظیم  انتخاب ’ اسم من را بخاطر داشته باش’ یک cookie با نام کاربری شما ایجاد می کند، بنابراین دفعه بعد که شما وارد سیستم میشوید، نام کاربری شما پر شده است."
 
-msgid "Settings"
-msgstr ""
-
 msgid "Severity"
 msgstr "شدت"
-
-msgid "Seychelles Rupee"
-msgstr ""
 
 msgid "Share Document"
 msgstr "اشتراک مدرک"
@@ -9261,23 +6472,11 @@ msgstr "اشتراک مدرک"
 msgid "Share Document Action"
 msgstr "عمل اشتراک مدرک"
 
-msgid "Share Document Action [transition in document_publication_workflow]"
-msgstr "عمل اشتراک مدرک"
-
 msgid "Share Document Alive"
 msgstr "اشتراک مدرک زنده"
 
 msgid "Share Document Alive Action"
 msgstr "عمل اشتراک مدرک زنده"
-
-msgid "Share Document Alive Action [transition in document_publication_workflow]"
-msgstr "عمل اشتراک مدرک زنده"
-
-msgid "Share Document Alive [transition in document_publication_workflow]"
-msgstr "اشتراک مدرک زنده"
-
-msgid "Share Document [transition in document_publication_workflow]"
-msgstr "اشتراک مدرک"
 
 msgid "Shared"
 msgstr "اشتراک شده"
@@ -9291,35 +6490,17 @@ msgstr "به طور زنده اشتراک شد"
 msgid "Shared [state in document_publication_workflow]"
 msgstr "اشتراک شد"
 
-msgid "Shekel"
-msgstr ""
-
 msgid "Ship Packing List"
 msgstr "لیست بسته بندی حمل"
 
 msgid "Ship Packing List Action"
 msgstr "عمل لیست بسته بندی حمل"
 
-msgid "Ship Packing List Action [transition in packing_list_workflow]"
-msgstr "عمل لیست بسته بندی حمل"
-
-msgid "Ship Packing List [transition in packing_list_workflow]"
-msgstr "لیست بسته بندی حمل"
-
-msgid "Shipment Report"
-msgstr ""
-
-msgid "Shipped"
-msgstr ""
-
 msgid "Shipped Packing List"
 msgstr "لیست بسته بندی حمل شده"
 
 msgid "Shipped Packing List [state in packing_list_workflow]"
 msgstr "لیست بسته بندی حمل شده"
-
-msgid "Shipped [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Shipping Date"
 msgstr "تاریخ حمل"
@@ -9332,12 +6513,6 @@ msgstr "عنوان کوتاه"
 
 msgid "Show All"
 msgstr "نمایش همه"
-
-msgid "Show Detailed List of Documents"
-msgstr ""
-
-msgid "Show tabs"
-msgstr ""
 
 msgid "Signature"
 msgstr "امضا"
@@ -9369,29 +6544,14 @@ msgstr "حالت شبیه سازی"
 msgid "Simulation Tool"
 msgstr "ابزار شبیه سازی"
 
-msgid "Singapore Dollar"
-msgstr ""
-
 msgid "Site"
 msgstr "سایت"
 
 msgid "Site Configuration Problems"
 msgstr "مشکل تنظیمات سایت"
 
-msgid "Site Configuration is going to be fixed by Activities."
-msgstr ""
-
-msgid "Site Error"
-msgstr ""
-
 msgid "Site Message"
 msgstr "پیام سایت"
-
-msgid "Site Properties"
-msgstr ""
-
-msgid "Site Property Configurator Item"
-msgstr ""
 
 msgid "Site Sections"
 msgstr "بخش های سایت"
@@ -9405,23 +6565,11 @@ msgstr "اندازه:"
 msgid "Skill"
 msgstr "مهارت"
 
-msgid "Skin Folders"
-msgstr ""
-
 msgid "Slice"
 msgstr "قطعه"
 
 msgid "Slice Settings"
 msgstr "تنظیم  قطعه"
-
-msgid "Slovak Koruna"
-msgstr ""
-
-msgid "Small Image Height"
-msgstr ""
-
-msgid "Small Image Width"
-msgstr ""
 
 msgid "Social Code"
 msgstr "کد گروهی"
@@ -9435,9 +6583,6 @@ msgstr "فروخته شد"
 msgid "Sold [state in sale_opportunity_workflow]"
 msgstr "فروخته شد"
 
-msgid "Solomon Islands Dollar"
-msgstr ""
-
 msgid "Solve Alarm"
 msgstr "حل کردن هشدار"
 
@@ -9446,12 +6591,6 @@ msgstr "حل واگرایی"
 
 msgid "Solve Divergences Action"
 msgstr "عمل حل واگرایی"
-
-msgid "Solve Divergences Action [transition in delivery_causality_workflow]"
-msgstr "عمل حل واگرایی"
-
-msgid "Solve Divergences [transition in delivery_causality_workflow]"
-msgstr "حل واگرایی"
 
 msgid "Solved"
 msgstr "حل شد"
@@ -9465,24 +6604,6 @@ msgstr "حل شد"
 msgid "Solved [state in solver_workflow]"
 msgstr "حل شد"
 
-msgid "Solver Configurator Item"
-msgstr ""
-
-msgid "Solver Decision"
-msgstr ""
-
-msgid "Solver Process"
-msgstr ""
-
-msgid "Solver Process Tool"
-msgstr ""
-
-msgid "Solver Tool"
-msgstr ""
-
-msgid "Solver Type"
-msgstr ""
-
 msgid "Solving"
 msgstr "در حال حل"
 
@@ -9495,17 +6616,8 @@ msgstr "در حال حل"
 msgid "Solving [state in solver_workflow]"
 msgstr "در حال حل"
 
-msgid "Som"
-msgstr ""
-
-msgid "Somali Shilling"
-msgstr ""
-
 msgid "Some divergences seem already solved. Please retry."
 msgstr "به نظر می آید بعضی واگرایی ها حل شده است، لطفا دوباره امتحان کنید."
-
-msgid "Somoni"
-msgstr ""
 
 msgid "Sorry, ${count} items are in use."
 msgstr "ببخشید، ${count} قلم در حال استفاده است."
@@ -9555,9 +6667,6 @@ msgstr "حساب مرجع"
 msgid "Source Code"
 msgstr "کد مرجع"
 
-msgid "Source Code Editor"
-msgstr ""
-
 msgid "Source Conversion"
 msgstr "تبدیل مرجع"
 
@@ -9573,17 +6682,8 @@ msgstr "بخش مرجع"
 msgid "Source conversion should not be set."
 msgstr "تبدیل مرجع نباید تعیین شود."
 
-msgid "South African Rand"
-msgstr ""
-
-msgid "South Korean Won"
-msgstr ""
-
 msgid "Specialise"
 msgstr "تخصص کردن"
-
-msgid "Specialise Divergence Tester"
-msgstr ""
 
 msgid "Specialise Title"
 msgstr "عنوان اختصاصی"
@@ -9597,12 +6697,6 @@ msgstr "منبع خاص"
 msgid "Split"
 msgstr "انشعاب"
 
-msgid "Split Document"
-msgstr ""
-
-msgid "Split Document [state in document_publication_workflow]"
-msgstr ""
-
 msgid "Split Movement Group"
 msgstr "گروه متحرک منشعب"
 
@@ -9611,12 +6705,6 @@ msgstr "ترجمه منشعب"
 
 msgid "Split Translation Action"
 msgstr "عمل ترجمه منشعب"
-
-msgid "Split Translation Action [transition in document_publication_workflow]"
-msgstr "عمل ترجمه منشعب"
-
-msgid "Split Translation [transition in document_publication_workflow]"
-msgstr "ترجمه منشعب"
 
 msgid "Split [state in document_publication_workflow]"
 msgstr "انشعاب"
@@ -9627,32 +6715,8 @@ msgstr "انشعاب و تأخیر"
 msgid "Split and Defer Action"
 msgstr "عمل انشعاب و تأخیر"
 
-msgid "Split and Defer Action [transition in delivery_causality_workflow]"
-msgstr "عمل انشعاب و تأخیر"
-
-msgid "Split and Defer [transition in delivery_causality_workflow]"
-msgstr "انشعاب و تأخیر"
-
 msgid "Spreadsheet"
 msgstr "برگه گسترده (Spreadsheet)"
-
-msgid "Sri Lankan Rupee"
-msgstr ""
-
-msgid "Standard BT5 Configurator Item"
-msgstr ""
-
-msgid "Standard Luxembourgers Plan(Luxembourg)"
-msgstr ""
-
-msgid "Standard Property"
-msgstr ""
-
-msgid "Standard Russian Plan (2000 edition)"
-msgstr ""
-
-msgid "Start"
-msgstr ""
 
 msgid "Start Accounting Period"
 msgstr "شروع دوره حسابداری"
@@ -9660,23 +6724,11 @@ msgstr "شروع دوره حسابداری"
 msgid "Start Accounting Period Action"
 msgstr "عمل شروع دوره حسابداری"
 
-msgid "Start Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل شروع دوره حسابداری"
-
-msgid "Start Accounting Period [transition in accounting_period_workflow]"
-msgstr "شروع دوره حسابداری"
-
 msgid "Start Assignment"
 msgstr "مأموریت شروع"
 
 msgid "Start Assignment Action"
 msgstr "عمل مأموریت شروع"
-
-msgid "Start Assignment Action [transition in assignment_workflow]"
-msgstr "عمل مأموریت شروع"
-
-msgid "Start Assignment [transition in assignment_workflow]"
-msgstr "مأموریت شروع"
 
 msgid "Start Bug"
 msgstr "خطای شروع"
@@ -9684,16 +6736,7 @@ msgstr "خطای شروع"
 msgid "Start Bug Action"
 msgstr "عمل خطای شروع"
 
-msgid "Start Bug Action [transition in bug_workflow]"
-msgstr "عمل خطای شروع"
-
-msgid "Start Bug [transition in bug_workflow]"
-msgstr "خطای شروع"
-
 msgid "Start Building"
-msgstr "ساخت شروع"
-
-msgid "Start Building [transition in delivery_causality_workflow]"
 msgstr "ساخت شروع"
 
 msgid "Start Career Step"
@@ -9701,12 +6744,6 @@ msgstr "مرحله شروع شغل"
 
 msgid "Start Career Step Action"
 msgstr "عمل مرحله شروع شغلی"
-
-msgid "Start Career Step Action [transition in career_workflow]"
-msgstr "عمل مرحله شروع شغلی"
-
-msgid "Start Career Step [transition in career_workflow]"
-msgstr "مرحله شروع شغلی"
 
 msgid "Start Date"
 msgstr "تاریخ شروع"
@@ -9717,23 +6754,11 @@ msgstr "شروع سفارش باز"
 msgid "Start Open Order Action"
 msgstr "عمل شروع سفارش باز"
 
-msgid "Start Open Order Action [transition in open_order_workflow]"
-msgstr "عمل شروع سفارش باز"
-
-msgid "Start Open Order [transition in open_order_workflow]"
-msgstr "شروع سفارش باز"
-
 msgid "Start Processing Requirement"
 msgstr "شروع فرآیند نیازمندی"
 
 msgid "Start Processing Requirement Action"
 msgstr "عمل شروع فرآیند نیازمندی"
-
-msgid "Start Processing Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "عمل شروع فرآیند نیازمندی"
-
-msgid "Start Processing Requirement [transition in requirement_analysis_workflow]"
-msgstr "شروع فرآیند نیازمندی"
 
 msgid "Start Project"
 msgstr "شروع پروژه"
@@ -9741,23 +6766,11 @@ msgstr "شروع پروژه"
 msgid "Start Project Action"
 msgstr "عمل شروع پروژه"
 
-msgid "Start Project Action [transition in project_workflow]"
-msgstr "عمل شروع پروژه"
-
-msgid "Start Project [transition in project_workflow]"
-msgstr "شروع پروژه"
-
 msgid "Start Task"
 msgstr "شروع تکلیف"
 
 msgid "Start Task Action"
 msgstr "عمل شروع تکلیف"
-
-msgid "Start Task Action [transition in task_report_workflow]"
-msgstr "عمل شروع تکلیف"
-
-msgid "Start Task [transition in task_report_workflow]"
-msgstr "شروع تکلیف"
 
 msgid "Start Ticket"
 msgstr "شروع بلیط"
@@ -9765,17 +6778,8 @@ msgstr "شروع بلیط"
 msgid "Start Ticket Action"
 msgstr "عمل شروع بلیط"
 
-msgid "Start Ticket Action [transition in ticket_workflow]"
-msgstr "عمل شروع بلیط"
-
-msgid "Start Ticket [transition in ticket_workflow]"
-msgstr "شروع بلیط"
-
 msgid "Start date is after stop date."
 msgstr "تاریخ شروع بعد از تاریخ توقف است."
-
-msgid "Start using your new ERP5 system"
-msgstr ""
 
 msgid "Started"
 msgstr "شروع شد"
@@ -9819,9 +6823,6 @@ msgstr "crawl منبع خارجی شروع شد."
 msgid "State"
 msgstr "حالت"
 
-msgid "Static Web Section"
-msgstr ""
-
 msgid "Statistics"
 msgstr "آمار"
 
@@ -9840,9 +6841,6 @@ msgstr "موجودی کالا"
 msgid "Stock Report"
 msgstr "گزارش موجودی"
 
-msgid "Stock by Transformed Resource"
-msgstr ""
-
 msgid "Stock by Variation"
 msgstr "موجودی توسط دگرگونی"
 
@@ -9855,35 +6853,17 @@ msgstr "توقف مأموریت"
 msgid "Stop Assignment Action"
 msgstr "عمل توقف مأموریت"
 
-msgid "Stop Assignment Action [transition in assignment_workflow]"
-msgstr "عمل توقف مأموریت"
-
-msgid "Stop Assignment [transition in assignment_workflow]"
-msgstr "توقف مأموریت"
-
 msgid "Stop Bug"
 msgstr "توقف خطا"
 
 msgid "Stop Bug Action"
 msgstr "عمل توقف خطا"
 
-msgid "Stop Bug Action [transition in bug_workflow]"
-msgstr "عمل توقف خطا"
-
-msgid "Stop Bug [transition in bug_workflow]"
-msgstr "توقف خطا"
-
 msgid "Stop Career Step"
 msgstr "مرحله توقف شغلی"
 
 msgid "Stop Career Step Action"
 msgstr "عمل مرحله توقف شغلی"
-
-msgid "Stop Career Step Action [transition in career_workflow]"
-msgstr "عمل مرحله توقف شغلی"
-
-msgid "Stop Career Step [transition in career_workflow]"
-msgstr "مرحله توقف شغلی"
 
 msgid "Stop Date"
 msgstr "تاریخ توقف"
@@ -9894,23 +6874,11 @@ msgstr "توقف سفارش باز"
 msgid "Stop Open Order Action"
 msgstr "عمل توقف سفارش باز"
 
-msgid "Stop Open Order Action [transition in open_order_workflow]"
-msgstr "عمل توقف سفارش باز"
-
-msgid "Stop Open Order [transition in open_order_workflow]"
-msgstr "توقف سفارش باز"
-
 msgid "Stop Processing Requirement"
 msgstr "توقف پردازش نبازمندی"
 
 msgid "Stop Processing Requirement Action"
 msgstr "توقف عمل پردازش نیازمندی"
-
-msgid "Stop Processing Requirement Action [transition in requirement_analysis_workflow]"
-msgstr "توقف عمل پردازش نیازمندی"
-
-msgid "Stop Processing Requirement [transition in requirement_analysis_workflow]"
-msgstr "توقف پردازش نیازمندی"
 
 msgid "Stop Project"
 msgstr "توقف پروژه"
@@ -9918,23 +6886,11 @@ msgstr "توقف پروژه"
 msgid "Stop Project Action"
 msgstr "عمل توقف پروژه"
 
-msgid "Stop Project Action [transition in project_workflow]"
-msgstr "عمل توقف پروژه"
-
-msgid "Stop Project [transition in project_workflow]"
-msgstr "توقف پروژه"
-
 msgid "Stop Ticket"
 msgstr "توقف بلیط"
 
 msgid "Stop Ticket Action"
 msgstr "عمل توقف بلیط"
-
-msgid "Stop Ticket Action [transition in ticket_workflow]"
-msgstr "عمل توقف بلیط"
-
-msgid "Stop Ticket [transition in ticket_workflow]"
-msgstr "توقف بلیط"
 
 msgid "Stopped"
 msgstr "متوقف شد"
@@ -9972,24 +6928,6 @@ msgstr "متوقف شد"
 msgid "Stopped [state in task_report_workflow]"
 msgstr "متوقف شد"
 
-msgid "Storage ID"
-msgstr ""
-
-msgid "Street Address"
-msgstr ""
-
-msgid "Strict Section Category"
-msgstr ""
-
-msgid "String Attribute Match Constraint"
-msgstr ""
-
-msgid "String Divergence Tester"
-msgstr ""
-
-msgid "String Fields Width"
-msgstr ""
-
 msgid "Sub-Requirement Count"
 msgstr "شمارش زیر مجموعه نیازمندی"
 
@@ -10008,25 +6946,13 @@ msgstr "زیرگروه ها"
 msgid "Submit Document"
 msgstr "تسلیم مدرک"
 
-msgid "Submit Document [transition in document_staging_workflow]"
-msgstr "تسلیم مدرک"
-
 msgid "Submit Document for Review"
 msgstr "تسلیم مدرک برای بازبینی"
 
 msgid "Submit Document for Review Action"
 msgstr "عمل تسلیم مدرک برای بازبینی"
 
-msgid "Submit Document for Review Action [transition in document_publication_workflow]"
-msgstr "عمل تسلیم مدرک برای بازبینی"
-
-msgid "Submit Document for Review [transition in document_publication_workflow]"
-msgstr "تسلیم مدرک برای بازبینی"
-
 msgid "Submit Doument for Review"
-msgstr "تسلیم مدرک برای بازبینی"
-
-msgid "Submit Doument for Review [transition in document_publication_workflow]"
 msgstr "تسلیم مدرک برای بازبینی"
 
 msgid "Submit Event"
@@ -10035,23 +6961,11 @@ msgstr "تسلیم اتفاق"
 msgid "Submit Event Action"
 msgstr "عمل تسلیم اتفاق"
 
-msgid "Submit Event Action [transition in event_workflow]"
-msgstr "عمل تسلیم اتفاق"
-
-msgid "Submit Event [transition in event_workflow]"
-msgstr "تسلیم اتفاق"
-
 msgid "Submit Message"
 msgstr "تسلیم پیام"
 
 msgid "Submit Message Action"
 msgstr "عمل تسلیم پیام"
-
-msgid "Submit Message Action [transition in notification_message_workflow]"
-msgstr "عمل تسلیم پبام"
-
-msgid "Submit Message [transition in notification_message_workflow]"
-msgstr "تسلیم پیام"
 
 msgid "Submitted"
 msgstr "تسلیم شد"
@@ -10113,9 +7027,6 @@ msgstr "تسلیم شد"
 msgid "Submitted [state in sale_opportunity_workflow]"
 msgstr "تسلیم شد"
 
-msgid "Submitted [state in ticket_workflow]"
-msgstr ""
-
 msgid "Subpages"
 msgstr "زیرصفحه ها"
 
@@ -10125,20 +7036,11 @@ msgstr "زیر بخش ها"
 msgid "Subversion"
 msgstr "زیر نسخه"
 
-msgid "Subversion User Name"
-msgstr ""
-
 msgid "Successor Tasks"
 msgstr "وظایف بعدی"
 
-msgid "Sudanese Pound"
-msgstr ""
-
 msgid "Suggest Reference"
 msgstr "پیشنهاد مرجع"
-
-msgid "Sum"
-msgstr ""
 
 msgid "Summary"
 msgstr "خلاصه"
@@ -10185,32 +7087,17 @@ msgstr "درخواست های پشتیبانی"
 msgid "Surcharge Ratio"
 msgstr "نسبت اضافه بها"
 
-msgid "Surinamese Dollar"
-msgstr ""
-
 msgid "Suspend Open Order"
 msgstr "تعلیق سفارش باز"
 
 msgid "Suspend Open Order Action"
 msgstr "عمل تعلیق سفارش باز"
 
-msgid "Suspend Open Order Action [transition in open_order_workflow]"
-msgstr "عمل تعلیق سفارش باز"
-
-msgid "Suspend Open Order [transition in open_order_workflow]"
-msgstr "تعلیق سفارش باز"
-
 msgid "Suspend Project"
 msgstr "تعلیق پروژه"
 
 msgid "Suspend Project Action"
 msgstr "عمل تعلیق پروژه"
-
-msgid "Suspend Project Action [transition in project_workflow]"
-msgstr "عمل تعلیق پروژه"
-
-msgid "Suspend Project [transition in project_workflow]"
-msgstr "تعلیق پروژه"
 
 msgid "Suspended"
 msgstr "تعلیق شد"
@@ -10227,38 +7114,17 @@ msgstr "تعلیق شد"
 msgid "Suspended [state in ticket_workflow]"
 msgstr "تعلیق شد"
 
-msgid "Swiss Franc"
-msgstr ""
-
 msgid "Symbol"
 msgstr "نشانه (سمبل)"
 
-msgid "Syrian Pound"
-msgstr ""
-
 msgid "System Preference"
 msgstr "مرجع سیستم"
-
-msgid "System Preference Configurator Item"
-msgstr ""
-
-msgid "TALES Constraint"
-msgstr ""
 
 msgid "Tab 1"
 msgstr "زبانه 1"
 
 msgid "Tab name"
 msgstr "اسم زبانه"
-
-msgid "Taka"
-msgstr ""
-
-msgid "Tala"
-msgstr ""
-
-msgid "Tanzanian Shilling"
-msgstr ""
 
 msgid "Target Product"
 msgstr "محصول هدف"
@@ -10482,20 +7348,11 @@ msgstr "توقف دوره حسابداری به طور موقت"
 msgid "Temporarily Stop Accounting Period Action"
 msgstr "عمل توقف دوره حسابداری به طور موقت"
 
-msgid "Temporarily Stop Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "عمل توقف دوره حسابداری به طور موقت"
-
-msgid "Temporarily Stop Accounting Period [transition in accounting_period_workflow]"
-msgstr "توقف دوره حسابداری به طور موقت"
-
 msgid "Temporarily Stopped"
 msgstr "بطور موقت متوقف شد"
 
 msgid "Temporarily Stopped [state in accounting_period_workflow]"
 msgstr "به طور موقت متوقف شد"
-
-msgid "Tenge"
-msgstr ""
 
 msgid "Terminate the Current Career Step"
 msgstr "حذفذمسیر شغلی موجود"
@@ -10506,215 +7363,23 @@ msgstr "عبارات"
 msgid "Terms created."
 msgstr "عبارات ایجاد شد."
 
-msgid "Test Component"
-msgstr ""
-
-msgid "Test Tool"
-msgstr ""
-
 msgid "Tested Property"
 msgstr "ویژگی آزمایش شد"
-
-msgid "Tests Dependencies"
-msgstr ""
 
 msgid "Text"
 msgstr "متن"
 
-msgid "Text Area Field Height"
-msgstr ""
-
-msgid "Text Area Field Width"
-msgstr ""
-
-msgid "Text Editor"
-msgstr ""
-
 msgid "Text Format"
 msgstr "فورمت تکست"
-
-msgid "The Date"
-msgstr ""
 
 msgid "The ID ${id} is invalid, it's a reserved property name"
 msgstr "شناسه ${id} معتبر نیست، این اسم یک ویژگی رزرو شده است"
 
-msgid "The Version of the Business Template"
-msgstr ""
-
-msgid "The absolute references of the document (our reference)"
-msgstr ""
-
-msgid "The base categories to browse"
-msgstr ""
-
-msgid "The content of the document considered as a text string"
-msgstr ""
-
-msgid "The current state of the document."
-msgstr ""
-
-msgid "The date when the document expires."
-msgstr ""
-
-msgid "The date when the document starts being valid."
-msgstr ""
-
-msgid "The default area number."
-msgstr ""
-
-msgid "The default city number."
-msgstr ""
-
-msgid "The default contained object id to look up"
-msgstr ""
-
-msgid "The default country number."
-msgstr ""
-
-msgid "The default currency when creating new transactions."
-msgstr ""
-
-msgid "The default height of text area fields"
-msgstr ""
-
-msgid "The default organisation to use when creating a new accounting transaction"
-msgstr ""
-
-msgid "The default section category for reporting"
-msgstr ""
-
-msgid "The default width of fields displaying amounts of money"
-msgstr ""
-
-msgid "The default width of quantity fields"
-msgstr ""
-
-msgid "The default width of string fields"
-msgstr ""
-
-msgid "The default width of text area fields"
-msgstr ""
-
-msgid "The height for large image.The unit is the pixel"
-msgstr ""
-
-msgid "The height for medium image.The unit is the pixel"
-msgstr ""
-
-msgid "The height for micro image. The unit is the pixel"
-msgstr ""
-
-msgid "The height for nano image. The unit is the pixel"
-msgstr ""
-
-msgid "The height for small image.The unit is the pixel"
-msgstr ""
-
-msgid "The height for thumbnail image.The unit is the pixel"
-msgstr ""
-
-msgid "The height for xlarge image.The unit is the pixel"
-msgstr ""
-
 msgid "The inventory module helps the user make a full inventory of the available products in the different warehouses of the company. There will be an inventory line for each product reference that is part of the inventory."
 msgstr "ماژول انبارگردانی به کاربر کمک می کند که یک انبارگردانی کامل محصولات موجود در انبارهای متفاوت شرکت انجام دهد. یک خط انبارگردانی، برای هر محصول مرجع که بخشی ازانبارگردانی است ایجاد خواهد شد."
 
-msgid "The languages displayed in the User Interface."
-msgstr ""
-
-msgid "The login this user will use to enter the system"
-msgstr ""
-
-msgid "The maximal date (inclusive) for transactions"
-msgstr ""
-
-msgid "The minimal date (inclusive) for transactions"
-msgstr ""
-
-msgid "The name of a document in ERP5"
-msgstr ""
-
-msgid "The name of the business template, must not change between revision as this is the property used to retrieve old one when upgrading"
-msgstr ""
-
-msgid "The original filename."
-msgstr ""
-
-msgid "The portal types to browse"
-msgstr ""
-
-msgid "The preferred account chart."
-msgstr ""
-
-msgid "The preferred account number method."
-msgstr ""
-
-msgid "The preferred bank account display method."
-msgstr ""
-
-msgid "The preferred date order in which datetime field will be displayed (dd/mm/yyyy, yyyy/mm/dd, ...)"
-msgstr ""
-
-msgid "The preferred float number style in which float field will be displayed (with comma, point, space, ...)"
-msgstr ""
-
-msgid "The preferred money quantity style in which float field will be displayed (with comma, point, space, ...)"
-msgstr ""
-
-msgid "The priority of the preference : in ascending order : user, site, global"
-msgstr ""
-
-msgid "The section Organisation for documents."
-msgstr ""
-
-msgid "The section category for documents; usually something like group/nexedi."
-msgstr ""
-
 msgid "The single event option can only be used with outgoing messages."
 msgstr "انتخاب یک اتفاق تنها می تواند با پیام های خروجی استفاده شود."
-
-msgid "The source code editor used by default"
-msgstr ""
-
-msgid "The street address.\n\nThis usually contains the street name, building number and apartment number (if any)."
-msgstr ""
-
-msgid "The style used to display categories in drop-down lists."
-msgstr ""
-
-msgid "The text editor used by default"
-msgstr ""
-
-msgid "The text format used by default"
-msgstr ""
-
-msgid "The width for large image.The unit is the pixel"
-msgstr ""
-
-msgid "The width for medium image.The unit is the pixel"
-msgstr ""
-
-msgid "The width for micro image. The unit is the pixel"
-msgstr ""
-
-msgid "The width for nano image. The unit is the pixel"
-msgstr ""
-
-msgid "The width for small image.The unit is the pixel"
-msgstr ""
-
-msgid "The width for thumbnail image.The unit is the pixel"
-msgstr ""
-
-msgid "The width for xlarge image.The unit is the pixel"
-msgstr ""
-
-msgid "The width for xsmall image.The unit is the pixel"
-msgstr ""
-
-msgid "The working copies"
-msgstr ""
 
 msgid "Third Parties"
 msgstr "اشخاص ثالث"
@@ -10731,14 +7396,8 @@ msgstr "حساب شخص ثالث"
 msgid "Third party ${third_party_name} is invalid."
 msgstr "شخص ثالث ${third_party_name} معتبر نیست."
 
-msgid "This dialog has already been submitted. Do you want to submit again ?"
-msgstr ""
-
 msgid "This document is not converted yet."
 msgstr "این مدرک هنوز تبدیل نشده است."
-
-msgid "This field contains layout of contained boxes. It should not (generally) be altered manually but by the system itself"
-msgstr ""
 
 msgid "This line can be included in a Purchase or Sale Invoice transaction and bears  information about the product or service that is sold, such as the quantity and the price. This line will be displayed in the final printed invoice."
 msgstr "این خط می تواند شامل صورتحساب معامله خرید یا فروش و اطلاعات در مورد محصول یا خدمات فروخته شده باشد، مانند تعداد و قیمت. این خط در صورتحساب نهایی چاپ شده خواهد بود."
@@ -10749,17 +7408,8 @@ msgstr "این خط ارزش یک واحد پول را در مقابل دیگر�
 msgid "This task should have a source : ${task_relative_url}"
 msgstr "این وظیفه باید یک منبع داشته باشد: ${task_relative_url}"
 
-msgid "Throw Away Local VCS Changes"
-msgstr ""
-
 msgid "Thumbnail"
 msgstr "ریز"
-
-msgid "Thumbnail Image Height"
-msgstr ""
-
-msgid "Thumbnail Image Width"
-msgstr ""
 
 msgid "Thumbnails"
 msgstr "ریز"
@@ -10791,12 +7441,6 @@ msgstr "بلیط ها"
 msgid "Time"
 msgstr "زمان"
 
-msgid "Timeout when connecting to the document conversion server (in seconds)"
-msgstr ""
-
-msgid "Timezone"
-msgstr ""
-
 msgid "Title"
 msgstr "عنوان"
 
@@ -10811,12 +7455,6 @@ msgstr "عنوان:"
 
 msgid "To reset your password, please enter your login below. An email will be sent to your address with a link to enter your new password."
 msgstr "برای تعیین مجدد رمز عبور خود، لطفأ نام کاربری خود را در زیر وارد کنید. یک ایمیل به آدرس شما ارسال خواهد شد که حاوی لینک برای وارد کردن رمز عبور شما است."
-
-msgid "Tools"
-msgstr ""
-
-msgid "Topic Keys"
-msgstr ""
 
 msgid "Total"
 msgstr "کل (مجموع)"
@@ -10854,21 +7492,6 @@ msgstr "خط تجارت"
 msgid "Trade Matrix Interaction Workflow"
 msgstr "گردش کار تعامل ماتریس تجاری"
 
-msgid "Trade Model Cell"
-msgstr ""
-
-msgid "Trade Model Line"
-msgstr ""
-
-msgid "Trade Model Line Cell Consistency Constraint"
-msgstr ""
-
-msgid "Trade Model Path"
-msgstr ""
-
-msgid "Trade Model Simulation Rule"
-msgstr ""
-
 msgid "Transaction Reference"
 msgstr "مرجع معامله"
 
@@ -10905,9 +7528,6 @@ msgstr "ماژول دگرگونی"
 msgid "Transformation Operation"
 msgstr "عملیات دگرگونی"
 
-msgid "Transformation Operation Cell"
-msgstr ""
-
 msgid "Transformation Optional Resource"
 msgstr "منبع انتخابی دگرگونی"
 
@@ -10917,26 +7537,11 @@ msgstr "گزارش دگرگونی"
 msgid "Transformation Transformed Resource"
 msgstr "منبع تغییر کرده دگرگونی"
 
-msgid "Transformation Transformed Resource Cell"
-msgstr ""
-
 msgid "Transformations"
 msgstr "تبدیل"
 
 msgid "Transformed Inventory Report"
 msgstr "گزارش موجودی تبدیل شده"
-
-msgid "Transformed Resource"
-msgstr ""
-
-msgid "Transition"
-msgstr ""
-
-msgid "Transition Variable"
-msgstr ""
-
-msgid "Translatable"
-msgstr ""
 
 msgid "Translated"
 msgstr "ترجمه شد"
@@ -10944,17 +7549,11 @@ msgstr "ترجمه شد"
 msgid "Translated [state in document_publication_workflow]"
 msgstr "ترجمه شد"
 
-msgid "Translation Domain"
-msgstr ""
-
 msgid "Translation Requested"
 msgstr "ترجمه درخواست شد"
 
 msgid "Translation Requested [state in document_publication_workflow]"
 msgstr "ترجمه درخواست شد"
-
-msgid "Translations"
-msgstr ""
 
 msgid "Translations to Assign"
 msgstr "ترجمه برای تخصیص"
@@ -10992,9 +7591,6 @@ msgstr "(%(count)s)ترجمه برای تجدید نظر"
 msgid "Translations to Revise [worklist in document_publication_workflow]"
 msgstr "ترجمه برای تجدید نظر"
 
-msgid "Translator Mode"
-msgstr ""
-
 msgid "Trash Bin"
 msgstr "ظرف آشغال"
 
@@ -11013,32 +7609,8 @@ msgstr "ابزار آشغال"
 msgid "Trial Balance"
 msgstr "تراز آزمون"
 
-msgid "Trinidad And Tobago Dollar"
-msgstr ""
-
-msgid "Tugrik"
-msgstr ""
-
-msgid "Tunisian Dinar"
-msgstr ""
-
-msgid "Turkish Lira"
-msgstr ""
-
-msgid "Turkmen Manat"
-msgstr ""
-
 msgid "Type"
 msgstr "نوع"
-
-msgid "Type of the property"
-msgstr ""
-
-msgid "Types Tool"
-msgstr ""
-
-msgid "UID"
-msgstr ""
 
 msgid "UOM"
 msgstr "UOM"
@@ -11052,38 +7624,17 @@ msgstr "URL Crawler"
 msgid "URL contributed successfully."
 msgstr "URL با موفقیت کمک کرد."
 
-msgid "URL of the document conversion server."
-msgstr ""
-
-msgid "Uae Dirham"
-msgstr ""
-
-msgid "Uganda Shilling"
-msgstr ""
-
 msgid "Unassigned"
 msgstr "معین نشده"
 
-msgid "Uncheck All"
-msgstr ""
-
 msgid "Undo"
 msgstr "خنثی کردن"
-
-msgid "Unidad De Valor Real"
-msgstr ""
 
 msgid "Uninstall Business Template"
 msgstr "الگوی تجاری را پاک کنید"
 
 msgid "Uninstall Business Template Action"
 msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Uninstall Business Template Action [transition in business_template_installation_workflow]"
-msgstr "عمل پاک کردن الگوی تجاری"
-
-msgid "Uninstall Business Template [transition in business_template_installation_workflow]"
-msgstr "پاک کردن الگوی تجاری"
 
 msgid "Unit"
 msgstr "واحد"
@@ -11094,12 +7645,6 @@ msgstr "تبدیل واحد ها"
 msgid "Unit Price"
 msgstr "قیمت واحد"
 
-msgid "Unit Test Classes"
-msgstr ""
-
-msgid "Units"
-msgstr ""
-
 msgid "Unknown"
 msgstr "ناشناخته"
 
@@ -11108,15 +7653,6 @@ msgstr "مدرک را چاپ نکنید"
 
 msgid "Unpublish Document Action"
 msgstr "عمل چاپ نکردن مدرک"
-
-msgid "Unpublish Document Action [transition in publication_workflow]"
-msgstr "عمل چاپ نکردن مدرک"
-
-msgid "Unpublish Document [transition in publication_workflow]"
-msgstr "مدرک را چاپ نکنید"
-
-msgid "Unsaved Form Warning"
-msgstr ""
 
 msgid "Until the end of month"
 msgstr "تا پایان ماه"
@@ -11127,26 +7663,14 @@ msgstr "تا پریود بعدی"
 msgid "Unversioned Files"
 msgstr "فایل ها ویرایش زدایی شد"
 
-msgid "Update"
-msgstr ""
-
 msgid "Update Assignment"
 msgstr "به روز کردن مأموریت"
 
 msgid "Update Assignment Action"
 msgstr "عمل به روز کردن مأموریت"
 
-msgid "Update Assignment Action [transition in assignment_workflow]"
-msgstr "عمل به روز کردن مأموریت"
-
-msgid "Update Assignment [transition in assignment_workflow]"
-msgstr "ابطال مأموریت"
-
 msgid "Update Business Template from SVN"
 msgstr "به روز کردن الگوی تجاری از SVN"
-
-msgid "Update Business Template from VCS"
-msgstr ""
 
 msgid "Update Fields"
 msgstr "به روز کردن فیلدها"
@@ -11157,12 +7681,6 @@ msgstr "به روز کردن فیلد بوسیله واژه نامه انگلی�
 msgid "Update File Metadata"
 msgstr "به روز کردن پرونده متادیتا"
 
-msgid "Update File Metadata [transition in processing_status_workflow]"
-msgstr "به روز کردن پرونده متادیتا"
-
-msgid "Update Local Roles"
-msgstr ""
-
 msgid "Update PortalTypes"
 msgstr "به روز کردن نوع پورتال"
 
@@ -11172,17 +7690,8 @@ msgstr "به روز کردن نوع پورتال بوسیله واژه نامه 
 msgid "Update Quantity from Container"
 msgstr "به روز کردن تعداد از کانتینر"
 
-msgid "Update Quantity from Container [transition in packing_list_container_workflow]"
-msgstr "به روز کردن تعداد از کانتینر"
-
 msgid "Update Repository Information"
 msgstr "به روز کردن اطلاعات مخزن"
-
-msgid "Update Tools"
-msgstr ""
-
-msgid "Update Translation?"
-msgstr ""
 
 msgid "Update Variations"
 msgstr "به روز کردن تغییرات"
@@ -11193,20 +7702,11 @@ msgstr "به روز کردن گردش کار"
 msgid "Update Workflows by English Glossary"
 msgstr "به روز کردن گردش کار بوسیله واژه نامه انگلیسی"
 
-msgid "Update and Reindex Catalog?"
-msgstr ""
-
 msgid "Update quantity"
 msgstr "به روز کردن تعداد"
 
 msgid "Update quantity Action"
 msgstr "عمل به روز کردن تعداد"
-
-msgid "Update quantity Action [transition in packing_list_container_workflow]"
-msgstr "عمل به روز کردن تعداد"
-
-msgid "Update quantity [transition in packing_list_container_workflow]"
-msgstr "به روز کردن تعداد"
 
 msgid "Updated"
 msgstr "به روز کردن"
@@ -11217,14 +7717,8 @@ msgstr "الگوهای تجاری به روز شد"
 msgid "Updated [state in assignment_workflow]"
 msgstr "به روز شد"
 
-msgid "Upgrade"
-msgstr ""
-
 msgid "Upgrade Business Templates from Repositories"
 msgstr "الگوی تجاری را از مخازن ترفیع دهید"
-
-msgid "Upload"
-msgstr ""
 
 msgid "Upload Business Template"
 msgstr "الگوی تجاری را آپلود کنید"
@@ -11235,13 +7729,7 @@ msgstr "پرونده را آپلود کنید"
 msgid "Upload Module"
 msgstr "ماژول آپلود"
 
-msgid "Upload a file that will replace the current one."
-msgstr ""
-
 msgid "Upload file"
-msgstr "پرونده را آپلود کنید"
-
-msgid "Upload file [transition in processing_status_workflow]"
 msgstr "پرونده را آپلود کنید"
 
 msgid "Uploaded"
@@ -11249,15 +7737,6 @@ msgstr "آپلود شد"
 
 msgid "Uploaded [state in processing_status_workflow]"
 msgstr "تبدیل شد"
-
-msgid "Url Registry Tool"
-msgstr ""
-
-msgid "Uruguayan Peso"
-msgstr ""
-
-msgid "Us Dollar"
-msgstr ""
 
 msgid "Usage"
 msgstr "استفاده"
@@ -11280,17 +7759,8 @@ msgstr "رابط کاربر"
 msgid "User Interface Languages"
 msgstr "زبان ارتباط با کاربر"
 
-msgid "User Login"
-msgstr ""
-
-msgid "User Password"
-msgstr ""
-
 msgid "User Preference Workflow"
 msgstr "گردش کار  ارجحیت"
-
-msgid "User accounts configuration"
-msgstr ""
 
 msgid "Username"
 msgstr "نام کاربری"
@@ -11307,12 +7777,6 @@ msgstr "کد VAT"
 msgid "VAT ID"
 msgstr "شناسه VAT"
 
-msgid "VCS"
-msgstr ""
-
-msgid "VCS Status"
-msgstr ""
-
 msgid "Validate"
 msgstr "تأئید"
 
@@ -11322,19 +7786,7 @@ msgstr "تأئید کردن حساب"
 msgid "Validate Account Action"
 msgstr "عمل تأئید حساب"
 
-msgid "Validate Account Action [transition in account_workflow]"
-msgstr "عمل تأئید حساب"
-
-msgid "Validate Account [transition in account_workflow]"
-msgstr "تأئید حساب"
-
 msgid "Validate Action"
-msgstr "عمل تأئید"
-
-msgid "Validate Action [transition in rule_validation_workflow]"
-msgstr "عمل تأئید"
-
-msgid "Validate Action [transition in validation_workflow]"
 msgstr "عمل تأئید"
 
 msgid "Validate Installation"
@@ -11346,32 +7798,14 @@ msgstr "تأئید کردن انبارگردانی"
 msgid "Validate Inventory Action"
 msgstr "عمل تأئید موجودی"
 
-msgid "Validate Inventory Action [transition in inventory_workflow]"
-msgstr "عمل تأئید موجودی"
-
-msgid "Validate Inventory [transition in inventory_workflow]"
-msgstr "تأئید موجودی"
-
 msgid "Validate Message"
 msgstr "تأئید پیام"
 
 msgid "Validate Message Action"
 msgstr "عمل تأئید پیام"
 
-msgid "Validate Message Action [transition in notification_message_workflow]"
-msgstr "عمل تأئید پیام"
-
-msgid "Validate Message [transition in notification_message_workflow]"
-msgstr "تأئید پیام"
-
 msgid "Validate Workflow Action"
 msgstr "عمل تأئید گردش کار"
-
-msgid "Validate [transition in rule_validation_workflow]"
-msgstr "تأئید"
-
-msgid "Validate [transition in validation_workflow]"
-msgstr "تأئید"
 
 msgid "Validated"
 msgstr "تأئید شد"
@@ -11418,9 +7852,6 @@ msgstr "تاریخ خاتمه تأئید"
 msgid "Value"
 msgstr "ارزش"
 
-msgid "Variable"
-msgstr ""
-
 msgid "Variable Additional Price"
 msgstr "قیمت اضافه متغیر"
 
@@ -11430,17 +7861,11 @@ msgstr "گروه تحرک متنوع"
 msgid "Variation"
 msgstr "تنوع"
 
-msgid "Variation Divergence Tester"
-msgstr ""
-
 msgid "Variation Property Movement Group"
 msgstr "تنوع خواص گروه تحرک"
 
 msgid "Variation Text"
 msgstr "متن متنوع"
-
-msgid "Vatu"
-msgstr ""
 
 msgid "Vendor Account"
 msgstr "حساب فروشنده"
@@ -11480,21 +7905,6 @@ msgstr "ملاحظه مخزن اطلاعات SVN"
 
 msgid "View Source"
 msgstr "نمایش منبع"
-
-msgid "View Style"
-msgstr ""
-
-msgid "View VCS History"
-msgstr ""
-
-msgid "View ZODB History"
-msgstr ""
-
-msgid "Visible"
-msgstr ""
-
-msgid "Visible [state in knowledge_pad_validation_workflow]"
-msgstr ""
 
 msgid "Visit"
 msgstr "بازدید"
@@ -11544,36 +7954,6 @@ msgstr "Webmaster"
 msgid "Welcome to ERP5"
 msgstr "به ERP5 خوش آمدید"
 
-msgid "What Sender Address should be Used for Automatically Generated Emails?"
-msgstr ""
-
-msgid "What is the Begin Date of your Current Accounting Period?"
-msgstr ""
-
-msgid "What is the Currency Used in your Company?"
-msgstr ""
-
-msgid "What is the Name of this Period?"
-msgstr ""
-
-msgid "What is the Name of your Company?"
-msgstr ""
-
-msgid "What will be the End Date of your Current Accounting Period?"
-msgstr ""
-
-msgid "When true, access tab will be used in front page."
-msgstr ""
-
-msgid "Which Accounting Plan do you Use?"
-msgstr ""
-
-msgid "Which Date Format do you Use?"
-msgstr ""
-
-msgid "Which Translations do you Want to Use?"
-msgstr ""
-
 msgid "Wiki Predecessors"
 msgstr "سوابق wiki"
 
@@ -11598,23 +7978,14 @@ msgstr "کارگر"
 msgid "Workflow"
 msgstr "گردش کار"
 
-msgid "Workflow Chains"
-msgstr ""
-
 msgid "Workflow History"
 msgstr "گردش کار تاریخچه"
 
 msgid "Workflow Item Path"
 msgstr "گردش کار مسیر قلم (آیتم)"
 
-msgid "Workflow Module"
-msgstr ""
-
 msgid "Workflow Report"
 msgstr "گزارش گردش کار"
-
-msgid "Workflow Security Configurator Item"
-msgstr ""
 
 msgid "Workflow modification in progress."
 msgstr "تصحیح گردش کار در حال پیشرفت است."
@@ -11625,17 +7996,8 @@ msgstr "گردش کارها"
 msgid "Workflows updated."
 msgstr "گردش کارها به روز شد."
 
-msgid "Working Copies"
-msgstr ""
-
-msgid "Worklist"
-msgstr ""
-
 msgid "Works"
 msgstr "کارها"
-
-msgid "Write Permission"
-msgstr ""
 
 msgid "Wrong hierarchy found for ID ${id} and depth ${depth}"
 msgstr "سلسله مراتب اشتباه برای شناسه ${id} و عمق ${depth} یافت شد"
@@ -11643,32 +8005,8 @@ msgstr "سلسله مراتب اشتباه برای شناسه ${id} و عمق $
 msgid "X Axis"
 msgstr "محور X"
 
-msgid "Xlarge Image Height"
-msgstr ""
-
-msgid "Xlarge Image Width"
-msgstr ""
-
-msgid "Xsmall Image Height"
-msgstr ""
-
-msgid "Xsmall Image Width"
-msgstr ""
-
 msgid "Y Axis"
 msgstr "محور Y"
-
-msgid "Year / Month / Day"
-msgstr ""
-
-msgid "Yemeni Rial"
-msgstr ""
-
-msgid "Yen"
-msgstr ""
-
-msgid "You are going to install your selected configuration."
-msgstr ""
 
 msgid "You are not allowed to add ${portal_type} in this context."
 msgstr "شما مجاز به افزودن ${portal_type} در این متن نیستید."
@@ -11712,149 +8050,17 @@ msgstr "شما از سیستم خارج شده اید."
 msgid "You have been logged out. Thank you for using this website."
 msgstr "شما لز سیستم خارج شده اید. برای استفاده از این وبسایت تشکر می کنیم."
 
-msgid "You have unsaved changes"
-msgstr ""
-
 msgid "Your account was successfully created."
 msgstr "حساب شما با موفقیت ایجاد شد."
-
-msgid "Your organisation"
-msgstr ""
 
 msgid "Your tab is empty."
 msgstr "این زبانه خالی است"
 
-msgid "ZODB Continuous Increasing Id Generator"
-msgstr ""
-
-msgid "ZODB History Size"
-msgstr ""
-
-msgid "Zambian Kwacha"
-msgstr ""
-
-msgid "Zimbabwe Dollar"
-msgstr ""
-
-msgid "Zloty"
-msgstr ""
-
-msgid "Zope Products"
-msgstr ""
-
-msgid "Zope Roles"
-msgstr ""
-
-msgid "a list of template names provided by this template"
-msgstr ""
-
-msgid "a list of template names required by this template"
-msgstr ""
-
-msgid "a list of template names required by this template to run unit tests from an instance created only for unit tests"
-msgstr ""
-
-msgid "answered"
-msgstr ""
-
-msgid "archived"
-msgstr ""
-
-msgid "assigned"
-msgstr ""
-
-msgid "auto_planned"
-msgstr ""
-
-msgid "building"
-msgstr ""
-
-msgid "built"
-msgstr ""
-
-msgid "built [state in business_template_building_workflow]"
-msgstr ""
-
-msgid "calculating"
-msgstr ""
-
-msgid "cancelled"
-msgstr ""
-
 msgid "class_name"
 msgstr "اسم_کلاس"
 
-msgid "closed"
-msgstr ""
-
-msgid "confirmed"
-msgstr ""
-
-msgid "contacted"
-msgstr ""
-
-msgid "conversion_failed"
-msgstr ""
-
-msgid "converted"
-msgstr ""
-
-msgid "converting"
-msgstr ""
-
-msgid "current"
-msgstr ""
-
-msgid "default identity (name + email) to commit in the git repository"
-msgstr ""
-
-msgid "default user name to commit in the svn repository"
-msgstr ""
-
-msgid "deleted"
-msgstr ""
-
-msgid "delivered"
-msgstr ""
-
 msgid "description"
 msgstr "توصیف"
-
-msgid "disabled"
-msgstr ""
-
-msgid "diverged"
-msgstr ""
-
-msgid "draft"
-msgstr ""
-
-msgid "draft [state in business_template_building_workflow]"
-msgstr ""
-
-msgid "embedded"
-msgstr ""
-
-msgid "empty"
-msgstr ""
-
-msgid "enabled"
-msgstr ""
-
-msgid "enquired"
-msgstr ""
-
-msgid "expired"
-msgstr ""
-
-msgid "expired_protected"
-msgstr ""
-
-msgid "expired_published"
-msgstr ""
-
-msgid "failed"
-msgstr ""
 
 msgid "getMessage"
 msgstr "گرفتن پیام"
@@ -11865,29 +8071,11 @@ msgstr "گرفتن شئ"
 msgid "getTranslatedMessage"
 msgstr "گرفتن پیام ترجمه شده"
 
-msgid "global"
-msgstr ""
-
 msgid "go back"
 msgstr "برگردید"
 
-msgid "hidden"
-msgstr ""
-
 msgid "iCalendar Export"
 msgstr "صدور تقویم"
-
-msgid "if checked, if will install all the missing tools in the site when installing the business template"
-msgstr ""
-
-msgid "installed"
-msgstr ""
-
-msgid "invalidated"
-msgstr ""
-
-msgid "invisible"
-msgstr ""
 
 msgid "mapping"
 msgstr "طرح ریزی کردن"
@@ -11895,143 +8083,14 @@ msgstr "طرح ریزی کردن"
 msgid "message"
 msgstr "پیام"
 
-msgid "missing"
-msgstr ""
-
-msgid "modified"
-msgstr ""
-
-msgid "modified [state in business_template_building_workflow]"
-msgstr ""
-
-msgid "new"
-msgstr ""
-
-msgid "not_installed"
-msgstr ""
-
-msgid "number of line displayed by a ListBox when used in list mode (in a module for example)"
-msgstr ""
-
-msgid "number of line displayed by a ListBox when used in view mode (in a document for example)"
-msgstr ""
-
 msgid "object_relative_url"
 msgstr "URL وابسته به شئ"
 
 msgid "of"
 msgstr "از"
 
-msgid "offered"
-msgstr ""
-
-msgid "open"
-msgstr ""
-
-msgid "ordered"
-msgstr ""
-
-msgid "packed"
-msgstr ""
-
-msgid "planned"
-msgstr ""
-
 msgid "portal type"
 msgstr "نوع پرتال"
 
-msgid "portal_categories"
-msgstr ""
-
-msgid "portal_property_sheets"
-msgstr ""
-
-msgid "portal_types"
-msgstr ""
-
-msgid "posted"
-msgstr ""
-
-msgid "protected"
-msgstr ""
-
-msgid "public"
-msgstr ""
-
-msgid "published"
-msgstr ""
-
-msgid "published_alive"
-msgstr ""
-
-msgid "reStructuredText"
-msgstr ""
-
-msgid "ready"
-msgstr ""
-
-msgid "rejected"
-msgstr ""
-
-msgid "released"
-msgstr ""
-
-msgid "released_alive"
-msgstr ""
-
-msgid "replaced"
-msgstr ""
-
-msgid "requested"
-msgstr ""
-
-msgid "shared"
-msgstr ""
-
-msgid "shared_alive"
-msgstr ""
-
 msgid "slice not defined"
 msgstr "برش تعریف نشد"
-
-msgid "sold"
-msgstr ""
-
-msgid "solved"
-msgstr ""
-
-msgid "solving"
-msgstr ""
-
-msgid "split"
-msgstr ""
-
-msgid "started"
-msgstr ""
-
-msgid "stopped"
-msgstr ""
-
-msgid "submitted"
-msgstr ""
-
-msgid "suspended"
-msgstr ""
-
-msgid "title"
-msgstr ""
-
-msgid "translated"
-msgstr ""
-
-msgid "updated"
-msgstr ""
-
-msgid "uploaded"
-msgstr ""
-
-msgid "validated"
-msgstr ""
-
-msgid "visible"
-msgstr ""

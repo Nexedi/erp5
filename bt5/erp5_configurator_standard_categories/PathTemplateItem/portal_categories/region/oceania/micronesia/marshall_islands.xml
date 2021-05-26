@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MHL</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MH</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>marshall_islands</string> </value>
         </item>

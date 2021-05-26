@@ -556,6 +556,8 @@
     var next_options;
     if (previous_options.hasOwnProperty('cancel')) {
       next_options = JSON.parse(previous_options.cancel);
+      // cancel may be outdated
+      gadget.props.is_cancelled = true;
     } else {
       next_options = {jio_key: previous_options.jio_key};
     }
@@ -1055,59 +1057,58 @@
 
 
   rJS(window)
-    .ready(function createProps(gadget) {
+    .ready(function routerReady(gadget) {
       gadget.props = {
         options: {}
       };
-    })
-
-    .ready(function createJioSelection(gadget) {
-      return gadget.getDeclaredGadget("jio_selection")
-        .push(function (jio_gadget) {
-          gadget.props.jio_gadget = jio_gadget;
-          return jio_gadget.createJio({
-            type: "sha",
-            sub_storage: {
-              type: "indexeddb",
-              database: "selection"
-            }
-          });
-        });
-    })
-
-    .ready(function createJioNavigationHistory(gadget) {
-      return gadget.getDeclaredGadget("jio_navigation_history")
-        .push(function (jio_gadget) {
-          gadget.props.jio_navigation_gadget = jio_gadget;
-          return jio_gadget.createJio({
-            type: "query",
-            sub_storage: {
-              type: "indexeddb",
-              database: "navigation_history"
-            }
-          });
-        });
-    })
-
-    .ready(function createJioDocumentState(gadget) {
-      return gadget.getDeclaredGadget("jio_document_state")
-        .push(function (jio_gadget) {
-          gadget.props.jio_state_gadget = jio_gadget;
-          return jio_gadget.createJio({
-            type: "indexeddb",
-            database: "document_state"
-          });
-        });
-    })
-    .ready(function createJioForContent(g) {
-      return g.getDeclaredGadget("jio_form_content")
-        .push(function (jio_form_content) {
-          g.props.jio_form_content = jio_form_content;
-          return jio_form_content.createJio({
-            type: "local",
-            sessiononly: true
-          });
-        });
+      return RSVP.all([
+        (function createJioSelection() {
+          return gadget.getDeclaredGadget("jio_selection")
+            .push(function (jio_gadget) {
+              gadget.props.jio_gadget = jio_gadget;
+              return jio_gadget.createJio({
+                type: "sha",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "selection"
+                }
+              });
+            });
+        }()),
+        (function createJioNavigationHistory() {
+          return gadget.getDeclaredGadget("jio_navigation_history")
+            .push(function (jio_gadget) {
+              gadget.props.jio_navigation_gadget = jio_gadget;
+              return jio_gadget.createJio({
+                type: "query",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "navigation_history"
+                }
+              });
+            });
+        }()),
+        (function createJioDocumentState() {
+          return gadget.getDeclaredGadget("jio_document_state")
+            .push(function (jio_gadget) {
+              gadget.props.jio_state_gadget = jio_gadget;
+              return jio_gadget.createJio({
+                type: "indexeddb",
+                database: "document_state"
+              });
+            });
+        }()),
+        (function createJioForContent() {
+          return gadget.getDeclaredGadget("jio_form_content")
+            .push(function (jio_form_content) {
+              gadget.props.jio_form_content = jio_form_content;
+              return jio_form_content.createJio({
+                type: "local",
+                sessiononly: true
+              });
+            });
+        }())
+      ]);
     })
 
     .declareMethod('getCommandUrlForList', function getCommandUrlForList(
@@ -1164,16 +1165,17 @@
         }
         result = routeMethodLess(gadget, command_options.args);
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return result;
-        })
+      return new RSVP.Queue(result)
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
             gadget.props.modified = false;
+            if (gadget.props.is_cancelled) {
+              route_result.options.is_cancelled = true;
+            }
             return gadget.renderApplication(route_result, gadget.props.keep_message)
               .push(function (result) {
                 gadget.props.keep_message = false;
+                gadget.props.is_cancelled = false;
                 return result;
               });
           }

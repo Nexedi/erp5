@@ -343,6 +343,14 @@ portal_absolute_url = portal.absolute_url()
 preference_tool = portal.portal_preferences
 Base_translateString = portal.Base_translateString
 
+def translateWorklistActionName(worklist_action_name):
+  """Translate a worklist action name, that may contain the document count.
+
+  Instead of translating "Draft to Validate (123)", we translate "Draft to Validate".
+  """
+  return Base_translateString(re.sub(r' \(\d+\)$', '', worklist_action_name))
+
+
 preferred_html_style_developer_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
 preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
@@ -1359,6 +1367,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'status': statusLevelToString(portal_status_level)
     }
 
+  if (mode == 'form') or (mode == 'traverse'):
+    # extra_param_json should be base64 encoded JSON at this point
+    # only for mode == 'form' it is already a dictionary
+    if not extra_param_json:
+      extra_param_json = {}
+
+    if isinstance(extra_param_json, str):
+      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
+
+    # Use extra param as request param
+    for k, v in byteify(extra_param_json.items()):
+      REQUEST.set(k, v)
+      REQUEST.form[k] = v
+
   if (mode == 'root') or (mode == 'traverse'):
     ##
     # Render ERP Document with a `view` specified
@@ -1382,19 +1404,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       "name": getRealRelativeUrl(traversed_document),
       "title": result_dict['title']
     }
-
-    # extra_param_json should be base64 encoded JSON at this point
-    # only for mode == 'form' it is already a dictionary
-    if not extra_param_json:
-      extra_param_json = {}
-
-    if isinstance(extra_param_json, str):
-      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
-
-    # Use extra param as request param
-    for k, v in byteify(extra_param_json.items()):
-      REQUEST.set(k, v)
-      REQUEST.form[k] = v
 
     # Add a link to the portal type if possible
     if not is_portal:
@@ -1449,7 +1458,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         view_context = traversed_document
       else:
         view_context = traversed_document.restrictedTraverse(current_action['other_context'])
-      view_instance = getattr(view_context, current_action['view_id'])
+
+      view_instance = getattr(view_context, current_action['view_id'], None)
+      if view_instance is None:
+        response.setStatus(404)
+        return ""
       if (view_instance is not None):
         embedded_dict = {
           '_links': {
@@ -1515,7 +1528,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title']),
+          'title': Base_translateString(
+              translateWorklistActionName(view_action['title'])
+              if 'worklist_id' in view_action
+              else view_action['title']),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
@@ -1848,7 +1864,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         else:
           catalog_kw['group_by_list'] = [str(group_by)]
         # Include select, as user may want to count
-        catalog_kw["select_list"] = select_list
+        # For now, consider only functions, for example, count(column_name) or COUNT(column name) or count(*)
+        catalog_kw["select_list"] = [x for x in select_list if re.match(r"^\D+\(.*\)$", x)]
 
       if limit:
         catalog_kw["limit"] = limit
@@ -2317,7 +2334,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'href': url_template_dict["jio_search_template"] % {
           "query": make_query({"query": query})
         },
-        'name': Base_translateString(re.sub(r' \(\d+\)$', '', action['name'])),
+        'name': translateWorklistActionName(action['name']),
         'count': action['count']
       }
 
@@ -2385,7 +2402,6 @@ if mode == 'url_generator':
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
-response.setHeader('Content-Type', mime_type)
 hateoas = calculateHateoas(relative_url=relative_url,
                            REQUEST=REQUEST, response=response, view=view, mode=mode,
                            query=query, select_list=select_list, limit=limit, form=form,
@@ -2396,4 +2412,5 @@ hateoas = calculateHateoas(relative_url=relative_url,
 if hateoas == "":
   return hateoas
 else:
+  response.setHeader('Content-Type', mime_type)
   return json.dumps(hateoas, indent=2)

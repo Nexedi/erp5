@@ -14,7 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Foo_viewPrintoutForm</string> </value>
+            <value> <string>Foo_printLastViewName</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

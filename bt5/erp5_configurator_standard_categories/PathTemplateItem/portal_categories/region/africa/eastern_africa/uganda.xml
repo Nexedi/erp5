@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>UGA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>UG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>uganda</string> </value>
         </item>

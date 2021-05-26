@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>WLF</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>WF</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>wallis_and_futuna_islands</string> </value>
         </item>

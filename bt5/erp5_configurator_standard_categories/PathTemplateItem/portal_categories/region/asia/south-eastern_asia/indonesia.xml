@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>IDN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ID</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>indonesia</string> </value>
         </item>

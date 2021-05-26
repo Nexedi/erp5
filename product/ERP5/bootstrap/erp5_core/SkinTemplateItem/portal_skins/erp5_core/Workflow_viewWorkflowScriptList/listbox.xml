@@ -108,20 +108,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>callable_type</string>
-                          <string>Callable Type</string>
                         </tuple>
                         <tuple>
                           <string>parameter_signature</string>
@@ -187,19 +179,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>WorkflowScript_getListBoxURL</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>WorkflowScript_getListBoxURL</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>WorkflowScript_getListBoxURL</string>
-                        </tuple>
-                        <tuple>
-                          <string>callable_type</string>
                           <string>WorkflowScript_getListBoxURL</string>
                         </tuple>
                         <tuple>

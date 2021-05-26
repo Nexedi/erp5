@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ASM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AS</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>american_samoa</string> </value>
         </item>

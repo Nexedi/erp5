@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SHN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>SH</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>saint_helena</string> </value>
         </item>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>PLW</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PW</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>palau</string> </value>
         </item>

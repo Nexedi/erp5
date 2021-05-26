@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>DMA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>DM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>dominica</string> </value>
         </item>

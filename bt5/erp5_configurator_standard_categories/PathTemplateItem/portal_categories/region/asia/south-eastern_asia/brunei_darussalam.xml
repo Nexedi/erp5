@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BRN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BN</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>brunei_darussalam</string> </value>
         </item>

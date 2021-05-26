@@ -308,12 +308,6 @@ msgstr "Übersetzung Akzeptieren"
 msgid "Accept Translation Action"
 msgstr "Akzeptiere Übersetzten Aktion"
 
-msgid "Accept Translation Action [transition in document_publication_workflow]"
-msgstr "Akzeptiere Übersetzten Aktion [transition in document_publication_Arbeitsablauf]"
-
-msgid "Accept Translation [transition in document_publication_workflow]"
-msgstr "Akzeptiere Übersetzung [transition in document_publication_Arbeitsablauf]"
-
 msgid "Accepts a translation and sets the validation state to submitted, waiting for further approval before publication."
 msgstr "Akzeptiert die Übersetzung, setzt den Validierung-Zustand auf \"eingereicht\"  und wartet anschließend auf nötige Genehmigungen zur Veröffentlichung."
 
@@ -545,9 +539,6 @@ msgstr "Alarm Bericht"
 msgid "All"
 msgstr "Alle"
 
-msgid "All criterions (AND)"
-msgstr "Alle Kriterien (AND)"
-
 msgid "All Accounting Transactions for this organisation during the period have to be closed first."
 msgstr "Alle Buchungs-Transaktionen für diese Organisation während des Zeitraums müssen zuerst abschlossen werden"
 
@@ -556,6 +547,9 @@ msgstr "Alle Dokumente"
 
 msgid "All Related Documents"
 msgstr "Alle Verknüpften Dokumente"
+
+msgid "All criterions (AND)"
+msgstr "Alle Kriterien (AND)"
 
 msgid "Allow user to associate spreadsheet columns with portal types properties."
 msgstr "Erlaube dem Nutzer, Tabellenspalten mit Portal Type Properties zu verknüpfen."
@@ -686,9 +680,6 @@ msgstr "Automatisch Erkennen"
 msgid "Available"
 msgstr "Verfügbar"
 
-msgid "ascending"
-msgstr "aufsteigend"
-
 msgid "Bad login provided."
 msgstr "Falsches Login."
 
@@ -779,11 +770,11 @@ msgstr "Beides"
 msgid "Boxes"
 msgstr "Boxen"
 
-msgid "Breadcrumb"
-msgstr "Navigation"
-
 msgid "Branch Number"
 msgstr "Zweigstellennummer"
+
+msgid "Breadcrumb"
+msgstr "Navigation"
 
 msgid "Budget Section"
 msgstr "Budgetposten"
@@ -1778,9 +1769,6 @@ msgstr "Doppelte ID gefunden in ${table} Zeile ${line} : ${id}"
 msgid "Duration"
 msgstr "Dauer"
 
-msgid "descending"
-msgstr "absteigend"
-
 msgid "EAN 13 Code"
 msgstr "Zolltarifnummer"
 
@@ -2129,12 +2117,6 @@ msgstr "Registrieren"
 msgid "Finish Task Action"
 msgstr "Arbeits-Aktion beenden"
 
-msgid "Finish Task Action [transition in task_report_workflow]"
-msgstr "Arbeits-Aktion beenden [Transition im task_report_workflow]"
-
-msgid "Finish Task [transition in task_report_workflow]"
-msgstr "Registrieren [transition im task_report_workflow]"
-
 msgid "Finished"
 msgstr "Fertig"
 
@@ -2390,11 +2372,11 @@ msgstr "Analytische Details Ausblenden"
 msgid "Hide Document"
 msgstr "Dokument Verstecken"
 
-msgid "Hide tabs"
-msgstr "Tabs Verstecken"
-
 msgid "Hide Rows"
 msgstr "Datensätze verbergen"
+
+msgid "Hide tabs"
+msgstr "Tabs Verstecken"
 
 msgid "Hides a document which was published or released by mistake by setting the validation_state to hidden."
 msgstr "Versteckt ein Dokument, was versehentlich veröffentlicht wurde durch Setzen des Validierungszustands auf Versteckt."
@@ -2666,9 +2648,6 @@ msgstr "Journalisiert"
 msgid "Jump"
 msgstr "Springen"
 
-msgid "Jumps"
-msgstr "Springen"
-
 msgid "Jump Relation"
 msgstr "Springe zu Verknüpfung"
 
@@ -2680,6 +2659,9 @@ msgstr "Zu Verknüpfter Zahlung Springen"
 
 msgid "Jump..."
 msgstr "Springen..."
+
+msgid "Jumps"
+msgstr "Springen"
 
 msgid "Keep Draft"
 msgstr "Im Zustand Entwurf belassen"
@@ -3083,9 +3065,6 @@ msgstr "Kein(e) ${portal_type} verknüpft."
 msgid "No Project"
 msgstr "kein Projekt"
 
-msgid "No records"
-msgstr "Keine Datensätze"
-
 msgid "No Sale Invoice Transaction Related"
 msgstr "Keine verknüpften Verkaufs-Rechnungs-Transaktionen"
 
@@ -3097,6 +3076,9 @@ msgstr "Keine verknüpfte Verkaufs-Packliste"
 
 msgid "No Task Report Related"
 msgstr "Keine verknüpften Arbeits-Berichte"
+
+msgid "No records"
+msgstr "Keine Datensätze"
 
 msgid "No sms will be sent.<br /> Only message with resource ${resource} are sent."
 msgstr "Keine SMS wird versandt.<br /> Nur Nachrichten mit der Ressource ${resource} werden versendet."
@@ -4382,12 +4364,6 @@ msgstr "Freigeben"
 msgid "Restop Task Action"
 msgstr "Freigeben"
 
-msgid "Restop Task Action [transition in task_report_workflow]"
-msgstr "Freigeben"
-
-msgid "Restop Task [transition in task_report_workflow]"
-msgstr "Freigeben"
-
 msgid "Result"
 msgstr "Ergebnis"
 
@@ -4640,9 +4616,6 @@ msgstr "Bewertung Lieferung"
 msgid "Search"
 msgstr "Suche"
 
-msgid "Searchable Text"
-msgstr "Durchsuchbarer Text"
-
 msgid "Search Key"
 msgstr "Suchschlüssel"
 
@@ -4651,6 +4624,9 @@ msgstr "Suchergebnisse"
 
 msgid "Search String"
 msgstr "Suchstring"
+
+msgid "Searchable Text"
+msgstr "Durchsuchbarer Text"
 
 msgid "Secrecy Level"
 msgstr "Geheimhaltungs-Stufe"
@@ -4664,9 +4640,6 @@ msgstr "Kategorie der Organisationseinheit"
 msgid "Section Transaction Reference"
 msgstr "Transaktions-Referenz Bereich"
 
-msgid "Select Template"
-msgstr "Auswahlvorlage"
-
 msgid "Select Favorite"
 msgstr "Favorit Auswählen"
 
@@ -4678,6 +4651,9 @@ msgstr "Sprache Auswählen"
 
 msgid "Select Module"
 msgstr "Modul Auswählen"
+
+msgid "Select Template"
+msgstr "Auswahlvorlage"
 
 msgid "Sell"
 msgstr "Verkaufen"
@@ -4892,14 +4868,14 @@ msgstr "Entschuldigung, Ihre Auswahl hat sich geändert."
 msgid "Sort"
 msgstr "Sortieren"
 
+msgid "Sort Editor"
+msgstr "Sortierung Bearbeiten"
+
 msgid "Sort Index"
 msgstr "Sortier Index"
 
 msgid "Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents."
 msgstr "Der Sortier Index bestimmt entweder die Berechnungs- oder Sortierreihenfolge von Dokumenten in Listen."
-
-msgid "Sort Editor"
-msgstr "Sortierung Bearbeiten"
 
 msgid "Sort Order"
 msgstr "Sortierreihenfolge"
@@ -4957,12 +4933,6 @@ msgstr "Projekt Starten"
 
 msgid "Start Project Action"
 msgstr "Projekt-Aktion Starten"
-
-msgid "Start Project Action [transition in project_workflow]"
-msgstr "Projekt-Aktion Starten [transition im project_workflow]"
-
-msgid "Start Project [transition in project_workflow]"
-msgstr "Projekt Starten [transition im project_workflow]"
 
 msgid "Start Task"
 msgstr "Arbeit starten"
@@ -6236,7 +6206,6 @@ msgstr "Bericht Ansehen"
 msgid "Viewable"
 msgstr "Ansicht"
 
-
 msgid "Views"
 msgstr "Ansichten"
 
@@ -6345,9 +6314,6 @@ msgstr "IST-Gesamstunden des Monats"
 msgid "Workflow"
 msgstr "Arbeitsablauf"
 
-msgid "Workflow-Transitions"
-msgstr "Arbeitsablauf-Buchungen"
-
 msgid "Workflow History"
 msgstr "Arbeitsablauf Historie"
 
@@ -6371,6 +6337,9 @@ msgstr "Arbeitsablauf, der die Etappen der Karriere einer Person definiert."
 
 msgid "Workflow used to determine the status of assignments for a given person"
 msgstr "Wird genutzt um den Zustand der Aufgabenzuweisung einer Person zu ermitteln."
+
+msgid "Workflow-Transitions"
+msgstr "Arbeitsablauf-Buchungen"
 
 msgid "Workflows"
 msgstr "Arbeitsabläufe"
@@ -6462,6 +6431,9 @@ msgstr "[${instance_name}] Passwort ändern"
 msgid "action called when editing a document"
 msgstr "Die Aktion, die aufgerufen wird, wenn ein Dokument editiert wird"
 
+msgid "ascending"
+msgstr "aufsteigend"
+
 msgid "default state of the document in the converting process"
 msgstr "Standardzustand eines Dokuments im Konvertierungsprozess."
 
@@ -6470,6 +6442,9 @@ msgstr "Definiert die Basis-UR, unter der sich die Dokumentation befindet"
 
 msgid "defines which email address is used by default for ingestion"
 msgstr "Definiert, welche E-Mailaddesse als Standard für dir E-Mail-Aufnahme verwendet wird."
+
+msgid "descending"
+msgstr "absteigend"
 
 msgid "draft"
 msgstr "Entwurf"

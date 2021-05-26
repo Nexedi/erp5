@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>COK</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CK</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>cook_islands</string> </value>
         </item>

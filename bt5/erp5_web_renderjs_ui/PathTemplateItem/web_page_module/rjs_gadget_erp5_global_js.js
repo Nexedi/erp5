@@ -172,6 +172,7 @@
       action_type,
       current_href,
       class_name,
+      extra_options,
       options,
       command,
       group_mapping = {},
@@ -256,17 +257,21 @@
                 group_mapping[group][i].action_type.indexOf("_raw") !== -1) {
             command = "raw";
             options = {
-              title: group_mapping[group][i].title,
               url: group_mapping[group][i].href
+            };
+            extra_options = {
+              title: group_mapping[group][i].title
             };
           } else {
             command = command_mapping[group] || default_command_mapping[group];
             options = {
-              title: group_mapping[group][i].title,
-              class_name: class_name,
               jio_key: jio_key,
               view: group_mapping[group][i].href,
               editable: editable_mapping[group]
+            };
+            extra_options = {
+              title: group_mapping[group][i].title,
+              class_name: class_name
             };
           }
           if (group === "view") {
@@ -274,11 +279,13 @@
             // OfficeJS we keep it empty for different default
             options.page = undefined;
           }
-          url_mapping[group].push({
+
+          extra_options.url_kw = {
             command: command,
             absolute_url: command === "raw" ? true : false,
             options: options
-          });
+          };
+          url_mapping[group].push(extra_options);
         }
       }
     }

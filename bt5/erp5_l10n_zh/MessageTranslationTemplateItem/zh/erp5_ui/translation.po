@@ -16,6 +16,9 @@ msgstr ""
 "“计算中”是一个“因果整合状态”，用来指示执行一个命令后，系统正在计算生成关联文档的状态。计算结束后，“整合状态”就有一个新的确定性状态，例如“不匹配”或“已解决”。\r\n"
 "例如，当销售订单确定后，系统会创建一个“确定”状态的装箱单。这个过程中ERP5要进行计算，装箱单的“因果整合状态”就是“创建中”，指示系统正在计算该装箱单和原销售订单一致还是不匹配。"
 
+msgid "${count} Records"
+msgstr "${count} 记录"
+
 msgid "${min_quantity} <= Quantity"
 msgstr "${min_quantity} <= 数量"
 
@@ -24,6 +27,9 @@ msgstr "${min_quantity} <= 数量 < ${max_quantity}"
 
 msgid "${number} records"
 msgstr "${number} 条记录"
+
+msgid "${portal_type} Created."
+msgstr "${portal_type}已创建。"
 
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${that_portal_type} : ${that_title}. 相关 ${this_portal_type}"
@@ -51,6 +57,9 @@ msgstr "2/3 选择一个发布"
 
 msgid "3/3 Request Service:"
 msgstr "3/3 请求服务："
+
+msgid "3/3 Request Service: ${title}"
+msgstr "3/3 请求服务： ${title}"
 
 msgid "A Campaign is a marketing mini-project which keeps track of all events associated to a given marketing action. Use it for example to manage press relation campaigns, assessment campaigns, product presentation campaigns which involve contacting many customers through email, phone, etc."
 msgstr "活动是一个小型营销项目，用于跟进关于一个给定的市场营销活动的所有事件。可以用它来管理媒体关系活动，评估型活动，产品演示活动，其中包括通过电子邮件，电话等联系众多的客户。"
@@ -859,6 +868,9 @@ msgstr "一项会计交易由会计或任何有权限在ERP5里创建交易的�
 msgid "An email address identifies an email box to which email messages are delivered."
 msgstr "电子邮件可以包含网络链接"
 
+msgid "An email has been sent to you."
+msgstr "已向您发送邮件。"
+
 msgid "An exclusive global discount ratio. This discount ratio is exclusive of any other discount."
 msgstr "独享的优先折扣率。此折扣率不包括任何其他折扣。"
 
@@ -955,11 +967,11 @@ msgstr "任务指派"
 msgid "Assignments in updated state are being updated before being reopened."
 msgstr "在重新开始前已更新的分配"
 
-msgid "Associated Servers"
-msgstr "相关联的服务器"
-
 msgid "Associated Persons"
 msgstr "相关联的人员"
+
+msgid "Associated Servers"
+msgstr "相关联的服务器"
 
 msgid "Associated Tickets"
 msgstr "相关联的工单"
@@ -1208,9 +1220,6 @@ msgstr "计算"
 
 msgid "Calculate Packing"
 msgstr "计算装箱"
-
-msgid "Calculate [transition in delivery_causality_workflow]"
-msgstr "计算 [transition in delivery_causality_workflow]"
 
 msgid "Calculating"
 msgstr "计算中"
@@ -1584,11 +1593,11 @@ msgstr "元件"
 msgid "Computer"
 msgstr "计算机"
 
-msgid "Computer:"
-msgstr "计算机:"
-
 msgid "Computer Network"
 msgstr "计算机网络"
+
+msgid "Computer Network :${title}"
+msgstr "计算机网络 :${title}"
 
 msgid "Computer Network is transferred."
 msgstr "计算机网络已转移。"
@@ -1601,6 +1610,12 @@ msgstr "计算机编号"
 
 msgid "Computer is transferred."
 msgstr "计算机已转移。"
+
+msgid "Computer:"
+msgstr "计算机:"
+
+msgid "Computer: ${title}"
+msgstr "计算机: ${title}"
 
 msgid "Configuration Form"
 msgstr "配置表格"
@@ -1674,14 +1689,14 @@ msgstr "确认您的密码"
 msgid "Confirmed"
 msgstr "已确认"
 
+msgid "Connect"
+msgstr "登录"
+
 msgid "Connection Parameters"
 msgstr "连接参数"
 
 msgid "Connection String to be used to run Unit Tests"
 msgstr "用于运行单元测试的连接字符串"
-
-msgid "Connect"
-msgstr "登录"
 
 msgid "Constraints"
 msgstr "约束"
@@ -1793,9 +1808,6 @@ msgstr "贡献者"
 
 msgid "Convergent"
 msgstr "趋同"
-
-msgid "Convergent [transition in delivery_causality_workflow]"
-msgstr "趋同 [transition in delivery_causality_workflow]"
 
 msgid "Conversion Format for reports."
 msgstr "报告转换格式"
@@ -1947,9 +1959,11 @@ msgstr "创建人"
 msgid "Creates a simulation movement with the difference between prevision and current, allows to postpone part of delivery of a sale packing list"
 msgstr "创建一个预期和现有文件之间的差异的模拟运作，以推迟一部分销售装箱单的交付。"
 
-
 msgid "Creation Date"
 msgstr "成立日期"
+
+msgid "Credential Request"
+msgstr "凭证请求"
 
 msgid "Credit"
 msgstr "贷方金额"
@@ -2251,14 +2265,14 @@ msgstr "定义"
 msgid "Definitively Close Transaction"
 msgstr "彻底终止交易"
 
-msgid "Definitively Close Transaction Action [transition in accounting_workflow]"
-msgstr "彻底终止交易操作"
-
 msgid "Delete"
 msgstr "删除"
 
 msgid "Delete Network:"
 msgstr "删除网络:"
+
+msgid "Delete Network: ${title}"
+msgstr "删除网络: ${title}"
 
 msgid "Delete Objects"
 msgstr "删除对象"
@@ -2266,8 +2280,14 @@ msgstr "删除对象"
 msgid "Delete Project:"
 msgstr "删除项目："
 
+msgid "Delete Project: ${title}"
+msgstr "删除项目： ${title}"
+
 msgid "Delete Site:"
 msgstr "删除站点："
+
+msgid "Delete Site: ${title}"
+msgstr "删除站点： ${title}"
 
 msgid "Delete The Objects"
 msgstr "删除对象"
@@ -2413,6 +2433,9 @@ msgstr "销毁"
 msgid "Destroy Hosting Subscription:"
 msgstr "销毁托管订阅："
 
+msgid "Destroy Hosting Subscription: ${title}"
+msgstr "销毁托管订阅： ${title}"
+
 msgid "Destroy Software Installation"
 msgstr "销毁软件安装"
 
@@ -2457,6 +2480,9 @@ msgstr "禁用"
 msgid "Disable Login"
 msgstr "关闭登录账号"
 
+msgid "Disable Login: ${title}"
+msgstr "关闭登录账号: ${title}"
+
 msgid "Disable Preference"
 msgstr "禁用偏好设置"
 
@@ -2492,9 +2518,6 @@ msgstr "后台分歧处理开始。"
 
 msgid "Divergent"
 msgstr "不匹配"
-
-msgid "Divergent [transition in delivery_causality_workflow]"
-msgstr "互异 [transition in delivery_causality_workflow]"
 
 msgid "Do you want to enable Periodical Check?"
 msgstr "您是否要启用定期检查？"
@@ -3015,11 +3038,11 @@ msgstr "职位"
 msgid "Future"
 msgstr "将来"
 
-msgid "Future Organisation"
-msgstr "将来的组织"
-
 msgid "Future Location"
 msgstr "将来的地点"
+
+msgid "Future Organisation"
+msgstr "将来的组织"
 
 msgid "Future Project"
 msgstr "将来的项目"
@@ -3180,6 +3203,9 @@ msgstr "托管订阅"
 msgid "Hosting Subscription:"
 msgstr "托管订阅："
 
+msgid "Hosting Subscription: ${title}"
+msgstr "托管订阅： ${title}"
+
 msgid "Hostname of the oood server."
 msgstr "oood服务器的主机名"
 
@@ -3188,6 +3214,9 @@ msgstr "小时"
 
 msgid "How much this currency is worth in terms of the reference currency."
 msgstr "该货币相对于参考货币的价值"
+
+msgid "I forgot my password!"
+msgstr "忘记密码"
 
 msgid "IBAN Key"
 msgstr "IBAN密钥"
@@ -3396,9 +3425,6 @@ msgstr "安装状态"
 msgid "Installed"
 msgstr "已安装"
 
-msgid "Instances"
-msgstr "实例"
-
 msgid "Instance Parameter"
 msgstr "实例参数"
 
@@ -3407,6 +3433,9 @@ msgstr "实例参数"
 
 msgid "Instance to be removed:"
 msgstr "将要被移除的实例："
+
+msgid "Instances"
+msgstr "实例"
 
 msgid "Instructions"
 msgstr "使用说明"
@@ -3630,6 +3659,9 @@ msgstr "发票单元是发票明细的进一步详细信息，例如，当一项
 msgid "Invoice:"
 msgstr "账单："
 
+msgid "Invoice:${title}"
+msgstr "账单：${title}"
+
 msgid "Invoices"
 msgstr "账单"
 
@@ -3692,9 +3724,6 @@ msgstr "项目已剪切"
 
 msgid "Items paste in progress."
 msgstr "项目正在被粘帖"
-
-msgid "I forgot my password!"
-msgstr "忘记密码"
 
 msgid "Journal"
 msgstr "日记账"
@@ -3881,14 +3910,14 @@ msgstr "登入用户："
 msgid "Login"
 msgstr "登录"
 
-msgid "Login and/or password is incorrect."
-msgstr "账号或密码错误。"
-
 msgid "Login Account"
 msgstr "登录账号"
 
 msgid "Login Name"
 msgstr "登录名"
+
+msgid "Login and/or password is incorrect."
+msgstr "账号或密码错误。"
 
 msgid "Login is Disabled."
 msgstr "不可登录。"
@@ -4085,7 +4114,6 @@ msgstr "镜子账户"
 
 msgid "Miss Container"
 msgstr "缺失货柜"
-
 
 msgid "Missing"
 msgstr "缺失"
@@ -4459,6 +4487,9 @@ msgstr "开启（仅订阅者）"
 msgid "Open the account and helps input transactions on it"
 msgstr "开设账户，使交易可以被录入"
 
+msgid "Opened"
+msgstr "已开启"
+
 msgid "Opening Date"
 msgstr "开户日期"
 
@@ -4590,6 +4621,9 @@ msgstr "订单"
 
 msgid "Organisation"
 msgstr "组织"
+
+msgid "Organisation : ${title}"
+msgstr "组织 : ${title}"
 
 msgid "Organisation that sends the invoice"
 msgstr "发送发票的机构"
@@ -5154,6 +5188,9 @@ msgstr "盈亏帐目"
 
 msgid "Project"
 msgstr "项目"
+
+msgid "Project : ${title}"
+msgstr "项目 : ${title}"
 
 msgid "Project Constraints"
 msgstr "项目约束"
@@ -6480,11 +6517,11 @@ msgstr "显示全部"
 msgid "Show All Tickets"
 msgstr "显示所有工单"
 
-msgid "Sign in or Login with Google"
-msgstr "使用谷歌账号登录或注册"
-
 msgid "Sign in or Login with Facebook"
 msgstr "使用脸书账号登录或注册"
+
+msgid "Sign in or Login with Google"
+msgstr "使用谷歌账号登录或注册"
 
 msgid "Similar Documents"
 msgstr "类似文件"
@@ -6497,6 +6534,9 @@ msgstr "模拟状态"
 
 msgid "Site"
 msgstr "站点"
+
+msgid "Site : ${title}"
+msgstr "站点 : ${title}"
 
 msgid "Site Configuration Problems"
 msgstr "站点配置问题"
@@ -6558,6 +6598,9 @@ msgstr "社会保险号码"
 msgid "Software Installation:"
 msgstr "软件安装:"
 
+msgid "Software Logo"
+msgstr "软件标志"
+
 msgid "Software Products"
 msgstr "软件产品"
 
@@ -6596,9 +6639,6 @@ msgstr "解决分歧"
 
 msgid "Solve Divergences"
 msgstr "解决分歧"
-
-msgid "Solve Divergences [transition in delivery_causality_workflow]"
-msgstr "解决分歧 [transition in delivery_causality_workflow]"
 
 msgid "Solve Method"
 msgstr "解决方法"
@@ -6657,9 +6697,6 @@ msgstr "拆分文件"
 msgid "Split Prevision"
 msgstr "拆分预期文件"
 
-msgid "Split and Defer [transition in delivery_causality_workflow]"
-msgstr "拆分和推迟 [transition in delivery_causality_workflow]"
-
 msgid "Splits a document in multiple subdocuments to accelerate translation. Sets validation_state to split."
 msgstr "将一个文件拆分成若干子文件J以加速翻译,并将验证状态设为\"以拆分\"."
 
@@ -6674,9 +6711,6 @@ msgstr "开始"
 
 msgid "Start Accounting Period"
 msgstr "开启会计期间"
-
-msgid "Start Accounting Period Action [transition in accounting_period_workflow]"
-msgstr "开启会计期间操作"
 
 msgid "Start After"
 msgstr "开始不早于"
@@ -6911,6 +6945,9 @@ msgstr "供应条件明细"
 
 msgid "Support Request"
 msgstr "客户支持请求"
+
+msgid "Support Request : ${title}"
+msgstr "客户支持请求 : ${title}"
 
 msgid "Support Request Detailed Report"
 msgstr "客户支持请求详细报表"
@@ -8422,9 +8459,6 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
-msgid "Username"
-msgstr "用户名"
-
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
@@ -8439,6 +8473,9 @@ msgstr "用户密码"
 
 msgid "User Preference Workflow"
 msgstr "用户偏好设置流程"
+
+msgid "Username"
+msgstr "用户名"
 
 msgid "Uses of base amounts for trade"
 msgstr "基本数目在贸易中的用途"
@@ -8611,14 +8648,14 @@ msgstr "预览"
 msgid "Views"
 msgstr "概览"
 
+msgid "Virtual Machines"
+msgstr "虚拟机"
+
 msgid "Visible"
 msgstr "可见"
 
 msgid "Visit"
 msgstr "访问"
-
-msgid "Virtual Machines"
-msgstr "虚拟机"
 
 msgid "Volume (m³)"
 msgstr "体积(m³)"
@@ -8767,6 +8804,9 @@ msgstr "超小图像高度"
 msgid "Xsmall Image Width"
 msgstr "超小图像宽度"
 
+msgid "You are not allowed to access this content"
+msgstr "您没有权限查看此内容"
+
 msgid "You are not allowed to access this content, please login with an user which has the right permission"
 msgstr "您没有权限查看此内容，请以有权限的用户登录。"
 
@@ -8782,8 +8822,14 @@ msgstr "您没有编辑该对象的权限。"
 msgid "You sucessfully request destruction."
 msgstr "您成功请求销毁。"
 
+msgid "You will receive a confirmation email to activate your account."
+msgstr "您将收到一封激活账号的确认邮件。"
+
 msgid "Your Account"
 msgstr "您的登录账号"
+
+msgid "Your Account : ${title}"
+msgstr "您的登录账号 : ${title}"
 
 msgid "Your Certificate"
 msgstr "您的证书"
@@ -8982,69 +9028,3 @@ msgstr "当文件转换完成时会自动检测该文件"
 
 msgid "will automatically detect when file is completely uploaded"
 msgstr "当文件上传完成时会自动检测该文件"
-
-msgid "Opened"
-msgstr "已开启"
-
-msgid "An email has been sent to you."
-msgstr "已向您发送邮件。"
-
-msgid "You will receive a confirmation email to activate your account."
-msgstr "您将收到一封激活账号的确认邮件。"
-
-msgid "Computer Network :${title}"
-msgstr "计算机网络 :${title}"
-
-msgid "You are not allowed to access this content"
-msgstr "您没有权限查看此内容"
-
-msgid "${count} Records"
-msgstr "${count} 记录"
-
-msgid "Your Account : ${title}"
-msgstr "您的登录账号 : ${title}"
-
-msgid "Disable Login: ${title}"
-msgstr "关闭登录账号: ${title}"
-
-msgid "Delete Network: ${title}"
-msgstr "删除网络: ${title}"
-
-msgid "Organisation : ${title}"
-msgstr "组织 : ${title}"
-
-msgid "Project : ${title}"
-msgstr "项目 : ${title}"
-
-msgid "Delete Project: ${title}"
-msgstr "删除项目： ${title}"
-
-msgid "Computer: ${title}"
-msgstr "计算机: ${title}"
-
-msgid "Destroy Hosting Subscription: ${title}"
-msgstr "销毁托管订阅： ${title}"
-
-msgid "3/3 Request Service: ${title}"
-msgstr "3/3 请求服务： ${title}"
-
-msgid "Hosting Subscription: ${title}"
-msgstr "托管订阅： ${title}"
-
-msgid "Delete Site: ${title}"
-msgstr "删除站点： ${title}"
-
-msgid "Site : ${title}"
-msgstr "站点 : ${title}"
-
-msgid "Support Request : ${title}"
-msgstr "客户支持请求 : ${title}"
-
-msgid "Invoice:${title}"
-msgstr "账单：${title}"
-
-msgid "${portal_type} Created."
-msgstr "${portal_type}已创建。"
-
-msgid "Credential Request"
-msgstr "凭证请求"

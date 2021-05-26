@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>LSO</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>LS</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>lesotho</string> </value>
         </item>

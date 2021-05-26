@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CHE</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CH</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>switzerland</string> </value>
         </item>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GRD</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GD</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>grenada</string> </value>
         </item>

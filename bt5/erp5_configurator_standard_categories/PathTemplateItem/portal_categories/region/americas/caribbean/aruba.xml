@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ABW</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AW</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>aruba</string> </value>
         </item>

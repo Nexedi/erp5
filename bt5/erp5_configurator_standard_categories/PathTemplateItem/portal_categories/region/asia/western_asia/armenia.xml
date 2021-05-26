@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ARM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>armenia</string> </value>
         </item>

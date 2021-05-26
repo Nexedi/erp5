@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>LIE</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>LI</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>liechtenstein</string> </value>
         </item>

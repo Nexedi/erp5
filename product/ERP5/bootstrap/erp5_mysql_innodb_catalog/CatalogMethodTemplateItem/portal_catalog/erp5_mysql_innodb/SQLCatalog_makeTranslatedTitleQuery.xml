@@ -50,7 +50,13 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>value</string> </value>
+            <value> <string>search_value, search_key=None, group=None, logical_operator=None, comparison_operator=None</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

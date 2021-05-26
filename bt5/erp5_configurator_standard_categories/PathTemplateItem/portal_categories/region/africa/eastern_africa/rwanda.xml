@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>RWA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>RW</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>rwanda</string> </value>
         </item>

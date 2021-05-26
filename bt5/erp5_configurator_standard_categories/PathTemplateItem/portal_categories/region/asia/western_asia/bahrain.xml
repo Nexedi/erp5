@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BHR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BH</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>bahrain</string> </value>
         </item>
