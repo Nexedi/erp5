@@ -57,9 +57,7 @@
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>BusinessConfiguration_viewWendelinConfigureDataNotebookForm</string> </value>
         </item>
       </dictionary>
     </pickle>
