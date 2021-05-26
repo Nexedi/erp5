@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>warning_message</string> </value>
+            <value> <string>your_warning_message</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -61,10 +61,6 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>

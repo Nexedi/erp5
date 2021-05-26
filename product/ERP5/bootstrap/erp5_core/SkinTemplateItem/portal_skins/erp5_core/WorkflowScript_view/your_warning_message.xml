@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>warning_message</string> </value>
+            <value> <string>your_warning_message</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -107,7 +107,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
