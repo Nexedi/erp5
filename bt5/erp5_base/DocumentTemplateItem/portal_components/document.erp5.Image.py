@@ -389,6 +389,8 @@ class Image(TextConvertableMixin, File, OFSImage):
       # XXX: The only portable way is to pass what stdin.write can accept,
       #      which is a string for PIPE.
       image, err = process.communicate(data)
+      if process.returncode:
+        image = None
     finally:
       del process
     if image:
