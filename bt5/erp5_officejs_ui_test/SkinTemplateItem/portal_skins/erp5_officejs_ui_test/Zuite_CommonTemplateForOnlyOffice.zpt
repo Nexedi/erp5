@@ -241,7 +241,7 @@
   </tal:block>
   <tal:block metal:define-macro="remove_document_by_id">
     <tr>
-      <td colspan="3"><b>Remove Document with ${id}</b></td>
+      <td colspan="3"><b>Remove Document with &#36;{id}</b></td>
     </tr>
     <tr>
       <td>open</td>
