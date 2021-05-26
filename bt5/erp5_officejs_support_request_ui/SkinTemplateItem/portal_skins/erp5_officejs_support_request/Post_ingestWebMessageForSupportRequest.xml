@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Post_ingestMailMessageForSupportRequest</string> </value>
+            <value> <string>Post_ingestWebMessageForSupportRequest</string> </value>
         </item>
       </dictionary>
     </pickle>

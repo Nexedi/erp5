@@ -594,8 +594,8 @@ class TestSupportRequestRSSSNonVisibleAttachment(SupportRequestRSSTestCase, Defa
 class TestIngestPostAsWebMessage(SupportRequestTestCase):
   """Tests ingesting HTML Post into web messages.
   """
-  def test_Post_ingestMailMessageForSupportRequest_as_other_user(self):
-    """Post_ingestMailMessageForSupportRequest should be able to ingest an HTML
+  def test_Post_ingestWebMessageForSupportRequest_as_other_user(self):
+    """Post_ingestWebMessageForSupportRequest should be able to ingest an HTML
     Post created by another user, so that we can run int in an alarm for example.
     """
     support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
@@ -610,7 +610,7 @@ class TestIngestPostAsWebMessage(SupportRequestTestCase):
 
     manager_user_id = 'ERP5TypeTestCase'
     self.login(manager_user_id)
-    post.Post_ingestMailMessageForSupportRequest(
+    post.Post_ingestWebMessageForSupportRequest(
       web_site_relative_url=self.getWebSite().getRelativeUrl())
 
     self.tic()
