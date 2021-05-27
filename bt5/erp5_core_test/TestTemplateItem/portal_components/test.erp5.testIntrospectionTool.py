@@ -26,34 +26,14 @@
 #
 ##############################################################################
 
-import unittest
-
-from AccessControl.SecurityManagement import newSecurityManager
+import json
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import json
 
 
 class TestIntrospectionTool(ERP5TypeTestCase):
-  def getBusinessTemplateList(self):
-    """  """
-    return ('erp5_base',)
-
-  def afterSetUp(self):
-    self.portal = self.getPortal()
-    self.login()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def test_getSystemSignatureJSON(self):
-    """
-      Test
-    """
     signature_json = self.portal.portal_introspections.getSystemSignatureAsJSON()
     signature_by_json = json.loads(signature_json)
     signature = self.portal.portal_introspections.getSystemSignatureDict()
@@ -62,7 +42,3 @@ class TestIntrospectionTool(ERP5TypeTestCase):
     for key in signature:
       self.assertEqual(signature[key], signature_by_json[key])
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestIntrospectionTool))
-  return suite

@@ -26,13 +26,11 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             noSecurityManager
+from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.ZopeGuards import guarded_apply, guarded_getattr
 from zExceptions import Unauthorized
+
 
 class TestTimerService(ERP5TypeTestCase):
   """
@@ -40,20 +38,6 @@ class TestTimerService(ERP5TypeTestCase):
   itself, but TimerService is not a part of ERP5, and I am not sure if it is a good
   idea to put an ERP5-type test in it.
   """
-
-  def getTitle(self):
-    return "TimerService"
-
-  def getBusinessTemplateList(self):
-    """
-    """
-    return ()
-
-  def afterSetUp(self):
-    uf = self.portal.acl_users
-    uf._doAddUser('rc', '', ['Manager'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
 
   def test_01_checkAnonymousProcessing(self):
     """
@@ -63,14 +47,9 @@ class TestTimerService(ERP5TypeTestCase):
     timer_service = self.app.Control_Panel.timer_service
     process_timer = guarded_getattr(timer_service, 'process_timer')
     try:
-        guarded_apply(process_timer, (0,))
+      guarded_apply(process_timer, (0,))
     except Unauthorized:
-        self.fail('calling process_timer is unauthorized')
-    except:
-        # Do not care about any exception but unauthorized.
-        pass
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTimerService))
-  return suite
+      self.fail('calling process_timer is unauthorized')
+    except Exception:
+      # Do not care about any exception but unauthorized.
+      pass
