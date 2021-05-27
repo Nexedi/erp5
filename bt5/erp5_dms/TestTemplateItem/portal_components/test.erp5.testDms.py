@@ -2935,12 +2935,13 @@ class TestDocumentPerformance(TestDocumentMixin):
       "Conversion took %s seconds and it is not less them 100.0 seconds" % \
         req_time)
 
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
   suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  # Run erp5_base's TestImage with dms installed (because dms has specific interactions)
+  from erp5.component.test.testERP5Base import TestImage
+  suite.addTest(unittest.makeSuite(TestImage))
   return suite
-
-
- # vim: syntax=python shiftwidth=2
