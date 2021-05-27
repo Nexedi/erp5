@@ -31,7 +31,6 @@
 ##############################################################################
 
 import os
-import struct
 import subprocess
 from cStringIO import StringIO
 
@@ -47,7 +46,7 @@ from erp5.component.document.Document import Document, ConversionError,\
                      DEFAULT_DISPLAY_ID_LIST, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
-from OFS.Image import getImageInfo
+import PIL.Image
 from zLOG import LOG, WARNING
 
 from erp5.component.module.ImageUtil import transformUrlToDataURI
@@ -111,23 +110,24 @@ class Image(TextConvertableMixin, File, OFSImage):
   def _update_image_info(self):
     """
       This method tries to determine the content type of an image and
-      its geometry. It uses currently OFS.Image for this purpose.
-      However, this method is known to be too simplistic.
-
-      TODO:
-      - use image magick or PIL
+      its geometry.
     """
     self.size = len(self.data)
-    content_type, width, height = getImageInfo(self.data)
-    if not content_type:
-      if self.size >= 30 and self.data[:2] == 'BM':
-        header = struct.unpack('<III', self.data[14:26])
-        if header[0] >= 12:
-          content_type = 'image/x-bmp'
-          width, height = header[1:]
+    try:
+      image = PIL.Image.open(StringIO(str(self.data)))
+    except IOError:
+      width = height = -1
+      content_type = 'application/unknown'
+    else:
+      width, height = image.size
+      content_type = image.get_format_mimetype()
+      # normalize the mimetype using the registry
+      mimetype_list = self.getPortalObject().mimetypes_registry.lookup(content_type)
+      if mimetype_list:
+        content_type = mimetype_list[0].normalized()
     self.height = height
     self.width = width
-    self._setContentType(content_type or 'application/unknown')
+    self._setContentType(content_type)
 
   def _upgradeImage(self):
     """
