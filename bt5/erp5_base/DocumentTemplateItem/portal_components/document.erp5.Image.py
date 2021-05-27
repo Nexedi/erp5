@@ -31,7 +31,6 @@
 ##############################################################################
 
 import os
-import struct
 import subprocess
 from cStringIO import StringIO
 
@@ -45,9 +44,10 @@ from erp5.component.document.File import File
 from erp5.component.document.Document import Document, ConversionError,\
                      VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
                      DEFAULT_DISPLAY_ID_LIST, _MARKER
-from os.path import splitext
+
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
+import PIL.Image
 from zLOG import LOG, WARNING
 
 from erp5.component.module.ImageUtil import transformUrlToDataURI
@@ -111,23 +111,26 @@ class Image(TextConvertableMixin, File, OFSImage):
   def _update_image_info(self):
     """
       This method tries to determine the content type of an image and
-      its geometry. It uses currently OFS.Image for this purpose.
-      However, this method is known to be too simplistic.
-
-      TODO:
-      - use image magick or PIL
+      its geometry.
     """
     self.size = len(self.data)
     content_type, width, height = getImageInfo(self.data)
     if not content_type:
-      if self.size >= 30 and self.data[:2] == 'BM':
-        header = struct.unpack('<III', self.data[14:26])
-        if header[0] >= 12:
-          content_type = 'image/x-bmp'
-          width, height = header[1:]
+      try:
+        image = PIL.Image.open(StringIO(str(self.data)))
+      except IOError:
+        width = height = -1
+        content_type = 'application/unknown'
+      else:
+        width, height = image.size
+        content_type = image.get_format_mimetype()
+        # normalize the mimetype using the registry
+        mimetype_list = self.getPortalObject().mimetypes_registry.lookup(content_type)
+        if mimetype_list:
+          content_type = mimetype_list[0].normalized()
     self.height = height
     self.width = width
-    self._setContentType(content_type or 'application/unknown')
+    self._setContentType(content_type)
 
   def _upgradeImage(self):
     """
@@ -303,8 +306,14 @@ class Image(TextConvertableMixin, File, OFSImage):
       kw['image_size'] = image_size
       display = kw.pop('display', None)
       crop = kw.pop('crop', None)
-      mime, image = self._makeDisplayPhoto(crop=crop, **kw)
-      image_data = image.data
+      mime, image_data = self._getContentTypeAndImageData(
+          format=format,
+          quality=quality,
+          resolution=kw.get('resolution'),
+          frame=kw.get('frame'),
+          image_size=image_size,
+          crop=crop,
+      )
       # as image will always be requested through a display not by passing exact
       # pixels we need to restore this way in cache
       if display is not None:
@@ -395,7 +404,7 @@ class Image(TextConvertableMixin, File, OFSImage):
       return StringIO(image)
     raise ConversionError('Image conversion failed (%s).' % err)
 
-  def _getDisplayData(
+  def _getContentTypeAndImageData(
       self,
       format,  # pylint: disable=redefined-builtin
       quality,
@@ -404,7 +413,7 @@ class Image(TextConvertableMixin, File, OFSImage):
       image_size,
       crop,
   ):
-    """Return raw photo data for given display."""
+    """Return the content type and the image data as str or PData."""
     if crop:
       width, height = image_size
     else:
@@ -413,29 +422,23 @@ class Image(TextConvertableMixin, File, OFSImage):
        and quality == self.getDefaultImageQuality(format) and resolution is None and frame is None\
        and not format:
       # No resizing, no conversion, return raw image
-      return self.getData()
-    return self._resize(quality, width, height, format, resolution, frame, crop)
-
-  def _makeDisplayPhoto(
-      self,
-      format=None,  # pylint: disable=redefined-builtin
-      quality=_MARKER,
-      resolution=None,
-      frame=None,
-      image_size=None,
-      crop=False,
-  ):
-    """Create given display."""
-    if quality is _MARKER:
-      quality = self.getDefaultImageQuality(format)
-    width, height = image_size  # pylint: disable=unpacking-non-sequence
-    base, ext = splitext(self.id)
-    id_ = '%s_%s_%s.%s'% (base, width, height, ext,)
-    image = OFSImage(id_, self.getTitle(),
-                     self._getDisplayData(format, quality, resolution,
-                                                            frame, image_size,
-                                                            crop))
-    return image.content_type, aq_base(image)
+      return self.getContentType(), self.getData()
+    image_file = self._resize(quality, width, height, format, resolution, frame, crop)
+    image = OFSImage('', '', image_file)
+    content_type = image.content_type
+    if content_type == 'application/octet-stream':
+      # If OFS Image could not guess content type, try with PIL
+      image_file.seek(0)
+      try:
+        pil_image = PIL.Image.open(image_file)
+      except IOError:
+        pass
+      else:
+        content_type = pil_image.get_format_mimetype()
+        mimetype_list = self.getPortalObject().mimetypes_registry.lookup(content_type)
+        if mimetype_list:
+          content_type = mimetype_list[0].normalized()
+    return content_type, image.data
 
   def _getAspectRatioSize(self, width, height):
     """Return proportional dimensions within desired size."""
@@ -454,10 +457,6 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       width =  img_width * height / img_height
     return (width, height)
-
-  def _validImage(self):
-    """At least see if it *might* be valid."""
-    return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
