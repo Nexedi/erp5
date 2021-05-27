@@ -94,7 +94,7 @@ class TestWorkflowHistoryList(TestCase):
           a = EXPECTED[item]
         except IndexError:
           with self.assertRaises(IndexError):
-            ddl[item]
+            _ = ddl[item]
         else:
           assert a != [], a
           self.assertEqual(a, ddl[item])
@@ -102,16 +102,16 @@ class TestWorkflowHistoryList(TestCase):
 
     i = COUNT + 1
     for i in xrange(-i, i):
-      check[i]
-    check[-50:10]
-    check[:20:3]
-    check[5:40]
-    check[32::4]
-    check[::-1]
-    check[-5::-7]
-    check[50:40:-1]
-    check[30:-50:-4]
-    check[:30:-3]
+      _ = check[i]
+    _ = check[-50:10]
+    _ = check[:20:3]
+    _ = check[5:40]
+    _ = check[32::4]
+    _ = check[::-1]
+    _ = check[-5::-7]
+    _ = check[50:40:-1]
+    _ = check[30:-50:-4]
+    _ = check[:30:-3]
 
     self.assertFalse(ddl[-5:30])
     self.assertFalse(ddl[30:-5:-1])
@@ -129,8 +129,7 @@ class TestWorkflowHistoryList(TestCase):
 
   @fixed_count_bucket
   def test_01_DoublyLinkList(self):
-    EXPECTED = range(COUNT)
-    self.checkList(new(DoublyLinkList, EXPECTED))
+    self.checkList(new(DoublyLinkList, range(COUNT)))
 
   @fixed_count_bucket
   def test_02_LegacyWorkflowHistoryList(self):
@@ -205,10 +204,10 @@ class TestDedup(ERP5TypeTestCase):
     self.login()
     deduped = []
     def dedupStrings(obj):
-      new = orig_dedupStrings(obj)
-      self.assertEqual(new, obj)
-      deduped.append(len(new))
-      return new
+      new_obj = orig_dedupStrings(obj)
+      self.assertEqual(new_obj, obj)
+      deduped.append(len(new_obj))
+      return new_obj
     from Products.ERP5Type import Workflow
     orig_dedupStrings = Workflow.dedupStrings
     try:

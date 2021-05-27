@@ -79,7 +79,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     return ('erp5_base',)
 
-  def login(self):
+  def login(self): # pylint:disable=arguments-differ
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
     user = uf.getUserById(self.username).__of__(uf)

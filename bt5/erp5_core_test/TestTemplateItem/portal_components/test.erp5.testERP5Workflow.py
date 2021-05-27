@@ -99,8 +99,6 @@ class TestERP5Workflow(ERP5TypeTestCase):
     transition2.setReference('transition2')
     state1.setDestinationValueList([transition1, transition2])
 
-    self.portal.portal_types.Folder.setTypeWorkflowList(['wf'])
-    doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     self.assertEqual([transition1, transition2], state1.getDestinationValueList())
 
 
@@ -231,6 +229,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     """
     workflow = self.workflow_module.newContent(portal_type='Workflow')
     state = workflow.newContent(portal_type='Workflow State', title='Some State')
+    state.Base_viewDict()
     transition = workflow.newContent(portal_type='Workflow Transition',
                                      title='Some Transition')
     transition.setReference('change_something')

@@ -150,7 +150,7 @@ class TestLocalizer(ERP5TypeTestCase):
       {'fr':"C'est 1€.", 'note':'',})
     localizer = portal.Localizer
 
-    test_script = createZODBPythonScript(portal.portal_skins.custom,
+    createZODBPythonScript(portal.portal_skins.custom,
         'test_script', '', """
 def assertEquals(a, b):
   if a != b:
@@ -191,7 +191,6 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     value (e.g. the original message) must be returned
     """
     message = "   This is 1€ non-translated    "
-    localizer = self.portal.Localizer
 
     # Base_translateString == Localizer.translate() currently, which calls
     # zope.i18n.translate and sets 'default' to 'message' before passing it to

@@ -58,7 +58,7 @@ class TestZODBHistory(ERP5TypeTestCase):
       preference = preference_tool.newContent(id="zodb_history_test_preference",
                                               portal_type="Preference")
     if preference.getPreferenceState() != "enabled":
-       preference.enable()
+      preference.enable()
 
   def addOrganisation(self, organisation_id):
     """ Add an organisation """
@@ -69,19 +69,9 @@ class TestZODBHistory(ERP5TypeTestCase):
 
   def setUpUser(self):
     """ Set up a user to test normal users can use this function. """
-    self.addUser('tatuya')
-
-  def addUser(self, user_name, role=['Member', 'Owner', 'Assignor']):
-    """ Create a test user."""
     uf = self.portal.acl_users
-    if not uf.getUserById(user_name):
-      uf._doAddUser(user_name, '', role, [])
-
-  def _clearCache(self):
-    """ Clear cache to validate the preference modification. """
-    self.portal.portal_caches.clearCache(
-      cache_factory_list=('erp5_ui_short', # for preference cache
-                          ))
+    if not uf.getUserById('tatuya'):
+      uf._doAddUser('tatuya', '', ['Member', 'Owner', 'Assignor'], [])
 
   def test_01_testZODBHistory(self):
     """
@@ -116,7 +106,6 @@ class TestZODBHistory(ERP5TypeTestCase):
 
     # changes the limit to 100
     preference.setPreferredHtmlStyleZodbHistorySize(100)
-    self._clearCache()
     self.assertEqual(preference.getPreferredHtmlStyleZodbHistorySize(), 100)
     history_list = org2.Base_getZODBHistoryList()
     # Now that the limit is 100, thus the history page show the all history

@@ -26,12 +26,10 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+
 
 class TestGeographicalAddress(ERP5TypeTestCase):
   """
@@ -41,7 +39,6 @@ class TestGeographicalAddress(ERP5TypeTestCase):
   on a Geographical Address returns the standard text format.
   """
 
-  run_all_test = 1
   entity_portal_type = 'Person'
   address_portal_type = 'Address'
   street_address_text = "rue Truc"
@@ -49,37 +46,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
   zip_code_text = "12345"
   city_text = "City1"
 
-  def getTitle(self):
-    return "Geographical Address"
-
-  def getBusinessTemplateList(self):
-    """
-    """
-    return ('erp5_base', )
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
-
-  def enableLightInstall(self):
-    """
-    You can override this.
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
-  def afterSetUp(self, quiet=1, run=run_all_test):
-    self.login()
-    self.portal = self.getPortal()
+  def afterSetUp(self):
     self.category_tool = self.getCategoryTool()
     self.createCategories()
 
@@ -91,7 +58,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     region_category_list = ['country1', 'country2', ]
     if len(self.category_tool.region.contentValues()) == 0 :
       for category_id in region_category_list:
-        o = self.category_tool.region.newContent(portal_type='Category',
+        self.category_tool.region.newContent(portal_type='Category',
                                                id=category_id,
                                                title=category_id.capitalize())
     self.region_category_list = ['region/%s' % x for x \
@@ -101,7 +68,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     """
     Create an entity
     """
-    portal = self.getPortal()
+    portal = self.portal
     module = portal.getDefaultModule(self.entity_portal_type)
     entity = module.newContent(portal_type=self.entity_portal_type)
     sequence.edit(
@@ -141,12 +108,10 @@ class TestGeographicalAddress(ERP5TypeTestCase):
                           self.zip_code_text,
                           self.city_text,))
 
-  def test_01_standardAddress(self, quiet=0, run=run_all_test):
+  def test_01_standardAddress(self):
     """
       Test property existence
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '\
               CreateEntity \
@@ -161,7 +126,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     """
     This script returns a different address format.
     """
-    createZODBPythonScript(self.getPortal().portal_skins.custom,
+    createZODBPythonScript(self.portal.portal_skins.custom,
                            'Address_asText', '', """
 return '%s\\n%s %s COUNTRY' % \\
        (context.getStreetAddress(),
@@ -180,12 +145,10 @@ return '%s\\n%s %s COUNTRY' % \\
                           self.zip_code_text,
                           self.city_text))
 
-  def test_02_asTextScript(self, quiet=0, run=run_all_test):
+  def test_02_asTextScript(self):
     """
       Test property existence
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '\
               CreateEntity \
@@ -197,7 +160,3 @@ return '%s\\n%s %s COUNTRY' % \\
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestGeographicalAddress))
-  return suite
