@@ -73,12 +73,6 @@ class TestERP5Base(ERP5TypeTestCase):
   ##  Usefull methods
   ##################################
 
-  def makeImageFileUpload(self, filename):
-    import Products.ERP5.tests
-    return FileUpload(
-            os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-            'test_data', 'images', filename))
-
   def login_as_auditor(self):
     """Create a new member user with Auditor role, and login
     """
@@ -935,52 +929,6 @@ class TestERP5Base(ERP5TypeTestCase):
     bank_account.setBankAccountKey('account-key')
     bank_account.setBankCountryCode('bank-country-code')
     self.assertEqual(bank_account.getReference(), 'iban')
-
-  def test_CreateImage(self):
-    # We can add Images inside Persons and Organisation
-    for entity in (self.getPersonModule().newContent(portal_type='Person'),
-        self.getOrganisationModule().newContent(portal_type='Organisation')):
-      image = entity.newContent(portal_type='Embedded File')
-      self.assertEqual([], image.checkConsistency())
-      image.view() # viewing the image does not cause error
-
-  def test_ConvertImage(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    self.assertEqual('image/png', image.getContentType())
-    self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
-
-    def convert(**kw):
-      image_type, image_data = image.convert('jpg', display='thumbnail', **kw)
-      self.assertEqual('image/jpeg', image_type)
-      thumbnail = self.portal.newContent(temp_object=True, portal_type='Image',
-        id='thumbnail', data=image_data)
-      self.assertEqual(image_type, thumbnail.getContentType())
-      self.assertEqual((128, 100), (thumbnail.getWidth(),
-                                    thumbnail.getHeight()))
-      return thumbnail.getSize()
-    self.assertTrue(convert() < convert(quality=100))
-
-  def test_ConvertImagePdata(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
-    from OFS.Image import Pdata
-    self.assertTrue(isinstance(image.data, Pdata))
-
-    image_type, image_data = image.convert('jpg', display='thumbnail')
-    self.assertEqual('image/jpeg', image_type)
-    # magic
-    self.assertEqual('\xff', image_data[0])
-    self.assertEqual('\xd8', image_data[1])
-
-  def test_ImageSize(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    self.assertEqual(320, image.getWidth())
-    self.assertEqual(250, image.getHeight())
-    image.edit(file=self.makeImageFileUpload('erp5_logo_small.png'))
-    self.assertEqual(160, image.getWidth())
-    self.assertEqual(125, image.getHeight())
 
   def test_Person_getCareerStartDate(self):
     # Person_getCareerStartDate scripts returns the date when an employee
@@ -1961,3 +1909,110 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
             ],
             ['Another Top Level Group', 'group/main_group_2'],
         ])
+
+
+class TestImage(ERP5TypeTestCase):
+  """Tests for images support.
+  """
+  def makeImageFileUpload(self, filename):
+    import Products.ERP5.tests
+    return FileUpload(
+            os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+            'test_data', 'images', filename))
+
+  def test_CreateImage(self):
+    # We can add Images inside Persons and Organisation
+    for entity in (self.getPersonModule().newContent(portal_type='Person'),
+        self.getOrganisationModule().newContent(portal_type='Organisation')):
+      image = entity.newContent(portal_type='Embedded File')
+      self.assertEqual([], image.checkConsistency())
+      image.view() # viewing the image does not cause error
+
+  def test_ConvertImage(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    self.assertEqual('image/png', image.getContentType())
+    self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
+
+    def convert(**kw):
+      image_type, image_data = image.convert('jpg', display='thumbnail', **kw)
+      self.assertEqual('image/jpeg', image_type)
+      thumbnail = self.portal.newContent(temp_object=True, portal_type='Image',
+        id='thumbnail', data=image_data)
+      self.assertEqual(image_type, thumbnail.getContentType())
+      self.assertEqual((128, 100), (thumbnail.getWidth(),
+                                    thumbnail.getHeight()))
+      return thumbnail.getSize()
+    self.assertTrue(convert() < convert(quality=100))
+
+  def test_ConvertImagePdata(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
+    from OFS.Image import Pdata
+    self.assertTrue(isinstance(image.data, Pdata))
+
+    image_type, image_data = image.convert('jpg', display='thumbnail')
+    self.assertEqual('image/jpeg', image_type)
+    # magic
+    self.assertEqual('\xff', image_data[0])
+    self.assertEqual('\xd8', image_data[1])
+
+  def test_ImageSize(self):
+    for filename, size in (
+        ('erp5_logo.png', (320, 250)),
+        ('erp5_logo_small.png', (160, 125)),
+        ('erp5_logo.jpg', (320, 250)),
+        ('erp5_logo.bmp', (320, 250)),
+        ('erp5_logo.gif', (320, 250)),
+        ('erp5_logo.tif', (320, 250)),
+        ('empty.png', (0, 0)),
+        ('broken.png', (-1, -1)),
+        ('../broken_html.html', (-1, -1)),
+      ):
+      image = self.portal.newContent(portal_type='Image', id=self.id())
+      image.edit(file=self.makeImageFileUpload(filename))
+      self.assertEqual(
+          (image.getWidth(), image.getHeight()),
+          size,
+          (filename, (image.getWidth(), image.getHeight()), size))
+      self.portal.manage_delObjects([self.id()])
+
+  def test_ImageContentTypeFromData(self):
+    for filename, content_type in (
+        ('erp5_logo.png', 'image/png'),
+        ('erp5_logo_small.png', 'image/png'),
+        ('erp5_logo.jpg', 'image/jpeg'),
+        ('erp5_logo.bmp', 'image/x-ms-bmp'),
+        ('erp5_logo.gif', 'image/gif'),
+        ('erp5_logo.tif', 'image/tiff'),
+        ('broken.png', 'application/unknown'),
+        ('empty.png', 'application/unknown'),
+        ('../broken_html.html', 'application/unknown'),
+      ):
+      image = self.portal.newContent(portal_type='Image', id=self.id())
+      image.edit(data=self.makeImageFileUpload(filename).read())
+      self.assertEqual(
+          image.getContentType(),
+          content_type,
+          (filename, image.getContentType(), content_type))
+      self.portal.manage_delObjects([self.id()])
+
+  def test_ImageContentTypeFromFile(self):
+    # with file= argument the filename also play a role in the type detection
+    for filename, content_type in (
+        ('erp5_logo.png', 'image/png'),
+        ('erp5_logo_small.png', 'image/png'),
+        ('erp5_logo.jpg', 'image/jpeg'),
+        ('erp5_logo.bmp', 'image/x-ms-bmp'),
+        ('erp5_logo.gif', 'image/gif'),
+        ('erp5_logo.tif', 'image/tiff'),
+        ('broken.png', 'image/png'),
+        ('empty.png', 'application/unknown'),
+      ):
+      image = self.portal.newContent(portal_type='Image', id=self.id())
+      image.edit(file=self.makeImageFileUpload(filename))
+      self.assertEqual(
+          image.getContentType(),
+          content_type,
+          (filename, image.getContentType(), content_type))
+      self.portal.manage_delObjects([self.id()])
