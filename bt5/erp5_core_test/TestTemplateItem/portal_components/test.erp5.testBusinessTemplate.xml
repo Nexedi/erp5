@@ -49,51 +49,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 68,  2: Arguments number differs from overridden \'_catch_log_errors\' method (arguments-differ)</string>
-                <string>W: 85,  2: Arguments number differs from overridden \'_ignore_log_errors\' method (arguments-differ)</string>
-                <string>W:135, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:427,  8: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:618,  6: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:606,  4: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:617,  8: Unused variable \'i\' (unused-variable)</string>
-                <string>W:642,  6: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:641,  8: Unused variable \'i\' (unused-variable)</string>
-                <string>W:696,  6: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:709,  6: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:1191,  8: Unused variable \'i\' (unused-variable)</string>
-                <string>W:1259,  8: Unused variable \'i\' (unused-variable)</string>
-                <string>W:1337, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:1353, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:1366, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:1377, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:1389, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:1389, 14: Unused variable \'wf_ids\' (unused-variable)</string>
-                <string>W:1445, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:1477,  4: Redefining built-in \'bin\' (redefined-builtin)</string>
-                <string>W:1713,  4: Redefining built-in \'filter\' (redefined-builtin)</string>
-                <string>W:1730,  4: Redefining built-in \'filter\' (redefined-builtin)</string>
-                <string>W:1750,  6: Expression "catalog._getFilterDict()[method_id]" is assigned to nothing (expression-not-assigned)</string>
-                <string>W:1771,  6: Expression "catalog._getFilterDict()[method_id]" is assigned to nothing (expression-not-assigned)</string>
-                <string>W:2468,  4: Unreachable code (unreachable)</string>
-                <string>W:2743, 12: Unused variable \'key\' (unused-variable)</string>
-                <string>W:2863,  4: No exception type(s) specified (bare-except)</string>
-                <string>W:2874,  4: No exception type(s) specified (bare-except)</string>
-                <string>W:2968, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:2998, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:2998, 14: Unused variable \'wf_ids\' (unused-variable)</string>
-                <string>W:3013, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:3013, 14: Unused variable \'wf_ids\' (unused-variable)</string>
-                <string>W:3028, 10: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:3066,  6: Unused variable \'portal_type\' (unused-variable)</string>
-                <string>W:3143, 69: Unused variable \'i\' (unused-variable)</string>
-                <string>W:6460,  8: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W:6855,  4: Unused variable \'new_object\' (unused-variable)</string>
-                <string>W:7169,  4: Unused variable \'bt\' (unused-variable)</string>
-                <string>W:7174,  4: Unused variable \'bt\' (unused-variable)</string>
-                <string>W:7360,  4: Unused variable \'broken\' (unused-variable)</string>
-                <string>W: 45,  0: Unused import gc (unused-import)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

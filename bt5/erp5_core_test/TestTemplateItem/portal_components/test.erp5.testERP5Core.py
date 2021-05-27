@@ -65,7 +65,7 @@ if 1: # BBB
                                                   *args, **kw)
 
   def setGlobalTranslationService(translation_service):
-    global global_translation_service
+    global global_translation_service   # pylint:disable=global-statement
     global_translation_service = translation_service
     zope.component.provideUtility(DummyTranslationDomainFallback,
                                   provides=IFallbackTranslationDomainFactory)
@@ -578,9 +578,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
          0 != i.getUid() != i.getProperty('uid')])
 
   def test_04_site_manager_and_translation_migration(self):
-    from zope.site.hooks import getSite, setSite
+    from zope.site.hooks import setSite
     from zope.component import queryUtility
-    from zope.i18n.interfaces import ITranslationDomain
     # check translation is working normaly
     erp5_ui_catalog = self.portal.Localizer.erp5_ui
     self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
