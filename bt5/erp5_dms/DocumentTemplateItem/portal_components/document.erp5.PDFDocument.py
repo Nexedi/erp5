@@ -165,21 +165,53 @@ class PDFDocument(Image):
 
   security.declarePrivate('_convertToText')
   def _convertToText(self, format='txt'):  # pylint: disable=redefined-builtin
-    """
-      Convert the PDF text content to text with pdftotext
+    """Convert the PDF to text
+
+    If the PDF have text, return the text, otherwise try to do OCR using
+    tesseract.
     """
     if not self.hasData():
       return ''
     mime_type = 'text/plain'
     portal_transforms = self.getPortalObject().portal_transforms
     filename = self.getFilename()
-    result = portal_transforms.convertToData(mime_type, str(self.getData()),
+    data = str(self.getData())
+    result = portal_transforms.convertToData(mime_type, data,
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
     if result:
       return result
     else:
-      # Try to use OCR
+      # Try to use OCR from ghostscript, but tolerate that the command might
+      # not be available.
+      process = None
+      command = [
+          'gs', '-q', '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
+          '-dNOPROMPT', '-sDEVICE=ocr', '-r300x300', '-o', '-', '-f', '-'
+      ]
+      try:
+        process = Popen(
+            command,
+            stdin=PIPE,
+            stdout=PIPE,
+            stderr=PIPE,
+            close_fds=True,
+        )
+        output = process.communicate(data)[0]
+        if process.returncode:
+          raise ConversionError("Error invoking ghostscript:" + output)
+        return output.strip()
+      except OSError as e:
+        if e.errno != errno.ENOENT:
+          raise
+      finally:
+        del process
+
+      # We don't have ghostscript, fallback to the expensive pipeline using:
+      #   pdf -- (Image._convert imagemagick) --> png
+      #       -- (PortalTransforms.png_to_tiff imagemagick) --> tiff
+      #       -- (PortalTransforms.tiff_to_text tesseract) --> text
+      #
       # As high dpi images are required, it may take some times to convert the
       # pdf.
       # It may be required to use activities to fill the cache and at the end,
