@@ -1,7 +1,10 @@
 portal = context.getPortalObject()
 
 for portal_type, document_id_list in (
-  ('Organisation', ('erp5_payment_mean_ui_test_organisation', )),
+  ('Organisation', (
+      'erp5_payment_mean_ui_test_organisation',
+      'erp5_payment_mean_ui_test_first_supplier',
+      'erp5_payment_mean_ui_test_second_supplier',),),
   ('Payment Transaction Group', ('erp5_payment_mean_ui_test_payment_transaction_group',),),
   ('Payment Transaction', (
       'erp5_payment_mean_ui_test_incoming_payment',
@@ -11,8 +14,7 @@ for portal_type, document_id_list in (
       'erp5_payment_mean_ui_test_confirmed_not_consistent_outgoing_payment',
       'erp5_payment_mean_ui_test_second_outgoing_payment',
       'erp5_payment_mean_ui_test_wrong_payment_mode_outgoing_payment',
-      'erp5_payment_mean_ui_test_wrong_currency_outgoing_payment',
-  ),),
+      'erp5_payment_mean_ui_test_wrong_currency_outgoing_payment',),),
 ):
   module = portal.getDefaultModule(portal_type)
   for document_id in document_id_list:

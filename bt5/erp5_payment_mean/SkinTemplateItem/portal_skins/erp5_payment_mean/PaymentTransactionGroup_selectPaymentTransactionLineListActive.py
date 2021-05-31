@@ -11,7 +11,8 @@ payment_relative_url_list = [brain.relative_url for brain
       start_date_range_min=start_date_range_min,
       start_date_range_max=start_date_range_max,
       sign=sign,
-      mode=mode,)]
+      mode=mode,
+      Movement_getMirrorSectionTitle=Movement_getMirrorSectionTitle,)]
 
 if mode == 'stopped_or_delivered':
   method_id = 'AccountingTransactionLine_addPaymentTransactionGroup'

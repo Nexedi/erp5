@@ -580,12 +580,17 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Movement_getMirrorSectionTitle</string>
+                          <string>Third Party</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
