@@ -38,7 +38,7 @@ from email.header import decode_header, make_header
 from email.utils import parseaddr
 
 # Copied from ERP5Type/patches/CMFMailIn.py
-def decode_email(file):
+def decode_email(file_):
   # Prepare result
   theMail = {
     'attachment_list': [],
@@ -47,9 +47,9 @@ def decode_email(file):
     'headers': {}
   }
   # Get Message
-  msg = email.message_from_string(file)
+  msg = email.message_from_string(file_)
   # Back up original file
-  theMail['__original__'] = file
+  theMail['__original__'] = file_
   # Recode headers to UTF-8 if needed
   for key, value in msg.items():
     decoded_value_list = decode_header(value)
@@ -61,7 +61,7 @@ def decode_email(file):
                  'to', 'from', 'cc', 'sender', 'reply-to'):
     header_field = theMail['headers'].get(header)
     if header_field:
-        theMail['headers'][header] = parseaddr(header_field)[1]
+      theMail['headers'][header] = parseaddr(header_field)[1]
   # Get attachments
   body_found = 0
   for part in msg.walk():
@@ -107,7 +107,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def getTitle(self):
     return "Notification Tool"
 
-  def createUser(self, name, role_list):
+  def createUser(self, name, role_list): # pylint:disable=arguments-differ
     user_folder = self.getPortal().acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
 
@@ -196,8 +196,8 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_notifications.sendMessage(
         recipient=sequence['user_a_id'], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
+    self.assertNotEqual(last_message, ())
+    mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
 
@@ -236,8 +236,8 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_notifications.sendMessage(
         subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
+    self.assertNotEqual(last_message, ())
+    mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['site@example.invalid'], mto)
 
@@ -249,8 +249,8 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_notifications.sendMessage(
         recipient=sequence['user_a_id'], subject='Subject', )
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
+    self.assertNotEqual(last_message, ())
+    mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
 
@@ -272,7 +272,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_notifications.sendMessage(
         recipient=sequence['user_a_id'], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, messageText = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
@@ -313,7 +313,7 @@ class TestNotificationTool(ERP5TypeTestCase):
         ])
     last_message = self.portal.MailHost._last_message
 
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, messageText = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
@@ -345,14 +345,14 @@ class TestNotificationTool(ERP5TypeTestCase):
         recipient=[sequence['user_a_id'], sequence['user_b_id']], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
 
-    self.assertNotEquals((), last_message)
-    mfrom, mto, messageText = last_message
+    self.assertNotEqual(last_message, ())
+    mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userB@example.invalid'], mto)
 
     previous_message = self.portal.MailHost._previous_message
-    self.assertNotEquals((), previous_message)
-    mfrom, mto, messageText = previous_message
+    self.assertNotEqual(last_message, ())
+    mfrom, mto, _ = previous_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
 
@@ -400,7 +400,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.portal.portal_notifications.sendMessage(
         recipient=person.getObject(), subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, messageText = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
@@ -434,7 +434,7 @@ Yes, I will go."""
         recipient=sequence['user_a_id'], subject='Subject',
         message_text_format='text/plain', message=message)
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
     mfrom, mto, messageText = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
@@ -493,7 +493,7 @@ Yes, I will go."""
     self.portal.portal_notifications.sendMessage(
         recipient=sequence['user_a_id'], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual(last_message, ())
 
   def test_permission_on_recipient_not_needed(self):
     """Notification Tool can be used to send Messages even when user does not

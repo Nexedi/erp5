@@ -35,6 +35,7 @@ from Products.ERP5Type.Base import _aq_reset
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Workflow import addWorkflowByType
 
+
 class TestInteractionWorkflow(ERP5TypeTestCase):
   portal_type = 'Organisation'
 
@@ -78,11 +79,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     return addWorkflowByType(wf_tool, "interaction_workflow", wf_id)
 
   def createInteractionWorkflow(self):
-    id = 'test_workflow'
-    wf_type = "interaction_workflow"
-    if getattr(self.getWorkflowTool(), id, None) is None:
-      self._createInteractionWorkflowWithId(id)
-    wf = self.getWorkflowTool()[id]
+    if getattr(self.getWorkflowTool(), 'test_workflow', None) is None:
+      self._createInteractionWorkflowWithId('test_workflow')
+    wf = self.getWorkflowTool()['test_workflow']
     self.wf = wf
     if getattr(wf.scripts, 'afterEdit', None) is None:
       wf.scripts.manage_addProduct['PythonScripts']\
@@ -96,9 +95,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def createInteractionWorkflowWithTwoInteractions(self):
-    id = 'test_workflow'
-    wf_type = "interaction_workflow (Web-configurable interaction workflow)"
-    wf = self._createInteractionWorkflowWithId(id)
+    wf = self._createInteractionWorkflowWithId('test_workflow')
     self.wf = wf
     wf.scripts.manage_addProduct['PythonScripts']\
                   .manage_addPythonScript(id='afterEditA')

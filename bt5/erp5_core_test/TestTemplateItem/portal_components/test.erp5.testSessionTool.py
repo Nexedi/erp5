@@ -29,7 +29,6 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.tool.SessionTool import SESSION_CACHE_FACTORY
 from string import letters as LETTERS
@@ -46,27 +45,6 @@ primitives_kw = dict(attr_1 = ['list_item'], \
 class TestSessionTool(ERP5TypeTestCase):
 
   session_id = "123456789"
-
-  def getTitle(self):
-    return "Session Tool"
-
-  def afterSetUp(self):
-    # create a Memcached Plugin
-    memcached_tool = self.portal.portal_memcached
-    #create Memcache Plugin
-    if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
-      memcached_tool.newContent(id='default_memcached_plugin',
-                                portal_type='Memcached Plugin',
-                                int_index=0,
-                                url_string='127.0.0.1:11211')
-    self.login()
-
-  def login(self):
-    uf = self.portal.acl_users
-    uf._doAddUser('ivan', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('ivan').__of__(uf)
-    newSecurityManager(None, user)
 
   def _changeCachePlugin(self, portal_type, storage_duration = 86400):
     """ Change current cache plugin with new one. """

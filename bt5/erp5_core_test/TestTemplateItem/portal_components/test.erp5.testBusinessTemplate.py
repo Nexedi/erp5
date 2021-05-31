@@ -42,7 +42,6 @@ from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
 import os
-import gc
 import random
 import string
 import tempfile
@@ -65,7 +64,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
             )
   ## Ignore errors from PortalTransforms (e.g. missing binaries)
 
-  def _catch_log_errors(self):
+  def _catch_log_errors(self):  # pylint:disable=arguments-differ
     LogInterceptor._catch_log_errors(self)
     level = self.level
     def _tr_init(*args, **kw):
@@ -82,7 +81,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
         assert self.output == 'BROKEN'
     Transform.manage_beforeDelete = manage_beforeDelete
 
-  def _ignore_log_errors(self):
+  def _ignore_log_errors(self):  # pylint:disable=arguments-differ
     Transform._tr_init = Transform_tr_init
     Transform.manage_beforeDelete = Transform_manage_beforeDelete
     LogInterceptor._ignore_log_errors(self)
@@ -126,10 +125,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Remove objects created in tests."""
     for d in getattr(self, "rmdir_list", ()):
       shutil.rmtree(d)
-
-    pw = self.getWorkflowTool()
-
-    props = {}
 
     for type_object in self.getTypesTool().listTypeInfo():
       workflow_list = type_object.getTypeWorkflowList()
@@ -421,8 +416,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     trash = self.getTrashTool()
     trash_ids = list(trash.objectIds())
-    for id in trash_ids:
-      trash.deleteContent(id)
+    for id_ in trash_ids:
+      trash.deleteContent(id_)
     self.assertFalse(len(trash.objectIds()) > 0)
 
   def stepCheckTrashBin(self, sequence=None, **kw):
@@ -600,21 +595,21 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Create Module with objects
     """
     portal = self.getPortal()
-    id = 'geek_module'
+    id_ = 'geek_module'
     n = 0
-    while id in portal.objectIds():
+    while id_ in portal.objectIds():
       n = n + 1
-      id = "%s_%s" %('geek_module', n)
-    module = portal.newContent(id=id, portal_type='Geek Module')
+      id_ = "%s_%s" % ('geek_module', n)
+    module = portal.newContent(id=id_, portal_type='Geek Module')
     self.assertTrue(module is not None)
     # add a specific permission to module which do not use acquisition
     module.manage_permission('Copy or Move', ['Assignor'], False)
     sequence.edit(module_id=module.getId())
     module_object_list = []
-    for i in xrange(10):
-      object = module.newContent(portal_type = 'Geek Object')
-      self.assertTrue(object is not None)
-      module_object_list.append(object)
+    for _ in xrange(10):
+      obj = module.newContent(portal_type = 'Geek Object')
+      self.assertIsNotNone(obj)
+      module_object_list.append(obj)
     sequence.edit(module_object_id_list=module_object_list)
 
   def stepAddModuleToBusinessTemplate(self, sequence=None, **kw):
@@ -623,7 +618,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     bt = sequence.get('current_bt', None)
     module_id = sequence.get('module_id', None)
-    self.assertTrue(module_id is not None)
+    self.assertIsNotNone(module_id)
     bt.edit(template_module_id_list=[module_id])
 
   def stepCreateModuleObjects(self, sequence=None, **kw):
@@ -633,12 +628,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get('module_id')
     module = portal._getOb(module_id, None)
-    self.assertTrue(module is not None)
+    self.assertIsNotNone(module)
     module_object_list = []
-    for i in xrange(10):
-      object = module.newContent(portal_type = 'Geek Object')
-      self.assertTrue(object is not None)
-      module_object_list.append(object.getId())
+    for _ in xrange(10):
+      obj = module.newContent(portal_type = 'Geek Object')
+      self.assertIsNotNone(obj)
+      module_object_list.append(obj.getId())
     sequence.edit(module_object_id_list=module_object_list)
 
   def stepRemoveModule(self, sequence=None, **kw):
@@ -648,7 +643,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get("module_id")
     portal.manage_delObjects([module_id])
-    self.assertFalse(portal._getOb(module_id, None) is not None)
+    self.assertIsNone(portal._getOb(module_id, None))
 
   def stepCheckModuleExists(self, sequence=None, **kw):
     """
@@ -657,7 +652,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get("module_id")
     new_module = portal._getOb(module_id, None)
-    self.assertFalse(new_module is None)
+    self.assertIsNotNone(new_module)
 
   def stepCheckModulePermissions(self, sequence=None, **kw):
     """
@@ -687,11 +682,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     module_id = sequence.get('module_id')
     module = portal._getOb(module_id)
-    self.assertTrue(module is not None)
+    self.assertIsNotNone(module)
     object_id_list = sequence.get('module_object_id_list')
     for object_id in object_id_list:
-      object = module._getOb(object_id, None)
-      self.assertTrue(object is not None)
+      self.assertIsNotNone(module._getOb(object_id, None))
 
   def stepCheckModuleObjectsRemoved(self, sequence=None, **kw):
     """
@@ -703,8 +697,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(module is not None)
     object_id_list = sequence.get('module_object_id_list')
     for object_id in object_id_list:
-      object = module._getOb(object_id, None)
-      self.assertTrue(object is None)
+      self.assertIsNone(module._getOb(object_id, None))
 
   def stepCheckModuleRemoved(self, sequence=None, **kw):
     """
@@ -712,7 +705,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.getPortal()
     module_id = sequence.get("module_id")
-    self.assertFalse(portal._getOb(module_id, None) is not None)
+    self.assertIsNone(portal._getOb(module_id, None))
 
   # skins folder
   def stepCreateSkinFolder(self, sequence=None, **kw):
@@ -722,7 +715,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertTrue(skin_folder is not None)
+    self.assertIsNotNone(skin_folder)
     sequence.edit(skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -738,7 +731,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder('erp5_nerd')
     skin_folder = ps._getOb('erp5_nerd', None)
-    self.assertTrue(skin_folder is not None)
+    self.assertIsNotNone(skin_folder)
     sequence.edit(another_skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -754,7 +747,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_addProduct['OFSP'].manage_addFolder('erp5_static')
     skin_folder = ps._getOb('erp5_static', None)
-    self.assertTrue(skin_folder is not None)
+    self.assertIsNotNone(skin_folder)
     sequence.edit(static_skin_folder_id=skin_folder.getId())
     # add skin in layers
     for skin_name, selection in ps.getSkinPaths():
@@ -767,10 +760,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateSkinSubFolder(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertTrue(skin_folder is not None)
+    self.assertIsNotNone(skin_folder)
     skin_folder.manage_addFolder('erp5_subgeek')
     skin_subfolder = skin_folder._getOb('erp5_subgeek', None)
-    self.assertTrue(skin_subfolder is not None)
+    self.assertIsNotNone(skin_subfolder)
     sequence.edit(skin_subfolder_id=skin_subfolder.getId())
 
   def stepCheckSkinSubFolderExists(self, sequence=None, **kw):
@@ -780,21 +773,21 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
-    self.assertTrue(skin_folder is not None)
+    self.assertIsNotNone(skin_folder)
     subskin_id = sequence.get('skin_subfolder_id')
     skin_subfolder = skin_folder._getOb(subskin_id, None)
-    self.assertTrue(skin_subfolder is not None)
+    self.assertIsNotNone(skin_subfolder)
 
   def stepCreateNewForm(self, sequence=None):
     """Create a new ERP5 Form in a skin folder."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = 'Geek_view'
     addERP5Form = skin_folder.manage_addProduct['ERP5Form'].addERP5Form
     addERP5Form(form_id, 'View')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     addField = form.manage_addProduct['Formulator'].manage_addField
@@ -813,12 +806,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Create a new ERP5 Form in a skin folder."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_nerd', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = 'Geek_view'
     addERP5Form = skin_folder.manage_addProduct['ERP5Form'].addERP5Form
     addERP5Form(form_id, 'View')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     addField = form.manage_addProduct['Formulator'].manage_addField
@@ -837,22 +830,22 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Remove an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     skin_folder.manage_delObjects([form_id])
     form = skin_folder._getOb(form_id, None)
-    self.assertEqual(form, None)
+    self.assertIsNone(form)
 
   def stepAddFormField(self, sequence=None):
     """Add a field to an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     addField = form.manage_addProduct['Formulator'].manage_addField
@@ -871,12 +864,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepModifyFormTitle(self, sequence=None):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
     form_title = 'First Form Title'
     form.title = form_title
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(['left', 'right', 'center', 'bottom', 'hidden']))
     group_dict = {}
@@ -891,7 +884,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepRevertFormTitle(self, sequence=None):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
     form_title = 'Second Form Title'
@@ -900,7 +893,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCheckFormTitle(self, sequence=None):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
     self.assertEqual('First Form Title', form.title)
@@ -909,7 +902,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Check the form is exist in erp5_geek."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
     self.assertEqual(form, None)
@@ -918,19 +911,19 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Check the form is not exist in erp5_nerd."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_nerd', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
 
   def stepRemoveFormField(self, sequence=None):
     """Remove a field from an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     field_id = sequence.get('field_id')
     field = form.get_field(field_id)
     self.assertNotEquals(field, None)
@@ -941,10 +934,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Check the groups of an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     group_dict = sequence.get('group_dict')
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
                       sorted(group_dict.iterkeys()))
@@ -958,10 +951,10 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """Check that field title is not removed form erp5_nerd."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_nerd', None)
-    self.assertNotEquals(skin_folder, None)
+    self.assertIsNotNone(skin_folder)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
-    self.assertNotEquals(form, None)
+    self.assertIsNotNone(form)
     title_field =form._getOb('my_title', None)
     self.assertNotEquals(title_field, None)
 
@@ -1185,9 +1178,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.assertTrue(base_category is not None)
     category_list = []
-    for i in xrange(10):
+    for _ in xrange(10):
       category = base_category.newContent(portal_type='Category')
-      self.assertTrue(category is not None)
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
 
@@ -1253,9 +1245,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(category is not None)
     subcategory_list = []
     subcategory_uid_dict = {}
-    for i in xrange(10):
+    for _ in xrange(10):
       subcategory = category.newContent(portal_type='Category', title='toto')
-      self.assertTrue(subcategory is not None)
       subcategory_list.append(subcategory.getId())
       subcategory_uid_dict[subcategory.getId()] = subcategory.getUid()
     sequence.edit(subcategory_id_list=subcategory_list, \
@@ -1430,8 +1421,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     wf_id = sequence.get('workflow_id')
     tt = self.getPortal()['portal_trash']
     self.assertEqual(len(tt.objectIds()), 1)
-    bin = tt.objectValues()[0]
-    self.assertNotEqual(len(bin.portal_workflow_items[wf_id].objectIds()), 0)
+    trash_bin = tt.objectValues()[0]
+    self.assertNotEqual(len(trash_bin.portal_workflow_items[wf_id].objectIds()), 0)
 
   # Actions
   def stepCreateFirstAction(self, sequence=None, **kw):
@@ -1666,11 +1657,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIn(method_id, catalog.sql_uncatalog_object)
     # check filter
     filter_dict = catalog._getFilterDict()
-    filter = filter_dict[method_id]
-    self.assertItemsEqual(filter['expression_cache_key'], ['portal_type'])
-    self.assertEqual(filter['type'], [])
-    self.assertEqual(filter['filtered'], 1)
-    self.assertEqual(filter['expression'], 'python: context.isPredicate()')
+    filter_ = filter_dict[method_id]
+    self.assertItemsEqual(filter_['expression_cache_key'], ['portal_type'])
+    self.assertEqual(filter_['type'], [])
+    self.assertEqual(filter_['filtered'], 1)
+    self.assertEqual(filter_['expression'], 'python: context.isPredicate()')
 
   def stepCheckUpdatedCatalogMethodExists(self, sequence=None, **kw):
     pc = self.getCatalogTool()
@@ -1683,11 +1674,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIn(method_id, catalog.sql_uncatalog_object)
     # check filter
     filter_dict = catalog._getFilterDict()
-    filter = filter_dict[method_id]
-    self.assertItemsEqual(filter['expression_cache_key'], ['portal_type'])
-    self.assertEqual(filter['type'], [])
-    self.assertEqual(filter['filtered'], 1)
-    self.assertEqual(filter['expression'], 'python: context.isDelivery()')
+    filter_ = filter_dict[method_id]
+    self.assertItemsEqual(filter_['expression_cache_key'], ['portal_type'])
+    self.assertEqual(filter_['type'], [])
+    self.assertEqual(filter_['filtered'], 1)
+    self.assertEqual(filter_['expression'], 'python: context.isDelivery()')
 
   def stepCheckCatalogMethodRemoved(self, sequence=None, **kw):
     """
@@ -1703,7 +1694,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertNotIn(method_id, catalog.sql_uncatalog_object)
     # check filter
     with self.assertRaises(KeyError):
-      catalog._getFilterDict()[method_id]
+      _ = catalog._getFilterDict()[method_id]
 
   def stepRemoveCatalogMethod(self, sequence=None, **kw):
     """
@@ -1724,7 +1715,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertNotIn(method_id, catalog.sql_uncatalog_object)
     # remove filter
     with self.assertRaises(KeyError):
-      catalog._getFilterDict()[method_id]
+      _ = catalog._getFilterDict()[method_id]
 
   # Related key, Result key and table, and others
   def stepCreateKeysAndTable(self, sequence=list, **kw):
@@ -2391,9 +2382,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Add Property Sheet to Business Template
     """
     bt = sequence.get('current_bt', None)
-    self.assertTrue(bt is not None)
+    self.assertIsNotNone(bt)
     ps_title = sequence.get('ps_title', None)
-    self.assertTrue(ps_title is not None)
+    self.assertIsNotNone(ps_title)
     bt.edit(template_property_sheet_id_list=[ps_title])
 
   def stepCheckPropertySheetMigration(self, sequence=None, **kw):
@@ -2413,19 +2404,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     Remove Property Sheet
     """
-    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.assertTrue(ps_path is not None)
+    self.assertIsNotNone(ps_path)
     self.assertTrue(os.path.exists(ps_path))
     os.remove(ps_path)
     self.assertFalse(os.path.exists(ps_path))
-    return
-    # Property Sheet will not be installed in file sytem
-    self.assertFalse(os.path.exists(ps_path))
-    # Property Sheet will be installed in ZODB
-    self.assertTrue(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
-    self.portal.portal_property_sheets.manage_delObjects([ps_title])
-    self.assertFalse(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepRemovePropertySheetFromZODB(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2433,7 +2416,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.assertTrue(ps_path is not None)
+    self.assertIsNotNone(ps_path)
     # Property Sheet will not be installed in file sytem
     self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
@@ -2447,7 +2430,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.assertTrue(ps_path is not None)
+    self.assertIsNotNone(ps_path)
     # Property Sheet will not be installed in file sytem
     self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
@@ -2458,7 +2441,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     Check deletion of Property Sheet
     """
     ps_path = sequence.get('ps_path', None)
-    self.assertTrue(ps_path is not None)
+    self.assertIsNotNone(ps_path)
     self.assertFalse(os.path.exists(ps_path))
 
   def stepCheckMigratedPropertySheetRemoved(self, sequence=None, **kw):
@@ -2492,7 +2475,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    self.assertTrue(ps_path is not None)
+    self.assertIsNotNone(ps_path)
     # Property Sheet will not be installed in file sytem
     self.assertFalse(os.path.exists(ps_path))
     # Property Sheet will be installed in ZODB
@@ -2696,7 +2679,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     for item_name in item_list:
       item = getattr(bt, item_name)
       if item is not None:
-        for key, data in item._objects.items():
+        for data in item._objects.itervalues():
           if hasattr(data, '__ac_local_roles__'):
             self.assertTrue(data.__ac_local_roles__ is None)
           if hasattr(data, '_owner'):
@@ -2796,7 +2779,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(p._getOb('portal_simulation', None) is None)
 
   def stepCheckSimulationToolExists(self, sequence=None, **kw):
-    self.assertTrue(self.getSimulationTool() is not None)
+    self.assertIsNotNone(self.getSimulationTool())
 
   def stepCheckSubobjectsNotIncluded(self, sequence=None, **kw):
     """Check subobjects are not included in the base category.
@@ -2806,30 +2789,19 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # XXX maybe too low level
     base_category_obj = bt._category_item._objects.get(
         'portal_categories/%s' % base_category_id)
-    self.assertTrue(base_category_obj is not None)
+    self.assertIsNotNone(base_category_obj)
     self.assertEqual(len(base_category_obj.objectIds()), 0)
 
   def stepCheckNoMissingDependencies(self, sequence=None, **kw):
     """ Check if bt has no missing dependency
     """
-    missing_dep = False
-    bt = sequence.get('current_bt')
-    try:
-      bt.checkDependencies()
-    except:
-      missing_dep = True
-    self.assertTrue(not missing_dep)
+    sequence['current_bt'].checkDependencies()
 
   def stepCheckMissingDependencies(self, sequence=None, **kw):
     """ Check if bt has missing dependency
     """
-    missing_dep = False
-    bt = sequence.get('current_bt')
-    try:
-      bt.checkDependencies()
-    except:
-      missing_dep = True
-    self.assertTrue(missing_dep)
+    with self.assertRaises(Exception):
+      sequence['current_bt'].checkDependencies()
 
   def stepAddDependency(self, sequence=None, **kw):
     """ Add a dependency to the business template
@@ -2992,7 +2964,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     new_value = []
     workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
     for workflow_chain in workflow_chain_list:
-      portal_type, wkflow_id = workflow_chain.split(' | ')
+      _, wkflow_id = workflow_chain.split(' | ')
       if wkflow_id != workflow_id:
         new_value.append(workflow_chain)
     bt.edit(template_portal_type_workflow_chain_list=new_value)
@@ -3018,8 +2990,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     Add type role to business template
     """
-    bt = sequence.get('current_bt', None)
-    self.assertTrue(bt is not None)
+    bt = sequence['current_bt']
     ptype_ids = []
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
@@ -3069,7 +3040,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateFakeZODBScript(self, sequence=None, **kw):
     """Create a Script inside portal_skins
     """
-    grain_of_sand = ''.join([random.choice(string.ascii_letters) for i in xrange(10)])
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in xrange(10)])
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
@@ -6765,7 +6736,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """
     # Simulate the case where we have an installed business template providing
     # the path test_document
-    new_object = self.portal.newContent(portal_type='File', id='test_document')
+    self.portal.newContent(portal_type='File', id='test_document')
 
     bt = self.portal.portal_templates.newContent(
         portal_type='Business Template',
@@ -7150,12 +7121,10 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt.edit(template_registered_version_priority_selection_list=())
 
   def stepCheckVersionPrioritySetOnSite(self, sequence=None, **kw):
-    bt = sequence.get('current_bt')
     self.assertEqual(self.getPortalObject().getVersionPriorityList(),
                      sequence['expected_version_priority_list'])
 
   def stepCheckVersionPriorityRemovedFromSite(self, sequence=None, **kw):
-    bt = sequence.get('current_bt')
     self.assertEqual(self.getPortalObject().getVersionPriorityList(),
                      ('erp5 | 0.0',))
 
@@ -7341,8 +7310,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     self.commit()
     self.portal.organisation_module.manage_delObjects(['1'])
-    broken = self.portal.organisation_module.newContent(
-                   portal_type='Mock Broken Organisation', id='1')
+    self.portal.organisation_module.newContent(portal_type='Mock Broken Organisation', id='1')
     self.commit()
     self.tic() # triger undex/index the document
 

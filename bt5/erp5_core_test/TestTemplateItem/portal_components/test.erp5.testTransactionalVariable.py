@@ -31,74 +31,74 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 class TestTransactionalVariable(TestCase):
 
-    from transaction import abort, commit
+  from transaction import abort, commit
 
-    def test_01_DictInterface(self):
-      """Check if a transaction variable behaves in the same way as a dict.  """
+  def test_01_DictInterface(self):
+    """Check if a transaction variable behaves in the same way as a dict.  """
 
-      tv = getTransactionalVariable()
+    tv = getTransactionalVariable()
 
-      # Test frequently used dict methods. This does not cover everything,
-      # but should be enough.
-      tv.clear()
-      self.assertEqual(len(tv), 0)
-      with self.assertRaises(KeyError):
-        tv['toto']
+    # Test frequently used dict methods. This does not cover everything,
+    # but should be enough.
+    tv.clear()
+    self.assertEqual(len(tv), 0)
+    with self.assertRaises(KeyError):
+      _ = tv['toto']
 
-      tv['toto'] = 'titi'
-      self.assertEqual(len(tv), 1)
-      self.assertEqual(tv['toto'], 'titi')
+    tv['toto'] = 'titi'
+    self.assertEqual(len(tv), 1)
+    self.assertEqual(tv['toto'], 'titi')
 
-      self.assertIsNone(tv.get('foo'))
-      tv.setdefault('foo', 'bar')
-      self.assertEqual(len(tv), 2)
-      self.assertEqual(tv['foo'], 'bar')
+    self.assertIsNone(tv.get('foo'))
+    tv.setdefault('foo', 'bar')
+    self.assertEqual(len(tv), 2)
+    self.assertEqual(tv['foo'], 'bar')
 
-      self.assertIn('foo', tv)
-      del tv['foo']
-      self.assertNotIn('foo', tv)
-      self.assertEqual(len(tv), 1)
+    self.assertIn('foo', tv)
+    del tv['foo']
+    self.assertNotIn('foo', tv)
+    self.assertEqual(len(tv), 1)
 
-    def test_02_Expiration(self):
-      """Check if a transaction variable does not persist over multiple
-      transactions.
-      """
-      tv = getTransactionalVariable()
-      tv.clear()
-      self.assertEqual(len(tv), 0)
+  def test_02_Expiration(self):
+    """Check if a transaction variable does not persist over multiple
+    transactions.
+    """
+    tv = getTransactionalVariable()
+    tv.clear()
+    self.assertEqual(len(tv), 0)
 
-      # Commit and check.
-      tv['toto'] = 'titi'
-      self.assertEqual(tv['toto'], 'titi')
-      self.commit()
-      self.assertNotIn('toto', tv)
+    # Commit and check.
+    tv['toto'] = 'titi'
+    self.assertEqual(tv['toto'], 'titi')
+    self.commit()
+    self.assertNotIn('toto', tv)
 
-      # Abort and check.
-      tv['toto'] = 'titi'
-      self.assertEqual(tv['toto'], 'titi')
-      self.abort()
-      self.assertNotIn('toto', tv)
+    # Abort and check.
+    tv['toto'] = 'titi'
+    self.assertEqual(tv['toto'], 'titi')
+    self.abort()
+    self.assertNotIn('toto', tv)
 
-    def test_03_Durability(self):
-      """Check if a transaction variable does not disappear within the same
-      transaction.
-      """
-      tv = getTransactionalVariable()
-      tv.clear()
-      self.assertEqual(len(tv), 0)
+  def test_03_Durability(self):
+    """Check if a transaction variable does not disappear within the same
+    transaction.
+    """
+    tv = getTransactionalVariable()
+    tv.clear()
+    self.assertEqual(len(tv), 0)
 
-      # Set both a transaction variable and a volatile attribute,
-      # in order to detect the difference between their behaviors.
-      tv['toto'] = 'titi'
-      self.assertEqual(tv['toto'], 'titi')
-      app = self.app
-      vattr = '_v_erp5type_test_durability'
-      setattr(app, vattr, 'dummy')
-      self.assertEqual(getattr(app, vattr), 'dummy')
+    # Set both a transaction variable and a volatile attribute,
+    # in order to detect the difference between their behaviors.
+    tv['toto'] = 'titi'
+    self.assertEqual(tv['toto'], 'titi')
+    app = self.app
+    vattr = '_v_erp5type_test_durability'
+    setattr(app, vattr, 'dummy')
+    self.assertEqual(getattr(app, vattr), 'dummy')
 
-      # Force to minimize the connection cache so that volatile attributes
-      # and unghostified objects are discarded.
-      app._p_jar.cacheMinimize()
-      self.assertIn('toto', tv)
-      self.assertEqual(tv['toto'], 'titi')
-      self.assertIsNone(getattr(app, vattr, None))
+    # Force to minimize the connection cache so that volatile attributes
+    # and unghostified objects are discarded.
+    app._p_jar.cacheMinimize()
+    self.assertIn('toto', tv)
+    self.assertEqual(tv['toto'], 'titi')
+    self.assertIsNone(getattr(app, vattr, None))

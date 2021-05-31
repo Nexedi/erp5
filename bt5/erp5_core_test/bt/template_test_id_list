@@ -48,7 +48,6 @@ test.erp5.testQueryModule
 test.erp5.testRestrictedPythonSecurity
 test.erp5.testSelectionTool
 test.erp5.testSessionTool
-test.erp5.testSQLCachedWorklist
 test.erp5.testTimeout
 test.erp5.testTimerService
 test.erp5.testTransactionalVariable
