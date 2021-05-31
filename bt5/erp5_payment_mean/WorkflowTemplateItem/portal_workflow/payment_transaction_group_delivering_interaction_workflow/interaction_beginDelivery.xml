@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Interaction Workflow Interaction" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>after_script/portal_workflow/payment_transaction_group_delivering_interaction_workflow/script_Workflow_deliver</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interaction_beginDelivery</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Interaction Workflow Interaction</string> </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Begin Delivery</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>beginDelivery</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>trigger_once_per_transaction</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
