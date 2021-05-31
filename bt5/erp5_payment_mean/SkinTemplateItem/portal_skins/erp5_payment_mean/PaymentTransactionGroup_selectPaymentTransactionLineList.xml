@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids=(), form_id=\'view\', select_limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, mode=None, listbox_Movement_getMirrorSectionTitle=None, **kw</string> </value>
+            <value> <string>uids=(), form_id=\'view\', select_limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, select_mode=None, listbox_Movement_getMirrorSectionTitle=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -17,14 +17,14 @@
 
 <tr>
   <td>assertSelected</td>
-  <td>field_your_mode</td>
+  <td>field_your_select_mode</td>
   <td>Select already Posted to General Ledger or Closed Payments</td>
 </tr>
 
 <!-- update dialog -->
 <tr>
   <td>select</td>
-  <td>field_your_mode</td>
+  <td>field_your_select_mode</td>
   <td>Select Planned or Confirmed Payments and Post them to General Ledger</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
