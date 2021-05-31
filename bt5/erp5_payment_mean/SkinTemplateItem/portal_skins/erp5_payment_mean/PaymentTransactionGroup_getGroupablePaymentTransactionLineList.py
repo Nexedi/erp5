@@ -1,6 +1,9 @@
 portal = context.getPortalObject()
 
-if mode == 'stopped_or_delivered':
+if mode is None:
+  # To show an empty listbox the first time the dialog is open
+  return []
+elif mode == 'stopped_or_delivered':
   simulation_state = ('delivered', 'stopped')
 else:
   assert mode == 'planned_or_confirmed', "Unknown mode, %r" % mode
