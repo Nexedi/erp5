@@ -48,6 +48,19 @@ class TestPaymentTransactionGroupReferences(ERP5TypeTestCase):
         ptg.getSourceReference(), cloned_ptg.getSourceReference())
 
 
+class TestPaymentTransactionGroupWorkflow(ERP5TypeTestCase):
+  def test_workflow_transitions(self):
+    ptg = self.portal.payment_transaction_group_module.newContent(
+        portal_type='Payment Transaction Group')
+    self.assertEqual(ptg.getValidationState(), 'draft')
+    self.portal.portal_workflow.doActionFor(ptg, 'open_action')
+    self.assertEqual(ptg.getValidationState(), 'open')
+    self.portal.portal_workflow.doActionFor(ptg, 'close_action')
+    self.assertEqual(ptg.getValidationState(), 'closed')
+    self.portal.portal_workflow.doActionFor(ptg, 'deliver_action')
+    self.assertEqual(ptg.getValidationState(), 'delivered')
+
+
 class TestPaymentTransactionGroupConstraint(ERP5TypeTestCase):
   def afterSetUp(self):
     ti = self.portal.portal_types['Payment Transaction Group']
