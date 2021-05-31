@@ -607,7 +607,12 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>none</string>
+                          <string>sort disabled</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
