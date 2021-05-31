@@ -262,9 +262,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -289,13 +287,13 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -345,7 +343,7 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -543,7 +541,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -624,7 +622,7 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -663,25 +661,12 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:request.form.get(\'sign\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
             <value> <string>python: preferences.getPreference(\'preferred_listbox_view_mode_line_count\', 15)</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
@@ -698,7 +683,7 @@ string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getI
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
@@ -711,7 +696,7 @@ string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getI
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
@@ -724,7 +709,7 @@ string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getI
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
