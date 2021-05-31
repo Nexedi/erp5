@@ -327,6 +327,18 @@ for filename in os.listdir(os.path.dirname(lxml.__file__)):
             module_name,
             __import__(module_name, fromlist=[module_name], level=0))
 
+# Wendelin is special namespace package which pylint fails to recognize, and so
+# complains about things like `from wendelin.bigarray.array_zodb import ZBigArray`
+# with `No name 'bigarray' in module 'wendelin' (no-name-in-module)`.
+#
+# -> Teach pylint to properly understand wendelin package nature.
+import wendelin
+def wendelin_transform(node):
+    m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
+    m.package = True
+    return m
+MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
+
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined

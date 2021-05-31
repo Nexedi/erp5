@@ -52,6 +52,7 @@ test.erp5.testTransactionalVariable
 test.erp5.testTrashTool
 test.erp5.testVanillaERP5Catalog
 test.erp5.testVideoField
+test.erp5.testWendelinCore
 test.erp5.testWorkflowHistoryList
 test.erp5.testWorklist
 test.erp5.testXForwardedFor
