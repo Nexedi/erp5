@@ -19,6 +19,10 @@
   <td>field_your_sign</td>
   <td>Outgoing</td>
 </tr>
+<!-- there's an empty listbox by default (and not a "Invalid Search Criteria-Reset" error) -->
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 
 <!-- update dialog -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
