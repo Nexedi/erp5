@@ -36,6 +36,9 @@ if start_date_range_max:
 if start_date_range_min:
   search_kw['from_date'] = start_date_range_min
 
+if Movement_getMirrorSectionTitle:
+  search_kw['stock_mirror_section_title'] = Movement_getMirrorSectionTitle
+
 if sign in ('outgoing', 'out'):
   search_kw['omit_asset_increase'] = True
 elif sign in ('incoming', 'in'):
