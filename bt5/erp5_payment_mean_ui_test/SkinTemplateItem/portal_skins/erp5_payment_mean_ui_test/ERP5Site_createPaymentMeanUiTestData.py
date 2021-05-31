@@ -43,21 +43,27 @@ payment_mean = portal.payment_transaction_group_module.newContent(
 )
 payment_mean.open()
 
-for id_, date, resource_value, payment_mode_value, quantity, state, consistent in (
-    ('erp5_payment_mean_ui_test_incoming_payment', DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, -100, 'stopped', True),
-    ('erp5_payment_mean_ui_test_outgoing_payment', DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'stopped', True),
-    ('erp5_payment_mean_ui_test_second_outgoing_payment', DateTime('2019/10/21'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'stopped', True),
-    ('erp5_payment_mean_ui_test_planned_outgoing_payment', DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'planned', True),
-    ('erp5_payment_mean_ui_test_confirmed_outgoing_payment', DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'confirmed', True),
-    ('erp5_payment_mean_ui_test_confirmed_not_consistent_outgoing_payment', DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'confirmed', False),
-    ('erp5_payment_mean_ui_test_wrong_payment_mode_outgoing_payment', DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.check, 100, 'stopped', True),
-    ('erp5_payment_mean_ui_test_wrong_currency_outgoing_payment', DateTime('2019/10/20'), portal.currency_module.yen, portal.portal_categories.payment_mode.cash, 100, 'stopped', True),
+first_supplier = portal.organisation_module.newContent(id="erp5_payment_mean_ui_test_first_supplier")
+first_supplier.validate()
+second_supplier = portal.organisation_module.newContent(id="erp5_payment_mean_ui_test_second_supplier")
+second_supplier.validate()
+
+for id_, supplier, date, resource_value, payment_mode_value, quantity, state, consistent in (
+    ('erp5_payment_mean_ui_test_incoming_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, -100, 'stopped', True),
+    ('erp5_payment_mean_ui_test_outgoing_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'stopped', True),
+    ('erp5_payment_mean_ui_test_second_outgoing_payment', second_supplier, DateTime('2019/10/21'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'stopped', True),
+    ('erp5_payment_mean_ui_test_planned_outgoing_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'planned', True),
+    ('erp5_payment_mean_ui_test_confirmed_outgoing_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'confirmed', True),
+    ('erp5_payment_mean_ui_test_confirmed_not_consistent_outgoing_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.cash, 100, 'confirmed', False),
+    ('erp5_payment_mean_ui_test_wrong_payment_mode_outgoing_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.euro, portal.portal_categories.payment_mode.check, 100, 'stopped', True),
+    ('erp5_payment_mean_ui_test_wrong_currency_outgoing_payment', first_supplier, DateTime('2019/10/20'), portal.currency_module.yen, portal.portal_categories.payment_mode.cash, 100, 'stopped', True),
 ):
   payment = portal.accounting_module.newContent(
       portal_type='Payment Transaction',
       id=id_,
       source_section_value=organisation,
       source_payment_value=bank_account,
+      destination_section_value=supplier,
       start_date=date,
       resource_value=resource_value,
       payment_mode_value=payment_mode_value,

@@ -13,6 +13,7 @@ context.activate(tag=tag).PaymentTransactionGroup_selectPaymentTransactionLineLi
   start_date_range_max=start_date_range_max,
   sign=sign,
   mode=mode,
+  Movement_getMirrorSectionTitle=listbox_Movement_getMirrorSectionTitle,
   tag=tag)
 
 return context.Base_redirect(form_id,
