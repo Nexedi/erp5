@@ -13,7 +13,7 @@ context.activate(tag=tag).PaymentTransactionGroup_selectPaymentTransactionLineLi
   start_date_range_min=start_date_range_min,
   start_date_range_max=start_date_range_max,
   sign=sign,
-  mode=mode,
+  select_mode=select_mode,
   Movement_getMirrorSectionTitle=listbox_Movement_getMirrorSectionTitle,
   tag=tag)
 
