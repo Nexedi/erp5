@@ -1,12 +1,13 @@
 portal = context.getPortalObject()
 
-if mode is None:
+if select_mode is None:
   # To show an empty listbox the first time the dialog is open
+  container.REQUEST.set('PaymentTransactionGroup_statGroupablePaymentTransactionLineList.total_quantity', None)
   return []
-elif mode == 'stopped_or_delivered':
+elif select_mode == 'stopped_or_delivered':
   simulation_state = ('delivered', 'stopped')
 else:
-  assert mode == 'planned_or_confirmed', "Unknown mode, %r" % mode
+  assert select_mode == 'planned_or_confirmed', "Unknown select_mode, %r" % select_mode
   simulation_state = ('planned', 'confirmed')
 
 search_kw = dict(

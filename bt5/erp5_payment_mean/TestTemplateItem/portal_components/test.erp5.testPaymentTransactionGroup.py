@@ -250,7 +250,7 @@ class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
         start_date_range_min=None,
         start_date_range_max=None,
         sign='incoming',
-        mode='stopped_or_delivered',
+        select_mode='stopped_or_delivered',
     )
     self.assertEqual(
         sorted([line.getObject().getRelativeUrl() for line in line_list]),
@@ -265,7 +265,7 @@ class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
         start_date_range_min=None,
         start_date_range_max=None,
         sign='incoming',
-        mode='stopped_or_delivered',
+        select_mode='stopped_or_delivered',
     )
     self.assertEqual(
         sorted([line.getObject().getRelativeUrl() for line in line_list]),
@@ -314,7 +314,7 @@ class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
         price_currency_value=self.portal.currency_module.euro,
         stop_date=DateTime(2014, 1, 31),)
     self.tic()
-    ptg.PaymentTransactionGroup_selectPaymentTransactionLineList(mode='stopped_or_delivered')
+    ptg.PaymentTransactionGroup_selectPaymentTransactionLineList(select_mode='stopped_or_delivered')
     self.tic()
     self.assertEqual(
         payment.bank.getAggregateValueList(),

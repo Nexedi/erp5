@@ -16,13 +16,13 @@ else:
         start_date_range_min=start_date_range_min,
         start_date_range_max=start_date_range_max,
         sign=sign,
-        mode=mode,
+        select_mode=select_mode,
         Movement_getMirrorSectionTitle=Movement_getMirrorSectionTitle,)]
 
-if mode == 'stopped_or_delivered':
+if select_mode == 'stopped_or_delivered':
   method_id = 'AccountingTransactionLine_addPaymentTransactionGroup'
 else:
-  assert mode == 'planned_or_confirmed', "Unknown mode, %r" % mode
+  assert select_mode == 'planned_or_confirmed', "Unknown select_mode, %r" % select_mode
   method_id = 'AccountingTransactionLine_stopAndAddPaymentTransactionGroup'
 
 
