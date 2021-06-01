@@ -46,7 +46,15 @@ elif len(related_object_list) == 1:
                  "that_title": context.getTitleOrId()}))))
 
 else:
+  message = portal.Base_translateString(
+  # first, try to get a full translated message with portal types
+  "Documents related to %s." % context.getPortalType(),
+  # if not found, fallback to generic translation
+  default=portal.Base_translateString('Documents related to ${that_portal_type} : ${that_title}.',
+        mapping={"that_portal_type": context.getTranslatedPortalType(),
+                 "that_title": context.getTitleOrId() }),)
   # XXX: Use POST rather than GET because of GET URL length limitation?
   return portal.getDefaultModule(portal_type).Base_redirect(
     keep_items={'reset': 1,
-                'uid': [obj.getUid() for obj in related_object_list]})
+                'portal_status_message': message,
+                'uid': [obj.uid for obj in related_object_list]})
