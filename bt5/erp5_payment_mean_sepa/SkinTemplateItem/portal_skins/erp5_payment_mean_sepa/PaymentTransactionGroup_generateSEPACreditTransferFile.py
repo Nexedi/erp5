@@ -1,5 +1,12 @@
 from Products.ERP5Type.Message import translateString
 
+# Same check as in PaymentTransactionGroup_selectPaymentTransactionLineList
+tag = 'PaymentTransactionGroup_selectPaymentTransactionList'
+context.serialize()
+if context.getPortalObject().portal_activities.countMessageWithTag(tag,):
+  return context.Base_redirect(form_id, keep_items=dict(portal_status_message=translateString(
+    "Some payments are still beeing processed in the background, please retry later")))
+
 assert version == 'pain.001.001.02', 'Unsupported version'
 
 portal = context.getPortalObject()
