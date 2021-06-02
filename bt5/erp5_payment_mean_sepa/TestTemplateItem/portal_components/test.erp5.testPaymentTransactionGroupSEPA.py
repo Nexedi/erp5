@@ -198,7 +198,6 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
         ['PT-1', 'PT-2'],
     )
 
-
   def test_generate_sepa_credit_transfer_action(self):
     ptg = self._createPTG()
     ret = ptg.PaymentTransactionGroup_generateSEPACreditTransferFile(
@@ -223,6 +222,18 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
         [node.text for node in pain.findall('.//{*}GrpHdr/{*}CtrlSum')],
         ['300.00'],
     )
+
+  def test_generate_sepa_credit_transfer_refused_when_activities_are_pending(self):
+    ptg = self._createPTG()
+    ptg.PaymentTransactionGroup_selectPaymentTransactionLineList(
+        select_mode='stopped_or_delivered')
+    self.commit()
+    ret = ptg.PaymentTransactionGroup_generateSEPACreditTransferFile(
+        version='pain.001.001.02')
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ['Some payments are still beeing processed in the background, please retry later'])
+    self.tic()
 
 
 class TestSEPAConstraints(AccountingTestCase):
