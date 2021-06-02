@@ -39,7 +39,7 @@ MailBase__makeMailer = MailBase._makeMailer
 def _makeMailer(self):
   """ Create a SMTPMailer """
   smtp_mailer = MailBase__makeMailer(self)
-  smtp_mailer.SMTP = partial(smtp_mailer.smtp, timeout=self.smtp_socket_timeout)
+  smtp_mailer.smtp = partial(smtp_mailer.smtp, timeout=self.smtp_socket_timeout)
   return smtp_mailer
 
 MailBase._makeMailer = _makeMailer
