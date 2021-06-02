@@ -65,6 +65,13 @@ def DateTime__getstate__(self):
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
 
+try:
+  DateTimeKlass._month_len
+except AttributeError:
+  # BBB
+  from DateTime.DateTime import _MONTH_LEN
+  DateTimeKlass._month_len = _MONTH_LEN
+
 def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   # Parse date-time components from a string
   month=year=tz=tm=None
