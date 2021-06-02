@@ -34,6 +34,9 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+original_DateTime__eq__ = DateTimeKlass.__eq__
+DateTimeKlass.__eq__ = DateTimeKlass.equalTo
+
 original_DateTime__setstate__ = DateTimeKlass.__setstate__
 
 def DateTime__setstate__(self, state):
