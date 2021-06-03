@@ -15,12 +15,12 @@
 <tr><td>assertTextPresent</td>
     <td>Reset Successfully.</td><td></td></tr>
 
-<tr><td colspan="3"><b>Set preferred text editor</b></td></tr>
+<tr><td colspan="3"><b>Set preferred code editor</b></td></tr>
 
 <tr><td>open</td>
     <td>${base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td><td></td></tr>
 <tr><td>click</td>
-    <td>//input[@name="field_my_preferred_text_editor" and @value="monaco"]</td><td></td></tr>
+    <td>//input[@name="field_my_preferred_source_code_editor" and @value="monaco"]</td><td></td></tr>
 <tr><td>clickAndWait</td>
     <td>//button[@name='Base_edit:method']</td><td></td></tr>
 
