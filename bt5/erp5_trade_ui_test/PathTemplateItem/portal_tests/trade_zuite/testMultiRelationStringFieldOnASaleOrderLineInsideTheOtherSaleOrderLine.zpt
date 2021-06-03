@@ -11,6 +11,11 @@ Test MultiRelationStringField on a sale order line inside the other sale order l
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/sale_order_module/erp5_trade_ui_test_sale_order_1</td>
+  <td></td>
+</tr>
 <!-- }}} -->
 
 <tr>
