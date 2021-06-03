@@ -43,10 +43,12 @@ from erp5.component.test.testPackingList import TestPackingListMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from erp5.component.module.TestInvoiceMixin import TestInvoiceMixin, TestSaleInvoiceMixin
 
+
 class TestInvoice(TestInvoiceMixin):
   """Test methods for sale and purchase invoice.
   Subclasses must defines portal types to use.
   """
+  trade_condition_portal_type = 'Sale Trade Condition'
   quiet = 1
   def test_invoice_transaction_line_resource(self):
     """
@@ -1462,8 +1464,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self._testSubContentReindexing(invoice, [invoice_line, transaction_line,
       invoice_cell])
 
-  def test_AccountingTransactionModuleListboxSaleTradeConditionColumn(self):
-    """Check listbox Sale Trade Condition column displays the trade condition
+  def test_AccountingTransactionModuleListboxTradeConditionColumn(self):
+    """Check listbox Trade Condition column displays the trade condition
     when there are multiple documents related by specialise category.
     """
     # test init
@@ -1471,10 +1473,10 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     whatever_object = accounting_module.newContent(
       portal_type=self.invoice_portal_type,
     )
-    sale_trade_condition_title = "Sale Trade Condition from test_AccountingTransactionModuleListboxSaleTradeConditionColumn"
-    sale_trade_condition = self.portal.sale_trade_condition_module.newContent(
-      portal_type="Sale Trade Condition",
-      title=sale_trade_condition_title,
+    trade_condition_title = "Trade Condition from %s" % self.id()
+    trade_condition = self.portal.getDefaultModule(self.trade_condition_portal_type).newContent(
+      portal_type=self.trade_condition_portal_type,
+      title=trade_condition_title,
     )
     sale_invoice = accounting_module.newContent(
       portal_type=self.invoice_portal_type,
@@ -1484,15 +1486,15 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     # Check listbox Sale Trade Condition column displays the trade condition
     # when there are multiple documents related by specialise category.
     accounting_listbox = accounting_module.AccountingTransactionModule_viewAccountingTransactionList.listbox
-    self.assertIn(("specialise_trade_condition_title", "Sale Trade Condition"), accounting_listbox.get_value("columns") + accounting_listbox.get_value("all_columns"))
+    self.assertIn(("specialise_trade_condition_title", "Trade Condition"), accounting_listbox.get_value("columns") + accounting_listbox.get_value("all_columns"))
     sale_invoice.setSpecialiseValueList([whatever_object])
     self.tic()
     sale_invoice_brain, = self.portal.portal_catalog(uid=sale_invoice.getUid(), select_list=["specialise_trade_condition_title"], limit=1)
     self.assertEqual(sale_invoice_brain.specialise_trade_condition_title, None)
-    sale_invoice.setSpecialiseValueList([whatever_object, sale_trade_condition])
+    sale_invoice.setSpecialiseValueList([whatever_object, trade_condition])
     self.tic()
     sale_invoice_brain, = self.portal.portal_catalog(uid=sale_invoice.getUid(), select_list=["specialise_trade_condition_title"], limit=1)
-    self.assertEqual(sale_invoice_brain.specialise_trade_condition_title, sale_trade_condition_title)
+    self.assertEqual(sale_invoice_brain.specialise_trade_condition_title, trade_condition_title)
 
 class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
@@ -2580,6 +2582,7 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
   invoice_transaction_line_portal_type = 'Purchase Invoice Transaction Line'
   invoice_line_portal_type = 'Invoice Line'
   invoice_cell_portal_type = 'Invoice Cell'
+  trade_condition_portal_type = 'Purchase Trade Condition'
 
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
