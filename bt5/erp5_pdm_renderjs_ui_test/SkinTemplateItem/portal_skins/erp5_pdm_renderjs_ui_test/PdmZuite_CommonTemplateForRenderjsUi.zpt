@@ -2,7 +2,8 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal">
   <tal:block metal:define-macro="init"
              tal:define="resource_relative_url resource_relative_url | string:product_module/erp5_pdm_ui_test_product;
-                         set_node_category_preference set_node_category_preference | python: False">
+                         set_node_category_preference set_node_category_preference | python: False;
+                         open_stock_browser open_stock_browser | python:True;">
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
@@ -58,13 +59,15 @@
       <td>Done.</td>
       <td></td>
     </tr>
-    <tr>
-      <td>open</td>
-      <td>${base_url}/web_site_module/renderjs_runner/#/<tal:block tal:replace="resource_relative_url"></tal:block></td>
-      <td></td>
-    </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
+    <tal:block tal:condition="open_stock_browser">
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/renderjs_runner/#/<tal:block tal:replace="resource_relative_url"></tal:block></td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+      <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
+    </tal:block>
   </tal:block>
 
   <tal:block metal:define-macro="go_to_stock_view">
