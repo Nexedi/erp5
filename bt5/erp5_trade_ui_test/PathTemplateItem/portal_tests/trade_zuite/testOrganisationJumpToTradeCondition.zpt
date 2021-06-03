@@ -1,0 +1,77 @@
+<html>
+<head><title>Test Organisation jump to trade condition</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Organisation jump to trade condition
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:Zuite_createOrganisationAndTradeConditionsForTradeZuite;">
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<!-- }}} -->
+
+<tal:block tal:repeat="trade_condition_portal_type python: ('Sale Trade Condition', 'Purchase Trade Condition', 'Internal Trade Condition', )">
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/organisation_module/erp5_trade_ui_test_organisation_1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td tal:content="trade_condition_portal_type"></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Documents related to Organisation : erp5_trade_ui_test_organisation_1_title.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_trade_ui_test_trade_condition_1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_trade_ui_test_trade_condition_2</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/organisation_module/erp5_trade_ui_test_organisation_2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td tal:content="trade_condition_portal_type"></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td><tal:block tal:replace="trade_condition_portal_type"/> related to Organisation : erp5_trade_ui_test_organisation_2_title.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_trade_ui_test_trade_condition_1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>erp5_trade_ui_test_trade_condition_2</td>
+  <td></td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
