@@ -218,6 +218,13 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     except (AttributeError, KeyError, IndexError):
       return 'draft'
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getContentType')
+  def getContentType(self, default=None):
+    """Returns the text content.
+    """
+    return "text/x-python"
+
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
     """
