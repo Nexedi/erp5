@@ -1920,7 +1920,8 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
 
   def test_only_valid_assignments_are_considered(self):
     self.person.newContent(portal_type='Assignment', group='main_group/sub_group').open()
-    self.person.newContent(portal_type='Assignment', group='main_group', stop_date=DateTime(1970, 1, 1)).open()
+    # XXX If set on 1970.1.1, the stop_date is None with new DateTime
+    self.person.newContent(portal_type='Assignment', group='main_group', stop_date=DateTime(1970, 1, 2)).open()
     self.person.newContent(portal_type='Assignment', group='main_group') # left as draft
     self.tic()
     self.login(self.user_id)
