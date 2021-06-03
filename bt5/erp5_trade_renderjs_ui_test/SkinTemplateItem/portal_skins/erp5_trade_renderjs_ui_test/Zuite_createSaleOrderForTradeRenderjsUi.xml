@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeRJSZuite_createPackingList</string> </value>
+            <value> <string>Zuite_createSaleOrderForTradeRenderjsUi</string> </value>
         </item>
       </dictionary>
     </pickle>
