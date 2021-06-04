@@ -220,8 +220,7 @@ warnings.simplefilter("default")
 
 def _showwarning(message, category, filename, lineno, file=None, line=None):
   if file is None:
-    LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
-        WARNING, '')
+    LOG(category.__name__, WARNING, "%s:%u %s" % (filename, lineno, message))
   else:
     file.write(warnings.formatwarning(message, category, filename, lineno, line))
 warnings.showwarning = _showwarning

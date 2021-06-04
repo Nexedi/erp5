@@ -32,6 +32,7 @@ of Portal Type as Classes and ZODB Components
 """
 
 import unittest
+import warnings
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -242,6 +243,17 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(o.getPortalType(), 'Base Object')
       self.assertTrue(o.isTempObject())
       self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
+
+    def test_warnings_redirected_to_event_log(self):
+      self._catch_log_errors()
+      self.addCleanup(self._ignore_log_errors)
+      warnings.warn('user warning')
+      self.assertEqual(self.logged[-1].name, 'UserWarning')
+      self.assertIn('Products/ERP5Type/tests/testERP5Type.py', self.logged[-1].message)
+      self.assertIn('user warning', self.logged[-1].message)
+      warnings.warn('user warning', DeprecationWarning)
+      self.assertEqual(self.logged[-1].name, 'DeprecationWarning')
+
 
 def test_suite():
   suite = unittest.TestSuite()
