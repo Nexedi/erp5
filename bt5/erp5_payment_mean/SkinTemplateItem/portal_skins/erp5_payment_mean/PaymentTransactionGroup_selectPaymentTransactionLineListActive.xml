@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, tag=\'\'</string> </value>
+            <value> <string>uids=(), select_limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, select_mode=None, Movement_getMirrorSectionTitle=None, tag=\'\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

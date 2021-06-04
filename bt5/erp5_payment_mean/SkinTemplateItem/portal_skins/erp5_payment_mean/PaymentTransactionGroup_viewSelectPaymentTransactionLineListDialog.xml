@@ -98,10 +98,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_limit</string>
+                        <string>your_select_limit</string>
                         <string>your_start_date_range_min</string>
                         <string>your_start_date_range_max</string>
                         <string>your_sign</string>
+                        <string>your_select_mode</string>
                       </list>
                     </value>
                 </item>
