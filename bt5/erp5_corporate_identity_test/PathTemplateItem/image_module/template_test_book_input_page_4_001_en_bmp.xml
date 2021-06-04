@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>2ce6a8ea3e264a0574ea09087c1c4ca4</string> </value>
+            <value> <string>1524cbb63bf6ba232bb84883e8f0830c</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -103,7 +103,9 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>1.bmp</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>height</string> </key>
