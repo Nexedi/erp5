@@ -71,6 +71,7 @@ from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
+import PyPDF2
 
 QUIET = 0
 
@@ -1981,13 +1982,34 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
   def test_PDFDocument_asTextConversion(self):
     """Test a PDF document with embedded images
-    To force usage of Ocropus portal_transform chain
+    To force usage of ghostscript with embedded tesseract OCR device
     """
-    portal_type = 'PDF'
-    module = self.portal.getDefaultModule(portal_type)
-    upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
-    document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEqual('ERP5 is a free software.', document.asText())
+    document = self.portal.document_module.newContent(
+        portal_type='PDF',
+        file=makeFileUpload('TEST.Embedded.Image.pdf'))
+    self.assertEqual(document.asText(), 'ERP5 is a free software.')
+
+  def test_broken_pdf_asText(self):
+    class StringIOWithFilename(StringIO.StringIO):
+      filename = 'broken.pdf'
+    document = self.portal.document_module.newContent(
+        portal_type='PDF',
+        file=StringIOWithFilename('broken'))
+    self.assertEqual(document.asText(), '')
+    self.tic() # no activity failure
+
+  def test_password_protected_pdf_asText(self):
+    pdf_reader = PyPDF2.PdfFileReader(makeFileUpload('TEST.Embedded.Image.pdf'))
+    pdf_writer = PyPDF2.PdfFileWriter()
+    pdf_writer.addPage(pdf_reader.getPage(0))
+    pdf_writer.encrypt('secret')
+    encrypted_pdf_stream = StringIO.StringIO()
+    pdf_writer.write(encrypted_pdf_stream)
+    document = self.portal.document_module.newContent(
+        portal_type='PDF',
+        file=encrypted_pdf_stream)
+    self.assertEqual(document.asText(), '')
+    self.tic() # no activity failure
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
