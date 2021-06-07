@@ -442,7 +442,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertEquals('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     # Simplistic assertion that we are viewing the ODF XML source
     self.assertTrue('office:document-content' in response.getBody())
@@ -453,7 +453,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertEquals('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     self.assertTrue('office:document-content' in response.getBody())
 
@@ -463,7 +463,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertEquals('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     self.assertTrue('office:document-content' in response.getBody())
 
