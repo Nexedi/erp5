@@ -53,7 +53,7 @@ class SlapOSControler(object):
       createFolder(shared)
       self.shared_part_list = self.shared_part_list + [shared]
 
-    self.instance_root = os.path.join(working_directory, 'inst')
+    self.instance_root = os.path.join(working_directory, 'i')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.instance_config = {}
@@ -287,7 +287,7 @@ class SlapOSControler(object):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
-      partition_reference = '%s-%s' %(config['partition_reference'], i)
+      partition_reference = '%s%s' %(config['partition_reference'], i)
       partition_path = os.path.join(instance_root, partition_reference)
       if not(os.path.exists(partition_path)):
         os.mkdir(partition_path)
