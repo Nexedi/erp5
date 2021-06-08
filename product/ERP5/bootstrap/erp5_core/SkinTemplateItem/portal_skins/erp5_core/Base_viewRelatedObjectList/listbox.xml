@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>count_method</string>
-                <string>default_params</string>
                 <string>list_action</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -67,21 +66,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>field_id</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>form_id</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -95,7 +88,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -113,7 +106,7 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -127,7 +120,7 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -150,13 +143,7 @@
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -182,7 +169,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -245,7 +232,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'parameter_list\')</string> </value>
+            <value> <string>python: context.Base_getRelationFieldProxyListBoxId().split("/")[1]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -258,7 +245,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_getRelationFieldProxyListBoxId().split("/")[1]</string> </value>
+            <value> <string>python: context.Base_getRelationFieldProxyListBoxId().split("/")[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -271,7 +258,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_getRelationFieldProxyListBoxId().split("/")[0]</string> </value>
+            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'portal_type\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -284,7 +271,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'portal_type\')</string> </value>
+            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'sort\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -297,25 +284,12 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'sort\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
             <value> <string>python: here.Base_getRelatedObjectParameter(parameter=\'title\')</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
@@ -328,7 +302,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
