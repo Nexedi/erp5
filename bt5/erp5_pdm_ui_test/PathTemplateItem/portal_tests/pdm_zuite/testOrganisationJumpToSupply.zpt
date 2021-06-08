@@ -1,0 +1,77 @@
+<html>
+<head><title>Test jump to supplies</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test jump to supplies
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft">
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+
+<tal:block tal:repeat="supply_portal_type python:('Purchase Supply', 'Sale Supply', 'Internal Supply', )">
+<tr>
+  <td>open</td>
+  <td>${base_url}/organisation_module/erp5_pdm_ui_test_source_node</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td tal:content="supply_portal_type"></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Documents related to Organisation : erp5_pdm_ui_test_source_node_title.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_pdm_ui_test_supply_1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_pdm_ui_test_supply_2</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/organisation_module/erp5_pdm_ui_test_destination_node</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td tal:content="supply_portal_type"></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td><tal:block tal:replace="supply_portal_type"/> related to Organisation : erp5_pdm_ui_test_destination_node_title.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_pdm_ui_test_supply_1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>erp5_pdm_ui_test_supply_2</td>
+  <td></td>
+</tr>
+
+</tal:block>
+
+
+
+</tbody></table>
+</body>
+</html>

@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TradeRJSZuite_deleteData</td>
+      <td>${base_url}/Zuite_deleteDataForTradeRenderjsUi</td>
       <td></td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TradeRJSZuite_createSaleOrder</td>
+      <td>${base_url}/Zuite_createSaleOrderForTradeRenderjsUi</td>
       <td></td>
     </tr>
     <tr>
@@ -64,7 +64,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/TradeRJSZuite_createPackingList</td>
+      <td>${base_url}/Zuite_createPackingListForTradeRenderjsUi</td>
       <td></td>
     </tr>
     <tr>
