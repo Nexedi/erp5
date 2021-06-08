@@ -221,7 +221,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getContentType')
   def getContentType(self, default=None):
-    """Returns the text content.
+    """Returns the content type.
     """
     return "text/x-python"
 
