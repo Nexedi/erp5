@@ -1432,7 +1432,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "relative_url": container.getRelativeUrl(),
             "script_id": script.id
           },
-          "name": container.getTitle(),
+          "name": container.getTranslatedTitle(),
         }
 
     # Find current action URL and extract embedded view
