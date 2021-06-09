@@ -145,6 +145,9 @@ class Xvfb(Process):
       """
 
   def run(self):
+    # set XORG_LOCK_DIR which is used by slapos pathed xorg, so that Xvfb and
+    # firefox don't use the system /tmp
+    os.environ['XORG_LOCK_DIR'] = os.environ['TMPDIR']
     for display_try in self.display_list:
       self._runCommand(display_try)
       if self.process.poll() is None:
