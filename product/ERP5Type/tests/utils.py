@@ -210,6 +210,59 @@ def addUserToDeveloperRole(user_name):
   elif user_name not in product_config['erp5'].developer_list:
     product_config['erp5'].developer_list.append(user_name)
 
+
+def findContentChain(portal, target_portal_type):
+  # type: (erp5.portal_type.ERP5Site,str) -> Tuple[erp5.portal_type.Folder, Tuple[str, ...]]
+  """Returns the module and the chain of portal types to create a document of target_portal_type.
+
+  This tries all allowed content types up to three levels and if not found, use portal_trash,
+  which allows anything.
+  """
+  # These types have a special `newContent` which does not really follow the interface, we
+  # cannot not use them as container.
+  invalid_container_type_set = {
+      'Session Tool',
+      'Contribution Tool',
+  }
+  # first look modules and their content to find a real container chain.
+  for module in portal.contentValues():
+    module_type = module.getTypeInfo()
+    if module_type is not None:
+      if module_type.getId() == target_portal_type:
+        return module, ()
+      if module_type.isTypeFilterContentType() \
+            and module_type.getId() not in invalid_container_type_set:
+        for allowed_type in module.allowedContentTypes():
+          # Actions on portal_actions are global actions which can be rendered on any context.
+          # We don't test them on all portal types, only on the first type "top level document"
+          if target_portal_type in ('portal_actions', allowed_type.getId()):
+            return module, (allowed_type.getId(),)
+          for sub_allowed_type in allowed_type.getTypeAllowedContentTypeList():
+            if target_portal_type == sub_allowed_type:
+              return module, (allowed_type.getId(), target_portal_type)
+            if sub_allowed_type in portal.portal_types:
+              for sub_sub_allowed_type in portal.portal_types[
+                  sub_allowed_type].getTypeAllowedContentTypeList():
+                if target_portal_type == sub_sub_allowed_type:
+                  return module, (
+                      allowed_type.getId(),
+                      sub_allowed_type,
+                      target_portal_type,
+                  )
+  # we did not find a valid chain of containers, so we'll fallback to creating
+  # in portal_trash, which allow anything.
+  # We still make one attempt at finding a valid container.
+  for ti in portal.portal_types.contentValues():
+    if ti.getId() not in invalid_container_type_set\
+        and target_portal_type in ti.getTypeAllowedContentTypeList():
+      return portal.portal_trash, (ti.getId(), target_portal_type,)
+  # no suitable container found, use directly portal_trash.
+  ZopeTestCase._print(
+      'Could not find container for %s. Using portal_trash as a container\n'
+      % target_portal_type)
+  return portal.portal_trash, (target_portal_type,)
+
+
 # python scripts
 def createZODBPythonScript(container, script_id, script_params,
                            script_content):
