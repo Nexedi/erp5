@@ -26,6 +26,7 @@
 ##############################################################################
 import os
 import pkg_resources
+import shutil
 import slapos.slap
 import subprocess
 import time
@@ -53,6 +54,7 @@ class SlapOSControler(object):
       createFolder(shared)
       self.shared_part_list = self.shared_part_list + [shared]
 
+    self.old_instance_root = os.path.join(working_directory, 'inst')
     self.instance_root = os.path.join(working_directory, 'i')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
@@ -277,6 +279,7 @@ class SlapOSControler(object):
       self._resetSoftware()
     else:
       createFolder(self.software_root)
+    shutil.rmtree(self.old_instance_root, True) # BBB
     instance_root = self.instance_root
     # Delete any existing partition in order to not get its data (ex.
     # MySQL DB content) from previous runs. To support changes of partition
