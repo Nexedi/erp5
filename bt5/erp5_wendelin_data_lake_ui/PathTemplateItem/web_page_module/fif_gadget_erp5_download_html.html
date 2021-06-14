@@ -52,13 +52,16 @@
 
       <h2>Mac OS X</h2>
       <p>Installation on Mac OS can be done via homebrew packages by running:</p>
-      <div class="code"><p>brew install https://github.com/roquegit/homebrew-ebulk/raw/master/ebulk.rb</p></div>
+      <div class="code">
+        <p>curl -L https://github.com/roquegit/homebrew-ebulk/raw/master/ebulk.rb > ebulk.rb</p>
+        <p>brew install ebulk.rb</p>
+      </div>
 
       <h2>Potential installation issues</h2>
       <p>During the package intallation, or during first ebulk execution, the bash script will try to install Embulk automatically (if it is not installed).
 If your OS needs special permission, it maybe will be necessary to install Embulk v 0.9.7 manually:</p>
       <div class="code">
-        <p>curl --create-dirs -o ~/.embulk/bin/embulk -L "https://dl.bintray.com/embulk/maven/embulk-0.9.7.jar"</p>
+        <p>curl --create-dirs -o ~/.embulk/bin/embulk -L "https://github.com/embulk/embulk/releases/download/v0.9.7/embulk-0.9.7.jar"</p>
         <p>chmod +x ~/.embulk/bin/embulk</p>
         <p>echo 'export PATH="$HOME/.embulk/bin:$PATH"' >> ~/.bashrc</p>
         <p>source ~/.bashrc</p>
