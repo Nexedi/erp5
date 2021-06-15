@@ -1,0 +1,418 @@
+<section class="master">
+<h1>How to Add People</h1>
+<img alt="Photo of John Scott Doh" src="http://img.erp5.cn/user-Howto.Add.People.Front.Page.John.Scott.Doh?format=png" title="Add people: John Scott Doh" type="image/svg+xml" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpPersonTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>How to create a person</li>
+	<li>How to validate the person</li>
+	<li>How to check the creation</li>
+</ul>
+
+<details open="open">
+<p>Now you have access to your ERP5, we are going to show you how to create persons in ERP5, thanks to the &laquo;&nbsp;base&nbsp;&raquo; area of the application. These persons can be either you, your co-workers, your clients, your suppliers, etc. Every person you interact with can be stored in ERP5. Here we will use an example of adding people into ERP5.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Example</h1>
+<img alt="Add people in ERP5 example: John Scott Doh" src="http://img.erp5.cn/user-Howto.Add.People.John.Scott.Doh.Example?format=png" title="Add people in ERP5 example: John Scott Doh" type="image/svg+xml" />
+<details open="open">
+<p>As you can see on the picture, we are going to create a person named John Doe, with the information above.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Click on the &ldquo;New&rdquo; tab</h1>
+
+<p><img alt="Add people: Click on the 'New' tab" src="user-Howto.Manage.Support.Requests.Browse.Persons.Svg?format=png" title="Browse for John Doh in your ERP5" type="image/png" /></p>
+
+<details open="open">
+<p>After you log in your ERP5 instance, in the ERP5 home page, click on &ldquo;new&rdquo; in the tab menu, you will see the Base area on the first line. The Base area gathers the person and organisation creation functions. This is also in this module that you will be able to add a currency for example.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Click on &ldquo;Persons&rdquo;</h1>
+<img alt="Add people: Click on 'Person'" src="user-Howto.Add.People.Action.Tab.Screenshot.Svg?format=png" title="Add people: Click on 'Person'" type="image/svg+xml" />
+<details open="open">
+<p>Click on &ldquo;person&rdquo; to create a person. This will open the View page of a new Person&#39;s document where you will have to fill with the required information.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Person&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Person&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Reach the person creation page</h1>
+<img alt="Person creation page" src="user-Howto.Add.People.Create.Document.Svg?format=png" title="Person creation page" type="image/svg+xml" />
+<details open="open">
+<p>The person creation page helps you store any specific information about a person, whether it is personal or financial, or even his/her picture. <strong>Note:</strong> If you are using the ERP5 Virtual Machine, you can find a picture of John Doe in your home folder. As you can see, there are different tabs on the person creation page. All those tabs gather the required information about the person, and it is possible to add some more details with the &quot;Action&quot; menu on top of the page, as we will see later in this tutorial.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the &ldquo;View&rdquo; page and save</h1>
+<img alt="Add people: Fill the 'View' tab and save" src="user-Howto.Add.People.View.And.Save.Svg?format=png" title="Add people: Fill the 'View' tab and save" type="image/svg+xml" />
+<details open="open">
+<p>Now let&#39;s refer back to our example: one of your company&#39;s contact is John Doh, the marketing manager of Z Company, a client of your company. Fill out the &ldquo;view&rdquo; page with those basic information of Mr Doh, then you can store his information in ERP5, by clicking on the Save button.</p>
+
+<p>Note that after entering all information in the current form, you should always save them before switching to another tab or document.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
+			<td>John</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_last_name&quot;]</td>
+			<td>Doh</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name="field_my_career_subordination_title"]</td>
+			<td>Z Company</td>
+		</tr>
+        <tr>
+		    <td>fireEvent</td>
+  		    <td>//input[@name="field_my_career_subordination_title"]</td>
+  		    <td>input</td>
+		</tr>
+		<tr>
+  		    <td>waitForElementPresent</td>
+  		    <td>//ul[@class="search_ul"]//li</td>
+  		    <td></td>
+	    </tr>
+	    <tr>
+  	        <td>click</td>
+ 		    <td>//ul[@class="search_ul"]/li[@name="Organisation"]</td>
+ 		    <td></td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_gender&quot;]</td>
+			<td>Male</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;subfield_field_my_career_role_list_default:list&quot;]</td>
+			<td>Client</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_career_function&quot;]</td>
+			<td>Marketing/Marketing Manager</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_career_activity&quot;]</td>
+			<td>Education</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_nationality&quot;]</td>
+			<td>French</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_default_email_coordinate_text&quot;]</td>
+			<td>jdoh@zcompany.com</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_default_telephone_my_default_telephone_coordinate_text&quot;]</td>
+			<td>+33(0)6-218765/00</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create the related organisation</h1>
+<img alt="Create the related organisation" src="user-Howto.Add.People.Create.The.Related.Organisation.Svg?format=png" title="Create the related organisation" type="image/svg+xml" />
+<details open="open">
+<p>Now that you have saved the information about John Doh, we see that there seems to be a problem with the organisation Z Company. Indeed, as John Doh is the first person of Z Company to be stored in ERP5, the organisation does not exist yet, unless you have created it before thanks to the organisation creation function, which obviously is not the case here.</p>
+
+<p>We will now solve this problem by creating the organisation - Z Company. To do that, just open the item list circled in red, and choose &ldquo;Add organisation&rdquo;.</p>
+
+<p>Note that you cannot see it but your organisation has been created in the &ldquo;organisation&rdquo; section.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the &ldquo;Details&rdquo; page</h1>
+<img alt="Add people: Fill the 'Details' tab" src="user-Howto.Create.New.Persons.Details.Svg?format=png" title="Add people: Fill the 'Details' tab" type="image/svg+xml" />
+<details open="open">
+<p>When you are done with the &ldquo;view&rdquo; tab, <strong>fill the other tabs.</strong> For example, you can fill out the &ldquo;details&rdquo; tab with the information: The middle name of John Doh is Scott; John is married and has two children. You can also add a profile photo to it.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Details&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_child_count&quot;]</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_marital_status&quot;]</td>
+			<td>Married</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>About the other tabs</h1>
+<img alt="Add people: Other tabs in the 'Details' page" src="user-Howto.Add.People.Details.Other.Tabs.Svg?format=png" title="Add people: Other tabs in the 'Details' page" type="image/svg+xml" />
+<details open="open">
+<p>As you can see, some tabs like &ldquo;assignment&rdquo; for instance, do not allow to enter data. Indeed, the only way to specify this information to ERP5, is to use the &ldquo;Action&rdquo; item list and choose &ldquo;Add assignment&rdquo;. But it is important to notice that the tabs circled in red on the picture, are tabs that will automatically be updated by the application whenever necessary. This subject will be treated in a specific tutorial.</p>
+
+<p>Remember that these tabs provide the general information about the person you are creating, but you can add different properties using the &quot;Action&quot; menu on top of the page. For example, the &laquo; view&raquo; tab allows you to set the person&#39;s email address. But sometimes, a person can have several email addresses. The &quot;Action&quot; menu makes it possible for example to add an other email address; simply choose &ldquo;add email&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Validate a Person (1)</h1>
+<img alt="Validate new person (1): Click on the 'Action' tab" src="user-Howto.Add.People.Validate.1.Action.Svg?format=png" title="Validate new person (1): Click on the 'Action' tab" type="image/svg+xml" />
+<details open="open">
+<p>Open the &quot;Action&quot; menu.</p>
+
+<p>ERP5 is an application based on workflows, which means that the data you enter in the system needs to be validated. In the case of a person, this step is really important, for instance, there is no need to validate somebody if you are not sure of his/her name: if the state is &ldquo;draft&rdquo;, which is the state by default, you warn everybody that the related information is incomplete. But when it is validated, the data is sure.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Validate&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Validate a Person (2)</h1>
+<img alt="Validate new person (2): Click on 'Validate'" src="user-Howto.Add.People.Validate.2.Validate.Svg?format=png" title="Validate new person (2): Click on 'Validate'" type="image/svg+xml" />
+<details open="open">
+<p>Click on &ldquo;Validate&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Validate a Person (3)</h1>
+<img alt="Validate new person (3): Check the update status" src="user-Howto.Add.People.Validate.3.Status.Changed.Svg?format=png" title="Validate new person (3): Check the update status" type="image/svg+xml" />
+<details open="open">
+<p>Check the update status which has been changed from &quot;Draft&quot; to &quot;Validated&quot;.</p>
+
+<p>Thanks to this function, your data will be validated, which means that your co-workers can be confident in accuracy of the information.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;View&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_validation_state_title&quot;]</td>
+			<td>Validated</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Check the Creation (1)</h1>
+<img alt="Check person creation (1): Click on the 'Modules' tab" src="user-Howto.Add.People.Check.Creation.1.Modules.Persons.Svg?format=png" title="Check person creation (1): Click on the 'Modules' tab" type="image/svg+xml" />
+<details open="open">
+<p>Now that the person has been created, defined and validated, we are going to check that everything worked fine.</p>
+
+<p>This is a 3 step procedure: As a first step, browse the &ldquo;ERP5 modules&rdquo; item list on the top of the page, and choose &ldquo;persons&rdquo;. The aim of this action is to lead you to the person module which displays each person who has been created in ERP5.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Check the Creation (2)</h1>
+<img alt="Check person creation (2): Click on 'Persons'" src="user-Howto.Add.People.Check.Creation.2.Persons.List.Svg?format=png" title="Check person creation (2): Click on 'Persons'" type="image/svg+xml" />
+<details open="open">
+<p>The second step is only to check that you are located in the person general menu and that the new person you created is on the Persons List.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Persons&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Use &quot;Browse&quot; tab</h1>
+
+<p><img alt="Check person creation: Browse the 'Persons' database" src="user-Howto.Add.People.Check.Creation.1.Modules.Persons.Svg?format=png" title="Check person creation (1): Click on the 'Modules' tab" type="image/svg+xml" /></p>
+
+<details open="open">
+<p>You can also use the &quot;Browse&quot; tab in the home page to check the persons stored in your ERP5 database. Just click on &ldquo;Persons&rdquo; in the &ldquo;Base&rdquo;module, which is the module that gathers &ldquo;Currencies&rdquo;, &ldquo;Organisations&rdquo; and &ldquo;Persons&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownPersonTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt;Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
