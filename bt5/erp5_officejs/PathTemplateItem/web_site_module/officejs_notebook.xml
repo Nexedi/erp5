@@ -463,9 +463,7 @@
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_officejs_notebook.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -712,7 +710,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.55673.4976.21401</string> </value>
+                      <value> <string>992.44282.29486.58026</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -730,7 +728,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1601046041.86</float>
+                              <float>1623767574.11</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
