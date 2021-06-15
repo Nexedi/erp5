@@ -1,5 +1,6 @@
 url_list = [
   "gadget_erp5_nojqm.css",
+  "gadget_officejs_bookmark.json",
   "jio_ojs_storage.js",
   "gadget_ojs_jio.js",
   "gadget_erp5_global.js",
