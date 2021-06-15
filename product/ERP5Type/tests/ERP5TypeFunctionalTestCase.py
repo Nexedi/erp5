@@ -39,6 +39,7 @@ import logging
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.runUnitTest import log_directory
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 from lxml import etree
 from lxml.html import builder as E
@@ -213,7 +214,14 @@ class FunctionalTestRunner:
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
         geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
-        kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
+        kw.update(
+            firefox_binary=firefox_bin,
+            executable_path=geckodriver,
+            # BBB in selenium 3.8.0 this option was named log_path
+            log_path=os.path.join(log_directory, 'geckodriver.log'),
+            # service_log_path=os.path.join(log_directory, 'geckodriver.log'),
+        )
+
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
       logger.info("Running with browser: %s", browser)
