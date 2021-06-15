@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Variation.Quantity.Svg</string> </value>
+            <value> <string>user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Accounting.View.Svg</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -94,7 +94,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>user_howto_create_invoice_transaction_from_scratch_purchase_variation_quantity_svg</string> </value>
+            <value> <string>user_howto_create_invoice_transaction_from_scratch_purchase_accounting_view_svg</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -135,8 +135,9 @@
  <g>\n
   <title>Layer 1</title>\n
   <g id="g18">\n
-   <image x="-1" y="-1" id="image20" xlink:href="https://www.erp5.com/user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Variation.Quantity.New?format=png" height="969" width="1391"/>\n
-   <rect id="rect4049" width="1122.73921" height="30.78534" x="240.51999" y="150.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
+   <image x="-1" y="-1" id="image20" xlink:href="https://www.erp5.com/user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Accounting.View.New?format=png" height="969" width="1391"/>\n
+   <rect id="rect4049" width="1100.73921" height="85.78534" x="262.51999" y="393.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
+   <rect id="rect4049" width="232.73921" height="26.78534" x="2.51999" y="310.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
   </g>\n
  </g>\n
 </svg>
@@ -145,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create invoice transaction from Scratch: Set Quantity</string> </value>
+            <value> <string>Create invoice transaction from Scratch: Accounting View</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -233,7 +234,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1621521991.02</float>
+                              <float>1623676411.55</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -282,7 +283,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.49682.29153.16998</string> </value>
+                      <value> <string>992.48281.34478.7168</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -300,7 +301,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1623760486.86</float>
+                              <float>1623680210.9</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -361,7 +362,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1610936040.28</float>
+                              <float>1613553900.92</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

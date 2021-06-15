@@ -136,7 +136,7 @@
   <title>Layer 1</title>\n
   <g id="g18">\n
    <image width="1391" height="969" xlink:href="https://www.erp5.com/user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Variation.Tabs.New?format=png" id="image20" y="-1" x="-1"/>\n
-   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient4626)" stroke-width="5" stroke-miterlimit="4" y="310.07357" x="4.51999" height="48.78534" width="232.73921" id="rect4049"/>\n
+   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient4626)" stroke-width="5" stroke-miterlimit="4" y="288.07357" x="2.51999" height="48.78534" width="210.73921" id="rect4049"/>\n
   </g>\n
  </g>\n
 </svg>
@@ -282,7 +282,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.37581.38503.11144</string> </value>
+                      <value> <string>992.49683.58412.36488</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -300,7 +300,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1620226090.17</float>
+                              <float>1623760566.11</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Variation.Quantity.Svg</string> </value>
+            <value> <string>osoe-Howto.User.Contribution.Svg</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -94,7 +94,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>user_howto_create_invoice_transaction_from_scratch_purchase_variation_quantity_svg</string> </value>
+            <value> <string>osoe_howto_user_contribution_svg</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -124,9 +124,9 @@
  <metadata id="metadata16">image/svg+xml</metadata>\n
  <defs>\n
   <linearGradient id="linearGradient4614">\n
-   <stop stop-color="#d40000" id="stop4612" offset="0"/>\n
+   <stop offset="0" id="stop4612" stop-color="#d40000"/>\n
   </linearGradient>\n
-  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient4626" xlink:href="#linearGradient4614"/>\n
+  <linearGradient xlink:href="#linearGradient4614" id="linearGradient4626" x1="0" y1="0.5" x2="1" y2="0.5"/>\n
  </defs>\n
  <g>\n
   <title>background</title>\n
@@ -135,8 +135,8 @@
  <g>\n
   <title>Layer 1</title>\n
   <g id="g18">\n
-   <image x="-1" y="-1" id="image20" xlink:href="https://www.erp5.com/user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Variation.Quantity.New?format=png" height="969" width="1391"/>\n
-   <rect id="rect4049" width="1122.73921" height="30.78534" x="240.51999" y="150.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
+   <image x="-1" y="-1" id="image20" xlink:href="https://www.erp5.com/osoe-Howto.User.Contribution.New?format=png" height="969" width="1391"/>\n
+   <rect id="rect4049" width="235.73921" height="26.78534" x="1.51999" y="332.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
   </g>\n
  </g>\n
 </svg>
@@ -145,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create invoice transaction from Scratch: Set Quantity</string> </value>
+            <value> <string>ERP5 New UI Contribution</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -233,7 +233,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1621521991.02</float>
+                              <float>1623677404.06</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -282,7 +282,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.49682.29153.16998</string> </value>
+                      <value> <string>992.48298.4450.64802</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -300,7 +300,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1623760486.86</float>
+                              <float>1623680211.01</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -361,7 +361,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1610936040.28</float>
+                              <float>1613442391.8</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

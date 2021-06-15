@@ -124,19 +124,19 @@
  <metadata id="metadata16">image/svg+xml</metadata>\n
  <defs>\n
   <linearGradient id="linearGradient4614">\n
-   <stop offset="0" id="stop4612" stop-color="#d40000"/>\n
+   <stop stop-color="#d40000" id="stop4612" offset="0"/>\n
   </linearGradient>\n
-  <linearGradient xlink:href="#linearGradient4614" id="linearGradient4626" x1="0" y1="0.5" x2="1" y2="0.5"/>\n
+  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient4626" xlink:href="#linearGradient4614"/>\n
  </defs>\n
  <g>\n
   <title>background</title>\n
-  <rect x="-1" y="-1" width="1377" height="965" id="canvas_background" fill="none"/>\n
+  <rect fill="none" id="canvas_background" height="965" width="1377" y="-1" x="-1"/>\n
  </g>\n
  <g>\n
   <title>Layer 1</title>\n
   <g id="g18">\n
-   <image width="1391" height="969" xlink:href="https://www.erp5.com/user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Choose.Variation.New?format=png" id="image20" y="-1" x="-1"/>\n
-   <rect id="rect4049" width="232.73921" height="63.78534" x="400.51999" y="235.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
+   <image x="-1" y="-1" id="image20" xlink:href="https://www.erp5.com/user-Howto.Create.Invoice.Transaction.From.Scratch.Purchase.Choose.Variation.New?format=png" height="969" width="1391"/>\n
+   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient4626)" stroke-width="5" stroke-miterlimit="4" y="210.07357" x="380.51999" height="33.78534" width="232.73921" id="rect4049"/>\n
   </g>\n
  </g>\n
 </svg>
@@ -282,7 +282,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.37581.38503.11144</string> </value>
+                      <value> <string>992.49550.51471.45397</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -300,7 +300,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1620226090.16</float>
+                              <float>1623760597.68</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
