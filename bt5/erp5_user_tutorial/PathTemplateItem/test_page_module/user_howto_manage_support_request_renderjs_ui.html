@@ -1,0 +1,954 @@
+<section class="master">
+<h1>How to Manage Support Requests</h1>
+<img alt="How to manage support requests" src="user-Howto.Manage.Support.Requests.Scenario?format=png" title="How to manage support requests" type="image/png" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpIncomingEventTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create an incoming Event from the client&#39;s document</li>
+	<li>Define the Recipient - the team member responsible to reply to client</li>
+	<li>Create the Follow Up Ticket - a Support Request Ticket</li>
+	<li>Deliver the Event</li>
+	<li>Reply to the client</li>
+</ul>
+
+<details open="open">
+<p>Support Request is a kind of Ticket which the incoming Events (email, phone call, fax, etc.) of your customers are assigned to, and which is a very important Ticket in ERP5 CRM because it allows you to manage all the interactions between your customer, your company and your supplier effectively, which helps consolidating the customer relations of your company.</p>
+
+<p>From last tutorial we have learned the standard process of managing incoming Events. In this tutorial, we will specially introduce the process of how to manage the Ticket &quot;Support Request&quot;, following the standard process of managing incoming Events explained in last tutorial.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>The incoming Event workflow</h1>
+<img alt="The incoming Event workflow" src="user-Events.Event.Workflow?format=png" title="The incoming Event workflow" type="image/png" />
+<details open="open">
+<p>As you have learned from last tutorial, the second part of this illustration shows the standard process of Incoming Events: <strong>Declare as Received</strong> , <strong>Define the Event&#39;s Recipient</strong> , <strong>Create a Follow Up Ticket</strong> and <strong>Deliver</strong></p>
+
+<p>Now we will explain in detail how to practice this process in managing Support Requests.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Scenario</h1>
+<img alt="Scenario: a request for support of ERP5 instance configuration" src="user-Howto.Manage.Support.Requests.Scenario?format=png" title="Scenario: a request for support of ERP5 instance configuration" type="image/png" />
+<details open="open">
+<p>This tutorial is based on a scenario that will help you understand how to manage Support Requests and the role of this kind of Ticket.</p>
+
+<p>Z Company is an electricity supplier, one of VIFIB clients who are using the ERP5 instance. John Scott Doh is the marketing manager of Z Company. From this year, as the other departments of Z Company, he starts to implement the ERP5 to manage his marketing department, and specially the ERP5 CRM for his business with his clients. In the very beginning of using this new instance, he met some difficulties in the configuration of the ERP5 instance, so he wrote to the ERP5 support team asking for help. When the ERP5 support team receives the email from this client, someone in the team will create a new incoming Event in ERP5 in order to ask for someone who is capable to answer to the request of John Doh.</p>
+
+<p>Now please follow this scenario, combine with the standard incoming Events process you have learned, to see what&#39;s the steps to take in ERP5 to manage the support requests from your clients.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Find the request sender John Doh in your ERP5</h1>
+
+<p><img alt="Browse for John Doh in your ERP5" src="user-Howto.Add.People.Check.Creation.1.Modules.Persons.Svg?format=png" title="Check person creation (1): Click on the 'Modules' tab" type="image/svg+xml" /></p>
+
+<details open="open">
+<p>In ERP5 CRM, in order to better manage the customer relations, once we receive an incoming email, phonecall or fax from our clients, we will have to <strong>create a new incoming Event from the support request sender&#39;s document</strong> in order to tell our team that we receive a message from our client. In this way, all the support requests from our clients will be recorded immediately, and be assigned to personnel to handle them later.</p>
+
+<p>In our example, we will first create an incoming Event to inform our ERP5 support team that we have received an email from John Doh who is asking for help. As it is John Doh who sent this email, we will create the incoming Event directly from John Doh&#39;s Person Document, in order for the Event to be linked easily to John Doh in ERP5.</p>
+
+<p>In order to <strong>create an incoming Event from the request sender John Doh&#39;s document</strong> , the <strong>first step</strong> will be to <strong>reach John Doh&#39;s person document</strong> in ERP5. To do so, <strong>click on the &ldquo;Modules&rdquo; on the sidebar</strong> of your instance, and <strong>click on &ldquo;Persons&rdquo;.</strong></p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Persons&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Click on John&#39;s line</h1>
+<img alt="Click on John's line" src="user-Howto.Manage.Support.Requests.Click.Persons.Line.Svg?format=png" title="Click on John's line" type="image/png" />
+<details open="open">
+<p>Then we will reach list of Persons stored in your ERP5 instance, <strong>click on John Doh&#39;s line</strong> in order to reach his Person Document.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>Open the Events tab</h1>
+<img alt="Open the Events tab in the person's document" src="user-Howto.Manage.Support.Requests.Open.Events.List.Svg?format=png" title="Open the Events tab in the person's document" type="image/png" />
+<details open="open">
+<p>Now that you have reached John Doh&#39;s Person Document, the <strong>second step</strong> in order to create an incoming Event from the support request sender&#39;s document is to <strong>reach the Event list of John Doh</strong> by <strong>Click on the Event Tab</strong> in John Doh&#39;s document.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
+</section>
+
+<section class="screenshot">
+<h1>The Events list is empty</h1>
+<img alt="The Events list is empty" src="user-Howto.Manage.Support.Requests.Events.List.Empty.Svg?format=png" title="The Events list is empty" type="image/png" />
+<details open="open">
+<p>As you can see, the Events list of John Doh is still empty because until now, there is no Event related to John Doh, i.e., VIFIB hasn&#39;t had any interaction with him so far.</p>
+</details>
+<test>
+    <table class="test" style="display: none;">
+        <tbody>
+        </tbody>
+    </table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a new Event (1): Action list</h1>
+<img alt="Click on 'Create New Event' on Action list" src="user-Howto.Manage.Support.Requests.Create.Event.Action.List.Svg?format=png" title="Click on 'Create New Event' on Action list" type="image/png" />
+<details open="open">
+<p>Since we have received the mail message from our client John Doh asking for help, we will now create a new Event related to John Doh to record this message. To do so,<strong>&nbsp;Click on&ldquo;Create New Event&quot; under the section &quot;ACTIONS&quot;&nbsp;on&nbsp;the sidebar</strong>&nbsp;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create New Event&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a new Event (2): Set Event title, type and direction</h1>
+
+<p><img alt="Set incoming Event title, type and direction" src="user-Howto.Manage.Support.Requests.Create.Event.Title.Type.Direction.Svg?format=png" title="Set incoming Event title, type and direction" type="image/png" /></p>
+
+<p><img alt="Set incoming Event title, type and direction" src="user-Howto.Manage.Support.Requests.Create.Event.Title.Type.Direction.2.Svg?format=png" title="Set incoming Event title, type and direction" type="image/png" />&nbsp;2</p>
+
+<details open="">
+<p>As you have learned in the previous tutorial &ldquo;How to Prepare Outgoing Events&rdquo;, when the new Event is created, you can first set the basic information such as <strong>Event title, type and direction</strong> , etc. The only difference here is to <strong>set the Event Direction to &ldquo;In&rdquo;</strong> this time, because you want to create an Incoming Event, indicating that you have received an email in this case, and then you will enter this email in your ERP5 for someone of your team to process it.</p>
+
+<p>Now you can copy and paste the email you have received from your client John Doh into &quot;Message&quot; area, or you can also do it later in the Event edit page.</p>
+
+<p>In order to follow this tutorial, check <strong>Keep in draft state</strong> option in order to create an Event on &quot;Draft&quot; State. Afterwards, we are going to learn how to learn how to declare it as received manually.</p>
+
+<p>When you are done, <strong>click the &ldquo;Create New Event&rdquo;</strong> button.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_your_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_portal_type&quot;]</td>
+			<td>Mail Message</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_your_title&quot;]</td>
+			<td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;field_your_direction&quot; and @value=&quot;incoming&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>click</td>
+			<td>//input[@name=&quot;field_your_keep_draft&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>&quot;New Event created&quot;</h1>
+<img alt="New incoming Event has been created-state Draft" src="user-Howto.Manage.Support.Requests.Create.Event.Draft.Event.Svg?format=png" title="New incoming Event has been created-state Draft" type="image/png" />
+<details open="open">
+<p>As you can see in the red area of the picture, a new Event has been created, which is on the <strong>&ldquo;Draft&rdquo; state</strong> . The black&nbsp;area shows the <strong>Sender and Recipient fields</strong> which have already been filled automatically, following this <strong>rule</strong> : The Sender is John Doh, because the incoming Event has been created from his person document. This act tells the ERP5 team that we have received an email from our client John Doh somewhere. The Recipient here is Jingjing XU, because this is the name of the <strong>ERP5 user</strong> who created this incoming Event. However, <strong>this information can be changed later</strong> , if we need to assign this incoming Event to someone else in our team to take care of it.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@value=&quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Draft</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a new Event (3): Copy/paste the email you received</h1>
+<img alt="Copy/paste the email you received into the new incoming Event" src="user-Howto.Manage.Support.Requests.Create.Event.Copy.Message.Into.New.Incoming.Event.Svg?format=png" title="Copy/paste the email you received into the new incoming Event" type="image/png" />
+<details open="open">
+<p>Now, <strong>copy and paste the email you have received from your client John Doh into the red area: Text Format</strong> . This area aims at showing the email you have received to all the persons of your team, which is the content of this new incoming Event. If you have done it in the previous step, you can just review and edit it as you want. And finally, don&#39;t forget to <strong>save</strong> your data changes.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_text_content&quot;]//textarea</td>
+			<td>ZUITE-TEST-EVENT-CONTENT this is the content of our event.</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a new Event (4): &quot;Receive&quot; the Event</h1>
+<img alt="Click on 'Declare as Received' on Action list" src="user-Howto.Manage.Support.Requests.Receive.Event.Svg?format=png" title="Click on 'Declare as Received' on Action list" type="image/png" />
+<details open="open">
+<p>Now that you have <strong>drafted</strong> all the necessary fields of this incoming Event, it is time to conform to the ERP5 that you have <strong>received</strong> this email from your client, the move will lead to the change of the Event&#39;s state as Received.</p>
+
+<p>To do so, <strong>Click on&ldquo;Declare as Received&rdquo;on the sidebar</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Declare as Received&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Event &quot;Received&quot;</h1>
+<img alt="Event Received" src="user-Howto.Manage.Support.Requests.Create.Event.State.Received.Svg?format=png" title="Event Received" type="image/png" />
+<details open="open">
+<p>As you can see on the screenshot, after we declared that the Event is received, the state of the newly created Event is now changed from &quot;Draft&quot; to &quot;Received&quot;, which is the first state of an incoming Event.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_destination_title_list&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>storeValue</td>
+			<td>//input[@name=&quot;field_my_destination_title_list&quot;]</td>
+			<td>user_title</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Received</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Define the &quot;Recipient&quot; - the person responsible to reply to client</h1>
+<img alt="Change the &quot;Recipient&quot; of the Event" src="user-Howto.Manage.Support.Requests.Change.Recipient.Replier.Svg?format=png" title="Change the &quot;Recipient&quot; of the Event" type="image/png" />
+<details open="open">
+<p>Now it is time to define who should process this Event - the person in the ERP5 support team who will have to provide John Doh with an answer. We will ask our team member &ldquo;Yingjie XU&rdquo; to take care of this Event.</p>
+
+<p>To be able to proceed with this step you must have already created the Person and user account for Yingjie XU by following the tutorial <a href="howto-Create.New.User">How to create new User</a>.</p>
+
+<p>To assign the Event to &ldquo;Yingjie XU&rdquo;, first <strong>change the person name in the &ldquo;Recipient&rdquo; field</strong> from &quot;Jingjing XU&quot; (the default Recipient) to &quot;Yingjie XU&quot;. Second, as usual, don&#39;t forget to <strong>&quot;Save&quot;</strong>.</p>
+
+<p>This step aims at indicating that &ldquo;Yingjie XU&rdquo; should receive this email from the client, and has to take care of it. So after the step that we &quot;Receive&quot; the Event, this Event will appear on Yingjie&#39;s worklist as &quot;Received Events to Deliver&quot;, which we will show you later. In this way, Yingjie will know that he is responsible to handling a new incoming Event.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Another focus: switch user</h1>
+<img alt="Switch user to reply incoming Event" src="user-Howto.Manage.Support.Requests.Switch.User.Log.Out.Svg?format=png" title="Switch user to reply incoming Event" type="image/png" />
+<details open="open">
+<p>Now the incoming Event has been <strong>&quot;Received&quot;</strong> , the <strong>&quot;Recipient&quot;</strong> has been defined, the <strong>Follow Up Ticket</strong> has been created, so it is time for the &quot;Replier&quot; - the Recipient to offer support to the client. And all the following interactions between the Replier and the Client will be recorded under the Support Request Ticket we just created.</p>
+
+<p>In this section, we will switch users in order to understand how users can be aware that they have Events to handle.<br />
+<strong>Log out</strong> by <strong>clicking on the &quot;Logout&quot; on the sidebar</strong>. After being logged out, we have <strong>log&nbsp;in as user &ldquo;yingjie.xu&rdquo;</strong> in order to help you understand how incoming Events are displayed in the <strong>worklist</strong> of this user.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_another_test_user&quot;&gt;Login As Another Functional Test User&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Received Events in Worklist</h1>
+<img alt="Received Events to Deliver" src="user-Howto.Manage.Support.Requests.Worklist.Received.Events.To.Deliver.Svg?format=png" title="Received Events to Deliver" type="image/png" />
+<details open="open">
+<p>&ldquo;Yingjie&rdquo; is now logged in, and while opening his Worklist, we see that <strong>there are 1 &quot;Received Events to Deliver&rdquo;</strong> to be treated. Let&#39;s <strong>click on this line</strong>.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Which Event should be processed ?</h1>
+<img alt="Choose in the &quot;Received Events&quot; List" src="user-Howto.Manage.Support.Requests.List.Received.Events.To.Deliver.Recipient.Choose.Svg?format=png" title="Choose in the &quot;Received Events&quot; List" type="image/png" />
+<details open="open">
+<p>This is the <strong>list of &quot;Received Events to Deliver&quot;</strong>, reached through the Worklist. All the Events declared as &quot;Received&quot; and have assigned to a &quot;Recipient&quot; will displayed on this list. In order to know who has to take care of them, <strong>each user has to search for his person name in the Recipients field</strong>, and then he will <strong>click now on this Event with&nbsp;his name as the Recipient in order to process it</strong>. ERP5 can be also configured to only display the received events of the user who is currently logged in, but the standard ERP5 configuration for SMBs is to display all received events.</p>
+
+<p>Now we have reached the List through Yingjie&#39;s Worklist, we can see that there is 1 received Event to deliver (Normally there could be more Events on the list with different Recipients). So user &quot;Yingjie&rdquo; only has his name in one Event, which means that this is the only Event he is entitled to take care of. So click on this line in order to process it.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Assign this Event to a Support Request Ticket</h1>
+<img alt="Assign Event to Ticket" src="user-Howto.Manage.Support.Requests.Create.Follow.Up.Ticket.Svg?format=png" title="Assign Event to Ticket" type="image/png" />
+<details open="open">
+<p>According to the standard process of incoming Events, if the Event can be handled in a simple way, we can <strong>Create Response directly</strong> from the Received Event&#39;s Action item list, as the option shown in the black&nbsp;frame. But if the incoming Event needs to be handled in a complicated way, which needs a Ticket to contain many following Events, as in our case the support request from our client, we will then need to <strong>Create Follow Up Ticket</strong> from the Received Event&#39;s Action item list, as the option shown in the red frame.</p>
+
+<p>So the next step will be to assign this Event to a Ticket. If you remember correctly, a Ticket can be a campaign, a sale opportunity, a support request, a meeting, etc...In this case, the client has asked for help in his email, so this is clearly a Support Request that has to be created. In order to create this Support Request Ticket,<strong>&nbsp;Click on the&ldquo;Create Follow Up Ticket&rdquo;on the sidebar.</strong></p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create Follow-up Ticket&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a Support Request - Set Ticket title, type and nature</h1>
+<img alt="Set Ticket title, type and nature" src="user-Howto.Manage.Support.Requests.Create.Follow.Up.Ticket.Title.Type.Svg?format=png" title="Set Ticket title, type and nature" type="image/png" />
+<details open="open">
+<p>Now you will choose the type of Ticket you want to assign this Event to. In the first field, you can enter a <strong>Ticket Title</strong> . This title will be displayed in the field Follow-Up of this Event. After this, you can choose the <strong>Ticket Type</strong> . In our example, we will choose &quot;Support Request&quot; as Ticket type, which means that later we will be able to find this support request Ticket in the Support Request module of ERP5. After created, this Ticket can receive many different Events afterwards, such as the reply from ERP5 support team member, and the further questions from the client John Doh. When you are done, <strong>click the &ldquo;Create Follow Up Ticket&rdquo; button</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_your_follow_up_ticket_title&quot;]</td>
+			<td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_follow_up_ticket_type&quot;]</td>
+			<td>Support Request</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>&quot;Follow Up Ticket created&quot;</h1>
+<img alt="Follow Up Ticket created" src="user-Howto.Manage.Support.Requests.Follow.Up.Ticket.Created.Svg?format=png" title="Follow Up Ticket created" type="image/png" />
+<details open="open">
+<p>The Follow Up Ticket of this incoming Event is now&nbsp;created. You can see the Ticket is displayed in the <strong>&quot;Follow Up&quot;</strong> field in the Event&#39;s page.</p>
+
+<p>The Event is now &quot;<strong>Delivered</strong>&quot; automatically.</p>
+
+<p>The Follow Up Ticket is created in order to contain all the following Events happened between the client and ERP5 team which are related to the original Event. We can easily access to it by <strong>clicking the plane icon</strong>&nbsp;on the right side of this field.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[text()=&quot;Delivered&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]</td>
+			<td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]/../../a</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@value=&quot;ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>storeLocation</td>
+			<td>support_request</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Base_clearCache</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>assertTextPresent</td>
+			<td>Cleared.</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Edit the Follow Up Ticket - Define the Operators</h1>
+<img alt="Edit the Follow Up Ticket " src="user-Howto.Manage.Support.Requests.Edit.Follow.Up.Ticket.Svg?format=png" title="Edit the Follow Up Ticket " type="image/png" />
+<details open="open">
+<p>Now we can access to the Follow Up Ticket of the incoming Event - the Support Request Ticket we just created. In the page of the Ticket, as circled in red, you can now define the Manager, the Supervisor and the Operators, so they will know through their worklist that they are responsible to process the Ticket.</p>
+
+<p>As circled in black, you can already see the Event from which we created the Support Request Ticket has been contained in the Events List of this Ticket. From now on, every interactions happen later between the operators and the client will be recorded in this Ticket, and clearly listed in the Events List.</p>
+
+<p>Now we can return to the event and we will now explain how to provide client John Doh&nbsp;with an answer to his question.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>open</td>
+			<td>${support_request}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_quantity&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_quantity&quot;]</td>
+			<td>10.0</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_quantity_unit&quot;]</td>
+			<td>Time/Day</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_price&quot;]</td>
+			<td>20.00</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_price_currency&quot;]</td>
+			<td>EUR</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+<!--<section class="screenshot">
+        <h1>Event "Delivered"</h1>
+        <img type="image/png" src="user-Howto.Manage.Support.Requests.Event.Delivered?format=png" title="Event &quot;Delivered&quot;" alt="Event &quot;Delivered&quot;">
+        <details open="open">
+          <p>The state of the Event has then changed from "Received" to "Delivered" which means it is now acknowledged by someone to be taken care of.</p><p>
+            <strong>By delivering the Event which is the final step of Process incoming Events, the Recipient who is entitled to take care of the Event says to his team that the Event is taken into account and will be processed by him.</strong>
+          </p>
+        </details>
+        <test>
+          <table class="test" style="display: none;">
+            <tbody>
+              <tr>
+                <td>verifyText</td>
+                <td>//label[normalize-space(text())='State']/../div</td>
+                <td>Submitted</td>
+              </tr>
+              <tr>
+                <td>verifyValue</td>
+                <td>//input[@name="field_my_title"]</td>
+                <td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
+      </section>-->
+
+<section class="screenshot">
+<h1>Create Response to client</h1>
+<img alt="Create Response to client " src="user-Howto.Manage.Support.Requests.Create.Response.Svg?format=png" title="Create Response to client " type="image/png" />
+<details open="open">
+<p>Now it is time to reply to the client. If you remember, we have created a Follow Up Ticket for this Event in order to record all the following interactions related to the original Event. But the same as those Events which can be handled in a simple way so not need to be assigned to a Follow Up Ticket, we will use the Actions in the&nbsp;Event page to create responses to our clients. The only difference is, all the Events of replies or other interactions created from this Event will be related to it by &quot;Event Origin&quot; and be recorded in the Follow Up Ticket we created.</p>
+
+<p>Now we will <strong>click on &quot;Create Response&quot; under&nbsp;the &quot;ACTIONS&quot;</strong>&nbsp;on the sidebar of&nbsp;the Event page to reply to client John Doh.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>click</td>
+			<td>//a[text()=&quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create Response&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Edit and send the response</h1>
+<img alt="Edit the response" src="user-Howto.Manage.Support.Requests.Edit.Response.Svg?format=png" title="Edit the response" type="image/png" />
+<details open="open">
+<p>Now we reached the Response editing page. We will first edit the reply in the &quot;Message&quot; field, then check the other information in this page such as Title, Date, etd. When you are sure everything is correctly edited, click on &quot;Create Response&quot;, then <strong>the response will be sent to the client and be created automatically as an outgoing Event with a state of &quot;Sent&quot;</strong> .</p>
+
+<p><strong>You should be very careful before click on &quot;Create Response&quot;</strong> , because after this action, your message to clients will be sent to them and cannot be modified any more.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//div[@data-gadget-scope=&quot;field_your_response_event_text_content&quot;]//textarea</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_your_response_event_text_content&quot;]//textarea</td>
+			<td>Some response</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>&quot;Response Created&quot;</h1>
+<img alt="&quot;Response Created&quot;" src="user-Howto.Manage.Support.Requests.Response.Created.Svg?format=png" title="&quot;Response Created&quot;" type="image/png" />
+<details open="open">
+<p>Here we are back to the original Event Mail Message from client John Doh. As you can see on this page, it is stated <strong>&quot;Response Created&quot;</strong> , which means this Information Request has been replied.</p>
+
+<p>You can still access to the Response Event you have sent to clients to see the details, just have to click on the <strong>&quot;Related Events&quot; tab</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>storeLocation</td>
+			<td>response</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Base_clearCache</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>assertTextPresent</td>
+			<td>Cleared.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${response}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>The Related Events tab</h1>
+<img alt="Related Events tab" src="user-Howto.Manage.Support.Requests.Related.Events.Tab.Svg?format=png" title="Related Events tab" type="image/png" />
+<details open="open">
+<p>Now we are lead to the <strong>Related Events tab</strong> of the original incoming Event from John Doh, which we &quot;Declare as Received&quot;, &quot;Deliver&quot; and &quot;Create Response&quot;.</p>
+
+<p>As we just created one response to the original Event from John Doh, there is only one Event listed in the tab which is the Response mail we want to check. <strong>Click on this Event to open it</strong>.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Related Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[text()=&quot;Re: ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[text()=&quot;Re: ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>The Sent Event - Response to client</h1>
+<img alt="Sent Event " src="user-Howto.Manage.Support.Requests.Response.Event.Sent.Svg?format=png" title="Sent Event " type="image/png" />
+<details open="open">
+<p>Now we have accessed to the <strong>new Event created automatically</strong> when we &quot;Create Response&quot; from the original incoming Event. The Event state is now <strong>&quot;sent&rdquo;</strong> , this means that the email containing the answer has been sent to the client John&#39;s email address!</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Sent</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>${user_title}</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Deliver&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Delivered</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Where is your processed Events (1)</h1>
+<img alt="Browse for Support Requests" src="user-Howto.Manage.Support.Requests.Browse.Support.Requests.Svg?format=png" title="Browse for Support Requests" type="image/png" />
+<details open="open">
+<p>We will need to find all the related Events after we have communicated with the client, so we will go back to the Follow Up Ticket of the original Event, which we created to recorded all the related Events to the original Event from our clients.</p>
+You remember the Ticket is a Support Request. In order to find it, <strong>click on the &ldquo;Modules&rdquo;tab</strong>&nbsp;on the sidebar of your ERP5 instance, and <strong>click on &ldquo;Support Requests&rdquo;</strong> in order to reach the Support Request module.
+
+<p>&nbsp;</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Where is your processed Events (2)</h1>
+<img alt="Browse for Support Requests module" src="user-Howto.Manage.Support.Requests.Browse.For.Support.Requests.Module.Svg?format=png" title="Browse for Support Requests module" type="image/png" />
+<details open="open">
+<p>The line highlighted in red is&nbsp;the Support Request Ticket we created when we assigned the incoming Event.&nbsp;<strong>Click on this line</strong> in order to open this support Request Ticket.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Your processed Events in Follow Up Ticket</h1>
+<img alt="Processed Events in the Ticket" src="user-Howto.Manage.Support.Requests.Processed.Events.In.Follow.Up.Ticket.Svg?format=png" title="Processed Events in the Ticket" type="image/png" />
+<details open="open">
+<p>We can see first that not much information has been edited, but you can do it now. Indeed, we have just created this ticket but not edited it yet. You can find some help in the tutorial <strong>&ldquo;How to Create a Marketing Campaign&rdquo;</strong> in order to understand which field is used for what (the Campaign and Support Request Tickets look exactly the same indeed).</p>
+
+<p><strong>The red area displays all the related Events stored in this ticket</strong> . As you can see there are two&nbsp;Events listed: the first one is the original Event which is the incoming Event we created to notice our team of John&#39;s question. This Event is on the Delivered state, because user &ldquo;Yingjie&rdquo; acknowledged it. The second one&nbsp;is the answer&nbsp;that we created for John Doh. This&nbsp;Event&nbsp;is&nbsp;on the &ldquo;Sent&rdquo; state, because the email was sent to the client!</p>
+
+<p><strong>From now on, this Support Request can be used if in the future, client John Doh sends new emails about configuration problems</strong> . The only thing you will have to do in order to add Events to this Support Requests, is to click the &ldquo;Create new Event&rdquo;on the sidebar of this page. Then the new Event will be created and associated automatically to the Ticket, as described in the <strong>&ldquo;How to Prepare Outgoing Events&rdquo;</strong> tutorial.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Support Requests&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownIncomingEventTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
