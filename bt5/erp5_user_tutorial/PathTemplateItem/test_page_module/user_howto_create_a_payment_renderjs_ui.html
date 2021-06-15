@@ -1,0 +1,380 @@
+<section class="illustration">
+<h1>How to Create a Payment</h1>
+<img alt="Payment Money" src="user-Howto.Create.A.Payment.Money?format=png" title="Payment Money" type="image/svg+xml" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Done.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>How to create a bank account for your company</li>
+	<li>How to create a payment from a sale invoice</li>
+	<li>How to confirm the payment transaction</li>
+</ul>
+
+<details open="open">
+<p>In this tutorial, you will learn how to create a payment using ERP5.</p>
+
+<p>The appropriate way to <strong>create a payment</strong> is to first locate in the <strong>invoice</strong> which you want to create the payment transaction from, and then <strong>create the related payment</strong> directly from the invoice sheet.</p>
+
+<p>The payment action works the same way as invoices:<br />
+First you have to <strong>create one and edit</strong> the details.<br />
+Once this is done properly, you will have to <strong>start the accounting process</strong> for it.</p>
+
+<p>If you have some accounting experience, you know that accounting of invoices and of payments have different meanings.<br />
+Both of them are mandatory, but the accounting done for invoices is related to your <strong>merchandise and client accounts</strong> , payment accounting relates to the notion of treasury, and to your <strong>bank account</strong> .</p>
+
+<p>You should understand that <strong>ERP5 will not let you create a payment if it is not related to a bank account</strong> , which means that <strong>the first step of this tutorial will be to learn how to create a bank account for your company</strong> in order to be able to create treasury transactions such as payment, which are directly linked to your bank account.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSalePackingListTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleInvoiceTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpPaymentTest?start_only=True</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpPaymentTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a Bank Account for your company</h1>
+<img alt="Check Bank Account" src="user-Howto.Create.A.Payment.Create.Bank.Account.Svg?format=png" title="Check Bank Account" type="image/svg+xml" />
+<details open="open">
+<p>From the previous tutorial <a href="user-Howto.Create.Bank.Account/view">&quot;How to create Bank Accounts&quot;</a> and the example &quot;Invoice Sender and Payee-Bank Account&quot; in the tutorial <a href="user-Howto.Create.Trade.Conditions/view">&quot;How to create Trade Conditions&quot;</a>, you have learned how to create a bank account for your company.</p>
+
+<p>In our example, please follow these tutorials and <strong>create a bank account &quot;LCL Paris sud&quot; for your company Hongzhao</strong> . Then please <strong>click on the Financial Information tab of the organisation document</strong> . This tab provides you with financial information about your company, such as Bank Accounts, Accounting Periods, etc. As you can see on the screenshot, the bank account you created appears in this tab, which means that the creation and validation were successful. If you want to see the details of this account, simply click on the line. This will lead you to the detail sheet of the bank account.</p>
+
+<p>Now we can create transactions linked to this bank account.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/view</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_module&quot;]</td>
+			<td>Organisations</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-SALEORDER-ORGANISATION-001&#39;],), enter_object=True)&quot;/&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Organisations</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//span[text()=&quot;Financial Information&quot;]/../</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//li[@class=&quot;selected&quot;]/a/span</td>
+			<td>Financial Information</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>1 records</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Reach the Invoice</h1>
+<img alt="Reach the Invoice" src="user-Howto.Create.A.Payment.Related.Sale.Invoice.Svg?format=png" title="Reach the Invoice" type="image/svg+xml" />
+<details open="open">
+<p>Now we have to create the Payment from the Sale Invoice.</p>
+
+<p>To reach the invoice we need, as you have learned in <a href="user-Howto.Manage.Invoices/view">&quot;How to manage Invoices&quot;</a>, after you are located in the Sale Packing List &quot;Red LED&quot;, click on &quot;Related Sale Invoice Transaction&quot; on the sidebar. This will lead you to the related invoice, from which you will be able to create the related payment.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_module&quot;]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-SALEORDER-PRODUCT-001&#39;],), enter_object=True)&quot;/&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_jump&quot;]</td>
+			<td>Related Sale Invoice Transaction</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Sale Invoice Transaction related to Sale Packing List : ZUITE-TEST-SALEORDER-PRODUCT-001.</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create Related Payment</h1>
+<img alt="Create Related Payment" src="user-Howto.Create.A.Payment.Create.Related.Payment.Svg?format=png" title="Create Related Payment" type="image/svg+xml" />
+<details open="open">
+<p>Now it is time to <strong>create the related payment</strong> . To do so, click on&nbsp;<strong>Create Related Payment</strong>&nbsp;on the sidebar.</p>
+
+<p>This will create the payment and open its related sheet.</p>
+
+<p>Note: you can <strong>create the related payment from an invoice once it is &quot;Journalised&quot;</strong> , you don&#39;t have to wait until&nbsp;&quot;Definitively Close Transaction&quot; and the invoice is &quot;Closed&quot; state.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Create Related Payment</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/select_cash_account&quot;&gt;Select Cash Account&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_payment_mode&quot;]</td>
+			<td>Credit Card</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_node&quot;]</td>
+			<td>Bank</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_payment&quot;]</td>
+			<td>0123456789 0123456789 - Main account</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-PAYMENT-TRANSACTION-001</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Choose basic payment information</h1>
+<img alt="Choose basic payment information" src="user-Howto.Create.A.Payment.Choose.Payment.Information.Svg?format=png" title="Choose basic payment information" type="image/svg+xml" />
+<details open="open">
+<p>Before creating the payment, ERP5 will ask you to <strong>fill up some basic payment information which are indispensable for the payment creation</strong> . As shown in the screenshot, choose the Account for Bank Line, Payment Mode, Bank Account to which you want the payment to be related (in our case, the bank account of our company Hongzhao), and also the Accounting Operation Date.</p>
+
+<p>After you finished, click on &quot;Create Related Payment&quot;.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Edit Payment document</h1>
+<img alt="Edit Payment document" src="user-Howto.Create.A.Payment.Edit.Payment.Document.Svg?format=png" title="Edit Payment document" type="image/svg+xml" />
+<details open="">
+<p>Now the new payment is created and you are led to its related document, and it is time to edit it.</p>
+
+<p>As you can see in the screenshot, there is not much information missing. The main information needed (circled in black ) have been updated automatically according to the related invoice where the payment is created from, and the basic payment information you filled up in the previous step. The only thing you need to edit is the Title. But you can still modify the details if you need.</p>
+
+<p>Fill in the missing details, and when you are done, save your data by clicking on the save button, and jump to next page.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Confirm Transaction</h1>
+<img alt="Confirm Payment Transaction" src="user-Howto.Create.A.Payment.Confirm.Transaction.Svg?format=png" title="Confirm Payment Transaction" type="image/svg+xml" />
+<details open="open">
+<p>You are now used to workflows, so you should know that the workflows are available for each object without exceptions and can be found in the sidebar&nbsp;list.</p>
+
+<p>After the creation, the next step will be to <strong>confirm the payment, if you want it to be taken into account, or if you want to be able to create the related accounting operation</strong> .</p>
+
+<p>Please click on&nbsp;<strong>Confirm Transaction</strong>&nbsp;on the sidebar.</p>
+
+<p>This action means that you have received the payment, for example, a payment related to an invoice you had sent to a customer some weeks ago. You know this because you can check the operations on your bank account on the internet, for example.</p>
+
+<p>But <strong>confirming the payment doesn&#39;t make automatically the related accounting transaction operation</strong> . As you have learned from the previous tutorial <a href="user-Howto.Manage.Invoices/view">&quot;How to manage Invoices&quot;</a>, the accounting transaction operation includes &quot;Journalise Transaction&quot;, &quot;Post Transaction To General Ledger&quot; and &quot;Definitively Close Accounting Transaction&quot;. For more information, please see next page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Confirm Transaction</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Confirmed</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Accounting transaction part</h1>
+<img alt="Accounting transaction part" src="user-Howto.Create.A.Payment.Accounting?format=png" title="Accounting transaction part" type="image/svg+xml" />
+<details open="open">
+<p>You might want to journalise this payment, because it is mandatory in most countries. This is an operation involving treasury, during which your bank account will be credited.</p>
+
+<p>To learn more about <strong>Accounting</strong> , we would recommend you to read the dedicated tutorial, that you can find in the knowledge base of ERP5 ( <a href="user-Accounting.Guide/view">&quot;La Comptabilit&eacute; sous ERP5&quot;</a>).</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${base_url}/Zuite_tearDownSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>

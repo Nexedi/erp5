@@ -1,0 +1,313 @@
+<section class="master">
+<h1>How to Create a Marketing Campaign</h1>
+<img alt="Campaign example: Beta Developer Program" src="user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program.Svg?format=png" title="Marketing campaign: Beta Developer Program" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpCampaignTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>What is a campaign</li>
+	<li>How to create a campaign</li>
+	<li>How to edit a campaign</li>
+	<li>How to open a campaign</li>
+</ul>
+
+<details open="open">
+<p>From the previous presentation, you have had a general idea of the four kinds of Tickets in ERP5 CRM and their workflows. In the following tutorials we will use the VIFIB example to explain how to process the Ticket for a marketing campaign, including the management of the related Events.<br />
+In this tutorial you will first learn how to create campaigns with ERP5 CRM, how to edit them and how to open them.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Marketing campaign: Example-Beta Developer Program</h1>
+<img alt="Campaign example: Beta Developer Program" src="user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program.Svg?format=png" title="Campaign example: Beta Developer Program" type="image/svg+xml" />
+<details open="open">
+<p>VIFIB director Mr Smets plans to launch a marketing campaign aims to increasing the product awareness of SlapOS the new operation system of VIFIB, in the way of hiring software developers. The main interactions of this campaign is to send mail messages to contacts (customers) of VIFIB, and these emails would be the <strong>Related Events</strong> of this <strong>Campaign Ticket</strong> . So they would be listed in the detail page of this Ticket.</p>
+
+<p><strong>Description:</strong> the <strong>Title</strong> is &quot;Beta Developer Program&quot;, the <strong>Ticket Type</strong> is Campaign, the <strong>Operations Manager</strong> is John Scott Doh, the <strong>Quantity</strong> is 10 Days, the <strong>Begin date</strong> is 01/12/2020, the <strong>End Date</strong> is 01/02/2021.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>What is a campaign</h1>
+<img alt="Campaign: a type of Ticket" src="user-Tickets.Beta.Developer.Program.New?format=png" title="Campaign: a type of Ticket" type="image/svg+xml" />
+<details open="open">
+<p>From the previous introduction of Events and Tickets, we know that a campaign in ERP5 CRM is a Ticket. The principle of a ticket is to gather one or more events in the same place, offering a good follow up for them.</p>
+
+<p>In our VIFIB example, the <strong>operations manager</strong> John Scott Doh created the <strong>Campaign Ticket</strong> the &quot;Beta Developer Program&quot; (the right side screen shot) for the VIFIB marketing campaign. In the detail page of this ticket we can see it gathers all the <strong>Events</strong> which &quot; <strong>Follow Up&quot;</strong> the <strong>Campaign</strong> , including reply emails (the left side screen shot) from the contacts and other related documents.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Click on the &ldquo;New&rdquo; tab</h1>
+<img alt="Create a marketing campaign: Click on the 'New' tab" src="user-Howto.Create.A.Marketing.Campaign.Click.New.Tab.Svg?format=png" title="Create a marketing campaign: Click on the 'New' tab" type="image/svg+xml" />
+<details open="open">
+<p>In order to create a campaign, click on the &quot;New&quot; tab on the sidebar of your ERP5 instance Home Page and click on &ldquo;Campaign&rdquo; in the CRM Area.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_module&quot;]</td>
+			<td>Campaigns</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Add Campaign</td>
+		</tr>
+		<tr>
+			<td>waitForCondition</td>
+			<td>selenium.isTextPresent(&quot;Title&quot;)</td>
+			<td>60000</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Reach the campaign document</h1>
+<img alt="Create a marketing campaign: Reach the campaign document" src="user-Howto.Create.A.Marketing.Campaign.Reach.Campaign.Document.Svg?format=png" title="Create a marketing campaign: Reach the campaign document" type="image/svg+xml" />
+<details open="open">
+<p>A new Campaign ticket has been created, and can now be edited in the campaign creation page. Here are the Three different areas of a campaign ticket:<br />
+The red zone gathers the tabs that will help you access the entire information about the campaign.<br />
+The black&nbsp;zone is the editable zone of the campaign, in which you can enter and modify information.<br />
+The yellow zone gathers the related events and documents stored in a campaign. <span style="color: rgb(255, 0, 0);">Please note that in order for an event to be stored in a campaign, the &quot;Follow up&quot; of this event must be the title of the Campaign.</span></p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to edit a campaign</h1>
+<img alt="Edit a marketing campaign" src="user-Howto.Create.A.Marketing.Campaign.Edit.Campaign.Svg?format=png" title="Edit a marketing campaign" type="image/svg+xml" />
+<details open="open">
+<p>Here are the different zones of the editable area of a campaign.<br />
+1.First, the red zone gathers the information about the Client, eg, the company/person who requested the campaign to be done. It can be either yourself or a client.<br />
+2.The black Zone (A) gathers the information about the persons/organisation who will manage the campaign, eg, who will be paid for it. We could say that this is the supplier of the campaign. The black&nbsp;Zone (B) helps you put who will be the operators of the campaign.<br />
+3.Finally, the yellow Zone gathers information about the opening and closing dates, the campaign duration and the costs.</p>
+
+<p>In our VIFIB example, we fill in the zones with the information needed as you can see in the above screen shot.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-CAMPAIGN-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_reference&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-CAMPAIGN-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_decision_title&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-PERSON-SUPERVISOR</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-PERSON-OPERATION-MANAGER</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_destination_title&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//textarea[@name=&quot;field_my_source_trade_title_list&quot;]</td>
+			<td>ZUITE-TEST-CAMPAIGN-PERSON-OPERATION-MANAGER</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;subfield_field_my_start_date_year&quot;]</td>
+			<td>2011</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;subfield_field_my_start_date_month&quot;]</td>
+			<td>01</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;subfield_field_my_start_date_day&quot;]</td>
+			<td>12</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;subfield_field_my_stop_date_year&quot;]</td>
+			<td>2012</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;subfield_field_my_stop_date_month&quot;]</td>
+			<td>01</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;subfield_field_my_stop_date_day&quot;]</td>
+			<td>02</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_quantity&quot;]</td>
+			<td>10.0</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_quantity_unit&quot;]</td>
+			<td>Time/Day</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_price&quot;]</td>
+			<td>20.00</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_price_currency&quot;]</td>
+			<td>EUR</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;transition_message&quot;]</td>
+			<td>Data updated.</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to open a Campaign (1)</h1>
+<img alt="Open a Campaign: Choose 'Open' in the Action List" src="user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Svg?format=png" title="Open a Campaign: Choose 'Open' in the Action List" type="image/svg+xml" />
+<details open="open">
+<p>In order to open a campaign, click on &quot;Open Ticket&quot; on the sidebar. <span style="color: rgb(255, 0, 0);">Note that this action can only be done by the Campaign Manager, or the creator of the Campaign ticket.</span></p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Open Ticket</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to open a Campaign (2)</h1>
+<img alt="Open a Campaign: Add comments and click on 'Open'" src="user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Comments.Open.Svg?format=png" title="Open a Campaign: Add comments and click on 'Open'" type="image/svg+xml" />
+<details open="open">
+<p>In this step, you can add comments, these are the comments that only your team will be able to visit. When you are done, validate the Ticket by clicking the &ldquo;Open Ticket&rdquo; button.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to open a Campaign (3)</h1>
+<img alt="Open a Campaign: Check the state of the campaign" src="user-Howto.Create.A.Marketing.Campaign.Open.Campaign.State.Svg?format=png" title="Open a Campaign: Check the state of the campaign" type="image/svg+xml" />
+<details open="open">
+<p>As you see on the image, the state of the campaign is now Open.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Opened</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownCampaignTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>

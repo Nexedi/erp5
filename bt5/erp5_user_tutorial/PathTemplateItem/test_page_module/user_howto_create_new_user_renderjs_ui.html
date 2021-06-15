@@ -1,0 +1,335 @@
+<section class="screenshot">
+<h1>How to create new User</h1>
+<img alt="How to create new User" src="http://img.erp5.cn/user-Howto.Create.New.User.Image?format=png" style="width: 744px;" title="How to create new User" type="image/svg+xml" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This tutorial teaches how to create new users in ERP5. The difference between Person and User is that a Person in ERP5 holds information related to an individual which is relevant to your organisation (for example a prospect, client supplier or employee) while a User has access to your ERP5 instance. The permissions, a user has in ERP5 are defined by assignments.</p>
+
+<p>During this tutorial, you will create two Users:</p>
+
+<ul>
+	<li>C&eacute;dric de Saint Martin: Information Systems Manager of your company and</li>
+	<li>Yingjie XU: Support Agent of your company.</li>
+</ul>
+
+<p>During this tutorial please replace &quot;VIFIB&quot; with your company name.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpPersonTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Create a Person</li>
+	<li>Start the Assignment</li>
+	<li>Create a new User Account</li>
+	<li>New User log in</li>
+	<li>Created Second User</li>
+</ul>
+
+<details open="open">
+<p>The process of creating a new User has three steps: Firstly, create and <strong>validate</strong> a Person who is the future User of your ERP5 instance. Secondly, <strong>add Assignment</strong> to this new User by using the Action item list. Finally, <strong>create User Account</strong> for this Person by using the Action item list. Then this new User can access to your ERP5 instance using the login and password you have set during the creation.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Create a Person</h1>
+<img alt="Create a Person" src="user-Howto.Create.New.User.Create.Person.Svg?format=png" style="width: 1289px; height: 903px;" title="Create a Person" type="image/svg+xml" />
+<details open="open">
+<p>After reading the tutorial <a href="user-Howto.Create.Persons/view">&quot;How to create Persons&quot;</a>, you can now try to create a new Person account for a staff of your company. In our case, we create an account for a VIFIB manager C&eacute;dric de Saint Martin, as shown in the screenshot.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Validate the Person</h1>
+<img alt="Validate the Person" src="user-Howto.Create.New.User.Validate.Person.Svg?format=png" title="Validate the Person" type="image/svg+xml" />
+<details open="open">
+<p>Validate the Person you just created before going to next step.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Action: Add Assignment</h1>
+
+<p><img alt="Action: Add Assignment 1" src="user-Howto.Create.New.User.Add.Assignment.1.Svg?format=png" title="Action: Add Assignment" type="image/svg+xml" /></p>
+
+<p><img alt="Action: Add Assignment 2" src="user-Howto.Create.New.User.Add.Assignment.2.Svg?format=png" title="Action: Add Assignment" type="image/svg+xml" /></p>
+
+<details open="open">
+<p>Without the assignment, even you has added a user account to the person document, the person still won&#39;t be able to access your ERP5 instance. To check current Assignments of this person,&nbsp;<strong>click on &quot;Assignment&quot;</strong>&nbsp;in the sidebar;&nbsp;to start a new Assignment,<strong>&nbsp;click &quot;+Add&quot;, choose &quot;Assignment&quot; </strong>in the Document Type List, then <strong>click &quot;Create Document&quot;</strong>.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
+			<td>John</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_last_name&quot;]</td>
+			<td>Doh</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
+			<td>Z Company</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_gender&quot;]</td>
+			<td>Male</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;subfield_field_my_career_role_list_default:list&quot;]</td>
+			<td>Client</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_career_function&quot;]</td>
+			<td>Marketing/Marketing Manager</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_career_activity&quot;]</td>
+			<td>Education</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_nationality&quot;]</td>
+			<td>French</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_default_email_coordinate_text&quot;]</td>
+			<td>jdoh@zcompany.com</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_default_telephone_my_default_telephone_coordinate_text&quot;]</td>
+			<td>+33(0)6-218765/00</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Edit Assignment</h1>
+<img alt="Edit Assignment" src="user-Howto.Create.New.User.Edit.Assignment.Svg?format=png" title="Edit Assignment" type="image/svg+xml" />
+<details open="open">
+<p>Now you are located in the Assignment document. Fill in the fields and save the data.</p>
+
+<p>Note: there two important fields to fill up. First, you must <strong>select the Group for the Assignment, and the Group must be your company, otherwise the User won&#39;t be able to access your ERP5 instance</strong> . Second, <strong>fill carefully the Assignment Start Date and Stop Date. The Assignment is only valid in the defined interval</strong> , which means the User can only login your ERP5 instance in the defined interval.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;information_area&quot;]</td>
+			<td>Input data has errors. Please look at the error messages below.</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//span[@class=&quot;error&quot;]</td>
+			<td>No such document was found.</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;subfield_field_my_career_subordination_title_relation&quot;]</td>
+			<td>Add Organisation</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextNotPresent</td>
+			<td>Input data has errors. Please look at the error messages below.</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Action: Start Assignment</h1>
+
+<p><img alt="Action: Start Assignment 1" src="user-Howto.Create.New.User.Start.Assignment.1.Svg?format=png" title="Action: Start Assignment" type="image/svg+xml" /></p>
+
+<p><img alt="Action: Start Assignment 2" src="user-Howto.Create.New.User.Start.Assignment.2.Svg?format=png" title="Action: Start Assignment" type="image/svg+xml" /></p>
+
+<details open="open">
+<p>After adding an Assignment to the new User, you have to start the Assignment, if not, the User account will not work. <strong>Click on &quot;Start Assignment&quot;</strong>&nbsp;in the sidebar.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>clickAndWait</td>
+			<td>link=Details</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_middle_name&quot;]</td>
+			<td>Scott</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_child_count&quot;]</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_marital_status&quot;]</td>
+			<td>Married</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Assignment &quot;Started&quot;</h1>
+<img alt="Assignment &quot;Started&quot;" src="user-Howto.Create.New.User.Assignment.Started.Svg?format=png" title="Assignment &quot;Started&quot;" type="image/svg+xml" />
+<details open="open">
+<p>After the status changed to &quot;Started&quot;, you can continue next step: Create User.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Action: Create User</h1>
+<img alt="Action: Create User" src="user-Howto.Create.New.User.Create.User.Svg?format=png" title="Action: Create User" type="image/svg+xml" />
+<details open="">
+<p>To create a User account for this Person, <strong>go back to the Person View and click on &quot;Create User&quot;in the sidebar</strong>.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_module&quot;]</td>
+			<td>Persons</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Add Person</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Set User Login and Password</h1>
+<img alt="Set User Login and Password" src="user-Howto.Create.New.User.Set.Login.Password.Svg?format=png" title="Set User Login and Password" type="image/svg+xml" />
+<details open="open">
+<p>Fill the dialog box with the User Login and the Password you set for this new User to access to your ERP5 instance. Then click on &quot;Create User&quot;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;transition_message&quot;]</td>
+			<td>Object created.</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//li[@class=&quot;selected&quot;]/a/span</td>
+			<td>View</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>New User Login</h1>
+<img alt="New User Login" src="user-Howto.Create.New.User.New.User.Login.Svg?format=png" title="New User Login" type="image/svg+xml" />
+<details open="open">
+<p>Try to log in your ERP5 instance with the new User Login and Password.</p>
+
+<p>Note: It is important to remember the three steps must be performed correctly. Don&#39;t forget to <strong>Validate</strong> the person you created and to <strong>Start Assignment</strong> . Otherwise it won&#39;t be possible to connect to ERP5 using the user created.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Validate</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Create Second User</h1>
+
+<ul>
+	<li>First Name: Yingjie</li>
+	<li>Last Name: XU</li>
+	<li>Organisation: VIFIB</li>
+	<li>Gender: Male</li>
+	<li>Role: Internal</li>
+	<li>Function: Company / Agent</li>
+	<li>User Name: yingjie.xu</li>
+</ul>
+
+<details open="open">
+<p>Now that your learned how to create a user, please create a second user &quot;Yingjie Xu&quot;. This user will be required to do the following tutorials. Make sure that you create the Person, the Assignment, start the Assignment and create the user account just like you did it for C&eacute;dric but using the information presented in this slide.</p>
+</details>
+</section>
