@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>c9d13ff7e3f89bc28f8178a2656b2f7a</string> </value>
+            <value> <string>e1bc9966b0b563e5eb69f125ba8983b1</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>erp5_purchase_8.png</string> </value>
+            <value> <string>237_big_format_2.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -300,7 +300,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>991.37581.38503.11144</string> </value>
+                      <value> <string>991.56282.48769.7731</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -318,7 +318,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1620224324.15</float>
+                              <float>1623752546.34</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
