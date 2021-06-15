@@ -1,0 +1,398 @@
+<section class="illustration">
+<h1>How to manage Invoices</h1>
+<img alt="Invoice Sample" src="user-Howto.Manage.Invoices.Invoice.New?format=png" title="Invoice Sample" type="image/png" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Done.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSalePackingListTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleInvoiceTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>How to reach an invoice</li>
+	<li>How to start, validate and close transaction</li>
+	<li>How to print an invoice</li>
+</ul>
+
+<details open="open">
+<p>Now that we have learned how to generate invoices from Sales Packing Lists in the previous tutorial <a href="user-Howto.Manage.Packing.Lists/view">&quot;How to Manage Packing Lists&quot;</a>, we are going to explain now <strong>how to manage and how to print the invoices.</strong></p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Reach the Invoice: reach the Packing List</h1>
+<img alt="Sale Packing List Module" src="user-Howto.Manage.Invoices.Reach.Invoice.Packing.Lists.Module.Svg?format=png" title="Sale Packing List Module" type="image/png" />
+<details open="open">
+<p>If you want to edit the sale invoice, you will have to <strong>locate it first</strong> . This is a two step procedure :</p>
+
+<p>First, browse the existing Sale Packing Lists from&nbsp;the Modules menu, the same you would have done for persons or organisations. Please refer to the <a href="user-Howto.Create.Persons/view">&quot;How to create Persons&quot;</a> or <a href="user-Howto.Create.Organisations/view">&quot;How to create Organisations&quot;</a> tutorials for more information.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_module&quot;]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-SALEORDER-PRODUCT-001&#39;],), enter_object=True)&quot;/&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Reach the Invoice: jump to &quot;Related Sale Invoice Transaction&quot;</h1>
+<img alt="Related Sale Invoice Transaction" src="user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice.Svg?format=png" title="Related Sale Invoice Transaction" type="image/png" />
+<details open="open">
+<p>Now you can <strong>reach</strong> the sale invoice directly from the related Sale Packing List.</p>
+
+<p>First, <strong>make sure that the Packing List has been shipped or delivered</strong> . You can find that information on the View tab of the Sales Packing List &ldquo;State&rdquo;.</p>
+
+<p>Now that you have checked the status, please&nbsp; click on the&nbsp;<strong>&quot;Related Sale Invoice Transaction&quot;</strong>&nbsp;on the sidebar. Then you will be directed to the related sales invoice.</p>
+
+<p>Note that an error may return: <strong>&quot;No Related Sale Invoice Transaction&quot;</strong> . This means that either the Sale Packing List status is not appropriate, or you just changed the status, and you have to wait at least 30 seconds for the system to take the changes into account.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_jump&quot;]</td>
+			<td>Related Sale Invoice Transaction</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[1]</td>
+			<td>ERP5</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Accounting</td>
+		</tr>
+		<tr>
+			<td>storeAttribute</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]@href</td>
+			<td>invoice</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${invoice}</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Check Sale Invoice Tabs</h1>
+<img alt="Check Sale Invoice Tabs" src="user-Howto.Manage.Invoices.Invoice.View.Tabs.Svg?format=png" title="Check Sale Invoice Tabs" type="image/png" />
+<details open="open">
+<p>Read the message that appears on the bottom right corner of the screen, you are now landed on the related sale invoice. The tabs of this invoice document incorporates lots of information, which comes directly from the initial Sale Order as well as from the Sale Packing List.</p>
+
+<p>In theory, there should not be anything here to fill out. The first step before trying to start the accounting transaction, is to <strong>check that the information provided by the sale invoice is correct</strong>. As most fields have been updated from your information, there shouldn&#39;t be any changes to implement, but one can never know, so we recommend you to check the information in every tab in your invoice document.</p>
+
+<p>When complete, <strong>click on the &quot;Accounting View&quot; tab</strong>&nbsp;on the sidebar, and jump to the next page to <strong>start the accounting transaction of the order</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Journalise Transaction</h1>
+<img alt="Journalise Transaction" src="user-Howto.Manage.Invoices.Journalise.Transaction.Svg?format=png" title="Journalise Transaction" type="image/png" />
+<details open="open">
+<p>In order to do an accounting transaction you have to <strong>initiate it</strong> .</p>
+
+<p>An accounting transaction is a three step procedure :<br />
+First, you need to start the transaction, which means that the accounting lines will be created. In accounting terms, this is called <strong>Journalise Transaction</strong> . The second step is to validate the transaction, once you have checked the different accounting lines that have been generated automatically by ERP5. In accounting terms, this is called <strong>Post Transaction To General Ledger</strong> . Once those two steps are over, you can <strong>Definitively Close Accounting Transaction</strong> .</p>
+
+<p>Be careful: once the transaction is closed, you will not be able to modify it. This is why some companies do not close their transactions until the end of their accounting period.</p>
+
+<p>As you can see in the screenshot of the &quot;Accounting View&quot; tab of the invoice, the state is &quot;Confirmed&quot;, and there is not any &quot;Accounting Transaction Lines&quot; yet. To start the transaction, click on the line <strong>&quot;Journalise Transaction&quot;</strong>&nbsp;on the sidebar, then you will see on the next page, this will <strong>create the first accounting lines</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Journalise Transaction</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Journalised</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${invoice}</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Check the Accounting Transaction Lines</h1>
+<img alt="Accounting Lines to Check" src="user-Howto.Manage.Invoices.Check.Accounting.Lines.Svg?format=png" title="Accounting Lines to Check" type="image/png" />
+<details open="open">
+<p>Before trying to go further in the accounting process, we will analyse what changes occurred on the invoice document after we journalised transaction.</p>
+
+<p>First, as you can see highlighted on the screenshot, the state has changed from &quot;Confirmed&quot; to &quot;Journalised&quot;. This means that ERP5 has created some accounting lines for your transaction.</p>
+
+<p><strong>Note: </strong>It can take up to 5 minutes for the accounting lines to be&nbsp;created. You might have to refresh the page, if you don&#39;t see the accounting lines.</p>
+
+<p>This is the second part of the analysis: as you can see in the screenshot, the first accounting transaction lines have been created. They are automatically created by ERP5, and, if you can read the accounting lines, they represent your transaction. In our example, the sell account should be credited with 100000&euro;. If you did not yet subscribe to ERP5, you may not know that more than one accounting plan is available. On this screenshot, the French accounting plan is used, but many others are available. We already have accounting plans catered especially for Africa and Japan, and we are constantly working on developing more plans that will be available soon.</p>
+
+<p>Note that a transaction can be modified as long as it is at &quot;Journalised&quot; state.</p>
+
+<p><strong>However, even though the accounting transaction lines have been created, but they have not been validated yet</strong>. To validate the transaction, you have to acting &quot;Post to General Ledger&quot;. Please see next page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Post Transaction</h1>
+<img alt="Post Transaction To General Ledger" src="user-Howto.Manage.Invoices.Post.Transaction.To.General.Ledger.Svg?format=png" title="Post Transaction To General Ledger" type="image/png" />
+<details open="open">
+<p>Once you have checked all the accounting transaction lines, you can validate them.</p>
+
+<p>To do so, please click on&nbsp;<strong>&quot;Post Transaction to General Ledger&quot;</strong>&nbsp;on the sidebar and jump to next page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Post Transaction to General Ledger</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Posted to General Ledger</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Validated transaction</h1>
+<img alt="Validated transaction" src="user-Howto.Manage.Invoices.Transaction.Validted.Svg?format=png" title="Validated transaction" type="image/svg+xml" />
+<details open="open">
+<p>After &quot;Post to General Ledger&quot;, as shown in the screenshot, the invoice state changed from &quot;Journalised&quot; to <strong>&quot;Posted to General Ledger&quot;</strong> . In fact, this state is similar to &quot;Journalised&quot;, unless it has to be seen as a transition state between &ldquo;Journalise&rdquo; and &ldquo; Definitely Closed&rdquo; state to indicate that the transaction has been validated.</p>
+
+<p>When validated by acting &quot;Post Transaction to General Ledger&quot;, a transaction can still be modified. If you browse the sidebar, you will find a line that is called <strong>&quot;Restart Transaction (journalise)&quot;</strong> , which helps you invalidate the transaction and go back to the &ldquo;Journalised&rdquo; state, as showing on this screenshot:&nbsp;</p>
+
+<p><img alt="Post transaction" src="user-Howto.Manage.Invoices.Transaction.Post.Svg?format=png" title="Validated transaction" type="image/svg+xml" /></p>
+
+<p>Now let&#39;s go back to &quot;Posted to General Ledger&quot; state, the <strong>&ldquo;Post Transaction to General Ledger&rdquo; action ensures that the transaction has been accepted, and the management has been transferred from sales department to accounting department</strong> .</p>
+
+<p>Once this is done, the next step will be to close the transaction, as shown on the next page.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Definitively Close Transaction</h1>
+<img alt="Definitively Close Accounting Action" src="user-Howto.Manage.Invoices.Definitely.Close.Transaction.Svg?format=png" title="Definitively Close Accounting Action" type="image/png" />
+<details open="open">
+<p>The very last step of managing an invoice is to &ldquo;<strong>Definitively Close</strong> &rdquo; the accounting transaction.</p>
+
+<p>Once this is done, <strong>you will not be able to go back to another state</strong> , which means that you will not have the possibility to modify the transaction.</p>
+
+<p><strong>Close the transaction only when you are absolutely sure that the details, figures, etc. are correct</strong> . Some companies for instance, are accustomed to closing all the transactions at the end of the year.</p>
+
+<p>To <strong>close a transaction</strong> , click on&ldquo; <strong>Definitively Close Transaction</strong> &rdquo;on the sidebar. Once this is done, the state of the transaction will be changed from &quot;Posted to General Ledger&quot; to <strong>Closed</strong> , and you will be able to <strong>create a payment</strong> for it, as we will see on the next tutorial &ldquo;How to create a Payment&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Definitively Close Transaction</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Closed</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Printing the invoice (1)</h1>
+
+<p><img alt="Print Button" src="user-Howto.Manage.Invoices.Closed.Transaction.Print.1.Svg?format=png" title="Print Button" type="image/png" />&nbsp;1</p>
+
+<p><img alt="Print Button" src="user-Howto.Manage.Invoices.Closed.Transaction.Print.2.Svg?format=png" title="Print Button" type="image/png" />&nbsp;2</p>
+
+<details open="open">
+<p>ERP5 allows you to <strong>print</strong> the invoices you have created.</p>
+
+<p>We will now explain how you can easily <strong>print</strong> an invoice you just created. You can print an invoice at any state, even if the transaction is not closed yet.</p>
+
+<p>The first step to print an invoice, is to click on the <strong>Export</strong> button on top of the invoice sheet, as you can see on the screenshot.</p>
+
+<p>Clicking this icon will open a new window in which you will be able to click on&nbsp;<strong>Print Invoice</strong> to go to print setting page&nbsp;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Printing the invoice (2)</h1>
+<img alt="Print Sale Invoice Transaction Dialog" src="user-Howto.Manage.Invoices.Closed.Transaction.Print.Options.Svg?format=png" title="Print Sale Invoice Transaction Dialog" type="image/png" />
+<details open="open">
+<p>The <strong>print setting page</strong> is now open, so you can browse the different menus to choose which kind of print you need.</p>
+
+<p>Firstly, <strong>choose the language</strong> of your print, in our example, the language can be either set to French or English. Secondly, <strong>choose the format</strong> of your print.</p>
+
+<p>When you are done, <strong>click the&nbsp;&quot;Print Invoice&quot;</strong> to create a physical copy of the document. You can either <strong>print directly with your printer</strong> , or <strong>save a copy of the invoice into PDF or other formats</strong> to keep it on your computer, so you can print it or send it by email later.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${base_url}/Zuite_tearDownSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>

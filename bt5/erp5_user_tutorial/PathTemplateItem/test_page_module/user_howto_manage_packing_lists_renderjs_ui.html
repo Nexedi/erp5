@@ -1,0 +1,382 @@
+<section class="master">
+<h1>How to Manage Packing Lists</h1>
+
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a></footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Done.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpSalePackingListTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>How to reach a Packing List</li>
+	<li>How to define Packing Lists</li>
+	<li>How to declare a shipment</li>
+	<li>How to generate invoices from packing lists</li>
+</ul>
+
+<details open="open">
+<p>When you validate a Sale Order, as seen in the previous tutorial <a href="user-Howto.Create.Sale.Orders/view">&quot;How to create Sale Orders&quot;</a>, ERP5 creates automatically the related <strong>&ldquo;Sale Packing List&rdquo;</strong> . Thanks to it, you will be able to track the shipment of the goods related to the order.</p>
+
+<p>The goal of this tutorial is to explain how to manage Sale Packing Lists, in order to have the goods shipped and delivered.</p>
+
+<p>This is a two steps procedure: first, the order needs to be shipped and, when it reached the client warehouse, the status must be turned into <strong>&ldquo;Delivered&rdquo;</strong> .</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Managing a Packing List</h1>
+<img alt="Delivery Flow" src="user-Howto.Manage.Sale.Packing.Lists.Model?format=png" title="Delivery Flow" type="image/png" />
+<details open="open">
+<p>As you can see on the drawing, the different steps of managing a Packing List can be linked with real people in the company.</p>
+
+<p>The principle of workflow based application makes sense in this case. Indeed, once the Sale Order has been registered and confirmed by the sales manager, the employee from the warehouse will prepare the automatically generated Sale Packing List related to the order. Thanks to the workflow, the sales manager will be aware that the order is ready to be sent and will give the order to &ldquo;Ship&rdquo; the goods. Once the client receives the goods, checks them and gives feedback, the sales manager will then change the status to &ldquo;Delivered&rdquo;.</p>
+
+<p>In this way, it is possible to track the whole shipment process, thanks to ERP5.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Sale Packing List</h1>
+<img alt="Packing List View Tab" src="user-Howto.Manage.Sale.Packing.Lists.View.Svg?format=png" title="Packing List View Tab" type="image/png" />
+<details open="open">
+<p>From the previous tutorial <a href="user-Howto.Create.Sale.Orders/view">&quot;How to create Sale Orders&quot;</a>, you have learned to generate the related Sale Packing List automatically by confirming the Sale Order, and reach the Sale Packing List by using the &quot;Related Sale Packing List&quot; on the sidebar.</p>
+
+<p>Now that you are on the initial view form of the Packing List related to your Sale Order, you can start <strong>filling out the the missing information</strong> where it is not filled automatically.</p>
+
+<p>Note: <strong>Most data in the View tab and the other tabs (Details, Payment, Profile) should have been updated automatically from the Sale Order</strong> , so you will not have much to do now. If some fields have not been updated, it means that those fields have not been filled out correctly in the related Sale Order. This is why we recommend to fill out properly the Sale Orders before generating Packing Lists.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_module&quot;]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-SALEORDER-PRODUCT-001&#39;],), enter_object=True)&quot;/&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Sale Packing Lists</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//textarea[@name=&quot;field_my_comment&quot;]</td>
+			<td>Delivery by the test.</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>clickAndWait</td>
+			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_source_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_destination_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_destination_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_destination_administration_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER USER-001</td>
+		</tr>
+		<tr>
+			<td>verifyValue</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>General Sale Trade Condition</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyTextPresent</td>
+			<td>1 records</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>verifyValue</td>
+			<td>//tr[@class=&#39;listbox-data-line-0 DataA&#39;]/td[6]/input</td>
+			<td>100 000.0</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Ship</h1>
+<img alt="Selecting Ship on Action Menu" src="user-Howto.Manage.Sale.Packing.Lists.Ship.Svg?format=png" title="Selecting Ship on Action Menu" type="image/png" />
+<details open="open">
+<p>After the sales manager confirms the Sale Order, the employees in warehouse will prepare the shipment and ship it. If the shipment corresponds with the information in the Sale Packing List, you have to tell ERP5 that your order has been shipped.</p>
+
+<p>To do so,&nbsp; click on <strong>&ldquo;Ship Packing List&rdquo;on the sidebar</strong> .</p>
+
+<p>This will change the status of the Sale Packing List from &quot;Confirmed&quot; to <strong>&quot;Shipped&quot;</strong> , as you can see on the next page&#39;s screenshot.</p>
+
+<p>The next step will be to set the packing list as delivered after the clients acknowledges the shipment.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Ship Packing List</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Shipped</td>
+		</tr>
+		<tr>
+			<td>storeAttribute</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]@href</td>
+			<td>wait</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${wait}</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Deliver</h1>
+<img alt="Selecting Delivery on Action Menu" src="user-Howto.Manage.Sale.Packing.Lists.Deliver.Svg?format=png" title="Selecting Delivery on Action Menu" type="image/png" />
+<details open="open">
+<p>When the shipment has been received by the customer, if the goods have been checked and are in good condition, you would like to set the packing list as delivered.</p>
+
+<p>To do so, please click on the<strong>&ldquo;Deliver Packing List&rdquo;on the sidebar</strong>&nbsp;.</p>
+
+<p>This will change the status of the Sale Packing List from <strong>&quot;Shipped&quot; to &ldquo;Delivered&rdquo;</strong> , and this also will <strong>generate the related invoice</strong> , as you can see on the following two pages.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_action&quot;]</td>
+			<td>Deliver Packing List</td>
+		</tr>
+		<tr>
+			<td>clickAndWait</td>
+			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>Delivered</td>
+		</tr>
+		<tr>
+			<td>storeAttribute</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]@href</td>
+			<td>spl</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Jump to &quot;Related Sale Invoice Transaction&quot;</h1>
+<img alt="Jump to &quot;Related Sale Transaction Invoice&quot;" src="user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice.Svg?format=png" title="Jump to &quot;Related Sale Transaction Invoice&quot;" type="image/svg+xml" />
+<details open="open">
+<p>After the Packing List is in &quot;Delivered&quot; state, you can access to related invoice by <strong>clicking the &quot;Related Sale Invoice Transaction&quot; on the sidebar</strong> .</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Generated Sale Invoice Transaction</h1>
+<img alt="Generated Sale Transaction Invoice" src="user-Howto.Manage.Sale.Packing.Lists.Related.Invoice.Svg?format=png" title="Generated Sale Transaction Invoice" type="image/svg+xml" />
+<details open="open">
+<p>Now you can have a look at the Sale Invoice Transaction generated from the Sale Packing List. If you need to go back to the initial Sale Order or Sale Packing List, you can either use the &quot;Jumps&quot; list on the sidebar again, or by browsing the Sale Orders or Sale Packing Lists in the &quot;Modules&quot; list.</p>
+
+<p>In next tutorial, you will learn how to manage invoices.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Diverged Packing List</h1>
+<img alt="Diverged Packing List" src="user-Howto.Manage.Sale.Packing.Lists.Manage.Shipped.Quantity.Difference.Acknowledge?format=png" title="Diverged Packing List" type="image/png" />
+<details open="open">
+<p>Sale Packing Lists can <strong>generate an invoice</strong> for the related transaction by a simply action: <strong>Ship Packing List</strong> , if the number of items shipped (in the Sale Packing List) matches the number of items ordered (in the Sale Order). This means that you do not have to bother clicking on anything, the invoice will be automatically generated after you ship the Packing List.<br />
+The same as the &quot;Related Sale Packing List&quot;, you can <strong>reach the &quot;Related Sale Invoice Transaction&quot; by clicking it on the sidebar</strong>&nbsp;.</p>
+
+<p>However, ERP5 also allows you to manage the difference that can exist between what has been ordered and what has been exactly shipped.</p>
+
+<p>For example, your client ordered 1000 products from you, but after the sales manager registered the Sale Order and confirmed it, the warehouse agent discovers that there is only 900 products left, due to a strike that obstructed your shipment to be delivered on time.</p>
+
+<p>The warehouse agent, who is in charge of preparing the shipment, verifying the Sale Packing List on ERP5 and shipping the goods, decides to pack the 900 products available, and changed the quantity in the Sale Packing List. Technically speaking, this means that the order and the shipment are not convergent, because 1000 products have been ordered and only 900 have been shipped. For this reason, the invoice generation will be up to the sales manager. If he/she approves the shipment, he/she can <strong>first &quot;Split and Defer&quot; the initial Sale Packing List</strong> , which will create another Sale Packing List for this order with the quantity left to be shipped later. The warehouse can <strong>then &quot;Ship&quot; and finally &quot;Deliver&quot; the first Packing List</strong> . After the second part of the products are prepared, the warehouse can <strong>&quot;Ship&quot; and &quot;Deliver&quot; the second Packing List</strong> . In this way, the diverged Packing List can be solved.</p>
+</details>
+
+<details open="open">
+<p>Note that <strong>once you Ship Packing List, the action generates invoice for the related Packing List automatically, with the updated quantity shipped</strong> . So finally, you will have two sale invoices, corresponding to each diverged Sale Packing List.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${spl}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>selectAndWait</td>
+			<td>//select[@name=&quot;select_jump&quot;]</td>
+			<td>Related Sale Invoice Transaction</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[1]</td>
+			<td>ERP5</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
+			<td>Accounting</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${base_url}/Zuite_tearDownSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
