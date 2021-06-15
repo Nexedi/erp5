@@ -1,0 +1,12 @@
+{
+      "short_name": "Office Slideshow",
+      "name": "OfficeJS Office Slideshow",
+      "description": "Slides presentation editor",
+      "icons": [{
+        "src": "slideshow_editor_app_logo.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
