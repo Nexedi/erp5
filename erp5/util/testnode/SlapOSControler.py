@@ -26,7 +26,6 @@
 ##############################################################################
 import os
 import pkg_resources
-import shutil
 import slapos.slap
 import subprocess
 import time
@@ -34,7 +33,7 @@ import xml_marshaller
 import argparse
 from slapos import client
 from . import logger
-from .Utils import createFolder
+from .Utils import createFolder, rmtree
 
 from six.moves import range
 
@@ -279,7 +278,7 @@ class SlapOSControler(object):
       self._resetSoftware()
     else:
       createFolder(self.software_root)
-    shutil.rmtree(self.old_instance_root, True) # BBB
+    rmtree(self.old_instance_root) # BBB
     instance_root = self.instance_root
     # Delete any existing partition in order to not get its data (ex.
     # MySQL DB content) from previous runs. To support changes of partition
