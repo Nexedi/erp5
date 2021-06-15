@@ -207,6 +207,8 @@ class FunctionalTestRunner:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
       options = webdriver.FirefoxOptions()
       options.set_preference('dom.serviceWorkers.enabled', True)
+      # output javascript console and errors on stdout to help diagnosing failures
+      options.set_preference('devtools.console.stdout.content', True)
       kw = dict(capabilities=capabilities, options=options)
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
