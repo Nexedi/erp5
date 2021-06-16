@@ -30,6 +30,9 @@
 		<tr style="opacity: 1;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
 		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -95,19 +98,22 @@ In this tutorial you will first learn how to create campaigns with ERP5 CRM, how
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Campaigns</td>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Campaign&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Add Campaign</td>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>waitForCondition</td>
-			<td>selenium.isTextPresent(&quot;Title&quot;)</td>
-			<td>60000</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Campaign&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 	</tbody>
 </table>
@@ -144,6 +150,11 @@ The yellow zone gathers the related events and documents stored in a campaign. <
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
 			<td>type</td>
 			<td>//input[@name=&quot;field_my_title&quot;]</td>
 			<td>ZUITE-TEST-CAMPAIGN-CAMPAIGN-001</td>
@@ -175,38 +186,18 @@ The yellow zone gathers the related events and documents stored in a campaign. <
 		</tr>
 		<tr>
 			<td>type</td>
-			<td>//textarea[@name=&quot;field_my_source_trade_title_list&quot;]</td>
+			<td>//input[@name=&quot;field_my_source_trade_title_list&quot;]</td>
 			<td>ZUITE-TEST-CAMPAIGN-PERSON-OPERATION-MANAGER</td>
 		</tr>
 		<tr>
 			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_start_date_year&quot;]</td>
-			<td>2011</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_start_date_month&quot;]</td>
-			<td>01</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_start_date_day&quot;]</td>
-			<td>12</td>
+			<td>//input[@name=&quot;field_my_start_date&quot;]</td>
+			<td>12032021</td>
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_stop_date_year&quot;]</td>
-			<td>2012</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_stop_date_month&quot;]</td>
-			<td>01</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_stop_date_day&quot;]</td>
-			<td>02</td>
+			<td>//input[@name=&quot;field_my_stop_date&quot;]</td>
+			<td>20032021</td>
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>type</td>
@@ -229,14 +220,7 @@ The yellow zone gathers the related events and documents stored in a campaign. <
 			<td>EUR</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Data updated.</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -252,9 +236,10 @@ The yellow zone gathers the related events and documents stored in a campaign. <
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Open Ticket</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Open Ticket&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -270,9 +255,10 @@ The yellow zone gathers the related events and documents stored in a campaign. <
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -288,8 +274,14 @@ The yellow zone gathers the related events and documents stored in a campaign. <
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;View&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
 			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Opened</td>
 		</tr>
 		<tr style="opacity: 1;">
