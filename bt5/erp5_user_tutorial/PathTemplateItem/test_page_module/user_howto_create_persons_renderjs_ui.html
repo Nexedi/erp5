@@ -12,7 +12,7 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; /&gt;</td>
 		</tr>
 		<tr>
 			<td>openAndWait</td>
@@ -24,11 +24,14 @@
 			<td>Init Ok</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot; /&gt;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -91,14 +94,22 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Persons</td>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Person&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Add Person</td>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Person&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 	</tbody>
 </table>
@@ -113,16 +124,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Object created.</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//li[@class=&quot;selected&quot;]/a/span</td>
-			<td>View</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -139,6 +140,11 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
 			<td>type</td>
 			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
 			<td>John</td>
@@ -150,8 +156,23 @@
 		</tr>
 		<tr>
 			<td>type</td>
-			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
+			<td>//input[@name="field_my_career_subordination_title"]</td>
 			<td>Z Company</td>
+		</tr>
+        <tr>
+		    <td>fireEvent</td>
+  		    <td>//input[@name="field_my_career_subordination_title"]</td>
+  		    <td>input</td>
+		</tr>
+		<tr>
+  		    <td>waitForElementPresent</td>
+  		    <td>//ul[@class="search_ul"]//li</td>
+  		    <td></td>
+	    </tr>
+	    <tr>
+  	        <td>click</td>
+ 		    <td>//ul[@class="search_ul"]/li[@name="Organisation"]</td>
+ 		    <td></td>
 		</tr>
 		<tr>
 			<td>select</td>
@@ -189,9 +210,7 @@
 			<td>+33(0)6-218765/00</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -210,31 +229,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;information_area&quot;]</td>
-			<td>Input data has errors. Please look at the error messages below.</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;error&quot;]</td>
-			<td>No such document was found.</td>
-		</tr>
-		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;subfield_field_my_career_subordination_title_relation&quot;]</td>
-			<td>Add Organisation</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextNotPresent</td>
-			<td>Input data has errors. Please look at the error messages below.</td>
-			<td>&nbsp;</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -249,14 +243,10 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>link=Details</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Details&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>type</td>
-			<td>//input[@name=&quot;field_my_middle_name&quot;]</td>
-			<td>Scott</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
 			<td>type</td>
@@ -267,6 +257,9 @@
 			<td>select</td>
 			<td>//select[@name=&quot;field_my_marital_status&quot;]</td>
 			<td>Married</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt;init&lt;/span&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -299,9 +292,16 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Validate</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Validate&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -316,16 +316,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//li[@class=&quot;selected&quot;]/a/span</td>
-			<td>Details</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -342,22 +332,15 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Status changed.</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;View&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>link=View</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
 			<td>verifyText</td>
-			<td>//div[@title=&quot;The current state of the document.&quot;]/div[1]</td>
+			<td>//p[@id=&quot;field_my_translated_validation_state_title&quot;]</td>
 			<td>Validated</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -375,14 +358,10 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>open</td>
-			<td>${base_url}/view</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Persons</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -398,14 +377,10 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[1]</td>
-			<td>ERP5</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Persons&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Persons</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -422,7 +397,7 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1;">
+		<tr>
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
 		</tr>
 		<tr>
@@ -435,8 +410,8 @@
 			<td>Clean Ok</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt;Wait for activities &lt;/span&gt;</td>
 		</tr>
 	</tbody>
 </table>
