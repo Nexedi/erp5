@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,16 +58,13 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/2</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -79,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jabberclient.appcache</string> </value>
+            <value> <string>gadget_officejs_jabber.json</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jabber_gadget_jabberclient_appcache</string> </value>
+            <value> <string>jabber_web_manifest_json</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -106,98 +102,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 08 Jun 2018 00:00:00 +0000\n
-\n
-CACHE:\n
-font-awesome/font-awesome.css\n
-font-awesome/font-awesome-webfont.eot\n
-font-awesome/font-awesome-webfont.woff\n
-font-awesome/font-awesome-webfont.woff2\n
-font-awesome/font-awesome-webfont.ttf\n
-font-awesome/font-awesome-webfont.svg\n
-erp5_launcher_nojqm.js\n
-gadget_global.js\n
-gadget_erp5_global.js\n
-gadget_jio.js\n
-gadget_jio.html\n
-handlebars.js\n
-jiodev.js\n
-renderjs.js\n
-rsvp.js\n
-gadget_erp5_router.html\n
-gadget_erp5_router.js\n
-gadget_erp5_notification.html\n
-gadget_erp5_notification.js\n
-gadget_erp5_editor_panel.html\n
-gadget_erp5_editor_panel.js\n
-gadget_erp5_search_editor.html\n
-gadget_erp5_search_editor.js\n
-gadget_erp5_sort_editor.html\n
-gadget_erp5_sort_editor.js\n
-gadget_erp5_configure_editor.html\n
-gadget_erp5_configure_editor.js\n
-gadget_erp5_header.html\n
-gadget_erp5_header.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_textarea.html\n
-gadget_erp5_field_textarea.js\n
-gadget_erp5_field_password.html\n
-gadget_erp5_field_password.js\n
-gadget_erp5_label_field.html\n
-gadget_erp5_label_field.js\n
-gadget_html5_input.html\n
-gadget_html5_input.js\n
-gadget_html5_textarea.html\n
-gadget_html5_textarea.js\n
-gadget_html5_element.html\n
-gadget_html5_element.js\n
-gadget_erp5_page_jabberclient_dialog.html\n
-gadget_erp5_page_jabberclient_dialog.js\n
-gadget_erp5_page_jabberclient_password.html\n
-gadget_erp5_page_jabberclient_password.js\n
-gadget_erp5_page_jabberclient_connect.html\n
-gadget_erp5_page_jabberclient_connect.js\n
-gadget_erp5_page_jabberclient_contact.html\n
-gadget_erp5_page_jabberclient_contact.js\n
-gadget_erp5_page_jabberclient_new_contact.html\n
-gadget_erp5_page_jabberclient_new_contact.js\n
-gadget_erp5_page_jabberclient_attachment.html\n
-gadget_erp5_page_jabberclient_attachment.js\n
-gadget_jabberclient_panel.html\n
-gadget_jabberclient_panel.js\n
-gadget_jabberclient_jio.html\n
-gadget_jabberclient_jio.js\n
-gadget_jabberclient_dialog.html\n
-gadget_jabberclient_dialog.js\n
-gadget_jabberclient.css\n
-favicon.ico\n
-appjabbericon.svg\n
-gadget_officejs_jabber.json\n
-gadget_jabberclient_notification_warning.ico\n
-gadget_jabberclient_notification_ok.ico\n
-connection/\n
-connection/gadget_global.js\n
-connection/gadget_jabberconnection.js\n
-connection/strophe.js\n
-connection/renderjs.js\n
-connection/rsvp.js\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget Jabber Client AppCache</string> </value>
+            <value> <string>Officejs Jabber Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -285,7 +191,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1441977297.98</float>
+                              <float>1623873589.95</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -334,7 +240,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.52841.31789.31726</string> </value>
+                      <value> <string>992.52841.16625.61491</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -352,7 +258,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1623950075.33</float>
+                              <float>1623950080.23</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -379,9 +285,7 @@ NETWORK:\n
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>detect_converted_file</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -397,7 +301,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>empty</string> </value>
+                      <value> <string>converted</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -415,7 +319,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1441976843.07</float>
+                              <float>1623848656.83</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
