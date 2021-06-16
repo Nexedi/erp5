@@ -105,13 +105,24 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Persons</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Persons&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
 		</tr>
 	</tbody>
 </table>
-</test></section>
+</test>
+</section>
 
 <section class="screenshot">
 <h1>Click on John&#39;s line</h1>
@@ -122,22 +133,23 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR&#39;],), enter_object=True)&quot;/&gt;</td>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR&quot;)]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Persons</td>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR&quot;)]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
-			<td>ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
-</test></section>
+</test>
+</section>
 
 <section class="screenshot">
 <h1>Open the Events tab</h1>
@@ -149,13 +161,15 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>link=Events</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
-</test></section>
+</test>
+</section>
 
 <section class="screenshot">
 <h1>The Events list is empty</h1>
@@ -164,15 +178,10 @@
 <p>As you can see, the Events list of John Doh is still empty because until now, there is no Event related to John Doh, i.e., VIFIB hasn&#39;t had any interaction with him so far.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;listbox-current-page-total-number&quot;]</td>
-			<td>0 records</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -185,9 +194,10 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Create New Event</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create New Event&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -213,6 +223,19 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_your_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
 			<td>select</td>
 			<td>//select[@name=&quot;field_your_portal_type&quot;]</td>
 			<td>Mail Message</td>
@@ -221,11 +244,6 @@
 			<td>type</td>
 			<td>//input[@name=&quot;field_your_title&quot;]</td>
 			<td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
-		</tr>
-		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;field_your_resource&quot;]</td>
-			<td>Test Functional Incoming Service</td>
 		</tr>
 		<tr>
 			<td>click</td>
@@ -238,9 +256,10 @@
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -256,9 +275,9 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>New event created.</td>
+			<td>waitForElementPresent</td>
+			<td>//input[@value=&quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>verifyText</td>
@@ -280,13 +299,11 @@
 	<tbody>
 		<tr>
 			<td>type</td>
-			<td>//textarea[@name=&quot;field_my_text_content&quot;]</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_text_content&quot;]//textarea</td>
 			<td>ZUITE-TEST-EVENT-CONTENT this is the content of our event.</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -304,14 +321,16 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Declare as Received</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Declare as Received&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -327,19 +346,19 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_destination_title_list&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
 			<td>storeValue</td>
-			<td>//textarea[@name=&quot;field_my_destination_title_list&quot;]</td>
+			<td>//input[@name=&quot;field_my_destination_title_list&quot;]</td>
 			<td>user_title</td>
 		</tr>
 		<tr>
 			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Received</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
 		</tr>
 	</tbody>
 </table>
@@ -380,14 +399,19 @@
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_another_test_user&quot;&gt;Login As Another Functional Test User&lt;/span&gt;</td>
 		</tr>
 		<tr>
-			<td>openAndWait</td>
-			<td>${base_url}/view</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Events</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -418,12 +442,17 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Events</td>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;)]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-INCOMING-EVENT-EVENT-001&#39;],), enter_object=True)&quot;/&gt;</td>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -441,9 +470,10 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Create Follow-up Ticket</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create Follow-up Ticket&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -469,9 +499,10 @@
 			<td>Support Request</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -491,19 +522,40 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[text()=&quot;Delivered&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>verifyValue</td>
 			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]</td>
 			<td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]/../a</td>
+			<td>click</td>
+			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]/../../a</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Support Requests</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@value=&quot;ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>storeLocation</td>
@@ -541,39 +593,17 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>openAndWait</td>
+			<td>open</td>
 			<td>${support_request}</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_start_date_year&quot;]</td>
-			<td>2011</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_start_date_month&quot;]</td>
-			<td>01</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_start_date_day&quot;]</td>
-			<td>12</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_stop_date_year&quot;]</td>
-			<td>2012</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_stop_date_month&quot;]</td>
-			<td>01</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;subfield_field_my_stop_date_day&quot;]</td>
-			<td>02</td>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_quantity&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>type</td>
@@ -596,9 +626,7 @@
 			<td>EUR</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -641,19 +669,23 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr style="opacity: 1; z-index: 0;">
-			<td>clickAndWait</td>
-			<td>link=ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
+			<td>click</td>
+			<td>//a[text()=&quot;ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
 			<td>verifyValue</td>
 			<td>//input[@name=&quot;field_my_title&quot;]</td>
 			<td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Create Response</td>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Create Response&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -671,15 +703,21 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>type</td>
-			<td>//textarea[@name=&quot;field_your_response_event_text_content&quot;]</td>
-			<td>Some response</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>waitForElementPresent</td>
+			<td>//div[@data-gadget-scope=&quot;field_your_response_event_text_content&quot;]//textarea</td>
 			<td>&nbsp;</td>
 		</tr>
+		<tr>
+			<td>type</td>
+			<td>//div[@data-gadget-scope=&quot;field_your_response_event_text_content&quot;]//textarea</td>
+			<td>Some response</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr
 	</tbody>
 </table>
 </test></section>
@@ -696,17 +734,30 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>storeAttribute</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]@href</td>
-			<td>waitack</td>
+			<td>storeLocation</td>
+			<td>response</td>
+			<td>&nbsp;</td>
 		</tr>
-		<tr style="opacity: 1;">
+		<tr>
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
 		</tr>
 		<tr>
 			<td>openAndWait</td>
-			<td>${waitack}</td>
+			<td>${base_url}/Base_clearCache</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>assertTextPresent</td>
+			<td>Cleared.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${response}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -724,18 +775,22 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>link=Related Events</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Related Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[text()=&quot;Re: ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;listbox-current-page-total-number&quot;]</td>
-			<td>1 records</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>link=Re: ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
+			<td>click</td>
+			<td>//a[text()=&quot;Re: ZUITE-TEST-INCOMING-EVENT-EVENT-001&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 	</tbody>
@@ -751,15 +806,18 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Sent</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;field_my_resource&quot;]</td>
-			<td>Test Functional Incoming Service</td>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Sent</td>
 		</tr>
 		<tr>
 			<td>type</td>
@@ -767,23 +825,28 @@
 			<td>${user_title}</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Deliver&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Deliver</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
 			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Delivered</td>
 		</tr>
 	</tbody>
@@ -803,14 +866,19 @@ You remember the Ticket is a Support Request. In order to find it, <strong>click
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Events</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Events</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -825,26 +893,6 @@ You remember the Ticket is a Support Request. In order to find it, <strong>click
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Folder_show:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//tr[@class=&#39;listbox-search-line&#39;]/th[@class=&quot;listbox-table-filter-cell&quot;]/input[@name=&#39;listbox_title&#39;]</td>
-			<td>%ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//input[@name=&quot;Base_doSelect:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;listbox-current-page-total-number&quot;]</td>
-			<td>2 records</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -866,22 +914,24 @@ You remember the Ticket is a Support Request. In order to find it, <strong>click
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
 		</tr>
 		<tr>
-			<td>openAndWait</td>
-			<td>${base_url}/view</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Support Requests&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001&quot;)]</td>
 			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Support Requests</td>
-		</tr>
-		<tr>
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001&#39;],), enter_object=True)&quot;/&gt;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;listbox-current-page-total-number&quot;]</td>
-			<td>2 records</td>
 		</tr>
 		<tr style="opacity: 1;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
