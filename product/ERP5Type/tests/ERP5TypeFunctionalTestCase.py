@@ -258,13 +258,25 @@ class FunctionalTestRunner:
       )))
       # XXX No idea how to wait for the iframe content to be loaded
       time.sleep(5)
-      # Count number of test to be executed
+      # Count number of tests to be executed
       test_count = browser.execute_script(
         "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
       ) - 1
+      # Wait for tests to end
       WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
         By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
       )))
+      # At the end of each test, updateSuiteWithResultOfPreviousTest updates
+      # testSuiteFrame iframe with hidden div containing the test results table.
+      # We will inspect these tables to know which tests have failed. First we
+      # need to wait a bit more, because at the end of test ( testComplete ),
+      # updateSuiteWithResultOfPreviousTest is called by setTimeout. We want to
+      # wait for the last test (which is the last td) result table to be present
+      browser.switch_to_frame('testSuiteFrame')
+      WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
+        By.XPATH, '//table/tbody/tr/td[last()]//table'
+      )))
+      browser.switch_to_default_content()
       self.execution_duration = round(time.time() - start_time, 2)
       html_parser = etree.HTMLParser(recover=True)
       iframe = etree.fromstring(
