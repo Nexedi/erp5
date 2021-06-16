@@ -9,29 +9,29 @@
 <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
-		</tr>
-		<tr>
-			<td>openAndWait</td>
-			<td>${base_url}/Zuite_setUpPostEventTest</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextPresent</td>
-			<td>Init Ok</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+            </tr>
+            <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_setUpPostEventTest</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>verifyTextPresent</td>
+                <td>Init Ok</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+            </tr>
+            <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section>
@@ -62,28 +62,56 @@
 <p>The Black&nbsp;Zone displays the content of the Event. As we have edited this Event previously, it is now <strong>ready to be sent</strong> . We will then explain how to send this event from this event sheet.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>open</td>
-			<td>${base_url}/view</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Events</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-POST-EVENT-EVENT-001&#39;],), enter_object=True)&quot;/&gt;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Planned</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-EVENT-001&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-EVENT-001&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td>click</td>
+                <td>//input[@name=&quot;editable&quot;]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//input[@name=&quot;field_my_title&quot;]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>verifyText</td>
+                <td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+                <td>Planned</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -97,15 +125,16 @@
 <p>When you are sure everything is fine, you can then confirm the planned Event. <strong>Click on the &quot;Confirm&quot; on the sidebar</strong> as highlighted&nbsp;in Red on the screenshot.&nbsp;</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Confirm</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Confirm&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -115,25 +144,27 @@
 <p>In this page you can add comments (only visible for your team) to this Event that is going to be confirmed, and then <strong>click on Confirm</strong> once again.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Status changed.</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Confirmed</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Confirm&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//p[text()=&quot;Confirmed&quot;]</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -145,15 +176,16 @@
 <p>Then we will <strong>Send</strong> the <strong>confirmed</strong> Event. The first step is to <strong>click on Send</strong> in the sidebar.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Send</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Send&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -165,15 +197,16 @@
 <p>You can first <strong>add some comments</strong> if needed, which will be only seen&nbsp;by you team. When you are ready to send the Event, <strong>click on Send</strong> .</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -187,20 +220,15 @@
 <p>Then we will have to check the <strong>Ticket sheet</strong> . <strong>Click on the Plane Icon</strong> next to the Follow Up field of your Event. This action will lead you back to the related Ticket, in our example, which is still the same campaign &quot;Beta Developer Program&quot; as in the previous tutorial &ldquo;How to Send Outgoing Events&rdquo;.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Status changed.</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Sent</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//p[text()=&quot;Sent&quot;]</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -212,35 +240,36 @@
 <p>However, are you sure that your Event has been sent to the right person-the Recipient that you set in the Event? And do you want to know how does this message Event behaves on the person document of the Recipient? In order to have a clear look, we will need to access to the <strong>Person Document of the Recipient</strong> .</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//input[@name=&quot;field_my_default_follow_up_title&quot;]/../a</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Campaigns</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
-			<td>ZUITE-TEST-POST-EVENT-CAMPAIGN-001</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;listbox-current-page-total-number&quot;]</td>
-			<td>1 records</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//tr[@class=&#39;listbox-data-line-0 DataA&#39;]/td[7]/</td>
-			<td>Sent</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td>click</td>
+                <td>//input[@name=&quot;field_my_default_follow_up_title&quot;]/../../a</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//input[@value=&quot;ZUITE-TEST-POST-EVENT-CAMPAIGN-001&quot;]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-EVENT-001&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;Sent&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -250,15 +279,22 @@
 <p>Click on the &quot;plane&quot; icon next to the Recipient &quot;person&quot; file you want to access, it will lead you to the database of this person. In this screenshot, we will access the Person document of Yingjie Xu.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Persons</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Persons&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -270,28 +306,37 @@
 <p>In ERP5 the Event tab of the person document displays all the Events that have been sent or received by a person. As you can see on the screenshot, the Event we have sent in this tutorial is displayed here. This method helps you follow the relations you have with your clients, suppliers and prospects. If you click on the Event, you will be redirected to the sheet of this Event.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-POST-EVENT-PERSON-SUPERVISOR&#39;],), enter_object=True)&quot;/&gt;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
-			<td>ZUITE-TEST-POST-EVENT-PERSON-SUPERVISOR</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>link=Events</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextPresent</td>
-			<td>ZUITE-TEST-POST-EVENT-EVENT-001</td>
-			<td>&nbsp;</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-PERSON-SUPERVISOR&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-PERSON-SUPERVISOR&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Events&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-EVENT-001&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
 
 <section class="screenshot">
@@ -301,37 +346,40 @@
 <p>Here we are back on the Event sheet of the Event that we have sent to Yingjie Xu&nbsp;in this tutorial.</p>
 </details>
 <test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr>
-			<td>clickAndWait</td>
-			<td>link=ZUITE-TEST-POST-EVENT-EVENT-001</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Sent</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
-		</tr>
-		<tr>
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
-		<tr>
-			<td>openAndWait</td>
-			<td>${base_url}/Zuite_tearDownPostEventTest</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextPresent</td>
-			<td>Clean Ok</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
-	</tbody>
-</table>
+    <table class="test" style="display: none;">
+        <tbody>
+            <tr>
+                <td>click</td>
+                <td>//a[contains(text(), &quot;ZUITE-TEST-POST-EVENT-EVENT-001&quot;)]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+            </tr>
+            <tr>
+                <td>waitForElementPresent</td>
+                <td>//p[text()=&quot;Sent&quot;]</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr style="opacity: 1;">
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+            </tr>
+            <tr>
+                <td>openAndWait</td>
+                <td>${base_url}/Zuite_tearDownPostEventTest</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>verifyTextPresent</td>
+                <td>Clean Ok</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+            </tr>
+        </tbody>
+    </table>
 </test></section>
