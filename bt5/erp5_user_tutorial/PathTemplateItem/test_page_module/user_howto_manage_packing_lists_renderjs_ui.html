@@ -83,9 +83,6 @@
 		<tr style="opacity: 1; z-index: 0;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -103,6 +100,14 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -120,38 +125,54 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>openAndWait</td>
-			<td>${base_url}</td>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Sale Packing Lists&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALEORDER-PRODUCT-001&quot;)]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Sale Packing Lists</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, &#39;ZUITE-TEST-SALEORDER-PRODUCT-001&#39;],), enter_object=True)&quot;/&gt;</td>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALEORDER-PRODUCT-001&quot;)]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Sale Packing Lists</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
-			<td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_comment&quot;]//textarea</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>type</td>
-			<td>//textarea[@name=&quot;field_my_comment&quot;]</td>
+			<td>//div[@data-gadget-scope=&quot;field_my_comment&quot;]//textarea</td>
 			<td>Delivery by the test.</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
 			<td>verifyValue</td>
@@ -193,15 +214,15 @@
 			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
 			<td>General Sale Trade Condition</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td>verifyTextPresent</td>
-			<td>1 records</td>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE-TEST-SALEORDER-PRODUCT-001&quot;)]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr style="opacity: 1;">
-			<td>verifyValue</td>
-			<td>//tr[@class=&#39;listbox-data-line-0 DataA&#39;]/td[6]/input</td>
-			<td>100 000.0</td>
+			<td>waitForElementPresent</td>
+			<td>//p[contains(text(), &quot;100 000.00&quot;)]</td>
+			<td>&nbsp;</td>
 		</tr>
 	</tbody>
 </table>
@@ -223,32 +244,42 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Ship Packing List</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td>storeLocation</td>
+			<td>packing_list</td>
 			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Shipped</td>
-		</tr>
-		<tr>
-			<td>storeAttribute</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]@href</td>
-			<td>wait</td>
 		</tr>
 		<tr style="opacity: 1;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
 		</tr>
 		<tr>
 			<td>open</td>
-			<td>${wait}</td>
+			<td>${packing_list}</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Ship Packing List&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
+			<td>Shipped</td>
 		</tr>
 	</tbody>
 </table>
@@ -268,27 +299,31 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Deliver Packing List</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Deliver Packing List&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
+			<td>//p[@id=&quot;field_my_translated_simulation_state_title&quot;]</td>
 			<td>Delivered</td>
 		</tr>
 		<tr>
-			<td>storeAttribute</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]@href</td>
+			<td>storeLocation</td>
 			<td>spl</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+			<td>&nbsp;</td>
 		</tr>
 	</tbody>
 </table>
@@ -335,31 +370,19 @@ The same as the &quot;Related Sale Packing List&quot;, you can <strong>reach the
 		<tr style="opacity: 1; z-index: 0;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
 		<tr>
 			<td>open</td>
 			<td>${spl}</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_jump&quot;]</td>
-			<td>Related Sale Invoice Transaction</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[1]</td>
-			<td>ERP5</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Related Sale Invoice Transaction&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Accounting</td>
-		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
 		</tr>
 		<tr style="opacity: 1;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
