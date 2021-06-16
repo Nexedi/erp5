@@ -95,6 +95,21 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Persons&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -110,13 +125,26 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;tal:block tal:content=&quot;structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([&#39;title&#39;, here.Zuite_getHowToInfo()[&#39;link_howto_person_title&#39;]],), enter_object=True)&quot;/&gt;</td>
+		<tr>
+			<td>click</td>
+			<td>//a[text()=&quot;ZUITE-TEST-LINK USER-001&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>assertValue</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
 			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
-			<td>ZUITE-TEST-LINK</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>assertValue</td>
@@ -127,6 +155,9 @@
 			<td>storeLocation</td>
 			<td>person</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -144,13 +175,28 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//input[@name=&quot;portal_selections/viewSearchRelatedDocumentDialog0:method&quot;]</td>
+			<td>open</td>
+			<td>${person}</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//div[@class=&quot;relation-input ui-input-text&quot;]/button</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
 		</tr>
 	</tbody>
 </table>
-</test></section>
+</test>
+</section>
 
 <section class="screenshot">
 <h1>Choose the organisation and set the relation</h1>
@@ -174,54 +220,20 @@ After you have set the relation, the &quot;magnify&nbsp;glass&quot; icon will ch
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>type</td>
-			<td>listbox_title</td>
-			<td>ZUITE-TEST-LINK-ORGANISATION-001</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>dialog_update_button</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>ZUITE-TEST-LINK-ORGANISATION-001</td>
-		</tr>
-		<tr>
-			<td>assertValue</td>
-			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//input[@name=&quot;portal_selections/viewSearchRelatedDocumentDialog0:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>listbox_title</td>
-			<td>ZUITE-TEST-LINK-ORGANISATION-001</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>dialog_update_button</td>
+			<td>assertElementPresent</td>
+			<td>//a[text()=&quot;ZUITE-TEST-LINK-ORGANISATION-001&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>click</td>
-			<td>//a[text()=&#39;ZUITE-TEST-LINK-ORGANISATION-001&#39;]/../../td[1]/input</td>
+			<td>//a[text()=&quot;ZUITE-TEST-LINK-ORGANISATION-001&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Data updated.</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -248,9 +260,12 @@ After you have set the relation, the &quot;magnify&nbsp;glass&quot; icon will ch
 			<td>ZUITE-TEST-LINK-ORGANISATION-001</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]/following-sibling::*[2]</td>
+			<td>click</td>
+			<td>//div[@class=&quot;relation-input ui-input-text&quot;]/a</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
 			<td>assertValue</td>
@@ -281,14 +296,23 @@ After you have set the relation, the &quot;magnify&nbsp;glass&quot; icon will ch
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
 		</tr>
 		<tr>
-			<td>openAndWait</td>
+			<td>open</td>
 			<td>${organisation}</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>link=ZUITE-TEST-LINK</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[text()=&quot;ZUITE-TEST-LINK&quot;]</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>assertValue</td>
@@ -340,32 +364,7 @@ After you have set the relation, the &quot;magnify&nbsp;glass&quot; icon will ch
 <details open="open">
 <p>Once have created the person Lei XU, just type the name of his/her organisation in the &ldquo;organisation&rdquo; field. When you are ready, click the save button.</p>
 </details>
-<test>
-<table class="test" style="display: none;">
-	<tbody>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>type</td>
-			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
-			<td>ZUITE-TEST-LINK-ORGANISATION-002</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;information_area&quot;]</td>
-			<td>Input data has errors. Please look at the error messages below.</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;error&quot;]</td>
-			<td>No such document was found.</td>
-		</tr>
-	</tbody>
-</table>
-</test></section>
+</section>
 
 <section class="screenshot">
 <h1>Add organisation</h1>
@@ -379,24 +378,6 @@ To do this, first browse the item menu circled in red, then click on &ldquo;Crea
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>select</td>
-			<td>//select[@name=&quot;subfield_field_my_career_subordination_title_relation&quot;]</td>
-			<td>Add Organisation</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>verifyTextNotPresent</td>
-			<td>Input data has errors. Please look at the error messages below.</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
 		<tr style="opacity: 1;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
 		</tr>
