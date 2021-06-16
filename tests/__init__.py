@@ -146,7 +146,7 @@ class ERP5(_ERP5):
     search = self.FTEST_PASS_FAIL_RE.search(summary)
     if search:
       group_dict = search.groupdict()
-      status_dict['failure_count'] = int(group_dict['failures'])
+      status_dict['failure_count'] += int(group_dict['failures'])
       status_dict['test_count'] = int(group_dict['total'])
       status_dict['skip_count'] = int(group_dict['expected_failure'])
     return status_dict
