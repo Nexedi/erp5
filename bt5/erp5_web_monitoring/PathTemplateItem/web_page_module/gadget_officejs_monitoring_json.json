@@ -1,0 +1,12 @@
+{
+      "short_name": "Monitor",
+      "name": "OfficeJS Monitor",
+      "description": "Cloud Monitoring Tool",
+      "icons": [{
+        "src": "img/vifib-logo.png",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
