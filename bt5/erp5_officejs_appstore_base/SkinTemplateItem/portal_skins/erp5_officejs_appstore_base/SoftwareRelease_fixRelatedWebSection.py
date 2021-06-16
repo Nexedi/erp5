@@ -49,9 +49,4 @@ else:
   web_section.setAggregate(default_page)
 if web_manifest is not None:
   web_section.setProperty('configuration_webapp_manifest_url', web_manifest)
-
-web_site.edit(
-  configuration_latest_version=software_release.getReference()
-)
-
 return "Done"
