@@ -5,6 +5,7 @@ portal = context.getPortalObject()
 preference_tool = portal.portal_preferences
 software_product_list = portal.portal_catalog(portal_type='Software Product', validation_state='validated')
 appstore_data = []
+appstore_data_cn = []
 logo_url_list = []
 i = 0
 for software_product in software_product_list:
@@ -26,7 +27,7 @@ for software_product in software_product_list:
         logo_url_list.append('appstore/' + logo.getReference())
         # Future domain could be defined by user
         app_domain = software_product.getFollowUpId(portal_type="Web Section")
-        appstore_data.append({
+        app_data = {
           "int_index": str(i),
           "application_image_type": 'image',
           "application_image_url": logo.getReference(),
@@ -41,7 +42,11 @@ for software_product in software_product_list:
           "application_category": data['category'] if "category" in data else "Documents",
           "application_title_i18n": "application.custom.%s.title" % app_domain,
           "application_description_i18n": "application.custom.%s.description" % app_domain
-        })
+        }
+        appstore_data.append(app_data)
+        app_data_cn = app_data.copy()
+        app_data_cn["application_url"] = app_data_cn["application_url"].replace(".com", ".cn")
+        appstore_data_cn.append(app_data_cn)
         i+=1
 
 json_data = json.dumps(appstore_data)
@@ -50,6 +55,8 @@ json_document = portal.document_module['store_officejs_data_application_sample_j
 if (json_data != json_document.getData()):
   # Do not modify document history with edit if nothing changed
   json_document.edit(data=json.dumps(appstore_data))
+  json_document_cn = portal.document_module['store_officejs_data_application_sample_cn_json']
+  json_document_cn.edit(data=json.dumps(appstore_data_cn))
   manifest_content = portal.web_page_module['store_officejs_base_appcache'].getTextContent()
   # Ensure the appcache content is modified when the json is too
   logo_url_list.append('# %s' % DateTime())
