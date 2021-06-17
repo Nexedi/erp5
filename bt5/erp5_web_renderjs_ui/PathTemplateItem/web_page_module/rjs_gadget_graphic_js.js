@@ -117,19 +117,11 @@
       for (i = 0; i < query_list.length; i += 1) {
         queue_list.push(gadget.jio_allDocs(query_list[i]));
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(queue_list);
-        })
+      return new RSVP.Queue(RSVP.all(queue_list))
         .push(function (result_list) {
           var bar_chart = gadget.element.querySelector(".wrap"),
-            loader = gadget.element.querySelector(".graph-spinner");
-          loader.style.display = "none";
-          bar_chart.style.display = "block";
-          return result_list;
-        })
-        .push(function (result_list) {
-          var graph_gadget = result_list[0],
+            loader = gadget.element.querySelector(".graph-spinner"),
+            graph_gadget = result_list[0],
             data_mapping = {},
             label_list = [],
             state_list = [],
@@ -139,6 +131,8 @@
             label,
             state,
             j;
+          loader.style.display = "none";
+          bar_chart.style.display = "block";
 
           function avoidFunction(el) {
             return el && !el.match(/^\D+\(\w+\)$/);
