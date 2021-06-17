@@ -1,8 +1,5 @@
 test_page_module/developer-Test.Page.Sample
-test_page_module/user-HowTo.Change.Language-TESTONLY
-test_page_module/user-HowTo.Use.FullText.Search-TESTONLY
-test_page_module/user-Howto.Manage.Invoices
-test_page_module/user-Howto.Manage.Invoices/**
+test_page_module/user_howto_change_language_testonly_renderjs_ui
 test_page_module/user_howto_create_a_payment_renderjs_ui
 test_page_module/user_howto_create_and_manage_products_renderjs_ui
 test_page_module/user_howto_create_bank_account_renderjs_ui
@@ -21,3 +18,4 @@ test_page_module/user_howto_manage_invoices_renderjs_ui
 test_page_module/user_howto_manage_packing_lists_renderjs_ui
 test_page_module/user_howto_manage_support_request_renderjs_ui
 test_page_module/user_howto_post_outgoing_events_renderjs_ui
+test_page_module/user_howto_use_fulltext_search_testonly_renderjs_ui

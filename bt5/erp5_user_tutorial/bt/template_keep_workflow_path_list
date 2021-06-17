@@ -1,8 +1,6 @@
 test_page_module/developer-Test.Page.Sample
 test_page_module/user-HowTo.Change.Language-TESTONLY
 test_page_module/user-HowTo.Use.FullText.Search-TESTONLY
-test_page_module/user-Howto.Manage.Invoices
-test_page_module/user-Howto.Manage.Invoices/**
 test_page_module/user_howto_create_persons_renderjs_ui
 test_page_module/user_howto_create_new_user_renderjs_ui
 test_page_module/user_howto_create_organisations_renderjs_ui
