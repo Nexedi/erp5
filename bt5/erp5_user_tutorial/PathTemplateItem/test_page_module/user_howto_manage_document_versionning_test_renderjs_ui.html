@@ -62,6 +62,31 @@
 
 <p><b>Note</b>: ERP5 document module can convert original documents in many different format so you must only upload your document in the original format. Please refer to &quot;DMS Cheat Sheet&quot; to learn about document conversion.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Done.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
 
 <section class="screenshot">
@@ -90,6 +115,38 @@
 
 <p>Then comes <b>few categories which will allow you to classify</b> your document as you would have done with a paper document. You will choose the Group and the site it refer to. Then the function of the document if it has one. Finally you can <b>choose one or more publication section</b> for the document.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Text&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Text&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
 
 <section class="screenshot">
@@ -199,4 +256,26 @@
 
 <p>The same will be done by ERP5 with your document, if you download a document from it, ERP5 will fill in all those properties.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>open</td>
+			<td>${base_url}</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Contribute File&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//select[@name=&quot;field_your_classification&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
