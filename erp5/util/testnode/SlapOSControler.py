@@ -31,11 +31,11 @@ import subprocess
 import time
 import xml_marshaller
 import argparse
-from slapos import client
-from . import logger
-from .Utils import createFolder, rmtree
-
 from six.moves import range
+from slapos import client
+from slapos.util import rmtree
+from . import logger
+from .Utils import createFolder
 
 MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
@@ -278,7 +278,8 @@ class SlapOSControler(object):
       self._resetSoftware()
     else:
       createFolder(self.software_root)
-    rmtree(self.old_instance_root) # BBB
+    if os.path.exists(self.old_instance_root): # BBB
+      rmtree(self.old_instance_root)
     instance_root = self.instance_root
     # Delete any existing partition in order to not get its data (ex.
     # MySQL DB content) from previous runs. To support changes of partition

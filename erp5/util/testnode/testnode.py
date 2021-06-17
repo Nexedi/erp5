@@ -31,6 +31,7 @@ import logging
 from six.moves.urllib.parse import urljoin
 from contextlib import contextmanager
 from slapos.slap.slap import ConnectionError
+from slapos.util import rmtree
 from . import logger, log_formatter
 from .ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
@@ -39,7 +40,6 @@ from .NodeTestSuite import NodeTestSuite, SlapOSInstance
 from .ScalabilityTestRunner import ScalabilityTestRunner
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
-from .Utils import rmtree
 from .. import taskdistribution
 
 MAX_TEMP_TIME = 0.01 # time in days we should keep temp files
