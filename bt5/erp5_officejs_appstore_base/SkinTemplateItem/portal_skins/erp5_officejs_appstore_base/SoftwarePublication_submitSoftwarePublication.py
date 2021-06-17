@@ -1,4 +1,4 @@
-def rejectSoftwarePublication():
+def rejectSoftwarePublication(exception=None):
   # TODO: reject somehow the publication (in the WF, there is no way to reject it from draft state)
   return
 
@@ -59,54 +59,61 @@ if not zip_file:
   rejectSoftwarePublication()
   return
 
+from cStringIO import StringIO
+import zipfile
+from zipfile import BadZipfile
+
+zipbuffer = StringIO()
+zipbuffer.write(str(zip_file.getData()))
 try:
-  from cStringIO import StringIO
-  import zipfile
-
-  zipbuffer = StringIO()
-  zipbuffer.write(str(zip_file.getData()))
   zip_reader = zipfile.ZipFile(zipbuffer)
-  base_length = len(getBaseDirectory(zip_reader.namelist()))
+except BadZipfile as e:
+  rejectSoftwarePublication(e)
+  return
+base_length = len(getBaseDirectory(zip_reader.namelist()))
 
-  tag = "preparing_sr_%s" % software_release_url
-  default_page = ""
-  for name in zip_reader.namelist():
-    if zip_reader.getinfo(name).file_size == 0:
-      continue
-    temp_file = StringIO(zip_reader.read(name))
-    url = name[base_length:]
+tag = "preparing_sr_%s" % software_release_url
+default_page = ""
+for name in zip_reader.namelist():
+  if zip_reader.getinfo(name).file_size == 0:
+    continue
+  temp_file = StringIO(zip_reader.read(name))
+  url = name[base_length:]
 
-    if url in ("index.html", "index.htm"):
-      publication_section = application_publication_section.landing_page.getRelativeUrl()
-    else:
-      publication_section = application_publication_section.getRelativeUrl()
+  if url in ("index.html", "index.htm"):
+    publication_section = application_publication_section.landing_page.getRelativeUrl()
+  else:
+    publication_section = application_publication_section.getRelativeUrl()
 
-    document = portal.portal_contributions.newContent(
-      file=temp_file,
-      filename=url,
-      redirect_to_document=False,
-      user_login=user_login,
-      reference=version + "/" + url,
-      title=url,
-      version=version,
-      publication_section_value=publication_section,
-      follow_up=software_release_url,
-      portal_type="File",
-    )
-    # XX Hackish
-    document.setCategoryList(
-      document.getCategoryList() + ["contributor/" + software_publication.getSource()])
-    if url in ("index.html", "index.htm"):
-      default_page = document.getRelativeUrl()
-      web_manifest_url = extractWebManifest(document.getData())
-    document.activate(tag=tag).publish()
+  document = portal.portal_contributions.newContent(
+    file=temp_file,
+    filename=url,
+    redirect_to_document=False,
+    user_login=user_login,
+    reference=version + "/" + url,
+    title=url,
+    version=version,
+    publication_section_value=publication_section,
+    follow_up=software_release_url,
+    portal_type="File",
+  )
+  try:
+    publication_source_category = "contributor/" + software_publication.getSource()
+  except TypeError as e:
+    rejectSoftwarePublication(e)
+    return
+  # XX Hackish
+  document.setCategoryList(
+    document.getCategoryList() + [publication_source_category])
+  if url in ("index.html", "index.htm"):
+    default_page = document.getRelativeUrl()
+    web_manifest_url = extractWebManifest(document.getData())
+  document.activate(tag=tag).publish()
 
-  software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page, web_manifest = web_manifest_url)
+software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page, web_manifest = web_manifest_url)
 
-  if portal.portal_workflow.isTransitionPossible(zip_file, 'publish'):
-    zip_file.publish()
-  if portal.portal_workflow.isTransitionPossible(software_release, 'submit'):
-    software_release.submit()
-  software_publication.activate(after_tag=tag).submit()
-except:
-  rejectSoftwarePublication()
+if portal.portal_workflow.isTransitionPossible(zip_file, 'publish'):
+  zip_file.publish()
+if portal.portal_workflow.isTransitionPossible(software_release, 'submit'):
+  software_release.submit()
+software_publication.activate(after_tag=tag).submit()
