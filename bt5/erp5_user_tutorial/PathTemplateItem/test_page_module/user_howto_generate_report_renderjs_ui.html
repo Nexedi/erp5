@@ -21,6 +21,31 @@
 <details open="open">
 <p>In this guide, you will learn which type of report you can generate with ERP5, and how to generate them.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_createFunctionalTestUser</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>verifyTextPresent</td>
+			<td>Done.</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
 
 <section class="screenshot">
@@ -59,6 +84,30 @@
 <details open="open">
 <p>Here is an example of the Account Statement report we have just created.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Site Reports&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[text()=&quot;Account Statement&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[text()=&quot;Account Statement&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//select[@name=&quot;field_your_section_category&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
 
 <section class="screenshot">
