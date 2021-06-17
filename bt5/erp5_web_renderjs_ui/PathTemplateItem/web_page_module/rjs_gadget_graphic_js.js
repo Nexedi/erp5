@@ -1,6 +1,6 @@
-/*global document, window, Option, rJS, RSVP, console, Array */
+/*global document, window, Option, rJS, RSVP, console, Array, SimpleQuery, Query, ComplexQuery */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Array) {
+(function (window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery) {
   "use strict";
 
   var color_list = ["#CCA08D", "#58ADC4", "#F9B39B", "#B75937",
@@ -20,82 +20,119 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      var i,
-        group_by,
+      var group_by,
         gadget = this,
         query_by = options.query_by,
         select_list = options.select_list || [],
         query_list = [],
-        date_range_catalog_key = options.date_range_catalog_key,
-        date_range_list = options.date_range_list || [],
-        y;
+        jio_query_list = [],
+        sub_query_list = [],
+        domain_id = options.layout.x.domain_id,
+        data = {
+          x: options.layout.x.key,
+          title: options.title || options.layout.x.title,
+          x_title: options.layout.x.title,
+          y_title: options.layout.y.title,
+          column_list: options.layout.x.column_list,
+          graph_gadget: "unsafe/gadget_field_graph_echarts.html"
+        },
+        domain_list, y, i, j;
 
       if ("object" === typeof options.group_by &&
           Array.isArray(options.group_by) &&
           options.group_by.length === 0) {
         group_by.push(query_by);
       } else if (!Array.isArray(options.group_by)) {
-        group_by = [options.group_by || query_by];
+        group_by = [options.group_by || options.layout.x.key];
       } else {
         group_by = options.group_by;
       }
 
       if (Array.isArray(options.group_by)) {
-        y = "count(" + (options.group_by[0] || options.query_by) + ")";
+        data.y = "count(" + (options.group_by[0] || options.layout.x.key) + ")";
       } else {
-        y = "count(" + (options.group_by || options.query_by) + ")";
+        data.y = "count(" + (options.group_by || options.layout.x.key) + ")";
       }
 
+      for (i in query_by) {
+        if (query_by.hasOwnProperty(i)) {
+          if (Array.isArray(query_by[i])) {
+            for (j = 0; j < query_by[i].length; j += 1) {
+              sub_query_list.push(new SimpleQuery({
+                operator: "",
+                key: i,
+                type: "simple",
+                value: query_by[i][j]
+              }));
+            }
+            jio_query_list.push(new ComplexQuery({
+              operator: "OR",
+              type: "complex",
+              query_list: sub_query_list
+            }));
+          } else {
+            jio_query_list.push(new SimpleQuery({
+              operator: "",
+              key: i,
+              type: "simple",
+              value: query_by[i]
+            }));
+          }
+        }
+      }
+
+      select_list = select_list.concat(
+        [data.y, options.layout.x.key].filter(function (el) {
+          return el;
+        })
+      );
+
+      if (domain_id) {
+        domain_list = options.layout.x.domain_list || [];
+        for (i = 0; i < domain_list.length; i += 1) {
+          sub_query_list.push(new SimpleQuery({
+            key: "selection_domain_" + domain_id,
+            operator: "",
+            type: "simple",
+            value: domain_list[i]
+          }));
+          query_list.push({
+            "query": Query.objectToSearchText(new ComplexQuery({
+              operator: "AND",
+              query_list: jio_query_list.concat(sub_query_list),
+              type: "complex"
+            })),
+            "group_by": group_by,
+            "select_list": select_list
+          });
+          sub_query_list = [];
+        }
+        data.query_list = query_list;
+      } else if (group_by instanceof Array && group_by.length > 1) {
+        data.query = {
+          "query": Query.objectToSearchText(new ComplexQuery({
+            operator: "AND",
+            query_list: jio_query_list,
+            type: "complex"
+          })),
+          "group_by": group_by,
+          "select_list": select_list.concat(group_by)
+        };
+      } else {
+        data.query = {
+          "query": Query.objectToSearchText(new ComplexQuery({
+            operator: "AND",
+            query_list: jio_query_list,
+            type: "complex"
+          })),
+          "group_by": group_by,
+          "select_list": select_list
+        };
+      }
       return gadget.getUrlParameter('extended_search')
         .push(function (extended_search) {
-          var query,
-            base_query,
-            data = {
-              x: query_by,
-              y: y,
-              extended_search: extended_search,
-              title: options.graph_title || options.title,
-              x_title: options.title,
-              date_range_list: date_range_list,
-              graph_gadget: "unsafe/gadget_field_graph_echarts.html/"
-            };
-
-          base_query = options.base_query;
           if (extended_search) {
-            base_query = base_query + " AND " + extended_search;
-          }
-
-          select_list = select_list.concat(
-            [y, query_by].filter(function (el) {
-              return el;
-            })
-          );
-          if (date_range_list.length > 0) {
-            for (i = 0; i < date_range_list.length; i += 1) {
-              query = base_query +
-                " AND " + date_range_catalog_key + ": >= " + date_range_list[i][1] +
-                " AND " + date_range_catalog_key + ": < " + date_range_list[i][2];
-
-              query_list.push({
-                "query": query,
-                "select_list": select_list,
-                "group_by": group_by
-              });
-            }
-            data.query_list = query_list;
-          } else if (group_by instanceof Array && group_by.length > 1) {
-            data.query = {
-              "query": base_query,
-              "select_list": select_list.concat(group_by),
-              "group_by": group_by
-            };
-
-          } else {
-            data.query = {
-              "query": base_query,
-              "select_list": select_list,
-              "group_by": group_by
-            };
+            jio_query_list.push(Query.parseStringToObject(extended_search));
           }
           return gadget.changeState(data);
         });
@@ -117,19 +154,11 @@
       for (i = 0; i < query_list.length; i += 1) {
         queue_list.push(gadget.jio_allDocs(query_list[i]));
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(queue_list);
-        })
+      return new RSVP.Queue(RSVP.all(queue_list))
         .push(function (result_list) {
           var bar_chart = gadget.element.querySelector(".wrap"),
-            loader = gadget.element.querySelector(".graph-spinner");
-          loader.style.display = "none";
-          bar_chart.style.display = "block";
-          return result_list;
-        })
-        .push(function (result_list) {
-          var graph_gadget = result_list[0],
+            loader = gadget.element.querySelector(".graph-spinner"),
+            graph_gadget = result_list[0],
             data_mapping = {},
             label_list = [],
             state_list = [],
@@ -139,6 +168,8 @@
             label,
             state,
             j;
+          loader.style.display = "none";
+          bar_chart.style.display = "block";
 
           function avoidFunction(el) {
             return el && !el.match(/^\D+\(\w+\)$/);
@@ -203,9 +234,9 @@
               });
             }
 
-          } else if (gadget.state.date_range_list.length > 0) {
-            for (i = 0; i < gadget.state.date_range_list.length; i += 1) {
-              label = gadget.state.date_range_list[i][0];
+          } else if (gadget.state.column_list.length > 0) {
+            for (i = 0; i < gadget.state.column_list.length; i += 1) {
+              label = gadget.state.column_list[i];
               if (label && !data_mapping.hasOwnProperty(label)) {
                 data_mapping[label] = {};
                 if (label_list.indexOf(label) === -1) {
@@ -250,7 +281,8 @@
               layout: {
                 axis_dict : {
                   '0': {"title": gadget.state.x_title},
-                  '1': {"title": "Quantity", "value_type": "number"}
+                  '1': {"title": gadget.state.y_title || "Quantity",
+                        "value_type": "number"}
                 },
                 title: gadget.state.title
               }
@@ -259,4 +291,4 @@
         });
     });
 
-}(window, rJS, RSVP, Array));
+}(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery));

@@ -1,22 +1,22 @@
-from urllib import quote
-
-def extract_date(date):
-  return quote(date.strftime("%Y-%m-%d"))
-
 translateString = context.Base_translateString
+
+domain_id = "graphic_gadget_modification_date_domain"
+column_list, domain_list = context.Base_getSubdomainTitleAndIdList(domain_id)
 
 return [
   ("group_by", "portal_type"),
-  ("date_range_catalog_key", "modification_date"),
-  ("date_range_list", [
-    # label, start, end
-    ["< 2", extract_date(DateTime()-2), extract_date(DateTime()+1)],
-    ["2 - 7", extract_date(DateTime()-7), extract_date(DateTime()-2)],
-    ["7 - 30", extract_date(DateTime()-30), extract_date(DateTime()-7)],
-    ["> 30", extract_date(DateTime(1900, 1, 1)), extract_date(DateTime()-30)],
-  ]),
-  ("query_by", "getTranslatedPortalType"),
-  ("base_query", "parent_uid:=%s" % context.getUid()),
-  ("graph_title", translateString("Number of events from a range of modification_date")),
-  ("title", translateString("Days"))
+  ("query_by", {"parent_uid": context.getUid()}),
+  ("title", translateString("Number of events from a range of modification_date")),
+  ("layout", {
+    "x": {
+      "title": translateString("Days"),
+      "key": "getTranslatedPortalType",
+      "domain_id": domain_id,
+      "column_list": column_list,
+      "domain_list": domain_list
+    },
+    "y": {
+      "title": translateString("Quantity")
+    }
+  })
 ]

@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>report_by_simulation_state_gadget</string> </value>
+            <value> <string>report_by_portal_type_gadget</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -137,7 +137,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'jio_key\', context.getRelativeUrl()), ("group_by", "simulation_state"), ("query_by", "getTranslatedSimulationStateTitle"), ("base_query", "parent_uid:=%s" % context.getUid()), ("title", context.Base_translateString("Simulation State")), ("title", context.Base_translateString("Simulation States"))]</string> </value>
+            <value> <string>python: [("query_by", {"parent_uid": context.getUid()}),  ("title", context.Base_translateString("Portal Types")), ("layout", {"x": {"key": "portal_type", "title": context.Base_translateString("Portal Types")}, "y": {"title": context.Base_translateString("Quantity")}})]</string> </value>
         </item>
       </dictionary>
     </pickle>
