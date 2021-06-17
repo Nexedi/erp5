@@ -122,23 +122,23 @@
 		</tr>
 		<tr>
 			<td>type</td>
-			<td>//input[@name="field_my_career_subordination_title"]</td>
+			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
 			<td>Z Company</td>
 		</tr>
-        <tr>
-		    <td>fireEvent</td>
-  		    <td>//input[@name="field_my_career_subordination_title"]</td>
-  		    <td>input</td>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
+			<td>input</td>
 		</tr>
 		<tr>
-  		    <td>waitForElementPresent</td>
-  		    <td>//ul[@class="search_ul"]//li</td>
-  		    <td></td>
-	    </tr>
-	    <tr>
-  	        <td>click</td>
- 		    <td>//ul[@class="search_ul"]/li[@name="Organisation"]</td>
- 		    <td></td>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]/li[@name=&quot;Organisation&quot;]</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>select</td>
@@ -207,15 +207,15 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-  		<tr>
+		<tr>
 			<td>waitForElementPresent</td>
 			<td>//a[contains(text(), &quot;Add&quot;)]</td>
-			<td></td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>click</td>
 			<td>//a[contains(text(), &quot;Add&quot;)]</td>
-			<td></td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
@@ -251,6 +251,14 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
 		<tr style="opacity: 1; z-index: 0;">
 			<td>type</td>
 			<td>//input[@name=&quot;field_my_title&quot;]</td>
@@ -395,5 +403,4 @@
 		</tr>
 	</tbody>
 </table>
-</test>
-</section>
+</test></section>
