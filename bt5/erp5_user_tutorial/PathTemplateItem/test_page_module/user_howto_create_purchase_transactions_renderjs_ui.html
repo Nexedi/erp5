@@ -65,59 +65,13 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr style="opacity: 1; z-index: 0;">
-			<td>openAndWait</td>
-			<td>${base_url}/Zuite_setUpSalePackingListTest</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextPresent</td>
-			<td>Init Ok</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>openAndWait</td>
-			<td>${base_url}/Zuite_setUpSaleInvoiceTest</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextPresent</td>
-			<td>Init Ok</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
 			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
 		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>openAndWait</td>
-			<td>${base_url}/Zuite_setUpPaymentTest?start_only=True</td>
-			<td>&nbsp;</td>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>verifyTextPresent</td>
-			<td>Init Ok</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>openAndWait</td>
-			<td>${base_url}/Zuite_setUpPaymentTest</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>verifyTextPresent</td>
-			<td>Init Ok</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms&quot;&gt; Invoke simulation alarms &lt;/span&gt;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -133,28 +87,26 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[3]</td>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Purchase Invoice Transaction&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyTextPresent</td>
-			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//span[text()=&quot;Financial Information&quot;]/../</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Purchase Invoice Transaction&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//li[@class=&quot;selected&quot;]/a/span</td>
-			<td>Financial Information</td>
-		</tr>
-		<tr>
-			<td>verifyTextPresent</td>
-			<td>1 records</td>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
 			<td>&nbsp;</td>
 		</tr>
 	</tbody>
@@ -176,14 +128,77 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Sale Packing Lists</td>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_destination_section&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;breadcrumb&quot;]/a[2]</td>
-			<td>Sale Packing Lists</td>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>ZUITE-TEST-PURCHASE-INVOICE-TRANSACTION-001</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>ZUITE-TEST-SALEORDER-ORGANISATION-002</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_source_section_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_reference&quot;]</td>
+			<td>ZUITE-TEST-PURCHASE-INVOICE-TRANSACTIOn-001</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>General Purchase Trade Condition</td>
+		</tr>
+		<tr>
+			<td>fireEvent</td>
+			<td>//input[@name=&quot;field_my_specialise_title&quot;]</td>
+			<td>input</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//ul[@class=&quot;search_ul&quot;]//li[1]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_stop_date&quot;]</td>
+			<td>04-05-2021</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_price_currency&quot;]</td>
+			<td>EUR</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_delivery_mode&quot;]</td>
+			<td>By Air</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -199,37 +214,10 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Create Related Payment</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/select_cash_account&quot;&gt;Select Cash Account&lt;/span&gt;</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Apply Purchase Trade Condition&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;field_your_payment_mode&quot;]</td>
-			<td>Credit Card</td>
-		</tr>
-		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;field_your_payment&quot;]</td>
-			<td>0123456789 0123456789 - Main account</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;field_my_title&quot;]</td>
-			<td>ZUITE-TEST-SALEORDER-PAYMENT-TRANSACTION-001</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -247,6 +235,41 @@
 
 <p>After you are done the checking and adding the Invoice Line, jump to next page in order to edit this line.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[text()=&quot;Add&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[text()=&quot;Add&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>Invoice Line</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
 
 <section class="screenshot">
@@ -344,21 +367,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Confirm Transaction</td>
-		</tr>
-		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@id=&quot;dialog_submit_button&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//label[normalize-space(text())=&#39;State&#39;]/../div</td>
-			<td>Confirmed</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -405,4 +413,29 @@
 <details open="open">
 <p>The <strong>Accounting module displays all the transactions that you have entered in your ERP5</strong> . As you can see on the screenshot, you can find in this list the two accounting transactions that we have created in this tutorial.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${base_url}/Zuite_tearDownSaleOrderTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
