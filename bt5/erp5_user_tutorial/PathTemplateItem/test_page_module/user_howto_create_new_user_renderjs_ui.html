@@ -19,7 +19,7 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; /&gt;</td>
 		</tr>
 		<tr>
 			<td>openAndWait</td>
@@ -31,11 +31,14 @@
 			<td>Init Ok</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot; /&gt;</td>
 		</tr>
-		<tr style="opacity: 1;">
-			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;New&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -71,6 +74,24 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//button[text()=&quot;Person&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//button[text()=&quot;Person&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -84,23 +105,11 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-	</tbody>
-</table>
-</test></section>
-
-<section class="screenshot">
-<h1>Action: Add Assignment</h1>
-
-<p><img alt="Action: Add Assignment 1" src="user-Howto.Create.New.User.Add.Assignment.1.Svg?format=png" title="Action: Add Assignment" type="image/svg+xml" /></p>
-
-<p><img alt="Action: Add Assignment 2" src="user-Howto.Create.New.User.Add.Assignment.2.Svg?format=png" title="Action: Add Assignment" type="image/svg+xml" /></p>
-
-<details open="open">
-<p>Without the assignment, even you has added a user account to the person document, the person still won&#39;t be able to access your ERP5 instance. To check current Assignments of this person,&nbsp;<strong>click on &quot;Assignment&quot;</strong>&nbsp;in the sidebar;&nbsp;to start a new Assignment,<strong>&nbsp;click &quot;+Add&quot;, choose &quot;Assignment&quot; </strong>in the Document Type List, then <strong>click &quot;Create Document&quot;</strong>.</p>
-</details>
-<test>
-<table class="test" style="display: none;">
-	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
 		<tr>
 			<td>type</td>
 			<td>//input[@name=&quot;field_my_first_name&quot;]</td>
@@ -113,8 +122,23 @@
 		</tr>
 		<tr>
 			<td>type</td>
-			<td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td>
+			<td>//input[@name="field_my_career_subordination_title"]</td>
 			<td>Z Company</td>
+		</tr>
+        <tr>
+		    <td>fireEvent</td>
+  		    <td>//input[@name="field_my_career_subordination_title"]</td>
+  		    <td>input</td>
+		</tr>
+		<tr>
+  		    <td>waitForElementPresent</td>
+  		    <td>//ul[@class="search_ul"]//li</td>
+  		    <td></td>
+	    </tr>
+	    <tr>
+  	        <td>click</td>
+ 		    <td>//ul[@class="search_ul"]/li[@name="Organisation"]</td>
+ 		    <td></td>
 		</tr>
 		<tr>
 			<td>select</td>
@@ -152,9 +176,65 @@
 			<td>+33(0)6-218765/00</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Validate&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Action: Add Assignment</h1>
+
+<p><img alt="Action: Add Assignment 1" src="user-Howto.Create.New.User.Add.Assignment.1.Svg?format=png" title="Action: Add Assignment" type="image/svg+xml" /></p>
+
+<p><img alt="Action: Add Assignment 2" src="user-Howto.Create.New.User.Add.Assignment.2.Svg?format=png" title="Action: Add Assignment" type="image/svg+xml" /></p>
+
+<details open="open">
+<p>Without the assignment, even you has added a user account to the person document, the person still won&#39;t be able to access your ERP5 instance. To check current Assignments of this person,&nbsp;<strong>click on &quot;Assignment&quot;</strong>&nbsp;in the sidebar;&nbsp;to start a new Assignment,<strong>&nbsp;click &quot;+Add&quot;, choose &quot;Assignment&quot; </strong>in the Document Type List, then <strong>click &quot;Create Document&quot;</strong>.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+  		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;Add&quot;)]</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;Add&quot;)]</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
 			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_your_select_action&quot;]</td>
+			<td>Assignment</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -171,30 +251,23 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;information_area&quot;]</td>
-			<td>Input data has errors. Please look at the error messages below.</td>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>SlapOS Community Manager</td>
 		</tr>
 		<tr>
-			<td>verifyText</td>
-			<td>//span[@class=&quot;error&quot;]</td>
-			<td>No such document was found.</td>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_start_date&quot;]</td>
+			<td>2021-01-14</td>
 		</tr>
 		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;subfield_field_my_career_subordination_title_relation&quot;]</td>
-			<td>Add Organisation</td>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_stop_date&quot;]</td>
+			<td>2021-12-22</td>
 		</tr>
 		<tr>
-			<td>clickAndWait</td>
-			<td>//button[@name=&quot;Base_edit:method&quot;]</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>verifyTextNotPresent</td>
-			<td>Input data has errors. Please look at the error messages below.</td>
-			<td>&nbsp;</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 	</tbody>
 </table>
@@ -214,24 +287,18 @@
 <table class="test" style="display: none;">
 	<tbody>
 		<tr>
-			<td>clickAndWait</td>
-			<td>link=Details</td>
-			<td>&nbsp;</td>
-		</tr>
-		<tr style="opacity: 1; z-index: 0;">
-			<td>type</td>
-			<td>//input[@name=&quot;field_my_middle_name&quot;]</td>
-			<td>Scott</td>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Start Assignment&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>type</td>
-			<td>//input[@name=&quot;field_my_child_count&quot;]</td>
-			<td>2</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
 		</tr>
 		<tr>
-			<td>select</td>
-			<td>//select[@name=&quot;field_my_marital_status&quot;]</td>
-			<td>Married</td>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_validation_state_title&quot;]</td>
+			<td>Started</td>
 		</tr>
 	</tbody>
 </table>
@@ -259,16 +326,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_module&quot;]</td>
-			<td>Persons</td>
-		</tr>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Add Person</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -282,16 +339,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>verifyText</td>
-			<td>//div[@id=&quot;transition_message&quot;]</td>
-			<td>Object created.</td>
-		</tr>
-		<tr>
-			<td>verifyText</td>
-			<td>//li[@class=&quot;selected&quot;]/a/span</td>
-			<td>View</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -307,11 +354,6 @@
 <test>
 <table class="test" style="display: none;">
 	<tbody>
-		<tr>
-			<td>selectAndWait</td>
-			<td>//select[@name=&quot;select_action&quot;]</td>
-			<td>Validate</td>
-		</tr>
 	</tbody>
 </table>
 </test></section>
@@ -332,4 +374,26 @@
 <details open="open">
 <p>Now that your learned how to create a user, please create a second user &quot;Yingjie Xu&quot;. This user will be required to do the following tutorials. Make sure that you create the Person, the Assignment, start the Assignment and create the user account just like you did it for C&eacute;dric but using the information presented in this slide.</p>
 </details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownPersonTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt;Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test>
 </section>
