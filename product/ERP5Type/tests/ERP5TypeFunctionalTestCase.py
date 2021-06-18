@@ -49,7 +49,7 @@ import certifi
 import urllib3
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait as _WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 
@@ -166,6 +166,25 @@ class Xvfb(Process):
 
     logger.debug('Xvfb : %d', self.process.pid)
     logger.debug('Take screenshots using xwud -in %s/Xvfb_screen0', self.fbdir)
+
+
+class WebDriverWait(_WebDriverWait):
+  """Wrapper for WebDriverWait which dumps the test page and take a
+  screenshot in case of error.
+  """
+  def until(self, *args):
+    try:
+      return super(WebDriverWait, self).until(args)
+    except Exception:
+      logger.exception("unable to find login field, dumping the page")
+      with open(os.path.join(log_directory, 'page.html'), 'w') as f:
+        f.write(
+           browser.execute_script(
+                "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"))
+      with open(os.path.join(log_directory, 'page-screenshot.png'), 'wb') as f:
+        f.write(browser.get_screenshot_as_png())
+      raise
+
 
 class FunctionalTestRunner:
 
