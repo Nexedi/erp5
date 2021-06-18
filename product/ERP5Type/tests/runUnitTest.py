@@ -602,7 +602,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   from Products.ERP5Type.tests.utils import DbFactory
   root_db_name, = cfg.dbtab.databases.keys()
-  DbFactory(root_db_name).addMountPoint('/')
+  db_factory = DbFactory(root_db_name)
+  db_factory.addMountPoint('/')
 
   TestRunner = unittest.TextTestRunner
 
@@ -681,6 +682,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     raise
   finally:
     ProcessingNodeTestCase.unregisterNode()
+    db_factory.close()
     Storage.close()
     if node_pid_list is not None:
       # Wait that child processes exit. Stop ZEO storage (if any) after all
