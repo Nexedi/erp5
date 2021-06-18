@@ -3,7 +3,7 @@ from DateTime import DateTime
 
 portal = context.getPortalObject()
 preference_tool = portal.portal_preferences
-software_product_list = portal.portal_catalog(portal_type='Software Product', validation_state='validated')
+software_product_list = portal.portal_catalog(portal_type='Software Product', validation_state='validated', sort_on='creation_date')
 appstore_data = []
 appstore_data_cn = []
 logo_url_list = []
