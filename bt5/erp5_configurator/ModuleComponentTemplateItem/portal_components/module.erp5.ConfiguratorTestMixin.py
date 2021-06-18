@@ -80,7 +80,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                          'erp5_configurator_standard_invoicing_template',
                          'erp5_ods_style',
                          'erp5_odt_style',
-                         'erp5_ooo_import')
+                         'erp5_ooo_import',
+                         'erp5_osoe_web_renderjs_ui',
+)
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
