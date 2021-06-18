@@ -16,7 +16,6 @@ bt5_installation_list = ('erp5_dhtml_style',
                          'erp5_ods_style',
                          'erp5_odt_style',
                          'erp5_ooo_import',
-                         'erp5_osoe_web_renderjs_ui',
                         )
 
 bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_accounting', )
