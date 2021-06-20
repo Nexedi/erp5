@@ -1,6 +1,6 @@
-/*global document, window, Option, rJS, RSVP, console, Array */
+/*global document, window, Option, rJS, RSVP, console, Array, SimpleQuery, Query, ComplexQuery */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Array) {
+(function (window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery) {
   "use strict";
 
   var color_list = ["#CCA08D", "#58ADC4", "#F9B39B", "#B75937",
@@ -48,8 +48,10 @@
 
       return gadget.getUrlParameter('extended_search')
         .push(function (extended_search) {
-          var query,
-            base_query,
+          var key,
+            jio_query_list = [],
+            sub_query_list = [],
+            base_query = options.base_query,
             data = {
               x: query_by,
               y: y,
@@ -60,9 +62,36 @@
               graph_gadget: "unsafe/gadget_field_graph_echarts.html/"
             };
 
-          base_query = options.base_query;
+          for (key in base_query) {
+            if (base_query.hasOwnProperty(key)) {
+              if (Array.isArray(base_query[key])) {
+                // XXX we should change this logic by IN()
+                // https://www.w3resource.com/mysql/comparision-functions-and-operators/in-function.php
+                for (i = 0; i < base_query[key].length; i += 1) {
+                  sub_query_list.push(new SimpleQuery({
+                    operator: "",
+                    key: key,
+                    type: "simple",
+                    value: base_query[key][i]
+                  }));
+                }
+                jio_query_list.push(new ComplexQuery({
+                  operator: "OR",
+                  type: "complex",
+                  query_list: sub_query_list
+                }));
+              } else {
+                jio_query_list.push(new SimpleQuery({
+                  operator: "",
+                  key: key,
+                  type: "simple",
+                  value: base_query[key]
+                }));
+              }
+            }
+          }
           if (extended_search) {
-            base_query = base_query + " AND " + extended_search;
+            jio_query_list.push(Query.parseStringToObject(extended_search));
           }
 
           select_list = select_list.concat(
@@ -72,29 +101,60 @@
           );
           if (date_range_list.length > 0) {
             for (i = 0; i < date_range_list.length; i += 1) {
-              query = base_query +
-                " AND " + date_range_catalog_key + ": >= " + date_range_list[i][1] +
-                " AND " + date_range_catalog_key + ": < " + date_range_list[i][2];
-
-              query_list.push({
-                "query": query,
-                "select_list": select_list,
-                "group_by": group_by
-              });
+              sub_query_list.push(new ComplexQuery({
+                operator: "AND",
+                type: "complex",
+                query_list: [
+                  new SimpleQuery({
+                    operator: ">=",
+                    key: date_range_catalog_key,
+                    type: "simple",
+                    value: date_range_list[i][1]
+                  }),
+                  new SimpleQuery({
+                    operator: "<",
+                    key: date_range_catalog_key,
+                    type: "simple",
+                    value: date_range_list[i][2]
+                  })
+                ]
+              }));
             }
+            jio_query_list.push(new ComplexQuery({
+              operator: "OR",
+              query_list: sub_query_list,
+              type: "complex"
+            }));
+            query_list.push({
+              "query": Query.objectToSearchText(new ComplexQuery({
+                operator: "AND",
+                query_list: jio_query_list,
+                type: "complex"
+              })),
+              "group_by": group_by,
+              "select_list": select_list
+            });
             data.query_list = query_list;
           } else if (group_by instanceof Array && group_by.length > 1) {
             data.query = {
-              "query": base_query,
-              "select_list": select_list.concat(group_by),
-              "group_by": group_by
+              "query": Query.objectToSearchText(new ComplexQuery({
+                operator: "AND",
+                query_list: jio_query_list,
+                type: "complex"
+              })),
+              "group_by": group_by,
+              "select_list": select_list.concat(group_by)
             };
 
           } else {
             data.query = {
-              "query": base_query,
-              "select_list": select_list,
-              "group_by": group_by
+              "query": Query.objectToSearchText(new ComplexQuery({
+                operator: "AND",
+                query_list: jio_query_list,
+                type: "complex"
+              })),
+              "group_by": group_by,
+              "select_list": select_list
             };
           }
           return gadget.changeState(data);
@@ -253,4 +313,4 @@
         });
     });
 
-}(window, rJS, RSVP, Array));
+}(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery));
