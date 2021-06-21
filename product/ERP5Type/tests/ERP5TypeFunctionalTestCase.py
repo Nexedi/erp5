@@ -39,6 +39,7 @@ import logging
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.runUnitTest import log_directory
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 from lxml import etree
 from lxml.html import builder as E
@@ -207,11 +208,20 @@ class FunctionalTestRunner:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
       options = webdriver.FirefoxOptions()
       options.set_preference('dom.serviceWorkers.enabled', True)
+      # output javascript console and errors on stdout to help diagnosing failures
+      options.set_preference('devtools.console.stdout.content', True)
       kw = dict(capabilities=capabilities, options=options)
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
         geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
-        kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
+        kw.update(
+            firefox_binary=firefox_bin,
+            executable_path=geckodriver,
+            # BBB in selenium 3.8.0 this option was named log_path
+            log_path=os.path.join(log_directory, 'geckodriver.log'),
+            # service_log_path=os.path.join(log_directory, 'geckodriver.log'),
+        )
+
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
       logger.info("Running with browser: %s", browser)
@@ -248,13 +258,25 @@ class FunctionalTestRunner:
       )))
       # XXX No idea how to wait for the iframe content to be loaded
       time.sleep(5)
-      # Count number of test to be executed
+      # Count number of tests to be executed
       test_count = browser.execute_script(
         "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
       ) - 1
+      # Wait for tests to end
       WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
         By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
       )))
+      # At the end of each test, updateSuiteWithResultOfPreviousTest updates
+      # testSuiteFrame iframe with hidden div containing the test results table.
+      # We will inspect these tables to know which tests have failed. First we
+      # need to wait a bit more, because at the end of test ( testComplete ),
+      # updateSuiteWithResultOfPreviousTest is called by setTimeout. We want to
+      # wait for the last test (which is the last td) result table to be present
+      browser.switch_to_frame('testSuiteFrame')
+      WebDriverWait(browser, 10).until(EC.presence_of_element_located((
+        By.XPATH, '//table/tbody/tr/td[last()]//table'
+      )))
+      browser.switch_to_default_content()
       self.execution_duration = round(time.time() - start_time, 2)
       html_parser = etree.HTMLParser(recover=True)
       iframe = etree.fromstring(

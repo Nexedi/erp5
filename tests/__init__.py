@@ -133,20 +133,21 @@ class ERP5(_ERP5):
 
   def _updateFunctionalTestResponse(self, status_dict):
     """ Convert the Unit Test output into more accurate information
-        related to funcional test run.
+        related to functional test run.
     """
     # Parse relevant information to update response information
     try:
       summary, html_test_result = status_dict['stderr'].split("-"*79)[1:3]
     except ValueError:
       # In case of error when parse the file, preserve the original
-      # informations. This prevents we have unfinished tests.
+      # information. This prevents we have unfinished tests.
       return status_dict
     status_dict['html_test_result'] = html_test_result
     search = self.FTEST_PASS_FAIL_RE.search(summary)
     if search:
       group_dict = search.groupdict()
-      status_dict['failure_count'] = int(group_dict['failures'])
+      status_dict['failure_count'] = int(group_dict['failures']) \
+          + int(status_dict.get('failure_count', 0))
       status_dict['test_count'] = int(group_dict['total'])
       status_dict['skip_count'] = int(group_dict['expected_failure'])
     return status_dict
