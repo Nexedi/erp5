@@ -121,29 +121,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg width="1346" height="944" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
- <metadata id="metadata16">image/svg+xml</metadata>\n
-\n
- <g>\n
-  <title>background</title>\n
-  <rect fill="none" id="canvas_background" height="946" width="1348" y="-1" x="-1"/>\n
- </g>\n
- <g>\n
-  <title>Layer 1</title>\n
-  <g id="g18">\n
-   <image x="-12" y="-1" id="image20" xlink:href="https://www.erp5.com/user-Howto.Add.People.Menu.Persons.New?format=png" height="944" width="1369"/>\n
-   <rect id="rect22" width="117.40128" height="26.90446" x="560" y="177" stroke-miterlimit="4" stroke-width="5" fill-rule="evenodd" fill="none"/>\n
-   <rect id="rect2777" width="141.42676" height="25.68153" x="560" y="177" stroke-miterlimit="4" stroke-width="5" stroke="#d40000" fill-rule="evenodd" fill="none"/>\n
-  </g>\n
- </g>\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Add people: Click on \'Persons\'</string> </value>
         </item>

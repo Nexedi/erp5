@@ -117,33 +117,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
- <metadata id="metadata16">image/svg+xml</metadata>\n
- <defs>\n
-  <linearGradient id="linearGradient4614">\n
-   <stop offset="0" id="stop4612" stop-color="#d40000"/>\n
-  </linearGradient>\n
-  <linearGradient xlink:href="#linearGradient4614" id="linearGradient4626" x1="0" y1="0.5" x2="1" y2="0.5"/>\n
- </defs>\n
- <g>\n
-  <title>background</title>\n
-  <rect fill="none" id="canvas_background" height="965" width="1377" y="-1" x="-1"/>\n
- </g>\n
- <g>\n
-  <title>Layer 1</title>\n
-  <g id="g18">\n
-   <image width="1391" height="969" xlink:href="https://www.erp5.com/osoe-howto-release.document-screenshot.new?format=png" id="image20" y="-1" x="-1"/>\n
-   <rect id="rect4049" width="232.73921" height="26.78534" x="4.51999" y="538.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>\n
-  </g>\n
- </g>\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Release the document</string> </value>
         </item>

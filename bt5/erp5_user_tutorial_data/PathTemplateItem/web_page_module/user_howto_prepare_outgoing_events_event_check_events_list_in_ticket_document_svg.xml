@@ -119,33 +119,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
- <metadata id="metadata16">image/svg+xml</metadata>\n
- <defs>\n
-  <linearGradient id="linearGradient4614">\n
-   <stop stop-color="#d40000" id="stop4612" offset="0"/>\n
-  </linearGradient>\n
-  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient4616" xlink:href="#linearGradient4614"/>\n
- </defs>\n
- <g>\n
-  <title>background</title>\n
-  <rect x="-1" y="-1" width="1377" height="965" id="canvas_background" fill="none"/>\n
- </g>\n
- <g>\n
-  <title>Layer 1</title>\n
-  <g id="g18">\n
-   <image width="1391" height="969" xlink:href="https://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Event.Check.Events.List.In.Ticket.Document.New?format=png" id="image20" y="-1" x="-1"/>\n
-   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient4616)" stroke-width="5" stroke-miterlimit="4" y="645.07357" x="253.51999" height="106.78534" width="1120.73921" id="rect4049"/>\n
-  </g>\n
- </g>\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Check the Events List in the Ticket</string> </value>
         </item>

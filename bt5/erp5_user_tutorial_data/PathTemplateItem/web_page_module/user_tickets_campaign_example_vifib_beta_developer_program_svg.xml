@@ -122,28 +122,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
- <metadata id="metadata16">image/svg+xml</metadata>\n
-\n
- <g>\n
-  <title>background</title>\n
-  <rect x="-1" y="-1" width="1377" height="965" id="canvas_background" fill="none"/>\n
- </g>\n
- <g>\n
-  <title>Layer 1</title>\n
-  <g id="g18">\n
-   <image width="1391" height="969" xlink:href="https://www.erp5.com/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program.New?format=png" id="image20" y="-1" x="-1"/>\n
-  </g>\n
-  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="24" id="svg_1" y="810" x="318" stroke-width="0" stroke="#000" fill="#000000">Ticket: Beta Developer - Marketing Campaign</text>\n
- </g>\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Campaign example: Beta Developer Program</string> </value>
         </item>

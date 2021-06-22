@@ -120,27 +120,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
- <metadata id="metadata4648">image/svg+xml</metadata>\n
-\n
- <g>\n
-  <title>background</title>\n
-  <rect fill="none" id="canvas_background" height="965" width="1377" y="-1" x="-1"/>\n
- </g>\n
- <g>\n
-  <title>Layer 1</title>\n
-  <g id="g4650">\n
-   <image width="1391" height="969" xlink:href="https://www.erp5.com/user-Howto.Add.People.Validate.2.Validate.New?format=" id="image3430"/>\n
-  </g>\n
- </g>\n
-</svg>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Validate new person (2): Click on \'Validate\'</string> </value>
         </item>
