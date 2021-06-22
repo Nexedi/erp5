@@ -339,17 +339,6 @@ function submitLinkAsHtmlForm(event){
   return false;
 }
 
-function redirectPDFPage(event, element){
-  /*
-    Used in PDF thumbnail preview mode
-  */
-  if(event.keyCode == 13){
-    selection_index = parseInt($(element).val(), 10) - 1;
-    window.location.href = "PDF_viewHTMLPreviewAsImage?selection_index=" + selection_index;
-    return false;    
-  }
-}
-
 if (navigator.userAgent.toLowerCase().indexOf('firefox') != -1)
   $(document).ready(rewriteIndentedSelect);
 $(document).ready(resizeIFrameOnLoad);
