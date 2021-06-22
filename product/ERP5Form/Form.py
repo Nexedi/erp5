@@ -213,10 +213,7 @@ class TALESValue(StaticValue):
     if kw.get('cell') is None:
       request = kw.get('REQUEST')
       if request is not None:
-        if getattr(request, 'cell', None) is not None:
-          kw['cell'] = request.cell
-        else:
-          kw['cell'] = request
+        kw['cell'] = getattr(request, 'cell', None)
         if 'cell_index' not in kw and\
             getattr(request, 'cell_index', None) is not None:
           kw['cell_index'] = request.cell_index
