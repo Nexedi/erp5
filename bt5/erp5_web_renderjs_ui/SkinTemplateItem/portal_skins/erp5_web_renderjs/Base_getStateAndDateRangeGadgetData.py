@@ -16,9 +16,9 @@ return [
     ["> 30", extract_date(DateTime(1900, 1, 1)), extract_date(DateTime()-30)],
   ]),
   ("query_by", "getTranslatedSimulationStateTitle"),
-  ("base_query", "parent_uid:=%s" % context.getUid()),
+  ("base_query", {"parent_uid": context.getUid()}),
   ("graph_title", translateString(
     "%s Pipes" % context.getPortalType().replace(" Module", "")
   )),
-  ("title", translateString("Days"))
+  ("x_title", translateString("Days"))
 ]

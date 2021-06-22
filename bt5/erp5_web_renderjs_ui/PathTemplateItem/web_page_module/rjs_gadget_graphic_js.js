@@ -56,8 +56,9 @@
               x: query_by,
               y: y,
               extended_search: extended_search,
-              title: options.graph_title || options.title,
-              x_title: options.title,
+              title: options.graph_title || options.x_title,
+              x_title: options.x_title,
+              y_title: options.y_title,
               date_range_list: date_range_list,
               graph_gadget: "unsafe/gadget_field_graph_echarts.html/"
             };
@@ -304,7 +305,8 @@
               layout: {
                 axis_dict : {
                   '0': {"title": gadget.state.x_title},
-                  '1': {"title": "Quantity", "value_type": "number"}
+                  '1': {"title": gadget.state.y_title || "Quantity",
+                        "value_type": "number"}
                 },
                 title: gadget.state.title
               }

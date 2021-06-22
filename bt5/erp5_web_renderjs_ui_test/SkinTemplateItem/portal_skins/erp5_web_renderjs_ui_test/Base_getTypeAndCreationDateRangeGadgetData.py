@@ -16,7 +16,7 @@ return [
     ["> 30", extract_date(DateTime(1900, 1, 1)), extract_date(DateTime()-30)],
   ]),
   ("query_by", "getTranslatedPortalType"),
-  ("base_query", "parent_uid:=%s" % context.getUid()),
+  ("base_query", {"parent_uid": context.getUid()}),
   ("graph_title", translateString("Number of events from a range of creation_date")),
-  ("title", translateString("Days"))
+  ("x_title", translateString("Days"))
 ]
