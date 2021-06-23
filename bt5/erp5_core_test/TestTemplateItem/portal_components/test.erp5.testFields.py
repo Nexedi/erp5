@@ -30,6 +30,9 @@
 # TODO: Some tests from this file can be merged into Formulator
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import hashlib
+import mock
+import os
 import unittest
 
 # Initialize ERP5Form Product to load monkey patches
@@ -39,6 +42,7 @@ from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
 DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
 MultiListField, IntegerField
+from Products.ERP5Form.CaptchaField import CaptchaField
 from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
 
@@ -1084,6 +1088,98 @@ class TestFieldValueCache(ERP5TypeTestCase):
     self.assertEqual(True, cache_size == self._getCacheSize('ProxyField.get_value'))
 
 
+class TestCaptchaField(ERP5TypeTestCase):
+  """Test Captcha field
+  """
+
+  def afterSetUp(self):
+    self.field = CaptchaField('test_field').__of__(self.portal)
+    self.widget = self.field.widget
+    self.validator = self.field.validator
+
+  def beforeTearDown(self):
+    self.portal.portal_sessions.manage_delObjects(
+        [
+          hashlib.md5(b'1 + 1').hexdigest(),
+          hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest(),
+        ]
+    )
+    if 'Base_viewTestCaptcha' in self.portal.portal_skins.custom.objectIds():
+      self.portal.portal_skins.custom.manage_delObjects(['Base_viewTestCaptcha'])
+    self.portal
+    self.tic()
+
+
+  def test_numeric_good_captcha(self):
+    self.field.values['captcha_type'] = 'numeric'
+    with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
+          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=lambda seq: seq[0]):
+      field_html = self.field.render(REQUEST=self.portal.REQUEST)
+    self.assertIn('1 plus 1', field_html)
+    self.assertIn(hashlib.md5(b'1 + 1').hexdigest(), field_html)
+
+    self.assertEqual(
+        self.validator.validate(
+            self.field, 'field_test', {
+                'field_test': '2',
+                '__captcha_field_test__': hashlib.md5(b'1 + 1').hexdigest()
+            }),
+        '2',
+    )
+
+  def test_numeric_bad_captcha(self):
+    self.field.values['captcha_type'] = 'numeric'
+    with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
+          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=lambda seq: seq[0]):
+      field_html = self.field.render(REQUEST=self.portal.REQUEST)
+    self.assertRaises(
+        ValidationError, self.validator.validate, self.field, 'field_test', {
+            'field_test': '3',
+            '__captcha_field_test__': hashlib.md5(b'1 + 1').hexdigest()
+        })
+
+  def test_text_good_captcha(self):
+    self.field.values['captcha_type'] = 'text'
+    self.field.values['captcha_dot_net_client'] = 'demo'
+    self.field.values['captcha_dot_net_secret'] = 'secret'
+    self.field.values['captcha_dot_net_use_ssl'] = True
+
+    with mock.patch('Products.ERP5Form.CaptchasDotNet.random.choice',
+                    side_effect=lambda seq: seq[0]):
+      field_html = self.field.render(REQUEST=self.portal.REQUEST)
+    self.assertIn(
+        'src="https://image.captchas.net/?client=demo&amp;random=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&amp;alphabet=abcdefghkmnopqrstuvwxyz"',
+        field_html)
+    self.assertIn(
+        hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest(),
+        field_html)
+
+    self.assertEqual(
+        self.validator.validate(
+            self.field, 'field_test', {
+                'field_test': 'cbktzg',
+                '__captcha_field_test__': hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest()
+            }),
+        'cbktzg',
+    )
+
+  def test_text_bad_captcha(self):
+    self.field.values['captcha_type'] = 'text'
+    self.field.values['captcha_dot_net_client'] = 'demo'
+    self.field.values['captcha_dot_net_secret'] = 'secret'
+    self.field.values['captcha_dot_net_use_ssl'] = True
+
+    with mock.patch('Products.ERP5Form.CaptchasDotNet.random.choice',
+                    side_effect=lambda seq: seq[0]):
+      field_html = self.field.render(REQUEST=self.portal.REQUEST)
+
+    self.assertRaises(
+        ValidationError, self.validator.validate, self.field, 'field_test', {
+            'field_test': 'wrong',
+            '__captcha_field_test__': hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest()
+        })
+
+
 def makeDummyOid():
   import time, random
   return '%s%s' % (time.time(), random.random())
@@ -1103,4 +1199,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestMultiListField))
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
+  suite.addTest(unittest.makeSuite(TestCaptchaField))
   return suite
