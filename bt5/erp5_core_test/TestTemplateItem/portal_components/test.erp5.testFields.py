@@ -1192,6 +1192,30 @@ class TestCaptchaField(ERP5TypeTestCase):
             '__captcha_field_test__': hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest()
         })
 
+  def test_captcha_haproxy_sticky_cookie(self):
+    # When viewing a captcha, we tell haproxy to stick the client to this
+    # zope node, as a workaround for portal sessions not being distributed.
+    skin_folder = self.portal.portal_skins.custom
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewTestCaptcha',
+        'View')
+    form = skin_folder._getOb('Base_viewTestCaptcha', None)
+    form.manage_addField('your_captcha', 'Captcha Field', 'CaptchaField')
+    form.your_captcha.values['captcha_type'] = 'text'
+    form.your_captcha.values['captcha_dot_net_client'] = 'demo'
+    form.your_captcha.values['captcha_dot_net_secret'] = 'secret'
+    form.your_captcha.values['captcha_dot_net_use_ssl'] = True
+    self.commit()
+
+    resp = self.publish(
+        form.getPath(),
+        env={
+            # haproxy set X-Balancer-Current-Cookie header which becomes
+            # HTTP_X_BALANCER_CURRENT_COOKIE in environment
+            'HTTP_X_BALANCER_CURRENT_COOKIE': 'SERVERID'
+        })
+    self.assertIn('SERVERID', resp.cookies)
+
 
 def makeDummyOid():
   import time, random
