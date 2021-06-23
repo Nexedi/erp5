@@ -5,6 +5,20 @@ image_module/P-OSOE-Invoices.Workflow.001.en
 image_module/P-OSOE-Yellow.Headpiece.001.en
 image_module/SlapOS-Howto.Create.New.Persons.Action.Tab.Screenshot.001.en
 image_module/SlapOS-Howto.Link.Person.Organisation.Set.Relation.Screenshot.001.en
+image_module/howto_link_people_to_existing_organisations_check_relation_2_check_person_line_new
+image_module/osoe_howto_add_new_document_versioning_screenshot_new
+image_module/osoe_howto_clone_document_1_new
+image_module/osoe_howto_clone_document_2_new
+image_module/osoe_howto_create_new_document_versioning_screenshot_new
+image_module/osoe_howto_fill_in_metadata_versioning_screenshot_new
+image_module/osoe_howto_hide_publish_share_document_screenshot_new
+image_module/osoe_howto_publish_release_second_version_screenshot_1_new
+image_module/osoe_howto_publish_release_second_version_screenshot_new
+image_module/osoe_howto_release_document_screenshot_new
+image_module/osoe_howto_select_document_type_new
+image_module/osoe_howto_upload_file_screenshot_new
+image_module/osoe_howto_user_contribution_new
+image_module/osoe_howto_work_document_screenshot_new
 image_module/user-ERP5.Login.Form.003.en
 image_module/user-ERP5.Login.Form.Screenshot.003.en
 image_module/user-Howto.Add.Organisations.Check.Creation.1.Modules.Screenshot.005.en
@@ -410,3 +424,6 @@ image_module/user-howto.manage.support.requests.sopport.request.person.001.en
 image_module/user-howto.manage.support.requests.sopport.request.team.001.en
 image_module/user-howto.manage.support.requests.switch.user.log.out.screenshot.002.en
 image_module/user-howto.manage.support.requests.worklist.received.events.to.deliver.screenshot.002.en
+image_module/user_howto_*_new
+web_page_module/osoe_howto_*_svg
+web_page_module/user_howto_*_svg
