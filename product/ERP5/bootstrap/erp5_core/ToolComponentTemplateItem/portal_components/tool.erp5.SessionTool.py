@@ -79,6 +79,11 @@ class Session(UserDict):
     for key, item in kw.items():
       self.__setitem__(key, item)
 
+  def __setitem__(self, key, item):
+    # save value without its acquisition context
+    UserDict.__setitem__(self, key, aq_base(item))
+
+
 class RamSession(Session):
   """ Local RAM Session dictionary """
 
@@ -97,10 +102,6 @@ class RamSession(Session):
         value = value.__of__(self._aq_context)
       return value
     raise KeyError(key)
-
-  def __setitem__(self, key, item):
-    # save value without its acquisition context
-    Session.__setitem__(self, key, aq_base(item))
 
 class DistributedSession(Session):
   """ Distributed Session dictionary.
