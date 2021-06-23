@@ -1,0 +1,32 @@
+<svg width="2765" height="1330" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata3097">image/svg+xml</metadata>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="1332" width="2767" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image width="1351" height="768" xlink:href="http://www.erp5.com/user-Tickets.What.Is.A.Ticket.Made.Of.Beta.Developer.Program.View.Screenshot.New?format=png" id="image3048" x="1408.1268" y="342.5282"/>
+   <image width="1351" height="768" xlink:href="http://www.erp5.com/user-Tickets.Example.SlapOS.Recruit.Cloud.Beta.Developer.Program.Screenshot.New?format=png" id="image3071" x="4.17697" y="520.77839"/>
+   <text font-size="56px" font-style="normal" font-weight="normal" text-anchor="middle" fill="#008080" font-family="Sans" transform="translate(0,585.905517578125) scale(1.0043047666549683,0.9957136511802673) " id="text6238" y="-465.21747" x="2024.585" xml:space="preserve">
+    <tspan font-size="56px" font-weight="bold" y="-465.21747" x="2024.585" id="tspan6240">Ticket: Beta Developer Program</tspan>
+    <tspan font-size="56px" font-weight="bold" id="tspan6371" y="-395.21747" x="2024.585">- Marketing Campaign</tspan>
+   </text>
+   <rect fill="none" stroke="#fb0000" stroke-width="5" stroke-linejoin="round" stroke-miterlimit="4" y="834.47197" x="806.41675" height="28.05935" width="515.85254" id="rect4293-5"/>
+   <text font-size="56px" font-style="normal" font-weight="normal" text-anchor="middle" fill="#000000" font-family="Sans" id="text3487-3-9-1-4" y="791.27251" x="1680.6465" xml:space="preserve">
+    <tspan font-size="56px" fill="#d40000" id="tspan3523-5-5-4" y="691.27251" x="1680.6465">Follow up Ticket</tspan>
+   </text>
+   <rect fill="none" stroke="#fb0000" stroke-width="5" stroke-linejoin="round" stroke-miterlimit="4" y="890.9671" x="1721.8539" height="24.09798" width="223.05881" id="rect4293-5-4"/>
+   <text font-size="56px" font-style="normal" font-weight="normal" text-anchor="middle" fill="#000000" font-family="Sans" id="text3487-3-9" y="983.29248" x="1039.49" xml:space="preserve">
+    <tspan font-size="56px" fill="#d40000" id="tspan3523-5" y="983.29248" x="1039.49">Related Event</tspan>
+   </text>
+   <text font-size="29.14828px" font-style="normal" font-weight="normal" text-anchor="middle" fill="#008080" font-family="Sans" transform="translate(0,585.905517578125) scale(0.9602405428886414,1.0414056777954102) " id="text6238-3-9" y="-341.70255" x="669.99194" xml:space="preserve">
+    <tspan font-size="48px" font-weight="bold" id="tspan6399-7" y="-341.70255" x="669.99194">Event: SlapOS Recruits</tspan>
+    <tspan font-size="48px" font-weight="bold" id="tspan3010" y="-281.70255" x="669.99194">Beta Developers</tspan>
+    <tspan font-size="48px" font-weight="bold" id="tspan6401-0" y="-221.70253" x="669.99194">- Mail Message Event</tspan>
+   </text>
+  </g>
+ </g>
+</svg>
