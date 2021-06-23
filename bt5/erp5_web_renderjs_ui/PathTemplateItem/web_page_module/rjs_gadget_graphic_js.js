@@ -66,8 +66,6 @@
           for (key in base_query) {
             if (base_query.hasOwnProperty(key)) {
               if (Array.isArray(base_query[key])) {
-                // XXX we should change this logic by IN()
-                // https://www.w3resource.com/mysql/comparision-functions-and-operators/in-function.php
                 for (i = 0; i < base_query[key].length; i += 1) {
                   sub_query_list.push(new SimpleQuery({
                     operator: "",
