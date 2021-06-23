@@ -7,5 +7,5 @@ return [
   ("base_query", {"parent_uid": [portal.person_module.getUid(),
                                  portal.organisation_module.getUid()]}),
   ("x_title", translateString("Portal Type")),
-  ("graph_title", translateString("Types from Person and Organisation module"))
+  ("title", translateString("Types from Person and Organisation module"))
 ]
