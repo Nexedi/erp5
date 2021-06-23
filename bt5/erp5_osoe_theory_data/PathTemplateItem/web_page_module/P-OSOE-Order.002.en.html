@@ -1,95 +1,181 @@
-<section class="illustration"> 
-    <h1>Session 3: Sale Orders</h1> <img alt="Sale Orders Workflow" title="Sale Orders Workflow" type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Order.Sale.Order.Workflow?format=png" /> <footer>
-          by <a href="/contact">OSOE Project</a> </footer> 
-    <details open="open">
-      <p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) 
-                project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and 
-                the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
-                to undergraduate students or professionals.
-      </p>
-      <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute 
-the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, 
-consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any 
-reuse or distribution, you must make clear to others the license terms of this work. Any of these
-conditions can be waived if you get permission from the copyright holder through a commercial license 
-or an educational license. For more information, contact info@nexedi.com
-</p>
-    </details>
-          </section><section> 
-    <h1>Agenda</h1> 
-    <ul> 
-      <li>The trade process</li> 
-      <li>What is a sale order?</li> 
-      <li>What is a product?</li> 
-      <li>What are the conditions of a trade order?</li> 
-      <li>The workflow of a sale order</li> 
-    </ul> <details open="true">
-      <p>This guide has been created to teach the fundamentals of a sale/purchase order.</p>
-      <p> <strong>
-              Note: in this session &quot;Sale Orders&quot;, we will use another company Hongzhao as an example to explain how to create products, trade conditions and sale orders in ERP5. Hongzhao is also configured when we installed another ERP5 instance, the same way as presented in the tutorial <a href="user-Howto.Configure.ERP5.for.SMB.With.Configurator/view">&quot;Configure your instance using ERP5 Configurator&quot;</a>. So when you are practicing, please replace Hongzhao with the company you created, when you configured your ERP5 instance.
-            </strong> </p> </details> </section><section class="illustration"> 
-    <h1>Trade Process</h1> <img alt="Trade Process" title="Trade Process" type="image/png" src="http://img.erp5.cn/P-OSOE-ERP5.Trade.Processus?format=png" /> <details open="true"> 
-      <p>Companies are always selling either a service or a product or both. The global process of selling a product or a service is the same and can be divided into three important phases:</p> 
-      <p>The first is the order from the client to our company</p> 
-      <p>The second is the delivering of the goods, or the performing of the service</p> 
-      <p>The last is invoicing what has been performed or delivered.</p> 
-      <p>This presentation will focus on the first part of the trade process which is the order.</p> </details> </section><section class="illustration"> 
-    <h1>Pre-Trade</h1> <img style="width: 744px;" alt="Pre-Trade" title="Pre-Trade" type="image/png" src="http://img.erp5.cn/P-OSOE-ERP5.Pre.Trade.Opportuniti?format=png" /> <details open="true"> 
-      <p>In order to have clients, we have to prospect for new clients. This is why they use the CRM module of an ERP. The sales agent of the company contacts the potential client and presents what the company has to sell. If the client is interested, a sales opportunity is created, then the client will say “ok, I am interested, but please give me an offer”.</p> 
-      <p>So an offer will be made, but what exactly is an offer? Is it a special document or not? Should we have a special module named “offer”?</p> 
-      <p>In fact the offer is what will link a sales opportunity to the sales order. The offer is a pre-sales order, it is an order which is given to the customer, and if the customer accepts the offer, it will then become a confirmed order. This is why an offer is not at all different from an order, it is just an order which hasn't yet been confirmed by the customer.</p> 
-      <p>However, not every sales opportunity is linked to an offer, sometimes there is no pre-trade process.</p> 
-      <p>We will now see what an order is made of.</p> </details> </section><section class="illustration"> 
-    <h1>A buyer</h1> <img alt="A buyer" title="A buyer" type="image/png" src="http://img.erp5.cn/P-OSOE-A.Bayer.Goods.And.Services?format=png" /> <details open="true"> 
-      <p>An order represents a movement of resource (goods, services) from a company to another. So in every order we will have a source (the supplier) and a destination (the buyer). But the destination can be more than one person or even organisation.</p> 
-      <p>Concerning the destination, We must distinguish three things:</p> 
-      <p>The person or organisation which receives the goods, the person or organisation which is invoiced, and the person which is taking the decision to buy. This is why on an order we must have three fields to let us represent the reality correctly.</p> 
-      <p>To illustrate these three fields, we can take a look at how the supermarket is organised in France. The companies have buying centres in which they negotiate the prices for all of their brands. It allows them to have more power in the negotiation. But once they have bought one hundred thousand cups of yoghurt, they ask for them to be delivered in small quantities in each of their distribution centres. So we already have a different destination point from the person, making the decision to buy. Then we might have to invoice the buying centre, and not the distribution centre</p> 
-      <p>We have also need to distinct between the source of the movement.</p> </details> </section><section class="illustration"> 
-    <h1>A seller</h1> <img alt="A seller" title="A seller" type="image/png" src="http://img.erp5.cn/P-OSOE-Seller.Goods.and.Services?format=png" /> <details open="true"> 
-      <p>With the source of the movement, we will have a person who is responsible for the offer which is made. This person is responsible for the client, or at least for the conditions of the transaction. But it doesn't mean that this person is in the same organisation, which will deliver the goods or which will deliver the service.</p> 
-      <p>This is why we have a specific field for the delivering organisation. For example, companies like Nike don't produce their goods, they only work on design, marketing and on selling them. The entire production is handled by other companies. So these companies are the origin of the movement of goods which are triggered when an order is created.</p> 
-      <p>In this case, the company which is invoiced is Nike.</p> 
-      <p>Once we have correctly set up the origin and the destination of the resource, we must choose the products or the services we are talking about. ButIn order to do this we need to see in detail what a product is or what a service made of.</p> </details> </section><section class="illustration"> 
-    <h1>A product or a service</h1> <img alt="A product or a service" title="A product or a service" type="image/png" src="http://img.erp5.cn/P-OSOE-Trade.Product.or.Service?format=png" /> <details open="true"> 
-      <p>A product is any kind of good sold by the company. It can either be the global package of a product, for example the product laptop will be comprised of the laptop, the battery and the adaptor, but it can also be each part of a global package. For example a battery is a product, a power line is a product etc...</p> 
-      <p>Services are the same but without goods. They represent a service which is provided by a company. For example a phone subscription is a service. An audit company will only sell services.</p> 
-      <p>For both it is important to choose the right quantity unit. Quantity unit is how you measure a quantity of a specific good, or of a specific service. A service can be quantified in time, whereas a product can be counted in volume or in units.</p> </details> </section><section class="illustration"> 
-    <h1>A variation of a product</h1> <img alt="A variation of product" title="A variation of product" type="image/png" src="http://img.erp5.cn/P-OSOE-Variation.Of.Product?format=png" /> <details open="true"> 
-      <p>Products and services can have what is called a “variant”. For example we can ask for a financial service on 6, 12 or 18 months. Those can be considered as a variation of the service.</p> 
-      <p>Products can also have variations. For example a shirt can be bought in many different sizes. In such a case we will have a single variant. But it is not the only variation of a shirt, we can have many different colours of the same shirt, so we will have two variations of the same product. We can also have the logo on it which might change...</p> 
-      <p>So many products might in fact be the same at the origin and must be represented with a unique document within the IT system. Otherwise it is not possible to manage your products or services correctly.</p> 
-      <p>How are products differentiated from one to another is up to the company. One company will think that a shirt in a different colour is a different product, one will think that it is not different. There is no universal way to categorise the products and it will always be made according to the point of view of the company.</p> 
-      <p>The goods which are sold must be linked with a selling price. As we just have seen that a single product can have many different variations, the final price may not be the same. For example with clothes, if they are bigger, we might want to sell them a little bit more. So each variation can change the global price.</p> 
-      <p>The other source of price variations is the quantity which is bought. The more we buy, the less they cost. So we must be able to create matrices with price and quantity for each of our products.</p> </details> </section><section class="illustration"> 
-    <h1>Conditions - Price</h1> <img alt="Conditions - Price" title="Conditions - Price" type="image/png" src="http://img.erp5.cn/P-OSOE-SP.Order.Condition.Price?format=png" /> <details open="true"> 
-      <p>Conditions of a sale order are here to let you record the conditions on which you agreed with the other part.</p> 
-      <p>For example you discuss with a buying centre, then they say “OK, we are referencing you as a supplier”. It is time for you to create a specific trade condition for this organisation. Then each time you agree on a product, you will add a supply line.</p> </details> </section><section class="illustration"> 
-    <h1>Conditions – Taxes or Discount</h1> <img alt="Conditions – Taxes or Discount" title="Conditions – Taxes or Discount" type="image/png" src="http://img.erp5.cn/P-OSOE-Order.Taxe.or.Discount?format=png" /> <details open="true"> 
-      <p>Once we have chosen the right price we will sell the product for, we might want to give a global discount on the total price of the order. But we might also want to apply a global discount only on a part of the products sold. This is why we have what we call base contribution and base application. Base contribution are a way of creating a group on which we will be able to apply a discount. For example we can create a base contribution category which can be named “de-stock” and on every product sold with the de-stock price, we will apply a global discount of 50% on the usual price.</p> 
-      <p>On the other hand, we might want to apply surcharge prices on order. For example an order which has to be delivered in top priority will cost more than an order which is made six months before the delivery date.</p> 
-      <p>Taxes are handled the same way Discounts are. They are a percentage of the global price. Using Base contribution and Base application allow us to set up multiple taxes as Quebecois taxes. In Quebec there are two taxes, and the second one applied to the global price, and on the first tax. So finally you pay taxes on taxes :-) .</p> </details> </section><section class="illustration"> 
-    <h1>Conditions - Payment</h1> <img alt="Conditions - Payment" title="Conditions - Payment" type="image/png" src="http://img.erp5.cn/P-OSOE-Order.Conditions.Payment?format=png" /> <details open="true"> 
-      <p>How the payment will be done is a very important condition of the order. You will have to choose the means of payment, but also the time when the payment is due. You can decide that the entire amount is due on a particular date, but you can also decide that a part of the global payment is due on a specific date, and that the rest is due on another date.</p> 
-      <p>This is very important to be handled correctly, because it is often a reason why companies which have commands cannot continue and go in bankruptcy.</p> 
-      <p>It is possible to have a different business process with each of your clients. This is why you should be able to modify the entire order, when the documents are generated.</p> </details> </section><section class="illustration"> 
-    <h1>Sale Order Workflow</h1> <img alt="Sale Order Workflow" title="Sale Order Workflow" type="image/png" src="http://img.erp5.cn/P-OSOE-Order.Sale.Order.Workflow?format=png" /> <details open="true"> 
-      <p>
-            So finally we have this global work-flow. As we have already said about the pre-trade phase, the Sales Order module of an ERP system is capable of generating two documents which look the same: an Offer and an Order. <strong>After you create and &quot;Make&quot; an Order document, it will be in the state &quot;Offered&quot;, which means an Offer is made, but presented as an Order</strong>
-            .
-          </p> 
-      <p> <strong>If the clients &quot;Accept&quot; the Offer, it becomes a “Planned” Order, which allows you to mark the Order that you think will be done</strong>
-            . It is like an extension of the offered state with the idea that there is a high possibility that this order will be done. You can then create the planned order on the entire year to manage your working capital, FR or BFR.
-          </p> 
-      <p>
-            &quot;Placed&quot; state means the client has made the Order, and your company has received it. But <strong>it doesn't mean that you have accepted it</strong>
-            .
-          </p> 
-      <p>
-            &quot;Confirmed&quot; order means that you will handle the order and that you <strong>accepted it</strong>
-            .
-          </p> 
-      <p>It is important to differentiate &quot;Placed&quot; orders from &quot;Confirmed&quot; orders since you might want to check if everything is in order with the client, or if you are capable of fulfilling the order etc.</p> 
-      <p>Once you confirm the Sale Order, a related Sale Packing List will be created automatically for the next step of the trade process. We will talk about this in the next session.</p> </details> </section><section class="screenshot"> 
-    <h1>Sale Order Worklists</h1> <img alt="Sale Order Worklists" title="Sale Order Worklists" type="image/png" src="http://img.erp5.cn/user-Order.Sale.Order.List.With.Worklist?format=png" /> <details open="true"> 
-      <p>As we have already seen, the trade process can be managed through work-lists, which you can access by opening the &quot;My Favourites&quot; menu. These work-lists are there to summarize the information that you can find in the Sale Orders module itself.</p> </details> </section>
+<section class="illustration">
+<h1>Session 3: Sale Orders</h1>
+<img alt="Sale Orders Workflow" src="http://img.erp5.cn/P-OSOE-Order.Sale.Order.Workflow?format=png" title="Sale Orders Workflow" type="image/svg+xml" />
+<footer>by <a href="/contact">OSOE Project</a></footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+</section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>The trade process</li>
+	<li>What is a sale order?</li>
+	<li>What is a product?</li>
+	<li>What are the conditions of a trade order?</li>
+	<li>The workflow of a sale order</li>
+</ul>
+
+<details open="true">
+<p>This guide has been created to teach the fundamentals of a sale/purchase order.</p>
+
+<p><strong>Note: in this session &quot;Sale Orders&quot;, we will use another company Hongzhao as an example to explain how to create products, trade conditions and sale orders in ERP5. Hongzhao is also configured when we installed another ERP5 instance, the same way as presented in the tutorial <a href="user-Howto.Configure.ERP5.for.SMB.With.Configurator/view">&quot;Configure your instance using ERP5 Configurator&quot;</a>. So when you are practicing, please replace Hongzhao with the company you created, when you configured your ERP5 instance. </strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Trade Process</h1>
+<img alt="Trade Process" src="http://img.erp5.cn/P-OSOE-ERP5.Trade.Processus?format=png" title="Trade Process" type="image/png" />
+<details open="true">
+<p>Companies are always selling either a service or a product or both. The global process of selling a product or a service is the same and can be divided into three important phases:</p>
+
+<p>The first is the order from the client to our company</p>
+
+<p>The second is the delivering of the goods, or the performing of the service</p>
+
+<p>The last is invoicing what has been performed or delivered.</p>
+
+<p>This presentation will focus on the first part of the trade process which is the order.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Pre-Trade</h1>
+<img alt="Pre-Trade" src="P-OSOE-ERP5.Pre.Trade.Opportuniti.New?format=png" style="width: 744px;" title="Pre-Trade" type="image/png" />
+<details open="true">
+<p>In order to have clients, we have to prospect for new clients. This is why they use the CRM module of an ERP. The sales agent of the company contacts the potential client and presents what the company has to sell. If the client is interested, a sales opportunity is created, then the client will say &ldquo;ok, I am interested, but please give me an offer&rdquo;.</p>
+
+<p>So an offer will be made, but what exactly is an offer? Is it a special document or not? Should we have a special module named &ldquo;offer&rdquo;?</p>
+
+<p>In fact the offer is what will link a sales opportunity to the sales order. The offer is a pre-sales order, it is an order which is given to the customer, and if the customer accepts the offer, it will then become a confirmed order. This is why an offer is not at all different from an order, it is just an order which hasn&#39;t yet been confirmed by the customer.</p>
+
+<p>However, not every sales opportunity is linked to an offer, sometimes there is no pre-trade process.</p>
+
+<p>We will now see what an order is made of.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>A buyer</h1>
+<img alt="A buyer" src="http://img.erp5.cn/P-OSOE-A.Bayer.Goods.And.Services?format=png" title="A buyer" type="image/png" />
+<details open="true">
+<p>An order represents a movement of resource (goods, services) from a company to another. So in every order we will have a source (the supplier) and a destination (the buyer). But the destination can be more than one person or even organisation.</p>
+
+<p>Concerning the destination, We must distinguish three things:</p>
+
+<p>The person or organisation which receives the goods, the person or organisation which is invoiced, and the person which is taking the decision to buy. This is why on an order we must have three fields to let us represent the reality correctly.</p>
+
+<p>To illustrate these three fields, we can take a look at how the supermarket is organised in France. The companies have buying centres in which they negotiate the prices for all of their brands. It allows them to have more power in the negotiation. But once they have bought one hundred thousand cups of yoghurt, they ask for them to be delivered in small quantities in each of their distribution centres. So we already have a different destination point from the person, making the decision to buy. Then we might have to invoice the buying centre, and not the distribution centre</p>
+
+<p>We have also need to distinct between the source of the movement.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>A seller</h1>
+<img alt="A seller" src="http://img.erp5.cn/P-OSOE-Seller.Goods.and.Services?format=png" title="A seller" type="image/png" />
+<details open="true">
+<p>With the source of the movement, we will have a person who is responsible for the offer which is made. This person is responsible for the client, or at least for the conditions of the transaction. But it doesn&#39;t mean that this person is in the same organisation, which will deliver the goods or which will deliver the service.</p>
+
+<p>This is why we have a specific field for the delivering organisation. For example, companies like Nike don&#39;t produce their goods, they only work on design, marketing and on selling them. The entire production is handled by other companies. So these companies are the origin of the movement of goods which are triggered when an order is created.</p>
+
+<p>In this case, the company which is invoiced is Nike.</p>
+
+<p>Once we have correctly set up the origin and the destination of the resource, we must choose the products or the services we are talking about. But In order to do this we need to see in detail what a product is or what a service made of.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>A product or a service</h1>
+<img alt="A product or a service" src="http://img.erp5.cn/P-OSOE-Trade.Product.or.Service?format=png" title="A product or a service" type="image/png" />
+<details open="true">
+<p>A product is any kind of good sold by the company. It can either be the global package of a product, for example the product laptop will be comprised of the laptop, the battery and the adaptor, but it can also be each part of a global package. For example a battery is a product, a power line is a product etc...</p>
+
+<p>Services are the same but without goods. They represent a service which is provided by a company. For example a phone subscription is a service. An audit company will only sell services.</p>
+
+<p>For both it is important to choose the right quantity unit. Quantity unit is how you measure a quantity of a specific good, or of a specific service. A service can be quantified in time, whereas a product can be counted in volume or in units.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>A variation of a product</h1>
+<img alt="A variation of product" src="http://img.erp5.cn/P-OSOE-Variation.Of.Product?format=png" title="A variation of product" type="image/png" />
+<details open="true">
+<p>Products and services can have what is called a &ldquo;variant&rdquo;. For example we can ask for a financial service on 6, 12 or 18 months. Those can be considered as a variation of the service.</p>
+
+<p>Products can also have variations. For example a shirt can be bought in many different sizes. In such a case we will have a single variant. But it is not the only variation of a shirt, we can have many different colours of the same shirt, so we will have two variations of the same product. We can also have the logo on it which might change...</p>
+
+<p>So many products might in fact be the same at the origin and must be represented with a unique document within the IT system. Otherwise it is not possible to manage your products or services correctly.</p>
+
+<p>How are products differentiated from one to another is up to the company. One company will think that a shirt in a different colour is a different product, one will think that it is not different. There is no universal way to categorise the products and it will always be made according to the point of view of the company.</p>
+
+<p>The goods which are sold must be linked with a selling price. As we just have seen that a single product can have many different variations, the final price may not be the same. For example with clothes, if they are bigger, we might want to sell them a little bit more. So each variation can change the global price.</p>
+
+<p>The other source of price variations is the quantity which is bought. The more we buy, the less they cost. So we must be able to create matrices with price and quantity for each of our products.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Conditions - Price</h1>
+<img alt="Conditions - Price" src="P-OSOE-Order.Taxes.Or.Discount.Screenshot2.New?format=png" title="Conditions - Price" type="image/png" />
+<details open="true">
+<p>Conditions of a sale order are here to let you record the conditions on which you agreed with the other part.</p>
+
+<p>For example you discuss with a buying centre, then they say &ldquo;OK, we are referencing you as a supplier&rdquo;. It is time for you to create a specific trade condition for this organisation. Then each time you agree on a product, you will add a supply line.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Conditions &ndash; Taxes or Discount</h1>
+<img alt="Conditions – Taxes or Discount" src="P-OSOE-Order.Taxe.or.Discount.New?format=png" title="Conditions – Taxes or Discount" type="image/png" />
+<details open="true">
+<p>Once we have chosen the right price we will sell the product for, we might want to give a global discount on the total price of the order. But we might also want to apply a global discount only on a part of the products sold. This is why we have what we call base contribution and base application. Base contribution are a way of creating a group on which we will be able to apply a discount. For example we can create a base contribution category which can be named &ldquo;de-stock&rdquo; and on every product sold with the de-stock price, we will apply a global discount of 50% on the usual price.</p>
+
+<p>On the other hand, we might want to apply surcharge prices on order. For example an order which has to be delivered in top priority will cost more than an order which is made six months before the delivery date.</p>
+
+<p>Taxes are handled the same way Discounts are. They are a percentage of the global price. Using Base contribution and Base application allow us to set up multiple taxes as Quebecois taxes. In Quebec there are two taxes, and the second one applied to the global price, and on the first tax. So finally you pay taxes on taxes :-) .</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Conditions - Payment</h1>
+<img alt="Conditions - Payment" src="P-OSOE-Order.Conditions.Payment.New?format=png" title="Conditions - Payment" type="image/png" />
+<details open="true">
+<p>How the payment will be done is a very important condition of the order. You will have to choose the means of payment, but also the time when the payment is due. You can decide that the entire amount is due on a particular date, but you can also decide that a part of the global payment is due on a specific date, and that the rest is due on another date.</p>
+
+<p>This is very important to be handled correctly, because it is often a reason why companies which have commands cannot continue and go in bankruptcy.</p>
+
+<p>It is possible to have a different business process with each of your clients. This is why you should be able to modify the entire order, when the documents are generated.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Sale Order Workflow</h1>
+<img alt="Sale Order Workflow" src="http://img.erp5.cn/P-OSOE-Order.Sale.Order.Workflow?format=png" title="Sale Order Workflow" type="image/png" />
+<details open="true">
+<p>So finally we have this global work-flow. As we have already said about the pre-trade phase, the Sales Order module of an ERP system is capable of generating two documents which look the same: an Offer and an Order. <strong>After you create and &quot;Make&quot; an Order document, it will be in the state &quot;Offered&quot;, which means an Offer is made, but presented as an Order</strong> .</p>
+
+<p><strong>If the clients &quot;Accept&quot; the Offer, it becomes a &ldquo;Planned&rdquo; Order, which allows you to mark the Order that you think will be done</strong> . It is like an extension of the offered state with the idea that there is a high possibility that this order will be done. You can then create the planned order on the entire year to manage your working capital, FR or BFR.</p>
+
+<p>&quot;Placed&quot; state means the client has made the Order, and your company has received it. But <strong>it doesn&#39;t mean that you have accepted it</strong> .</p>
+
+<p>&quot;Confirmed&quot; order means that you will handle the order and that you <strong>accepted it</strong> .</p>
+
+<p>It is important to differentiate &quot;Placed&quot; orders from &quot;Confirmed&quot; orders since you might want to check if everything is in order with the client, or if you are capable of fulfilling the order etc.</p>
+
+<p>Once you confirm the Sale Order, a related Sale Packing List will be created automatically for the next step of the trade process. We will talk about this in the next session.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Sale Order Worklists</h1>
+<img alt="Sale Order Worklists" src="user-Order.Sale.Order.List.With.Worklist.New?format=png" title="Sale Order Worklists" type="image/png" />
+<details open="true">
+<p>As we have already seen, the trade process can be managed through work-lists, which you can access by opening the &quot;Worklists&quot; tab on the sidebar. These work-lists are there to summarize the information that you can find also in the Sale Orders module itself.</p>
+</details>
+</section>
