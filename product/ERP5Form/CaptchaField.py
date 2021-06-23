@@ -193,13 +193,13 @@ class CaptchaWidget(Widget.TextWidget):
     """
       Render editor
     """
+    portal = field.getPortalObject()
     captcha_key = None
     captcha_field = None
     captcha_type = field.get_value("captcha_type")
     provider = CaptchaProviderFactory.getProvider(captcha_type)
     (captcha_key, captcha_answer) = provider.generate(field)
-    portal_sessions = field.getPortalObject().portal_sessions
-    while not self.add_captcha(portal_sessions, md5(captcha_key).hexdigest(), captcha_answer):
+    while not self.add_captcha(portal.portal_sessions, md5(captcha_key).hexdigest(), captcha_answer):
       (captcha_key, captcha_answer) = provider.generate(field)
     captcha_field = provider.getHTML(field, captcha_key)
 
@@ -215,6 +215,17 @@ class CaptchaWidget(Widget.TextWidget):
                                    size=10)
     # HTML page having a captcha field should never be cached.
     REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=0, no-store')
+    # set haproxy balancer cookie, as a temporary workaround because portal_sessions
+    # does not work with memcached yet. See CookieCrumbler for details about
+    # haproxy sticky cookie mechanism
+    balancer_cookie = REQUEST.get('HTTP_X_BALANCER_CURRENT_COOKIE')
+    if balancer_cookie:
+      if balancer_cookie not in REQUEST.cookies:
+        REQUEST.RESPONSE.setCookie(
+            balancer_cookie,
+            'anything',
+            path=portal.absolute_url_path())
+
     return captcha_field + key_field + splitter + answer
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
