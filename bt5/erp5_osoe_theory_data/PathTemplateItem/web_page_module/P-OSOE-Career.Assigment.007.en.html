@@ -1,108 +1,123 @@
-    
-      <section class="master">
-        <h1>Session 1: Careers and Assignments</h1>
-        <img alt="Workflow of people's career" type="image/png" title="Career and assignments workflow" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Front.Page.Career.Workflow?format=png">
-        <footer>
-          by <a href="/contact">OSOE Project</a>.
-        </footer>
-        <details open="open">
-          <p>
-            This visual guide is part of a collection of documents created by the One Student One ERP (OSOE)
-            project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and
-            the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
-            to undergraduate students or professionals.
-          </p><p>
-            <b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute
-            the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training,
-            consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any
-            reuse or distribution, you must make clear to others the license terms of this work. Any of these
-            conditions can be waived if you get permission from the copyright holder through a commercial license
-            or an educational license. For more information, contact info@nexedi.com
-          </p>
-        </details>
-      </section><section class="">
-        <h1>Agenda</h1>
-        <ul>
-          <li>Person and organisations</li>
-          <li>Career and universal career workflow</li>
-          <li>Assignment and universal assignment workflow</li>
-          <li>HR: beyond careers and assignments</li>
-        </ul>
-        <details open="open">
-          <p>The goal of this tutorial is to teach you what Careers and Assignments are, and how they are applied in ERP systems using ERP5 as example.</p><p>The first step in using an ERP system is to create and manage people of the company. People are the most essential asset of any company. In ERP5, people are represented by Persons. Each person has his/her own role associated with different organisations, thus, for each person we create, we should also link the organisation that he/she is working for to this person. If organisation doesn’t exist yet, we should create the organisation.</p><strong>
-            Note: in this session "Carreers and Assignments", following the previous tutorial <a href="“http://www.osoe-project.org/lesson/osoe-Lecture.ERP.Configuration.Introduction/user-Howto.Configure.ERP5.for.SMB.With.Configurator/view”">"Configure your instance using ERP5 Configurator",</a> we will use our configured company VIFIB as an example to explain how to use ERP systems such as ERP5 to manage the company's performance by managing people, their assignments and their relations with organisations. So when you are practicing, please replace VIFIB with the company you created when you configured your ERP5 instance.
-          </strong>
-        </details>
-      </section><section class="illustration">
-        <h1>Persons in ERP5: staff, client, supplier</h1>
-        <img title="Person: staff, client, supplier?" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Person.Staff.Client.Supplier?format=png" alt="Person: staff, client, supplier?" type="image/png">
-        <details open="open">
-          <p>All people who have interaction with our company should be entered in the ERP system based on different roles such as staff, clients, suppliers, etc. After a person has been created, he/she can be assigned with different duties, linked to different organisations, set relations to different functions. In this way, all people could be managed according to the company’s needs.</p><p>In our VIFIB case, the company VIFIB has staff (role "Internal") – engineers of software development, technicians who manage computer hardware and software, managers, accountants, administration and so on. VIFIB has clients (role "Client") who purchase hosting capacity for their own use or for retail through their own SlapOS platform, and clients who are software developers and need software certifications. VIFIB has suppliers (role "Supplier") who supply computer capacity and hosting space, and suppliers of software licenses and software integration service. VIFIB is also in relation with journalists (role 'Media'), and social insurance center (role "Administration").</p><p>
-            In ERP5, there are two principles in identifying people. First, the role of a person should be differentiated among client, supplier, and stuff as shown in the graphics above. However, we should also be able to assign multiple roles to a person. For example, a VIFIB client who purchases large amounts of hosting capacity for retail use could also provide computer capacity to VIFIB through their SlapOS platform, thus becomes a VIFIB supplier. So this person is at the same time a client and a supplier <strong>(different roles in the same Person document)</strong>
-            . Second, every person created must be unique. We should only create the same person once and be able to use it everywhere needed. If we create two Person documents for the same person (e.g.Person 1 Supplier and Person 1 Client), then the documents are redundant, and could lead to many confusions in using them.
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>People work for organisations</h1>
-        <img title="People work for organisations" alt="People work for organisations" src="http://img.erp5.cn/osoe-Careers.And.Assignments.People.Work.For.Organisations?format=png" type="image/png">
-        <details open="open">
-          <p>Once we have created all Person documents in the system, we should do the same for the Organisation. Organisations could be companies, non-profit organisations, government institutions and so on. After we have created all Organisation documents, we need to to link them to Person documents to show the relation between a Person and an Organisation. For example, Cédric De Saint Martin and Yingjie Xu are staff of VIFIB, then we should link the two Person documents which represent Cédric De Saint Martin and Yingjie Xu to the Organisation document VIFIB.  In the meanwhile, John Scott Doh works for VIFIB's client Z Company, then we should link the Person document which represents John Scott Doh to the Organisation document that represents Z company.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>People change organisations</h1>
-        <img title="People change of organisations" alt="People change of organisations" src="http://img.erp5.cn/osoe-Careers.And.Assignments.People.Change.Of.Organisations?format=png" type="image/png">
-        <details open="open">
-          <p>In ERP5, a person can be represented by a Person document and by an Organisation document he/she is linked to, but both entities are independent and have their own life cycle. A person can work for one or many organisations, or change organisations during his/her career. However, keep in mind that there is no need to create a new person, you should just update the existing one by creating a new career step.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Tracking a person's career</h1>
-        <img title="Tracking peoples' career" alt="Tracking peoples' career" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Tracking.Peoples.Career?format=png" type="image/png">
-        <details open="open">
-          <p>When a person is working for a given organisation, it is only a step in his global career. A person might have different career steps since he/she may later switch to other companies. If a person changes organisation, we should create a new career step for that person, link the Person document to the new organisation, and start it. As shown in the table above, each step of a career has a start and an end date. This gives us a really simple but realistic way to handle career developments of people. Nowadays, many organisations also use grids to present internal career steps of a person, which includes an associated salary level.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Career workflow</h1>
-        <img title="Career workflow" alt="Career workflow" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Career.Workflow?format=png" type="image/png">
-        <details open="open">
-          <p>We have a very simple workflow for career steps. A career step can be started, cancelled, or stopped.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Assign duties to a Person</h1>
-        <img title="People are assigned duties" alt="People are assigned duties" src="http://img.erp5.cn/osoe-Careers.And.Assignments.People.Are.Assigned.Duties?format=png" type="image/png">
-        <details open="open">
-          <p>However, careers could only represent a person’s big career steps, but not the positions and responsibilities of the person in a given organisation. In ERP5, “assignments” are used to represent positions and duties of a person.</p><p>Assignments are completely independent from career steps. Firstly, a person could have multiple positions and a variety of duties in one career step. Secondly, the assignments could be very different from each other, and sometimes could even be far from the career step itself. For example, the financial manager of VIFIB might be assigned the duty of handling the director role for a short time when the company director is absent for business trips. Thirdly, assignments are not always related to the organisation that the person works for in a career step. For example, a software developer of VIFIB might be assigned the “project manager” position for a project from VIFIB’s client organisation for a defined period of time.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Managing a Person's duties</h1>
-        <img title="Managing people duties" alt="Managing people duties" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Managing.People.Duties.Screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>The screenshot above is the interface of Assignments in ERP5. As you can see, the person Jacques Honoré has different assignments associated to different functions, and works for two organisations (Nexedi and Tiolive LLC). Assignments could also be used to handle security level so that only the person with certain assignments could access certain information. In companies, the security level is often associated with the responsibility level of a person. This way, confidential business information could be better protected.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Assignment workflow</h1>
-        <img title="Assignment workflow" alt="Assignment workflow" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Assignment.Workflow?format=png" type="image/png">
-        <details open="open">
-          <p>The workflow of an assignment is also relatively simple. The status “updated“ here means that you could review the assignments assigned to a person. When the review process is done, you just need to change it back to “started”. You can also cancel an assigned assignment of a person if the person is no longer responsible to the related tasks. You could define the security permission of a certain assignment, but it will only be effective when the assignment is “started”.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>HR: beyond careers and assignments</h1>
-        <img src="" type="image/svg+xml" title="" alt="">
-        <ul>
-          <li>Skills</li>
-          <li>Training</li>
-          <li>Position</li>
-          <li>Hiring</li>
-        </ul>
-        <details open="open">
-          <p>Careers and assignments are the minimum information in order to manage human resources. There are of course many other fields which can be added to ERP5 configuration so that a complete human management system could be built in.</p><p>
-            <b>Skills:</b>  Skills are always an important aspect when considering human resource management. A skill catalogue could be very useful to keep track of skills of all people within and outside the company. In this case, whenever a task requires a special skill to complete, the right person could be easily found in this catalogue.
-          </p><p>
-            <b>Training:</b> Trainings could extend people’s skills to another level. New skills could be gained from trainings as well. Thus, trainings should also be managed and organised in a human resource management system.
-          </p><p>
-            <b>Positions:</b>  A position should contain three dimensions: function, group, and site. It should involve a clear job description.
-          </p><p>
-            <b>Hiring:</b>  Finally the recruitment procedure should also be handled by the human resource management system. When the company opens a position, candidates should be filled in for this position. Once the right candidate is found, the position should become closed.
-          </p><p></p>
-        </details>
-      </section>
-    
+<section class="master">
+<h1>Session 1: Careers and Assignments</h1>
+<img alt="Workflow of people's career" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Front.Page.Career.Workflow?format=png" title="Career and assignments workflow" type="image/png" />
+<footer>by <a href="/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+</section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Person and organisations</li>
+	<li>Career and universal career workflow</li>
+	<li>Assignment and universal assignment workflow</li>
+	<li>HR: beyond careers and assignments</li>
+</ul>
+
+<details open="open">
+<p>The goal of this tutorial is to teach you what Careers and Assignments are, and how they are applied in ERP systems using ERP5 as example.</p>
+
+<p>The first step in using an ERP system is to create and manage people of the company. People are the most essential asset of any company. In ERP5, people are represented by Persons. Each person has his/her own role associated with different organisations, thus, for each person we create, we should also link the organisation that he/she is working for to this person. If organisation doesn&#39;t exist yet, we should create the organisation.</p>
+<strong>Note: in this session &quot;Carreers and Assignments&quot;, following the previous tutorial <a href="“http://www.osoe-project.org/lesson/osoe-Lecture.ERP.Configuration.Introduction/user-Howto.Configure.ERP5.for.SMB.With.Configurator/view”">&quot;Configure your instance using ERP5 Configurator&quot;,</a> we will use our configured company VIFIB as an example to explain how to use ERP systems such as ERP5 to manage the company&#39;s performance by managing people, their assignments and their relations with organisations. So when you are practicing, please replace VIFIB with the company you created when you configured your ERP5 instance. </strong></details>
+</section>
+
+<section class="illustration">
+<h1>Persons in ERP5: staff, client, supplier</h1>
+<img alt="Person: staff, client, supplier?" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Person.Staff.Client.Supplier?format=png" title="Person: staff, client, supplier?" type="image/png" />
+<details open="open">
+<p>All people who have interaction with our company should be entered in the ERP system based on different roles such as staff, clients, suppliers, etc. After a person has been created, he/she can be assigned with different duties, linked to different organisations, set relations to different functions. In this way, all people could be managed according to the company&#39;s needs.</p>
+
+<p>In our VIFIB case, the company VIFIB has staff (role &quot;Internal&quot;) &ndash; engineers of software development, technicians who manage computer hardware and software, managers, accountants, administration and so on. VIFIB has clients (role &quot;Client&quot;) who purchase hosting capacity for their own use or for retail through their own SlapOS platform, and clients who are software developers and need software certifications. VIFIB has suppliers (role &quot;Supplier&quot;) who supply computer capacity and hosting space, and suppliers of software licenses and software integration service. VIFIB is also in relation with journalists (role &#39;Media&#39;), and social insurance center (role &quot;Administration&quot;).</p>
+
+<p>In ERP5, there are two principles in identifying people. First, the role of a person should be differentiated among client, supplier, and stuff as shown in the graphics above. However, we should also be able to assign multiple roles to a person. For example, a VIFIB client who purchases large amounts of hosting capacity for retail use could also provide computer capacity to VIFIB through their SlapOS platform, thus becomes a VIFIB supplier. So this person is at the same time a client and a supplier <strong>(different roles in the same Person document)</strong> . Second, every person created must be unique. We should only create the same person once and be able to use it everywhere needed. If we create two Person documents for the same person (e.g.Person 1 Supplier and Person 1 Client), then the documents are redundant, and could lead to many confusions in using them.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>People work for organisations</h1>
+<img alt="People work for organisations" src="http://img.erp5.cn/osoe-Careers.And.Assignments.People.Work.For.Organisations?format=png" title="People work for organisations" type="image/png" />
+<details open="open">
+<p>Once we have created all Person documents in the system, we should do the same for the Organisation. Organisations could be companies, non-profit organisations, government institutions and so on. After we have created all Organisation documents, we need to to link them to Person documents to show the relation between a Person and an Organisation. For example, C&eacute;dric De Saint Martin and Yingjie Xu are staff of VIFIB, then we should link the two Person documents which represent C&eacute;dric De Saint Martin and Yingjie Xu to the Organisation document VIFIB. In the meanwhile, John Scott Doh works for VIFIB&#39;s client Z Company, then we should link the Person document which represents John Scott Doh to the Organisation document that represents Z company.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>People change organisations</h1>
+<img alt="People change of organisations" src="http://img.erp5.cn/osoe-Careers.And.Assignments.People.Change.Of.Organisations?format=png" title="People change of organisations" type="image/png" />
+<details open="open">
+<p>In ERP5, a person can be represented by a Person document and by an Organisation document he/she is linked to, but both entities are independent and have their own life cycle. A person can work for one or many organisations, or change organisations during his/her career. However, keep in mind that there is no need to create a new person, you should just update the existing one by creating a new career step.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Tracking a person&#39;s career</h1>
+<img alt="Tracking peoples' career" src="osoe-Careers.And.Assignments.Tracking.Peoples.Career.New?format=png" title="Tracking peoples' career" type="image/png" />
+<details autocomplete="off" open="">
+<p>When a person is working for a given organisation, it is only a step in his global career. A person might have different career steps since he/she may later switch to other companies. If a person changes organisation, we should create a new career step for that person, link the Person document to the new organisation, and start it. As shown in the table above, each step of a career has a start and an end date. This gives us a really simple but realistic way to handle career developments of people. Nowadays, many organisations also use grids to present internal career steps of a person, which includes an associated salary level.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Career workflow</h1>
+<img alt="Career workflow" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Career.Workflow?format=png" title="Career workflow" type="image/png" />
+<details open="open">
+<p>We have a very simple workflow for career steps. A career step can be started, cancelled, or stopped.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Assign duties to a Person</h1>
+<img alt="People are assigned duties" src="http://img.erp5.cn/osoe-Careers.And.Assignments.People.Are.Assigned.Duties?format=png" title="People are assigned duties" type="image/png" />
+<details open="open">
+<p>However, careers could only represent a person&#39;s big career steps, but not the positions and responsibilities of the person in a given organisation. In ERP5, &ldquo;assignments&rdquo; are used to represent positions and duties of a person.</p>
+
+<p>Assignments are completely independent from career steps. Firstly, a person could have multiple positions and a variety of duties in one career step. Secondly, the assignments could be very different from each other, and sometimes could even be far from the career step itself. For example, the financial manager of VIFIB might be assigned the duty of handling the director role for a short time when the company director is absent for business trips. Thirdly, assignments are not always related to the organisation that the person works for in a career step. For example, a software developer of VIFIB might be assigned the &ldquo;project manager&rdquo; position for a project from VIFIB&#39;s client organisation for a defined period of time.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Managing a Person&#39;s duties</h1>
+<img alt="Managing people duties" src="osoe-Careers.And.Assignments.Managing.People.Duties.New?format=png" title="Managing people duties" type="image/png" />
+<details open="open">
+<p>The screenshot above is the interface of Assignments in ERP5. As you can see, the person Jacques Honor&eacute; has different assignments associated to different functions, and works for two organisations (Nexedi and Tiolive LLC). Assignments could also be used to handle security level so that only the person with certain assignments could access certain information. In companies, the security level is often associated with the responsibility level of a person. This way, confidential business information could be better protected.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Assignment workflow</h1>
+<img alt="Assignment workflow" src="http://img.erp5.cn/osoe-Careers.And.Assignments.Assignment.Workflow?format=png" title="Assignment workflow" type="image/png" />
+<details open="open">
+<p>The workflow of an assignment is also relatively simple. The status &ldquo;updated&ldquo; here means that you could review the assignments assigned to a person. When the review process is done, you just need to change it back to &ldquo;started&rdquo;. You can also cancel an assigned assignment of a person if the person is no longer responsible to the related tasks. You could define the security permission of a certain assignment, but it will only be effective when the assignment is &ldquo;started&rdquo;.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>HR: beyond careers and assignments</h1>
+<img alt="" src="" title="" type="image/svg+xml" />
+<ul>
+	<li>Skills</li>
+	<li>Training</li>
+	<li>Position</li>
+	<li>Hiring</li>
+</ul>
+
+<details open="open">
+<p>Careers and assignments are the minimum information in order to manage human resources. There are of course many other fields which can be added to ERP5 configuration so that a complete human management system could be built in.</p>
+
+<p><b>Skills:</b> Skills are always an important aspect when considering human resource management. A skill catalogue could be very useful to keep track of skills of all people within and outside the company. In this case, whenever a task requires a special skill to complete, the right person could be easily found in this catalogue.</p>
+
+<p><b>Training:</b> Trainings could extend people&#39;s skills to another level. New skills could be gained from trainings as well. Thus, trainings should also be managed and organised in a human resource management system.</p>
+
+<p><b>Positions:</b> A position should contain three dimensions: function, group, and site. It should involve a clear job description.</p>
+
+<p><b>Hiring:</b> Finally the recruitment procedure should also be handled by the human resource management system. When the company opens a position, candidates should be filled in for this position. Once the right candidate is found, the position should become closed.</p>
+
+<p>&nbsp;</p>
+</details>
+</section>
