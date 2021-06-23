@@ -3,7 +3,7 @@ from DateTime import DateTime
 
 portal = context.getPortalObject()
 preference_tool = portal.portal_preferences
-software_product_list = portal.portal_catalog(portal_type='Software Product', validation_state='validated')
+software_product_list = portal.portal_catalog(portal_type='Software Product', validation_state='validated', sort_on='creation_date')
 appstore_data = []
 logo_url_list = []
 i = 0
@@ -26,13 +26,13 @@ for software_product in software_product_list:
         logo_url_list.append('appstore/' + logo.getReference())
         # Future domain could be defined by user
         app_domain = software_product.getFollowUpId(portal_type="Web Section")
-        appstore_data.append({
+        app_data = {
           "int_index": str(i),
           "application_image_type": 'image',
           "application_image_url": logo.getReference(),
           "application_toc_accept": 'true',
-          "application_published": 'some_date',
-          "application_submitted": 'other_date',
+          "application_published": web_section.getModificationDate().strftime("%m/%d/%Y"),
+          "application_submitted": web_section.getModificationDate().strftime("%m/%d/%Y"),
           "application_description": data["description"] if "description" in data else data["name"],
           "application_url": "%s://%s.%s/" % (preference_tool.getPreferredSystemAppstoreWildcardProtocol(),
                                               app_domain,
@@ -41,7 +41,8 @@ for software_product in software_product_list:
           "application_category": data['category'] if "category" in data else "Documents",
           "application_title_i18n": "application.custom.%s.title" % app_domain,
           "application_description_i18n": "application.custom.%s.description" % app_domain
-        })
+        }
+        appstore_data.append(app_data)
         i+=1
 
 json_data = json.dumps(appstore_data)
