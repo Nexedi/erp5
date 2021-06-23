@@ -153,6 +153,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Test Component":      ("py",   0, "text_content"),
   "Test Page":           (None,   0, "text_content"),
   "Tool Component":      ("py",   0, "text_content"),
+  "Web Illustration":    ("svg",  0, "text_content"),
   "Web Page":            (None,   0, "text_content"),
   "Web Script":          (None,   0, "text_content"),
   "Web Style":           (None,   0, "text_content"),
