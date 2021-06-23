@@ -17,7 +17,7 @@ return [
   ]),
   ("query_by", "getTranslatedSimulationStateTitle"),
   ("base_query", {"parent_uid": context.getUid()}),
-  ("graph_title", translateString(
+  ("title", translateString(
     "%s Pipes" % context.getPortalType().replace(" Module", "")
   )),
   ("x_title", translateString("Days"))

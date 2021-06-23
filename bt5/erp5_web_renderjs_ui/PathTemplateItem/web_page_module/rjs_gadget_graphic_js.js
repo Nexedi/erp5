@@ -56,11 +56,11 @@
               x: query_by,
               y: y,
               extended_search: extended_search,
-              title: options.graph_title || options.x_title,
+              title: options.title || options.x_title,
               x_title: options.x_title,
               y_title: options.y_title,
               date_range_list: date_range_list,
-              graph_gadget: "unsafe/gadget_field_graph_echarts.html/"
+              graph_gadget: "unsafe/gadget_field_graph_echarts.html"
             };
 
           for (key in base_query) {
