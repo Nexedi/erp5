@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Image" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -85,39 +83,47 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/public</string>
                 <string>publication_section/documentation/user</string>
-                <string>group/nexedi</string>
-                <string>contributor/person_module/20150706-86B8EE8</string>
-                <string>contributor/person_module/2326</string>
                 <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>classification/collaborative/team</string>
                 <string>contributor/person_module/510</string>
-                <string>contributor/person_module/20121115-586BC0F</string>
-                <string>contributor/person_module/20130927-61A66CC</string>
+                <string>group/nexedi</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
+            <value> <string>d4168cbe49dad01b53a889e9b45690a4</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user-Order.And.Packing.List.Worklist.Screenshot.New</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>P-OSOE-Sale.Order.With.Worklist.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <key> <string>filename</string> </key>
+            <value> <string>02-01.png</string> </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string>This guide has been created for teaching ERP: Theory, Practice and Configuration through the use of ERP5</string> </value>
+            <key> <string>height</string> </key>
+            <value> <int>560</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.004.en</string> </value>
+            <value> <string>user_order_and_packing_list_worklist_screenshot_new</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -125,33 +131,34 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Image</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>ERP: Theory, Practice and Configuration - Introduction</string> </value>
+            <value> <string>Order and Packing List Worklists</string> </value>
         </item>
         <item>
             <key> <string>subject</string> </key>
             <value>
               <tuple>
-                <string>data</string>
-                <string>mining</string>
-                <string>tiolive</string>
-                <string>introduction</string>
-                <string>theory</string>
-                <string>practice</string>
-                <string>configuration</string>
+                <string>sale</string>
+                <string>order</string>
+                <string>list</string>
+                <string>worklist</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP: Theory, Practice and Configuration - Introduction</string> </value>
+            <value> <string>Order and Packing List Worklists</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>004</string> </value>
+            <value> <string>002</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>732</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -206,12 +213,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -235,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>superrafael</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -257,8 +258,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1343124017.02</float>
-                              <string>GMT+2</string>
+                              <float>1620783615.32</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
@@ -306,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.64099.48140.10427</string> </value>
+                      <value> <string>992.66.1690.12936</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -324,68 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1624638823.15</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>mayoro</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>0.0.0.0</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1325768503.16</float>
+                              <float>1620783513.3</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
