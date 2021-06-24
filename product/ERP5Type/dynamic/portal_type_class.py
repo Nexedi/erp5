@@ -384,8 +384,9 @@ def loadTempPortalTypeClass(portal_type_name):
   import erp5.portal_type
   klass = getattr(erp5.portal_type, portal_type_name)
 
-  return type("Temporary " + portal_type_name,
-              (TemporaryDocumentMixin, klass), {})
+  #temporary_portal_type_name = portal_type_name \
+  #    if portal_type_name.startswith("Temporary ") else "Temporary " + portal_type_name
+  return type(portal_type_name, (TemporaryDocumentMixin, klass), {})
 
 last_sync = -1
 _bootstrapped = set()

@@ -244,6 +244,35 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertTrue(o.isTempObject())
       self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
 
+    def test_TempObjectPersistent(self):
+      # Temp objects can not be stored in ZODB
+      import erp5.temp_portal_type
+      import sys
+      temp_object = self.portal.person_module.newContent(portal_type='Person', temp_object=True)
+      self.assertIs(
+        temp_object.__class__,
+        sys.modules['erp5.temp_portal_type'].Person)
+
+      self.assertTrue(temp_object.isTempObject())
+      temp_object.getTitle()
+
+      # they can be pickled
+      if 1:
+        import pickle
+        from Acquisition import aq_base
+        self.assertTrue(pickle.dumps(aq_base(temp_object)))
+
+      # but they can not be saved in ZODB accidentally
+      self.portal.oops = temp_object
+      self.commit()
+      self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
+      self.abort()
+
+      self.portal.person_module._setObject('oops', temp_object)
+      self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
+      self.abort()
+
+
     def test_warnings_redirected_to_event_log(self):
       self._catch_log_errors()
       self.addCleanup(self._ignore_log_errors)
