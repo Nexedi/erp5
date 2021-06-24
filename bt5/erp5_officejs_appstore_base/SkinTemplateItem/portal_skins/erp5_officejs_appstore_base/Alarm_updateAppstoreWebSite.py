@@ -26,7 +26,7 @@ for software_product in software_product_list:
         logo_url_list.append('appstore/' + logo.getReference())
         # Future domain could be defined by user
         app_domain = software_product.getFollowUpId(portal_type="Web Section")
-        app_data = {
+        appstore_data.append({
           "int_index": str(i),
           "application_image_type": 'image',
           "application_image_url": logo.getReference(),
@@ -41,8 +41,7 @@ for software_product in software_product_list:
           "application_category": data['category'] if "category" in data else "Documents",
           "application_title_i18n": "application.custom.%s.title" % app_domain,
           "application_description_i18n": "application.custom.%s.description" % app_domain
-        }
-        appstore_data.append(app_data)
+        })
         i+=1
 
 json_data = json.dumps(appstore_data)
