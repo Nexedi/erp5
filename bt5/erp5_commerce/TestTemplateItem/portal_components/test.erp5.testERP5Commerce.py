@@ -197,6 +197,8 @@ class TestCommerce(ERP5TypeTestCase):
     self.clearModule(self.portal.currency_module)
     self.clearModule(self.portal.sale_trade_condition_module)
     self.portal.portal_caches.clearAllCache()
+    self.portal.portal_sessions.manage_delObjects([SESSION_ID])
+    self.commit()
 
   def createDefaultOrganisation(self):
     """
