@@ -178,13 +178,28 @@ class SessionTool(BaseTool):
       shopping_cart = session['shopping_cart']
 
       Please note that:
-       - developer is responsible for handling an unique sessiond_id (using cookies for example).
-       - it's not recommended to store in portal_sessions ZODB persistent objects because in order
-       to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get"
-       request they'll be returend wrapped.
-       - developer can store temporary RAM based objects like 'TempOrder' but ONLY
-       when using Local RAM type of sessions. In a distributed environment one can use only
-       pickable types ue to the nature of memcached server.
+        - developer is responsible for handling an unique sessiond_id (using cookies for example).
+        - it's not recommended to store in portal_sessions ZODB persistent objects because in order
+      to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get"
+      request they'll be returend wrapped.
+        - developer can store temporary ERP5 documents like 'TempOrder', but keep
+      in mind that after making changes to temporary documents they need to be
+      saved again in portal_sessions, so:
+
+      >>> shopping_cart = context.newContent(portal_type='Order', temp_object=True, id='987654321')
+      >>> shopping_cart.newContent(portal_type='Order Line', quantity=1, resource=...)
+      >>> session['shopping_cart'] = shopping_cart
+
+      # modifying a temp document from session is valid
+      >>> shopping_cart.getMovementList()[0].setQuantity(3)
+      # but the session still reference the documents as it was when saved to session:
+      >>> session['shopping_cart'].getMovementList()[0].getQuantity()
+      1
+      # to make the change persist in the session, the temp document has to be saved again:
+      >>> session['shopping_cart'] = shopping_cart
+      >>> session['shopping_cart'].getMovementList()[0].getQuantity()
+      3
+
       """
 
   id = 'portal_sessions'
