@@ -64,6 +64,8 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
     self.portal.person_module.manage_delObjects(
         [self.user.getId()])
     self.assertEqual(self.portal.ERP5Site_cleanupSupportRequestUITestDataSet(), 'Done.')
+    self.portal.portal_sessions.manage_delObjects(
+      ['support_request_module/erp5_officejs_support_request_ui_test_support_reuqest_001.latest_comment'])
     self.tic()
 
   def createUserAndLogin(self):
