@@ -96,6 +96,18 @@ class SessionToolTestCase(ERP5TypeTestCase):
       self.assertEqual(str(i), attr.getId())
       self.assertEqual(0, len(attr.objectIds()))
 
+  def test_store_recursive_temp_object(self):
+    doc = self.portal.newContent(
+        temp_object=True, portal_type='Document', id='doc', title='Doc')
+    doc.newContent(
+        temp_object=True, portal_type='Document', id='sub_doc', title='Sub doc')
+    self.portal.portal_sessions.newContent(self.session_id, doc=doc)
+    self.commit()
+    doc = self.portal.portal_sessions[self.session_id]['doc']
+    self.assertEqual(doc.getTitle(), 'Doc')
+    self.assertEqual(doc.sub_doc.getTitle(), 'Sub doc')
+    self.assertEqual(len(doc.contentValues()), 1)
+
   def test_modify_session(self):
     """ Modify session and check that modifications are updated in storage backend."""
     portal_sessions = self.portal.portal_sessions
@@ -111,8 +123,8 @@ class SessionToolTestCase(ERP5TypeTestCase):
     self.assertNotIn('attr_1', session.keys())
     self.assertNotIn('attr_2', session.keys())
 
-    session.update(**{'key_1':'value_1',
-                      'key_2':'value_2',})
+    session.update(**{'key_1': 'value_1',
+                      'key_2': 'value_2',})
     session = portal_sessions[self.session_id]
     self.assertIn('key_1', session.keys())
     self.assertEqual(session['key_1'], 'value_1')
@@ -184,7 +196,6 @@ class SessionToolTestCase(ERP5TypeTestCase):
     session['popitem'] = 'Bar'
     self.assertEqual(('popitem', 'Bar'), session.popitem())
     self.assertRaises(KeyError, session.popitem)
-
 
   def test_session_getattr(self):
     session = self.portal.portal_sessions[self.session_id]
