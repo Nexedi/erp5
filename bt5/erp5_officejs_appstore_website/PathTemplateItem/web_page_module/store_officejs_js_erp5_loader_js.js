@@ -4624,6 +4624,8 @@
         var i, string_response,
           app_list = JSON.parse(e.target.response),
           site_tld = window.location.origin.split('.').pop();
+        // change all application urls TDL to current appstore site TDL
+        // e.g. if site is 'officejs.com' then all app urls will be '.com'
         for (i = 0; i < app_list.length; i += 1) {
           app_list[i].application_url = app_list[i].application_url.replace(
             app_list[i].application_url.split('.').pop(), site_tld
