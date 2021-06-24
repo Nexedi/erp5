@@ -57,8 +57,8 @@
               y: y,
               extended_search: extended_search,
               title: options.title || options.x_title,
-              x_title: options.x_title,
-              y_title: options.y_title,
+              x_title: options.layout.x,
+              y_title: options.layout.y,
               date_range_list: date_range_list,
               graph_gadget: "unsafe/gadget_field_graph_echarts.html/"
             };

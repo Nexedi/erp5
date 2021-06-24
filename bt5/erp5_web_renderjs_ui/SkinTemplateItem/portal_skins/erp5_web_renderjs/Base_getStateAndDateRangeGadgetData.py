@@ -20,5 +20,8 @@ return [
   ("title", translateString(
     "%s Pipes" % context.getPortalType().replace(" Module", "")
   )),
-  ("x_title", translateString("Days"))
+  ("layout", {
+    "x": translateString("Days"),
+    "y": translateString("Quantity")
+  })
 ]
