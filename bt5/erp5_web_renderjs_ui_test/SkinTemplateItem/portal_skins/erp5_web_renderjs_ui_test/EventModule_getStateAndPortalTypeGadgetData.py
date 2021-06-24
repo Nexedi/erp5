@@ -5,5 +5,8 @@ return [
   ("select_list", ["getTranslatedPortalType", "getTranslatedSimulationStateTitle"]),
   ("base_query", {"parent_uid": context.getUid()}),
   ("title", translateString("Number of different events per simulation state")),
-  ("x_title", translateString("Types"))
+  ("layout", {
+    "x": translateString("Types"),
+    "y": translateString("Quantity")
+  })
 ]

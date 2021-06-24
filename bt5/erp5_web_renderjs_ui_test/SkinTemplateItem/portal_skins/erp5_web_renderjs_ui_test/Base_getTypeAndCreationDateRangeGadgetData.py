@@ -18,5 +18,8 @@ return [
   ("query_by", "getTranslatedPortalType"),
   ("base_query", {"parent_uid": context.getUid()}),
   ("title", translateString("Number of events from a range of creation_date")),
-  ("x_title", translateString("Days"))
+  ("layout", {
+    "x": translateString("Days"),
+    "y": translateString("Quantity")
+  })
 ]
