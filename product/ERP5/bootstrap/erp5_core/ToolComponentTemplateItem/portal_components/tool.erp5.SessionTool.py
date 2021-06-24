@@ -105,6 +105,11 @@ class Session(UserDict):
     # save value without its acquisition context
     UserDict.__setitem__(self, key, aq_base(item))
 
+  def update(self, dict=None, **kwargs):  # pylint: disable=redefined-builtin
+    for k, v in (dict or kwargs).iteritems():
+      # make sure to use our __setitem__ which removes acquistion wrappers
+      self[k] = v
+
 
 class DistributedSession(Session):
   """ Distributed Session dictionary.
