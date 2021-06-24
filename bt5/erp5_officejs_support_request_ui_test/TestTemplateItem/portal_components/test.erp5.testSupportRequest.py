@@ -252,6 +252,9 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
           attachment_link=file_document.getRelativeUrl(),
           message_id='xxx-message-id')],
       json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
+    # commit, so that reading SupportRequest_getCommentPostListAsJson flushes
+    # the "just posted message" from session
+    self.commit()
 
 
 class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
