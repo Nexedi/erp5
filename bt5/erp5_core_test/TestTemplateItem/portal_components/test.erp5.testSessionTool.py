@@ -29,7 +29,6 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.tool.SessionTool import SESSION_CACHE_FACTORY
 from string import letters as LETTERS
 from random import choice
@@ -42,9 +41,17 @@ primitives_kw = dict(attr_1 = ['list_item'], \
                      attr_5 = {'some_key':  'some_value'}, \
                      attr_6 = 'string', )
 
-class TestSessionTool(ERP5TypeTestCase):
+
+class SessionToolTestCase(ERP5TypeTestCase):
 
   session_id = "123456789"
+
+  def afterSetUp(self):
+    super(SessionToolTestCase, self).afterSetUp()
+    self.setCachePlugin()
+
+  def setCachePlugin(self):
+    raise NotImplementedError()
 
   def _changeCachePlugin(self, portal_type, storage_duration = 86400):
     """ Change current cache plugin with new one. """
@@ -60,8 +67,7 @@ class TestSessionTool(ERP5TypeTestCase):
     self.commit()
     portal_caches.updateCache()
 
-  def stepTestSetGet(self, sequence=None,
-                     sequence_list=None, **kw):
+  def test_set_get(self):
     session = self.portal.portal_sessions[self.session_id]
     session.clear()
     session.update(primitives_kw)
@@ -69,15 +75,14 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assertEqual(primitives_kw, session)
 
     # API check
-    self.assert_(self.portal.portal_sessions[self.session_id] ==  \
+    self.assertEqual(self.portal.portal_sessions[self.session_id],
                    self.portal.portal_sessions.getSession(self.session_id))
     session.clear()
     session.edit(**primitives_kw)
     session = self.portal.portal_sessions[self.session_id]
     self.assertEqual(primitives_kw, session)
 
-  def stepTestAcquisitionRamSessionStorage(self, sequence=None, \
-                                           sequence_list=None, **kw):
+  def test_store_temp_object(self):
     portal_sessions =  self.portal.portal_sessions
     session = portal_sessions.newContent(
                       self.session_id,
@@ -86,13 +91,24 @@ class TestSessionTool(ERP5TypeTestCase):
     ## check temp (RAM based) attributes stored in session
     for i in range (1, 3):
       attr_name = 'attr_%s' %i
-      self.assert_(attr_name in session.keys())
+      self.assertIn(attr_name, session.keys())
       attr = session[attr_name]
-      self.assert_(str(i), attr.getId())
-      self.assert_(0 == len(attr.objectIds()))
+      self.assertEqual(str(i), attr.getId())
+      self.assertEqual(0, len(attr.objectIds()))
 
-  def stepModifySession(self, sequence=None, \
-                        sequence_list=None, **kw):
+  def test_store_recursive_temp_object(self):
+    doc = self.portal.newContent(
+        temp_object=True, portal_type='Document', id='doc', title='Doc')
+    doc.newContent(
+        temp_object=True, portal_type='Document', id='sub_doc', title='Sub doc')
+    self.portal.portal_sessions.newContent(self.session_id, doc=doc)
+    self.commit()
+    doc = self.portal.portal_sessions[self.session_id]['doc']
+    self.assertEqual(doc.getTitle(), 'Doc')
+    self.assertEqual(doc.sub_doc.getTitle(), 'Sub doc')
+    self.assertEqual(len(doc.contentValues()), 1)
+
+  def test_modify_session(self):
     """ Modify session and check that modifications are updated in storage backend."""
     portal_sessions = self.portal.portal_sessions
     session = portal_sessions.newContent(self.session_id, \
@@ -104,33 +120,33 @@ class TestSessionTool(ERP5TypeTestCase):
     # get again session object again and check that session value is updated
     # (this makes sense for memcached)
     session = portal_sessions[self.session_id]
-    self.assert_(not 'attr_1' in session.keys())
-    self.assert_(not 'attr_2' in session.keys())
+    self.assertNotIn('attr_1', session.keys())
+    self.assertNotIn('attr_2', session.keys())
 
-    session.update(**{'key_1':'value_1',
-                      'key_2':'value_2',})
+    session.update(**{'key_1': 'value_1',
+                      'key_2': 'value_2',})
     session = portal_sessions[self.session_id]
-    self.assert_('key_1' in session.keys())
-    self.assert_(session['key_1'] == 'value_1')
-    self.assert_('key_2' in session.keys())
-    self.assert_(session['key_2'] == 'value_2')
+    self.assertIn('key_1', session.keys())
+    self.assertEqual(session['key_1'], 'value_1')
+    self.assertIn('key_2', session.keys())
+    self.assertEqual(session['key_2'], 'value_2')
 
     session.clear()
     session = portal_sessions[self.session_id]
-    self.assert_(session == {})
+    self.assertEqual(session, {})
 
     session['pop_key'] = 'pop_value'
     session = portal_sessions[self.session_id]
-    self.assert_(session['pop_key'] == 'pop_value')
+    self.assertEqual(session['pop_key'], 'pop_value')
     session.popitem()
     session = portal_sessions[self.session_id]
-    self.assert_(session == {})
+    self.assertEqual(session, {})
 
     session.setdefault('default', 'value')
     session = portal_sessions[self.session_id]
-    self.assert_(session['default'] == 'value')
+    self.assertEqual(session['default'], 'value')
 
-  def stepDeleteClearSession(self, sequence=None, \
+  def test_clear_session(self, sequence=None, \
                              sequence_list=None, **kw):
     """ Get session object and check keys stored in previous test. """
     portal_sessions =  self.portal.portal_sessions
@@ -139,19 +155,18 @@ class TestSessionTool(ERP5TypeTestCase):
     # delete it
     portal_sessions.manage_delObjects(self.session_id)
     session = portal_sessions[self.session_id]
-    self.assert_({} == session)
+    self.assertEqual(session, {})
     # clear it
     session = portal_sessions.newContent(
                       self.session_id, \
                       **primitives_kw)
     session = portal_sessions[self.session_id]
-    self.assert_(primitives_kw == session)
+    self.assertEqual(session, primitives_kw)
     session.clear()
     session = portal_sessions[self.session_id]
-    self.assert_(session == {})
+    self.assertEqual(session, {})
 
-  def stepTestSessionDictInterface(self, sequence=None, \
-                                   sequence_list=None, **kw):
+  def test_session_dict_interface(self):
     session = self.portal.portal_sessions[self.session_id]
     session.clear()
     # get / set
@@ -182,9 +197,7 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assertEqual(('popitem', 'Bar'), session.popitem())
     self.assertRaises(KeyError, session.popitem)
 
-
-  def stepTestSessionGetattr(self, sequence=None, \
-                             sequence_list=None, **kw):
+  def test_session_getattr(self):
     session = self.portal.portal_sessions[self.session_id]
     session.clear()
     session['foo'] = 'Bar'
@@ -192,8 +205,7 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assertEqual('Default', getattr(session, 'bar', 'Default'))
     self.assertRaises(AttributeError, getattr, session, 'bar')
 
-  def stepTestSessionBulkStorage(self, sequence=None, \
-                                 sequence_list=None, **kw):
+  def test_session_bulk_storage(self):
     """ Test massive session sets which uses different cache plugin. """
     kw = {}
     session = self.portal.portal_sessions[self.session_id]
@@ -216,8 +228,7 @@ class TestSessionTool(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     self.assertEqual(kw, session)
 
-  def stepTestSessionExpire(self, sequence=None, \
-                            sequence_list=None, **kw):
+  def test_session_expire(self):
     """ Test expire session which uses different cache plugin. """
     interval = 3
     portal_sessions = self.portal.portal_sessions
@@ -227,10 +238,9 @@ class TestSessionTool(ERP5TypeTestCase):
     time.sleep(interval+1)
     session = self.portal.portal_sessions.getSession(self.session_id)
     # session should be an emty dic as it expired
-    self.assert_(session == {})
+    self.assertEqual(session, {})
 
-  def stepTestCheckSessionAfterNewPerson(self, sequence=None, \
-                                  sequence_list=None, **kw):
+  def test_check_session_after_new_person(self):
     """ Test if session still the same after create new person setting the
     reference. """
     session = self.portal.portal_sessions[self.session_id]
@@ -252,44 +262,19 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assertEqual(session.get('key'),  'value')
     self.abort()
 
-  def test_01_CheckSessionTool(self):
-    """ Checks session tool is present """
-    self.assertNotEqual(None, getattr(self.portal, 'portal_sessions', None))
 
-  def test_02_RamSession(self):
-    """ Test RamSession which uses local RAM based cache plugin. """
-    sequence_list = SequenceList()
-    sequence_string =  'stepTestSetGet  \
-                    stepTestAcquisitionRamSessionStorage \
-                    stepModifySession  \
-                    stepDeleteClearSession \
-                    stepTestSessionDictInterface \
-                    stepTestSessionGetattr  \
-                    stepTestSessionBulkStorage  \
-                    stepTestSessionExpire  \
-                    stepTestCheckSessionAfterNewPerson \
-                    '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+class TestRAMCacheSessionTool(SessionToolTestCase):
+  def setCachePlugin(self):
+    self._changeCachePlugin('Ram Cache')
 
-  def test_03_MemcachedDistributedSession(self):
-    """ Test DistributedSession which uses memcached based cache plugin. """
-    # create memcached plugin and test
+
+class TestDistributedCacheSessionTool(SessionToolTestCase):
+  def setCachePlugin(self):
     self._changeCachePlugin('Distributed Ram Cache')
-    sequence_list = SequenceList()
-    sequence_string =  'stepTestSetGet  \
-                        stepModifySession  \
-                        stepDeleteClearSession \
-                        stepTestSessionDictInterface \
-                        stepTestSessionGetattr  \
-                        stepTestSessionBulkStorage  \
-                        stepTestSessionExpire  \
-                        stepTestCheckSessionAfterNewPerson \
-                   '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSessionTool))
+  suite.addTest(unittest.makeSuite(TestRAMCacheSessionTool))
+  suite.addTest(unittest.makeSuite(TestDistributedCacheSessionTool))
   return suite
