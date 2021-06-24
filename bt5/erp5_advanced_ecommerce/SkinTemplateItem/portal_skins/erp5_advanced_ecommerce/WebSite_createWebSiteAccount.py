@@ -71,6 +71,7 @@ else:
 shopping_cart = context.SaleOrder_getShoppingCart()
 if shopping_cart is not None:
   shopping_cart.manage_setLocalRoles(user_id, ['Owner'])
+  portal.portal_sessions[container.REQUEST['session_id']].update(shopping_cart=shopping_cart)
 
 """
 response = context.REQUEST.RESPONSE
