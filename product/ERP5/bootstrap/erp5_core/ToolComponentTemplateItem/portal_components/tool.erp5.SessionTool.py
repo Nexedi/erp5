@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Acquisition import aq_base
+from Acquisition import aq_base, Explicit
 from UserDict import UserDict
 
 # the ERP5 cache factory used as a storage
@@ -60,10 +60,32 @@ class Session(UserDict):
   # used to set duration of session
   session_duration = None
 
+  # a handle to current aquisition context
+  _aq_context = None
+
+  def __getstate__(self):
+    """filter out acqusition wrappers when serializing.
+    """
+    state = {
+        'session_duration': self.session_duration,
+        'data': {k: aq_base(v) for k, v in self.data.iteritems()}
+    }
+    if 'session_id' in self.__dict__:
+      state['session_id']  = self.session_id
+    return state
+
   def _updatecontext(self, aq_context):
-    """ Update current aquisition context.
-         This makes only sense for local RAM Session."""
-    pass
+    """ Update current aquisition context. """
+    self._aq_context = aq_context
+
+  def __getitem__(self, key):
+    if key in self.data:
+      value = self.data[key]
+      if hasattr(value, '__of__'):
+        # returned it wrapped in aquisition context
+        value = value.__of__(self._aq_context)
+      return value
+    raise KeyError(key)
 
   def _updateSessionDuration(self, session_duration):
     self.session_duration = int(session_duration)
@@ -84,26 +106,7 @@ class Session(UserDict):
     UserDict.__setitem__(self, key, aq_base(item))
 
 
-class RamSession(Session):
-  """ Local RAM Session dictionary """
-
-  # a handle to current aquisition context
-  _aq_context = None
-
-  def _updatecontext(self, aq_context):
-    """ Update current aquisition context. """
-    self._aq_context = aq_context
-
-  def __getitem__(self, key):
-    if key in self.data:
-      value = self.data[key]
-      if hasattr(value, '__of__'):
-        # returned it wrapped in aquisition context
-        value = value.__of__(self._aq_context)
-      return value
-    raise KeyError(key)
-
-class DistributedSession(Session):
+class DistributedSession(Session, Explicit):
   """ Distributed Session dictionary.
       It uses DistributedRamCache plugins."""
 
@@ -207,7 +210,7 @@ class SessionTool(BaseTool):
       # init it in cache and use different Session types based on cache plugin type used as a storage
       storage_plugin_type = storage_plugin_.__class__.__name__
       if storage_plugin_type in ("RamCache",):
-        session = RamSession()
+        session = Session()
       elif storage_plugin_type in ("DistributedRamCache",):
         session = DistributedSession()
         session._updateSessionId(session_id)
