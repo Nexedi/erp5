@@ -31,8 +31,10 @@ other Tests are in erp5_core_test:testERP5Type) which is deprecated in favor
 of Portal Type as Classes and ZODB Components
 """
 
+import pickle
 import unittest
 import warnings
+from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -243,6 +245,19 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(o.getPortalType(), 'Base Object')
       self.assertTrue(o.isTempObject())
       self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
+
+    def test_TempObjectPersistent(self):
+      # Temp objects can not be stored in ZODB
+      temp_object = self.portal.person_module.newContent(portal_type='Person', temp_object=True)
+      self.assertTrue(temp_object.isTempObject())
+
+      # they can be pickled
+      self.assertTrue(pickle.dumps(aq_base(temp_object)))
+
+      # but they can not be saved in ZODB accidentally
+      self.portal.person_module.oops = temp_object
+      self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
+      self.abort()
 
     def test_warnings_redirected_to_event_log(self):
       self._catch_log_errors()
