@@ -3,8 +3,8 @@
       "name": "OfficeJS Monitor",
       "description": "Cloud Monitoring Tool",
       "icons": [{
-        "src": "img/vifib-logo.png",
-        "sizes": "any",
+        "src": "NXD-Logo.Rapid.Space.png",
+        "sizes": "128x128",
         "type": "image/svg"
       }],
       "start_url": "../../",
