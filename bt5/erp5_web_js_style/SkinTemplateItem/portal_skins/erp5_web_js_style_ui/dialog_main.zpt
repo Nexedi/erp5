@@ -11,6 +11,7 @@
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
       no_style_gadget_url python: web_section.getLayoutProperty('configuration_style_gadget_url', default='');
+      favicon_url python: web_section.getLayoutProperty('configuration_favicon_url', default='');
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
@@ -21,7 +22,7 @@
   <noscript>
     <link rel="stylesheet" href="jsstyle.css">
   </noscript>
-  <tal:block tal:define="favicon_url python: web_section.getLayoutProperty('configuration_favicon_url', default='')" tal:condition="favicon_url">
+  <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
