@@ -6,7 +6,8 @@
              available_oauth_login_list python: context.getPortalObject().ERP5Site_getAvailableOAuthLoginList();
              enable_google_login python: 'google' in available_oauth_login_list;
              enable_facebook_login python: 'facebook' in available_oauth_login_list;
-             css_list python: (enable_google_login or enable_facebook_login) and ['%s/zocial.min.css' % here.portal_url()] or [];
+             enable_openidconnect_login python: 'openidconnect' in available_oauth_login_list;
+             css_list python: (enable_google_login or enable_facebook_login or enable_openidconnect_login) and ['%s/zocial.min.css' % here.portal_url()] or [];
              js_list python: ['%s/login_form.js' % (here.portal_url(), ), '%s/erp5.js' % (here.portal_url(), )]">
     <tal:block metal:use-macro="here/main_template/macros/master">
       <tal:block metal:fill-slot="main">
@@ -67,6 +68,15 @@
                 <div class="input">
                   <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToFacebookLoginPage"
                      i18n:translate="" i18n:domain="ui" class="zocial facebook">Login with Facebook</a>
+                </div>
+              </div>
+            </tal:block>
+            <tal:block tal:condition="enable_openidconnect_login">
+              <div class="field">
+                <label>&nbsp;</label>
+                <div class="input">
+                  <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToOpenIdLoginPage"
+                     i18n:translate="" i18n:domain="ui" class="zocial openid">Login with OpenId Connect</a>
                 </div>
               </div>
             </tal:block>
