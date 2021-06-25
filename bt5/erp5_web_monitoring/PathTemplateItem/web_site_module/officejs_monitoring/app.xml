@@ -273,6 +273,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -330,6 +340,10 @@
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_officejs_monitoring_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_precache_manifest_script_list</string> </key>
+            <value> <string>WebSection_getMonitorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -554,7 +568,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>963.27666.8050.30907</string> </value>
+                      <value> <string>992.50077.60742.52258</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -572,7 +586,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1541168426.77</float>
+                              <float>1624634982.84</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
