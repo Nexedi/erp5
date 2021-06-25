@@ -1,0 +1,5 @@
+OpenId Connect Connector | edit_workflow
+OpenId Connect Connector | validation_workflow
+OpenId Connect Login | edit_workflow
+OpenId Connect Login | login_interaction_workflow
+OpenId Connect Login | validation_workflow

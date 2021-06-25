@@ -781,6 +781,14 @@ class TestPASAPI(UserManagementTestCase):
                 ERP5BearerExtractionPlugin
     verifyClass(ILoginPasswordHostExtractionPlugin, ERP5BearerExtractionPlugin)
 
+  def test_ERP5OpenIdConnectExtractionPluginInterfaces(self):
+    """Tests openid connect extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5ExternalOpenIdConnectExtractionPlugin import\
+                ERP5OpenIdConnectExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5OpenIdConnectExtractionPlugin)
+
   def test_ERP5DumbHTTPExtractionPluginInterfaces(self):
     """Tests dumb HTTP extraction plugin respects interfaces."""
     from Products.PluggableAuthService.interfaces.plugins import\
