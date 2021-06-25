@@ -85,6 +85,7 @@ def initialize(context):
     ERP5ExternalOauth2ExtractionPlugin,
     ERP5AccessTokenExtractionPlugin,
     ERP5DumbHTTPExtractionPlugin,
+    ERP5ExternalOpenIdConnectExtractionPlugin,
   )
 
   registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
@@ -99,6 +100,7 @@ def initialize(context):
   registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
   registerMultiPlugin(ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin.meta_type)
   registerMultiPlugin(ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin.meta_type)
+  registerMultiPlugin(ERP5ExternalOpenIdConnectExtractionPlugin.ERP5OpenIdConnectExtractionPlugin.meta_type)
 
 
   context.registerClass( ERP5UserManager.ERP5UserManager
@@ -205,6 +207,15 @@ def initialize(context):
                        , constructors=(
                           ERP5DumbHTTPExtractionPlugin.manage_addERP5DumbHTTPExtractionPluginForm,
                           ERP5DumbHTTPExtractionPlugin.addERP5DumbHTTPExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
+
+  context.registerClass( ERP5ExternalOpenIdConnectExtractionPlugin.ERP5OpenIdConnectExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5ExternalOpenIdConnectExtractionPlugin.manage_addERP5OpenIdConnectExtractionPluginForm,
+                          ERP5ExternalOpenIdConnectExtractionPlugin.addERP5OpenIdConnectExtractionPlugin, )
                        , visibility=None
                        , icon='www/portal.gif'
                        )
