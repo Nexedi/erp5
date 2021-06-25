@@ -192,6 +192,9 @@ connection/gadget_jabberconnection.js\n
 connection/strophe.js\n
 connection/renderjs.js\n
 connection/rsvp.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -334,7 +337,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.52841.31789.31726</string> </value>
+                      <value> <string>992.52842.38595.15479</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -352,7 +355,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1623950075.33</float>
+                              <float>1624562316.54</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
