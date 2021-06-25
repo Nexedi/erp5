@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Image" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,27 +58,38 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
+            <key> <string>_count</string> </key>
             <value>
-              <tuple>
-                <string>classification/collaborative/public</string>
-              </tuple>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>d29ed927731719eab342e4fc228ff6a6</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_monitoring.appcache</string> </value>
+            <value> <string>vifib-logo.png</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -88,16 +98,22 @@
             </value>
         </item>
         <item>
+            <key> <string>height</string> </key>
+            <value> <int>117</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_monitoring_appcache</string> </value>
+            <value> <string>gadget_officejs_appstore_vifib</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Image</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -106,180 +122,49 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Fri, 19 Nov 2018 12:54:57 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-CACHE:\n
-font-awesome/font-awesome.css\n
-font-awesome/font-awesome-webfont.eot\n
-font-awesome/font-awesome-webfont.woff\n
-font-awesome/font-awesome-webfont.woff2\n
-font-awesome/font-awesome-webfont.ttf\n
-font-awesome/font-awesome-webfont.svg\n
-URI.js\n
-dygraph.js\n
-gadget_erp5_nojqm.css\n
-gadget_global.js\n
-gadget_field_graph_dygraph.html\n
-gadget_field_graph_dygraph.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
-gadget_translation.html\n
-dygraph.js\n
-handlebars.js\n
-jiodev.js\n
-erp5_launcher_nojqm.js\n
-monitoring_jio_storage.js\n
-monitoring_jio_web_storage.js\n
-jsen.min.js\n
-renderjs.js\n
-rsvp.js\n
-\n
-# shared\n
-gadget_erp5_notification.html\n
-gadget_erp5_notification.js\n
-gadget_officejs_router.js\n
-gadget_translation_data.js\n
-gadget_translation.js\n
-gadget_erp5_router.html\n
-gadget_erp5_router.js\n
-gadget_html5_input.html\n
-gadget_html5_input.js\n
-gadget_erp5_configure_editor.html\n
-gadget_erp5_configure_editor.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_label_field.html\n
-gadget_erp5_label_field.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_datetime.html\n
-gadget_erp5_field_datetime.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
-gadget_erp5_field_status.html\n
-gadget_erp5_field_status.js\n
-gadget_html5_element.html\n
-gadget_html5_element.js\n
-gadget_erp5_field_editor.html\n
-gadget_erp5_field_editor.js\n
-gadget_erp5_field_relationstring.html\n
-gadget_erp5_field_relationstring.js\n
-gadget_erp5_field_textarea.html\n
-gadget_erp5_field_textarea.js\n
-gadget_erp5_relation_input.html\n
-gadget_erp5_relation_input.js\n
-gadget_erp5_page_ojs_controller.html\n
-gadget_erp5_page_ojs_controller.js\n
-gadget_html5_textarea.html\n
-gadget_html5_textarea.js\n
-gadget_erp5_field_list.html\n
-gadget_erp5_field_list.js\n
-gadget_erp5_field_checkbox.html\n
-gadget_erp5_field_checkbox.js\n
-gadget_html5_select.html\n
-gadget_html5_select.js\n
-gadget_erp5_field_password.html\n
-gadget_erp5_field_password.js\n
-gadget_erp5_field_integer.html\n
-gadget_erp5_field_integer.js\n
-gadget_erp5_jio.html\n
-gadget_erp5_jio.js\n
-gadget_erp5_search_editor.html\n
-gadget_erp5_search_editor.js\n
-gadget_erp5_sort_editor.html\n
-gadget_erp5_sort_editor.js\n
-\n
-# monitoring\n
-gadget_officejs_monitoring.appcache\n
-gadget_officejs_monitoring_jio.html\n
-gadget_erp5_page_ojsm_hosting_subscription_list.html\n
-gadget_officejs_monitoring_parameter_view.html\n
-gadget_erp5_page_settings_configurator.html\n
-gadget_erp5_page_ojsm_processes_view.html\n
-gadget_officejs_jio_hosting_subscription_view.html\n
-gadget_officejs_monitoring_sync.html\n
-gadget_officejs_jio_software_instance_view.html\n
-gadget_erp5_page_ojsm_software_instance_list.html\n
-gadget_officejs_monitoring_router.html\n
-gadget_officejs_jio_promise_view.html\n
-gadget_erp5_page_ojsm_import_export.html\n
-gadget_officejs_jio_opml_view.html\n
-gadget_erp5_page_ojsm_opml_add.html\n
-gadget_officejs_monitoring_panel.html\n
-gadget_erp5_page_ojsm_resources_view.html\n
-gadget_erp5_page_ojsm_opml_delete.html\n
-gadget_officejs_monitoring_header.html\n
-gadget_erp5_page_ojsm_status_list.html\n
-gadget_erp5_page_ojsm_synchronize.html\n
-gadget_erp5_page_ojsm_erp5_configurator.html\n
-gadget_erp5_page_ojsm_jump.html\n
-gadget_officejs_monitoring_opml_edit.html\n
-gadget_erp5_page_ojsm_dispatch.html\n
-gadget_ojsm_graph_field.html\n
-\n
-# monitoring js\n
-gadget_officejs_monitoring_jio.js\n
-gadget_erp5_page_ojsm_hosting_subscription_list.js\n
-gadget_officejs_monitoring_parameter_view.js\n
-gadget_erp5_page_settings_configurator.js\n
-gadget_erp5_page_ojsm_processes_view.js\n
-gadget_officejs_monitoring_custom.css\n
-gadget_officejs_jio_hosting_subscription_view.js\n
-gadget_erp5_global.js\n
-gadget_officejs_monitoring_sync.js\n
-gadget_erp5_page_ojsm_software_instance_list.js\n
-gadget_officejs_monitoring_panel.js\n
-gadget_officejs_jio_software_instance_view.js\n
-gadget_erp5_page_ojsm_import_export.js\n
-gadget_erp5_page_ojsm_resources_view.js\n
-gadget_officejs_jio_promise_view.js\n
-gadget_officejs_monitoring_header.js\n
-gadget_erp5_page_ojsm_opml_add.js\n
-gadget_erp5_page_ojsm_opml_delete.js\n
-gadget_erp5_page_ojsm_status_list.js\n
-gadget_officejs_jio_opml_view.js\n
-gadget_erp5_page_ojsm_synchronize.js\n
-gadget_erp5_page_ojsm_jump.js\n
-gadget_erp5_page_ojsm_erp5_configurator.js\n
-gadget_officejs_monitoring_opml_edit.js\n
-gadget_erp5_page_ojsm_dispatch.js\n
-gadget_ojsm_graph_field.js\n
-\n
-# erp5_web_renderjs_ui\n
-gadget_erp5_editor_panel.html\n
-gadget_erp5_editor_panel.js\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget Monitoring AppCache</string> </value>
+            <value> <string>vifib-logo.png</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
             <value> <string>001</string> </value>
         </item>
         <item>
+            <key> <string>width</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -292,13 +177,13 @@ NETWORK:\n
                 <item>
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -307,7 +192,7 @@ NETWORK:\n
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -346,7 +231,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1509980323.24</float>
+                              <float>1624564717.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -364,7 +249,7 @@ NETWORK:\n
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -395,7 +280,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>972.4099.58600.53947</string> </value>
+                      <value> <string>992.63086.13751.19012</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -413,7 +298,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1543855489.22</float>
+                              <float>1624564710.41</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
