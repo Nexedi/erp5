@@ -1,58 +1,7 @@
-software_publication = context
-
-if software_publication.getSimulationState() != "draft":
+def rejectSoftwarePublication(software_publication):
+  software_publication.submit()
+  software_publication.reject()
   return
-
-software_publication_line = software_publication.objectValues(
-  portal_type="Software Publication Line",
-)[0]
-
-software_product = software_publication_line.getResourceValue(portal_type="Software Product")
-
-if not software_product:
-  return
-
-portal = context.getPortalObject()
-application_publication_section = portal.portal_categories.publication_section.application
-
-zip_file = portal.portal_catalog.getResultValue(
-  portal_type="File",
-  strict_publication_section_uid=application_publication_section.package.getUid(),
-  strict_follow_up_uid=software_publication.getUid(),
-)
-
-if not zip_file:
-  # XXX Do something?
-  return
-
-software_release = software_publication_line.getAggregateValue(portal_type="Software Release")
-
-from cStringIO import StringIO
-import zipfile
-
-zipbuffer = StringIO()
-zipbuffer.write(str(zip_file.getData()))
-zip_reader = zipfile.ZipFile(zipbuffer)
-user_login = software_publication.getSourceReference()
-
-version = software_release.getReference()
-
-# look for Base Directory
-base = ""
-for name in zip_reader.namelist():
-  if "/" in name:
-    temp_base = name.split("/")[0]
-    if base and base != temp_base:
-      base = ""
-      break
-    else:
-      base = temp_base
-  else:
-    base = ""
-    break
-if base:
-  base += "/"
-base_length = len(base)
 
 def extractWebManifest(html_file):
   html = context.Base_parseHtml(html_file)
@@ -62,10 +11,71 @@ def extractWebManifest(html_file):
         if attribute[0] == 'href':
           return attribute[1]
 
+def getBaseDirectory(namelist):
+  base = ""
+  for name in namelist:
+    if "/" in name:
+      temp_base = name.split("/")[0]
+      if base and base != temp_base:
+        base = ""
+        break
+      else:
+        base = temp_base
+    else:
+      base = ""
+      break
+  if base:
+    base += "/"
+  return base
+
+portal = context.getPortalObject()
+software_publication = context
+
+if software_publication.getSimulationState() != "draft":
+  return
+
+software_publication_line = software_publication.objectValues(
+  portal_type="Software Publication Line",
+)[0]
+software_product = software_publication_line.getResourceValue(portal_type="Software Product")
+
+if not software_product:
+  rejectSoftwarePublication(software_publication)
+  return
+
+software_release = software_publication_line.getAggregateValue(portal_type="Software Release")
+version = software_release.getReference()
 software_release_url = software_release.getRelativeUrl()
+user_login = software_publication.getSourceReference()
+
+application_publication_section = portal.portal_categories.publication_section.application
+
+zip_file = portal.portal_catalog.getResultValue(
+  portal_type="File",
+  strict_publication_section_uid=application_publication_section.package.getUid(),
+  strict_follow_up_uid=software_publication.getUid(),
+)
+
+if not zip_file:
+  rejectSoftwarePublication(software_publication)
+  return
+
+from cStringIO import StringIO
+import zipfile
+from zipfile import BadZipfile
+
+zipbuffer = StringIO()
+zipbuffer.write(str(zip_file.getData()))
+try:
+  zip_reader = zipfile.ZipFile(zipbuffer)
+except BadZipfile:
+  rejectSoftwarePublication(software_publication)
+  return
+base_length = len(getBaseDirectory(zip_reader.namelist()))
 
 tag = "preparing_sr_%s" % software_release_url
 default_page = ""
+web_manifest_url = None
 for name in zip_reader.namelist():
   if zip_reader.getinfo(name).file_size == 0:
     continue
@@ -89,9 +99,14 @@ for name in zip_reader.namelist():
     follow_up=software_release_url,
     portal_type="File",
   )
+  try:
+    publication_source_category = "contributor/" + software_publication.getSource()
+  except TypeError:
+    rejectSoftwarePublication(software_publication)
+    return
   # XX Hackish
   document.setCategoryList(
-    document.getCategoryList() + ["contributor/" + software_publication.getSource()])
+    document.getCategoryList() + [publication_source_category])
   if url in ("index.html", "index.htm"):
     default_page = document.getRelativeUrl()
     web_manifest_url = extractWebManifest(document.getData())
