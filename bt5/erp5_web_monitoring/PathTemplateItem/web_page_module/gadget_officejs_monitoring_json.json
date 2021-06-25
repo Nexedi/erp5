@@ -3,7 +3,7 @@
       "name": "OfficeJS Monitor",
       "description": "Cloud Monitoring Tool",
       "icons": [{
-        "src": "img/vifib-logo.png",
+        "src": "vifib-logo.png",
         "sizes": "any",
         "type": "image/svg"
       }],
