@@ -10,18 +10,18 @@
       dialog_category python: '';
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
-      no_style_gadget_url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='');
+      no_style_gadget_url python: web_section.getLayoutProperty('configuration_style_gadget_url', default='');
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
   <head>
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
-  <title tal:content="python: here.getTranslatedTitle() or web_site.getTranslatedTitle()"></title>
+  <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
   <noscript>
     <link rel="stylesheet" href="jsstyle.css">
   </noscript>
-  <tal:block tal:define="favicon_url python: web_site.getLayoutProperty('configuration_favicon_url', default='')" tal:condition="favicon_url">
+  <tal:block tal:define="favicon_url python: web_section.getLayoutProperty('configuration_favicon_url', default='')" tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
