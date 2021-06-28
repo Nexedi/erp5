@@ -1,199 +1,320 @@
-    
-      <section class="illustration">
-        <h1>OSOE - ERP 101</h1>
-        <img alt="OSOE - ERP 101" title="OSOE - ERP 101" src="http://img.erp5.cn/osoe-erp-101.cover?format=png" type="image/png">
-        <footer>
-          by <a href="/contact">OSOE Project</a>.
-        </footer>
-        <details open="true">
-          <p>
-            This visual guide is part of a collection of documents created by the One Student One ERP (OSOE)
-            project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and
-            the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
-            to undergraduate students or professionals.
-          </p><p>
-            <b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute
-            the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training,
-            consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any
-            reuse or distribution, you must make clear to others the license terms of this work. Any of these
-            conditions can be waived if you get permission from the copyright holder through a commercial license
-            or an educational license. For more information, contact info@nexedi.com
-          </p>
-        </details>
-      </section><section class="">
-        <h1>Agenda</h1>
-        <ul>
-          <li>Class requirements</li>
-          <li>ERP facts</li>
-          <li>What is an ERP</li>
-        </ul>
-        <details open="open">
-          <p>ERPs are usually considered difficult from both learning and teaching perspectives. Since ERP take accounts of all aspects within a company, students need sufficient background knowledge from almost all management subjects in order to understand an ERP system. Often ERP classes in schools are either too general that no detailed functions are taught or purely based on case studies which result in lack of theoretical principles.Thus, this course is structured in two stages. In the first stage, you will learn the theories applied in ERPs, and the universal business processes in companies. You will also practice on an open source ERP system (ERP5). In the second stage, with the help of a questionnaire developed by ERP5, you will adopt a role of an ERP consultant to conduct an interview with a company of your choice, and analyse the information gained from the interview to perform an ERP implementation configuration.</p><p>In the following sections, we are going to introduce some basic concepts regarding the ERP systems to prepare you for the course, such as what an ERP is, the components of an ERP,  and business workflows etc. Let's get started now!</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Requirements</h1>
-        <img src="http://img.erp5.cn/osoe-erp.101.requirements-screenshot?format=png" type="image/png" title="Requirements" alt="Requirements">
-        <details open="open">
-          <p>There are two main requirements for this course. The first one is to have your own ERP5 system (you could either use an online instance or download the ERP5 virtual machine). The second requirement is to find a company for your ERP configuration process.</p><p>The best way to understand ERPs is to learn ERP using a real case. Therefore, for this course you need to find a small –to-medium sized business (could also be a non-profit organisation, or a public administration etc.). This business entity will serve as an implementation field. After you finished the first stage, you could apply the knowledge you learned to this implementation field, and try to configure the categories for ERP implementation.</p><p>For students, it will be a unique opportunity to learn what ERP consultants do for ERP implementation in companies. For companies you found, they will have the opportunity to gain more insights about their business processes, receive precious advices on how they could improve their business processes, and improve their performance.</p><p>The configuration process of this course only requires a configuration spreadsheet. It is a straightforward method and easier for the students to understand from the technical point of view. From the user point of view, this simple configuration method could completely change the way how an ERP is perceived. In the end, your configuration should match the actual business environment of the company, and become usable for an ERP implementation.</p>
-        </details>
-      </section><section class="screenshot">
-        <h1>ERP Facts</h1>
-        <img src="http://img.erp5.cn/user-OSOE.Erp.Facts?format=png" type="image/png" title="ERP Facts" alt="ERP Facts">
-        <a href="http://www.forbes.com/sites/louiscolumbus/2013/06/18/gartner-predicts-crm-will-be-a-36b-market-by-2017/">Gartner, 2013.</a><details open="open">
-          <p>Enterprise sales of ERP systems will grow to $34.3B in 2017, attaining a 6.7% CAGR in the forecast period of 2011 to 2017. CRM is projected to be $35.5B by 2017, attaining a CAGR of 9.1% from 2011 to 2017.</p><p>What kinds of business need an ERP? How much does an ERP cost? How long does ERP implementation process take? Is it risky to implement an ERP? And are there any alternatives? These questions are what we are going to try to answer before we explain in details what an ERP is.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Who needs an ERP ?</h1>
-        <img alt="Who needs an ERP" title="Who needs an ERP" src="http://img.erp5.cn/osoe-who.needs.an.erp-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>All businesses, government institutions, and non-profit organisations could use an ERP to manage their daily operations. An ERP systems can manage human resources, products and materials, purchases and sales, finance and almost all other aspects within a business entity. Even though today more and more transactions are done electronically in companies, which is much efficient than traditional paper recording. However, the efficiency of using separated applications for different business processes is not comparable to having an integrated ERP system. Especially for large organisations, ERP has become an essential success factor. It could drastically increase productivity, reduce errors, and decrease manual workload.</p><p>An ERP could take the form of a “Common Off-Shelve Package” or a custom software. It could be a centralised piece of software or a collection of components with interfaces. What remains common is that it provides a place for people to share and relate business documents.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Who does not need an ERP ?</h1>
-        <img alt="Who dont need an ERP" title="Who dont need an ERP" src="http://img.erp5.cn/osoe-who.dont.needs.an.erp-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>Of course private households do not require ERPs. One-man businesses or small businesses probably do not need to use ERPs. As long as the amount of business documents remains small, there is no need to use an ERP system, or maybe any software systems. For example, a private business consultants who sells 5 contracts per year doesn't need to use any software to track transactions since his/her brain can function faster.</p><p>Very often in small businesses, physical tools are more efficient than software, as long as people trust each other. The "Kanban" system which was introduced in Japan is a perfect example of a management system based on tangible tools which defeated an approach based on software and mathematics.</p><p>Having these considerations in mind is very important in terms of ERP implementation. Not everything needs to be put into ERP. Some parts of a business can be kept outside the ERP, using paper, binders, drawers or, simply, human brain. You need to keep in mind that the more features an ERP has, the more time consuming to implement the system, and the longer time needed to teach or make users adopt. Thus, priorities need to be set when implementing an ERP system. Only the ones could bring most return should be integrated in an ERP system. Keeping an ERP configuration lean and simple, using only parts of an ERP can sometimes be more efficient than trying to do everything with an ERP.</p>
-        </details>
-      </section><section class="screenshot">
-        <h1>Key Players</h1>
-        <img src="http://img.erp5.cn/osoe-key.players?format=png" alt="Key Players" title="Key Players">
-        <a href="https://www.gartner.com/doc/2477517/market-share-analysis-erp-software">Gartner, 2014.</a><details open="open">
-          <p>The leader among all ERP providers is currently SAP. It is a German company that considered as the 2nd or 3rd biggest software company in the world after Microsoft. The most powerful competitor of SAP is Oracle.</p><p>SAP is definitely the reference ERP. It is used in most large corporations. However, that does not mean that corporations that use SAP do not use another ERP system. EADS for example is an SAP shop. However, Infoterra, a subsidiary of EADS uses ERP5, an open source ERP, for part of its business. In reality, implementing the same single ERP for all business units and subsidiaries of a large company is nearly impossible due to the perpetual changes of the corporate structure and business processes. Commonly in large companies they have “plurality of ERPs”. Normally, only the financial part of the ERP is consolidated in the same ERP instance across all business units and subsidiaries.</p><p>In terms of ERPs in small-to-medium sized companies, things are different. Because there is more consistency in these companies than in large multinational companies, it is possible to unify all business activities within the same ERP and improve efficiency through the unification.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>How much does an ERP cost?</h1>
-        <img alt="The Cost" title="The Cost" src="http://img.erp5.cn/osoe-the.erp.cost-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>An ERP system costs normally range from 0 to 2000EUR/ user (open source ERPs are cost-free). ERP license often needs to be renewed every year at a cost that amounts from 10% to 20% of the initial license fee.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>How much is an implementation?</h1>
-        <img alt="The Implementation" title="The Implementation" src="http://img.erp5.cn/osoe-how.mush.implementation-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>Most costs of an ERP lie in the implementation process. The total implementation cost of an ERP is usually estimated from 2 workdays to 6 workdays per employee in a company. This is approximately equivalent to 1% to 3% of the company turnover or to 1,000 EUR to 3,000 EUR per employee.</p><p>If we translate these figures to a small company (6 people), we will find that implementing an ERP costs about 10,000 EUR or 20 man-days. In a large organisation with 1,000 employees, an ERP will implementation will quickly reach 2,000 man-days or 1,000,000 EUR. In a large multinational with 100,000 employees, an ERP implementation can quickly surpass 100,000 man-days and 100,000,000 EUR.</p><p>The cost of buying an ERP is mainly the time spent in customizing a given ERP, which is similar in small and medium sized companies.</p><p>As a result, ERPs are not often used in small companies since the profit is so small that few people would invest time in promoting them to small companies.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>What is the success rate?</h1>
-        <img alt="What is the success rate?" title="What is the success rate?" src="http://img.erp5.cn/osoe-what.is.success.rate-screenshot?format=png" type="image/png">
-        <br>
-        <a href="https://www.erp5.com/allerp.pdf">allerp.pdf</a><details open="open">
-          <p>The “Mourlon Neyer” report is one of the best sources to understand the risks of ERP implementation. As a rule of thumb, 50% ERP projects fail, they cost 3 times the expected costs and take twice longer than planned.</p><p>The reasons for failure are very seldom related to the ERP software itself, but rather to the abnormal behaviour of clients of consultants. However, because clients and consultants seldom accept to recognize their own mistakes, the ERP software is often blamed for the failure of the project. Thus, the current ERP market is dominated by a few well-known brands because only they could survive with a failure rate of 50% or more. In this environment, the ERP implementation process is also strictly controlled by these few providers.</p><p>The most common reasons for ERP failures are: 1) the clients do not know precisely what they want to achieve with the help of an ERP system; 2) the consults do not have a clear idea of what an ERP can do. This problem is well known in management under the name “Limited Rationality”, a decision theory which explains how and why organisations do not take the most rational decisions.</p><p>This happens a lot when a company outsources its ERP requirement specifications to a junior consultant who knows little about the company’s business. Under these specifications, the implemented ERP is of course of little use and help to the business.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>Are there alternatives?</h1>
-        <img alt="ERP5 alternatives" title="ERP5 alternatives" src="http://img.erp5.cn/osoe-are.there.alternatives-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>The reasons which lead to ERP project failure are fundamental-failures related to human nature rather than to technology. Thus, it makes many managers scared to adopt any ERP. Instead, they build an information system out of independent components which are then integrated in a way. In such a system, usually each individual component can function well.  However, since these components have different interfaces, they normally cause troubles (sources of turnover for service companies). The SOA approach can be considered as one of the examples of interfacing components rather than implementing an integrated ERP. However, this alternative is not in the core an integrated system, rather an aggregation of components.</p><p>
-            <strong>Another alternative nowadays to closed source ERPs is: open source ERPs.</strong>
-            They can help certain project succeed by providing more flexibility. But of course they can also lead to failures if  this flexibility is abused by unskilled consultants. Open Source ERPs are also an excellent way to create a simple prototype in short time at low cost, because there are no license costs. Using an Open Source ERP to create a “Less is More” prototype is therefore probably the safest way to adopt an ERP.
-          </p>
-        </details>
-      </section><section class="screenshot">
-        <h1>What is an ERP?</h1>
-        <img alt="What is an ERP?" title="What is an ERP?" src="http://img.erp5.cn/osoe-what.is.an.erp-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>The definition of an ERP is quite vague. For some people, it is only a matter of using the same database. But what happens if an ERP is based on distributed web services, is it still an ERP? For others, it is a matter of using only a single data model. But what happens if ERPs share the same database yet use 100 different data models for the same function?</p><p>Some say that MRP is the key criteria to identify an ERP. However MRP is only used for production. Is an ERP used in trade still an ERP? Is CRM part of an ERP? What about knowledge management and e-commerce?</p><p>As we can see, the definition of an ERP is very vague. So let us analyse one by one the different approaches to characterize an ERP.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>A Unified Database</h1>
-        <img alt="Unified Database" title="Unified Database" src="http://img.erp5.cn/osoe-unified.database-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>Some people consider that a software is an ERP if it hosts all different business information in a single database. However, that does not say how many tables are used and how they are used.</p><p>If we follow this definition, the combination of an online shop, an accounting software, and of a HR software that uses the same MySQL database is an ERP. The combination of 100 independent software, each of which uses 100 tables, is also an ERP in that sense. Well, this definition is at least consistent with the way leading “legacy ERPs” are built: a collection of independent software, relying on more than 22,000 tables in a database with an integration system based in a batch technology which copies information between tables.</p><p>However, this is only a matter of level of integration. For example, an ERP like ERP5 uses less than 10 tables, yet can do the same as those which are using 22,000 tables. And some management systems are not based on relational database but on object database (ex. ZODB) or even on distributed object databases (ex. Erlang based systems).</p><p>
-            <strong>We could therefore claim that “a unified access to business data” is a required characteristic of an ERP, without saying how data is accessed.</strong>
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>Single Software / Wide Coverage</h1>
-        <img alt="Single Software / Wide Coverage" title="Single Software / Wide Coverage" src="http://img.erp5.cn/osoe-singlesoftware.widecoverage-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>Some people consider that an ERP is an integrated business software which combines at least accounting, purchase, sales, invoicing, inventory and possibly human resources, project management, production management, customer relation management, and document management, etc. In short, an ERP is a software which can be used to “do everything in the same place”.</p><p>This definition is in line with the kind of integration which is provided by leading ERPs and ERP brands. However, it excludes the factor that the integrated business systems are made of the collection of various components from different suppliers.</p><p>And it is actually not “do everything in the same place”, but rather using a common appearance or a common user interface for different components. Some business systems that are made of the collection of independent software, can be better integrated than single brand ERPs, and can provide better productivity because of better automation of workflows.</p><p>
-            <strong>We could therefore claim that “a wide functional coverage” is another required characteristic of an ERP, without saying how this coverage is achieved.</strong>
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>
-          Everyone <u>Must</u> Use it
-        </h1>
-        <img alt="Everyonce <u>Must</u> Use it" title="Everyonce <u>Must</u> Use it" src="http://img.erp5.cn/osoe-everyone.must.use.it-screenshot?format=jpg" type="image/png">
-        <details open="open">
-          <p>Accounting software is used by accountants. Sales software is used by sales. And shipping software is used by warehouse people.</p><p>
-            On the other hand, <strong>an ERP is used by people with different functions</strong>
-            in the company. This is another characteristics of ERP vs. specialised business software.
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>Business Workflow</h1>
-        <img alt="Business Workflow" title="Business Workflow" src="http://img.erp5.cn/osoe-business.workflow-screenshot?format=jpg" type="image/png">
-        <details open="open">
-          <p>Workflow is a key term in ERP. There are different types of workflows. They are normally represented by a state diagram.</p><p>“Activity workflows” or “business process” models are related to the sequence of activities. For example, all activities related to an order, the activities could be process order, prepare goods, deliver, issue invoice etc.</p>
-          “Supply chain workflows” define how materials circulate in a production workshop. For example, how components are assembled, and where. They normally involve suppliers and partners of the company.
-          <p></p><p>“Document workflows” are used to track the decision process related to a given business document, such as an order or an invoice.</p><p>There three types of workflows described above are almost implemented in all ERPs, either in an implicit and hard coded way, or in an explicit and configurable way.</p><p>
-            <strong>We could therefore claim that “providing work-flows for BPM, Supply Chain and Decision Making” is a required characteristic of an ERP, without defining whether such workflows are implicit or explicit</strong>
-            . However, keep in mind that explicit and configurable workflows are much more flexible.
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>Past, Present and Future</h1>
-        <img alt="Past, Present and Future" title="Past, Present and Future" src="http://img.erp5.cn/osoe-past.present.future-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>ERPs are expected to provide the management of a company the current states of everything of importance that happening in the company now, and subsequently aid in decision making process. In order to have a good overview, management of large companies are normally interested in implementing a group-wide ERP that spreads across all subsidiaries and business units. ERP vendors are of course aware of this “interest”, they often sell ERPs as an enabling tool for big brother wannabes.</p><p>Besides providing a unified access to business data, ERP usually offer various reporting features which can synthesize the current status of a corporation and provide predictions on the future based on various business rules.</p><p>
-            <strong>We could therefore claim that “providing synthetic reports on the past, present and future” is a required characteristic of an ERP.</strong>
-            However, in reality, often only the past is provided by ERP. If the ERP can provide an accurate state of the present, it is already a sign of a successful implementation. If the ERP pointed the right direction to the future, it is an exceptional implementation.
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>MRP: What Makes ERP So Different</h1>
-        <img alt="MRP: What Makes ERP So Different" title="MRP: What Makes ERP So Different" src="http://img.erp5.cn/osoe-what.makes.erp.different-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>ERP was originally built around a management theory known as “MRP”, which stands for Material Resource Planning.</p><p>In 50s and 60s, the manufacturing industry was booming and was always looking for new ways of organising production. It was a time when mathematics in general, operational research in particular, were expected to solve all management problems.</p><p>MRP was one of the simple mathematical models which was adopted and implemented in software used in the field of production management. Nowadays it becomes the core of any ERP systems.</p><p>Other more complex models, such as constraint programming, operation research, linear programming are not as widely used as MRP, and often fail. Recently, management of companies has been increasingly relying on more ad-hoc lean management techniques, such as “kan ban” and “just in time”, created and implemented by the Japanese industry, rather than on pure mathematical approaches which were initiated in Europe and US. Yet, MRP is the one remaining mathematical model which is still widely accepted.</p><p>
-            <strong>We could therefore claim that “implemented kind of as MRP” is a required characteristic of an ERP.</strong>
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>MRP1: Materials</h1>
-        <img alt="MRP1: Materials" title="MRP1: Materials" src="http://img.erp5.cn/osoe-mrp1.meterials-screenshot?format=jpg" type="image/png">
-        <details open="open">
-          <p>The first type of MRP that we are going to introduce you is also called “MRP1”. Its focus is on materials.</p><p>The idea is simple. If we know that a client will order 100 goods, then we need to produce 100 goods. If producing 1 good requires 10 components of type A and 20 components of type B, then producing 100 goods requires 1000 of A and 2000 of B.</p>
-          If the inventory of A is 500, in order to have enough material to produce 100 goods, we know that we need to order at least 500 items of A.
-          <p></p><p>Even though in reality things are normally more complex (e.g. parallel productions, planning of purchase orders), the principles are the same. MRP calculation can tell you how much materials need to be purchased and at what point of time, so that production can happen on time.</p><p>The MRP calculation can be based on different assumptions. For example, one assumption is liquidity optimization, which means order as late as possible. This is the “just in time” way. Another assumption is to get maximum discounts by ordering as many as possible for a single item. This way is more commonly used when MRP was firstly introduced in the 60s.</p>
-        </details>
-      </section><section class="illustration">
-        <h1>MRP2: Resources at Large</h1>
-        <img alt="MRP2: Resources at Large" title="MRP2: Resources at Large" src="http://img.erp5.cn/osoe-mrp2.resources.large-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>The idea of MRP2 was introduced later. Some scholars claim that the meaning of “M” changed from “Material” to “Management” or “Manufacturing”.</p><p>
-            Rather than only considering materials, MRP2 takes into account cash, machines, and workers etc. It also provides a framework to optimise resources based on numerous management goals.
-            With MRP2, it is for example possible to plan sales orders, purchase orders, inventory, and future cash flows. The combination of MRP2 with global optimisation can be useful for making decisions regarding whether to order big batches now or small batches over time.
-          </p><p>Constraints, such as cash constraints, and workforce constraints are also introduced in the equation to help making better decisions. This is what is called “finite resource planification” in ERPs. It is said to be the most advanced planning tool. However, sadly it is rarely used. The reasons are the same: too much mathematics, too far from reality.</p><p>This is why another approach is often used instead: user interface tools which use graphics and colors to represent the different constraints in production.</p>
-        </details>
-      </section><section class="">
-        <h1>ERP Extension: CRM</h1>
-        <img src="http://img.erp5.cn/osoe-erp.extension-crm-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>The above sections described core characteristics of an ERP system. Modern ERPs include however much more than just unified database, wide functional coverage, work-flows, and MRP. They also extended the functional scope to cover CRM, KM and etc.</p><p>CRM stands for “Customer Relation Management”. The idea of CRM is quite simple: to collect and present all information related to a client.</p><p>In a pure ERP system, such information are the person’s contact, orders, invoices and such. CRM extends the information to include events and tickets. Events represent each contact made with a customer: a phone call, a visit, an email and so on. Tickets represent the specific interaction types with a customer. For example, a customer received the product he ordered, but he don’t know how to use the product, then he may ask for help. In this case, a support ticket should be opened in the CRM. All actions (events) which may happen in order to help this customer, e.g. emails, phone calls, and etc.) should be attached to this support ticket. Once the problem is resolved, the ticket can be closed.</p><p>Such information are normally hosted at the same location as the orders, packing lists and invoices because human relations with the customer (events &amp; tickets) are directly related to trade relations with the customer (order, packing list, invoice). CRM can also be used for public relations, sales management, supplier management and so on.</p><p></p><strong>We could therefore claim that “keeping track of the relation history with people” is a frequent characteristic of a modern ERP.</strong>
-          <p></p>
-        </details>
-      </section><section class="illustration">
-        <h1>ERP Extension: KM</h1>
-        <img alt="ERP Extension: KM" title="ERP Extension: KM" src="http://img.erp5.cn/osoe-erp.extension-km-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>KM is short for knowledge management. One definition of KM, which many consider as a creation of IBM, is “the right information to the right person at the right time”. Since the ERP is the central piece of software which is used to manage a business, it is significant that such a system can help the users to reach the right information at the right time in order to make the appropriate decisions.</p><p>Moreover, many pure documentary tools, such as PDF, office files, images, videos, are needed to support company activities, for example, the creation of a catalog of products, or project reports. Documents are nowadays an essential part of company management, and in particular for the management of customer/ supplier relationships.</p><p>Many ERPs use a document management module. The difference between “Document Management” and “Knowledge Management” is subtle: the first indicates that documentary information is “available or archived somewhere” while the latter focuses on “providing the right information to the right person at the right time”. This is commonly achieved by integrating the ERP workflows with the human resource management subsystem and the document management system.</p><p>
-            <strong>We could therefore claim that “handling multimedia documents in relation with people and workflows” is a frequent characteristic of a modern ERP.</strong>
-          </p>
-        </details>
-      </section><section class="illustration">
-        <h1>ERP + Web = e-business</h1>
-        <img alt="ERP + Web = e-business" title="ERP + Web = e-business" src="http://img.erp5.cn/osoe-erp..web-ebusiness-screenshot?format=png" type="image/png">
-        <details open="open">
-          <p>E-commerce was in 2010 one of the very few fast growing businesses in IT and in industry. More than 1000 different solutions of e-commerce were available, with fantastic open source packages as well.</p><p>However, e-commerce integration was still a dream: people get orders from one place (e.g. Ebay), follow clients on another place (e.g. SalesForce CRM) and keep their accounting with Quickbooks. Integration between the different aspects of business, on the Web or offline, was made manually, often in distant countries because of labour costs.</p><p>E-commerce tools therefore have been trying to do more and more: CRM, sales management, accounting and so on, and have been evolving towards ERPs. However, often their architecture and design were not really made for turning into a central management tool. Ten years after the raise of e-commerce, a fully integrated solution which combines ERP, CMS, CRM and e-commerce still seems  far away (ERP5 for example uses a few other solutions to support this integration).</p><p>E-business can be seen a combination of e-commerce and an ERP system. It includes e-commerce with a wider coverage. It takes also into consideration the business processes within the company. Since businesses are increasingly relying on outsourcing (also cloud outsourcing as the new tendency), ERP systems are also adapting this tendency and becoming e-business tools.</p><p>
-            <strong>We could therefore claim that “support of e-business” is a frequent characteristic of a modern ERP.</strong>
-          </p>
-        </details>
-      </section><section class="screenshot">
-        <h1>One ERP per student programme</h1>
-        <img alt="One Student One ERP (OSOE)  programme" title="One Student One ERP (OSOE)  programme" src="http://img.erp5.cn/user-OSOE.Website.Homepage?format=png" type="image/png">
-        <details open="open">
-          <p>This closes the introduction session about the ERP concepts. You will understand the ERP concepts more by patiently practicing on a real ERP system, and going into the details of each of its main modules. Many managers dream that ERP is a magical tool that can solves all the managerial problems. This dream could easily turn into a nightmare because of the unrealistic expectations and lack of clear understanding of the capabilities of an ERP system. In this course, each student will have an ERP system to practice on, and the follow-up sessions will guide you through implementing and using ERP with realistic expectations.</p>
-        </details>
-      </section>
-    
+<section class="illustration">
+<h1>OSOE - ERP 101</h1>
+<img alt="OSOE - ERP 101" src="http://img.erp5.cn/osoe-erp-101.cover?format=png" title="OSOE - ERP 101" type="image/png" />
+<footer>by <a href="/contact">OSOE Project</a>.</footer>
+
+<details open="true">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+</section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>Class requirements</li>
+	<li>ERP facts</li>
+	<li>What is an ERP</li>
+</ul>
+
+<details open="open">
+<p>ERPs are usually considered difficult from both learning and teaching perspectives. Since ERP take accounts of all aspects within a company, students need sufficient background knowledge from almost all management subjects in order to understand an ERP system. Often ERP classes in schools are either too general that no detailed functions are taught or purely based on case studies which result in lack of theoretical principles.Thus, this course is structured in two stages. In the first stage, you will learn the theories applied in ERPs, and the universal business processes in companies. You will also practice on an open source ERP system (ERP5). In the second stage, with the help of a questionnaire developed by ERP5, you will adopt a role of an ERP consultant to conduct an interview with a company of your choice, and analyse the information gained from the interview to perform an ERP implementation configuration.</p>
+
+<p>In the following sections, we are going to introduce some basic concepts regarding the ERP systems to prepare you for the course, such as what an ERP is, the components of an ERP, and business workflows etc. Let&#39;s get started now!</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Requirements</h1>
+<img alt="Requirements" src="http://img.erp5.cn/osoe-erp.101.requirements-screenshot?format=png" title="Requirements" type="image/png" />
+<details open="open">
+<p>There are two main requirements for this course. The first one is to have your own ERP5 system (you could either use an online instance or download the ERP5 virtual machine). The second requirement is to find a company for your ERP configuration process.</p>
+
+<p>The best way to understand ERPs is to learn ERP using a real case. Therefore, for this course you need to find a small &ndash;to-medium sized business (could also be a non-profit organisation, or a public administration etc.). This business entity will serve as an implementation field. After you finished the first stage, you could apply the knowledge you learned to this implementation field, and try to configure the categories for ERP implementation.</p>
+
+<p>For students, it will be a unique opportunity to learn what ERP consultants do for ERP implementation in companies. For companies you found, they will have the opportunity to gain more insights about their business processes, receive precious advices on how they could improve their business processes, and improve their performance.</p>
+
+<p>The configuration process of this course only requires a configuration spreadsheet. It is a straightforward method and easier for the students to understand from the technical point of view. From the user point of view, this simple configuration method could completely change the way how an ERP is perceived. In the end, your configuration should match the actual business environment of the company, and become usable for an ERP implementation.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>ERP Facts</h1>
+<img alt="ERP Facts" src="http://img.erp5.cn/user-OSOE.Erp.Facts?format=png" title="ERP Facts" type="image/png" /> <a href="http://www.forbes.com/sites/louiscolumbus/2013/06/18/gartner-predicts-crm-will-be-a-36b-market-by-2017/">Gartner, 2013.</a>
+
+<details open="open">
+<p>Enterprise sales of ERP systems will grow to $34.3B in 2017, attaining a 6.7% CAGR in the forecast period of 2011 to 2017. CRM is projected to be $35.5B by 2017, attaining a CAGR of 9.1% from 2011 to 2017.</p>
+
+<p>What kinds of business need an ERP? How much does an ERP cost? How long does ERP implementation process take? Is it risky to implement an ERP? And are there any alternatives? These questions are what we are going to try to answer before we explain in details what an ERP is.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Who needs an ERP ?</h1>
+<img alt="Who needs an ERP" src="http://img.erp5.cn/osoe-who.needs.an.erp-screenshot?format=png" title="Who needs an ERP" type="image/png" />
+<details open="open">
+<p>All businesses, government institutions, and non-profit organisations could use an ERP to manage their daily operations. An ERP systems can manage human resources, products and materials, purchases and sales, finance and almost all other aspects within a business entity. Even though today more and more transactions are done electronically in companies, which is much efficient than traditional paper recording. However, the efficiency of using separated applications for different business processes is not comparable to having an integrated ERP system. Especially for large organisations, ERP has become an essential success factor. It could drastically increase productivity, reduce errors, and decrease manual workload.</p>
+
+<p>An ERP could take the form of a &ldquo;Common Off-Shelve Package&rdquo; or a custom software. It could be a centralised piece of software or a collection of components with interfaces. What remains common is that it provides a place for people to share and relate business documents.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Who does not need an ERP ?</h1>
+<img alt="Who dont need an ERP" src="http://img.erp5.cn/osoe-who.dont.needs.an.erp-screenshot?format=png" title="Who dont need an ERP" type="image/png" />
+<details open="open">
+<p>Of course private households do not require ERPs. One-man businesses or small businesses probably do not need to use ERPs. As long as the amount of business documents remains small, there is no need to use an ERP system, or maybe any software systems. For example, a private business consultants who sells 5 contracts per year doesn&#39;t need to use any software to track transactions since his/her brain can function faster.</p>
+
+<p>Very often in small businesses, physical tools are more efficient than software, as long as people trust each other. The &quot;Kanban&quot; system which was introduced in Japan is a perfect example of a management system based on tangible tools which defeated an approach based on software and mathematics.</p>
+
+<p>Having these considerations in mind is very important in terms of ERP implementation. Not everything needs to be put into ERP. Some parts of a business can be kept outside the ERP, using paper, binders, drawers or, simply, human brain. You need to keep in mind that the more features an ERP has, the more time consuming to implement the system, and the longer time needed to teach or make users adopt. Thus, priorities need to be set when implementing an ERP system. Only the ones could bring most return should be integrated in an ERP system. Keeping an ERP configuration lean and simple, using only parts of an ERP can sometimes be more efficient than trying to do everything with an ERP.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Key Players</h1>
+<img alt="Key Players" src="http://img.erp5.cn/osoe-key.players?format=png" title="Key Players" /> <a href="https://www.gartner.com/doc/2477517/market-share-analysis-erp-software">Gartner, 2014.</a>
+
+<details open="open">
+<p>The leader among all ERP providers is currently SAP. It is a German company that considered as the 2nd or 3rd biggest software company in the world after Microsoft. The most powerful competitor of SAP is Oracle.</p>
+
+<p>SAP is definitely the reference ERP. It is used in most large corporations. However, that does not mean that corporations that use SAP do not use another ERP system. EADS for example is an SAP shop. However, Infoterra, a subsidiary of EADS uses ERP5, an open source ERP, for part of its business. In reality, implementing the same single ERP for all business units and subsidiaries of a large company is nearly impossible due to the perpetual changes of the corporate structure and business processes. Commonly in large companies they have &ldquo;plurality of ERPs&rdquo;. Normally, only the financial part of the ERP is consolidated in the same ERP instance across all business units and subsidiaries.</p>
+
+<p>In terms of ERPs in small-to-medium sized companies, things are different. Because there is more consistency in these companies than in large multinational companies, it is possible to unify all business activities within the same ERP and improve efficiency through the unification.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>How much does an ERP cost?</h1>
+<img alt="The Cost" src="http://img.erp5.cn/osoe-the.erp.cost-screenshot?format=png" title="The Cost" type="image/png" />
+<details open="open">
+<p>An ERP system costs normally range from 0 to 2000EUR/ user (open source ERPs are cost-free). ERP license often needs to be renewed every year at a cost that amounts from 10% to 20% of the initial license fee.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>How much is an implementation?</h1>
+<img alt="The Implementation" src="http://img.erp5.cn/osoe-how.mush.implementation-screenshot?format=png" title="The Implementation" type="image/png" />
+<details open="open">
+<p>Most costs of an ERP lie in the implementation process. The total implementation cost of an ERP is usually estimated from 2 workdays to 6 workdays per employee in a company. This is approximately equivalent to 1% to 3% of the company turnover or to 1,000 EUR to 3,000 EUR per employee.</p>
+
+<p>If we translate these figures to a small company (6 people), we will find that implementing an ERP costs about 10,000 EUR or 20 man-days. In a large organisation with 1,000 employees, an ERP will implementation will quickly reach 2,000 man-days or 1,000,000 EUR. In a large multinational with 100,000 employees, an ERP implementation can quickly surpass 100,000 man-days and 100,000,000 EUR.</p>
+
+<p>The cost of buying an ERP is mainly the time spent in customizing a given ERP, which is similar in small and medium sized companies.</p>
+
+<p>As a result, ERPs are not often used in small companies since the profit is so small that few people would invest time in promoting them to small companies.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>What is the success rate?</h1>
+<img alt="What is the success rate?" src="http://img.erp5.cn/osoe-what.is.success.rate-screenshot?format=png" title="What is the success rate?" type="image/png" /><br />
+<a href="https://www.erp5.com/allerp.pdf">allerp.pdf</a>
+
+<details open="open">
+<p>The &ldquo;Mourlon Neyer&rdquo; report is one of the best sources to understand the risks of ERP implementation. As a rule of thumb, 50% ERP projects fail, they cost 3 times the expected costs and take twice longer than planned.</p>
+
+<p>The reasons for failure are very seldom related to the ERP software itself, but rather to the abnormal behaviour of clients of consultants. However, because clients and consultants seldom accept to recognize their own mistakes, the ERP software is often blamed for the failure of the project. Thus, the current ERP market is dominated by a few well-known brands because only they could survive with a failure rate of 50% or more. In this environment, the ERP implementation process is also strictly controlled by these few providers.</p>
+
+<p>The most common reasons for ERP failures are: 1) the clients do not know precisely what they want to achieve with the help of an ERP system; 2) the consults do not have a clear idea of what an ERP can do. This problem is well known in management under the name &ldquo;Limited Rationality&rdquo;, a decision theory which explains how and why organisations do not take the most rational decisions.</p>
+
+<p>This happens a lot when a company outsources its ERP requirement specifications to a junior consultant who knows little about the company&rsquo;s business. Under these specifications, the implemented ERP is of course of little use and help to the business.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Are there alternatives?</h1>
+<img alt="ERP5 alternatives" src="http://img.erp5.cn/osoe-are.there.alternatives-screenshot?format=png" title="ERP5 alternatives" type="image/png" />
+<details open="open">
+<p>The reasons which lead to ERP project failure are fundamental-failures related to human nature rather than to technology. Thus, it makes many managers scared to adopt any ERP. Instead, they build an information system out of independent components which are then integrated in a way. In such a system, usually each individual component can function well. However, since these components have different interfaces, they normally cause troubles (sources of turnover for service companies). The SOA approach can be considered as one of the examples of interfacing components rather than implementing an integrated ERP. However, this alternative is not in the core an integrated system, rather an aggregation of components.</p>
+
+<p><strong>Another alternative nowadays to closed source ERPs is: open source ERPs.</strong> They can help certain project succeed by providing more flexibility. But of course they can also lead to failures if this flexibility is abused by unskilled consultants. Open Source ERPs are also an excellent way to create a simple prototype in short time at low cost, because there are no license costs. Using an Open Source ERP to create a &ldquo;Less is More&rdquo; prototype is therefore probably the safest way to adopt an ERP.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>What is an ERP?</h1>
+<img alt="What is an ERP?" src="osoe-what.is.an.erp-screenshot.new?format=png" title="What is an ERP?" type="image/png" />
+<details open="open">
+<p>The definition of an ERP is quite vague. For some people, it is only a matter of using the same database. But what happens if an ERP is based on distributed web services, is it still an ERP? For others, it is a matter of using only a single data model. But what happens if ERPs share the same database yet use 100 different data models for the same function?</p>
+
+<p>Some say that MRP is the key criteria to identify an ERP. However MRP is only used for production. Is an ERP used in trade still an ERP? Is CRM part of an ERP? What about knowledge management and e-commerce?</p>
+
+<p>As we can see, the definition of an ERP is very vague. So let us analyse one by one the different approaches to characterize an ERP.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>A Unified Database</h1>
+<img alt="Unified Database" src="http://img.erp5.cn/osoe-unified.database-screenshot?format=png" title="Unified Database" type="image/png" />
+<details open="open">
+<p>Some people consider that a software is an ERP if it hosts all different business information in a single database. However, that does not say how many tables are used and how they are used.</p>
+
+<p>If we follow this definition, the combination of an online shop, an accounting software, and of a HR software that uses the same MySQL database is an ERP. The combination of 100 independent software, each of which uses 100 tables, is also an ERP in that sense. Well, this definition is at least consistent with the way leading &ldquo;legacy ERPs&rdquo; are built: a collection of independent software, relying on more than 22,000 tables in a database with an integration system based in a batch technology which copies information between tables.</p>
+
+<p>However, this is only a matter of level of integration. For example, an ERP like ERP5 uses less than 10 tables, yet can do the same as those which are using 22,000 tables. And some management systems are not based on relational database but on object database (ex. ZODB) or even on distributed object databases (ex. Erlang based systems).</p>
+
+<p><strong>We could therefore claim that &ldquo;a unified access to business data&rdquo; is a required characteristic of an ERP, without saying how data is accessed.</strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Single Software / Wide Coverage</h1>
+<img alt="Single Software / Wide Coverage" src="http://img.erp5.cn/osoe-singlesoftware.widecoverage-screenshot?format=png" title="Single Software / Wide Coverage" type="image/png" />
+<details open="open">
+<p>Some people consider that an ERP is an integrated business software which combines at least accounting, purchase, sales, invoicing, inventory and possibly human resources, project management, production management, customer relation management, and document management, etc. In short, an ERP is a software which can be used to &ldquo;do everything in the same place&rdquo;.</p>
+
+<p>This definition is in line with the kind of integration which is provided by leading ERPs and ERP brands. However, it excludes the factor that the integrated business systems are made of the collection of various components from different suppliers.</p>
+
+<p>And it is actually not &ldquo;do everything in the same place&rdquo;, but rather using a common appearance or a common user interface for different components. Some business systems that are made of the collection of independent software, can be better integrated than single brand ERPs, and can provide better productivity because of better automation of workflows.</p>
+
+<p><strong>We could therefore claim that &ldquo;a wide functional coverage&rdquo; is another required characteristic of an ERP, without saying how this coverage is achieved.</strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Everyone <u>Must</u> Use it</h1>
+<img alt="Everyonce &lt;u&gt;Must&lt;/u&gt; Use it" src="http://img.erp5.cn/osoe-everyone.must.use.it-screenshot?format=jpg" title="Everyonce &lt;u&gt;Must&lt;/u&gt; Use it" type="image/png" />
+<details open="open">
+<p>Accounting software is used by accountants. Sales software is used by sales. And shipping software is used by warehouse people.</p>
+
+<p>On the other hand, <strong>an ERP is used by people with different functions</strong> in the company. This is another characteristics of ERP vs. specialised business software.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Business Workflow</h1>
+<img alt="Business Workflow" src="http://img.erp5.cn/osoe-business.workflow-screenshot?format=jpg" title="Business Workflow" type="image/png" />
+<details open="open">
+<p>Workflow is a key term in ERP. There are different types of workflows. They are normally represented by a state diagram.</p>
+
+<p>&ldquo;Activity workflows&rdquo; or &ldquo;business process&rdquo; models are related to the sequence of activities. For example, all activities related to an order, the activities could be process order, prepare goods, deliver, issue invoice etc.</p>
+&ldquo;Supply chain workflows&rdquo; define how materials circulate in a production workshop. For example, how components are assembled, and where. They normally involve suppliers and partners of the company.
+
+<p>&nbsp;</p>
+
+<p>&ldquo;Document workflows&rdquo; are used to track the decision process related to a given business document, such as an order or an invoice.</p>
+
+<p>There three types of workflows described above are almost implemented in all ERPs, either in an implicit and hard coded way, or in an explicit and configurable way.</p>
+
+<p><strong>We could therefore claim that &ldquo;providing work-flows for BPM, Supply Chain and Decision Making&rdquo; is a required characteristic of an ERP, without defining whether such workflows are implicit or explicit</strong> . However, keep in mind that explicit and configurable workflows are much more flexible.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Past, Present and Future</h1>
+<img alt="Past, Present and Future" src="http://img.erp5.cn/osoe-past.present.future-screenshot?format=png" title="Past, Present and Future" type="image/png" />
+<details open="open">
+<p>ERPs are expected to provide the management of a company the current states of everything of importance that happening in the company now, and subsequently aid in decision making process. In order to have a good overview, management of large companies are normally interested in implementing a group-wide ERP that spreads across all subsidiaries and business units. ERP vendors are of course aware of this &ldquo;interest&rdquo;, they often sell ERPs as an enabling tool for big brother wannabes.</p>
+
+<p>Besides providing a unified access to business data, ERP usually offer various reporting features which can synthesize the current status of a corporation and provide predictions on the future based on various business rules.</p>
+
+<p><strong>We could therefore claim that &ldquo;providing synthetic reports on the past, present and future&rdquo; is a required characteristic of an ERP.</strong> However, in reality, often only the past is provided by ERP. If the ERP can provide an accurate state of the present, it is already a sign of a successful implementation. If the ERP pointed the right direction to the future, it is an exceptional implementation.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>MRP: What Makes ERP So Different</h1>
+<img alt="MRP: What Makes ERP So Different" src="http://img.erp5.cn/osoe-what.makes.erp.different-screenshot?format=png" title="MRP: What Makes ERP So Different" type="image/png" />
+<details open="open">
+<p>ERP was originally built around a management theory known as &ldquo;MRP&rdquo;, which stands for Material Resource Planning.</p>
+
+<p>In 50s and 60s, the manufacturing industry was booming and was always looking for new ways of organising production. It was a time when mathematics in general, operational research in particular, were expected to solve all management problems.</p>
+
+<p>MRP was one of the simple mathematical models which was adopted and implemented in software used in the field of production management. Nowadays it becomes the core of any ERP systems.</p>
+
+<p>Other more complex models, such as constraint programming, operation research, linear programming are not as widely used as MRP, and often fail. Recently, management of companies has been increasingly relying on more ad-hoc lean management techniques, such as &ldquo;kan ban&rdquo; and &ldquo;just in time&rdquo;, created and implemented by the Japanese industry, rather than on pure mathematical approaches which were initiated in Europe and US. Yet, MRP is the one remaining mathematical model which is still widely accepted.</p>
+
+<p><strong>We could therefore claim that &ldquo;implemented kind of as MRP&rdquo; is a required characteristic of an ERP.</strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>MRP1: Materials</h1>
+<img alt="MRP1: Materials" src="http://img.erp5.cn/osoe-mrp1.meterials-screenshot?format=jpg" title="MRP1: Materials" type="image/png" />
+<details open="open">
+<p>The first type of MRP that we are going to introduce you is also called &ldquo;MRP1&rdquo;. Its focus is on materials.</p>
+
+<p>The idea is simple. If we know that a client will order 100 goods, then we need to produce 100 goods. If producing 1 good requires 10 components of type A and 20 components of type B, then producing 100 goods requires 1000 of A and 2000 of B.</p>
+If the inventory of A is 500, in order to have enough material to produce 100 goods, we know that we need to order at least 500 items of A.
+
+<p>&nbsp;</p>
+
+<p>Even though in reality things are normally more complex (e.g. parallel productions, planning of purchase orders), the principles are the same. MRP calculation can tell you how much materials need to be purchased and at what point of time, so that production can happen on time.</p>
+
+<p>The MRP calculation can be based on different assumptions. For example, one assumption is liquidity optimization, which means order as late as possible. This is the &ldquo;just in time&rdquo; way. Another assumption is to get maximum discounts by ordering as many as possible for a single item. This way is more commonly used when MRP was firstly introduced in the 60s.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>MRP2: Resources at Large</h1>
+<img alt="MRP2: Resources at Large" src="http://img.erp5.cn/osoe-mrp2.resources.large-screenshot?format=png" title="MRP2: Resources at Large" type="image/png" />
+<details open="open">
+<p>The idea of MRP2 was introduced later. Some scholars claim that the meaning of &ldquo;M&rdquo; changed from &ldquo;Material&rdquo; to &ldquo;Management&rdquo; or &ldquo;Manufacturing&rdquo;.</p>
+
+<p>Rather than only considering materials, MRP2 takes into account cash, machines, and workers etc. It also provides a framework to optimise resources based on numerous management goals. With MRP2, it is for example possible to plan sales orders, purchase orders, inventory, and future cash flows. The combination of MRP2 with global optimisation can be useful for making decisions regarding whether to order big batches now or small batches over time.</p>
+
+<p>Constraints, such as cash constraints, and workforce constraints are also introduced in the equation to help making better decisions. This is what is called &ldquo;finite resource planification&rdquo; in ERPs. It is said to be the most advanced planning tool. However, sadly it is rarely used. The reasons are the same: too much mathematics, too far from reality.</p>
+
+<p>This is why another approach is often used instead: user interface tools which use graphics and colors to represent the different constraints in production.</p>
+</details>
+</section>
+
+<section>
+<h1>ERP Extension: CRM</h1>
+<img src="http://img.erp5.cn/osoe-erp.extension-crm-screenshot?format=png" type="image/png" />
+<details open="open">
+<p>The above sections described core characteristics of an ERP system. Modern ERPs include however much more than just unified database, wide functional coverage, work-flows, and MRP. They also extended the functional scope to cover CRM, KM and etc.</p>
+
+<p>CRM stands for &ldquo;Customer Relation Management&rdquo;. The idea of CRM is quite simple: to collect and present all information related to a client.</p>
+
+<p>In a pure ERP system, such information are the person&rsquo;s contact, orders, invoices and such. CRM extends the information to include events and tickets. Events represent each contact made with a customer: a phone call, a visit, an email and so on. Tickets represent the specific interaction types with a customer. For example, a customer received the product he ordered, but he don&rsquo;t know how to use the product, then he may ask for help. In this case, a support ticket should be opened in the CRM. All actions (events) which may happen in order to help this customer, e.g. emails, phone calls, and etc.) should be attached to this support ticket. Once the problem is resolved, the ticket can be closed.</p>
+
+<p>Such information are normally hosted at the same location as the orders, packing lists and invoices because human relations with the customer (events &amp; tickets) are directly related to trade relations with the customer (order, packing list, invoice). CRM can also be used for public relations, sales management, supplier management and so on.</p>
+
+<p>&nbsp;</p>
+<strong>We could therefore claim that &ldquo;keeping track of the relation history with people&rdquo; is a frequent characteristic of a modern ERP.</strong>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>ERP Extension: KM</h1>
+<img alt="ERP Extension: KM" src="http://img.erp5.cn/osoe-erp.extension-km-screenshot?format=png" title="ERP Extension: KM" type="image/png" />
+<details open="open">
+<p>KM is short for knowledge management. One definition of KM, which many consider as a creation of IBM, is &ldquo;the right information to the right person at the right time&rdquo;. Since the ERP is the central piece of software which is used to manage a business, it is significant that such a system can help the users to reach the right information at the right time in order to make the appropriate decisions.</p>
+
+<p>Moreover, many pure documentary tools, such as PDF, office files, images, videos, are needed to support company activities, for example, the creation of a catalog of products, or project reports. Documents are nowadays an essential part of company management, and in particular for the management of customer/ supplier relationships.</p>
+
+<p>Many ERPs use a document management module. The difference between &ldquo;Document Management&rdquo; and &ldquo;Knowledge Management&rdquo; is subtle: the first indicates that documentary information is &ldquo;available or archived somewhere&rdquo; while the latter focuses on &ldquo;providing the right information to the right person at the right time&rdquo;. This is commonly achieved by integrating the ERP workflows with the human resource management subsystem and the document management system.</p>
+
+<p><strong>We could therefore claim that &ldquo;handling multimedia documents in relation with people and workflows&rdquo; is a frequent characteristic of a modern ERP.</strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>ERP + Web = e-business</h1>
+<img alt="ERP + Web = e-business" src="http://img.erp5.cn/osoe-erp..web-ebusiness-screenshot?format=png" title="ERP + Web = e-business" type="image/png" />
+<details open="open">
+<p>E-commerce was in 2010 one of the very few fast growing businesses in IT and in industry. More than 1000 different solutions of e-commerce were available, with fantastic open source packages as well.</p>
+
+<p>However, e-commerce integration was still a dream: people get orders from one place (e.g. Ebay), follow clients on another place (e.g. SalesForce CRM) and keep their accounting with Quickbooks. Integration between the different aspects of business, on the Web or offline, was made manually, often in distant countries because of labour costs.</p>
+
+<p>E-commerce tools therefore have been trying to do more and more: CRM, sales management, accounting and so on, and have been evolving towards ERPs. However, often their architecture and design were not really made for turning into a central management tool. Ten years after the raise of e-commerce, a fully integrated solution which combines ERP, CMS, CRM and e-commerce still seems far away (ERP5 for example uses a few other solutions to support this integration).</p>
+
+<p>E-business can be seen a combination of e-commerce and an ERP system. It includes e-commerce with a wider coverage. It takes also into consideration the business processes within the company. Since businesses are increasingly relying on outsourcing (also cloud outsourcing as the new tendency), ERP systems are also adapting this tendency and becoming e-business tools.</p>
+
+<p><strong>We could therefore claim that &ldquo;support of e-business&rdquo; is a frequent characteristic of a modern ERP.</strong></p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>One ERP per student programme</h1>
+<img alt="One Student One ERP (OSOE)  programme" src="http://img.erp5.cn/user-OSOE.Website.Homepage?format=png" title="One Student One ERP (OSOE)  programme" type="image/png" />
+<details open="open">
+<p>This closes the introduction session about the ERP concepts. You will understand the ERP concepts more by patiently practicing on a real ERP system, and going into the details of each of its main modules. Many managers dream that ERP is a magical tool that can solves all the managerial problems. This dream could easily turn into a nightmare because of the unrealistic expectations and lack of clear understanding of the capabilities of an ERP system. In this course, each student will have an ERP system to practice on, and the follow-up sessions will guide you through implementing and using ERP with realistic expectations.</p>
+</details>
+</section>
