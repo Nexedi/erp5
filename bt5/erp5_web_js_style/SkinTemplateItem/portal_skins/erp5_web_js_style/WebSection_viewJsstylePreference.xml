@@ -79,6 +79,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_configuration_relative_url_base</string>
                         <string>my_configuration_style_gadget_url</string>
                         <string>my_configuration_favicon_url</string>
                       </list>
