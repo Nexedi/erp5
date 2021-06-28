@@ -132,8 +132,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Test Page</string>
-                          <string>Test Page</string>
+                          <string>Web Page</string>
+                          <string>Web Page</string>
                         </tuple>
                       </list>
                     </value>
@@ -151,7 +151,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>test_page_module_view_test_page_list_officejs_selection</string> </value>
+                    <value> <string>web_page_module_view_web_page_list_officejs_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -181,7 +181,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Test Pages</string> </value>
+                    <value> <string>Web Pages</string> </value>
                 </item>
               </dictionary>
             </value>
