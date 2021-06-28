@@ -297,11 +297,12 @@
         style_gadget,
         body = gadget.element,
         style_gadget_url = body.getAttribute("data-nostyle-gadget-url"),
+        style_css_url = body.getAttribute("data-nostyle-css-url"),
         parsed_content;
 
       if (!style_gadget_url) {
         // No style configured, use backend only rendering
-        return rJS.declareCSS("jsstyle.css", document.head);
+        return rJS.declareCSS(style_css_url, document.head);
       }
 
       parsed_content = parsePageContent(gadget.element);
@@ -329,7 +330,7 @@
             });
         }, function (error) {
           console.warn('Cant load the style gadget', error);
-          return new RSVP.Queue(rJS.declareCSS("jsstyle.css", document.head))
+          return new RSVP.Queue(rJS.declareCSS(style_css_url, document.head))
             .push(function () {
               // Set again the page content after the css is loaded
               // to prevent ugly rendering
