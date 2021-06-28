@@ -59,7 +59,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TestPageModule_viewForSlideshowEditor</string> </value>
+            <value> <string>string:${object_url}/WebPageModule_viewForSlideshowEditor</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -16,14 +16,14 @@ portal_types/Notebook/notebook_export
 portal_types/Notebook/notebook_preview
 portal_types/PDF/pdf_viewer_clone
 portal_types/PDF/pdf_viewer_view
-portal_types/Test Page Module/slideshow_editor_view
-portal_types/Test Page/slideshow_editor_clone
-portal_types/Test Page/slideshow_editor_view
 portal_types/Web Illustration/svg_editor_clone
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
+portal_types/Web Page Module/slideshow_editor_view
 portal_types/Web Page Module/svg_editor_view
 portal_types/Web Page Module/text_editor_view
+portal_types/Web Page/slideshow_editor_clone
+portal_types/Web Page/slideshow_editor_view
 portal_types/Web Page/text_editor_clone
 portal_types/Web Page/text_editor_view
 portal_types/Web Script/codemirror_clone
