@@ -11,9 +11,9 @@
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
       relative_url_prefix python: web_section.WebSection_generateRelativeUrlPrefix();
-      no_style_gadget_url python: web_section.getLayoutProperty('configuration_style_gadget_url', default='');
+      no_style_gadget_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_style_gadget_url');
       no_style_css_url python: relative_url_prefix + 'jsstyle.css';
-      favicon_url python: web_section.getLayoutProperty('configuration_favicon_url', default='');
+      favicon_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_favicon_url');
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
@@ -25,14 +25,14 @@
     <link rel="stylesheet" tal-attributes="href no_style_css_url">
   </noscript>
   <tal:block tal:condition="favicon_url">
-    <link rel="icon" tal:attributes="href python: relative_url_prefix + favicon_url" />
+    <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
   <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/rsvp.js'"></script>
   <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/renderjs.js'"></script>
   <script tal:attributes="src python: relative_url_prefix + 'jsstyle.js'"></script>
   <tal:block tal:condition="python: no_style_gadget_url != ''">
-  <link rel="prerender" tal:attributes="href python: relative_url_prefix + no_style_gadget_url">
+  <link rel="prerender" tal:attributes="href no_style_gadget_url">
   </tal:block>
   </head>
   <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url;
