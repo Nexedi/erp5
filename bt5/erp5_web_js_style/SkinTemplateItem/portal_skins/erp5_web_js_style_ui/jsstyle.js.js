@@ -157,7 +157,19 @@
           result_dict.xhr.responseText,
           'text/html'
         ),
-          parsed_content = parsePageContent(dom_parser.body);
+          parsed_content;
+        if (gadget.style_gadget_url !== new URL(
+            dom_parser.body
+                      .getAttribute("data-nostyle-gadget-url"),
+            dom_parser.baseURI
+          ).href
+            ) {
+          // If the HTML is not supposed to be rendered
+          // with the same js style gadget,
+          // consider this must be reloaded
+          throw new Error('Trigger an error to force reload');
+        }
+        parsed_content = parsePageContent(dom_parser.body);
         gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
         return result_dict.style_gadget.render(parsed_content.html_content,
@@ -167,32 +179,6 @@
         return scrollToHash(hash);
       });
   }
-
-  function isAnotherSitemapLocation(sitemap, url1, url2) {
-    var is_url1_matching = (url1.indexOf(sitemap.href) === 0),
-      is_child_another_location,
-      i;
-    if (is_url1_matching && (url2.indexOf(sitemap.href) !== 0)) {
-      return true;
-    }
-    if (!is_url1_matching) {
-      // Both url do not match
-      return false;
-    }
-    // If both match, check sub urls
-    for (i = 0; i < sitemap.child_list.length; i += 1) {
-      is_child_another_location = isAnotherSitemapLocation(
-        sitemap.child_list[i],
-        url1,
-        url2
-      );
-      if (is_child_another_location) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 
   function listenURLChange() {
     var gadget = this;
@@ -209,9 +195,7 @@
     function handleClick(evt) {
       var target_element = evt.target.closest('a'),
         base_uri = document.baseURI,
-        link_url,
-        matching_language_count = 0,
-        matching_language_base_uri_count = 0;
+        link_url;
 
       if (!target_element) {
         // Only handle link
@@ -224,34 +208,10 @@
       if (evt.altKey || evt.ctrlKey || evt.metaKey || evt.shiftKey) {
         return;
       }
-
       link_url = new URL(target_element.href, base_uri);
-      if (link_url.href.indexOf(base_uri) !== 0) {
-        // Only handle sub path of the base url
-        // Meaning it will also reload when going from a non default language
-        // to the default one
-        return;
-      }
 
-      // Check if going from the default language to another one
-      // Check if url is suburl from 2 languages (default + the expected one)
-      gadget.parsed_content.language_list.map(function (language) {
-        if (link_url.href.indexOf(language.href) === 0) {
-          matching_language_count += 1;
-        }
-        // Ensure current url is in the default language
-        if (base_uri.indexOf(language.href) === 0) {
-          matching_language_base_uri_count += 1;
-        }
-      });
-      if ((1 < matching_language_count) &&
-          (matching_language_base_uri_count === 1)) {
-        return;
-      }
-
-      // Check if going from a section to a child one
-      if (isAnotherSitemapLocation(gadget.parsed_content.sitemap,
-                                   link_url.href, base_uri)) {
+      if (base_uri.indexOf(link_url.origin) !== 0) {
+        // No need to query from another domain
         return;
       }
 
@@ -271,7 +231,8 @@
           // to ensure popstate listener is correctly working
           // when the user will click on back/forward browser buttons
           history.pushState(null, null, target_element.href);
-        }, function () {
+        }, function (error) {
+          console.warn('Cant render the page', error);
           // Implement support for managed error
           // (like URL is not an HTML document parsable)
           // and redirect in such case
@@ -308,6 +269,8 @@
       parsed_content = parsePageContent(gadget.element);
       gadget.parsed_content = parsed_content;
       parsed_content.page_title = document.title;
+      gadget.style_gadget_url =
+        new URL(style_gadget_url, document.baseURI).href;
       // Clear the DOM
       while (body.firstChild) {
         body.firstChild.remove();
