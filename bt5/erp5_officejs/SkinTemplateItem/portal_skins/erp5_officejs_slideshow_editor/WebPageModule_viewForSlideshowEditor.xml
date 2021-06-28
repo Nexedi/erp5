@@ -35,7 +35,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,17 +57,16 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Document Reference)</string>
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>bottom (Preview)</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -73,38 +76,30 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom (Preview)</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>text_content</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
+                        <string>listbox_creation_date</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Document Reference)</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -112,10 +107,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_version</string>
-                        <string>my_language</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -123,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_viewForSlideshowEditor</string> </value>
+            <value> <string>WebPageModule_viewForSlideshowEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -131,11 +123,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPage_view</string> </value>
+            <value> <string>WebPageModule_viewTestPageList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -147,7 +139,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Test Page</string> </value>
+            <value> <string>Web Pages</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
