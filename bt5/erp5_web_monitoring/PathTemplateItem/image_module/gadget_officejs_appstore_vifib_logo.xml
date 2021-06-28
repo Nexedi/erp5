@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appstore_vifib</string> </value>
+            <value> <string>gadget_officejs_appstore_vifib_logo</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -280,7 +280,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.63086.13751.19012</string> </value>
+                      <value> <string>992.63086.40426.324</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -298,7 +298,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1624564710.41</float>
+                              <float>1624887168.82</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
