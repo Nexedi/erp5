@@ -157,6 +157,26 @@ configuration_dict = {
     'title': "Demo Style With Language",
     'site_map_section_parent': True
   },
+  'language_with_web_site_language_base': {
+    'configuration_relative_url_base': 'web_site_language',
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'available_language_list': ['en', 'fr', 'zh'],
+    'static_language_selection': True,
+    'language': "en",
+    'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id),
+    'title': "Demo Style With Language",
+    'site_map_section_parent': True
+  },
+  'language_with_web_site_base': {
+    'configuration_relative_url_base': 'web_site',
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'available_language_list': ['en', 'fr', 'zh'],
+    'static_language_selection': True,
+    'language': "en",
+    'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id),
+    'title': "Demo Style With Language",
+    'site_map_section_parent': True
+  },
   'form': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Form",
