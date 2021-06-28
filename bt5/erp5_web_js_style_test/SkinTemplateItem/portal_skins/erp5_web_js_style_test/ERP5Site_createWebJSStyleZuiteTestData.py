@@ -166,6 +166,7 @@ web_site = module.newContent(
   id=web_site_id,
   skin_selection_name="Jsstyle",
   layout_configuration_form_id="WebSection_viewJsstylePreference",
+  site_map_section_parent=True,
   **configuration_dict[configuration]
 )
 web_section = web_site.newContent(
@@ -173,7 +174,8 @@ web_section = web_site.newContent(
   id='%s1' % web_section_id_prefix,
   aggregate_value=web_site.getAggregateValue(),
   title="Demo Section 1",
-  visible=True
+  visible=True,
+  site_map_section_parent=True
 )
 web_section.newContent(
   portal_type=web_section_portal_type,
