@@ -203,4 +203,12 @@ web_site.newContent(
   visible=True
 )
 
+if configuration == 'form':
+  web_site.newContent(
+    portal_type=web_section_portal_type,
+    id='%sform' % web_section_id_prefix,
+    title="Demo Section Form",
+    custom_render_method_id='WebSite_viewJSStyleTestDialog'
+  )
+
 return "Web Site created."
