@@ -1184,6 +1184,10 @@ class TestResource(ERP5TypeTestCase):
     supply_line = supply.newContent(portal_type=self.sale_supply_line_portal_type)
     supply_line.setProductLineValue(self.portal.portal_categories.product_line.a)
     supply_line.setBasePrice(1000)
+    copy_data = supply.getParentValue().manage_copyObjects([supply.getId()])
+    new_id = supply.getParentValue().manage_pasteObjects(copy_data)[0]['new_id']
+    new_supply = supply.getParentValue()[new_id]
+    new_supply.validate()
     supply.validate()
 
     resource_a = self.portal.getDefaultModule(self.product_portal_type)\
@@ -1295,6 +1299,10 @@ class TestResource(ERP5TypeTestCase):
     )
 
     sale_supply.validate()
+    copy_data = sale_supply.getParentValue().manage_copyObjects([sale_supply.getId()])
+    new_id = sale_supply.getParentValue().manage_pasteObjects(copy_data)[0]['new_id']
+    new_sale_supply = sale_supply.getParentValue()[new_id]
+    new_sale_supply.validate()
     self.tic()
 
     currency_module = self.portal.getDefaultModule("Currency")
