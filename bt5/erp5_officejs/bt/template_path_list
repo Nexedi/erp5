@@ -3,7 +3,6 @@ document_module/gadget_officejs_*
 image_module/gadget_officejs_*
 image_module/hr_logo_svg
 image_module/officejs_audioplayer_*
-image_module/slideshow_icon_svg
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
 portal_types/Notebook Module/notebook_editor_view

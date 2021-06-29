@@ -4,7 +4,6 @@ image_module/gadget_officejs_*
 image_module/hr_logo_svg
 image_module/officejs_audioplayer_*
 image_module/wallsearch_icon_svg
-image_module/slideshow_icon_svg
 web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
 web_page_module/gadget_field_*
