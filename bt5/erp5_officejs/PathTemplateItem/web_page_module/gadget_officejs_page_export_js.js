@@ -86,7 +86,8 @@
       },
       "Monitoring App": {
         "url": "officejs_monitoring/",
-        "cache" : "gadget_officejs_monitoring.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "App Store": {
         "url": "officejs_appstore/",
