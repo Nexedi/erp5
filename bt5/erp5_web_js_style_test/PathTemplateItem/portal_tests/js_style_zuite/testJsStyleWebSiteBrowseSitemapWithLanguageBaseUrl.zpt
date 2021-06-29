@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=language_with_web_site_base</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=language_with_web_site_language_base</td>
   <td></td>
 </tr>
 <tr>
@@ -38,7 +38,7 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check the page content uses the default language (en)</b></td>
+  <td colspan="3"><b>Check the page content uses the web site</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -62,25 +62,25 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Change to the not default language</b></td>
+  <td colspan="3"><b>Change to one subsection</b></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//nav[@id='language']//a[text()='fr']</td>
+  <td>//nav[@id='sitemap']//a[text()='Demo Section 1']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check the page content uses the second language (fr)</b></td>
+  <td colspan="3"><b>Check the page content uses the web section 1</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()="Contenu de la page d'accueil"]</td>
+  <td>//p[@id='render_count'][contains(text(), '2')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//p[text()="Contenu de la page d'accueil"]</td>
+  <td>//main//p[text()='Frontpage content']</td>
   <td></td>
 </tr>
 <tr>
@@ -95,25 +95,25 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Change to the second not default language</b></td>
+  <td colspan="3"><b>Change to second level subsection</b></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//nav[@id='language']//a[text()='zh']</td>
+  <td>//nav[@id='sitemap']//a[text()='Demo Section 11']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check the page content uses the third language (zh)</b></td>
+  <td colspan="3"><b>Check the page content uses the web section 11</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()="主页内容"]</td>
+  <td>//p[@id='render_count'][contains(text(), '3')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//p[text()="主页内容"]</td>
+  <td>//main//p[text()='Frontpage content']</td>
   <td></td>
 </tr>
 <tr>
@@ -128,20 +128,20 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Change to the default language</b></td>
+  <td colspan="3"><b>Change to parent subsection</b></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//nav[@id='language']//a[text()='en']</td>
+  <td>//nav[@id='sitemap']//a[text()='Demo Section 1']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check the page content uses the default language (en)</b></td>
+  <td colspan="3"><b>Check the page content uses the web section 1</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//main//p[text()='Frontpage content']</td>
+  <td>//p[@id='render_count'][contains(text(), '4')]</td>
   <td></td>
 </tr>
 <tr>
@@ -157,6 +157,72 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='render_count'][contains(text(), '4')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Change to one sibling</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//nav[@id='sitemap']//a[text()='Demo Section 2']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the page content uses the web section 2</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id='render_count'][contains(text(), '5')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//main//p[text()='Frontpage content']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='render_count'][contains(text(), '5')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Change to one web site</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//nav[@id='sitemap']//a[text()='Demo Style With Language']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the page content uses the web site</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id='render_count'][contains(text(), '6')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//main//p[text()='Frontpage content']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='render_count'][contains(text(), '6')]</td>
   <td></td>
 </tr>
 
