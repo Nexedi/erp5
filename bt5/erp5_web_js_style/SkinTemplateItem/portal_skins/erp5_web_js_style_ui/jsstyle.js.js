@@ -127,7 +127,32 @@
     return result;
   }
 
-  function parsePageContent(body_element) {
+  function parsePageContent(body_element, base_uri) {
+    var i,
+      element,
+      element_list,
+      j,
+      url_attribute_list = ['src', 'href', 'srcset', 'action'],
+      url_attribute;
+
+    if (base_uri !== undefined) {
+      // Rewrite relative url (copied from renderjs)
+      for (j = 0; j < url_attribute_list.length; j += 1) {
+        url_attribute = url_attribute_list[j];
+        element_list = body_element.querySelectorAll(
+          '[' + url_attribute + ']'
+        );
+        for (i = 0; i < element_list.length; i += 1) {
+          element = element_list[i];
+          element.setAttribute(url_attribute, new URL(
+            element.getAttribute(url_attribute),
+            base_uri
+          ).href);
+        }
+      }
+
+    }
+
     return {
       original_content: body_element.innerHTML,
       html_content: body_element.querySelector('main').innerHTML,
@@ -169,7 +194,7 @@
           // consider this must be reloaded
           throw new Error('Trigger an error to force reload');
         }
-        parsed_content = parsePageContent(dom_parser.body);
+        parsed_content = parsePageContent(dom_parser.body, dom_parser.baseURI);
         gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
         return result_dict.style_gadget.render(parsed_content.html_content,
