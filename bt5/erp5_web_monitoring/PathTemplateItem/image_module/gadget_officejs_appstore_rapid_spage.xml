@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>d29ed927731719eab342e4fc228ff6a6</string> </value>
+            <value> <string>c3632480b2ddbb7445c4fd3039ae6c66</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>vifib-logo.png</string> </value>
+            <value> <string>NXD-Logo.Rapid.Space.png</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -98,12 +98,16 @@
             </value>
         </item>
         <item>
+            <key> <string>filename</string> </key>
+            <value> <string>NXD-Logo.Rapid.Space.png</string> </value>
+        </item>
+        <item>
             <key> <string>height</string> </key>
-            <value> <int>117</int> </value>
+            <value> <int>400</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appstore_vifib</string> </value>
+            <value> <string>gadget_officejs_appstore_rapid_spage</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -123,7 +127,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>vifib-logo.png</string> </value>
+            <value> <string>NXD-Logo.Rapid.Space.png</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -131,7 +135,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>400</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -280,7 +284,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.63086.13751.19012</string> </value>
+                      <value> <string>993.4494.25552.27733</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -298,7 +302,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1624564710.41</float>
+                              <float>1624981359.38</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

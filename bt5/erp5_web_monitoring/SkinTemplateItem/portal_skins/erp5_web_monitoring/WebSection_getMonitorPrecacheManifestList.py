@@ -131,7 +131,7 @@ url_list = [
   "gadget_erp5_page_ojsm_dispatch.js",
   "gadget_ojsm_graph_field.js",
   "gadget_officejs_monitor.json",
-  "vifib-logo.png",
+  "NXD-Logo.Rapid.Space.png",
   "gadget_erp5_editor_panel.html",
   "gadget_erp5_editor_panel.js"
 ]
