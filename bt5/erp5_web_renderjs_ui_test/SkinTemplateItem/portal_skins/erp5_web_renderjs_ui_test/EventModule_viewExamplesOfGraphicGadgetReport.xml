@@ -78,6 +78,8 @@
                       <list>
                         <string>report_by_creation_date_gadget</string>
                         <string>report_by_modification_date_gadget</string>
+                        <string>report_by_simulation_state_gadget</string>
+                        <string>report_person_and_organisation_gadget</string>
                         <string>report_portal_type_gadget</string>
                       </list>
                     </value>
@@ -86,8 +88,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>report_by_simulation_state_gadget</string>
-                        <string>report_person_and_organisation_gadget</string>
+                        <string>report_by_portal_type_gadget</string>
                       </list>
                     </value>
                 </item>
