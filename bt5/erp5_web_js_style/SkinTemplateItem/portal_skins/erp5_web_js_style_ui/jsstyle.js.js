@@ -109,6 +109,24 @@
     return sitemap;
   }
 
+  function parseDocumentListElement(document_list_element) {
+    var document_list = [],
+      li_list,
+      i;
+    if (document_list_element === null) {
+      return document_list;
+    }
+
+    li_list = document_list_element.querySelectorAll('a');
+    for (i = 0; i < li_list.length; i += 1) {
+      document_list_element.push({
+        href: li_list[i].href,
+        text: li_list[i].textContent
+      });
+    }
+    return document_list_element;
+  }
+
   function parseFormElement(form_element) {
     if (form_element !== null) {
       return form_element.outerHTML;
@@ -161,6 +179,9 @@
       ),
       sitemap: parseSitemapElement(
         body_element.querySelector('nav#sitemap')
+      ),
+      document_list: parseDocumentListElement(
+        body_element.querySelector('aside#document_list')
       ),
       form_html_content: parseFormElement(
         body_element.querySelector('form#main_form')
