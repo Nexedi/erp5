@@ -1,8 +1,8 @@
 /*globals window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          history */
+          history, console */
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          loopEventListener, history) {
+          loopEventListener, history, console) {
   "use strict";
 
   // XXX Copy/paste from renderjs
@@ -256,7 +256,8 @@
           // to ensure popstate listener is correctly working
           // when the user will click on back/forward browser buttons
           history.pushState(null, null, target_element.href);
-        }, function () {
+        }, function (error) {
+          console.warn('Cant render the page', error);
           // Implement support for managed error
           // (like URL is not an HTML document parsable)
           // and redirect in such case
@@ -327,4 +328,4 @@
     });
 
 }(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-  rJS.loopEventListener, history));
+  rJS.loopEventListener, history, console));
