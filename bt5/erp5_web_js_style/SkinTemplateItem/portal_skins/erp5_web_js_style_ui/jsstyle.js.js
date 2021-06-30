@@ -119,12 +119,12 @@
 
     li_list = document_list_element.querySelectorAll('a');
     for (i = 0; i < li_list.length; i += 1) {
-      document_list_element.push({
+      document_list.push({
         href: li_list[i].href,
         text: li_list[i].textContent
       });
     }
-    return document_list_element;
+    return document_list;
   }
 
   function parseFormElement(form_element) {
