@@ -1,9 +1,15 @@
 body {
   display: grid;
-  grid-template-raws: repeat(3, 1fr);
+  grid-gap: 1em;
+  grid-template-areas: "header" "content" "sidebar" "footer";
+}
+@media only screen and (min-width: 50em) {
+  body {
+    grid-template-areas: "header  header  header" "content content sidebar" "footer  footer  footer";
+  }
 }
 body > nav#sitemap {
-  grid-row: 1;
+  grid-area: header;
   background-color: #DDD;
   display: flex;
   flex-wrap: wrap;
@@ -31,7 +37,7 @@ body > nav#sitemap a:not(:first-child) {
   padding: 0 1em;
 }
 body main {
-  grid-row: 2;
+  grid-area: content;
 }
 body main fieldset {
   border: none;
@@ -45,8 +51,12 @@ body main fieldset > div > label {
   font-weight: bold;
   min-width: 10%;
 }
+body > aside#document_list {
+  grid-area: sidebar;
+  background-color: #DDD;
+}
 body > nav#language {
-  grid-row: 3;
+  grid-area: footer;
   background-color: #DDD;
   display: flex;
   flex-wrap: wrap;
