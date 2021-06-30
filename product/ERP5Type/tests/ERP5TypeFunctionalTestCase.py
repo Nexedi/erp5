@@ -242,7 +242,7 @@ class FunctionalTestRunner:
       selenium_test_runner_configuration = test_runner_configuration.get('selenium', {})
       use_local_firefox = selenium_test_runner_configuration.get('server-url') is None
       if 'firefox' not in selenium_test_runner_configuration.get(
-          'desired-capabilities', {}).get('browserName').lower():
+          'desired-capabilities', {}).get('browserName', '').lower():
         options = None
 
     if use_local_firefox:
