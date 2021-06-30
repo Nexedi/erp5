@@ -35,6 +35,7 @@
     })
     .declareMethod("render", function (html_content, parsed_content) {
       var state = {
+        document_list: JSON.stringify(parsed_content.document_list || []),
         language_list: JSON.stringify(parsed_content.language_list || []),
         sitemap: JSON.stringify(parsed_content.sitemap || {}),
         page_title: parsed_content.page_title || "",
@@ -49,6 +50,7 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         language_list,
+        document_list,
         child_list,
         i;
 
@@ -95,6 +97,18 @@
           })]));
         }
         domsugar(gadget.element.querySelector('nav#language'),
+                 [domsugar('ul', child_list)]);
+      }
+      if (modification_dict.hasOwnProperty('document_list')) {
+        document_list = JSON.parse(gadget.state.document_list);
+        child_list = [];
+        for (i = 0; i < document_list.length; i += 1) {
+          child_list.push(domsugar('li', [domsugar('a', {
+            text: document_list[i].text,
+            href: document_list[i].href
+          })]));
+        }
+        domsugar(gadget.element.querySelector('aside#document_list'),
                  [domsugar('ul', child_list)]);
       }
       if (modification_dict.hasOwnProperty('sitemap')) {
