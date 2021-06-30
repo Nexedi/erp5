@@ -159,6 +159,8 @@ Options:
                              extend sys.path
   --instance_home=PATH       Create/use test instance in given path
   --log_directory=PATH       Create log files in given path
+  --with_wendelin_core       Pass for tests that use wendelin.core.
+                             This option is likely to become a noop in the future.
 
 When no unit test is specified, only activities are processed.
 """
@@ -602,13 +604,14 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   from Products.ERP5Type.tests.utils import DbFactory
   root_db_name, = cfg.dbtab.databases.keys()
-  DbFactory(root_db_name).addMountPoint('/')
+  db_factory = DbFactory(root_db_name)
+  db_factory.addMountPoint('/')
 
   TestRunner = unittest.TextTestRunner
 
   import Lifetime
   from Zope2.custom_zodb import Storage, save_mysql, \
-      node_pid_list, neo_cluster, zeo_server_pid
+      node_pid_list, neo_cluster, zeo_server_pid, wcfs_server
   def shutdown(signum, frame, signum_set=set()):
     Lifetime.shutdown(0)
     signum_set.add(signum)
@@ -681,6 +684,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     raise
   finally:
     ProcessingNodeTestCase.unregisterNode()
+    db_factory.close()
     Storage.close()
     if node_pid_list is not None:
       # Wait that child processes exit. Stop ZEO storage (if any) after all
@@ -694,6 +698,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         os.waitpid(zeo_server_pid, 0)
       if neo_cluster:
         neo_cluster.stop()
+    if wcfs_server is not None:
+      # Stop WCFS server (if any) after all Zope nodes are stopped and
+      # disconnected from it.
+      wcfs_server.stop()
 
   if coverage_config:
     coverage_process.stop()
@@ -761,7 +769,8 @@ def main(argument_list=None):
         "products_path=",
         "sys_path=",
         "instance_home=",
-        "log_directory="
+        "log_directory=",
+        "with_wendelin_core"
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -883,6 +892,8 @@ def main(argument_list=None):
       instance_home = os.path.abspath(arg)
     elif opt == "--log_directory":
       _log_directory = os.path.abspath(arg)
+    elif opt == "--with_wendelin_core":
+      os.environ["with_wendelin_core"] = "1"
 
   bt5_path_list += filter(None,
     os.environ.get("erp5_tests_bt5_path", "").split(','))

@@ -29,6 +29,7 @@ except KeyError:
 
 data_fs_path = os.environ.get('erp5_tests_data_fs_path',
                               os.path.join(instance_home, 'var', 'Data.fs'))
+with_wendelin_core = int(os.environ.get('with_wendelin_core', 0))
 load = int(os.environ.get('erp5_load_data_fs', 0))
 save = int(os.environ.get('erp5_save_data_fs', 0))
 save_mysql = int(os.environ.get('erp5_dump_sql') or not zeo_client) or None
@@ -83,12 +84,16 @@ else:
 
 zeo_server_pid = None
 node_pid_list = []
+in_forked_process = False
 
 def fork():
+  global in_forked_process
   pid = os.fork()
   if pid:
     # make sure parent and child have 2 different RNG
     instance_random.seed(instance_random.random())
+  else:
+    in_forked_process = True
   return pid
 
 def forkNodes():
@@ -172,6 +177,19 @@ else:
         Storage = ClientStorage(zeo_client, server_sync=True)
     except TypeError: # BBB: ZEO<5
         Storage = ClientStorage(zeo_client)
+
+# launch WCFS server if wendelin.core usage is requested and we are running
+# with wendelin.core 2.
+wcfs_server = None
+if with_wendelin_core and not in_forked_process:
+  try:
+    from wendelin import wcfs
+  except ImportError:
+    pass # wendelin.core 1
+  else:
+    from wendelin.lib.zodb import zstor_2zurl
+    zurl = zstor_2zurl(Storage)
+    wcfs_server = wcfs.start(zurl)
 
 if node_pid_list is not None:
   _print("Instance at %r loaded ... " % instance_home)

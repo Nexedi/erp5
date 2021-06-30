@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from glob import glob
 import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
@@ -89,6 +90,19 @@ class ERP5(_ERP5):
       if not status_dict['status_code']:
         status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
+    elif test.startswith('testWendelinCore'):
+      # Combining Zope and WCFS working together requires data to be on a real
+      # storage, not on in-RAM MappingStorage inside Zope's Python process.
+      # Force this via --load --save for now.
+      #
+      # Also manually indicate via --with_wendelin_core, that this test needs
+      # WCFS server - corresponding to ZODB test storage - to be launched.
+      #
+      # In the future we might want to rework custom_zodb.py to always use
+      # FileStorage on tmpfs instead of δ=MappingStorage in DemoStorage(..., δ),
+      # and to always spawn WCFS for all tests, so that this hack becomes
+      # unnecessary.
+      return self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
     elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
     elif test == 'testUpgradeInstanceWithOldDataFs':
