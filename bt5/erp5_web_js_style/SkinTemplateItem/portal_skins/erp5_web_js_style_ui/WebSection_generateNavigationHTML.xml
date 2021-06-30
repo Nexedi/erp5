@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_generateNavigationHTML</string> </value>
+            <value> <string>WebSection_generateNavigationHTML</string> </value>
         </item>
       </dictionary>
     </pickle>
