@@ -25,9 +25,8 @@
         gadget = this,
         query_by = options.query_by,
         select_list = options.select_list || [],
+        domain_list = options.layout.x.domain_list || [],
         query_list = [],
-        date_range_catalog_key = options.date_range_catalog_key,
-        date_range_list = options.date_range_list || [],
         y;
 
       if ("object" === typeof options.group_by &&
@@ -53,22 +52,20 @@
             sub_query_list = [],
             base_query = options.base_query,
             data = {
-              x: query_by,
+              x: options.layout.x.key,
               y: y,
               extended_search: extended_search,
-              title: options.title || options.x_title,
-              x_title: options.layout.x,
-              y_title: options.layout.y,
-              date_range_list: date_range_list,
-              graph_gadget: "unsafe/gadget_field_graph_echarts.html/"
+              title: options.title || options.layout.x.title,
+              x_title: options.layout.x.title,
+              y_title: options.layout.y.title,
+              label_list: options.layout.x.label_list,
+              graph_gadget: "unsafe/gadget_field_graph_echarts.html"
             };
 
-          for (key in base_query) {
-            if (base_query.hasOwnProperty(key)) {
-              if (Array.isArray(base_query[key])) {
-                // XXX we should change this logic by IN()
-                // https://www.w3resource.com/mysql/comparision-functions-and-operators/in-function.php
-                for (i = 0; i < base_query[key].length; i += 1) {
+          for (key in query_by) {
+            if (query_by.hasOwnProperty(key)) {
+              if (Array.isArray(query_by[key])) {
+                for (i = 0; i < query_by[key].length; i += 1) {
                   sub_query_list.push(new SimpleQuery({
                     operator: "",
                     key: key,
@@ -86,7 +83,7 @@
                   operator: "",
                   key: key,
                   type: "simple",
-                  value: base_query[key]
+                  value: query_by[key]
                 }));
               }
             }
@@ -96,45 +93,29 @@
           }
 
           select_list = select_list.concat(
-            [y, query_by].filter(function (el) {
+            [y, options.layout.x.key].filter(function (el) {
               return el;
             })
           );
-          if (date_range_list.length > 0) {
-            for (i = 0; i < date_range_list.length; i += 1) {
-              sub_query_list.push(new ComplexQuery({
-                operator: "AND",
-                type: "complex",
-                query_list: [
-                  new SimpleQuery({
-                    operator: ">=",
-                    key: date_range_catalog_key,
-                    type: "simple",
-                    value: date_range_list[i][1]
-                  }),
-                  new SimpleQuery({
-                    operator: "<",
-                    key: date_range_catalog_key,
-                    type: "simple",
-                    value: date_range_list[i][2]
-                  })
-                ]
+          if (domain_list.length > 0) {
+            for (i = 0; i < domain_list.length; i += 1) {
+              sub_query_list.push(new SimpleQuery({
+                key: "selection_domain_graphic_gadget_domain",
+                operator: "",
+                type: "simple",
+                value: domain_list[i]
               }));
+              query_list.push({
+                "query": Query.objectToSearchText(new ComplexQuery({
+                  operator: "AND",
+                  query_list: jio_query_list.concat(sub_query_list),
+                  type: "complex"
+                })),
+                "group_by": group_by,
+                "select_list": select_list
+              });
+              sub_query_list = [];
             }
-            jio_query_list.push(new ComplexQuery({
-              operator: "OR",
-              query_list: sub_query_list,
-              type: "complex"
-            }));
-            query_list.push({
-              "query": Query.objectToSearchText(new ComplexQuery({
-                operator: "AND",
-                query_list: jio_query_list,
-                type: "complex"
-              })),
-              "group_by": group_by,
-              "select_list": select_list
-            });
             data.query_list = query_list;
           } else if (group_by instanceof Array && group_by.length > 1) {
             data.query = {
@@ -146,7 +127,6 @@
               "group_by": group_by,
               "select_list": select_list.concat(group_by)
             };
-
           } else {
             data.query = {
               "query": Query.objectToSearchText(new ComplexQuery({
@@ -258,9 +238,9 @@
               });
             }
 
-          } else if (gadget.state.date_range_list.length > 0) {
-            for (i = 0; i < gadget.state.date_range_list.length; i += 1) {
-              label = gadget.state.date_range_list[i][0];
+          } else if (gadget.state.label_list.length > 0) {
+            for (i = 0; i < gadget.state.label_list.length; i += 1) {
+              label = gadget.state.label_list[i];
               if (label && !data_mapping.hasOwnProperty(label)) {
                 data_mapping[label] = {};
                 if (label_list.indexOf(label) === -1) {
