@@ -63,6 +63,12 @@
 
 <tr>
   <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//a[text()='erp5_web_js_style_test_contentpage']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
   <td>//div[@class='input']/span[@class='headline' and text()='No Style']</td>
   <td></td>
 </tr>
