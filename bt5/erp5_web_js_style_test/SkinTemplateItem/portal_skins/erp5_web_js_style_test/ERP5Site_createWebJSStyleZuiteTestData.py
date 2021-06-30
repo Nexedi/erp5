@@ -198,8 +198,12 @@ web_site = module.newContent(
   id=web_site_id,
   skin_selection_name="Jsstyle",
   layout_configuration_form_id="WebSection_viewJsstylePreference",
+  site_map_document_parent=True,
+  criterion_property_list=('title',),
   **configuration_dict[configuration]
 )
+web_site.setCriterion('title', identity='erp5_web_js_style_test_contentpage')
+
 web_section = web_site.newContent(
   portal_type=web_section_portal_type,
   id='%s1' % web_section_id_prefix,
