@@ -1,7 +1,8 @@
 import cgi
 import re
 
-web_site = context
+web_section = context
+web_site = web_section.getWebSiteValue()
 
 def _(string_to_escape):
   return cgi.escape("%s" % string_to_escape, quote=False)
@@ -25,10 +26,10 @@ def generateSectionListHTML(result_list, section_list):
 
 def generateDocumentListHTML(result_list, document_list):
   if (document_list):
-    result_list.append('<ul>')
+    result_list.append('<aside id="document_list"><ul>')
     for section in document_list:
       result_list.append('<li><a href="%s">%s</a></li>' % (__(section['url']), _(section['translated_title'])))
-    result_list.append('</ul>')
+    result_list.append('</ul></aside>')
 
 
 # Language
@@ -58,8 +59,6 @@ generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_
 result_list.append('</nav>')
 
 # Documents
-result_list.append('<aside id="document_list">')
-generateDocumentListHTML(result_list, web_site.WebSection_getSiteMapTree(include_subsection=False, depth=1))
-result_list.append('</aside>')
+generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, depth=1))
 
 return ''.join(result_list)
