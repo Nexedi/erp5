@@ -108,7 +108,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Thu, 08 Jun 2018 00:00:00 +0000\n
+# generated on Wed, 30 Jun 2021 00:00:00 +0000\n
 \n
 CACHE:\n
 font-awesome/font-awesome.css\n
@@ -192,9 +192,6 @@ connection/gadget_jabberconnection.js\n
 connection/strophe.js\n
 connection/renderjs.js\n
 connection/rsvp.js\n
-gadget_translation.html\n
-gadget_translation.js\n
-gadget_translation_data.js\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -337,7 +334,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.52842.38595.15479</string> </value>
+                      <value> <string>992.63046.39919.61201</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -355,7 +352,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1624562316.54</float>
+                              <float>1625057476.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
