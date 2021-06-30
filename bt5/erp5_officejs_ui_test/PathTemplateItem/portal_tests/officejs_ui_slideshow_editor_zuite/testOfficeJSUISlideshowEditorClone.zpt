@@ -420,7 +420,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/test_page_module/Zuite_waitForActivities</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -435,7 +435,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/test_page_module/</td>
+  <td>${base_url}/web_page_module/</td>
   <td></td>
 </tr>
 <tr>
