@@ -23,6 +23,14 @@ def generateSectionListHTML(result_list, section_list):
     result_list.append('</ul>')
 
 
+def generateDocumentListHTML(result_list, document_list):
+  if (document_list):
+    result_list.append('<ul>')
+    for section in document_list:
+      result_list.append('<li><a href="%s">%s</a></li>' % (__(section['url']), _(section['translated_title'])))
+    result_list.append('</ul>')
+
+
 # Language
 result_list = ['<nav id="language"><ul>']
 
@@ -48,5 +56,10 @@ result_list.append('<nav id="sitemap">')
 result_list.append('<a href="%s">%s</a>' % (__(web_site.absolute_url()), _(web_site.getTranslatedTitle())))
 generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_document=False, depth=99))
 result_list.append('</nav>')
+
+# Documents
+result_list.append('<aside id="document_list">')
+generateDocumentListHTML(result_list, web_site.WebSection_getSiteMapTree(include_subsection=False, depth=1))
+result_list.append('</aside>')
 
 return ''.join(result_list)
