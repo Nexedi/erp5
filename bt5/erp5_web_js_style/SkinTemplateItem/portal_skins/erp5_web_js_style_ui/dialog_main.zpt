@@ -37,7 +37,7 @@
   </head>
   <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url;
                         data-nostyle-css-url no_style_css_url">
-    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML(here)"></tal:block>
+    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
     <main>
 
     <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>

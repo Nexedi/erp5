@@ -59,8 +59,6 @@ generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_
 result_list.append('</nav>')
 
 # Documents
-if rendering_context == web_section:
-  # Only calculate the document list if the rendering context is the web section
-  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, depth=1))
+generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1))
 
 return ''.join(result_list)
