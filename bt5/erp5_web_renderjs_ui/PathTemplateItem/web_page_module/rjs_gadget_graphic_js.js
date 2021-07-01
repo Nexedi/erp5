@@ -20,14 +20,13 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      var i,
-        group_by,
+      var group_by,
         gadget = this,
         query_by = options.query_by,
         select_list = options.select_list || [],
         domain_list = options.layout.x.domain_list || [],
         query_list = [],
-        y;
+        y, i, j;
 
       if ("object" === typeof options.group_by &&
           Array.isArray(options.group_by) &&
@@ -99,22 +98,24 @@
           );
           if (domain_list.length > 0) {
             for (i = 0; i < domain_list.length; i += 1) {
-              sub_query_list.push(new SimpleQuery({
-                key: "selection_domain_graphic_gadget_domain",
-                operator: "",
-                type: "simple",
-                value: domain_list[i]
-              }));
-              query_list.push({
-                "query": Query.objectToSearchText(new ComplexQuery({
-                  operator: "AND",
-                  query_list: jio_query_list.concat(sub_query_list),
-                  type: "complex"
-                })),
-                "group_by": group_by,
-                "select_list": select_list
-              });
-              sub_query_list = [];
+              for (j = 0; j < domain_list[i][1].length; j += 1) {
+                sub_query_list.push(new SimpleQuery({
+                  key: "selection_domain_" + domain_list[i][0],
+                  operator: "",
+                  type: "simple",
+                  value: domain_list[i][1][j]
+                }));
+                query_list.push({
+                  "query": Query.objectToSearchText(new ComplexQuery({
+                    operator: "AND",
+                    query_list: jio_query_list.concat(sub_query_list),
+                    type: "complex"
+                  })),
+                  "group_by": group_by,
+                  "select_list": select_list
+                });
+                sub_query_list = [];
+              }
             }
             data.query_list = query_list;
           } else if (group_by instanceof Array && group_by.length > 1) {
