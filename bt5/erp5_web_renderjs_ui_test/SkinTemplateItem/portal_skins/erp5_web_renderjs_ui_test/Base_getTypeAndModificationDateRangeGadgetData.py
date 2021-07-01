@@ -9,12 +9,14 @@ return [
       "title": translateString("Days"),
       "key": "getTranslatedPortalType",
       "label_list": ["< 2", "2 - 7", "7 - 30", "> 30"],
-      "domain_list": [
-        'modification_date_lt2',
-        'modification_date_2to7',
-        'modification_date_7to30',
-        'modification_date_gt30'
-      ]
+      "domain_list": [(
+        "graphic_gadget_domain", (
+          'creation_date_lt2',
+          'creation_date_2to7',
+          'creation_date_7to30',
+          'creation_date_gt30'
+        )
+      )]
     },
     "y": {
       "title": translateString("Quantity")
