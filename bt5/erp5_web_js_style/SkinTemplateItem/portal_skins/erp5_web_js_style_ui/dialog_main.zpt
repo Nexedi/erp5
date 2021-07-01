@@ -10,30 +10,34 @@
       dialog_category python: '';
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
-      no_style_gadget_url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='');
+      relative_url_prefix python: web_section.WebSection_generateRelativeUrlPrefix();
+      no_style_gadget_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_style_gadget_url');
+      no_style_css_url python: relative_url_prefix + 'jsstyle.css';
+      favicon_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_favicon_url');
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
   <head>
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
-  <title tal:content="python: here.getTranslatedTitle() or web_site.getTranslatedTitle()"></title>
+  <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
   <noscript>
-    <link rel="stylesheet" href="jsstyle.css">
+    <link rel="stylesheet" tal-attributes="href no_style_css_url">
   </noscript>
-  <tal:block tal:define="favicon_url python: web_site.getLayoutProperty('configuration_favicon_url', default='')" tal:condition="favicon_url">
+  <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
   <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
-  <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
-  <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
-  <script src="jsstyle.js"></script>
+  <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/rsvp.js'"></script>
+  <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/renderjs.js'"></script>
+  <script tal:attributes="src python: relative_url_prefix + 'jsstyle.js'"></script>
   <tal:block tal:condition="python: no_style_gadget_url != ''">
   <link rel="prerender" tal:attributes="href no_style_gadget_url">
   </tal:block>
   </head>
-  <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url">
-    <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
+  <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url;
+                        data-nostyle-css-url no_style_css_url">
+    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
     <main>
 
     <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>

@@ -119,28 +119,34 @@ portal.portal_workflow.doActionFor(web_page, 'publish_action')
 
 configuration_dict = {
   'nostyle': {
-    'title': 'No Style'
+    'title': 'No Style',
+    'site_map_section_parent': True
   },
   'nostyleform': {
     'title': "No Style Form",
-    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog'
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True
   },
   'section': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Style",
+    'site_map_section_parent': True
   },
   'not_loading': {
     'configuration_style_gadget_url': "jsstyle_demo_not_loading.html",
     'title': "Not Loading Style",
+    'site_map_section_parent': True
   },
   'favicon': {
     'title': 'Favicon',
-    'configuration_favicon_url': "favicon.ico"
+    'configuration_favicon_url': "favicon.ico",
+    'site_map_section_parent': True
   },
   'faviconform':{
     'title': 'Favicon Form',
     'configuration_favicon_url': "favicon.ico",
-    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog'
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True
   },
   'language': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
@@ -149,12 +155,38 @@ configuration_dict = {
     'language': "en",
     'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id),
     'title': "Demo Style With Language",
+    'site_map_section_parent': True
+  },
+  'language_with_web_site_language_base': {
+    'configuration_relative_url_base': 'web_site_language',
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'available_language_list': ['en', 'fr', 'zh'],
+    'static_language_selection': True,
+    'language': "en",
+    'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id),
+    'title': "Demo Style With Language",
+    'site_map_section_parent': True
+  },
+  'language_with_web_site_base': {
+    'configuration_relative_url_base': 'web_site',
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'available_language_list': ['en', 'fr', 'zh'],
+    'static_language_selection': True,
+    'language': "en",
+    'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id),
+    'title': "Demo Style With Language",
+    'site_map_section_parent': True
   },
   'form': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Form",
-    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog'
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True
   },
+  'empty_sitemap': {
+    'title': 'Empty Sitemap',
+    'configuration_style_gadget_url': "jsstyle_demo.html"
+  }
 }
 
 ### Web site
@@ -166,14 +198,19 @@ web_site = module.newContent(
   id=web_site_id,
   skin_selection_name="Jsstyle",
   layout_configuration_form_id="WebSection_viewJsstylePreference",
+  site_map_document_parent=True,
+  criterion_property_list=('title',),
   **configuration_dict[configuration]
 )
+web_site.setCriterion('title', identity='erp5_web_js_style_test_contentpage')
+
 web_section = web_site.newContent(
   portal_type=web_section_portal_type,
   id='%s1' % web_section_id_prefix,
   aggregate_value=web_site.getAggregateValue(),
   title="Demo Section 1",
-  visible=True
+  visible=True,
+  site_map_section_parent=True
 )
 web_section.newContent(
   portal_type=web_section_portal_type,
@@ -189,5 +226,13 @@ web_site.newContent(
   title="Demo Section 2",
   visible=True
 )
+
+if configuration == 'form':
+  web_site.newContent(
+    portal_type=web_section_portal_type,
+    id='%sform' % web_section_id_prefix,
+    title="Demo Section Form",
+    custom_render_method_id='WebSite_viewJSStyleTestDialog'
+  )
 
 return "Web Site created."
