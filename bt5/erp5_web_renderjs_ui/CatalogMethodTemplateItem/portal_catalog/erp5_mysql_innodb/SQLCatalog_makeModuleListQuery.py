@@ -1,7 +1,7 @@
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 
-is_developer_mode = (context.getPortalObject().portal_preferences
-                     .getPreferredHtmlStyleDevelopperMode())
+is_access_tool_enabled = (context.getPortalObject().portal_preferences
+                          .getPreferredHtmlStyleAccessTool())
 
 simple_query = SimpleQuery(parent_uid=0)
 module_query = ComplexQuery(
@@ -10,7 +10,7 @@ module_query = ComplexQuery(
   logical_operator='AND'
 )
 
-if is_developer_mode:
+if is_access_tool_enabled:
   query = ComplexQuery(
     simple_query,
     ComplexQuery(
