@@ -57,7 +57,7 @@
                   </div>
                   <div class="ui-field-contain">
                     <label i18n:domain="ui" i18n:translate="" >Password</label>
-                    <div><input type="password" name="__ac_password" value="" autocomplete="off" /></div>
+                    <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
                   </div>
                   <div class="dialog_button_container">
                     <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
