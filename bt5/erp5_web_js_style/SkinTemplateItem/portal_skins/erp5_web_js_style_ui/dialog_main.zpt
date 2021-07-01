@@ -21,18 +21,21 @@
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
   <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
-  <noscript>
-    <link rel="stylesheet" tal-attributes="href no_style_css_url">
-  </noscript>
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
-  <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
-  <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/rsvp.js'"></script>
-  <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/renderjs.js'"></script>
-  <script tal:attributes="src python: relative_url_prefix + 'jsstyle.js'"></script>
+  <tal:block tal:condition="python: no_style_gadget_url == ''">
+    <link rel="stylesheet" tal:attributes="href no_style_css_url">
+  </tal:block>
   <tal:block tal:condition="python: no_style_gadget_url != ''">
-  <link rel="prerender" tal:attributes="href no_style_gadget_url">
+    <noscript>
+      <link rel="stylesheet" tal:attributes="href no_style_css_url">
+    </noscript>
+    <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
+    <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/rsvp.js'"></script>
+    <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/renderjs.js'"></script>
+    <script tal:attributes="src python: relative_url_prefix + 'jsstyle.js'"></script>
+    <link rel="prerender" tal:attributes="href no_style_gadget_url">
   </tal:block>
   </head>
   <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url;
