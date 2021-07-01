@@ -78,7 +78,6 @@ url_list = [
   "gadget_erp5_search_editor.js",
   "gadget_erp5_sort_editor.html",
   "gadget_erp5_sort_editor.js",
-  "gadget_officejs_monitoring.appcache",
   "gadget_officejs_monitoring_jio.html",
   "gadget_erp5_page_ojsm_hosting_subscription_list.html",
   "gadget_officejs_monitoring_parameter_view.html",
