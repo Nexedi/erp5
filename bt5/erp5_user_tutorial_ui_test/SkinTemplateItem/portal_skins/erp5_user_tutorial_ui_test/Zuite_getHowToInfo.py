@@ -130,5 +130,5 @@ return {'now': DateTime(),
         'functional_test_user_email': 'lucas@nexedi.com',
 
         'manager_username': 'ERP5TypeTestCase',
-        'manager_password': '',
+        'manager_password': 'secret',
         }
