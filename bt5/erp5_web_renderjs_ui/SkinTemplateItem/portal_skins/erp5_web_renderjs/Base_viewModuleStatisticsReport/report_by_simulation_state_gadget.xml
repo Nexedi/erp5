@@ -137,7 +137,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("group_by", "simulation_state"), ("query_by", "getTranslatedSimulationStateTitle"), ("base_query", {"parent_uid": context.getUid()}), ("layout", { "x": context.Base_translateString("Simulation State"), "y": context.Base_translateString("Quantity")}), ("title", context.Base_translateString("Simulation States"))]</string> </value>
+            <value> <string>python: [ ("group_by", "simulation_state"), ("query_by", { "parent_uid": context.getUid() }), ("layout", { "x": { "title": context.Base_translateString("Simulation State"), "key": "getTranslatedSimulationStateTitle" }, "y": { "title": context.Base_translateString("Quantity") } }), ("title", context.Base_translateString("Simulation States"))]</string> </value>
         </item>
       </dictionary>
     </pickle>
