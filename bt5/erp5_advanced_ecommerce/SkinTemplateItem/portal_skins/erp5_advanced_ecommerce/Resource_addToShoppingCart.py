@@ -88,6 +88,9 @@ if not line_found:
     method_id(category)
   order_line.setPrice(context.getPrice(supply_path_type=["Sale Supply Line", "Sale Supply Cell"], context=order_line))
 context.WebSection_updateShoppingCartTradeCondition(shopping_cart, None)
+
+context.getPortalObject().portal_sessions[session_id].update(shopping_cart=shopping_cart)
+
 if checkout:
   website = context.getWebSiteValue()
   if website is not None:

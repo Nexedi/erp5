@@ -43,11 +43,13 @@ for order_line in shopping_cart_items:
     line_found=True
     break
 
-if line_found == False:
+if not line_found:
   ## new Resource so add it to shopping cart
   order_line = shopping_cart.newContent(portal_type='Sale Order Line')
   order_line.setResource(resource.getRelativeUrl())
   order_line.setQuantity(quantity)
+
+context.getPortalObject().portal_sessions[request['session_id']].update(shopping_cart=shopping_cart)
 
 if( context.getPortalType() == 'Product'):
   context.Base_redirect('Resource_viewAsShop',
