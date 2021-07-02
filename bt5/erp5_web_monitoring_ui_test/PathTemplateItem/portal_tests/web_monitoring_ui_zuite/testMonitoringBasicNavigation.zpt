@@ -113,21 +113,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Promises']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Promises']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[text()='Monitoring Promises ']</td>
-  <td></td>
-</tr>
-<tr>
   <td>open</td>
   <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
