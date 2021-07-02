@@ -33,15 +33,15 @@
           options.group_by.length === 0) {
         group_by.push(query_by);
       } else if (!Array.isArray(options.group_by)) {
-        group_by = [options.group_by || query_by];
+        group_by = [options.group_by || options.layout.x.key];
       } else {
         group_by = options.group_by;
       }
 
       if (Array.isArray(options.group_by)) {
-        y = "count(" + (options.group_by[0] || options.query_by) + ")";
+        y = "count(" + (options.group_by[0] || options.layout.x.key) + ")";
       } else {
-        y = "count(" + (options.group_by || options.query_by) + ")";
+        y = "count(" + (options.group_by || options.layout.x.key) + ")";
       }
 
       return gadget.getUrlParameter('extended_search')
@@ -49,7 +49,6 @@
           var key,
             jio_query_list = [],
             sub_query_list = [],
-            base_query = options.base_query,
             data = {
               x: options.layout.x.key,
               y: y,
@@ -69,7 +68,7 @@
                     operator: "",
                     key: key,
                     type: "simple",
-                    value: base_query[key][i]
+                    value: query_by[key][i]
                   }));
                 }
                 jio_query_list.push(new ComplexQuery({
