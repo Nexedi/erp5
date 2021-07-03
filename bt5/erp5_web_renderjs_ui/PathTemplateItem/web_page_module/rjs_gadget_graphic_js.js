@@ -24,8 +24,18 @@
         gadget = this,
         query_by = options.query_by,
         select_list = options.select_list || [],
-        domain_list = options.layout.x.domain_list || [],
         query_list = [],
+        jio_query_list = [],
+        sub_query_list = [],
+        domain_list = options.layout.x.domain_list || [],
+        data = {
+          x: options.layout.x.key,
+          title: options.title || options.layout.x.title,
+          x_title: options.layout.x.title,
+          y_title: options.layout.y.title,
+          label_list: options.layout.x.label_list,
+          graph_gadget: "unsafe/gadget_field_graph_echarts.html"
+        },
         y, i, j;
 
       if ("object" === typeof options.group_by &&
@@ -39,104 +49,91 @@
       }
 
       if (Array.isArray(options.group_by)) {
-        y = "count(" + (options.group_by[0] || options.layout.x.key) + ")";
+        data.y = "count(" + (options.group_by[0] || options.layout.x.key) + ")";
       } else {
-        y = "count(" + (options.group_by || options.layout.x.key) + ")";
+        data.y = "count(" + (options.group_by || options.layout.x.key) + ")";
       }
 
-      return gadget.getUrlParameter('extended_search')
-        .push(function (extended_search) {
-          var key,
-            jio_query_list = [],
-            sub_query_list = [],
-            data = {
-              x: options.layout.x.key,
-              y: y,
-              extended_search: extended_search,
-              title: options.title || options.layout.x.title,
-              x_title: options.layout.x.title,
-              y_title: options.layout.y.title,
-              label_list: options.layout.x.label_list,
-              graph_gadget: "unsafe/gadget_field_graph_echarts.html"
-            };
-
-          for (key in query_by) {
-            if (query_by.hasOwnProperty(key)) {
-              if (Array.isArray(query_by[key])) {
-                for (i = 0; i < query_by[key].length; i += 1) {
-                  sub_query_list.push(new SimpleQuery({
-                    operator: "",
-                    key: key,
-                    type: "simple",
-                    value: query_by[key][i]
-                  }));
-                }
-                jio_query_list.push(new ComplexQuery({
-                  operator: "OR",
-                  type: "complex",
-                  query_list: sub_query_list
-                }));
-              } else {
-                jio_query_list.push(new SimpleQuery({
-                  operator: "",
-                  key: key,
-                  type: "simple",
-                  value: query_by[key]
-                }));
-              }
+      for (i in query_by) {
+        if (query_by.hasOwnProperty(i)) {
+          if (Array.isArray(query_by[i])) {
+            for (j = 0; j < query_by[i].length; j += 1) {
+              sub_query_list.push(new SimpleQuery({
+                operator: "",
+                key: i,
+                type: "simple",
+                value: query_by[i][j]
+              }));
             }
-          }
-          if (extended_search) {
-            jio_query_list.push(Query.parseStringToObject(extended_search));
-          }
-
-          select_list = select_list.concat(
-            [y, options.layout.x.key].filter(function (el) {
-              return el;
-            })
-          );
-          if (domain_list.length > 0) {
-            for (i = 0; i < domain_list.length; i += 1) {
-              for (j = 0; j < domain_list[i][1].length; j += 1) {
-                sub_query_list.push(new SimpleQuery({
-                  key: "selection_domain_" + domain_list[i][0],
-                  operator: "",
-                  type: "simple",
-                  value: domain_list[i][1][j]
-                }));
-                query_list.push({
-                  "query": Query.objectToSearchText(new ComplexQuery({
-                    operator: "AND",
-                    query_list: jio_query_list.concat(sub_query_list),
-                    type: "complex"
-                  })),
-                  "group_by": group_by,
-                  "select_list": select_list
-                });
-                sub_query_list = [];
-              }
-            }
-            data.query_list = query_list;
-          } else if (group_by instanceof Array && group_by.length > 1) {
-            data.query = {
-              "query": Query.objectToSearchText(new ComplexQuery({
-                operator: "AND",
-                query_list: jio_query_list,
-                type: "complex"
-              })),
-              "group_by": group_by,
-              "select_list": select_list.concat(group_by)
-            };
+            jio_query_list.push(new ComplexQuery({
+              operator: "OR",
+              type: "complex",
+              query_list: sub_query_list
+            }));
           } else {
-            data.query = {
+            jio_query_list.push(new SimpleQuery({
+              operator: "",
+              key: i,
+              type: "simple",
+              value: query_by[i]
+            }));
+          }
+        }
+      }
+
+      select_list = select_list.concat(
+        [data.y, options.layout.x.key].filter(function (el) {
+          return el;
+        })
+      );
+
+      if (domain_list.length > 0) {
+        for (i = 0; i < domain_list.length; i += 1) {
+          for (j = 0; j < domain_list[i][1].length; j += 1) {
+            sub_query_list.push(new SimpleQuery({
+              key: "selection_domain_" + domain_list[i][0],
+              operator: "",
+              type: "simple",
+              value: domain_list[i][1][j]
+            }));
+            query_list.push({
               "query": Query.objectToSearchText(new ComplexQuery({
                 operator: "AND",
-                query_list: jio_query_list,
+                query_list: jio_query_list.concat(sub_query_list),
                 type: "complex"
               })),
               "group_by": group_by,
               "select_list": select_list
-            };
+            });
+            sub_query_list = [];
+          }
+        }
+        data.query_list = query_list;
+      } else if (group_by instanceof Array && group_by.length > 1) {
+        data.query = {
+          "query": Query.objectToSearchText(new ComplexQuery({
+            operator: "AND",
+            query_list: jio_query_list,
+            type: "complex"
+          })),
+          "group_by": group_by,
+          "select_list": select_list.concat(group_by)
+        };
+      } else {
+        data.query = {
+          "query": Query.objectToSearchText(new ComplexQuery({
+            operator: "AND",
+            query_list: jio_query_list,
+            type: "complex"
+          })),
+          "group_by": group_by,
+          "select_list": select_list
+        };
+      }
+      return gadget.getUrlParameter('extended_search')
+        .push(function (extended_search) {
+          if (extended_search) {
+            jio_query_list.push(Query.parseStringToObject(extended_search));
           }
           return gadget.changeState(data);
         });
