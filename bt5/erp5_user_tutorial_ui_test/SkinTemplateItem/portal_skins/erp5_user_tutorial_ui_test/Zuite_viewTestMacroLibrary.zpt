@@ -25,7 +25,37 @@
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/create_manager">Login As Manager</span>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
+</tal:block>
+
+<tal:block metal:define-macro="create_manager">
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\  <!-- Wait for activities to finish -->
+  <tr>
+    <td colspan="3"><b>Create manager</b></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_createManagementTestUser</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Done.</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
 </tal:block>
 
 <tal:block metal:define-macro="logout">
@@ -34,7 +64,7 @@
   </tr>
   <!-- Logout -->
   <tr>
-    <td>openAndWait</td>
+    <td>open</td>
     <td>${base_url}</td>
     <td></td>
   </tr>
