@@ -1,5 +1,6 @@
-def rejectSoftwarePublication(exception=None):
-  # TODO: reject somehow the publication (in the WF, there is no way to reject it from draft state)
+def rejectSoftwarePublication(software_publication):
+  software_publication.submit()
+  software_publication.reject()
   return
 
 def extractWebManifest(html_file):
@@ -39,7 +40,7 @@ software_publication_line = software_publication.objectValues(
 software_product = software_publication_line.getResourceValue(portal_type="Software Product")
 
 if not software_product:
-  rejectSoftwarePublication()
+  rejectSoftwarePublication(software_publication)
   return
 
 software_release = software_publication_line.getAggregateValue(portal_type="Software Release")
@@ -56,7 +57,7 @@ zip_file = portal.portal_catalog.getResultValue(
 )
 
 if not zip_file:
-  rejectSoftwarePublication()
+  rejectSoftwarePublication(software_publication)
   return
 
 from cStringIO import StringIO
@@ -67,8 +68,8 @@ zipbuffer = StringIO()
 zipbuffer.write(str(zip_file.getData()))
 try:
   zip_reader = zipfile.ZipFile(zipbuffer)
-except BadZipfile as e:
-  rejectSoftwarePublication(e)
+except BadZipfile:
+  rejectSoftwarePublication(software_publication)
   return
 base_length = len(getBaseDirectory(zip_reader.namelist()))
 
@@ -99,8 +100,8 @@ for name in zip_reader.namelist():
   )
   try:
     publication_source_category = "contributor/" + software_publication.getSource()
-  except TypeError as e:
-    rejectSoftwarePublication(e)
+  except TypeError:
+    rejectSoftwarePublication(software_publication)
     return
   # XX Hackish
   document.setCategoryList(
