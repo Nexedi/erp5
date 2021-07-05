@@ -1878,6 +1878,16 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
             ['Main Group/Sub Group', 'group/main_group/sub_group'],
         ])
 
+  def test_assignments_with_start_date_only_are_considered(self):
+    self.person.newContent(portal_type='Assignment', group='main_group/sub_group', start_date=DateTime(1970, 1, 1)).open()
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+        ])
+
   def test_non_person_user(self):
     self.assertEqual(
         self.portal.Base_getDialogSectionCategoryItemList(), [
