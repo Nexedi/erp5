@@ -129,6 +129,6 @@ return {'now': DateTime(),
         'functional_test_user_password' : 'secret',
         'functional_test_user_email': 'lucas@nexedi.com',
 
-        'manager_username': 'zope',
-        'manager_password': 'zope',
+        'manager_username': 'john',
+        'manager_password': 'secret',
         }
