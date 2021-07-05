@@ -269,4 +269,5 @@ class RJS_Only(_ERP5):
                             "erp5_travel_expense_ui_test",
                             "erp5_gadget_interface_validator_ui_test",
                             "erp5_hal_json_style"]
+    rjs_officejs_bt_list = ["erp5_web_monitoring_ui_test"]
     return [test for test in self._getAllTestList() if any(test.find(bt)>-1 for bt in rjs_officejs_bt_list)]
