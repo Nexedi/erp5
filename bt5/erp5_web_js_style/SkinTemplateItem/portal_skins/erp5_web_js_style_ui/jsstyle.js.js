@@ -339,6 +339,11 @@
             });
         }, function (error) {
           console.warn('Cant load the style gadget', error);
+          if (style_css_url === null) {
+            // Compatibility with old html format (like in google cache)
+            gadget.element.innerHTML = parsed_content.original_content;
+            return;
+          }
           return new RSVP.Queue(rJS.declareCSS(style_css_url, document.head))
             .push(function () {
               // Set again the page content after the css is loaded
