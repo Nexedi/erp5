@@ -52,7 +52,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     "Configure user accounts": {
       'field_your_first_name': "John",
       'field_your_last_name': "Doe",
-      'field_your_reference': "ERP5TypeTestCase",
+      'field_your_reference': "john",
       'field_your_password': "secret",
       'field_your_password_confirm': "secret",
       'field_your_default_email_text': "abc@nexedi.com",
