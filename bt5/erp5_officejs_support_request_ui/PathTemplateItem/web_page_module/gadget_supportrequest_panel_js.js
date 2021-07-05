@@ -50,24 +50,31 @@
     .declareMethod('render', function (options) {
       var erp5_document = options.erp5_document,
         workflow_list,
-        view_list;
+        view_list,
+        jump_list;
       if (erp5_document !== undefined) {
         workflow_list = erp5_document._links.action_workflow || [];
         view_list = erp5_document._links.action_object_view || [];
+        jump_list = erp5_document._links.action_object_jio_jump || [];
         if (workflow_list.constructor !== Array) {
           workflow_list = [workflow_list];
         }
         if (view_list.constructor !== Array) {
           view_list = [view_list];
         }
-        // Prevent has much as possible to modify the DOM panel
+        if (jump_list.constructor !== Array) {
+          jump_list = [jump_list];
+        }
+        // Prevent as much as possible to modify the DOM panel
         // stateChange prefer to compare strings
         workflow_list = JSON.stringify(workflow_list);
         view_list = JSON.stringify(view_list);
+        jump_list = JSON.stringify(jump_list);
       }
       return this.changeState({
         workflow_list: workflow_list,
         view_list: view_list,
+        jump_list: jump_list,
         global: true,
         editable: options.editable
       });
@@ -134,7 +141,8 @@
           (modification_dict.hasOwnProperty("desktop") ||
           modification_dict.hasOwnProperty("editable") ||
           modification_dict.hasOwnProperty("workflow_list") ||
-          modification_dict.hasOwnProperty("view_list"))) {
+          modification_dict.hasOwnProperty("view_list") ||
+          modification_dict.hasOwnProperty("jump_list"))) {
         if (!(this.state.desktop && (this.state.view_list !== undefined))) {
           queue
             .push(function () {
@@ -146,7 +154,8 @@
               var i = 0,
                 promise_list = [],
                 workflow_list = JSON.parse(gadget.state.workflow_list),
-                view_list = JSON.parse(gadget.state.view_list);
+                view_list = JSON.parse(gadget.state.view_list),
+                jump_list = JSON.parse(gadget.state.jump_list);
 
               for (i = 0; i < workflow_list.length; i += 1) {
                 promise_list.push(
@@ -170,15 +179,27 @@
                   })
                 );
               }
+              for (i = 0; i < jump_list.length; i += 1) {
+                promise_list.push(
+                  gadget.getUrlFor({
+                    command: 'change',
+                    options: {
+                      view: jump_list[i].href,
+                      page: undefined
+                    }
+                  })
+                );
+              }
               return RSVP.all(promise_list);
             })
             .push(function (result_list) {
               var i,
                 result_workflow_list = [],
                 result_view_list = [],
+                result_jump_list = [],
                 workflow_list = JSON.parse(gadget.state.workflow_list),
-                view_list = JSON.parse(gadget.state.view_list);
-
+                view_list = JSON.parse(gadget.state.view_list),
+                jump_list = JSON.parse(gadget.state.jump_list);
               for (i = 0; i < workflow_list.length; i += 1) {
                 result_workflow_list.push({
                   title: workflow_list[i].title,
@@ -191,10 +212,17 @@
                   href: result_list[i + workflow_list.length]
                 });
               }
+              for (i = 0; i < jump_list.length; i += 1) {
+                result_jump_list.push({
+                  title: jump_list[i].title,
+                  href: result_list[i + workflow_list.length + view_list.length]
+                });
+              }
               return gadget.translateHtml(
                 panel_template_body_desktop({
                   workflow_list: result_workflow_list,
-                  view_list: result_view_list
+                  view_list: result_view_list,
+                  jump_list: result_jump_list
                 })
               ).push(function (my_translated_or_plain_html) {
                 gadget.element.querySelector("dl").innerHTML = my_translated_or_plain_html;
