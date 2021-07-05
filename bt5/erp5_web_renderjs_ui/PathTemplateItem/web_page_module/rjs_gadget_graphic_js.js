@@ -33,7 +33,7 @@
           title: options.title || options.layout.x.title,
           x_title: options.layout.x.title,
           y_title: options.layout.y.title,
-          label_list: options.layout.x.label_list,
+          column_list: options.layout.x.column_list,
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
         y, i, j;
@@ -235,9 +235,9 @@
               });
             }
 
-          } else if (gadget.state.label_list.length > 0) {
-            for (i = 0; i < gadget.state.label_list.length; i += 1) {
-              label = gadget.state.label_list[i];
+          } else if (gadget.state.column_list.length > 0) {
+            for (i = 0; i < gadget.state.column_list.length; i += 1) {
+              label = gadget.state.column_list[i];
               if (label && !data_mapping.hasOwnProperty(label)) {
                 data_mapping[label] = {};
                 if (label_list.indexOf(label) === -1) {

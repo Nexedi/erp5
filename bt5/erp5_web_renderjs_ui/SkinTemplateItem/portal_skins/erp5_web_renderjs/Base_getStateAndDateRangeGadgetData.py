@@ -10,7 +10,7 @@ return [
     "x": {
       "title": translateString("Days"),
       "key": "getTranslatedSimulationStateTitle",
-      "label_list": ["< 2", "2 - 7", "7 - 30", "> 30"],
+      "column_list": ["< 2", "2 - 7", "7 - 30", "> 30"],
       "domain_list": [(
         "graphic_gadget_domain", (
           'delivery_start_date_lt2',
