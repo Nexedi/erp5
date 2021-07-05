@@ -10,7 +10,9 @@ return [
       "title": translateString("Portal Type"),
       "key": "portal_type"
     },
-    "y": {"title": translateString("Quantity")}
+    "y": {
+      "title": translateString("Quantity")
+    }
   }),
   ("title", translateString("Types from Person and Organisation module"))
 ]

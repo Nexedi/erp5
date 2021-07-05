@@ -8,7 +8,7 @@ return [
     "x": {
       "title": translateString("Days"),
       "key": "getTranslatedPortalType",
-      "label_list": ["< 2", "2 - 7", "7 - 30", "> 30"],
+      "column_list": ["< 2", "2 - 7", "7 - 30", "> 30"],
       "domain_list": [(
         "graphic_gadget_domain", (
           'creation_date_lt2',
