@@ -42,7 +42,11 @@
   <tal:block tal:define="click_configuration python: {'text': 'Logout'}">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
   </tal:block>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
   <tr>
     <td>click</td>
     <td>//input[@value="Confirm"]</td>
