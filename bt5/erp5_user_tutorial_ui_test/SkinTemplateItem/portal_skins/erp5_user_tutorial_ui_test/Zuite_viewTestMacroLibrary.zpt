@@ -34,7 +34,7 @@
   </tr>
   <!-- Logout -->
   <tr>
-    <td>openAndWait</td>
+    <td>open</td>
     <td>${base_url}</td>
     <td></td>
   </tr>
