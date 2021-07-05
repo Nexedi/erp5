@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test SlapOS Monitoring UI</title>
+  <script src="../../web_site_module/officejs_monitoring/rsvp.js"></script>
+  <script src="../../web_site_module/officejs_monitoring/jiodev.js"></script>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -21,12 +23,86 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Initialize -->
+<!-- Install offline and redirect to clone -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_monitoring/</td>
+  <td tal:content="python: '${base_url}/web_site_module/%s?ignore_layout:int=1&editable_mode:int=1' % 'officejs_monitoring'"></td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>field_my_id
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Created Clone Web Site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeValue</td>
+  <td>name=field_my_id</td>
+  <td>install_url</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Software Instances']</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b>Delete cloned web site on server</b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/manage_main</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=ids:list</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=ids:list</td>
+  <td>${install_url}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=manage_delObjects:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b>Redirect on cloned web site</b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${install_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>setTimeout</td>
+  <td>10000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextNotPresent</td>
+  <td>Office JS Monitor App is being prepared for 100 % offline mode</td>
+  <td></td>
+</tr>
+<tr>
+  <td>setTimeout</td>
+  <td>90000</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Monitoring Configurations']</td>
@@ -124,7 +200,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_monitoring/app/#!display?n.page=settings_configurator</td>
+  <td>${base_url}/web_site_module/${install_url}/app/#!display?n.page=settings_configurator</td>
   <td></td>
 </tr>
 <tr>
