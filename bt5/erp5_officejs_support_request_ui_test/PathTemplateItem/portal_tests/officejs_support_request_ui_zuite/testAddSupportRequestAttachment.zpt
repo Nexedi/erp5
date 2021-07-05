@@ -236,6 +236,67 @@
             <td></td>
           </tr>
         </tal:block>
+
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//p[contains(text(), '${current_reference}')]</td>
+          <td></td>
+        </tr>
+
+        <!-- Attached documents can also be found from "Documents" action -->
+        <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+        <tal:block tal:define="click_configuration python: {'text': 'Documents'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'Documents related to Support Request : test.'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>test_support_request_text</td>
+          <td></td>
+        </tr>
+
+        <!-- on "desktop", this is always visible from the main view -->
+        <!-- fake a large enough screen -->
+        <tr>
+          <td>getEval</td>
+          <td>
+            window.matchMedia = function () {return {matches:true}};
+            event = document.createEvent("Event");
+            event.initEvent('resize', true, true);
+            window.dispatchEvent(event);
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-gadget-scope="panel"]//a[@data-i18n="Documents"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//div[@data-gadget-scope="panel"]//a[@data-i18n="Documents"]</td>
+          <td></td>
+        </tr>
+
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'Documents related to Support Request : test.'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>test_support_request_text</td>
+          <td></td>
+        </tr>
+
       </tbody>
     </table>
   </body>
