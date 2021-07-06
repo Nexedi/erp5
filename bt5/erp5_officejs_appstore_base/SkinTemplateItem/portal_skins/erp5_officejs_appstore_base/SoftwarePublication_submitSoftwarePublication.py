@@ -75,6 +75,7 @@ base_length = len(getBaseDirectory(zip_reader.namelist()))
 
 tag = "preparing_sr_%s" % software_release_url
 default_page = ""
+web_manifest_url = None
 for name in zip_reader.namelist():
   if zip_reader.getinfo(name).file_size == 0:
     continue
