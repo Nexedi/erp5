@@ -264,6 +264,7 @@ class RJS_Only(_ERP5):
   def getTestList(self):
     rjs_officejs_bt_list = ["erp5_officejs_",
                             "renderjs_ui_test",
+                            "erp5_web_monitoring_ui_test",
                             "erp5_monaco_editor_ui_test",
                             "erp5_travel_expense_ui_test",
                             "erp5_gadget_interface_validator_ui_test",
