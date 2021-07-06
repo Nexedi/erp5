@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test SlapOS Monitoring UI</title>
-  <script src="../../web_site_module/officejs_monitoring/rsvp.js"></script>
-  <script src="../../web_site_module/officejs_monitoring/jiodev.js"></script>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
