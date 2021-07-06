@@ -1,0 +1,90 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test TALES context for editable cells</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test TALES context for editable cells</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
+<!-- create one cell -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
+  <td></td>
+</tr>
+
+<!-- create (only) one cell -->
+<tr>
+  <td>type</td>
+  <td>field_matrixbox_quantity_cell_0_0_0</td>
+  <td>1.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_0_0_0</td>
+  <td>1.0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_matrixbox_quantity_cell_1_0_0</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBoxTALESContext</td>
+  <td></td>
+</tr>
+<!-- When a cell exist at these coordinate, `cell` in TALES context is the cell. -->
+<tr>
+  <td>assertValue</td>
+  <td>field_matrixbox_title_cell_0_0_0</td>
+  <td>cell_index: ['a', 'one'] cell_position: (0, 0, 0) cell: &lt;Foo Line at <tal:block tal:replace="context/foo_module/getPath"/>/0/1/cell_0_0&gt;</td>
+</tr>
+
+<!-- When no cell exist, `cell` in TALES context is None. -->
+<tr>
+  <td>assertValue</td>
+  <td>field_matrixbox_title_cell_1_0_0</td>
+  <td>cell_index: ['b', 'one'] cell_position: (1, 0, 0) cell: None</td>
+</tr>
+
+</tbody>
+</table>
+</body>
+</html>
