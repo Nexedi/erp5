@@ -44,6 +44,11 @@
   </tal:block>
   <tr>
     <td>waitForElementPresent</td>
+    <td>//h1/a[@data-i18n="Logout"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
     <td>//input[@value="Confirm"]</td>
     <td></td>
   </tr>
