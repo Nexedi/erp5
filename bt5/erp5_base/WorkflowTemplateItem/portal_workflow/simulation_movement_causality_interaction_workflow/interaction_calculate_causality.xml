@@ -48,7 +48,7 @@
             <key> <string>trigger_method_id</string> </key>
             <value>
               <tuple>
-                <string>_set(?!LastId$|Ob$|Object$|Delivery$|DeliveryValue$)</string>
+                <string>_set(?!LastId$|Ob$|Object$|Delivery$|DeliveryValue$|CategoryList$)</string>
               </tuple>
             </value>
         </item>

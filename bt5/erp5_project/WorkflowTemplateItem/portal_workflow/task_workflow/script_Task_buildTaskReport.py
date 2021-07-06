@@ -1,1 +1,1 @@
-state_change['object'].localBuild()
+# INTERACTION DROPPED
