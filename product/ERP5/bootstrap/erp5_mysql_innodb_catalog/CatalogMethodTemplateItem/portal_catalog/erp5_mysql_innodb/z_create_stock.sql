@@ -40,7 +40,7 @@ CREATE TABLE `stock` (
   KEY `funding_uid` (`funding_uid`),
   KEY `explanation_uid` (`explanation_uid`),
   KEY `state_section_node_date` (`simulation_state`, `section_uid`, `node_uid`, `date`),
-  KEY `resource_node_uid` (`resource_uid`, `node_uid`),
+  KEY `resource_node_uid_date` (`resource_uid`, `node_uid`, `date`),
   KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),
   KEY `date` (`date`)
 ) ENGINE=InnoDB;
