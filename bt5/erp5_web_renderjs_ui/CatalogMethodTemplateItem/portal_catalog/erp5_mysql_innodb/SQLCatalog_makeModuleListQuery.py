@@ -1,22 +1,21 @@
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
-
-is_access_tool_enabled = (context.getPortalObject().portal_preferences
+portal = context.getPortalObject()
+is_access_tool_enabled = (portal.portal_preferences
                           .getPreferredHtmlStyleAccessTool())
 
-query = ComplexQuery(
-  SimpleQuery(id="%\\_module", comparison_operator="like"),
-  SimpleQuery(meta_type="ERP5 Folder"),
-  logical_operator='AND'
-)
+sql_catalog = portal.portal_catalog.getSQLCatalog()
+query = sql_catalog.buildQuery({
+  "id": "%\\_module",
+  "meta_type": "ERP5 Folder"
+})
 
 if is_access_tool_enabled:
-  query = ComplexQuery(
-    query,
-    SimpleQuery(id="portal\\_%", comparison_operator="like"),
-    logical_operator='OR')
+  query = sql_catalog.buildQuery({
+    "id": "portal\\_%",
+    "query": query
+  }, operator="or")
 
-return ComplexQuery(
-  query,
-  SimpleQuery(parent_uid=0),
-  SimpleQuery(id=value, comparison_operator="like" if "%" in value else "="),
-  logical_operator='AND')
+return sql_catalog.buildQuery({
+  "id": value,
+  "parent_uid": 0,
+  "query": query
+})
