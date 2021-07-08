@@ -133,7 +133,9 @@
                                                  'test_support_request_spreadsheet.xlsx',
                                                  'test_support_request_docx.docx',
                                                  'test_support_request_txt.txt',
-                                                 'test_support_request_png.png']">
+                                                 'test_support_request_png.png',
+                                                 'test_support_request_bin.bin',
+                                                 ]">
           <tr>
             <td>setFile</td>
             <td>attachment</td>
@@ -203,7 +205,9 @@
                                                  'test_support_request_spreadsheet.xlsx',
                                                  'test_support_request_docx.docx',
                                                  'test_support_request_txt.txt',
-                                                 'test_support_request_png.png']">
+                                                 'test_support_request_png.png',
+                                                 'test_support_request_bin.bin',
+                                                 ]">
           <tr>
             <td>waitForElementPresent</td>
             <td tal:content="string: //a[contains(text(), '${filename}')]"></td>
@@ -223,6 +227,11 @@
           <tr>
             <td>assertTextNotPresent</td>
             <td>undefined</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertTextNotPresent</td>
+            <td>Error</td>
             <td></td>
           </tr>
           <tr tal:define="title python: filename.split('.')[0]">
