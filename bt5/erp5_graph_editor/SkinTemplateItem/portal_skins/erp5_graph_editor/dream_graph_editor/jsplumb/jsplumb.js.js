@@ -353,25 +353,11 @@
     function addEdge(gadget, edge_id, edge_data) {
         var overlays = [];
         var connection;
-        var label = '';
         if (edge_data.name) {
-            label = edge_data.name;
-            if (edge_data.path) {
-                label = label.link(edge_data.path);
-            }
-        }
-        if (edge_data.name_path_dict) {
-            var linked_name_list = [];
-            for (var name in edge_data.name_path_dict) {
-                linked_name_list.push(name.link(edge_data.name_path_dict[name]));
-            }
-            label = linked_name_list.join(', ');
-        }
-        if (label) {
             overlays = [
                 ["Label", {
                     cssClass: "l1 component label",
-                    label: label
+                    label: edge_data.name
                 }]
             ];
         }
@@ -491,6 +477,78 @@
         return clone(expanded_class_definition);
     }
 
+    function openEdgeEditionDialog(gadget, connection) {
+        var edge_id = connection.id;
+        var edge_data = gadget.props.data.graph.edge[edge_id];
+        var edit_popup = $(gadget.props.element).find("#popup-edit-template");
+        var schema;
+        var fieldset_element;
+        var delete_promise;
+        schema = expandSchema(gadget.props.data.class_definition[edge_data._class], gadget.props.data);
+        // We do not edit source & destination on edge this way.
+        delete schema.properties.source;
+        delete schema.properties.destination;
+        gadget.props.element.insertAdjacentHTML("beforeend", popup_edit_template);
+        edit_popup = $(gadget.props.element).find("#edit-popup");
+        edit_popup.find(".node_class").text(connection.name || connection._class);
+        fieldset_element = edit_popup.find("fieldset")[0];
+        edit_popup.dialog();
+        edit_popup.show();
+
+        function save_promise(fieldset_gadget) {
+            return new RSVP.Queue().push(function () {
+                return promiseEventListener(edit_popup.find(".graph_editor_validate_button")[0], "click", false);
+            }).push(function (evt) {
+                var data = {
+                    id: $(evt.target[1]).val(),
+                    data: {}
+                };
+                return fieldset_gadget.getContent().then(function (r) {
+                    $.extend(data.data, gadget.props.data.graph.edge[connection.id]);
+                    $.extend(data.data, r);
+                    // to redraw, we remove the edge and add again.
+                    // but we want to disable events on connection, since event
+                    // handling promise are executed asynchronously in undefined order,
+                    // we cannot just remove and /then/ add, because the new edge is
+                    // added before the old is removed.
+                    connection.ignoreEvent = true;
+                    gadget.props.jsplumb_instance.detach(connection);
+                    addEdge(gadget, r.id, data.data);
+                });
+            });
+        }
+        delete_promise = new RSVP.Queue().push(function () {
+            return promiseEventListener(edit_popup.find(".graph_editor_delete_button")[0], "click", false);
+        }).push(function () {
+            // connectionDetached event will remove the edge from data
+            gadget.props.jsplumb_instance.detach(connection);
+        });
+        return gadget.declareGadget("../fieldset/index.html", {
+            element: fieldset_element,
+            scope: "fieldset"
+        }).push(function (fieldset_gadget) {
+            return RSVP.all([fieldset_gadget, fieldset_gadget.render({
+                value: edge_data,
+                property_definition: schema
+            }, edge_id)]);
+        }).push(function (fieldset_gadget) {
+            edit_popup.dialog("open");
+            return fieldset_gadget[0];
+        }).push(function (fieldset_gadget) {
+            fieldset_gadget.startService(); // XXX
+            return fieldset_gadget;
+        }).push(function (fieldset_gadget) {
+            // Expose the dialog handling promise so that we can wait for it in
+            // test.
+            gadget.props.dialog_promise = RSVP.any([save_promise(fieldset_gadget, edge_id), delete_promise]);
+            return gadget.props.dialog_promise;
+        }).push(function () {
+            edit_popup.dialog("close");
+            edit_popup.remove();
+            delete gadget.props.dialog_promise;
+        });
+    }
+
     function openNodeEditionDialog(gadget, element) {
         var node_id = getNodeId(gadget, element.id);
         var node_data = gadget.props.data.graph.node[node_id];
@@ -588,6 +646,12 @@
         });
     }
 
+    function waitForConnectionClick(gadget) {
+        return loopJsplumbBind(gadget, "click", function (connection) {
+            return openEdgeEditionDialog(gadget, connection);
+        });
+    }
+
     function addNode(gadget, node_id, node_data) {
         var render_element = $(gadget.props.main);
         var class_definition = gadget.props.data.class_definition[node_data._class];
@@ -612,8 +676,7 @@
             "class": node_data._class.replace(".", "-"),
             element_id: dom_element_id,
             title: node_data.name || node_data.id,
-            name: node_data.name || node_data.id,
-            name_href: node_data.path
+            name: node_data.name || node_data.id
         }), "text/html").querySelector(".window");
         render_element.append(domElement);
         box = $(gadget.props.element).find("#" + dom_element_id);
@@ -623,10 +686,6 @@
         }
         box.css("top", absolute_position[1]);
         box.css("left", absolute_position[0]);
-        if (node_data.is_initial_state) {
-            box.css("border", "double #000000");
-            box.css("font-weight", "bold");
-        }
         updateNodeStyle(gadget, dom_element_id);
         draggable(gadget);
         // XXX make only this element draggable.
@@ -803,7 +862,8 @@
             return RSVP.all([
                 waitForDrop(gadget),
                 waitForConnection(gadget),
-                waitForConnectionDetached(gadget)
+                waitForConnectionDetached(gadget),
+                waitForConnectionClick(gadget)
             ]);
         });
 
