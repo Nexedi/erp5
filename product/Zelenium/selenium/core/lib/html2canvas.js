@@ -1,6 +1,6 @@
 /*!
- * html2canvas 1.0.0-rc.5 <https://html2canvas.hertzen.com>
- * Copyright (c) 2020 Niklas von Hertzen <https://hertzen.com>
+ * html2canvas 1.0.0 <https://html2canvas.hertzen.com>
+ * Copyright (c) 2021 Niklas von Hertzen <https://hertzen.com>
  * Released under MIT License
  */
 (function (global, factory) {
@@ -3010,6 +3010,9 @@
     (function (BORDER_STYLE) {
         BORDER_STYLE[BORDER_STYLE["NONE"] = 0] = "NONE";
         BORDER_STYLE[BORDER_STYLE["SOLID"] = 1] = "SOLID";
+        BORDER_STYLE[BORDER_STYLE["DASHED"] = 2] = "DASHED";
+        BORDER_STYLE[BORDER_STYLE["DOTTED"] = 3] = "DOTTED";
+        BORDER_STYLE[BORDER_STYLE["DOUBLE"] = 4] = "DOUBLE";
     })(BORDER_STYLE || (BORDER_STYLE = {}));
     var borderStyleForSide = function (side) { return ({
         name: "border-" + side + "-style",
@@ -3020,6 +3023,12 @@
             switch (style) {
                 case 'none':
                     return BORDER_STYLE.NONE;
+                case 'dashed':
+                    return BORDER_STYLE.DASHED;
+                case 'dotted':
+                    return BORDER_STYLE.DOTTED;
+                case 'double':
+                    return BORDER_STYLE.DOUBLE;
             }
             return BORDER_STYLE.SOLID;
         }
@@ -3068,6 +3077,7 @@
     var parseDisplayValue = function (display) {
         switch (display) {
             case 'block':
+            case '-webkit-box':
                 return 2 /* BLOCK */;
             case 'inline':
                 return 4 /* INLINE */;
@@ -3790,11 +3800,28 @@
         prefix: false,
         type: PropertyDescriptorParsingType.LIST,
         parse: function (tokens) {
-            return tokens.filter(isStringToken$1).map(function (token) { return token.value; });
+            var accumulator = [];
+            var results = [];
+            tokens.forEach(function (token) {
+                switch (token.type) {
+                    case TokenType.IDENT_TOKEN:
+                    case TokenType.STRING_TOKEN:
+                        accumulator.push(token.value);
+                        break;
+                    case TokenType.NUMBER_TOKEN:
+                        accumulator.push(token.number.toString());
+                        break;
+                    case TokenType.COMMA_TOKEN:
+                        results.push(accumulator.join(' '));
+                        accumulator.length = 0;
+                        break;
+                }
+            });
+            if (accumulator.length) {
+                results.push(accumulator.join(' '));
+            }
+            return results.map(function (result) { return (result.indexOf(' ') === -1 ? result : "'" + result + "'"); });
         }
-    };
-    var isStringToken$1 = function (token) {
-        return token.type === TokenType.STRING_TOKEN || token.type === TokenType.IDENT_TOKEN;
     };
 
     var fontSize = {
@@ -4524,7 +4551,7 @@
     var isTextNode = function (node) { return node.nodeType === Node.TEXT_NODE; };
     var isElementNode = function (node) { return node.nodeType === Node.ELEMENT_NODE; };
     var isHTMLElementNode = function (node) {
-        return typeof node.style !== 'undefined';
+        return isElementNode(node) && typeof node.style !== 'undefined' && !isSVGElementNode(node);
     };
     var isSVGElementNode = function (element) {
         return typeof element.className === 'object';
@@ -5091,7 +5118,13 @@
             if (isStyleElement(node)) {
                 return this.createStyleClone(node);
             }
-            return node.cloneNode(false);
+            var clone = node.cloneNode(false);
+            // @ts-ignore
+            if (isImageElement(clone) && clone.loading === 'lazy') {
+                // @ts-ignore
+                clone.loading = 'eager';
+            }
+            return clone;
         };
         DocumentCloner.prototype.createStyleClone = function (node) {
             try {
@@ -5216,12 +5249,12 @@
                 return node.cloneNode(false);
             }
             var window = node.ownerDocument.defaultView;
-            if (isHTMLElementNode(node) && window) {
+            if (window && isElementNode(node) && (isHTMLElementNode(node) || isSVGElementNode(node))) {
                 var clone = this.createElementClone(node);
                 var style = window.getComputedStyle(node);
                 var styleBefore = window.getComputedStyle(node, ':before');
                 var styleAfter = window.getComputedStyle(node, ':after');
-                if (this.referenceElement === node) {
+                if (this.referenceElement === node && isHTMLElementNode(clone)) {
                     this.clonedReferenceElement = clone;
                 }
                 if (isBodyElement(clone)) {
@@ -5247,7 +5280,7 @@
                     clone.appendChild(after);
                 }
                 this.counters.pop(counters);
-                if (style && this.options.copyStyles && !isIFrameElement(node)) {
+                if (style && (this.options.copyStyles || isSVGElementNode(node)) && !isIFrameElement(node)) {
                     copyCSSStyles(style, clone);
                 }
                 //this.inlineAllImages(clone);
@@ -5556,6 +5589,54 @@
             var paddingRight = getAbsoluteValue(styles.paddingRight, element.bounds.width);
             var paddingBottom = getAbsoluteValue(styles.paddingBottom, element.bounds.width);
             var paddingLeft = getAbsoluteValue(styles.paddingLeft, element.bounds.width);
+            this.topLeftBorderDoubleOuterBox =
+                tlh > 0 || tlv > 0
+                    ? getCurvePoints(bounds.left + borderLeftWidth / 3, bounds.top + borderTopWidth / 3, tlh - borderLeftWidth / 3, tlv - borderTopWidth / 3, CORNER.TOP_LEFT)
+                    : new Vector(bounds.left + borderLeftWidth / 3, bounds.top + borderTopWidth / 3);
+            this.topRightBorderDoubleOuterBox =
+                tlh > 0 || tlv > 0
+                    ? getCurvePoints(bounds.left + topWidth, bounds.top + borderTopWidth / 3, trh - borderRightWidth / 3, trv - borderTopWidth / 3, CORNER.TOP_RIGHT)
+                    : new Vector(bounds.left + bounds.width - borderRightWidth / 3, bounds.top + borderTopWidth / 3);
+            this.bottomRightBorderDoubleOuterBox =
+                brh > 0 || brv > 0
+                    ? getCurvePoints(bounds.left + bottomWidth, bounds.top + rightHeight, brh - borderRightWidth / 3, brv - borderBottomWidth / 3, CORNER.BOTTOM_RIGHT)
+                    : new Vector(bounds.left + bounds.width - borderRightWidth / 3, bounds.top + bounds.height - borderBottomWidth / 3);
+            this.bottomLeftBorderDoubleOuterBox =
+                blh > 0 || blv > 0
+                    ? getCurvePoints(bounds.left + borderLeftWidth / 3, bounds.top + leftHeight, blh - borderLeftWidth / 3, blv - borderBottomWidth / 3, CORNER.BOTTOM_LEFT)
+                    : new Vector(bounds.left + borderLeftWidth / 3, bounds.top + bounds.height - borderBottomWidth / 3);
+            this.topLeftBorderDoubleInnerBox =
+                tlh > 0 || tlv > 0
+                    ? getCurvePoints(bounds.left + (borderLeftWidth * 2) / 3, bounds.top + (borderTopWidth * 2) / 3, tlh - (borderLeftWidth * 2) / 3, tlv - (borderTopWidth * 2) / 3, CORNER.TOP_LEFT)
+                    : new Vector(bounds.left + (borderLeftWidth * 2) / 3, bounds.top + (borderTopWidth * 2) / 3);
+            this.topRightBorderDoubleInnerBox =
+                tlh > 0 || tlv > 0
+                    ? getCurvePoints(bounds.left + topWidth, bounds.top + (borderTopWidth * 2) / 3, trh - (borderRightWidth * 2) / 3, trv - (borderTopWidth * 2) / 3, CORNER.TOP_RIGHT)
+                    : new Vector(bounds.left + bounds.width - (borderRightWidth * 2) / 3, bounds.top + (borderTopWidth * 2) / 3);
+            this.bottomRightBorderDoubleInnerBox =
+                brh > 0 || brv > 0
+                    ? getCurvePoints(bounds.left + bottomWidth, bounds.top + rightHeight, brh - (borderRightWidth * 2) / 3, brv - (borderBottomWidth * 2) / 3, CORNER.BOTTOM_RIGHT)
+                    : new Vector(bounds.left + bounds.width - (borderRightWidth * 2) / 3, bounds.top + bounds.height - (borderBottomWidth * 2) / 3);
+            this.bottomLeftBorderDoubleInnerBox =
+                blh > 0 || blv > 0
+                    ? getCurvePoints(bounds.left + (borderLeftWidth * 2) / 3, bounds.top + leftHeight, blh - (borderLeftWidth * 2) / 3, blv - (borderBottomWidth * 2) / 3, CORNER.BOTTOM_LEFT)
+                    : new Vector(bounds.left + (borderLeftWidth * 2) / 3, bounds.top + bounds.height - (borderBottomWidth * 2) / 3);
+            this.topLeftBorderStroke =
+                tlh > 0 || tlv > 0
+                    ? getCurvePoints(bounds.left + borderLeftWidth / 2, bounds.top + borderTopWidth / 2, tlh - borderLeftWidth / 2, tlv - borderTopWidth / 2, CORNER.TOP_LEFT)
+                    : new Vector(bounds.left + borderLeftWidth / 2, bounds.top + borderTopWidth / 2);
+            this.topRightBorderStroke =
+                tlh > 0 || tlv > 0
+                    ? getCurvePoints(bounds.left + topWidth, bounds.top + borderTopWidth / 2, trh - borderRightWidth / 2, trv - borderTopWidth / 2, CORNER.TOP_RIGHT)
+                    : new Vector(bounds.left + bounds.width - borderRightWidth / 2, bounds.top + borderTopWidth / 2);
+            this.bottomRightBorderStroke =
+                brh > 0 || brv > 0
+                    ? getCurvePoints(bounds.left + bottomWidth, bounds.top + rightHeight, brh - borderRightWidth / 2, brv - borderBottomWidth / 2, CORNER.BOTTOM_RIGHT)
+                    : new Vector(bounds.left + bounds.width - borderRightWidth / 2, bounds.top + bounds.height - borderBottomWidth / 2);
+            this.bottomLeftBorderStroke =
+                blh > 0 || blv > 0
+                    ? getCurvePoints(bounds.left + borderLeftWidth / 2, bounds.top + leftHeight, blh - borderLeftWidth / 2, blv - borderBottomWidth / 2, CORNER.BOTTOM_LEFT)
+                    : new Vector(bounds.left + borderLeftWidth / 2, bounds.top + bounds.height - borderBottomWidth / 2);
             this.topLeftBorderBox =
                 tlh > 0 || tlv > 0
                     ? getCurvePoints(bounds.left, bounds.top, tlh, tlv, CORNER.TOP_LEFT)
@@ -5578,15 +5659,15 @@
                     : new Vector(bounds.left + borderLeftWidth, bounds.top + borderTopWidth);
             this.topRightPaddingBox =
                 trh > 0 || trv > 0
-                    ? getCurvePoints(bounds.left + Math.min(topWidth, bounds.width + borderLeftWidth), bounds.top + borderTopWidth, topWidth > bounds.width + borderLeftWidth ? 0 : trh - borderLeftWidth, trv - borderTopWidth, CORNER.TOP_RIGHT)
+                    ? getCurvePoints(bounds.left + Math.min(topWidth, bounds.width - borderRightWidth), bounds.top + borderTopWidth, topWidth > bounds.width + borderRightWidth ? 0 : Math.max(0, trh - borderRightWidth), Math.max(0, trv - borderTopWidth), CORNER.TOP_RIGHT)
                     : new Vector(bounds.left + bounds.width - borderRightWidth, bounds.top + borderTopWidth);
             this.bottomRightPaddingBox =
                 brh > 0 || brv > 0
-                    ? getCurvePoints(bounds.left + Math.min(bottomWidth, bounds.width - borderLeftWidth), bounds.top + Math.min(rightHeight, bounds.height + borderTopWidth), Math.max(0, brh - borderRightWidth), brv - borderBottomWidth, CORNER.BOTTOM_RIGHT)
+                    ? getCurvePoints(bounds.left + Math.min(bottomWidth, bounds.width - borderLeftWidth), bounds.top + Math.min(rightHeight, bounds.height - borderBottomWidth), Math.max(0, brh - borderRightWidth), Math.max(0, brv - borderBottomWidth), CORNER.BOTTOM_RIGHT)
                     : new Vector(bounds.left + bounds.width - borderRightWidth, bounds.top + bounds.height - borderBottomWidth);
             this.bottomLeftPaddingBox =
                 blh > 0 || blv > 0
-                    ? getCurvePoints(bounds.left + borderLeftWidth, bounds.top + leftHeight, Math.max(0, blh - borderLeftWidth), blv - borderBottomWidth, CORNER.BOTTOM_LEFT)
+                    ? getCurvePoints(bounds.left + borderLeftWidth, bounds.top + Math.min(leftHeight, bounds.height - borderBottomWidth), Math.max(0, blh - borderLeftWidth), Math.max(0, blv - borderBottomWidth), CORNER.BOTTOM_LEFT)
                     : new Vector(bounds.left + borderLeftWidth, bounds.top + bounds.height - borderBottomWidth);
             this.topLeftContentBox =
                 tlh > 0 || tlv > 0
@@ -5655,10 +5736,10 @@
     var TransformEffect = /** @class */ (function () {
         function TransformEffect(offsetX, offsetY, matrix) {
             this.type = 0 /* TRANSFORM */;
+            this.target = 2 /* BACKGROUND_BORDERS */ | 4 /* CONTENT */;
             this.offsetX = offsetX;
             this.offsetY = offsetY;
             this.matrix = matrix;
-            this.target = 2 /* BACKGROUND_BORDERS */ | 4 /* CONTENT */;
         }
         return TransformEffect;
     }());
@@ -5670,10 +5751,19 @@
         }
         return ClipEffect;
     }());
+    var OpacityEffect = /** @class */ (function () {
+        function OpacityEffect(opacity) {
+            this.type = 2 /* OPACITY */;
+            this.target = 2 /* BACKGROUND_BORDERS */ | 4 /* CONTENT */;
+            this.opacity = opacity;
+        }
+        return OpacityEffect;
+    }());
     var isTransformEffect = function (effect) {
         return effect.type === 0 /* TRANSFORM */;
     };
     var isClipEffect = function (effect) { return effect.type === 1 /* CLIP */; };
+    var isOpacityEffect = function (effect) { return effect.type === 2 /* OPACITY */; };
 
     var StackingContext = /** @class */ (function () {
         function StackingContext(container) {
@@ -5693,6 +5783,9 @@
             this.container = element;
             this.effects = parentStack.slice(0);
             this.curves = new BoundCurves(element);
+            if (element.styles.opacity < 1) {
+                this.effects.push(new OpacityEffect(element.styles.opacity));
+            }
             if (element.styles.transform !== null) {
                 var offsetX = element.bounds.left + element.styles.transformOrigin[0].number;
                 var offsetY = element.bounds.top + element.styles.transformOrigin[1].number;
@@ -5755,7 +5848,7 @@
                     else if (order_1 > 0) {
                         var index_2 = 0;
                         parentStack.positiveZIndex.some(function (current, i) {
-                            if (order_1 > current.element.container.styles.zIndex.order) {
+                            if (order_1 >= current.element.container.styles.zIndex.order) {
                                 index_2 = i + 1;
                                 return false;
                             }
@@ -5829,6 +5922,61 @@
             default:
                 return createPathFromCurves(curves.bottomLeftBorderBox, curves.bottomLeftPaddingBox, curves.topLeftBorderBox, curves.topLeftPaddingBox);
         }
+    };
+    var parsePathForBorderDoubleOuter = function (curves, borderSide) {
+        switch (borderSide) {
+            case 0:
+                return createPathFromCurves(curves.topLeftBorderBox, curves.topLeftBorderDoubleOuterBox, curves.topRightBorderBox, curves.topRightBorderDoubleOuterBox);
+            case 1:
+                return createPathFromCurves(curves.topRightBorderBox, curves.topRightBorderDoubleOuterBox, curves.bottomRightBorderBox, curves.bottomRightBorderDoubleOuterBox);
+            case 2:
+                return createPathFromCurves(curves.bottomRightBorderBox, curves.bottomRightBorderDoubleOuterBox, curves.bottomLeftBorderBox, curves.bottomLeftBorderDoubleOuterBox);
+            case 3:
+            default:
+                return createPathFromCurves(curves.bottomLeftBorderBox, curves.bottomLeftBorderDoubleOuterBox, curves.topLeftBorderBox, curves.topLeftBorderDoubleOuterBox);
+        }
+    };
+    var parsePathForBorderDoubleInner = function (curves, borderSide) {
+        switch (borderSide) {
+            case 0:
+                return createPathFromCurves(curves.topLeftBorderDoubleInnerBox, curves.topLeftPaddingBox, curves.topRightBorderDoubleInnerBox, curves.topRightPaddingBox);
+            case 1:
+                return createPathFromCurves(curves.topRightBorderDoubleInnerBox, curves.topRightPaddingBox, curves.bottomRightBorderDoubleInnerBox, curves.bottomRightPaddingBox);
+            case 2:
+                return createPathFromCurves(curves.bottomRightBorderDoubleInnerBox, curves.bottomRightPaddingBox, curves.bottomLeftBorderDoubleInnerBox, curves.bottomLeftPaddingBox);
+            case 3:
+            default:
+                return createPathFromCurves(curves.bottomLeftBorderDoubleInnerBox, curves.bottomLeftPaddingBox, curves.topLeftBorderDoubleInnerBox, curves.topLeftPaddingBox);
+        }
+    };
+    var parsePathForBorderStroke = function (curves, borderSide) {
+        switch (borderSide) {
+            case 0:
+                return createStrokePathFromCurves(curves.topLeftBorderStroke, curves.topRightBorderStroke);
+            case 1:
+                return createStrokePathFromCurves(curves.topRightBorderStroke, curves.bottomRightBorderStroke);
+            case 2:
+                return createStrokePathFromCurves(curves.bottomRightBorderStroke, curves.bottomLeftBorderStroke);
+            case 3:
+            default:
+                return createStrokePathFromCurves(curves.bottomLeftBorderStroke, curves.topLeftBorderStroke);
+        }
+    };
+    var createStrokePathFromCurves = function (outer1, outer2) {
+        var path = [];
+        if (isBezierCurve(outer1)) {
+            path.push(outer1.subdivide(0.5, false));
+        }
+        else {
+            path.push(outer1);
+        }
+        if (isBezierCurve(outer2)) {
+            path.push(outer2.subdivide(0.5, true));
+        }
+        else {
+            path.push(outer2);
+        }
+        return path;
     };
     var createPathFromCurves = function (outer1, inner1, outer2, inner2) {
         var path = [];
@@ -6123,6 +6271,9 @@
         };
         CanvasRenderer.prototype.applyEffect = function (effect) {
             this.ctx.save();
+            if (isOpacityEffect(effect)) {
+                this.ctx.globalAlpha = effect.opacity;
+            }
             if (isTransformEffect(effect)) {
                 this.ctx.translate(effect.offsetX, effect.offsetY);
                 this.ctx.transform(effect.matrix[0], effect.matrix[1], effect.matrix[2], effect.matrix[3], effect.matrix[4], effect.matrix[5]);
@@ -6146,7 +6297,6 @@
                         case 0:
                             styles = stack.element.container.styles;
                             if (!styles.isVisible()) return [3 /*break*/, 2];
-                            this.ctx.globalAlpha = styles.opacity;
                             return [4 /*yield*/, this.renderStackContent(stack)];
                         case 1:
                             _a.sent();
@@ -6593,8 +6743,8 @@
                 return image;
             }
             var canvas = this.canvas.ownerDocument.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = Math.max(1, width);
+            canvas.height = Math.max(1, height);
             var ctx = canvas.getContext('2d');
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, height);
             return canvas;
@@ -6714,13 +6864,37 @@
                 });
             });
         };
-        CanvasRenderer.prototype.renderBorder = function (color, side, curvePoints) {
+        CanvasRenderer.prototype.renderSolidBorder = function (color, side, curvePoints) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     this.path(parsePathForBorder(curvePoints, side));
                     this.ctx.fillStyle = asString(color);
                     this.ctx.fill();
                     return [2 /*return*/];
+                });
+            });
+        };
+        CanvasRenderer.prototype.renderDoubleBorder = function (color, width, side, curvePoints) {
+            return __awaiter(this, void 0, void 0, function () {
+                var outerPaths, innerPaths;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!(width < 3)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.renderSolidBorder(color, side, curvePoints)];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                        case 2:
+                            outerPaths = parsePathForBorderDoubleOuter(curvePoints, side);
+                            this.path(outerPaths);
+                            this.ctx.fillStyle = asString(color);
+                            this.ctx.fill();
+                            innerPaths = parsePathForBorderDoubleInner(curvePoints, side);
+                            this.path(innerPaths);
+                            this.ctx.fill();
+                            return [2 /*return*/];
+                    }
                 });
             });
         };
@@ -6735,10 +6909,10 @@
                             styles = paint.container.styles;
                             hasBackground = !isTransparent(styles.backgroundColor) || styles.backgroundImage.length;
                             borders = [
-                                { style: styles.borderTopStyle, color: styles.borderTopColor },
-                                { style: styles.borderRightStyle, color: styles.borderRightColor },
-                                { style: styles.borderBottomStyle, color: styles.borderBottomColor },
-                                { style: styles.borderLeftStyle, color: styles.borderLeftColor }
+                                { style: styles.borderTopStyle, color: styles.borderTopColor, width: styles.borderTopWidth },
+                                { style: styles.borderRightStyle, color: styles.borderRightColor, width: styles.borderRightWidth },
+                                { style: styles.borderBottomStyle, color: styles.borderBottomColor, width: styles.borderBottomWidth },
+                                { style: styles.borderLeftStyle, color: styles.borderLeftColor, width: styles.borderLeftWidth }
                             ];
                             backgroundPaintingArea = calculateBackgroundCurvedPaintingArea(getBackgroundValueForIndex(styles.backgroundClip, 0), paint.curves);
                             if (!(hasBackground || styles.boxShadow.length)) return [3 /*break*/, 2];
@@ -6785,21 +6959,142 @@
                             _i = 0, borders_1 = borders;
                             _a.label = 3;
                         case 3:
-                            if (!(_i < borders_1.length)) return [3 /*break*/, 7];
+                            if (!(_i < borders_1.length)) return [3 /*break*/, 13];
                             border = borders_1[_i];
-                            if (!(border.style !== BORDER_STYLE.NONE && !isTransparent(border.color))) return [3 /*break*/, 5];
-                            return [4 /*yield*/, this.renderBorder(border.color, side, paint.curves)];
+                            if (!(border.style !== BORDER_STYLE.NONE && !isTransparent(border.color) && border.width > 0)) return [3 /*break*/, 11];
+                            if (!(border.style === BORDER_STYLE.DASHED)) return [3 /*break*/, 5];
+                            return [4 /*yield*/, this.renderDashedDottedBorder(border.color, border.width, side, paint.curves, BORDER_STYLE.DASHED)];
                         case 4:
                             _a.sent();
-                            _a.label = 5;
+                            return [3 /*break*/, 11];
                         case 5:
-                            side++;
-                            _a.label = 6;
+                            if (!(border.style === BORDER_STYLE.DOTTED)) return [3 /*break*/, 7];
+                            return [4 /*yield*/, this.renderDashedDottedBorder(border.color, border.width, side, paint.curves, BORDER_STYLE.DOTTED)];
                         case 6:
+                            _a.sent();
+                            return [3 /*break*/, 11];
+                        case 7:
+                            if (!(border.style === BORDER_STYLE.DOUBLE)) return [3 /*break*/, 9];
+                            return [4 /*yield*/, this.renderDoubleBorder(border.color, border.width, side, paint.curves)];
+                        case 8:
+                            _a.sent();
+                            return [3 /*break*/, 11];
+                        case 9: return [4 /*yield*/, this.renderSolidBorder(border.color, side, paint.curves)];
+                        case 10:
+                            _a.sent();
+                            _a.label = 11;
+                        case 11:
+                            side++;
+                            _a.label = 12;
+                        case 12:
                             _i++;
                             return [3 /*break*/, 3];
-                        case 7: return [2 /*return*/];
+                        case 13: return [2 /*return*/];
                     }
+                });
+            });
+        };
+        CanvasRenderer.prototype.renderDashedDottedBorder = function (color, width, side, curvePoints, style) {
+            return __awaiter(this, void 0, void 0, function () {
+                var strokePaths, boxPaths, startX, startY, endX, endY, length, dashLength, spaceLength, useLineDash, multiplier, numberOfDashes, minSpace, maxSpace, path1, path2, path1, path2;
+                return __generator(this, function (_a) {
+                    this.ctx.save();
+                    strokePaths = parsePathForBorderStroke(curvePoints, side);
+                    boxPaths = parsePathForBorder(curvePoints, side);
+                    if (style === BORDER_STYLE.DASHED) {
+                        this.path(boxPaths);
+                        this.ctx.clip();
+                    }
+                    if (isBezierCurve(boxPaths[0])) {
+                        startX = boxPaths[0].start.x;
+                        startY = boxPaths[0].start.y;
+                    }
+                    else {
+                        startX = boxPaths[0].x;
+                        startY = boxPaths[0].y;
+                    }
+                    if (isBezierCurve(boxPaths[1])) {
+                        endX = boxPaths[1].end.x;
+                        endY = boxPaths[1].end.y;
+                    }
+                    else {
+                        endX = boxPaths[1].x;
+                        endY = boxPaths[1].y;
+                    }
+                    if (side === 0 || side === 2) {
+                        length = Math.abs(startX - endX);
+                    }
+                    else {
+                        length = Math.abs(startY - endY);
+                    }
+                    this.ctx.beginPath();
+                    if (style === BORDER_STYLE.DOTTED) {
+                        this.formatPath(strokePaths);
+                    }
+                    else {
+                        this.formatPath(boxPaths.slice(0, 2));
+                    }
+                    dashLength = width < 3 ? width * 3 : width * 2;
+                    spaceLength = width < 3 ? width * 2 : width;
+                    if (style === BORDER_STYLE.DOTTED) {
+                        dashLength = width;
+                        spaceLength = width;
+                    }
+                    useLineDash = true;
+                    if (length <= dashLength * 2) {
+                        useLineDash = false;
+                    }
+                    else if (length <= dashLength * 2 + spaceLength) {
+                        multiplier = length / (2 * dashLength + spaceLength);
+                        dashLength *= multiplier;
+                        spaceLength *= multiplier;
+                    }
+                    else {
+                        numberOfDashes = Math.floor((length + spaceLength) / (dashLength + spaceLength));
+                        minSpace = (length - numberOfDashes * dashLength) / (numberOfDashes - 1);
+                        maxSpace = (length - (numberOfDashes + 1) * dashLength) / numberOfDashes;
+                        spaceLength =
+                            maxSpace <= 0 || Math.abs(spaceLength - minSpace) < Math.abs(spaceLength - maxSpace)
+                                ? minSpace
+                                : maxSpace;
+                    }
+                    if (useLineDash) {
+                        if (style === BORDER_STYLE.DOTTED) {
+                            this.ctx.setLineDash([0, dashLength + spaceLength]);
+                        }
+                        else {
+                            this.ctx.setLineDash([dashLength, spaceLength]);
+                        }
+                    }
+                    if (style === BORDER_STYLE.DOTTED) {
+                        this.ctx.lineCap = 'round';
+                        this.ctx.lineWidth = width;
+                    }
+                    else {
+                        this.ctx.lineWidth = width * 2 + 1.1;
+                    }
+                    this.ctx.strokeStyle = asString(color);
+                    this.ctx.stroke();
+                    this.ctx.setLineDash([]);
+                    // dashed round edge gap
+                    if (style === BORDER_STYLE.DASHED) {
+                        if (isBezierCurve(boxPaths[0])) {
+                            path1 = boxPaths[3];
+                            path2 = boxPaths[0];
+                            this.ctx.beginPath();
+                            this.formatPath([new Vector(path1.end.x, path1.end.y), new Vector(path2.start.x, path2.start.y)]);
+                            this.ctx.stroke();
+                        }
+                        if (isBezierCurve(boxPaths[1])) {
+                            path1 = boxPaths[1];
+                            path2 = boxPaths[2];
+                            this.ctx.beginPath();
+                            this.formatPath([new Vector(path1.end.x, path1.end.y), new Vector(path2.start.x, path2.start.y)]);
+                            this.ctx.stroke();
+                        }
+                    }
+                    this.ctx.restore();
+                    return [2 /*return*/];
                 });
             });
         };
@@ -6912,7 +7207,7 @@
         if (options === void 0) { options = {}; }
         return renderElement(element, options);
     };
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
         CacheStorage.setContext(window);
     }
     var renderElement = function (element, opts) { return __awaiter(_this, void 0, void 0, function () {
