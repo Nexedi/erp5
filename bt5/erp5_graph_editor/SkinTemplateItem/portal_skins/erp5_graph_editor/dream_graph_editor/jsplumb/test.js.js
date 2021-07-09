@@ -296,7 +296,7 @@
                 jsplumb_gadget.render(sample_data_graph);
             }).then(runTest).fail(error_handler).always(start);
         });
-        test("Node can be connected", function () {
+        test("Nodes can be connected", function () {
             var jsplumb_gadget;
             stop();
             function runTest() {
@@ -308,6 +308,9 @@
                         source: node1.id,
                         target: node2.id
                     });
+                    // .connect insternal API is asynchronous, but there's no way to wait for the event to be processed.
+                    // for now we just wait for a short delay
+                    return RSVP.delay(1e3);
                 }).then(function () {
                     return jsplumb_gadget.getContent();
                 }).then(function (content) {
