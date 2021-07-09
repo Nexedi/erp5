@@ -4,15 +4,11 @@
     border: 1px solid #999;
 
     min-width: 400px;
-    min-height: 1200px;
+    min-height: 400px;
 
     overflow: hidden;
     background-color: #eaedef;
     text-align: center;
-}
-
-.selected {
-    color: #bd0b0b!important
 }
 
 .window,
