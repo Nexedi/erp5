@@ -28,7 +28,9 @@
                   "lines": 20,
                   "list_method": "portal_catalog",
                   "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    "Software%20Product%22",
+                    "Software%20Product%22" +
+                    "%20AND%20validation_state%3A%28%22validated%22%" +
+                    "20OR%20%22draft%22%29",
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
