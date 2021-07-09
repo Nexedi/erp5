@@ -82,6 +82,12 @@
                         <string>my_configuration_relative_url_base</string>
                         <string>my_configuration_style_gadget_url</string>
                         <string>my_configuration_favicon_url</string>
+                        <string>my_configuration_site_preview_image_url_meta_tag</string>
+                        <string>my_configuration_site_name_meta_tag</string>
+                        <string>my_configuration_site_title_meta_tag</string>
+                        <string>my_configuration_site_url_meta_tag</string>
+                        <string>my_configuration_description_meta_tag</string>
+                        <string>my_configuration_type_meta_tag</string>
                       </list>
                     </value>
                 </item>

@@ -1,0 +1,235 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test JS Style Demo Style</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test JS Style Demo Style</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=nostyleform</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Web Site created.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='No Style Form']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='url']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@property='og:url']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='twitter:url']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@property='og:title']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='twitter:title']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@property='og:image']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='twitter:image']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='application-name']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@property='og:site_name']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@property='og:description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='twitter:description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@name='keywords']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//meta[@property='og:type']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=meta_tag_form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Web Site created.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Meta Tag Form']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='url' and @content='Site Url Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:url' and @content='Site Url Meta Tag']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:url' and @content='Site Url Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:title' and @content='Site Title Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:title' and @content='Site Title Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:image' and @content='https://example']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:image' and @content='https://example']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='application-name' and @content='Site Name Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:site_name' and @content='Site Name Meta Tag']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='description' and @content='Description Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:description' and @content='Description Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:description' and @content='Description Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='keywords' and @content='keyword1,keyword2']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:type' and @content='website']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

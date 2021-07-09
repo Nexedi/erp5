@@ -148,6 +148,29 @@ configuration_dict = {
     'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
     'site_map_section_parent': True
   },
+  'meta_tag': {
+    'title': 'Meta Tag',
+    'configuration_description_meta_tag': 'Description Meta Tag',
+    'configuration_site_name_meta_tag': 'Site Name Meta Tag',
+    'configuration_site_title_meta_tag': 'Site Title Meta Tag',
+    'configuration_site_url_meta_tag': 'Site Url Meta Tag',
+    'configuration_site_preview_image_url_meta_tag': 'https://example',
+    'subject_list': ['keyword1', 'keyword2'],
+    'configuration_type_meta_tag': 'website',
+    'site_map_section_parent': True
+  },
+  'meta_tag_form':{
+    'title': 'Meta Tag Form',
+    'configuration_description_meta_tag': 'Description Meta Tag',
+    'configuration_site_name_meta_tag': 'Site Name Meta Tag',
+    'configuration_site_title_meta_tag': 'Site Title Meta Tag',
+    'configuration_site_url_meta_tag': 'Site Url Meta Tag',
+    'configuration_site_preview_image_url_meta_tag': 'https://example',
+    'subject_list': ['keyword1', 'keyword2'],
+    'configuration_type_meta_tag': 'website',
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True
+  },
   'language': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'available_language_list': ['en', 'fr', 'zh'],

@@ -14,6 +14,13 @@
       no_style_gadget_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_style_gadget_url');
       no_style_css_url python: relative_url_prefix + 'jsstyle.css';
       favicon_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_favicon_url');
+      site_url_meta_tag python: web_section.WebSection_generateLayoutPropertyUrl('configuration_site_url_meta_tag');
+      site_title_meta_tag python: web_section.WebSection_generateLayoutPropertyUrl('configuration_site_title_meta_tag');
+      site_preview_image_url_meta_tag python: web_section.WebSection_generateLayoutPropertyUrl('configuration_site_preview_image_url_meta_tag');
+      site_name_meta_tag python: web_section.WebSection_generateLayoutPropertyUrl('configuration_site_name_meta_tag');
+      description_meta_tag python: web_section.WebSection_generateLayoutPropertyUrl('configuration_description_meta_tag');
+      type_meta_tag python: web_section.WebSection_generateLayoutPropertyUrl('configuration_type_meta_tag');
+      keyword_list python: web_section.getSubjectList();
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
@@ -23,6 +30,34 @@
   <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
+  </tal:block>
+  <tal:block tal:condition="keyword_list">
+    <meta name="keywords" tal:attributes="content python: ','.join(keyword_list)">
+  </tal:block>
+  <tal:block tal:condition="type_meta_tag">
+    <meta property="og:type" tal:attributes="content type_meta_tag">
+  </tal:block>
+  <tal:block tal:condition="site_url_meta_tag">
+    <meta name="url" tal:attributes="content site_url_meta_tag">
+    <meta property="og:url" tal:attributes="content site_url_meta_tag">
+    <meta name="twitter:url" tal:attributes="content site_url_meta_tag">
+  </tal:block>
+  <tal:block tal:condition="site_title_meta_tag">
+    <meta property="og:title" tal:attributes="content site_title_meta_tag">
+    <meta name="twitter:title" tal:attributes="content site_title_meta_tag">
+  </tal:block>
+  <tal:block tal:condition="site_preview_image_url_meta_tag">
+    <meta property="og:image" tal:attributes="content site_preview_image_url_meta_tag">
+    <meta name="twitter:image" tal:attributes="content site_preview_image_url_meta_tag">
+  </tal:block>
+  <tal:block tal:condition="site_name_meta_tag">
+    <meta name="application-name" tal:attributes="content site_name_meta_tag" >
+    <meta property="og:site_name" tal:attributes="content site_name_meta_tag">
+  </tal:block>
+  <tal:block tal:condition="description_meta_tag">
+    <meta name="description" tal:attributes="content description_meta_tag">
+    <meta property="og:description" tal:attributes="content description_meta_tag">
+    <meta name="twitter:description" tal:attributes="content description_meta_tag">
   </tal:block>
   <tal:block tal:condition="python: no_style_gadget_url == ''">
     <link rel="stylesheet" tal:attributes="href no_style_css_url">
