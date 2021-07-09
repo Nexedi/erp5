@@ -2,8 +2,6 @@ import json
 business_process = sci['object']
 graph = business_process.getProperty('jsplumb_graph')
 
-assert graph
-
 if graph:
   portal = business_process.getPortalObject()
   trade_state_dict = dict(start=None, end=None)
