@@ -13,6 +13,23 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>jsplumb_graph</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -43,6 +60,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>validation_workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>jsplumb_graph</string> </key>
+            <value> <string>{"class_definition":{},"graph":{"node":{"state_deleted":{"coordinate":{"top":0.949081048508587,"left":0.9496606334841629},"path":"/erp5/portal_workflow/validation_workflow/state_deleted","_class":"workflow.state","name":"Deleted","is_initial_state":false},"state_invalidated":{"coordinate":{"top":0.949081048508587,"left":0.5264423076923077},"path":"/erp5/portal_workflow/validation_workflow/state_invalidated","_class":"workflow.state","name":"Invalidated","is_initial_state":false},"state_validated":{"coordinate":{"top":0.1385959626393492,"left":0.3545673076923077},"path":"/erp5/portal_workflow/validation_workflow/state_validated","_class":"workflow.state","name":"Validated","is_initial_state":false},"state_draft":{"coordinate":{"top":0.41578788791804766,"left":0.025240384615384616},"path":"/erp5/portal_workflow/validation_workflow/state_draft","_class":"workflow.state","name":"Draft","is_initial_state":true}},"edge":{"transition_to_state_invalidated":{"source":"state_invalidated","destination":"state_invalidated","_class":"workflow.transition","name_path_dict":{"Delete Action":"/erp5/portal_workflow/validation_workflow/transition_delete_action","Validate Action":"/erp5/portal_workflow/validation_workflow/transition_validate_action"}},"state_draft_transition_validate":{"name":"Validate","description":"Validates a document in ERP5","destination":"state_validated","source":"state_draft","path":"/erp5/portal_workflow/validation_workflow/transition_validate","_class":"workflow.transition","transition_id":"transition_validate","actbox_url":null},"state_draft_transition_invalidate":{"name":"Invalidate","description":"This action invalidates a document in ERP5","destination":"state_invalidated","source":"state_draft","path":"/erp5/portal_workflow/validation_workflow/transition_invalidate","_class":"workflow.transition","transition_id":"transition_invalidate","actbox_url":null},"state_validated_transition_invalidate":{"name":"Invalidate","description":"This action invalidates a document in ERP5","destination":"state_invalidated","source":"state_validated","path":"/erp5/portal_workflow/validation_workflow/transition_invalidate","_class":"workflow.transition","transition_id":"transition_invalidate","actbox_url":null},"state_invalidated_transition_delete":{"name":"Delete","description":"Delete a document in ERP5","destination":"state_deleted","source":"state_invalidated","path":"/erp5/portal_workflow/validation_workflow/transition_delete","_class":"workflow.transition","transition_id":"transition_delete","actbox_url":null},"state_invalidated_transition_validate":{"name":"Validate","description":"Validates a document in ERP5","destination":"state_validated","source":"state_invalidated","path":"/erp5/portal_workflow/validation_workflow/transition_validate","_class":"workflow.transition","transition_id":"transition_validate","actbox_url":null},"transition_to_state_validated":{"source":"state_validated","destination":"state_validated","_class":"workflow.transition","name_path_dict":{"Invalidate Action":"/erp5/portal_workflow/validation_workflow/transition_invalidate_action"}},"state_draft_transition_delete":{"name":"Delete","description":"Delete a document in ERP5","destination":"state_deleted","source":"state_draft","path":"/erp5/portal_workflow/validation_workflow/transition_delete","_class":"workflow.transition","transition_id":"transition_delete","actbox_url":null},"transition_to_state_draft":{"source":"state_draft","destination":"state_draft","_class":"workflow.transition","name_path_dict":{"Invalidate Action":"/erp5/portal_workflow/validation_workflow/transition_invalidate_action","Delete Action":"/erp5/portal_workflow/validation_workflow/transition_delete_action","Validate Action":"/erp5/portal_workflow/validation_workflow/transition_validate_action"}}}}}</string> </value>
         </item>
         <item>
             <key> <string>manager_bypass</string> </key>
