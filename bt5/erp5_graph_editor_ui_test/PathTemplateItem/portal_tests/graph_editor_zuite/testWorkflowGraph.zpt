@@ -1,0 +1,60 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4" tal:content="template/title">
+</td></tr>
+</thead><tbody>
+
+<tr>
+  <td>open</td>
+  <td tal:content="string:${context/portal_url}/portal_workflow/validation_workflow/Workflow_viewGraph"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-editable="field_my_jsplumb_graph"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-editable="field_my_jsplumb_graph"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, "workflow-state")][4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr><td colspan="3"><b>Verify the rendering of the graph matches our reference snapshot</b></td></tr>
+<tr>
+  <td>verifyImageMatchSnapshot</td>
+  <td>//body</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
