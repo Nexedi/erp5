@@ -144,9 +144,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -161,11 +159,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -221,7 +231,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>gadget_graph_editor.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -233,7 +243,13 @@
                 </item>
                 <item>
                     <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>iframe</string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -242,6 +258,14 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Graph</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string>my_core_mode_text_content_validator</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -258,19 +282,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>context/Workflow_getGraph</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.getPortalObject().restrictedTraverse(\'dream_graph_editor/jsplumb/index.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>
