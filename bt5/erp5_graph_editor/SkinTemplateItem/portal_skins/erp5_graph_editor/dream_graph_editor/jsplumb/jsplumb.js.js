@@ -22,7 +22,7 @@
 (function (RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy) {
     "use strict";
     /* TODO:
-    * less dependancies ( promise event listener ? )
+    * less dependencies ( promise event listener ? )
     * no more handlebars
     * id should not always be modifiable
     * drop zoom level
@@ -31,9 +31,30 @@
     */
     var gadget_klass = rJS(window);
     var domParser = new DOMParser();
-    var node_template_source = gadget_klass.__template_element.getElementById("node-template").innerHTML;
-    var node_template = Handlebars.compile(node_template_source);
-    var popup_edit_template = gadget_klass.__template_element.getElementById("popup-edit-template").innerHTML;
+    var node_template = Handlebars.compile(
+        '  <div class="window {{class}}"'
+        + '    id="{{element_id}}"'
+        + '    title="{{title}}">'
+        + '    {{name}}'
+        + '    <div class="ep"></div>'
+        + '</div>'
+    );
+    var popup_edit_template = (
+        '  <div id="edit-popup" data-position-to="origin">'
+        + '    <div data-role="header" data-theme="a">'
+        + '        <h1 class="node_class">Edit properties</h1>'
+        + '        <!-- XXX add this for jquery mobile version.'
+        + '        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>'
+        + '        -->'
+        + '    </div>'
+        + '    <br/>'
+        + '    <form class="ui-content">'
+        + '        <fieldset></fieldset>'
+        + '        <input type="button" value="Delete" class="graph_editor_delete_button">'
+        + '        <input type="submit" value="Validate" class="graph_editor_validate_button">'
+        + '    </form>'
+        + '</div>'
+    );
 
     function layoutGraph(graph_data) {
         // Promise returning the graph once springy calculated the layout.
@@ -523,7 +544,7 @@
             // connectionDetached event will remove the edge from data
             gadget.props.jsplumb_instance.detach(connection);
         });
-        return gadget.declareGadget("../fieldset/index.html", {
+        return gadget.declareGadget("dream_graph_editor/fieldset/index.html", {
             element: fieldset_element,
             scope: "fieldset"
         }).push(function (fieldset_gadget) {
@@ -602,7 +623,7 @@
         }).push(function () {
             return removeElement(gadget, node_id);
         });
-        return gadget.declareGadget("../fieldset/index.html", {
+        return gadget.declareGadget("dream_graph_editor/fieldset/index.html", {
             element: fieldset_element,
             scope: "fieldset"
         }).push(function (fieldset_gadget) {
