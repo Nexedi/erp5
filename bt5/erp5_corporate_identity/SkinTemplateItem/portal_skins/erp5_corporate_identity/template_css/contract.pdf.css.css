@@ -254,7 +254,7 @@
 .ci-contract .ci-contract-header .ci-contract-header-image-wkhtmltopdf-image-wrapper img {
   height: auto;
   vertical-align: middle;
-  max-height: 14mm;
+  max-height: 25mm;
 }
 /* header spec section */
 .ci-contract .ci-contract-header td:last-child {
