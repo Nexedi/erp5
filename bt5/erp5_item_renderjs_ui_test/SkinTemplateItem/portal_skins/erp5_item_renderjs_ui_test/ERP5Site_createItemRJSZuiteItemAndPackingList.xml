@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ItemRJSZuite_createItemAndPackingList</string> </value>
+            <value> <string>ERP5Site_createItemRJSZuiteItemAndPackingList</string> </value>
         </item>
       </dictionary>
     </pickle>

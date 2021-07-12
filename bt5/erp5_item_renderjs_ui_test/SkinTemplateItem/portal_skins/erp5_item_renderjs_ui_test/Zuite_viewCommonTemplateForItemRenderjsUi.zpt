@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/ItemRJSZuite_deleteData</td>
+      <td>${base_url}/ERP5Site_deleteItemRJSZuiteData</td>
       <td></td>
     </tr>
     <tr>
@@ -35,13 +35,13 @@
   </tal:block>
 
   <tal:block metal:define-macro="prepare_data">
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/delete_data" />
+    <tal:block metal:use-macro="here/Zuite_viewCommonTemplateForItemRenderjsUi/macros/delete_data" />
     <tr>
       <td colspan="3"><b>Create Item Test Data</b></td>
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/ItemRJSZuite_createItemAndPackingList</td>
+      <td>${base_url}/ERP5Site_createItemRJSZuiteItemAndPackingList</td>
       <td></td>
     </tr>
     <tr>
@@ -86,6 +86,29 @@
       <td>Purchase Packing List Line</td>
       <td></td>
     </tr>
+
+    <!-- Graph editor to visualize tracking -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope="field_my_jsplumb_graph"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectFrame</td>
+      <td>//div[@data-gadget-scope="field_my_jsplumb_graph"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class, "node")][2]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
+    </tr>
+
     <tal:block tal:define="click_configuration python: {'text': 'Sale Packing List Line'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
     </tal:block>
