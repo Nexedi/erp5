@@ -72,6 +72,21 @@
   <td>//ul/li[2]/a[text()='Template Test Web FAQ 2' and @href='Template.Test.Web.FAQ2']</td>
   <td></td>
 </tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/template_test_web_site/login_form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//ul/li[2]/a[text()='Template Test Web FAQ 2' and @href='Template.Test.Web.FAQ2']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class='ci-web-header-bar-logo']//span[text()='Template Test Web Site']</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
