@@ -35,11 +35,8 @@ def getWorkflowGraph(workflow):
             'transition_id': transition.getId(), # used for edition.
             'path': transition.getPath()
           })
-        else:
-          # user action
-          transition_list.append(transition)
 
-    if transition_list != []:
+    if transition_list:
       graph['edge']['transition_to_%s' % (state.getId())] = {
         '_class':'workflow.transition',
         'source':state.getId(),
