@@ -85,6 +85,11 @@ book_title = html_quote(override_document_title) if override_document_title else
 if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
+# backcompat
+book_history_section_list = re.findall('<section.+?>.+?</section>', book_content, re.S)
+for book_history_section in book_history_section_list:
+  book_content = book_content.replace(book_history_section, '')
+
 # override for tests
 if override_batch_mode:
   book_modification_date = DateTime("1976-11-04")
@@ -225,6 +230,7 @@ for image in re.findall('(<img.*?/>)', book_content):
 if book_format == "html" or book_format == "mhtml":
   context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")
   book_output = book.WebPage_createBook(
+    book_history_section_list = book_history_section_list,
     book_theme=book_theme.get("theme"),
     book_title=book_title,
     book_language=book_language,
@@ -285,6 +291,7 @@ elif book_format == "pdf":
   )
 
   book_history = book.WebPage_createBookTableOfHistory(
+    book_history_section_list = book_history_section_list,
     book_theme=book_theme.get("theme"),
     book_title=book_title,
     book_language=book_language,
