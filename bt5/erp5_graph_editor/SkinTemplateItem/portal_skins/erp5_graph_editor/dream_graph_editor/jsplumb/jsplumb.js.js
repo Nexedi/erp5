@@ -505,7 +505,11 @@
         var schema;
         var fieldset_element;
         var delete_promise;
-        schema = expandSchema(gadget.props.data.class_definition[edge_data._class], gadget.props.data);
+        var class_definition = gadget.props.data.class_definition[edge_data._class];
+        if (class_definition === undefined) {
+            return;
+        }
+        schema = expandSchema(class_definition, gadget.props.data);
         // We do not edit source & destination on edge this way.
         delete schema.properties.source;
         delete schema.properties.destination;
