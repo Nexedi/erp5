@@ -1,0 +1,69 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Contract footer.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_theme                        python: options.get('contract_theme');
+                       contract_title                        python: options.get('contract_title');
+                       contract_footer                       python: options.get('contract_footer');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_full_reference               python: options.get('contract_full_reference');
+                       contract_source_organisation_title    python: options.get('contract_source_organisation_title');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: contract_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url contract_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+    </script>
+    </head>
+    <body class="ci-contract" onload="setPlaceholdersWithUrlParameters()">
+      <tal:block metal:use-macro="context/WebPage_createContractFooter/macros/contract_footer" />
+    </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="contract_footer">
+    <tal:block tal:condition="python: contract_footer">
+      <tal:block tal:content="structure python: contract_footer"></tal:block>
+    </tal:block>
+    <tal:block tal:condition="python: not contract_footer">
+      <table class="ci-contract-footer">
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td><div>
+             <span class="ci-contract-header-key" i18n:translate="" i18n:domain="erp5_ui">Page:</span>
+             <span class="ci-contract-header-value page"></span>
+             <span class="ci-contract-header-value">/</span>
+             <span class="ci-contract-header-value topage"></span>
+          </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </tal:block>
+  </tal:block>
+</tal:block>

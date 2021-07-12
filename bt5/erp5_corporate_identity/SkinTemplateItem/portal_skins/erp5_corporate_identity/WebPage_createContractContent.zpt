@@ -1,0 +1,59 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Book content.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_theme                        python: options.get('contract_theme');
+                       contract_title                        python: options.get('contract_title');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_report_css_list              python: options.get('contract_report_css_list');
+                       contract_report_js_list               python: options.get('contract_report_js_list');
+                       contract_short_title                  python: options.get('contract_short_title');
+                       contract_description                  python: options.get('contract_description');
+                       contract_source_person_title          python: options.get('contract_source_person_title');
+                       contract_content                      python: options.get('contract_content');
+                       contract_format                       python: options.get('contract_format');
+                       contract_rendering_fix                python: options.get('contract_rendering_fix');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: contract_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url contract_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+    <link rel="stylesheet" href="template_css/highlight.css" />
+    <tal:block tal:condition="python: len(contract_report_css_list) > 0">
+      <tal:block tal:repeat="css_href contract_report_css_list">
+        <link rel="stylesheet" tal:attributes="href css_href" />
+      </tal:block>
+    </tal:block>
+    </head>
+    <body class="ci-contract ci-contract-content">
+      <tal:block metal:use-macro="context/WebPage_createContractContent/macros/contract_content" />
+      <script type="text/javascript" src="template_js/highlight.js"></script>
+      <tal:block tal:condition="python: len(contract_report_js_list) > 0">
+        <tal:block tal:repeat="js_src contract_report_js_list">
+          <script type="text/javascript" tal:attributes="src js_src"></script>
+        </tal:block>
+      </tal:block>
+      <tal:block tal:condition="python: contract_format == 'pdf'">
+        <tal:block tal:content="structure python: contract_rendering_fix"></tal:block>
+      </tal:block>
+        </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="contract_content">
+    <tal:block tal:content="structure python: contract_content"></tal:block>
+  </tal:block>
+</tal:block>
