@@ -8,6 +8,7 @@ object_value_list = [
   getattr(portal.organisation_module, 'test_trade_ui_test_client', None),
   getattr(portal.person_module, 'test_trade_ui_test_supplier', None),
   getattr(portal.person_module, 'test_trade_ui_test_client', None),
+  getattr(portal.business_process_module, 'test_trade_ui_test_business_process', None),
 ] + [
   getattr(portal.getDefaultModule(portal_type), "erp5_trade_ui_test_trade_condition" + suffix, None)
   for portal_type in ("Internal Trade Condition", "Purchase Trade Condition", "Sale Trade Condition")
