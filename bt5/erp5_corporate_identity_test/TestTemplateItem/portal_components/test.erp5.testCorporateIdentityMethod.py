@@ -111,6 +111,20 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
       self.portal.portal_preferences.default_site_preference.enable()
     self.tic()
 
+  def test_WebPage_createImageOverview(self):
+    web_page = self.portal.web_page_module.template_test_slideshow_input_001_en_html
+    document_content = '<div><img src="http://test.png" /></div>'
+    expected_dict ={'figure_list': []}
+    output_dict = web_page.WebPage_createImageOverview(document_content)
+    self.assertEquals(output_dict, expected_dict)
+    document_content = '<div><img src="http://test.png" alt="test" /></div>'
+    expected_dict ={'figure_list': [{'input': '<img src="http://test.png" alt="test" />',
+                                     'item': {'id': 'Figure-1', 'title': 'test'},
+                                     'output': '<a href="#Figure-1"></a><img src="http://test.png" alt="test" /><span>Figure-1 - test</span>'}]}
+    output_dict = web_page.WebPage_createImageOverview(document_content)
+    self.assertEquals(output_dict, expected_dict)
+
+
   def test_validateImage(self):
     web_page = self.portal.web_page_module.template_test_slideshow_input_001_en_html
     img_string = ''
