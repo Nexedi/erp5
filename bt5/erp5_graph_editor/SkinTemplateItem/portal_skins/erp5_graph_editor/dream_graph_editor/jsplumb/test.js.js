@@ -591,5 +591,24 @@
                 });
             }).fail(error_handler).always(start);
         });
+        test("Gadget can be rendered multiple times", function () {
+            var jsplumb_gadget;
+            stop();
+            g.declareGadget("./index.html", {
+                element: document.querySelector("#test-element")
+            }).then(function (new_gadget) {
+                jsplumb_gadget = new_gadget;
+                return jsplumb_gadget.render(sample_data_graph);
+            }).then(function () {
+                return jsplumb_gadget.getContent();
+            }).then(function () {
+                return jsplumb_gadget.render(sample_data_graph);
+            }).then(function () {
+                return jsplumb_gadget.getContent();
+            }).then(function (content) {
+                equal(sample_data_graph, content);
+                equal($(".window", document.querySelector("#test-element")).length, 2, "Graph is rendered only once");
+            }).fail(error_handler).always(start);
+        });
     });
 }(rJS, JSON, QUnit, RSVP, jQuery));
