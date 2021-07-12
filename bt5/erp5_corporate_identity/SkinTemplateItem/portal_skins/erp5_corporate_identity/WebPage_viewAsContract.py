@@ -50,9 +50,10 @@ for header in re.findall("<h[1-6].*</h[1-6]>", contract_content or ""):
     header_list = re.findall("<(h[1-6]).*>", header)
     if len(header_list):
       tag = header_list[0]
+      key = tag[1]
       contract_content = contract_content.replace(
         header,
-        header.replace(tag, 'h2')
+        header.replace(tag, 'h%s' % (int(key) + 1))
       )
 
 
