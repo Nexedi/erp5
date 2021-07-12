@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_CommonTemplateForItemRenderjsUi</string> </value>
+            <value> <string>Zuite_viewCommonTemplateForItemRenderjsUi</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
