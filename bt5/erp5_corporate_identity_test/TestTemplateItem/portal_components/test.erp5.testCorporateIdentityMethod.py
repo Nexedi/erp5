@@ -160,6 +160,10 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     output_string = web_page.WebPage_validateImage(img_string=img_string)
     self.assertEqual(output_string, '<img src="Template.Test.Image.Map?version=1&amp;format=">')
 
+    img_string = '<img src="Template.Test.Image.Map/getData">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, '<img src="Template.Test.Image.Map/getData?format=">')
+
     img_string = '<img src="./Template.Test.Image.Map?version=1">'
     output_string = web_page.WebPage_validateImage(img_string=img_string)
     self.assertEqual(output_string, '<img src="Template.Test.Image.Map?version=1&amp;format=">')
