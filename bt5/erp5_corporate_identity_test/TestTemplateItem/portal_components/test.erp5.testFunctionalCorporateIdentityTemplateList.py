@@ -30,7 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctiona
 
 class TestFunctionalCorporateIdentityTemplateList(ERP5TypeFunctionalTestCase):
   foreground = 0
-  run_only = "template_test_zuite"
+  run_only = "corporate_identity_test_zuite"
 
   def getBusinessTemplateList(self):
     return (
