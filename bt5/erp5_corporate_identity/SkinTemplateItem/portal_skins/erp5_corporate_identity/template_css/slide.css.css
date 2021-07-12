@@ -32,8 +32,28 @@ html .ci-slideshow code {
   font-size: .4em;
 }
 
-
-
+/* line number */
+html .ci-slideshow pre {
+  counter-reset: lines;
+}
+html .ci-slideshow pre .line {
+  counter-increment: lines;
+}
+html .ci-slideshow pre .line::before {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  content: counter(lines);
+  text-align: right;
+  width:1em;
+  display: inline-block;
+  padding-right: 0.5em;
+  margin-right: 0.5em;
+  color: #BBB;
+  border-right: solid 1px;
+}
 
 /*
 
