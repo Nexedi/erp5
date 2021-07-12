@@ -225,8 +225,8 @@
 
     function updateConnectionData(gadget, connection, remove) {
         if (connection.ignoreEvent) {
-            // this hack is for edge edition. Maybe there I missed one thing and
-            // there is a better way.
+            // this hack is for edge edition and when the graph is re-rendered.
+            // Maybe there I missed one thing and there is a better way.
             return;
         }
         if (remove) {
@@ -815,6 +815,20 @@
            }
          });
         */
+
+            // reset previous graph, if any.
+            if ($(".window", this.props.element).length) {
+                $.each(
+                    // disable the "delete" event, otherwise after render load the
+                    // graph, loopJsplumbBind events will process the connection deleted
+                    // events 
+                    this.props.jsplumb_instance.getAllConnections(),
+                    function (i, connection) {
+                        connection.ignoreEvent = true
+                    });
+                this.props.jsplumb_instance.reset();
+                $(".window", this.props.element).remove();
+            }
             if (data) {
                 this.props.data = JSON.parse(data);
 
