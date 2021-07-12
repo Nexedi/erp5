@@ -21,7 +21,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content or blank):
           link_doc = context.restrictedTraverse(link_reference.split("?")[0])
           doc_content = doc_content.replace(link, link_doc.asStrippedHTML())
         except LookupError:
-          raise LookupError(link_reference)
+          pass
 
 doc_content = doc_content.replace("${related_subject_list}", blank)
 doc_content = doc_content.replace("${table_of_content", blank)
