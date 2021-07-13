@@ -1352,38 +1352,38 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
           is_field_library = self.getId().endswith('FieldLibrary')
           if self.pt == 'form_view' and not is_field_library:
-
-            translated_workflow_state_title_field_re = re.compile('my_translated_.*state_title$')
-            def isTranslatedWorkflowStateTitleField(f):
-              return translated_workflow_state_title_field_re.match(f.getId()) is not None
-
-            not_translated_workflow_state_field_re = re.compile('my_(?!translated_).*state(_title|)$')
-            def isNonTranslatedWorkflowStateField(f):
-              return not_translated_workflow_state_field_re.match(f.getId()) and f.getId() not in (
-                  # exception for some properties containing "state" in their names
-                  'my_initial_implementation_state',
-                  'my_hot_reindexing_state',
-                  'my_message_different_state',
-              )
-
-            for group_name in self.get_groups():
-              field_list = self.get_fields_in_group(group_name)
-              for index, field in enumerate(field_list):
-                if isTranslatedWorkflowStateTitleField(field):
-                  is_in_right_group = 'right' in group_name
-                  # workflow states fields must be the last ones, so we check
-                  # that this field or all the one below match the
-                  # my_translated_${state_variable}_title regex
-                  all_bottom_fields_are_workflow_state_fields = {True} == {
-                      isTranslatedWorkflowStateTitleField(f) is not None for f in field_list[index:]}
-                  if not (all_bottom_fields_are_workflow_state_fields and is_in_right_group):
+            if self.getId() not in CodingStyle.ignored_skin_id_set:
+              translated_workflow_state_title_field_re = re.compile('my_translated_.*state_title$')
+              def isTranslatedWorkflowStateTitleField(f):
+                return translated_workflow_state_title_field_re.match(f.getId()) is not None
+  
+              not_translated_workflow_state_field_re = re.compile('my_(?!translated_).*state(_title|)$')
+              def isNonTranslatedWorkflowStateField(f):
+                return not_translated_workflow_state_field_re.match(f.getId()) and f.getId() not in (
+                    # exception for some properties containing "state" in their names
+                    'my_initial_implementation_state',
+                    'my_hot_reindexing_state',
+                    'my_message_different_state',
+                )
+  
+              for group_name in self.get_groups():
+                field_list = self.get_fields_in_group(group_name)
+                for index, field in enumerate(field_list):
+                  if isTranslatedWorkflowStateTitleField(field):
+                    is_in_right_group = 'right' in group_name
+                    # workflow states fields must be the last ones, so we check
+                    # that this field or all the one below match the
+                    # my_translated_${state_variable}_title regex
+                    all_bottom_fields_are_workflow_state_fields = {True} == {
+                        isTranslatedWorkflowStateTitleField(f) is not None for f in field_list[index:]}
+                    if not (all_bottom_fields_are_workflow_state_fields and is_in_right_group):
+                      addMessage(
+                          'erp5-Guideline.Place.Simulation.And.Validation.Fields.In.Bottom.Of.Right.Group',
+                          'Workflow state fields must be at the bottom right')
+                  if isNonTranslatedWorkflowStateField(field):
                     addMessage(
-                        'erp5-Guideline.Place.Simulation.And.Validation.Fields.In.Bottom.Of.Right.Group',
-                        'Workflow state fields must be at the bottom right')
-                if isNonTranslatedWorkflowStateField(field):
-                  addMessage(
-                      'erp5-Guideline.Use.Correct.Names.For.Simulation.And.Validation.Titles',
-                      'Workflow state fields should be named my_translated_${state_variable}_title')
+                        'erp5-Guideline.Use.Correct.Names.For.Simulation.And.Validation.Titles',
+                        'Workflow state fields should be named my_translated_${state_variable}_title')
 
       # check fields, if they implement _checkConsistency
       for field in self.objectValues():
