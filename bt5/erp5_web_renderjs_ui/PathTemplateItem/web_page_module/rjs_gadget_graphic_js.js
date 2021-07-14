@@ -36,7 +36,9 @@
           column_list: options.layout.x.column_list,
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
-        domain_list, y, i, j;
+        domain_list,
+        i,
+        j;
 
       if ("object" === typeof options.group_by &&
           Array.isArray(options.group_by) &&
