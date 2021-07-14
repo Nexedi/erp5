@@ -1,21 +1,20 @@
 translateString = context.Base_translateString
 
-domain_id = "graphic_gadget_delivery_start_date_domain"
-column_list, domain_list = context.Base_getSubdomainTitleAndIdList(domain_id)
+listbox_data_dict = context.Base_extractGadgetDataDictFromListbox(
+  context.Base_viewStateAndDateRangeGadgetDataList.listbox
+)
 
 return [
-  ("group_by", "simulation_state"),
-  ("query_by", {"parent_uid": context.getUid()}),
-  ("title", translateString(
-    "%s Pipes" % context.getPortalType().replace(" Module", "")
-  )),
+  ("group_by", listbox_data_dict["group_by"]),
+  ("query_by", listbox_data_dict["query_by"]),
+  ("title", listbox_data_dict["title"]),
   ("layout", {
     "x": {
       "title": translateString("Days"),
       "key": "getTranslatedSimulationStateTitle",
-      "domain_id": domain_id,
-      "column_list": column_list,
-      "domain_list": domain_list
+      "domain_id": listbox_data_dict["domain_id"],
+      "column_list": listbox_data_dict["column_list"],
+      "domain_list": listbox_data_dict["domain_list"]
     },
     "y": {
       "title": translateString("Quantity")
