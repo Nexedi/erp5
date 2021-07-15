@@ -55,6 +55,7 @@ if doc_content.find('${WebPage_') != -1:
 # call it with the parameters provided
 
 for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
+  link = link[1:-1]
   link_reference_list = re.findall('href=\"(.*?)\"', link)
   if link_reference_list:
     link_reference = link_reference_list[0]
