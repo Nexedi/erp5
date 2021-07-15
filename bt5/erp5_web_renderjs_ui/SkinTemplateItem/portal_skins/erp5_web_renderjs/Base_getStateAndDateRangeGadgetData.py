@@ -1,5 +1,3 @@
-translateString = context.Base_translateString
-
 listbox_data_dict = context.Base_extractGadgetDataDictFromListbox(
   context.Base_viewStateAndDateRangeGadgetDataList.listbox
 )
@@ -10,17 +8,14 @@ return [
   ("title", listbox_data_dict["title"]),
   ("layout", {
     "x": {
-      # XXX How to move this title to listbox?
-      "title": translateString("Days"),
-      # XXX How listbox can provide it
-      "key": "getTranslatedSimulationStateTitle",
+      "title": listbox_data_dict["column_list"][0][1],
+      "key": listbox_data_dict["column_list"][0][0],
       "domain_id": listbox_data_dict["domain_id"],
-      "column_list": listbox_data_dict["column_list"],
+      "column_list": listbox_data_dict["label_list"],
       "domain_list": listbox_data_dict["domain_list"]
     },
     "y": {
-      # XXX How to move this title to listbox?
-      "title": translateString("Quantity")
+      "title": listbox_data_dict["column_list"][1][1]
     }
   })
 ]
