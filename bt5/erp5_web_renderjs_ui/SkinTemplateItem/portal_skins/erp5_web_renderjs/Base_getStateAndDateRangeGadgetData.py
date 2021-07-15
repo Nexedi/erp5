@@ -10,13 +10,16 @@ return [
   ("title", listbox_data_dict["title"]),
   ("layout", {
     "x": {
+      # XXX How to move this title to listbox?
       "title": translateString("Days"),
+      # XXX How listbox can provide it
       "key": "getTranslatedSimulationStateTitle",
       "domain_id": listbox_data_dict["domain_id"],
       "column_list": listbox_data_dict["column_list"],
       "domain_list": listbox_data_dict["domain_list"]
     },
     "y": {
+      # XXX How to move this title to listbox?
       "title": translateString("Quantity")
     }
   })
