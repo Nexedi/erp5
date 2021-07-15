@@ -3,6 +3,9 @@
 Create HTML table of content (to be used on web pages instead of xsl for pdf)
 ================================================================================
 """
+# ERP5 web uses type= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # parameters
 # ------------------------------------------------------------------------------
 # doc_content                 text content of document being rendered

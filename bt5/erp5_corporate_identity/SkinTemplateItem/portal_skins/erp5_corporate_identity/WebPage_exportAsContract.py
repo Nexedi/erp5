@@ -1,3 +1,6 @@
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 return context.WebPage_viewAsContract(
   document_save=document_save,
   display_svg=display_svg,
