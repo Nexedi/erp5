@@ -1,0 +1,164 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Tables of references.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_format                       python: options.get('contract_format');
+                       contract_theme                        python: options.get('contract_theme');
+                       contract_title                        python: options.get('contract_title');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_include_reference            python: options.get('contract_include_reference');
+                       contract_reference_list               python: options.get('contract_reference_list');
+                       contract_applicable_document_list     python: options.get('contract_applicable_document_list');
+                       contract_abbreviation_list            python: options.get('contract_abbreviation_list');
+                       contract_image_list                   python: options.get('contract_image_list');
+                       contract_table_list                   python: options.get('contract_table_list');">
+  <tal:block tal:condition="python: contract_format == 'html' or contract_format == 'mhtml'">
+    <tal:block metal:use-macro="context/WebPage_createContractTableOfReferences/macros/contract_references" />
+  </tal:block>
+  <tal:block tal:condition="python: contract_format == 'pdf'">
+    <!DOCTYPE html>
+    <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+    <head>
+      <meta charset="utf-8">
+      <title tal:content="python: contract_title"></title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <tal:block tal:repeat="font_url contract_theme_css_font_list">
+        <link rel="stylesheet" tal:attributes="href font_url" />
+      </tal:block>
+      <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+     <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+      </head>
+      	<body class="ci-contract" tal:condition="python: contract_include_reference != 0">
+      	  <tal:block metal:use-macro="context/WebPage_createContractTableOfReferences/macros/contract_references" />
+        </body>
+  	 </html>
+    </tal:block>
+  </tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="contract_references">
+    <tal:comment tal:replace="nothing">We need to recheck in case macro is called directly</tal:comment>
+    <tal:block tal:condition="python: contract_include_reference != 0">
+      <h2 i18n:translate="" i18n:domain="erp5_ui">References</h2>
+      <p i18n:translate="" i18n:domain="erp5_ui">This section provides the list of applicable documents and references.</p>
+      <h3 i18n:translate="" i18n:domain="erp5_ui">Applicable Documents</h3>
+      <p i18n:translate="" i18n:domain="erp5_ui">This section provides the list of applicable documents.</p>
+      <table class="ci-contract-table ci-contract-applicable-list" border="1" width="100%" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th width="9%"><b i18n:translate="" i18n:domain="erp5_ui">ID</b></th>
+            <th width="56%"><b i18n:translate="" i18n:domain="erp5_ui">Title</b><b>/</b><b i18n:translate="" i18n:domain="erp5_ui">Reference</b></th>
+            <th width="21%"><b i18n:translate="" i18n:domain="erp5_ui">Document Number</b></th>
+            <th width="14%"><b i18n:translate="" i18n:domain="erp5_ui">Issue.</b><br /><b i18n:translate="" i18n:domain="erp5_ui">Rev.</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:block tal:condition="python: len(contract_applicable_document_list) > 0">
+            <tal:block tal:repeat="applicable_document contract_applicable_document_list">
+              <tr>
+                <td width="9%"><a tal:attributes="id python: applicable_document.get('id')"></a><span tal:content="python: applicable_document.get('id')"></span></td>
+                <td width="56%" style="text-align:left"><span tal:content="python: applicable_document.get('title')"></span><br/><a tal:attributes="href python: applicable_document.get('href')"><span tal:content="python: applicable_document.get('href')"></span></a></td>
+                <td width="21%" tal:content="python: applicable_document.get('number')"></td>
+                <td width="14%" tal:content="python: applicable_document.get('version')"></td>
+              </tr>
+            </tal:block>
+          </tal:block>
+        </tbody>
+      </table>
+      <h3 i18n:translate="" i18n:domain="erp5_ui">Referenced Documents</h3>
+      <p i18n:translate="" i18n:domain="erp5_ui">This section provides the list of referenced documents.</p>
+      <table class="ci-contract-table ci-contract-reference-list" border="1" width="100%" style="table-layout:fixed;" cellpadding="2" cellspacing="0">
+        <thead>
+          <tr>
+            <th width="9%"><b i18n:translate="" i18n:domain="erp5_ui">ID</b></th>
+            <th width="56%"><b i18n:translate="" i18n:domain="erp5_ui">Title</b><b>/</b><b i18n:translate="" i18n:domain="erp5_ui">Reference</b></th>
+            <th width="21%"><b i18n:translate="" i18n:domain="erp5_ui">Document Number</b></th>
+            <th width="14%"><b i18n:translate="" i18n:domain="erp5_ui">Issue.</b><br /><b i18n:translate="" i18n:domain="erp5_ui">Rev.</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:block tal:condition="python: len(contract_reference_list) > 0">
+            <tal:block tal:repeat="reference_document contract_reference_list">
+              <tr>
+                <td width="9%"><a tal:attributes="id python: reference_document.get('id')"></a><span tal:content="python: reference_document.get('id')"></span></td>
+                <td width="56%" style="text-align:left"><span tal:content="python: reference_document.get('title')"></span><br/><a tal:attributes="href python: reference_document.get('href')"><span tal:content="python: reference_document.get('href')"></span></a></td>
+                <td width="21%" tal:content="python: reference_document.get('number')"></td>
+                <td width="14%" tal:content="python: reference_document.get('version')"></td>
+              </tr>
+            </tal:block>
+          </tal:block>
+        </tbody>
+      </table>
+      <h2 i18n:translate="" i18n:domain="erp5_ui">Abbreviations</h2>
+      <p i18n:translate="" i18n:domain="erp5_ui">This section provides the lists of the applicable abbreviations.</p>
+      <table border="1" class="ci-contract-table ci-contract-abbreviation-list" width="100%" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th width="10%"><b i18n:translate="" i18n:domain="erp5_ui">ID</b></th>
+          <th width="15%"><b i18n:translate="" i18n:domain="erp5_ui">Abbreviation</b></th>
+          <th width="31%"><b i18n:translate="" i18n:domain="erp5_ui">Title</b></th>
+          <th width="43%"><b i18n:translate="" i18n:domain="erp5_ui">Description</b></th>
+        </tr>
+      </thead>
+        <tbody>
+          <tal:block tal:condition="python: len(contract_abbreviation_list) > 0">
+            <tal:block tal:repeat="abbreviation contract_abbreviation_list">
+              <tr>
+                <td width="9%"><a tal:attributes="id python: abbreviation.get('id')"></a><span tal:content="python: abbreviation.get('id')"></span></td>
+                <td width="56%" style="text-align:left"><a tal:attributes="href python: abbreviation.get('href')"><span tal:content="python: abbreviation.get('abbreviation')"></span></a></td>
+                <td width="21%" style="text-align:left" tal:content="python: abbreviation.get('title')"></td>
+                <td width="14%" style="text-align:left" tal:content="python: abbreviation.get('description')"></td>
+              </tr>
+            </tal:block>
+          </tal:block>
+        </tbody>
+      </table>
+      <h2 i18n:translate="" i18n:domain="erp5_ui">Figures</h2>
+      <p i18n:translate="" i18n:domain="erp5_ui">This section provides the list of figures and images.</p>
+      <table border="1" class="ci-contract-table ci-contract-figure-list" width="100%" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th width="10%"><b i18n:translate="" i18n:domain="erp5_ui">ID</b></th>
+            <th width="90%"><b i18n:translate="" i18n:domain="erp5_ui">Title</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:block tal:condition="python: len(contract_image_list) > 0">
+            <tal:block tal:repeat="image contract_image_list">
+            <tr>
+              <td width="10%"><a tal:attributes="id python: image.get('id')"></a><span tal:content="python: image.get('id')"></span></td>
+              <td width="90%" style="text-align: left; vertical-align: top" tal:content="python: image.get('title')"></td>
+            </tr>
+            </tal:block>
+          </tal:block>
+        </tbody>
+      </table>
+      <h2 i18n:translate="" i18n:domain="erp5_ui">Tables</h2>
+      <p i18n:translate="" i18n:domain="erp5_ui">This section provides the list of tables.</p>
+      <table border="1" class="ci-contract-table ci-contract-figure-list" width="100%" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th width="10%"><b i18n:translate="" i18n:domain="erp5_ui">ID</b></th>
+            <th width="90%"><b i18n:translate="" i18n:domain="erp5_ui">Title</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:block tal:condition="contract_table_list">
+            <tal:block tal:repeat="table contract_table_list">
+              <tr>
+                <td width="10%"><a tal:attributes="id python: table.get('id')"></a><span tal:content="python: table.get('id')"></span></td>
+                <td width="90%" style="text-align: left; vertical-align: top" tal:content="python: table.get('title')"></td>
+              </tr>
+            </tal:block>
+          </tal:block>
+        </tbody>
+      </table>
+    </tal:block>
+  </tal:block>
+</tal:block>

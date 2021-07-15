@@ -11,6 +11,7 @@ import re
 
 blank = ""
 for link in re.findall('([^[]<a.*?</a>[^]])', doc_content or blank):
+  link = link[1:-1]
   link_reference_list = re.findall('href=\"(.*?)\"', link)
   if link_reference_list:
     link_reference = link_reference_list[0]
@@ -21,7 +22,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content or blank):
           link_doc = context.restrictedTraverse(link_reference.split("?")[0])
           doc_content = doc_content.replace(link, link_doc.asStrippedHTML())
         except LookupError:
-          raise LookupError(link_reference)
+          pass
 
 doc_content = doc_content.replace("${related_subject_list}", blank)
 doc_content = doc_content.replace("${table_of_content", blank)

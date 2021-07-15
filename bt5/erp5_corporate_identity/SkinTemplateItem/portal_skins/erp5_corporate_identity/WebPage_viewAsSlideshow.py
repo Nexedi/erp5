@@ -140,14 +140,24 @@ def removeEmptyDetails(my_content):
 def addLastSlide(my_last_slide):
   # XXXX This condition is not accurate
   if my_last_slide.count("<div") != 2:
-    last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl()
-    if last_slide_relative_url:
-      # try:
-      last_slide = doc.restrictedTraverse(last_slide_relative_url)
-      if last_slide is not None:
-        return last_slide.getTextContent()
-      #except AttributeError:
-      #  last_slide_content = blank
+    last_slide=None
+    # search first through web reference
+    if doc_theme['theme']:
+      last_slide_list = context.portal_catalog(
+        portal_type='Web Page',
+        reference='%s-Marketing.Slideshow.Last.Slide' % doc_theme['theme'].upper(),
+        limit=1)
+      if last_slide_list:
+        last_slide=last_slide_list[0]
+    if not last_slide:
+      # get default one
+      last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl()
+      if last_slide_relative_url:
+        last_slide = doc.restrictedTraverse(last_slide_relative_url)
+
+    if last_slide:
+      return last_slide.getTextContent()
+
   return blank
 
 # -------------------------- Setup ---------------------------------------------
@@ -168,6 +178,8 @@ override_logo_reference = kw.get('override_logo_reference', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
 override_batch_mode = kw.get('batch_mode')
 override_source_person_title = None
+
+doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/slide", skin="Slide")
 
 # --------------------- Convert any page into a slideshow ----------------------
 # Note: mileage varies depending on the cleanliness of the HTML page
@@ -250,7 +262,6 @@ if doc_reference is None:
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 
 # --------------------------- Layout Parameters --------------------------------
-doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/slide", skin="Slide")
 doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {',
   'content: "%s";' % (doc_theme.get("theme_logo_description")),
   'background: #FFF url("%s") center no-repeat;' % (doc.Base_setUrl(path=doc_theme.get("theme_logo_url"), display="medium")),

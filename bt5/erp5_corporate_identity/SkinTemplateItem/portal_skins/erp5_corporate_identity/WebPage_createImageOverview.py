@@ -38,7 +38,7 @@ for figure in re.findall('(<img.*?/>)', document_content or ''):
 
   # no alt attribute = skip an image from being included
   figure_title = re.findall(match_content, figure) or blank
-  if figure_title[0] == blank:
+  if figure_title == blank or figure_title[0] == blank:
     continue
 
   figure_count = figure_count + 1

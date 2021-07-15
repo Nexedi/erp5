@@ -92,99 +92,7 @@
   	        
     	        
     
-    
       <section>
-        <table class="ci-book-table ci-book-signature-list" border="1" width="100%" cellpadding="0" cellspacing="0">
-          <thead>
-            <tr>
-              <th colspan="4">Signature List</th>
-            </tr>
-            <tr>
-              <th width="25%">Name</th>
-              <th width="25%"><span>Function</span><br /><span>Company</span></th>
-              <th width="25%">Signature</th>
-              <th width="25%">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-            
-              <tr>
-                <td width="25%"><em>Signed by:</em><strong>Sample Person</strong></td>
-                <td width="25%">CEO</td>
-                <td width="25%">Sample Company</td>
-                <td width="25%">20xx-xx-xx</td>
-              </tr>
-            
-          </tbody>
-        </table>
-      </section>
-      <section>
-        <table class="ci-book-table ci-book-distribution-list" border="1" width="100%" cellpadding="0" cellspacing="0">
-          <thead>
-            <tr>
-              <th>Distribution List</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <ul>
-                  
-                  
-                    <li>
-                      <div>Sample Person</div>
-                      <div>Sample Company</div>
-                    </li>
-                  
-                </ul>
-                <ul>
-                  
-                  
-                    <li>
-                      <div>Sample Person</div>
-                      <div>Sample Company</div>
-                    </li>
-                  
-                </ul>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-      <section>
-        <table class="ci-book-table ci-book-version-list" border="1" width="100%" cellpadding="0" cellspacing="0">
-          <thead>
-            <tr>
-              <th colspan="4">Version Table</th>
-            </tr>
-            <tr>
-              <th width="15%">Version</th>
-              <th width="20%">Date</th>
-              <th width="15%">Page</th>
-              <th width="55%">Description of Modifications</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-            
-              <tr>
-                <td width="15%">001</td>
-                <td width="20%">20xx-xx-xx</td>
-                <td width="15%">All</td>
-                <td width="55%" style="text-align: right">Added example content, corrections.</td>
-              </tr>
-            
-          </tbody>
-        </table>
-      </section>
-    
-  
-            
-            <section class="ci-book-table-of-content"><p class="ci-book-toc-faux-h1">Table of Contents</p><ol><li><div><a href="#introduction0_anchor">Introduction</div></a><ol><li><div><a href="#references1_anchor">References</div></a><ol><li><div><a href="#applicable-documents2_anchor">Applicable Documents</div></a></li><li><div><a href="#referenced-documents3_anchor">Referenced Documents</div></a></li></ol><li><div><a href="#abbreviations4_anchor">Abbreviations</div></a></li><li><div><a href="#figures5_anchor">Figures</div></a></li><li><div><a href="#tables6_anchor">Tables</div></a></li></ol><li><div><a href="#synthese7_anchor">Synthese</div></a><ol><li><div><a href="#risks-and-measures8_anchor">Risks and measures</div></a><ol><li><div><a href="#risk-of-casualties-if-device-does-not-stop-and-destroys-itself9_anchor">Risk of casualties if device does not stop and destroys itself</div></a></li><li><div><a href="#risk-of-killing-birds-and-polluting-the-environment10_anchor">Risk of killing birds and polluting the environment</div></a></li><li><div><a href="#noise-and-vibration-levels11_anchor">Noise and vibration levels</div></a></li></ol></li></ol><li><div><a href="#header-embedded-document12_anchor">Header Embedded Document</div></a><ol><li><div><a href="#header-embedded-document-content-examples13_anchor">Header Embedded Document content Examples</div></a></li></ol><li><div><a href="#reports14_anchor">Reports</div></a><ol><li><div><a href="#project-reports15_anchor">Project Reports</div></a></li><li><div><a href="#sale-order-reports16_anchor">Sale Order Reports</div></a></ol></ol></section>
-          
-          
-    <section>
 <table>
 	<thead>
 		<tr>
@@ -220,8 +128,9 @@
 	</tbody>
 </table>
 </section>
-
-<section>
+    
+    
+      <section>
 <table>
 	<thead>
 		<tr>
@@ -251,8 +160,9 @@
 	</tbody>
 </table>
 </section>
-
-<section>
+    
+    
+      <section>
 <table>
 	<thead>
 		<tr>
@@ -287,6 +197,137 @@
 	</tbody>
 </table>
 </section>
+    
+    <!--tal:comment replace="nothing">Directly called from WebPage_createBook, so need to check again</tal:comment>
+    <tal:block tal:condition="python: book_include_history != 0">
+      <section>
+        <table class="ci-book-table ci-book-signature-list" border="1" width="100%" cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th colspan="4" i18n:translate="" i18n:domain="erp5_ui">Signature List</th>
+            </tr>
+            <tr>
+              <th width="25%" i18n:translate="" i18n:domain="erp5_ui">Name</th>
+              <th width="25%"><span i18n:translate="" i18n:domain="erp5_ui">Function</span><br /><span i18n:translate="" i18n:domain="erp5_ui">Company</span></th>
+              <th width="25%" i18n:translate="" i18n:domain="erp5_ui">Signature</th>
+              <th width="25%" i18n:translate="" i18n:domain="erp5_ui">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tal:block tal:condition="python: len(book_signature_list) > 0">
+              <tal:block tal:repeat="person book_signature_list">
+                <tr>
+                  <td width="25%"><em i18n:translate="" i18n:domain="erp5_ui">Signed by:</em><strong tal:content="python: person.title"></strong></td>
+                  <td width="25%" tal:content="python: person.career_subordination_title"></td>
+                  <td width="25%" tal:content="python: person.career_function"></td>
+                  <td width="25%" tal:content="python: Date().strftime('%Y-%m-%d')"></td>
+                </tr>
+              </tal:block>
+            </tal:block>
+            <tal:block tal:condition="python: len(book_signature_list) == 0">
+              <tr>
+                <td width="25%"><em i18n:translate="" i18n:domain="erp5_ui">Signed by:</em><strong>Sample Person</strong></td>
+                <td width="25%">CEO</td>
+                <td width="25%">Sample Company</td>
+                <td width="25%">20xx-xx-xx</td>
+              </tr>
+            </tal:block>
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <table class="ci-book-table ci-book-distribution-list" border="1" width="100%" cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th i18n:translate="" i18n:domain="erp5_ui">Distribution List</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul>
+                  <tal:block tal:condition="python: len(book_distribution_list) > 0">
+                    <tal:block tal:repeat="person book_distribution_list">
+                      <li tal:condition="person/odd">
+                        <div tal:content="python: person.title"></div>
+                        <div tal:content="python: person.career_function"></div>
+                      </li>
+                    </tal:block>
+                  </tal:block>
+                  <tal:block tal:condition="python: len(book_distribution_list) == 0">
+                    <li>
+                      <div>Sample Person</div>
+                      <div>Sample Company</div>
+                    </li>
+                  </tal:block>
+                </ul>
+                <ul>
+                  <tal:block tal:condition="python: len(book_distribution_list) > 0">
+                    <tal:block tal:repeat="person book_distribution_list">
+                      <li tal:condition="person/even">
+                        <div tal:content="python: person.title"></div>
+                        <div tal:content="python: person.career_function"></div>
+                      </li>
+                    </tal:block>
+                  </tal:block>
+                  <tal:block tal:condition="python: len(book_distribution_list) == 0">
+                    <li>
+                      <div>Sample Person</div>
+                      <div>Sample Company</div>
+                    </li>
+                  </tal:block>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <table class="ci-book-table ci-book-version-list" border="1" width="100%" cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th colspan="4" i18n:translate="" i18n:domain="erp5_ui">Version Table</th>
+            </tr>
+            <tr>
+              <th width="15%" i18n:translate="" i18n:domain="erp5_ui">Version</th>
+              <th width="20%" i18n:translate="" i18n:domain="erp5_ui">Date</th>
+              <th width="15%" i18n:translate="" i18n:domain="erp5_ui">Page</th>
+              <th width="55%" i18n:translate="" i18n:domain="erp5_ui">Description of Modifications</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tal:block tal:condition="python: len(book_version_list) > 0">
+              <tal:block  tal:repeat="version book_version_list">
+                <tr>
+                  <td width="15%" tal:content="python: version.number"></td>
+                  <td width="20%" tal:content="python: version.date"></td>
+                  <td width="15%" tal:content="python: version.modifciations"></td>
+                  <td width="55%" tal:content="python: version.comment" style="text-align: left"></td>
+                </tr>
+              </tal:block>
+            </tal:block>
+            <tal:block tal:condition="python: len(book_version_list) == 0">
+              <tr>
+                <td width="15%">001</td>
+                <td width="20%">20xx-xx-xx</td>
+                <td width="15%">All</td>
+                <td width="55%" style="text-align: right">Added example content, corrections.</td>
+              </tr>
+            </tal:block>
+          </tbody>
+        </table>
+      </section>
+    </tal:block-->
+  
+            
+            <section class="ci-book-table-of-content"><p class="ci-book-toc-faux-h1">Table of Contents</p><ol><li><div><a href="#introduction0_anchor">Introduction</div></a><ol><li><div><a href="#references1_anchor">References</div></a><ol><li><div><a href="#applicable-documents2_anchor">Applicable Documents</div></a></li><li><div><a href="#referenced-documents3_anchor">Referenced Documents</div></a></li></ol><li><div><a href="#abbreviations4_anchor">Abbreviations</div></a></li><li><div><a href="#figures5_anchor">Figures</div></a></li><li><div><a href="#tables6_anchor">Tables</div></a></li></ol><li><div><a href="#synthese7_anchor">Synthese</div></a><ol><li><div><a href="#risks-and-measures8_anchor">Risks and measures</div></a><ol><li><div><a href="#risk-of-casualties-if-device-does-not-stop-and-destroys-itself9_anchor">Risk of casualties if device does not stop and destroys itself</div></a></li><li><div><a href="#risk-of-killing-birds-and-polluting-the-environment10_anchor">Risk of killing birds and polluting the environment</div></a></li><li><div><a href="#noise-and-vibration-levels11_anchor">Noise and vibration levels</div></a></li></ol></li></ol><li><div><a href="#header-embedded-document12_anchor">Header Embedded Document</div></a><ol><li><div><a href="#header-embedded-document-content-examples13_anchor">Header Embedded Document content Examples</div></a></li></ol><li><div><a href="#reports14_anchor">Reports</div></a><ol><li><div><a href="#project-reports15_anchor">Project Reports</div></a></li><li><div><a href="#sale-order-reports16_anchor">Sale Order Reports</div></a></ol></ol></section>
+          
+          
+    
+
+
+
+
 <h1><a name="introduction0_anchor"></a>Introduction<a class="custom-para" href=#introduction0_anchor><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a></h1>
 <h2><a name="references1_anchor"></a>References<a class="custom-para" href=#references1_anchor><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a></h2>
       <p>This section provides the list of applicable documents and references.</p>
@@ -494,13 +535,15 @@ within corelated noise and vibration in allowed by regulations levels [<a href="
 Finally an abbreviation: [<a href="#AB-1" title="Enterprise Research Planning">AB-1</a>],
 mixed with another link to an external <a href="https://google.com">document</a>
 which should not be touched.
-</p><h1><a name="header-embedded-document12_anchor"></a>Header Embedded Document<a class="custom-para" href=#header-embedded-document12_anchor><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a></h1>
+</p>
+<h1><a name="header-embedded-document12_anchor"></a>Header Embedded Document<a class="custom-para" href=#header-embedded-document12_anchor><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a></h1>
 <p>This is the content of an embedded document loaded via reference.</p>
 <h2><a name="header-embedded-document-content-examples13_anchor"></a>Header Embedded Document content Examples<a class="custom-para" href=#header-embedded-document-content-examples13_anchor><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a></h2>
 <p>Some more references to include in the overall tables
 [<a href="#AD-2" title="Gnu">AD-2</a>], as well another image.
 </p>
 <a href="#Figure-1"></a><p class="ci-book-img" style="text-align:center"><img src="Template.Test.Illustration.Reach?format=png&amp;display=medium" alt="Reach" /></p><span>Figure-1 - Reach</span>
+
 <p>Another example of an image and a table of data</p>
 <a href="#Figure-2"></a><p class="ci-book-img" style="text-align:center"><img src="Template.Test.Image.Office?format=png&amp;display=medium" alt="Caption for this image" /></p><span>Figure-2 - Caption for this image</span>
 <p>Another example of an image and a table of data</p>

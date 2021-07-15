@@ -39,6 +39,8 @@ if doc_save:
         'portal_type': context.getTranslatedPortalType()
       }
     )
+    if context.getWebSiteValue():
+      context.getPortalObject().portal_skins.changeSkin('HalRestricted')
     return web_page.Base_redirect(
       keep_items=dict(portal_status_message=message)
     )
