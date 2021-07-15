@@ -106,8 +106,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>Simulation State</string>
+                          <string>getTranslatedSimulationStateTitle</string>
+                          <string>Days</string>
+                        </tuple>
+                        <tuple>
+                          <string>count(getTranslatedSimulationStateTitle)</string>
+                          <string>Quantity</string>
                         </tuple>
                       </list>
                     </value>
