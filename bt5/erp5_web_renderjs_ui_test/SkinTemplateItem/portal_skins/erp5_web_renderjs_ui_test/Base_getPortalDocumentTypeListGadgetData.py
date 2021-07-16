@@ -1,7 +1,7 @@
 translateString = context.Base_translateString
 
 return [
-  ("group_by", "portal_type"),
+  ("group_by", ["portal_type",]),
   ("query_by", {"portal_type": context.getPortalDocumentTypeList()}),
   ("title", translateString("Number of Documents")),
   ("layout", {
