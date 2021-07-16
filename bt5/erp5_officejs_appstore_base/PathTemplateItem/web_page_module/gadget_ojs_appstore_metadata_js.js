@@ -8,12 +8,14 @@
     .declareMethod('render', function (options) {
       var value = "Not found",
         css_class = "ui-btn orange";
-      if (options.metadata) {
+      try {
         var metadata = JSON.parse(options.metadata);
         value = metadata.message;
         if (metadata.status === 0) {
           css_class = "ui-btn-disabled green";
         }
+      } catch (e) {
+        value = "Error getting metadata";
       }
       return this.changeState({
         value: value,
