@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ojs_appstore_publish_button.css</string> </value>
+            <value> <string>gadget_ojs_appstore_metadata.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ojs_appstore_publish_button_css</string> </value>
+            <value> <string>gadget_ojs_appstore_metadata_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS Appstore Publish Button CSS</string> </value>
+            <value> <string>Gadget OfficeJS Appstore Metadata CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -201,7 +201,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1536067229.5</float>
+                              <float>1626463735.64</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -250,7 +250,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>992.13065.39275.59033</string> </value>
+                      <value> <string>993.30650.1240.12526</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -268,7 +268,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1626464688.12</float>
+                              <float>1626464645.99</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -295,9 +295,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>detect_converted_file</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -313,7 +311,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>empty</string> </value>
+                      <value> <string>converted</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -331,7 +329,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1536067092.9</float>
+                              <float>1626463460.63</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
