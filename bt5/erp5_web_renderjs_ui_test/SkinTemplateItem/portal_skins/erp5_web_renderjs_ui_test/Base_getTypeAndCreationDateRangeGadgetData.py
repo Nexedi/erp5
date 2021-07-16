@@ -4,7 +4,7 @@ domain_id = "graphic_gadget_creation_date_domain"
 column_list, domain_list = context.Base_getSubdomainTitleAndIdList(domain_id)
 
 return [
-  ("group_by", "portal_type"),
+  ("group_by", ["portal_type",]),
   ("query_by", {"parent_uid": context.getUid()}),
   ("title", translateString("Number of events from a range of creation_date")),
   ("layout", {
