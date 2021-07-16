@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {"jio_key": context.getRelativeUrl(), "metadata": context.SoftwarePublication_appMetadataStatus()}</string> </value>
+            <value> <string>python: {"jio_key": context.getRelativeUrl(), "metadata": context.SoftwarePublication_getMetadataStatus()}</string> </value>
         </item>
       </dictionary>
     </pickle>
