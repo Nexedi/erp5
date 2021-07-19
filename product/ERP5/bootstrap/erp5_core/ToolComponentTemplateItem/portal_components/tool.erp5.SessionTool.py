@@ -60,10 +60,32 @@ class Session(UserDict):
   # used to set duration of session
   session_duration = None
 
+  # a handle to current aquisition context
+  _aq_context = None
+
+  def __getstate__(self):
+    """filter out acqusition wrappers when serializing.
+    """
+    state = {
+        'session_duration': self.session_duration,
+        'data': {k: aq_base(v) for k, v in self.data.iteritems()}
+    }
+    if 'session_id' in self.__dict__:
+      state['session_id']  = self.session_id
+    return state
+
   def _updatecontext(self, aq_context):
-    """ Update current aquisition context.
-         This makes only sense for local RAM Session."""
-    pass
+    """ Update current aquisition context. """
+    self._aq_context = aq_context
+
+  def __getitem__(self, key):
+    if key in self.data:
+      value = self.data[key]
+      if hasattr(value, '__of__'):
+        # returned it wrapped in aquisition context
+        value = value.__of__(self._aq_context)
+      return value
+    raise KeyError(key)
 
   def _updateSessionDuration(self, session_duration):
     self.session_duration = int(session_duration)
@@ -79,28 +101,15 @@ class Session(UserDict):
     for key, item in kw.items():
       self.__setitem__(key, item)
 
-class RamSession(Session):
-  """ Local RAM Session dictionary """
-
-  # a handle to current aquisition context
-  _aq_context = None
-
-  def _updatecontext(self, aq_context):
-    """ Update current aquisition context. """
-    self._aq_context = aq_context
-
-  def __getitem__(self, key):
-    if key in self.data:
-      value = self.data[key]
-      if hasattr(value, '__of__'):
-        # returned it wrapped in aquisition context
-        value = value.__of__(self._aq_context)
-      return value
-    raise KeyError(key)
-
   def __setitem__(self, key, item):
     # save value without its acquisition context
-    Session.__setitem__(self, key, aq_base(item))
+    UserDict.__setitem__(self, key, aq_base(item))
+
+  def update(self, dict=None, **kwargs):  # pylint: disable=redefined-builtin
+    for k, v in (dict or kwargs).iteritems():
+      # make sure to use our __setitem__ which removes acquistion wrappers
+      self[k] = v
+
 
 class DistributedSession(Session):
   """ Distributed Session dictionary.
@@ -111,6 +120,7 @@ class DistributedSession(Session):
 
   def _updateStorage(self):
     """ Update backend storage. """
+    assert self.session_id
     storage_plugin.set(self.session_id, \
                        SESSION_SCOPE, \
                        value = self, \
@@ -174,13 +184,28 @@ class SessionTool(BaseTool):
       shopping_cart = session['shopping_cart']
 
       Please note that:
-       - developer is responsible for handling an unique sessiond_id (using cookies for example).
-       - it's not recommended to store in portal_sessions ZODB persistent objects because in order
-       to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get"
-       request they'll be returend wrapped.
-       - developer can store temporary RAM based objects like 'TempOrder' but ONLY
-       when using Local RAM type of sessions. In a distributed environment one can use only
-       pickable types ue to the nature of memcached server.
+        - developer is responsible for handling an unique sessiond_id (using cookies for example).
+        - it's not recommended to store in portal_sessions ZODB persistent objects because in order
+      to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get"
+      request they'll be returend wrapped.
+        - developer can store temporary ERP5 documents like 'TempOrder', but keep
+      in mind that after making changes to temporary documents they need to be
+      saved again in portal_sessions, so:
+
+      >>> shopping_cart = context.newContent(portal_type='Order', temp_object=True, id='987654321')
+      >>> shopping_cart.newContent(portal_type='Order Line', quantity=1, resource=...)
+      >>> session['shopping_cart'] = shopping_cart
+
+      # modifying a temp document from session is valid
+      >>> shopping_cart.getMovementList()[0].setQuantity(3)
+      # but the session still reference the documents as it was when saved to session:
+      >>> session['shopping_cart'].getMovementList()[0].getQuantity()
+      1
+      # to make the change persist in the session, the temp document has to be saved again:
+      >>> session['shopping_cart'] = shopping_cart
+      >>> session['shopping_cart'].getMovementList()[0].getQuantity()
+      3
+
       """
 
   id = 'portal_sessions'
@@ -206,7 +231,7 @@ class SessionTool(BaseTool):
       # init it in cache and use different Session types based on cache plugin type used as a storage
       storage_plugin_type = storage_plugin_.__class__.__name__
       if storage_plugin_type in ("RamCache",):
-        session = RamSession()
+        session = Session()
       elif storage_plugin_type in ("DistributedRamCache",):
         session = DistributedSession()
         session._updateSessionId(session_id)

@@ -7,7 +7,8 @@
   - use Base_edit and a real ERP5 Form in order to  benefit from
     field reusability and property validation
 """
-translateString = context.Base_translateString 
+portal = context.getPortalObject()
+translateString = portal.Base_translateString 
 if field_my_buy_quantity is None:
   field_my_buy_quantity = context.REQUEST.get("field_my_buy_quantity", None)
 
@@ -44,7 +45,7 @@ if field_my_shipping_method not in ['', None]:
   line = getattr(shopping_cart, 'shipping_method', None)
   if line is not None:
     shopping_cart.manage_delObjects(line.getId())
-  shipping = context.getPortalObject().restrictedTraverse(field_my_shipping_method)
+  shipping = portal.restrictedTraverse(field_my_shipping_method)
   # create new shipping method order line
   shopping_cart.newContent(
                  id='shipping_method', 
@@ -57,7 +58,9 @@ if field_my_comment is not None:
   shopping_cart.setComment(field_my_comment)
 
 context.WebSection_updateShoppingCartTradeCondition(shopping_cart, field_my_payment_mode, preserve=True)
-  
+
+portal.portal_sessions[container.REQUEST['session_id']].update(shopping_cart=shopping_cart)
+
 if redirect:
   # Hardcode redirection.
   return context.Base_redirect("WebSection_viewShoppingCart", \
