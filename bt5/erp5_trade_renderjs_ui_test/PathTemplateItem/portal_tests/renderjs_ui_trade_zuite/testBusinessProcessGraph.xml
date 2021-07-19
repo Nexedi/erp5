@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testItemTrackingList</string> </value>
+            <value> <string>testBusinessProcessGraph</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Test Item View Tracking List</unicode> </value>
+            <value> <unicode>Test Business Process Graph</unicode> </value>
         </item>
       </dictionary>
     </pickle>
