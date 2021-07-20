@@ -906,16 +906,24 @@
         .push(undefined, function (error) {
           // couscous
           if (!navigator.onLine) {
-            window.addEventListener('online',
-                                    function backOnline() {
-              return location.reload();
-            });
-            return;
+            console.log('not online');
+            return gadget.changeState({
+              error_text: 'Offline',
+              // request_error_text: request_error_text,
+              url: undefined
+            })
+              .push(function () {
+                return rJS.loopEventListener(window, 'online', false,
+                                            function backOnline() {
+                  console.log('let reload');
+                  return gadget.render(route_result, keep_message);
+                  // return location.reload();
+                });
+              });
           }
           throw error;
         })
         .push(undefined, function (error) {
-
           return displayError(gadget, error);
         });
     })
