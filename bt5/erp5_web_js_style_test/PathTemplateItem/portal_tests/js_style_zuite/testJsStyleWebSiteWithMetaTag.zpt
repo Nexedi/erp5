@@ -1,0 +1,307 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test JS Style Demo Style</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test JS Style Demo Style</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=meta_tag</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Web Site created.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[text()='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:title' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:title' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:image' and @content='favicon.ico']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:image' and @content='favicon.ico']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='application-name' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:site_name' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='description' and @content='this is a description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:description' and @content='this is a description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:description' and @content='this is a description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='keywords' and @content='keyword1,keyword2']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:type' and @content='website']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:locale' and @content='en_US']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/fr</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[text()='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:title' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:title' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:image' and @content='favicon.ico']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:image' and @content='favicon.ico']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='application-name' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:site_name' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='description' and @content='this is a description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:description' and @content='this is a description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:description' and @content='this is a description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='keywords' and @content='keyword1,keyword2']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:type' and @content='website']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:locale' and @content='fr_FR']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[text()='Demo Section 1']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:title' and @content='Demo Section 1']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:title' and @content='Demo Section 1']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:image' and @content='favicon.ico']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='twitter:image' and @content='favicon.ico']</td>
+  <td></td>
+</tr>
+
+ <tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@name='application-name' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:site_name' and @content='Meta Tag']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//meta[@property='og:type' and @content='website']</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
