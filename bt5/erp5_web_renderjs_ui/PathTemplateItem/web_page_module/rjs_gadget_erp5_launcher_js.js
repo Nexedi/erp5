@@ -904,6 +904,18 @@
         render_timestamp: new Date().getTime()
       })
         .push(undefined, function (error) {
+          // couscous
+          if (!navigator.onLine) {
+            window.addEventListener('online',
+                                    function backOnline() {
+              return location.reload();
+            });
+            return;
+          }
+          throw error;
+        })
+        .push(undefined, function (error) {
+
           return displayError(gadget, error);
         });
     })
