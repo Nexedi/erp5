@@ -27,6 +27,7 @@
           href: options.href,
           alt: options.alt,
           name: options.name,
+          title: options.title,
           append: getFirstNonEmpty(options.append, ""),
           prepend: getFirstNonEmpty(options.prepend, "")
         };
@@ -67,6 +68,9 @@
       }
       if (this.state.alt) {
         new_element.setAttribute('alt', this.state.alt);
+      }
+      if (this.state.title) {
+        new_element.setAttribute('title', this.state.title);
       }
       if (modification_dict.hasOwnProperty("data")) {
         data = JSON.parse(modification_dict.data);
