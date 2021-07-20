@@ -947,6 +947,26 @@
         render_timestamp: new Date().getTime()
       })
         .push(undefined, function (error) {
+          if (!navigator.onLine) {
+            return route(gadget, 'translation_gadget', 'translate',
+                         ['You are offline.'])
+              .push(function (message) {
+                return route(gadget, "notification", 'notify',
+                        [{
+                    "message": message,
+                    "status": "error"
+                  }]);
+              })
+              .push(function () {
+                return rJS.loopEventListener(window, 'online', false,
+                                             function backOnline() {
+                    return location.reload();
+                  });
+              });
+          }
+          throw error;
+        })
+        .push(undefined, function (error) {
           return displayError(gadget, error);
         });
     })
