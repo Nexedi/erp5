@@ -148,6 +148,21 @@ configuration_dict = {
     'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
     'site_map_section_parent': True
   },
+  'meta_tag': {
+    'title': 'Meta Tag',
+    'description': 'this is a description',
+    'subject_list': ['keyword1', 'keyword2'],
+    'configuration_favicon_url': 'favicon.ico',
+    'site_map_section_parent': True
+  },
+  'meta_tag_form':{
+    'title': 'Meta Tag Form',
+    'description': 'this is a form description',
+    'subject_list': ['keyword1', 'keyword2'],
+    'configuration_favicon_url': 'favicon.ico',
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True
+  },
   'language': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'available_language_list': ['en', 'fr', 'zh'],
