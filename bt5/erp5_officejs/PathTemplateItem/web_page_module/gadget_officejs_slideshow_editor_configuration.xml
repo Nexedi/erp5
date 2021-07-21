@@ -97,17 +97,17 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Thu Sep 10 14:56:06 2020\n
+# generated on Tue Jul 20 15:24:43 2021\n
 CACHE:\n
 \n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZS9zbGlkZXNob3dfZWRpdG9yX3ZpZXc=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9UZXN0UGFnZV92aWV3Rm9yU2xpZGVzaG93RWRpdG9y\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZS9zbGlkZXNob3dfZWRpdG9yX2Nsb25l\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9zbGlkZXNob3dfZWRpdG9yX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdGb3JTbGlkZXNob3dFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3NsaWRlc2hvd19lZGl0b3Jfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9XZWJQYWdlX3ZpZXdGb3JTbGlkZXNob3dFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3NsaWRlc2hvd19lZGl0b3JfY2xvbmU=\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9CYXNlX2Nsb25lRG9jdW1lbnRGb3JTbGlkZXNob3dFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZSBNb2R1bGU=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZSBNb2R1bGUvc2xpZGVzaG93X2VkaXRvcl92aWV3\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9UZXN0UGFnZU1vZHVsZV92aWV3Rm9yU2xpZGVzaG93RWRpdG9y\n
 \n
 NETWORK:\n
 *</string> </value>
