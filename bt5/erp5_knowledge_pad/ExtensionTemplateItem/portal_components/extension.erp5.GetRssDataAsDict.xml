@@ -45,9 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:  6,  2: local variable \'translate\' is assigned to but never used</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

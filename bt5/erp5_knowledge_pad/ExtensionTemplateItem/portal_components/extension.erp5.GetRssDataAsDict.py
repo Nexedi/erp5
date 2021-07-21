@@ -3,7 +3,6 @@ from hashlib import md5
 
 def getRssDataAsDict(context, url, username=None, password=None):
   result = {}
-  translate = context.Base_translateString
   # no url, no feed to read
   if url in ('', None, 'None',):
     # no URL
