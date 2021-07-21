@@ -50,7 +50,7 @@ def getRssDataAsDict(context, url, username=None, password=None):
     entry_dict['title'] = entry['title']
     entry_dict['link'] = entry['link']
     entry_dict['other_links'] = [x['href'] for x in entry['links']]
-    entry_dict['md5'] = md5(entry['link']).hexdigest()
+    entry_dict['md5'] = md5((entry.get('guid') or entry.get('id') or entry['link']).encode()).hexdigest()
     entry_dict['content'] = entry.get('summary', '')
     entry_dict['date'] = entry.get('updated', None)
     entry_dict['img'] = [x['href'] for x in entry.get('enclosures', [])]
