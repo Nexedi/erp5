@@ -57,7 +57,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -75,22 +77,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>report_by_creation_date_gadget</string>
-                        <string>report_by_modification_date_gadget</string>
-                        <string>report_by_simulation_state_gadget</string>
-                        <string>report_by_quantity_unit_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>report_by_portal_type_gadget</string>
-                        <string>report_portal_type_gadget</string>
-                        <string>report_person_and_organisation_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -98,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>EventModule_viewExamplesOfGraphicGadgetReport</string> </value>
+            <value> <string>Base_viewQuantityUnitGadgetDataList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -106,7 +99,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>EventModule_viewExamplesOfGraphicGadgetReport</string> </value>
+            <value> <string>Base_reportPrototype</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -126,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Test Graphic Gadget</string> </value>
+            <value> <string>Report Module By State</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
