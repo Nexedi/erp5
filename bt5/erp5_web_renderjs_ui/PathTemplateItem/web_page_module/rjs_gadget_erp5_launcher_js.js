@@ -904,21 +904,21 @@
         render_timestamp: new Date().getTime()
       })
         .push(undefined, function (error) {
-          // couscous
           if (!navigator.onLine) {
-            console.log('not online');
-            return gadget.changeState({
-              error_text: 'Offline',
-              // request_error_text: request_error_text,
-              url: undefined
-            })
+            return route(gadget, 'translation_gadget', 'translate',
+                         ['You are offline.'])
+              .push(function (message) {
+                return route(gadget, "notification", 'notify',
+                        [{
+                    "message": message,
+                    "status": "error"
+                  }]);
+              })
               .push(function () {
                 return rJS.loopEventListener(window, 'online', false,
-                                            function backOnline() {
-                  console.log('let reload');
-                  return gadget.render(route_result, keep_message);
-                  // return location.reload();
-                });
+                                             function backOnline() {
+                    return location.reload();
+                  });
               });
           }
           throw error;
