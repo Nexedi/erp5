@@ -48,6 +48,7 @@ def getRssDataAsDict(context, url, username=None, password=None):
   for entry in d.entries:
     entry_dict = {}
     entry_dict['title'] = entry['title']
+    entry_dict['author'] = entry.get('author', '')
     entry_dict['link'] = entry['link']
     entry_dict['other_links'] = [x['href'] for x in entry['links']]
     entry_dict['md5'] = md5((entry.get('guid') or entry.get('id') or entry['link']).encode()).hexdigest()
