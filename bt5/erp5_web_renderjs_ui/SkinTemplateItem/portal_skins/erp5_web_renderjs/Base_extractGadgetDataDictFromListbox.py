@@ -1,5 +1,15 @@
 domain_id = listbox.get_value("domain_root_list")[0][0]
-label_list, domain_list = context.Base_getSubdomainTitleAndIdList(domain_id)
+portal = context.getPortalObject()
+base_category = getattr(portal.portal_categories, domain_id, None)
+
+if base_category is not None:
+  label_list, domain_list = [], []
+  # should we get childs recursively?
+  for child in base_category.objectValues():
+    label_list.append(child.getTranslatedTitle())
+    domain_list.append(child.getId())
+else:
+  label_list, domain_list = context.Base_getSubdomainTitleAndIdList(domain_id)
 
 default_param_dict = {}
 
