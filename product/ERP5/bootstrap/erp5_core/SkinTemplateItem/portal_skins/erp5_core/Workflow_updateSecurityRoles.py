@@ -6,7 +6,7 @@ def updateRoleMappings(self, REQUEST=None):
   # XXX(WORKFLOW) add test for roles update:
   #  - edit permission/roles on a workflow
   #  - check permission on an existing object of a type using this workflow
-  type_info_list = self.getParentValue()._listTypeInfo()
+  type_info_list = self.portal_types.listTypeInfo()
   workflow_id = self.getId()
   # check the workflow defined on the type objects
   portal_type_id_list = [
