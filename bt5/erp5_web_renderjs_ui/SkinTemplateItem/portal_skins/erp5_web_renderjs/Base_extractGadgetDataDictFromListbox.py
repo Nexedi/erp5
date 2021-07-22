@@ -21,19 +21,21 @@ for (key, value) in listbox.get_value('default_params') or []:
     default_param_dict.setdefault(key, []).append(value)
 
 return [
-  ("group_by", default_param_dict.pop("group_by", [])),
+  ("group_by", listbox.get_value("all_columns")[1][0]),
+  ("list_method", listbox.get_value("list_method").getMethodName()),
+  ("relative_url", context.getObject().getRelativeUrl()),
   ("query_by", default_param_dict),
   ("title", listbox.get_value("title")),
   ("layout", {
     "x": {
-      "title": listbox.get_value("columns")[0][1],
-      "key": listbox.get_value("columns")[0][0],
+      "title": listbox.get_value("all_columns")[0][1],
+      "key": listbox.get_value("all_columns")[0][0],
       "domain_id": domain_id,
       "column_list": label_list,
       "domain_list": domain_list
     },
     "y": {
-      "title": listbox.get_value("columns")[1][1]
+      "title": listbox.get_value("all_columns")[1][1]
     }
   })
 ]
