@@ -137,7 +137,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_extractGadgetDataDictFromListbox(context.Base_viewStateAndDateRangeGadgetDataList.listbox)</string> </value>
+            <value> <string>python: context.Base_extractGadgetDataDictFromListbox(field.listbox)</string> </value>
         </item>
       </dictionary>
     </pickle>
