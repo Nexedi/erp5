@@ -3,17 +3,7 @@ def updateRoleMappings(self, REQUEST=None):
   """
   Changes permissions of all objects related to this workflow
   """
-  # XXX(WORKFLOW) add test for roles update:
-  #  - edit permission/roles on a workflow
-  #  - check permission on an existing object of a type using this workflow
-  type_info_list = self.getParentValue()._listTypeInfo()
-  workflow_id = self.getId()
-  # check the workflow defined on the type objects
-  portal_type_id_list = [
-    portal_type.getId() for portal_type in type_info_list
-    if workflow_id in portal_type.getTypeWorkflowList()
-  ]
-
+  portal_type_id_list = self.getPortalTypeListForWorkflow()
   if portal_type_id_list:
     object_list = self.portal_catalog(portal_type=portal_type_id_list, limit=None)
     portal_activities = self.portal_activities
