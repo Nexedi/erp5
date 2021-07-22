@@ -1,15 +1,14 @@
-/*global window, rJS, URL, jIO, RSVP*/
+/*global window, rJS, RSVP*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, URL, jIO) {
+(function (window, rJS, RSVP) {
   "use strict";
   rJS(window)
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("redirect", "redirect")
     .declareMethod('render', function (options) {
-      var value = "Not found",
+      var metadata,
+        value = "Not found",
         css_class = "ui-btn orange";
       try {
-        var metadata = JSON.parse(options.metadata);
+        metadata = JSON.parse(options.metadata);
         value = metadata.message;
         if (metadata.status === 0) {
           css_class = "ui-btn-disabled green";
@@ -32,4 +31,4 @@
       }
     });
 
-}(window, rJS, URL, jIO, RSVP));
+}(window, rJS, RSVP));
