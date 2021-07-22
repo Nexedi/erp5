@@ -104,6 +104,8 @@
               query_list: jio_query_list.concat(sub_query_list),
               type: "complex"
             })),
+            "list_method": options.list_method,
+            "relative_url": options.relative_url,
             "group_by": group_by,
             "select_list": select_list
           });
@@ -117,6 +119,8 @@
             query_list: jio_query_list,
             type: "complex"
           })),
+          "list_method": options.list_method,
+          "relative_url": options.relative_url,
           "group_by": group_by,
           "select_list": select_list.concat(group_by)
         };
@@ -127,6 +131,8 @@
             query_list: jio_query_list,
             type: "complex"
           })),
+          "list_method": options.list_method,
+          "relative_url": options.relative_url,
           "group_by": group_by,
           "select_list": select_list
         };
