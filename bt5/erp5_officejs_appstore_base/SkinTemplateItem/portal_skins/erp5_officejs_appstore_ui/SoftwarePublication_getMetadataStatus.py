@@ -8,7 +8,7 @@ return_dict = {
 }
 
 if software_publication.getSimulationState() == 'draft':
-  return json.dumps(return_dict)
+  return return_dict
 
 software_publication_line = software_publication.objectValues(
   portal_type="Software Publication Line",
@@ -21,30 +21,30 @@ try:
   web_section =  web_site[version]
 except KeyError:
   return_dict["message"] = 'Not found'
-  return json.dumps(return_dict)
+  return return_dict
 
 manifest_url = web_section.getLayoutProperty('configuration_webapp_manifest_url', default=None)
 if manifest_url is None:
   return_dict["message"] = 'Configuration webapp manifest url not found'
-  return json.dumps(return_dict)
+  return return_dict
 
 manifest = portal.portal_catalog.getResultValue(reference=version + '/' + manifest_url)
 if manifest is None:
   return_dict["message"] = 'Configuration webapp manifest not found'
-  return json.dumps(return_dict)
+  return return_dict
 
 try:
   data = json.loads(manifest.getData())
 except ValueError:
   return_dict["message"] = 'Invalid configuration webapp manifest JSON'
-  return json.dumps(return_dict)
+  return return_dict
 
 src_icon = data['icons'][0]['src']
 logo = portal.portal_catalog.getResultValue(reference='%' + src_icon, version=version, portal_type='File')
 if not logo:
   return_dict["message"] = "App logo '%s' not found" % src_icon
-  return json.dumps(return_dict)
+  return return_dict
 
 return_dict["status"] = 0
 return_dict["message"] = "OK"
-return json.dumps(return_dict)
+return return_dict

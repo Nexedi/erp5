@@ -1,20 +1,16 @@
-/*global window, rJS, RSVP*/
+/*global window, rJS*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS) {
   "use strict";
   rJS(window)
     .declareMethod('render', function (options) {
-      var metadata,
-        value = "Not found",
+      var value = "Not found",
         css_class = "ui-btn orange";
-      try {
-        metadata = JSON.parse(options.metadata);
-        value = metadata.message;
-        if (metadata.status === 0) {
+      if (options.metadata.message) {
+        value = options.metadata.message;
+        if (options.metadata.status === 0) {
           css_class = "ui-btn-disabled green";
         }
-      } catch (e) {
-        value = "Error getting metadata";
       }
       return this.changeState({
         value: value,
@@ -31,4 +27,4 @@
       }
     });
 
-}(window, rJS, RSVP));
+}(window, rJS));
