@@ -304,7 +304,7 @@ url_template_dict = {
 
   # Search template will call standard "searchValues" on a document described by `root_url`
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
-                     "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*,list_method*,relative_url*}",
+                     "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}",
   "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
   # Custom search comes with Listboxes where "list_method" is specified. We pass even listbox's
   # own URL so the search can resolve template fields for proper rendering/formatting/editability
@@ -1921,10 +1921,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       #
       for k, v in catalog_kw.items():
         REQUEST.set(k, v)
-
-      if list_method in ("searchFolder", "objectValues"):
-        callable_list_method = getattr(traversed_document, list_method)
-
       search_result_iterable = callable_list_method(**catalog_kw)
 
     # extract form field definition into `editable_field_dict`
