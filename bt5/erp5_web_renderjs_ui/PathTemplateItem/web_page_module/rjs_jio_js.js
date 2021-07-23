@@ -13911,8 +13911,6 @@ return new Parser;
               // XXX Force erp5 to return embedded document
               select_list: options.select_list || ["title", "reference"],
               limit: options.limit,
-              list_method: options.list_method,
-              relative_url: options.relative_url,
               sort_on: sort_list,
               group_by: group_list,
               local_roles: local_roles,
