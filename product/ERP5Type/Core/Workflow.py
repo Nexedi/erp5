@@ -489,9 +489,9 @@ class Workflow(XMLObject):
 
     portal = self.getPortalObject()
     def getPortalTypeListByWorkflowIdDict():
-      workflow_tool = portal.portal_workflow
+      portal_types = portal.portal_types
       result = defaultdict(list)
-      for type_info in workflow_tool._listTypeInfo():
+      for type_info in portal_types.listTypeInfo():
         portal_type = type_info.id
         for workflow_id in type_info.getTypeWorkflowList():
           result[workflow_id].append(portal_type)

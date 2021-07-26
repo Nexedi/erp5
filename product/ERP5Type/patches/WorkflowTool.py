@@ -179,19 +179,6 @@ def canDoActionFor(self, ob, action, wf_id=None, guard_kw={}):
           mapping={'action_id': action}))
 WorkflowTool.canDoActionFor = canDoActionFor
 
-security.declarePrivate('_listTypeInfo')
-def _listTypeInfo(self):
-    """ List the portal types which are available.
-    """
-    # <patch>
-    ttool = getattr(self.getPortalObject(), "portal_types", None)
-    # </patch>
-    if ttool is not None:
-        return ttool.listTypeInfo()
-    return ()
-
-WorkflowTool._listTypeInfo = _listTypeInfo
-
 ## From here on: migration/compatibility code DCWorkflow => ERP5 Workflow
 
 # The following 2 functions are necessary for workflow tool dynamic migration

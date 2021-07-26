@@ -505,8 +505,8 @@ def getPortalTypeListForWorkflow(self):
   """
   result = []
   workflow_id = self.id
-  workflow_tool = getToolByName(self, 'portal_workflow')
-  for type_info in workflow_tool._listTypeInfo():
+  portal_types = getToolByName(self, 'portal_types')
+  for type_info in portal_types.listTypeInfo():
     portal_type = type_info.id
     if workflow_id in workflow_tool.getChainFor(portal_type):
       result.append(portal_type)
