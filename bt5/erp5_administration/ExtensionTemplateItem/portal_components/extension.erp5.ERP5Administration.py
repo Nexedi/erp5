@@ -22,8 +22,7 @@ def dumpWorkflowChain(self, ignore_default=False,
   # - batch_mode : used to directly return the sctructure instead of return string
   if ignore_id_set is None:
     ignore_id_set = set()
-  workflow_tool = self.getPortalObject().portal_workflow
-  ti = workflow_tool._listTypeInfo()
+  ti = self.getPortalObject().portal_types.listTypeInfo()
   types_info = []
   for t in ti:
     id_ = t.getId()
