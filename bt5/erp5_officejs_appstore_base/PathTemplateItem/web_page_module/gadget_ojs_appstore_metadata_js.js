@@ -4,27 +4,18 @@
   "use strict";
   rJS(window)
     .declareMethod('render', function (options) {
-      var value = "Not found",
-        css_class = "ui-btn orange";
+      var value = "Not found";
       if (options.metadata.message) {
         value = options.metadata.message;
-        if (options.metadata.status === 0) {
-          css_class = "ui-btn-disabled green";
-        }
       }
       return this.changeState({
-        value: value,
-        css_class: css_class
+        value: value
       });
     })
     .onStateChange(function (modification_dict) {
-      var a = this.element.querySelector("a");
+      var div = this.element.querySelector("div");
       if (modification_dict.hasOwnProperty('value')) {
-        a.textContent = modification_dict.value;
-      }
-      if (modification_dict.hasOwnProperty('css_class')) {
-        a.setAttribute('class', this.state.css_class);
+        div.textContent = modification_dict.value;
       }
     });
-
 }(window, rJS));
