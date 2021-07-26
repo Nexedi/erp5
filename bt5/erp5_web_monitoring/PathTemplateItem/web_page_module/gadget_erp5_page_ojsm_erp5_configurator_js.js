@@ -5,7 +5,7 @@
 
   rJS(window)
     .setState({
-      erp5_url: "https://slapos.vifib.com/hateoas/"
+      erp5_url: "https://panel.rapid.space/hateoas/"
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
