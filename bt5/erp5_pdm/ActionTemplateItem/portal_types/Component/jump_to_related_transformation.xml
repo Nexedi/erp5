@@ -73,11 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-string:${object_url}/Base_jumpToRelatedObject?base_category=resource&portal_type=Transformation
-
-]]></string> </value>
+            <value> <string>string:${object_url}/Resource_jumpToRelatedTransformation</string> </value>
         </item>
       </dictionary>
     </pickle>
