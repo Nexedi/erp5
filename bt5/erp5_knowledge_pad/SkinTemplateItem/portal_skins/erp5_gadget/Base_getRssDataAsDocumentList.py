@@ -54,6 +54,7 @@ for result in items:
   message = newTempBase(context, 'item')
   message.edit(field_title = result.get('title','No title'),
             field_date = date,
+            field_author = result['author'],
             field_content = result.get('content','No content'),
             field_img = result.get('img',''),
             field_others_links = result.get('other_links',''),

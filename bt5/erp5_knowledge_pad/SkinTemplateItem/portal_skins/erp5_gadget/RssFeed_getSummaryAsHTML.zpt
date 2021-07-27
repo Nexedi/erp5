@@ -1,5 +1,6 @@
 <tal:block 
   tal:define="title here/field_title;
+              author here/field_author;
               date here/field_date|nothing;
               description here/field_content;
               image here/field_img;
@@ -40,7 +41,9 @@
         <span class="document-title"
               tal:content="title"/> - 
         <span class="modification-date"
-              tal:content="date"/>
+              tal:content="date"/> -
+        <span class="modification-date"
+              tal:content="author"/>
       </a>
 
     </div>
@@ -60,7 +63,10 @@
       <span class="document-title"
             tal:content="title"/> - 
       <span class="modification-date"
-            tal:content="date"/>
+            tal:content="date"/> -
+      <span class="modification-date"
+            tal:content="author"/>
+
     </div>
 
     <!-- Hidden description -->
