@@ -10,13 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
                 <string>default_params</string>
                 <string>domain_root_list</string>
-                <string>domain_tree</string>
                 <string>list_method</string>
-                <string>title</string>
               </list>
             </value>
         </item>
@@ -55,6 +54,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,26 +76,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
                 </item>
               </dictionary>
             </value>
@@ -102,7 +91,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -110,8 +99,19 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>_</string>
+                          <string>simulation_state</string>
                           <string>Quantity</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -138,10 +138,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
@@ -152,12 +148,8 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>List Mode Listbox</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -173,25 +165,12 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'group_by\', ["simulation_state",]), ("parent_uid", context.support_request_module.getUid())]</string> </value>
+            <value> <string>python: [("parent_uid", context.support_request_module.getUid())]</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_translateString("%s Pipes" % context.getPortalType().replace(" Module", ""))</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
