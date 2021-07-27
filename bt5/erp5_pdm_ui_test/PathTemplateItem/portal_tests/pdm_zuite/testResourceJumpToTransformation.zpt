@@ -1,0 +1,119 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4" tal:content="template/title"></td></tr>
+</thead>
+<tbody tal:define="init_method string:ERP5Site_createTransformationForPdmUiTest">
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+
+<tal:block tal:repeat="resource_relative_url python: (
+    'product_module/erp5_pdm_ui_test_product_without_transformation',
+    'component_module/erp5_pdm_ui_test_component_without_transformation',)">
+<tr>
+  <td>open</td>
+  <td>${base_url}/<tal:block tal:replace="resource_relative_url"/></td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Related Transformation</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>No Transformation related.</td>
+  <td></td>
+</tr>
+</tal:block>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/product_module/erp5_pdm_ui_test_product_with_one_transformation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Related Transformation</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Transformation related to Product : erp5_pdm_ui_test_product_with_one_transformation.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/component_module/erp5_pdm_ui_test_component_with_one_transformation</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Related Transformation</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Transformation related to Component : erp5_pdm_ui_test_component_with_one_transformation.</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/product_module/erp5_pdm_ui_test_product_with_two_transformations</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Related Transformation</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Documents related to Product : erp5_pdm_ui_test_product_with_two_transformations.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_pdm_ui_test_transformation_1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/component_module/erp5_pdm_ui_test_component_with_two_transformations</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_jump</td>
+  <td>Related Transformation</td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Documents related to Component : erp5_pdm_ui_test_component_with_two_transformations.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>erp5_pdm_ui_test_transformation_1</td>
+  <td></td>
+</tr>
+
+
+
+</tbody></table>
+</body>
+</html>
