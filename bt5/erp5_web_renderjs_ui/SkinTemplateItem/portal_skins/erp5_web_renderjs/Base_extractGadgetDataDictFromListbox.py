@@ -14,13 +14,19 @@ else:
   label_list, domain_list = context.Base_getSubdomainTitleAndIdList(domain_id)
 
 default_param_dict = {}
+default_param_list = listbox.get_value('default_params') or []
 
-# Use dict() is simpler but is slower
-for (key, value) in listbox.get_value('default_params') or []:
-  if isinstance(value, list):
-    default_param_dict.setdefault(key, []).extend(value)
-  else:
-    default_param_dict.setdefault(key, []).append(value)
+if default_param_list:
+  list_method, relative_url = None, None
+  # Use dict() is simpler but is slower
+  for (key, value) in default_param_list:
+    if isinstance(value, list):
+      default_param_dict.setdefault(key, []).extend(value)
+    else:
+      default_param_dict.setdefault(key, []).append(value)
+else:
+  relative_url = context.getObject().getRelativeUrl()
+  list_method = listbox.get_value("list_method").getMethodName()
 
 # remove hateoas path hardcoded
 list_method_template = ("%s/ERP5Document_getHateoas?mode=search"
@@ -30,8 +36,8 @@ list_method_template = ("%s/ERP5Document_getHateoas?mode=search"
 return [
   ("group_by", listbox.get_value("all_columns")[1][0]),
   ("list_method_template", list_method_template),
-  ("list_method", listbox.get_value("list_method").getMethodName()),
-  ("relative_url", context.getObject().getRelativeUrl()),
+  ("list_method", list_method),
+  ("relative_url", relative_url),
   ("query_by", default_param_dict),
   ("title", listbox.get_value("title")),
   ("layout", {
