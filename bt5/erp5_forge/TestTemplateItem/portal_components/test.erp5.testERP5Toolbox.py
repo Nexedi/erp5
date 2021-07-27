@@ -51,10 +51,10 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
         ['Report created.'],
         urlparse.parse_qs(resp_url.query)['portal_status_message'])
 
-    # report is usable
+    # report is usable (also in ERP5JS)
     action, = [
         a for a in self.portal.portal_actions.listFilteredActionsFor(
-            self.portal.foo_module)['object_report']
+            self.portal.foo_module)['object_jio_report']
         if a['name'] == 'Dummy Report'
     ]
     self.assertEqual('dummy_report_report', action['id'])
