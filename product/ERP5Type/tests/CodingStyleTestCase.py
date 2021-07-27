@@ -183,6 +183,11 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           )
         for action_category, action_list in self.portal.portal_actions.listFilteredActionsFor(
             document).iteritems():
+          # We ignore duplicate actions in action categories used by OfficeJS
+          # because OfficeJS only display actions referenced in the router
+          # gadget configuration.
+          if action_category in ('object_jio_view', 'object_jio_js_script'):
+            continue
           for action_name, action_count in collections.Counter(
               [action['name'] for action in action_list]).iteritems():
             if action_count > 1:
