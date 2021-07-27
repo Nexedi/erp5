@@ -2,8 +2,6 @@ domain_id = listbox.get_value("domain_root_list")[0][0]
 portal = context.getPortalObject()
 base_category = getattr(portal.portal_categories, domain_id, None)
 
-site_root = context.getWebSiteValue()
-
 if base_category is not None:
   label_list, domain_list = [], []
   # should we get childs recursively?
@@ -28,10 +26,9 @@ else:
   relative_url = context.getObject().getRelativeUrl()
   list_method = listbox.get_value("list_method").getMethodName()
 
-# remove hateoas path hardcoded
 list_method_template = ("%s/ERP5Document_getHateoas?mode=search"
                         "{&query,select_list*,limit*,group_by*,sort_on*,"
-                        "local_roles*,selection_domain*,list_method*,relative_url*}") % site_root.hateoas.absolute_url()
+                        "local_roles*,selection_domain*,list_method*,relative_url*}") % context.REQUEST["VIRTUAL_URL"]
 
 return [
   ("group_by", listbox.get_value("all_columns")[1][0]),
