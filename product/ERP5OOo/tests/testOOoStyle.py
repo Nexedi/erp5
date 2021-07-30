@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import io
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -34,6 +35,8 @@ from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
 import httplib
+import lxml.html
+import PyPDF2
 
 HTTP_OK = httplib.OK
 
@@ -264,6 +267,57 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
+
+  def test_report_view_report_section_title(self):
+    response = self.publish(
+       '/%s/foo_module/FooModule_viewHierarchyTestReport'
+        % self.portal.getId(), self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    self._validate(response.getBody())
+
+    # check the hierarchy is properly kept ...
+    if self.skin == 'ODT':
+      # ... in pdf
+      response = self.publish(
+         '/%s/foo_module/FooModule_viewHierarchyTestReport?format=pdf'
+          % self.portal.getId(), self.auth)
+      pdf = PyPDF2.PdfFileReader(io.BytesIO(response.getBody()))
+
+      def getOutlineTitles(outlines):
+        for outline in outlines:
+          if isinstance(outline, list):
+            yield list(getOutlineTitles(outline))
+          else:
+            yield outline['/Title']
+      self.assertEqual(
+          list(getOutlineTitles(pdf.getOutlines())),
+          [
+              "1. First",
+              [
+                  "1.1 First / First",
+                  "1.2 First / Second",
+                  ["1.2.1 First / Second / First"],
+              ],
+              "2. Second",
+          ],
+      )
+
+      # ..and in html
+      response = self.publish(
+         '/%s/foo_module/FooModule_viewHierarchyTestReport?format=html'
+          % self.portal.getId(), self.auth)
+      tree = lxml.html.fromstring(response.getBody())
+      self.assertEqual(
+          [node.text for node in tree.findall('.//h1')],
+          ['1. First', '2. Second'])
+      self.assertEqual(
+          [node.text for node in tree.findall('.//h2')],
+          ['1.1 First / First', '1.2 First / Second'])
+      self.assertEqual(
+          [node.text for node in tree.findall('.//h3')],
+          ['1.2.1 First / Second / First'])
 
   def test_form_view_encoding(self):
     self.portal.person_module.pers.setFirstName('Jérome')
