@@ -161,6 +161,10 @@
                           <string>Static Web Section</string>
                           <string>Static Web Section</string>
                         </tuple>
+                        <tuple>
+                          <string>jIO Web Section</string>
+                          <string>jIO Web Section</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
