@@ -30,6 +30,12 @@ class TestSuite(XMLObject, PeriodicityMixin):
     return portal.portal_task_distribution.getMemcachedDict().get(
        "%s_ping_date" % (self.getRelativeUrl()))
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSlapOSInstanceParameterSchemaURL')
+  def getSlapOSInstanceParameterSchemaURL(self):
+    """
+    """
+    return "https://lab.nexedi.com/nexedi/slapos/raw/master/software/erp5/instance-erp5-input-schema.json"
+
   # Compatibility Code to be removed after 06/2018, since all instances using
   # test suites should be migrated at that time. Purpose here was to fix the
   # setting of some properties that were defined with type "lines" instead of "string".
