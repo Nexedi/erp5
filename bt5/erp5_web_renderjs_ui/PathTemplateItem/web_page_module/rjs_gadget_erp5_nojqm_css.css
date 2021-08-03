@@ -1221,11 +1221,11 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content form .ui-field-contain {
   position: relative;
 }
-.gadget-content form .ui-field-contain > span {
+.gadget-content form .ui-field-contain > span.error {
   animation: fadein 0.2s ease-out;
 }
 @media not screen and (max-width: 85em), only screen and (min-width: 45em) and (max-width: 85em) {
-  .gadget-content form .ui-field-contain > span {
+  .gadget-content form .ui-field-contain > span.error {
     background-color: #FF6600;
     color: #f8fff3;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -1238,7 +1238,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     width: auto;
     z-index: 1001;
   }
-  .gadget-content form .ui-field-contain > span:before {
+  .gadget-content form .ui-field-contain > span.error:before {
     position: absolute;
     top: 100%;
     left: 2em;
@@ -1250,7 +1250,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 @media not screen and (min-width: 45em) {
-  .gadget-content form .ui-field-contain > span {
+  .gadget-content form .ui-field-contain > span.error {
     margin-left: 6pt;
     color: #FF6600;
   }
@@ -1896,6 +1896,39 @@ ul.ui-list-grid > li button:focus {
 }
 .translate-description {
   border: 1px solid rgba(0, 0, 0, 0.3);
+}
+/**********************************************
+* JSONForm
+**********************************************/
+fieldset > .jsonformfield {
+  padding-left: 0;
+}
+.jsonformfield {
+  display: flex;
+  /*padding-left: 20px;*/
+  padding-top: 3px;
+  /*margin-left: 15px;*/
+}
+.jsonformfield button {
+  display: block;
+  vertical-align: top;
+}
+.jsonformfield .ui-btn-icon-top::before {
+  vertical-align: top;
+}
+.jsonformfield label {
+  word-break: keep-all;
+  hyphens: none;
+}
+.jsonformfield span {
+  color: #5e7f8d;
+}
+.jsonformfield .error {
+  color: #E82525;
+  font-weight: 600;
+}
+.jsonformfield input[type=number] {
+  text-align: right;
 }
 /**********************************************
 * Icons

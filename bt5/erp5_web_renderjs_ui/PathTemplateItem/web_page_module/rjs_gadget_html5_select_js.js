@@ -163,7 +163,7 @@
     })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .onEvent('change', function change() {
+    .onEvent('change', function change(e) {
       return RSVP.all([
         this.checkValidity(),
         this.notifyChange("change")

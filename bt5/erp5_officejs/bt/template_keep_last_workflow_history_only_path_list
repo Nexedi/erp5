@@ -7,6 +7,8 @@ image_module/wallsearch_icon_svg
 image_module/slideshow_icon_svg
 web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
+web_page_module/gadget_erp5_ojs_*
+web_page_module/gadget_erp5_page_ojs_*
 web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
 web_page_module/jio_*
@@ -35,6 +37,8 @@ web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
 web_site_module/officejs_slideshow_editor
 web_site_module/officejs_slideshow_editor/**
+web_site_module/officejs_schema
+web_site_module/officejs_schema/**
 web_site_module/officejs_svg_editor
 web_site_module/officejs_svg_editor/**
 web_site_module/officejs_text_editor

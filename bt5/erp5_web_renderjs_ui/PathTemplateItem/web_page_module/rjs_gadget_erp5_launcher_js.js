@@ -622,9 +622,7 @@
     })
 
     .allowPublicAcquisition("updatePanel", function updatePanel(param_list) {
-      var gadget = this;
-      initPanelOptions(gadget);
-      gadget.props.panel_argument_list = param_list[0];
+      return lUpdatePanel(this, param_list[0]);
     })
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
