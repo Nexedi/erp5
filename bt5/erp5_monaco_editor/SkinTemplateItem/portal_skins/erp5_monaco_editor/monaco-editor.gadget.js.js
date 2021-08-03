@@ -110,6 +110,9 @@
         options.portal_type === 'Module Component'
       ) {
         model_language = 'python';
+      } else if (options.content_type === 'application/json') {
+        model_language = 'json';
+        state_dict.json_schema_url = options.json_schema_url;
       }
       state_dict.model_language = model_language;
       state_dict.value = options.value || '';
@@ -304,6 +307,23 @@
           );
         }
 
+        if (this.state.model_language === 'json') {
+          let schemas = []
+          if (this.state.json_schema_url) {
+            schemas.push(
+              {
+                uri: this.state.json_schema_url,
+                fileMatch: "*"
+              }
+            )
+          }
+          monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            validate: true,
+            allowComments: false,
+            schemas: schemas,
+            enableSchemaRequest: true,
+          });
+        }
         if (modification_dict.hasOwnProperty('editable')) {
           this.editor.updateOptions({ readOnly: !this.state.editable });
         }
