@@ -790,7 +790,9 @@
         editable: options.editable === undefined ? true : options.editable
       };
       if (options.value !== undefined) {
-        z.value = JSON.stringify(options.value);
+        // XXX shouldn't it already be encoded ???
+        // z.value = JSON.stringify(options.value);
+        z.value = options.value;
       }
       return this.changeState(z);
     })
