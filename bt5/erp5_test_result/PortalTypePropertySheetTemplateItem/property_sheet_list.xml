@@ -21,6 +21,7 @@
  <portal_type id="Scalability Test Suite">
   <item>Arrow</item>
   <item>ScalabilityTestSuite</item>
+  <item>SortIndex</item>
   <item>TestSuite</item>
  </portal_type>
  <portal_type id="SlapOS Agent Distributor">

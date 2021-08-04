@@ -1262,6 +1262,24 @@ class TestTaskDistribution(TaskDistributionTestCase):
     for suite in config_nodes.values():
       self.assertEquals(suite, [])
 
+  def test_16A_startTestSuiteERP5ScalabilityDistributorWithRunningTestResult(self):
+    # Subscribe nodes
+    self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
+    # Create test suite
+    test_suite = self._createTestSuite(quantity=1,priority=1, reference_correction=0,
+                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")[0]
+    self.tic()
+    self._callOptimizeAlarm()
+    test_result = self.test_result_module.newContent(
+      portal_type = 'Test Result',
+      title = test_suite.getTitle()
+    )
+    test_result.start()
+    self.tic()
+    configuration = self.scalability_distributor.startTestSuite(title="COMP1-Scalability-Node1")
+    self.assertNotEquals(configuration, [])
+
+
   def test_17_isMasterTestnodeERP5ScalabilityDistributor(self):
     """
     Check the method isMasterTestnode()
