@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html manifest="jsonform.gadget.appcache">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERP5</title>
+  <script src="rsvp.js" type="text/javascript"></script>
+  <script src="renderjs.js" type="text/javascript"></script>
+  <script src="URI.js" type="text/javascript"></script>
+  <script src="jquery.js" type="text/javascript"></script>
+  <script src="vkbeautify.js" type="text/javascript"></script>
+  <script src="jsonform.slapos.gadget.js" type="text/javascript"></script>
+  <!--
+      <link href="gadget_erp5_page_slap_parameter_form.css" rel="stylesheet" type="text/css"/>
+-->
+
+</head>
+
+<body>
+  <div>
+    <fieldset id="software-type">
+      <div class="field" title="software_type">
+        <label> Software Type </label>
+        <div class="input">
+          <select size="1" name="software_type" class="slapos-software-type">
+                </select>
+        </div>
+      </div>
+      <div class="field" title="serialisation_type">
+        <div class="input">
+          <input type=hidden name="serialisation_type" class="slapos-serialisation-type">
+        </div>
+      </div>
+      <div class="field" title="hide_show_button">
+        <div class="input">
+          <button type="button" class="slapos-show-form hidden-button"> Show Parameter Form </button>
+          <button type="button" class="slapos-show-raw-parameter"> Show Parameter XML</button>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset id="parameter-main"> </fieldset>
+    <fieldset id="parameter-optional"> </fieldset>
+    <fieldset id="parameter-xml">
+      <input type=hidden name="parameter_hash" class="parameter_hash_output">
+      <input type=hidden name="shared" class="parameter_shared">
+      <input type=hidden name="schema_url" class="parameter_schema_url">
+    </fieldset>
+  </div>
+  <div class="loadschema" data-gadget-url="gadget_erp5_page_slap_load_schema.html" data-gadget-scope="loadschema">
+  </div>
+</body>
+
+</html>
