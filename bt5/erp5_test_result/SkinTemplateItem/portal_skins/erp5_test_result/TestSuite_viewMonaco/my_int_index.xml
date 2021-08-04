@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="GadgetField" module="Products.ERP5Form.GadgetField"/>
+      <global name="ListField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_cluster_configuration</string> </value>
+            <value> <string>my_int_index</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,8 +19,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>no_validator</string> </key>
-                    <value> <string>Does not support this operation.</string> </value>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -35,10 +39,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -66,7 +66,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -74,11 +78,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -86,11 +94,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>validator_field_id</string> </key>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>validator_form_id</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -109,10 +117,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>data_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -137,7 +141,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -145,25 +153,29 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>validator_field_id</string> </key>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>validator_form_id</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -182,16 +194,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>data_url</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>For Priority, please use :\n
+- 3 cores for a test suite which is not needed to run in parallel testnodes and if quick results is not needed.\n
+- 12 cores if you can benefit parallel execution and you are on an a quite active branch and you would like to reduce the time to wait before test start.\n
+- 24 cores can be used when you want to have maximum reactivity for a medium size project which can benefit parallelization.\n
+- 45 cores is strictly required if you launch all ERP5 tests. This is also true even if the test suite is not urgent for you. If you do not do so, your test suite will block a testnode many hours, preventing others to have their results.\n
+\n
+In all cases, please avoid single test taking more than one hour (otherwise it is useless to distribute on many cores). So if a test is too long, please cut it in several tests.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -210,34 +224,42 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string>react-jsonschema-form-gadget.html</string> </value>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>renderjs_extra</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>SlapOS Parameters</string> </value>
+                    <value> <string>Priority</string> </value>
                 </item>
                 <item>
-                    <key> <string>validator_field_id</string> </key>
-                    <value> <string>my_core_mode_text_content_validator</string> </value>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>validator_form_id</string> </key>
-                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -253,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'schema\', context.getSlapOSInstanceParameterSchemaURL())]</string> </value>
+            <value> <string>python: [("", None),("3 Cores", 1),("12 Cores",4),("24 Cores",7),("45 Cores",9)]</string> </value>
         </item>
       </dictionary>
     </pickle>

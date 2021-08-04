@@ -1,9 +1,13 @@
+import urlparse
+
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
+
+import requests
 
 class TestSuite(XMLObject, PeriodicityMixin):
 
@@ -32,9 +36,31 @@ class TestSuite(XMLObject, PeriodicityMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSlapOSInstanceParameterSchemaURL')
   def getSlapOSInstanceParameterSchemaURL(self):
+    """Return the URL of the schema to use for SlapOS parameters.
     """
-    """
-    return "https://lab.nexedi.com/nexedi/slapos/raw/master/software/erp5/instance-erp5-input-schema.json"
+    if self.getTitle().startswith('http'):
+      return self.getTitle() # XXX to test schema editor ! (TODO remove)
+
+    for test_suite_repository in self.contentValues(portal_type='Test Suite Repository'):
+      git_url = test_suite_repository.getGitUrl()
+      if git_url:
+        if git_url.endswith('/'):
+          git_url = git_url[:-1]
+        if git_url.endswith('.git'):
+          git_url = git_url[:-4]
+        software_json_url = "{git_url}/raw/{branch}/{profile_path}.json".format(
+            git_url=git_url,
+            branch=test_suite_repository.getBranch(),
+            profile_path=test_suite_repository.getProfilePath(),
+        )
+        try:
+          software_json = requests.get(software_json_url).json()
+        except ValueError:
+          # TODO: more proper error handling, timeout etc
+          return None
+        for software_type in ('RootSoftwareInstance', 'default'):
+          if software_type in software_json['software-type']:
+            return urlparse.urljoin(software_json_url, software_json['software-type'][software_type]['request'])
 
   # Compatibility Code to be removed after 06/2018, since all instances using
   # test suites should be migrated at that time. Purpose here was to fix the

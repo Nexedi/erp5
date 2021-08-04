@@ -211,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>react-jsonschema-form-gadget.html</string> </value>
+                    <value> <string>jsonform.slapos.gadget.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'schema\', context.getSlapOSInstanceParameterSchemaURL())]</string> </value>
+            <value> <string>python: [(\'json_url\', modules[\'urlparse\'].urljoin(context.getSlapOSInstanceParameterSchemaURL(), \'software.cfg.json\') )]</string> </value>
         </item>
       </dictionary>
     </pickle>

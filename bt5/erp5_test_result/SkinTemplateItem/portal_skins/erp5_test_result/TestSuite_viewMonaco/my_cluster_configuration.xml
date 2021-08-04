@@ -179,7 +179,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>page</string> </value>
                 </item>
                 <item>
                     <key> <string>data_url</string> </key>
@@ -211,7 +211,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>react-jsonschema-form-gadget.html</string> </value>
+                    <value> <string>monaco-editor.gadget.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -219,7 +219,7 @@
                 </item>
                 <item>
                     <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>iframe</string> </value>
                 </item>
                 <item>
                     <key> <string>renderjs_extra</string> </key>
@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'schema\', context.getSlapOSInstanceParameterSchemaURL())]</string> </value>
+            <value> <string>python: [(\'content_type\', \'application/json\'), (\'json_schema_url\', context.getSlapOSInstanceParameterSchemaURL())]</string> </value>
         </item>
       </dictionary>
     </pickle>
