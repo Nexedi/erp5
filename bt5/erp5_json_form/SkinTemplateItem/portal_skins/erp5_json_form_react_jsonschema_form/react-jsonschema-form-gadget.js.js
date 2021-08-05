@@ -3,7 +3,7 @@
 (function (window, rJS, RSVP, document) {
   'use strict';
 
-  /**
+/**
 * Prepare a ui-schema from the conventions of SlapOS instance parameters schema.
 * This does the following:
 *  - remove `default` from schema. In SlapOS schemas we use `default` as a documentation
@@ -27,16 +27,9 @@ function makeUiSchema(schema, uiSchema, visited) {
     if (schema.properties) {
       for (const [key, value] of Object.entries(schema.properties)) {
         uiSchema[key] = {};
-        if (value.default) {
-          if (key == 'tcpv4-port') {
-            console.log(key, value);
-          }
-          /** XXX value.const ... isn't it a bug in ERP5 SR schema ? */
+        if (value.default && !(value.default instanceof Object)) {
           if (value?.type === 'string' && value.const === undefined) {
             uiSchema[key]['ui:placeholder'] = value.default;
-          } else {
-            // XXX seems ugly
-            // uiSchema[key]['ui:help'] = `Default value: ${value.default}`
           }
           if (value.const === undefined) {
             delete value.default;
@@ -79,10 +72,6 @@ function makeUiSchema(schema, uiSchema, visited) {
           .dereference(modification_dict.schema_url)
           .then(function (schema) {
             let uiSchema = {};
-            // TODO: wouldn't using mergeAllOf here solve the problem of 
-            // ERP5's kumofs default port
-            schema = JSONSchemaForm.utils.retrieveSchema(schema);
-            
             makeUiSchema(schema, uiSchema, new Set())
             console.log('after simplification', schema, uiSchema);
 
