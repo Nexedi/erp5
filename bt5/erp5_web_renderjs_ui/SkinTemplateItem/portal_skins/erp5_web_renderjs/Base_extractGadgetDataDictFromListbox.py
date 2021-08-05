@@ -2,6 +2,12 @@ domain_id = listbox.get_value("domain_root_list")[0][0]
 portal = context.getPortalObject()
 base_category = getattr(portal.portal_categories, domain_id, None)
 
+# We should not group by catalog keys like translate_*_title.
+# For now, we keep a dict here, to convert this key by another faster catalog ket
+perfomance_mapping = {
+  "translated_simulation_state_title": "simulation_state"
+}
+
 if base_category is not None:
   label_list, domain_list = [], []
   # should we get childs recursively?
@@ -13,6 +19,18 @@ else:
 
 default_param_dict = {}
 default_param_list = listbox.get_value('default_params') or []
+
+group_by, group_by_title = None, ""
+
+column_list = listbox.get_value("columns") or []
+for column in column_list:
+  key, title = column
+  if any([i in key for i in ("validation_state", "simulation_state")]):
+    group_by = key
+    group_by_title = title
+
+
+assert group_by, "group_by not found"
 
 if default_param_list:
   list_method, relative_url = None, None
@@ -35,7 +53,7 @@ list_method_template = (
   "local_roles*,selection_domain*,list_method*,relative_url*}") % {"root_url": root_url, "script_id": script_id}
 
 return [
-  ("group_by", listbox.get_value("all_columns")[1][0]),
+  ("group_by", perfomance_mapping.get(group_by, None) or group_by),
   ("list_method_template", list_method_template),
   ("list_method", list_method),
   ("relative_url", relative_url),
@@ -43,14 +61,14 @@ return [
   ("title", listbox.get_value("title")),
   ("layout", {
     "x": {
-      "title": listbox.get_value("all_columns")[0][1],
-      "key": listbox.get_value("all_columns")[0][0],
+      "title": group_by_title,
+      "key": group_by,
       "domain_id": domain_id,
       "column_list": label_list,
       "domain_list": domain_list
     },
     "y": {
-      "title": listbox.get_value("all_columns")[1][1]
+      "title": "Quantity"
     }
   })
 ]

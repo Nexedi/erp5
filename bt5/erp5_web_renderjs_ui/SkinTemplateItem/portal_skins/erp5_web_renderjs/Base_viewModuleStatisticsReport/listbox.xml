@@ -10,10 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
-                <string>default_params</string>
                 <string>domain_root_list</string>
                 <string>sort</string>
                 <string>title</string>
@@ -63,10 +61,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -94,21 +88,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>Simulation State</string>
-                        </tuple>
-                        <tuple>
-                          <string>simulation_state</string>
-                          <string>Quantity</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -134,12 +113,6 @@
                 <item>
                     <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
