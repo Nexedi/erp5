@@ -79,17 +79,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>report_by_portal_type_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>report_by_simulation_state_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

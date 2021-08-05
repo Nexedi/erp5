@@ -29,7 +29,6 @@ else:
 # XXX - hack to build absolute_url to add hateoas script through hateoas web site
 script_id = "ERP5Document_getHateoas"
 root_url = context.getWebSiteValue().hateoas.absolute_url()
-
 list_method_template = (
   "%(root_url)s/%(script_id)s?mode=search"
   "{&query,select_list*,limit*,group_by*,sort_on*,"
