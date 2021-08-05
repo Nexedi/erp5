@@ -1,6 +1,8 @@
-/*global document, window, Option, rJS, RSVP, console, Array, SimpleQuery, Query, ComplexQuery */
+/*global document, window, Option, rJS, RSVP, console, Array, SimpleQuery, Query,
+         ComplexQuery, loopEventListener */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery) {
+(function (window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery,
+           loopEventListener) {
   "use strict";
 
   var color_list = ["#CCA08D", "#58ADC4", "#F9B39B", "#B75937",
@@ -11,10 +13,50 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .allowPublicAcquisition("chartItemClick", function (params) {
-      // Do nothing
-      console.log(params);
+      var gadget = this;
+      return gadget.getSearchCriteria(params[0][0], params[0][1])
+        .push(function (result) {
+          return gadget.redirect({
+            command: 'change',
+            options: {
+              extended_search: result
+            }
+          });
+        })
+        .push(undefined, function (error) {
+          if (error instanceof RSVP.CancellationError) {
+            return;
+          }
+          throw error;
+        })
+        .push(function () {
+          var restore_filter_input = gadget.element.querySelectorAll("input")[0];
+          restore_filter_input.disabled = false;
+          restore_filter_input.classList.remove("ui-disabled");
+        });
+    })
+    .declareMethod('getSearchCriteria', function (a, b) {
+      return Query.objectToSearchText(new ComplexQuery({
+        operator: "AND",
+        type: "complex",
+        query_list: [
+          new SimpleQuery({
+            operator: "",
+            key: this.state.extended_search_mapping[a].key,
+            type: "simple",
+            value: this.state.extended_search_mapping[a].value
+          }),
+          new SimpleQuery({
+            operator: "",
+            key: this.state.x,
+            type: "simple",
+            value: b
+          })
+        ]
+      }));
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -27,13 +69,15 @@
         query_list = [],
         jio_query_list = [],
         sub_query_list = [],
+        column_list = options.layout.x.column_list,
         domain_id = options.layout.x.domain_id,
+        extended_search_mapping = {},
         data = {
           x: options.layout.x.key,
           title: options.title || options.layout.x.title,
           x_title: options.layout.x.title,
           y_title: options.layout.y.title,
-          column_list: options.layout.x.column_list,
+          column_list: column_list,
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
         domain_list,
@@ -92,6 +136,10 @@
       if (domain_id) {
         domain_list = options.layout.x.domain_list || [];
         for (i = 0; i < domain_list.length; i += 1) {
+          extended_search_mapping[column_list[i]] = {
+            "key": "selection_domain_" + domain_id,
+            "value": domain_list[i]
+          };
           sub_query_list.push(new SimpleQuery({
             key: "selection_domain_" + domain_id,
             operator: "",
@@ -112,6 +160,7 @@
           });
           sub_query_list = [];
         }
+        data.extended_search_mapping = extended_search_mapping;
         data.query_list = query_list;
       } else if (group_by instanceof Array && group_by.length > 1) {
         data.query = {
@@ -146,6 +195,37 @@
             jio_query_list.push(Query.parseStringToObject(extended_search));
           }
           return gadget.changeState(data);
+        });
+    })
+    .declareService(function () {
+      var gadget = this,
+        restore_filter_input = gadget.element.querySelectorAll("input")[0];
+      return gadget.getUrlParameter('extended_search')
+        .push(function (result) {
+          if (result !== undefined) {
+            restore_filter_input.disabled = false;
+            restore_filter_input.classList.remove("ui-disabled");
+          }
+        });
+    })
+    .declareService(function () {
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          var restore_filter_input = gadget.element.querySelectorAll("input")[0],
+            one = loopEventListener(restore_filter_input, "click", false, function () {
+              restore_filter_input.disabled = true;
+              restore_filter_input.classList.add("ui-disabled");
+              return gadget.redirect({
+                command: "change",
+                options: {
+                  extended_search: undefined,
+                  field_listbox_begin_from: undefined
+                }
+              });
+            }, true);
+
+          return one;
         });
     })
     .onStateChange(function (modification_dict) {
@@ -292,8 +372,10 @@
               layout: {
                 axis_dict : {
                   '0': {"title": gadget.state.x_title},
-                  '1': {"title": gadget.state.y_title || "Quantity",
-                        "value_type": "number"}
+                  '1': {
+                    "title": gadget.state.y_title || "Quantity",
+                    "value_type": "number"
+                  }
                 },
                 title: gadget.state.title
               }
@@ -302,4 +384,5 @@
         });
     });
 
-}(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery));
+}(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery,
+  rJS.loopEventListener));
