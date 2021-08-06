@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
                 <string>default_params</string>
@@ -54,10 +53,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -91,27 +86,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>getTranslatedSimulationStateTitle</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>simulation_state</string>
-                          <string>Quantity</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
