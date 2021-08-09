@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, isEmpty, console*/
-(function (window, document, rJS, URI, RSVP, isEmpty, console) {
+/*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar*/
+(function (window, document, rJS, URI, RSVP, isEmpty, console, domsugar) {
   "use strict";
 
   var variable = {},
@@ -85,24 +85,26 @@
         {{/each}}
        </tbody>
 */
-    var tbody_element = document.createElement('tbody'),
+    var tbody_element = domsugar('tbody'),
       i,
       j,
       row,
       cell,
+      element_data,
       tr_element,
       td_element,
       sub_element,
       a_element;
 
     for (i = 0; i < options.row_list.length; i += 1) {
-      tr_element = document.createElement('tr');
+      tr_element = domsugar('tr');
       row = options.row_list[i];
       if (options.show_anchor) {
-        td_element = document.createElement('td');
-        sub_element = document.createElement('a');
-        sub_element.setAttribute('class', 'ui-icon-carat-r ui-btn-icon-notext');
-        sub_element.href = row.jump;
+        td_element = domsugar('td');
+        sub_element = domsugar('a', {
+          "class": 'ui-icon-carat-r ui-btn-icon-notext',
+          "href": row.jump
+        });
         sub_element.textContent = ' ';
         td_element.appendChild(sub_element);
         tr_element.appendChild(td_element);
@@ -110,56 +112,64 @@
 
       for (j = 0; j < row.cell_list.length; j += 1) {
         cell = row.cell_list[j];
-        td_element = document.createElement('td');
+        td_element = domsugar('td');
 
         if (options.show_line_selector || (options.form_id === 'form_dialog' && options.show_select)) {
           if (j === 0) {
-            // If first cell, show a checkbox to select the line
-            sub_element = document.createElement('input');
-            sub_element.setAttribute('data-uid', row.uid);
-            sub_element.setAttribute('type', 'checkbox');
-            sub_element.setAttribute('class', 'hide_element');
-            sub_element.setAttribute('id', 'listbox_line_' + row.uid);
+            element_data = {
+              "data-uid": row.uid,
+              "type": "checkbox",
+              "class": "hide_element",
+              "id":  'listbox_line_' + row.uid
+            };
             if (row.checked) {
-              sub_element.setAttribute('checked', 'checked');
+              element_data.checked = 'checked';
             }
+
+            // If first cell, show a checkbox to select the line
+            sub_element = domsugar('input', element_data);
             td_element.appendChild(sub_element);
           }
 
+          element_data = {};
+
           // Create a label, to update the checkbox when clicking the text
-          sub_element = document.createElement('label');
-          sub_element.setAttribute('for', 'listbox_line_' + row.uid);
+          sub_element = domsugar('label', {
+            "for": 'listbox_line_' + row.uid
+          });
           if (cell.type) {
-            sub_element.setAttribute('class', 'editable_div');
-            sub_element.setAttribute('data-column', cell.column);
-            sub_element.setAttribute('data-line', cell.line);
+            element_data["class"] = 'editable_div';
+            element_data['data-column'] = cell.column;
+            element_data['data-line'] = cell.line;
           } else {
-            sub_element.textContent = cell.default;
+            element_data.text = cell["default"];
           }
           td_element.appendChild(sub_element);
 
         } else {
 
           if (cell.type) {
-            sub_element = document.createElement('div');
-            sub_element.setAttribute('class', 'editable_div');
-            sub_element.setAttribute('data-column', cell.column);
-            sub_element.setAttribute('data-line', cell.line);
+            sub_element = domsugar('div', {
+              'class': 'editable_div',
+              'data-column': cell.column,
+              'data-line': cell.line
+            });
             if (cell.editable || !cell.href) {
               td_element.appendChild(sub_element);
             } else {
-              a_element = document.createElement('a');
-              a_element.href = cell.href;
+              a_element = domsugar('a', {
+                "href": cell.href
+              });
               a_element.appendChild(sub_element);
               td_element.appendChild(a_element);
             }
 
           } else {
             if (cell.href) {
-              sub_element = document.createElement('a');
+              sub_element = domsugar('a');
               sub_element.href = cell.href;
             } else {
-              sub_element = document.createElement('p');
+              sub_element = domsugar('p');
             }
             sub_element.textContent = cell.default;
             td_element.appendChild(sub_element);
@@ -170,10 +180,11 @@
       }
 
       if (row.line_icon) {
-        td_element = document.createElement('td');
-        sub_element = document.createElement('a');
-        sub_element.setAttribute('class', 'ui-btn-icon-right ui-icon-sign-in');
-        sub_element.href = row.jump;
+        td_element = domsugar('td');
+        sub_element = domsugar('a', {
+          'class': 'ui-btn-icon-right ui-icon-sign-in',
+          'href': row.jump
+        });
         td_element.appendChild(sub_element);
         tr_element.appendChild(td_element);
       }
@@ -212,7 +223,7 @@
        {{/each}}
        </tfoot>
 */
-    var tfoot_element = document.createElement('tfoot'),
+    var tfoot_element = domsugar('tfoot'),
       i,
       j,
       row,
@@ -221,21 +232,22 @@
       td_element,
       div_element;
     for (i = 0; i < options.row_list.length; i += 1) {
-      tr_element = document.createElement('tr');
+      tr_element = domsugar('tr');
       if (options.show_anchor) {
-        td_element = document.createElement('td');
+        td_element = domsugar('td');
         td_element.textContent = 'Total';
         tr_element.appendChild(td_element);
       }
       row = options.row_list[i];
       for (j = 0; j < row.cell_list.length; j += 1) {
         cell = row.cell_list[j];
-        td_element = document.createElement('td');
+        td_element = domsugar('td');
         if (cell.type) {
-          div_element = document.createElement('div');
-          div_element.setAttribute('class', 'editable_div');
-          div_element.setAttribute('data-column', cell.column);
-          div_element.setAttribute('data-line', cell.line);
+          div_element = domsugar('div', {
+            'class': 'editable_div',
+            'data-column': cell.column,
+            'data-line': cell.line
+          });
           td_element.appendChild(div_element);
         } else {
           if (cell.default) {
@@ -583,22 +595,21 @@
 </div>
 */
             var container = gadget.element.querySelector(".document_table"),
-              div_element = document.createElement('div'),
-              a_element = document.createElement('a'),
+              div_element = domsugar('div'),
+              a_element = domsugar('a'),
               span_element;
             a_element.href = result_list[0];
 
-            span_element = document.createElement('span');
-            span_element.setAttribute('class', 'ui-info-error');
-            span_element.textContent = result_list[1][0];
+            span_element = domsugar('span', {
+              'class': 'ui-info-error',
+              'text': result_list[1][0]
+            });
             a_element.appendChild(span_element);
 
-            span_element = document.createElement('span');
-            span_element.textContent = '-';
+            span_element = domsugar('span', {"text": '-'});
             a_element.appendChild(span_element);
 
-            span_element = document.createElement('span');
-            span_element.textContent = result_list[1][1];
+            span_element = domsugar('span', {"text": result_list[1][1]});
             a_element.appendChild(span_element);
 
             div_element.appendChild(a_element);
@@ -708,21 +719,24 @@
               column,
               current_sort,
               fragment = document.createDocumentFragment(),
-              div_element = document.createElement('div'),
-              table_element = document.createElement('table'),
+              div_element = domsugar('div', {
+                "class": 'ui-table-header ui-header'
+              }),
+              table_element = domsugar('table'),
               button_element,
-              h1_element = document.createElement('h1'),
-              span_element = document.createElement('span'),
+              // For an unknown reason, the title used to be translated previously,
+              // which is unexpected, as the value can't be hardcoded in the gadget
+              // <h1>{{title}} <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></h1>
+              h1_element = domsugar('h1', {
+                "text": gadget.state.title + ' '
+              }),
+              span_element = domsugar('span', {
+                "class": 'listboxloader ui-icon-spinner ui-btn-icon-left'
+              }),
               tr_element,
               th_element,
               a_element;
 
-            div_element.setAttribute('class', 'ui-table-header ui-header');
-            // For an unknown reason, the title used to be translated previously,
-            // which is unexpected, as the value can't be hardcoded in the gadget
-            // <h1>{{title}} <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></h1>
-            h1_element.textContent = gadget.state.title + ' ';
-            span_element.setAttribute('class', 'listboxloader ui-icon-spinner ui-btn-icon-left');
             h1_element.appendChild(span_element);
             div_element.appendChild(h1_element);
 
@@ -730,93 +744,102 @@
               for (k = 0; k < select_option_list.length; k += 1) {
                 // Add include button
                 // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
-                button_element = document.createElement('button');
-                button_element.setAttribute('data-rel', 'hide');
-                button_element.setAttribute('data-select-action', select_option_list[k].action);
-                button_element.setAttribute('name', 'SelectAction');
-                button_element.type = 'button';
-                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left');
-                button_element.textContent = select_option_list[k].title;
+                button_element = domsugar('button', {
+                  'data-rel': 'hide',
+                  'data-select-action': select_option_list[k].action,
+                  'name': 'SelectAction',
+                  'type': 'button',
+                  'class': 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left',
+                  'text': select_option_list[k].title
+                });
                 div_element.appendChild(button_element);
               }
 
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'CancelSelect');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left');
-              button_element.textContent = translation_list[4];
+              button_element = domsugar('button', {
+                'data-rel': 'hide',
+                'name': 'CancelSelect',
+                'type': 'button',
+                'class': 'ui-icon-times ui-btn-icon-left',
+                'text': translation_list[4]
+              });
               div_element.appendChild(button_element);
 
             } else if (gadget.state.show_clipboard_action) {
               for (k = 0; k < select_option_list.length; k += 1) {
                 // Add include button
                 // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
-                button_element = document.createElement('button');
-                button_element.setAttribute('data-rel', 'clipboard');
-                button_element.setAttribute('data-clipboard-action', select_option_list[k].action);
-                button_element.setAttribute('name', 'ClipboardAction');
-                button_element.type = 'button';
-                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left');
-                button_element.textContent = select_option_list[k].title;
+                button_element = domsugar('button', {
+                  'data-rel': 'clipboard',
+                  'data-clipboard-action': select_option_list[k].action,
+                  'name': 'ClipboardAction',
+                  'type': 'button',
+                  'class': 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left',
+                  'text': select_option_list[k].title
+                });
                 div_element.appendChild(button_element);
               }
 
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'CancelSelect');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left');
-              button_element.textContent = translation_list[4];
+              button_element = domsugar('button', {
+                'data-rel': 'hide',
+                'name': 'CancelSelect',
+                'type': 'button',
+                'class': 'ui-icon-times ui-btn-icon-left',
+                'text': translation_list[4]
+              });
               div_element.appendChild(button_element);
 
             } else {
 
               // Add Configure button
               // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'configure_columns');
-              button_element.setAttribute('name', 'Configure');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class);
-              button_element.textContent = translation_list[2];
+              button_element = domsugar('button', {
+                'disabled': gadget.state.disabled,
+                'data-rel': 'configure_columns',
+                'name': 'Configure',
+                'type': 'button',
+                'class': 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class,
+                'text': translation_list[2]
+              });
               div_element.appendChild(button_element);
 
               // Add Sort button
               // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'Sort');
-              button_element.setAttribute('name', 'Sort');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
-              button_element.textContent = translation_list[3];
+              button_element = domsugar('button', {
+                'disabled': gadget.state.disabled,
+                'data-rel': 'Sort',
+                'name': 'Sort',
+                'type': 'button',
+                'class': 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class,
+                'text': translation_list[3]
+              });
               div_element.appendChild(button_element);
 
               // Add Do button
               // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'clipboard');
-              button_element.setAttribute('name', 'Clipboard');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ');
-              button_element.textContent = translation_list[5];
+              button_element = domsugar('button', {
+                'disabled': gadget.state.disabled,
+                'data-rel': 'clipboard',
+                'name': 'Clipboard',
+                'type': 'button',
+                'class': 'ui-icon-list-ul ui-btn-icon-left ',
+                'text': translation_list[5]
+              });
               div_element.appendChild(button_element);
 
               // Add Select button
               // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'Hide');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = translation_list[1];
+              button_element = domsugar('button', {
+                'disabled': gadget.state.disabled,
+                'data-rel': 'hide',
+                'name': 'Hide',
+                'type': 'button',
+                'class': 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class,
+                'text': translation_list[1]
+              });
               div_element.appendChild(button_element);
             }
             fragment.appendChild(div_element);
@@ -825,21 +848,22 @@
             tr_element = table_element.querySelector('tr');
 
             if (gadget.state.show_anchor) {
-              th_element = document.createElement('th');
-              th_element.textContent = translation_list[0];
+              th_element = domsugar('th', {
+                "text": translation_list[0]
+              });
               tr_element.appendChild(th_element);
             }
 
             for (k = 0; k < column_list.length; k += 1) {
               column = column_list[k];
-              th_element = document.createElement('th');
+              th_element = domsugar('th');
 
               current_sort = sort_list.find(hasSameFirstItem(column));
               if (current_sort !== undefined) {
                 if (current_sort[1] === 'ascending') {
-                  th_element.setAttribute('class', "ui-icon ui-icon-sort-amount-asc");
+                  th_element.classList.add("ui-icon", "ui-icon-sort-amount-asc");
                 } else if (current_sort[1] === 'descending') {
-                  th_element.setAttribute('class', "ui-icon ui-icon-sort-amount-desc");
+                  th_element.classList.add("ui-icon", "ui-icon-sort-amount-desc");
                 }
               }
 
@@ -850,9 +874,10 @@
 
                 if (is_sortable_list[k]) {
                   // <th class="{{class_value}}"><a href="{{sort_link}}">{{text}}</a></th>
-                  a_element = document.createElement('a');
-                  a_element.textContent = column[1];
-                  a_element.href = url_for_list[url_for_index];
+                  a_element = domsugar('a', {
+                    "text": column[1],
+                    "href": url_for_list[url_for_index]
+                  });
                   th_element.appendChild(a_element);
                   url_for_index += 1;
                 } else {
@@ -865,13 +890,13 @@
             }
 
             if (gadget.state.line_icon) {
-              th_element = document.createElement('th');
+              th_element = domsugar('th');
               tr_element.appendChild(th_element);
             }
 
             fragment.appendChild(table_element);
 
-            fragment.appendChild(document.createElement('nav'));
+            fragment.appendChild(domsugar('nav'));
 
             while (container.firstChild) {
               container.removeChild(container.firstChild);
@@ -1080,21 +1105,24 @@
 // <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
 // <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
 // <span class="ui-disabled">{{record}}</span>
-                sub_element = document.createElement('a');
-                sub_element.setAttribute('class', previous_classname);
-                sub_element.href = previous_url;
-                sub_element.textContent = result_list[0][1];
+                sub_element = domsugar('a', {
+                  'class': previous_classname,
+                  'href': previous_url,
+                  'text': result_list[0][1]
+                });
                 fragment.appendChild(sub_element);
 
-                sub_element = document.createElement('a');
-                sub_element.setAttribute('class', next_classname);
-                sub_element.href = next_url;
-                sub_element.textContent = result_list[0][2];
+                sub_element = domsugar('a', {
+                  'class': next_classname,
+                  'href': next_url,
+                  'text': result_list[0][2]
+                });
                 fragment.appendChild(sub_element);
 
-                sub_element = document.createElement('span');
-                sub_element.setAttribute('class', 'ui-disabled');
-                sub_element.textContent = record;
+                sub_element = domsugar('span', {
+                  'class': 'ui-disabled',
+                  'text': record
+                });
                 fragment.appendChild(sub_element);
 
                 while (nav_element.firstChild) {
@@ -1424,4 +1452,4 @@
       return;
     });
 
-}(window, document, rJS, URI, RSVP, isEmpty, console));
+}(window, document, rJS, URI, RSVP, isEmpty, console, domsugar));
