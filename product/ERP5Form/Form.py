@@ -1364,7 +1364,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                   'my_initial_implementation_state',
                   'my_hot_reindexing_state',
                   'my_message_different_state',
-              )
+              ) and (self.getId(), f.getId()) not in (
+                    # Field used in API
+                    ('Ticket_viewAsHateoas', 'my_simulation_state_title'),
+                    # Preference unrelated to workflow states.
+                    ('SystemPreference_viewSlapOS', 'my_preferred_shacache_website_expected_state'),
+                )
 
             for group_name in self.get_groups():
               field_list = self.get_fields_in_group(group_name)
