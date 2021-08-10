@@ -88,6 +88,7 @@ EquivalenceTester
 Event
 ExpressPreference
 ExternalDocument
+ExternalMethod
 ExtraLocalRole
 FlowCapacity
 Folder
