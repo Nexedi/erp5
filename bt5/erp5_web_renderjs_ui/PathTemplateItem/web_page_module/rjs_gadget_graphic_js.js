@@ -80,6 +80,9 @@
           column_list: column_list,
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
+        perfomance_mapping = {
+          "translated_simulation_state_title": "simulation_state"
+        },
         domain_list,
         i,
         j;
@@ -92,6 +95,13 @@
         group_by = [options.group_by || options.layout.x.key];
       } else {
         group_by = options.group_by;
+      }
+
+      console.log(group_by);
+      for (i = 0; i < group_by.length; i += 1) {
+        if (perfomance_mapping.hasOwnProperty(group_by[i])) {
+          group_by[i] = perfomance_mapping[group_by[i]];
+        }
       }
 
       if (Array.isArray(options.group_by)) {
@@ -197,7 +207,7 @@
           return gadget.changeState(data);
         });
     })
-    .declareService(function () {
+    /*.declareService(function () {
       var gadget = this,
         restore_filter_input = gadget.element.querySelectorAll("input")[0];
       return gadget.getUrlParameter('extended_search')
@@ -227,7 +237,7 @@
 
           return one;
         });
-    })
+    })*/
     .onStateChange(function (modification_dict) {
       var i,
         gadget = this,
@@ -364,8 +374,8 @@
                 title: state_list[i]
               });
             }
-
           }
+          console.log(data_list);
           return graph_gadget.render({
             value: {
               data: data_list,
