@@ -57,8 +57,8 @@ from six.moves import range
 
 # max time to generate frontend instance: 1.5 hour
 MAX_FRONTEND_TIME = 60*90
-# max time to register instance to slapOSMaster: 15 minutes
-MAX_CREATION_INSTANCE_TIME = 60*15
+# max time to register instance to slapOSMaster: 5 minutes
+MAX_CREATION_INSTANCE_TIME = 60*10
 # max time for a test: 20 minutes
 MAX_TEST_CASE_TIME = 60*20
 # max time to prepare SlapOS for testsuite (software installation, instances requests, etc.)
