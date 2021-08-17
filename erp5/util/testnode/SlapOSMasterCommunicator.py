@@ -119,7 +119,7 @@ class SlapOSMasterCommunicator(object):
 
   @retryOnNetworkFailure
   def isInstanceRequested(self, instance_title):
-    return len(self.hateoas_navigator._getHostingSubscriptionList(
+    return len(self.hateoas_navigator._getInstanceTreeList(
         title=instance_title))
 
   @retryOnNetworkFailure
@@ -132,7 +132,7 @@ class SlapOSMasterCommunicator(object):
 
   @retryOnNetworkFailure
   def getInstanceUrlList(self):
-    return self.hateoas_navigator.getHostingSubscriptionInstanceList(
+    return self.hateoas_navigator.getInstanceTreeInstanceList(
       self.name)
 
   @retryOnNetworkFailure
