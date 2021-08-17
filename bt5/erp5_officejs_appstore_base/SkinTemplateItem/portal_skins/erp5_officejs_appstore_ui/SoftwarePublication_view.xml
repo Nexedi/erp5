@@ -101,6 +101,7 @@
                         <string>my_title</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>publication_action</string>
+                        <string>metadata_configuration</string>
                       </list>
                     </value>
                 </item>
