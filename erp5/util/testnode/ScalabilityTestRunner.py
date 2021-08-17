@@ -463,7 +463,6 @@ Require valid-user
                              self.frontend_instance_guid,
                              purge_previous_instance = not self.use_existing_setup)
         logger.debug("Scalability instance requested.")
-        self._waitInstanceCreation(self.instance_title)
       except Exception as e:
         logger.error("Error creating instance: " + str(e))
         return {'status_code' : 1}
