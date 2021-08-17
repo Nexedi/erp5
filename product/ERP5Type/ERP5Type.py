@@ -99,7 +99,7 @@ class LocalRoleAssignorMixIn(object):
 
       ## Update role assignments to groups
       # Assign new roles
-      ac_local_roles = {group: list(role_list)
+      ac_local_roles = {group: sorted(role_list)
         for group, role_list in group_id_role_dict.iteritems()
         if role_list}
 
