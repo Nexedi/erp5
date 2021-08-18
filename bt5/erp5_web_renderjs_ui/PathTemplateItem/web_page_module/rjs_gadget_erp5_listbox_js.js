@@ -275,7 +275,7 @@
         domsugar('tr', td_element_list)
       );
     }
-    return domsugar('tbody', tfoot_element_list);
+    return domsugar('tfoot', tfoot_element_list);
   }
 
   function renderSubField(gadget, element, sub_field_json) {
