@@ -738,7 +738,13 @@
                   })
                 ])
               ],
-              table_element = domsugar('table'),
+              table_element = domsugar('table', [
+                domsugar("thead", {"class": "thead"}, [
+                  domsugar("tr")
+                ]),
+                domsugar("tbody"),
+                domsugar("tfoot")
+              ]),
               // For an unknown reason, the title used to be translated previously,
               // which is unexpected, as the value can't be hardcoded in the gadget
               // <h1>{{title}} <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></h1>
@@ -846,7 +852,6 @@
               }, div_element_list)
             );
 
-            table_element.innerHTML = '<thead class="thead"><tr></tr></thead><tbody></tbody><tfoot></tfoot>';
             tr_element = table_element.querySelector('tr');
 
             if (gadget.state.show_anchor) {
@@ -1075,7 +1080,6 @@
                   previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child",
                   next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child",
                   fragment = document.createDocumentFragment(),
-                  sub_element,
                   nav_element = gadget.element.querySelector('nav'),
                   from_index;
 
@@ -1108,25 +1112,22 @@
 // <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
 // <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
 // <span class="ui-disabled">{{record}}</span>
-                sub_element = domsugar('a', {
+                fragment.appendChild(domsugar('a', {
                   'class': previous_classname,
                   'href': previous_url,
                   'text': result_list[0][1]
-                });
-                fragment.appendChild(sub_element);
+                }));
 
-                sub_element = domsugar('a', {
+                fragment.appendChild(domsugar('a', {
                   'class': next_classname,
                   'href': next_url,
                   'text': result_list[0][2]
-                });
-                fragment.appendChild(sub_element);
+                }));
 
-                sub_element = domsugar('span', {
+                fragment.appendChild(domsugar('span', {
                   'class': 'ui-disabled',
                   'text': record
-                });
-                fragment.appendChild(sub_element);
+                }));
 
                 while (nav_element.firstChild) {
                   nav_element.removeChild(nav_element.firstChild);
