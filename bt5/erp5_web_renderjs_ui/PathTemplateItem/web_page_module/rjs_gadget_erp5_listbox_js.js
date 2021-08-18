@@ -129,12 +129,11 @@
             sub_element_list.push(domsugar('input', element_data));
           }
 
-          element_data = {};
+          element_data = {
+            "for": 'listbox_line_' + row.uid
+          };
 
           // Create a label, to update the checkbox when clicking the text
-          sub_element = domsugar('label', {
-            "for": 'listbox_line_' + row.uid
-          });
           if (cell.type) {
             element_data["class"] = 'editable_div';
             element_data['data-column'] = cell.column;
@@ -142,7 +141,9 @@
           } else {
             element_data.text = cell["default"];
           }
-          sub_element_list.push(sub_element);
+          sub_element_list.push(
+            domsugar('label', element_data)
+          );
 
         } else {
 
