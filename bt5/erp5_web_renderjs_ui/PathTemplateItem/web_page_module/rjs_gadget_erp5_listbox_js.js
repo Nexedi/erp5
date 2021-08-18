@@ -233,8 +233,8 @@
       cell,
       sub_element_list,
       tfoot_element_list = [],
-      td_element_list,
       div_element,
+      td_element_list,
       td_data;
 
     for (i = 0; i < options.row_list.length; i += 1) {
@@ -729,9 +729,7 @@
               column,
               current_sort,
               fragment = document.createDocumentFragment(),
-              div_element = domsugar('div', {
-                "class": 'ui-table-header ui-header'
-              }, [
+              div_element_list = [
                 domsugar('h1', {
                   "text": gadget.state.title + ' '
                 }, [
@@ -739,7 +737,7 @@
                     "class": 'listboxloader ui-icon-spinner ui-btn-icon-left'
                   })
                 ])
-              ]),
+              ],
               table_element = domsugar('table'),
               // For an unknown reason, the title used to be translated previously,
               // which is unexpected, as the value can't be hardcoded in the gadget
@@ -751,7 +749,7 @@
               for (k = 0; k < select_option_list.length; k += 1) {
                 // Add include button
                 // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
-                div_element.appendChild(domsugar('button', {
+                div_element_list.push(domsugar('button', {
                   'data-rel': 'hide',
                   'data-select-action': select_option_list[k].action,
                   'name': 'SelectAction',
@@ -763,7 +761,7 @@
 
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
-              div_element.appendChild(domsugar('button', {
+              div_element_list.push(domsugar('button', {
                 'data-rel': 'hide',
                 'name': 'CancelSelect',
                 'type': 'button',
@@ -775,7 +773,7 @@
               for (k = 0; k < select_option_list.length; k += 1) {
                 // Add include button
                 // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
-                div_element.appendChild(domsugar('button', {
+                div_element_list.push(domsugar('button', {
                   'data-rel': 'clipboard',
                   'data-clipboard-action': select_option_list[k].action,
                   'name': 'ClipboardAction',
@@ -787,7 +785,7 @@
 
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
-              div_element.appendChild(domsugar('button', {
+              div_element_list.push(domsugar('button', {
                 'data-rel': 'hide',
                 'name': 'CancelSelect',
                 'type': 'button',
@@ -799,7 +797,7 @@
 
               // Add Configure button
               // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
-              div_element.appendChild(domsugar('button', {
+              div_element_list.push(domsugar('button', {
                 'disabled': gadget.state.disabled,
                 'data-rel': 'configure_columns',
                 'name': 'Configure',
@@ -810,7 +808,7 @@
 
               // Add Sort button
               // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
-              div_element.appendChild(domsugar('button', {
+              div_element_list.push(domsugar('button', {
                 'disabled': gadget.state.disabled,
                 'data-rel': 'Sort',
                 'name': 'Sort',
@@ -821,7 +819,7 @@
 
               // Add Do button
               // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              div_element.appendChild(domsugar('button', {
+              div_element_list.push(domsugar('button', {
                 'disabled': gadget.state.disabled,
                 'data-rel': 'clipboard',
                 'name': 'Clipboard',
@@ -832,7 +830,7 @@
 
               // Add Select button
               // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              div_element.appendChild(domsugar('button', {
+              div_element_list.push(domsugar('button', {
                 'disabled': gadget.state.disabled,
                 'data-rel': 'hide',
                 'name': 'Hide',
@@ -841,7 +839,12 @@
                 'text': translation_list[1]
               }));
             }
-            fragment.appendChild(div_element);
+
+            fragment.appendChild(
+              domsugar('div', {
+                "class": 'ui-table-header ui-header'
+              }, div_element_list)
+            );
 
             table_element.innerHTML = '<thead class="thead"><tr></tr></thead><tbody></tbody><tfoot></tfoot>';
             tr_element = table_element.querySelector('tr');
