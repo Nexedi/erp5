@@ -1,4 +1,10 @@
 <property_sheet_list>
+ <portal_type id="Compute Node">
+  <item>VariationRange</item>
+ </portal_type>
+ <portal_type id="Compute Partition">
+  <item>VariationRange</item>
+ </portal_type>
  <portal_type id="Computer">
   <item>VariationRange</item>
  </portal_type>

@@ -1,3 +1,10 @@
+Compute Node Module | view
+Compute Node | apply_computer_model
+Compute Node | compute_partition
+Compute Node | model
+Compute Node | tcp_port_number
+Compute Node | view
+Compute Partition | view
 Computer Model Module | view
 Computer Model | view
 Computer Module | view
