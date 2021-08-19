@@ -610,8 +610,8 @@
    </a>
 </div>
 */
-            var container = gadget.element.querySelector(".document_table"),
-              div_element = domsugar('div', [
+            return domsugar(gadget.element.querySelector(".document_table"), [
+              domsugar('div', [
                 domsugar('a', {
                   "href": result_list[0]
                 }, [
@@ -622,12 +622,8 @@
                   domsugar('span', {"text": '-'}),
                   domsugar('span', {"text": result_list[1][1]})
                 ])
-              ]);
-
-            while (container.firstChild) {
-              container.removeChild(container.firstChild);
-            }
-            domsugar(container, [div_element]);
+              ])
+            ]);
           });
       }
 
@@ -729,7 +725,6 @@
               url_for_index = 0,
               column,
               current_sort,
-              fragment = document.createDocumentFragment(),
               div_element_list = [
                 domsugar('h1', {
                   // For an unknown reason, the title used to be translated previously,
@@ -749,6 +744,7 @@
                 domsugar("tbody"),
                 domsugar("tfoot")
               ]),
+              th_element_list = [],
               tr_element,
               th_element;
 
@@ -846,20 +842,13 @@
                 'text': translation_list[1]
               }));
             }
-            domsugar(fragment, [
-              domsugar('div', {
-                "class": 'ui-table-header ui-header'
-              }, div_element_list)
-            ]);
-
-            tr_element = table_element.querySelector('tr');
 
             if (gadget.state.show_anchor) {
-              domsugar(tr_element, [
+              th_element_list.push(
                 domsugar('th', {
                   "text": translation_list[0]
                 })
-              ]);
+              );
             }
 
             for (k = 0; k < column_list.length; k += 1) {
@@ -894,23 +883,22 @@
                   th_element.textContent = column[1];
                 }
               }
-              domsugar(tr_element, [th_element]);
+              th_element_list.push(th_element);
             }
 
             if (gadget.state.line_icon) {
-              domsugar(tr_element, [
-                domsugar('th')
-              ]);
+              th_element_list.push(domsugar('th'));
             }
 
-            fragment.appendChild(table_element);
+            domsugar(table_element.querySelector('tr'), th_element_list);
 
-            fragment.appendChild(domsugar('nav'));
-
-            while (container.firstChild) {
-              container.removeChild(container.firstChild);
-            }
-            domsugar(container, [fragment]);
+            domsugar(container, [
+              domsugar('div', {
+                "class": 'ui-table-header ui-header'
+              }, div_element_list),
+              table_element,
+              domsugar('nav')
+            ]);
           });
       }
 
@@ -1080,7 +1068,6 @@
                   next_url = url_list[1],
                   previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child",
                   next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child",
-                  fragment = document.createDocumentFragment(),
                   nav_element = gadget.element.querySelector('nav'),
                   from_index;
 
@@ -1113,13 +1100,13 @@
 // <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
 // <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
 // <span class="ui-disabled">{{record}}</span>
-                domsugar(fragment, [
+                domsugar(nav_element, [
                   domsugar('a', {
                     'class': previous_classname,
                     'href': previous_url,
                     'text': result_list[0][1]
                   }),
-                 domsugar('a', {
+                  domsugar('a', {
                     'class': next_classname,
                     'href': next_url,
                     'text': result_list[0][2]
@@ -1129,11 +1116,6 @@
                     'text': record
                   })
                 ]);
-
-                while (nav_element.firstChild) {
-                  nav_element.removeChild(nav_element.firstChild);
-                }
-                domsugar(nav_element, [fragment]);
               })
               .push(function () {
                 var result_sum = (allDocs_result.sum || {}).rows || [], // render summary footer if available
