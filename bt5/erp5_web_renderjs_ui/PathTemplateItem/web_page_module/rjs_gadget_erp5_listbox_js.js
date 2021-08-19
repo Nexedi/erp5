@@ -262,7 +262,7 @@
           });
           sub_element_list.push(div_element);
         } else {
-          if (cell.hasOwnProperty("default")) {
+          if (cell["default"]) {
             td_data.text = cell["default"];
           } else if ((!options.show_anchor) && (j === 0)) {
             td_data.text = 'Total';
