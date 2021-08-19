@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python:[\'Computer\']</string> </value>
+            <value> <string>python:[\'Computer\', \'Compute Node\']</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
