@@ -627,7 +627,7 @@
             while (container.firstChild) {
               container.removeChild(container.firstChild);
             }
-            container.appendChild(div_element);
+            domsugar(container, [div_element]);
           });
       }
 
@@ -846,21 +846,20 @@
                 'text': translation_list[1]
               }));
             }
-
-            fragment.appendChild(
+            domsugar(fragment, [
               domsugar('div', {
                 "class": 'ui-table-header ui-header'
               }, div_element_list)
-            );
+            ]);
 
             tr_element = table_element.querySelector('tr');
 
             if (gadget.state.show_anchor) {
-              tr_element.appendChild(
+              domsugar(tr_element, [
                 domsugar('th', {
                   "text": translation_list[0]
                 })
-              );
+              ]);
             }
 
             for (k = 0; k < column_list.length; k += 1) {
@@ -883,24 +882,25 @@
 
                 if (is_sortable_list[k]) {
                   // <th class="{{class_value}}"><a href="{{sort_link}}">{{text}}</a></th>
-                  th_element.appendChild(
+                  domsugar(th_element, [
                     domsugar('a', {
                       "text": column[1],
                       "href": url_for_list[url_for_index]
                     })
-                  );
+                  ]);
                   url_for_index += 1;
                 } else {
                   // <th class="{{class_value}}">{{text}}</th>
                   th_element.textContent = column[1];
                 }
               }
-
-              tr_element.appendChild(th_element);
+              domsugar(tr_element, [th_element]);
             }
 
             if (gadget.state.line_icon) {
-              tr_element.appendChild(domsugar('th'));
+              domsugar(tr_element, [
+                domsugar('th')
+              ]);
             }
 
             fragment.appendChild(table_element);
@@ -910,7 +910,7 @@
             while (container.firstChild) {
               container.removeChild(container.firstChild);
             }
-            container.appendChild(fragment);
+            domsugar(container, [fragment]);
           });
       }
 
@@ -1113,27 +1113,27 @@
 // <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
 // <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
 // <span class="ui-disabled">{{record}}</span>
-                fragment.appendChild(domsugar('a', {
-                  'class': previous_classname,
-                  'href': previous_url,
-                  'text': result_list[0][1]
-                }));
-
-                fragment.appendChild(domsugar('a', {
-                  'class': next_classname,
-                  'href': next_url,
-                  'text': result_list[0][2]
-                }));
-
-                fragment.appendChild(domsugar('span', {
-                  'class': 'ui-disabled',
-                  'text': record
-                }));
+                domsugar(fragment, [
+                  domsugar('a', {
+                    'class': previous_classname,
+                    'href': previous_url,
+                    'text': result_list[0][1]
+                  }),
+                 domsugar('a', {
+                    'class': next_classname,
+                    'href': next_url,
+                    'text': result_list[0][2]
+                  }),
+                  domsugar('span', {
+                    'class': 'ui-disabled',
+                    'text': record
+                  })
+                ]);
 
                 while (nav_element.firstChild) {
                   nav_element.removeChild(nav_element.firstChild);
                 }
-                nav_element.appendChild(fragment);
+                domsugar(nav_element, [fragment]);
               })
               .push(function () {
                 var result_sum = (allDocs_result.sum || {}).rows || [], // render summary footer if available
