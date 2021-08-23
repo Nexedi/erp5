@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
 /*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar*/
-(function (window, document, rJS, URI, RSVP, isEmpty, console, domsugar) {
+(function (window, rJS, URI, RSVP, isEmpty, console, domsugar) {
   "use strict";
 
   var variable = {},
@@ -745,7 +745,6 @@
                 domsugar("tfoot")
               ]),
               th_element_list = [],
-              tr_element,
               th_element;
 
             if (gadget.state.show_select_action) {
@@ -1154,11 +1153,10 @@
                 loading_element.textContent = '(' + pagination_message + ')';
               })
               .push(function () {
-                var div,
+                var div = domsugar("div", {"class": "graphic-section"}),
                   gadget_list = [],
                   domain_list = JSON.parse(gadget.state.domain_list_json);
-                div = domsugar("div", {"class": "graphic-section"});
-                gadget.element.appendChild(div);
+                gadget.element.insertBefore(div, gadget.element.firstChild);
                 gadget_list.push(
                   gadget.declareGadget('gadget_graphic.html', {
                     scope: 'gadget_graphic',
@@ -1169,7 +1167,7 @@
                   div = domsugar("div", {
                     "class": "graphic-section " + domain_list[i][0]
                   });
-                  gadget.element.appendChild(div);
+                  gadget.element.insertBefore(div, gadget.element.firstChild);
                   gadget_list.push(
                     gadget.declareGadget('gadget_graphic.html', {
                       scope: 'gadget_graphic_' + domain_list[i][0],
@@ -1187,7 +1185,6 @@
                   group_by,
                   group_by_title,
                   domain_id,
-                  layout,
                   domain;
                 for (domain_id in domain_dict) {
                   if (domain_dict.hasOwnProperty(domain_id)) {
@@ -1245,14 +1242,13 @@
                           "title": "Quantity"
                         }
                       }
-                   }));
-                 }
-                 return RSVP.all(queue_list);
+                    }));
+                  }
+                  return RSVP.all(queue_list);
                 }
-             });
+              });
           });
       }
-
       return result_queue;
     })
 
