@@ -476,7 +476,9 @@
             j,
             column_id,
             column_title,
-            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
+            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])],
+            option_list = field_json.domain_root_list || [];
+
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
@@ -500,8 +502,20 @@
               }
             }
           }
+
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
+          }
+
+          for (i = 0; i < not_concatenated_list.length; i += 1) {
+            for (j = 0; j < not_concatenated_list[i].length; j += 1) {
+              if (not_concatenated_list[i][j][0].indexOf("_state") !== -1) {
+                option_list.push([
+                  not_concatenated_list[i][j][0],
+                  not_concatenated_list[i][j][1]
+                ]);
+              }
+            }
           }
 
           return gadget.changeState({
@@ -530,6 +544,7 @@
             list_method: field_json.list_method,
             list_method_template: field_json.list_method_template,
 
+            option_list: option_list,
             domain_list_json: JSON.stringify(field_json.domain_root_list || []),
             domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
 
@@ -1153,6 +1168,21 @@
                 loading_element.textContent = '(' + pagination_message + ')';
               })
               .push(function () {
+                var sub_element_list = [];
+                for (i = 0; i < gadget.state.option_list.length; i += 1) {
+                  sub_element_list.push(
+                    domsugar("option", {
+                      "value": gadget.state.option_list[i][0],
+                      "text": gadget.state.option_list[i][1]
+                    })
+                  );
+                }
+                gadget.element.insertBefore(
+                  domsugar("select", sub_element_list),
+                  gadget.element.firstChild
+                );
+              });
+              /*.push(function () {
                 var div = domsugar("div", {"class": "graphic-section"}),
                   gadget_list = [],
                   domain_list = JSON.parse(gadget.state.domain_list_json);
@@ -1176,8 +1206,8 @@
                   );
                 }
                 return RSVP.all(gadget_list);
-              })
-              .push(function (gadget_list) {
+              })*/
+              /*.push(function (gadget_list) {
                 var default_param_list = JSON.parse(gadget.state.column_list_json),
                   domain_dict = JSON.parse(gadget.state.domain_dict_json),
                   domain_list = [],
@@ -1246,7 +1276,7 @@
                   }
                   return RSVP.all(queue_list);
                 }
-              });
+              });*/
           });
       }
 
@@ -1431,7 +1461,6 @@
           return result;
         });
     }, {mutex: 'changestate'})
-
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks
@@ -1494,9 +1523,13 @@
           show_clipboard_action: false
         });
       }
-
+      if (evt.target.type === "select-one") {
+        // XXX Move it to onEvent > "change" probably 
+        return gadget.changeState({"graphic_type": evt.target.value});
+      }
       if ((evt.target.type === 'button') &&
           ((evt.target.name === 'SelectAction') || (evt.target.name === 'ClipboardAction'))) {
+        console.log("I am here");
         evt.preventDefault();
 
         checked_uid_list = [];
