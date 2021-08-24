@@ -1,5 +1,5 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, isEmpty, console, domsugar*/
+/*global window, rJS, URI, RSVP, isEmpty, console, domsugar*/
 (function (window, rJS, URI, RSVP, isEmpty, console, domsugar) {
   "use strict";
 
@@ -1249,6 +1249,7 @@
               });
           });
       }
+
       return result_queue;
     })
 
@@ -1532,4 +1533,4 @@
       return;
     });
 
-}(window, document, rJS, URI, RSVP, isEmpty, console, domsugar));
+}(window, rJS, URI, RSVP, isEmpty, console, domsugar));
