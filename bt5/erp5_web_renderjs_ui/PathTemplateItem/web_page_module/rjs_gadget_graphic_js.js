@@ -1,8 +1,8 @@
 /*global document, window, Option, rJS, RSVP, console, Array, SimpleQuery, Query,
-         ComplexQuery, loopEventListener */
+         ComplexQuery, loopEventListener, domsugar */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery,
-           loopEventListener) {
+           loopEventListener, domsugar) {
   "use strict";
 
   var color_list = ["#CCA08D", "#58ADC4", "#F9B39B", "#B75937",
@@ -257,6 +257,7 @@
       }
       return new RSVP.Queue(RSVP.all(queue_list))
         .push(function (result_list) {
+          console.log(result_list);
           var bar_chart = gadget.element.querySelector(".wrap"),
             loader = gadget.element.querySelector(".graph-spinner"),
             graph_gadget = result_list[0],
@@ -375,7 +376,13 @@
               });
             }
           }
-          console.log(data_list);
+          if (data_list.length === 0) {
+            console.log("I am here");
+            return domsugar(gadget.element, [
+              domsugar("p", {"text": "No data"})
+            ]);
+          }
+          console.log(data_list, data_list.length);
           return graph_gadget.render({
             value: {
               data: data_list,
@@ -395,4 +402,4 @@
     });
 
 }(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery,
-  rJS.loopEventListener));
+  rJS.loopEventListener, domsugar));
