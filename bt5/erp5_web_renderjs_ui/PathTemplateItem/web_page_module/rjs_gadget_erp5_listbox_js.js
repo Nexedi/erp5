@@ -1182,49 +1182,54 @@
                     })
                   );
                 }
-                gadget.element.insertBefore(
+                domsugar(gadget.element.querySelector(".graphic_section"), [
                   domsugar("select", sub_element_list),
-                  gadget.element.firstChild
-                );
+                  domsugar("div", {"class": "graphic_area"})
+                ]);
               });
           });
       } else if (modification_dict.hasOwnProperty("graphic_type") &&
                  modification_dict.graphic_type !== "") {
         return result_queue
           .push(function () {
-            var div = domsugar("div", {"class": "graphic-section"}),
-              gadget_list = [],
-              domain_list = JSON.parse(gadget.state.domain_list_json);
-            gadget.element.insertBefore(div, gadget.element.firstChild);
-            gadget_list.push(
-              gadget.declareGadget('gadget_graphic.html', {
-                scope: 'gadget_graphic',
-                element: div
-              })
-            );
-            for (i = 0; i < domain_list.length; i += 1) {
-              div = domsugar("div", {
-                "class": "graphic-section " + domain_list[i][0]
-              });
-              gadget.element.insertBefore(div, gadget.element.firstChild);
-              gadget_list.push(
-                gadget.declareGadget('gadget_graphic.html', {
-                  scope: 'gadget_graphic_' + domain_list[i][0],
-                  element: div
-                })
-              );
-            }
-            return RSVP.all(gadget_list);
+            return gadget.declareGadget('gadget_graphic.html', {
+              scope: 'gadget_graphic',
+              element: gadget.element.querySelector(".graphic_area")
+            });
           })
-          .push(function (gadget_list) {
-            var default_param_list = JSON.parse(gadget.state.column_list_json),
+          .push(function (graphic_gadget) {
+            var group_by,
+              group_by_title,
+              column_list_json = JSON.parse(gadget.state.column_list_json),
               domain_dict = JSON.parse(gadget.state.domain_dict_json),
               domain_list = [],
-              queue_list = [],
-              group_by,
-              group_by_title,
               domain_id,
               domain;
+
+
+            for (i = 0; i < column_list_json.length; i += 1) {
+              if (column_list_json[i][0] === modification_dict.graphic_type) {
+                group_by = column_list_json[i][0];
+                group_by_title = column_list_json[i][1];
+                return graphic_gadget.render({
+                  group_by: group_by,
+                  query_by: {},
+                  title: group_by_title,
+                  list_method_template: gadget.state.list_method_template,
+                  list_method: gadget.state.list_method,
+                  layout: {
+                    x: {
+                      "title": group_by_title,
+                      "key": group_by
+                    },
+                    y: {
+                      "title": "Quantity"
+                    }
+                  }
+                });
+              }
+            }
+
             for (domain_id in domain_dict) {
               if (domain_dict.hasOwnProperty(domain_id)) {
                 domain = {
@@ -1239,31 +1244,15 @@
                 domain_list.push(domain);
               }
             }
-            for (i = 0; i < default_param_list.length; i += 1) {
-              if (default_param_list[i][0].indexOf("_state") !== -1) {
-                group_by = default_param_list[i][0];
-                group_by_title = default_param_list[i][1];
+            for (i = 0; i < column_list_json.length; i += 1) {
+              if (column_list_json[i][0].indexOf("_state") !== -1) {
+                group_by = column_list_json[i][0];
+                group_by_title = column_list_json[i][1];
               }
             }
-            if (gadget_list) {
-              queue_list.push(gadget_list[0].render({
-                group_by: group_by,
-                query_by: {},
-                title: gadget.state.title,
-                list_method_template: gadget.state.list_method_template,
-                list_method: gadget.state.list_method,
-                layout: {
-                  x: {
-                    "title": group_by_title,
-                    "key": group_by
-                  },
-                  y: {
-                    "title": "Quantity"
-                  }
-                }
-              }));
-              for (i = 0; i < domain_list.length; i += 1) {
-                queue_list.push(gadget_list[i + 1].render({
+            for (i = 0; i < domain_list.length; i += 1) {
+              if (domain_list[i].domain_id === modification_dict.graphic_type) {
+                return graphic_gadget.render({
                   group_by: group_by,
                   query_by: {},
                   title: gadget.state.title,
@@ -1281,9 +1270,8 @@
                       "title": "Quantity"
                     }
                   }
-                }));
+                });
               }
-              return RSVP.all(queue_list);
             }
           });
       }
