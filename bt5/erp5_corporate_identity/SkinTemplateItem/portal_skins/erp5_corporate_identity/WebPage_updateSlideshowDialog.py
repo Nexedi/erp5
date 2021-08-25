@@ -27,18 +27,16 @@ Update the slide dialog with parameters manually entered
 
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
-  return context.Base_redirect(
-    dialog_id,
-    keep_items = dict(
-      portal_status_message=translateString('Preview updated.'),
-      cancel_url=cancel_url,
-      portal_skin=portal_skin,
-      override_logo_reference=override_logo_reference,
-      override_source_organisation_title=override_source_organisation_title,
-      display_note=display_note,
-      display_svg=display_svg,
-      document_save=document_save,
-      document_download=document_download,
-      format=format,
-    )
-  )
+  request = container.REQUEST
+  request.form['portal_status_message'] = translateString('Preview updated.')
+  request.form['cancel_url'] = cancel_url
+  request.form['portal_skin'] = portal_skin
+  request.form['format'] = format
+  request.form['display_svg'] = display_svg
+  request.form['document_save'] = document_save
+  request.form['document_download'] = document_download
+  request.form['override_logo_reference'] = override_logo_reference
+  request.form['override_source_organisation_title'] = override_source_organisation_title
+  request.form['display_note'] = display_note
+
+  return context.Base_renderForm(dialog_id)

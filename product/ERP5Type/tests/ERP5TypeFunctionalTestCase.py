@@ -34,18 +34,25 @@ import time
 import re
 import subprocess
 import shutil
+import json
+import tempfile
 import transaction
 import logging
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.runUnitTest import log_directory
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 from lxml import etree
 from lxml.html import builder as E
+import certifi
+import urllib3
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait as _WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.remote_connection import RemoteConnection
+
 
 logger = logging.getLogger(__name__)
 
@@ -145,6 +152,9 @@ class Xvfb(Process):
       """
 
   def run(self):
+    # set XORG_LOCK_DIR which is used by slapos pathed xorg, so that Xvfb and
+    # firefox don't use the system /tmp
+    os.environ['XORG_LOCK_DIR'] = os.environ['TMPDIR']
     for display_try in self.display_list:
       self._runCommand(display_try)
       if self.process.poll() is None:
@@ -157,112 +167,196 @@ class Xvfb(Process):
     logger.debug('Xvfb : %d', self.process.pid)
     logger.debug('Take screenshots using xwud -in %s/Xvfb_screen0', self.fbdir)
 
+
+class WebDriverWait(_WebDriverWait):
+  """Wrapper for WebDriverWait which dumps the test page and take a
+  screenshot in case of error.
+  """
+  def until(self, *args):
+    try:
+      return super(WebDriverWait, self).until(*args)
+    except:
+      logger.exception("unable to find login field, dumping the page")
+      try:
+        with open(os.path.join(log_directory, 'page.html'), 'w') as f:
+          f.write(
+            self._driver.execute_script(
+                  "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"))
+      except:
+        logger.exception("error when dumping page")
+      try:
+        with open(os.path.join(log_directory, 'page-screenshot.png'), 'wb') as f:
+          f.write(self._driver.get_screenshot_as_png())
+      except:
+        logger.exception("error when taking screenshot")
+      raise
+
+
 class FunctionalTestRunner:
 
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
-  def __init__(self, host, port, portal, run_only=''):
+  def __init__(self, host, port, testcase):
     self.instance_home = os.environ['INSTANCE_HOME']
 
     # Such information should be automatically loaded
     self.user = 'ERP5TypeTestCase'
     self.password = ''
-    self.run_only = run_only
+    self.testcase = testcase
     profile_dir = os.path.join(self.instance_home, 'profile')
-    self.portal = portal
 
   def getStatus(self):
     transaction.begin()
-    return self.portal.portal_tests.TestTool_getResults(self.run_only)
+    return self.testcase.portal.portal_tests.TestTool_getResults(self.testcase.run_only)
 
   def _getTestBaseURL(self):
     # Access the https proxy in front of runUnitTest's zserver
     base_url = os.getenv('zserver_frontend_url')
     if base_url:
-      return '%s%s' % (base_url, self.portal.getId())
-    return self.portal.portal_url()
+      return '%s%s' % (base_url, self.testcase.portal.getId())
+    return self.testcase.portal_url()
 
   def _getTestURL(self):
     return ZELENIUM_BASE_URL % (
         self._getTestBaseURL(),
-        self.run_only,
+        self.testcase.run_only,
     )
 
   def test(self, debug=0):
-    xvfb = Xvfb(self.instance_home)
-    try:
+    xvfb = None
+    use_local_firefox = True
+    # options for firefox
+    options = webdriver.FirefoxOptions()
+    # Service workers are disabled on Firefox 52 ESR:
+    # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
+    options.set_preference('dom.serviceWorkers.enabled', True)
+    # output javascript console and errors on stdout to help diagnosing failures
+    options.set_preference('devtools.console.stdout.content', True)
+
+    selenium_test_runner_configuration = {}
+    test_runner_configuration_file = os.environ.get('ERP5_TEST_RUNNER_CONFIGURATION')
+    if test_runner_configuration_file and os.path.exists(test_runner_configuration_file):
+      with open(test_runner_configuration_file) as f:
+        test_runner_configuration = json.load(f)
+      selenium_test_runner_configuration = test_runner_configuration.get('selenium', {})
+      use_local_firefox = selenium_test_runner_configuration.get('server-url') is None
+      if not use_local_firefox and 'firefox' not in selenium_test_runner_configuration.get(
+          'desired-capabilities', {}).get('browserName', '').lower():
+        options = None
+
+    if use_local_firefox:
+      xvfb = Xvfb(self.instance_home)
+      self.testcase.addCleanup(xvfb.quit)
       if not (debug and os.getenv('DISPLAY')):
         logger.debug("You can set 'erp5_debug_mode' environment variable to 1 to use your existing display instead of Xvfb.")
         xvfb.run()
       capabilities = webdriver.common.desired_capabilities \
         .DesiredCapabilities.FIREFOX.copy()
       capabilities['marionette'] = True
-      # Zope is accessed through apache with a certificate not trusted by firefox
+      # Zope is accessed through haproxy with a certificate not trusted by firefox
       capabilities['acceptInsecureCerts'] = True
-      # Service workers are disabled on Firefox 52 ESR:
-      # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
-      options = webdriver.FirefoxOptions()
-      options.set_preference('dom.serviceWorkers.enabled', True)
       kw = dict(capabilities=capabilities, options=options)
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
         geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
-        kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
+        kw.update(
+            firefox_binary=firefox_bin,
+            executable_path=geckodriver,
+            # BBB in selenium 3.8.0 this option was named log_path
+            log_path=os.path.join(log_directory, 'geckodriver.log'),
+            # service_log_path=os.path.join(log_directory, 'geckodriver.log'),
+        )
       browser = webdriver.Firefox(**kw)
-      start_time = time.time()
-      logger.info("Running with browser: %s", browser)
-      logger.info("Reported user agent: %s", browser.execute_script("return navigator.userAgent"))
-      logger.info(
-          "Reported screen information: %s",
-          browser.execute_script(
-              '''
-              return JSON.stringify({
-                  'screen.width': window.screen.width,
-                  'screen.height': window.screen.height,
-                  'screen.pixelDepth': window.screen.pixelDepth,
-                  'innerWidth': window.innerWidth,
-                  'innerHeight': window.innerHeight
-                })'''))
-
-      browser.get(self._getTestBaseURL() + '/login_form')
-      login_field = WebDriverWait(browser, 10).until(
-        EC.presence_of_element_located((By.ID, 'name')),
+    else:
+      executor = RemoteConnection(
+          selenium_test_runner_configuration['server-url'],
+          keep_alive=True)
+      cert_reqs = 'CERT_REQUIRED'
+      ca_certs = certifi.where()
+      if not selenium_test_runner_configuration.get('verify-server-certificate', True):
+        cert_reqs = 'CERT_NONE'
+        ca_certs = None
+      if selenium_test_runner_configuration.get('server-ca-certificate'):
+        ca_certs_tempfile = tempfile.NamedTemporaryFile(
+            suffix="-cacerts.pem",
+            mode="w",
+            delete=False)
+        ca_certs = ca_certs_tempfile.name
+        self.testcase.addCleanup(os.unlink, ca_certs_tempfile)
+        with open(ca_certs, 'w') as f:
+          f.write(selenium_test_runner_configuration['server-ca-certificate'])
+      executor._conn = urllib3.PoolManager(cert_reqs=cert_reqs, ca_certs=ca_certs)
+      browser = webdriver.Remote(
+          command_executor=executor,
+          desired_capabilities=selenium_test_runner_configuration['desired-capabilities'],
+          options=options
       )
-      login_field.clear()
-      login_field.send_keys(self.user)
-      password_field = browser.find_element_by_id('password')
-      password_field.clear()
-      password_field.send_keys(self.password)
-      login_form_url = browser.current_url
-      password_field.submit()
-      WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
-      WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
-      browser.get(self._getTestURL())
+      self.testcase.addCleanup(browser.quit)
 
-      WebDriverWait(browser, 10).until(EC.presence_of_element_located((
-        By.XPATH, '//iframe[@id="testSuiteFrame"]'
-      )))
-      # XXX No idea how to wait for the iframe content to be loaded
-      time.sleep(5)
-      # Count number of test to be executed
-      test_count = browser.execute_script(
-        "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
-      ) - 1
-      WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
-        By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
-      )))
-      self.execution_duration = round(time.time() - start_time, 2)
-      html_parser = etree.HTMLParser(recover=True)
-      iframe = etree.fromstring(
+    start_time = time.time()
+    logger.info("Running with browser: %s", browser)
+    logger.info("Reported user agent: %s", browser.execute_script("return navigator.userAgent"))
+    logger.info(
+        "Reported screen information: %s",
+        browser.execute_script(
+            '''
+            return JSON.stringify({
+                'screen.width': window.screen.width,
+                'screen.height': window.screen.height,
+                'screen.pixelDepth': window.screen.pixelDepth,
+                'innerWidth': window.innerWidth,
+                'innerHeight': window.innerHeight
+              })'''))
+
+    # login to get an authentication cookie
+    browser.get(self._getTestBaseURL() + '/login_form')
+    login_field = WebDriverWait(browser, 10).until(
+      EC.presence_of_element_located((By.ID, 'name')),
+    )
+    login_field.clear()
+    login_field.send_keys(self.user)
+    password_field = browser.find_element_by_id('password')
+    password_field.clear()
+    password_field.send_keys(self.password)
+    login_form_url = browser.current_url
+    password_field.submit()
+    WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
+    WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+
+    browser.get(self._getTestURL())
+    WebDriverWait(browser, 10).until(EC.presence_of_element_located((
+       By.XPATH, '//iframe[@id="testSuiteFrame"]'
+    )))
+    # XXX No idea how to wait for the iframe content to be loaded
+    time.sleep(5)
+    # Count number of tests to be executed
+    test_count = browser.execute_script(
+      "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
+    ) - 1
+    # Wait for tests to end
+    WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
+      By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
+    )))
+    # At the end of each test, updateSuiteWithResultOfPreviousTest updates
+    # testSuiteFrame iframe with hidden div containing the test results table.
+    # We will inspect these tables to know which tests have failed. First we
+    # need to wait a bit more, because at the end of test ( testComplete ),
+    # updateSuiteWithResultOfPreviousTest is called by setTimeout. We want to
+    # wait for the last test (which is the last td) result table to be present
+    browser.switch_to_frame('testSuiteFrame')
+    WebDriverWait(browser, 10).until(EC.presence_of_element_located((
+      By.XPATH, '//table/tbody/tr/td[last()]//table'
+    )))
+    browser.switch_to_default_content()
+    self.execution_duration = round(time.time() - start_time, 2)
+    html_parser = etree.HTMLParser(recover=True)
+    iframe = etree.fromstring(
       browser.execute_script(
         "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"
       ).encode('UTF-8'),
         html_parser
-      )
-      browser.quit()
-    finally:
-      xvfb.quit()
+    )
     return iframe
 
   def processResult(self, iframe):
@@ -305,6 +399,7 @@ class FunctionalTestRunner:
     return detail, sucess_amount, failure_amount, expected_failure_amount, \
         error_title_list
 
+
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
   foreground = 0
@@ -325,8 +420,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()
-    self.runner = FunctionalTestRunner(host, port,
-                                self.portal, self.run_only)
+    self.runner = FunctionalTestRunner(host, port, self)
 
   def setSystemPreference(self):
     self.portal.Zuite_setPreference(

@@ -414,6 +414,21 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     # check worklist view is available on workflow
     self.workflow.worklist_1_draft_test_workflow_document_list.view()
 
+  def test_17_testUpdateSecurityRole(self):
+    text_document = self.getTestObject()
+    self.assertEqual(text_document._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
+    self.assertEqual(text_document.getValidationState(), 'draft')
+    default_role_dict = self.workflow.state_draft.getStatePermissionRoleListDict()
+    modified_role_dict = default_role_dict.copy()
+    modified_role_dict['View'] = ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager')
+    self.workflow.state_draft.setStatePermissionRoleListDict(modified_role_dict)
+    self.tic()
+    self.workflow.Workflow_updateSecurityRoles()
+    self.tic()
+    self.assertEqual(text_document._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager'))
+    self.workflow.state_draft.setStatePermissionRoleListDict(default_role_dict)
+    self.tic()
+
 class TestDCWorkflow(TestERP5WorkflowMixin):
   """
     Check DC Workflow works correctly in new Workflow Tool.

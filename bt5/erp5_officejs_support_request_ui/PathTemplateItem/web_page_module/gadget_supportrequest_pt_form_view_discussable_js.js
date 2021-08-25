@@ -27,13 +27,23 @@
     .declareMethod('getDocumentUrl', function (raw_url) {
       var gadget = this;
       return gadget.jio_getAttachment(raw_url, "links")
-       .push(function (links) {
-          var page = "preview",
-            has_preview = links._links.view.filter(function (i) {
-              return i.name === "preview";
-            }).length > 0;
-          if (!has_preview) {
-            page = "html_view";
+        .push(function (links) {
+          // try to find a preview action
+          var page, i, view_actions = links._links.view;
+          for (i = 0; i < view_actions.length; i += 1) {
+            if (view_actions[i].name.indexOf('preview') !== -1 || view_actions[i].title === 'Preview') {
+              page = view_actions[i].name;
+              break;
+            }
+          }
+          // if not found, fallback to the first view action
+          if (page === undefined) {
+            for (i = 0; i < view_actions.length; i += 1) {
+              if (view_actions[i].name.indexOf('view') !== -1) {
+                page = view_actions[i].name;
+                break;
+              }
+            }
           }
           return gadget.getUrlFor({
             command: 'display_erp5_action_with_history',

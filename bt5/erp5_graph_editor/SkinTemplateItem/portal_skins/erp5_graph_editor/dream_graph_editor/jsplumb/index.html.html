@@ -4,50 +4,22 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="../lib/jquery-ui.css">
     <link rel="stylesheet" href="jsplumb.css">
-    <title>JSPlumb gadget</title>
+    <title>JSPlumb public gadget (for qunit tests)</title>
 <!--
- FIXME: renderjs fails if we include renderjs.js twice (this one has a different URL from ERP5's one)
+  The gadget for test is used with "public" sandbox, so we should not include javascripts again.
+
+  The following scripts must have been included by the parent page:
     <script src="renderjs.js" type="text/javascript"></script>
     <script src="rsvp.js" type="text/javascript"></script>
--->
-<!--
-  FIXME: Including jQuery twice cause the jsplumb to be loaded twice.
-  For now we assume that it has already been loaded at this point.
     <script src="../lib/jquery.js"  type="text/javascript"></script>
 -->
     <script src="../lib/jquery-ui.js"  type="text/javascript"></script>
     <script src="../lib/jquery.jsplumb.js" type="text/javascript"></script>
     <script src="../lib/handlebars.min.js" type="text/javascript"></script>
-    <script src="seedrandom.js" type="text/javascript"></script>
     <script src="../lib/springy.js" type="text/javascript"></script>
 
     <script src="../dream/mixin_promise.js" type="text/javascript"></script>
     <script src="jsplumb.js" type="text/javascript"></script>
-
-    <script id="node-template" type="text/x-handlebars-template">
-      <div class="window {{class}}"
-           id="{{element_id}}"
-           title="{{title}}">
-        <a href="{{name_href}}">{{name}}</a>
-        <div class="ep"></div>
-      </div>
-    </script>
-    <script id="popup-edit-template" type="text/x-handlebars-template">
-      <div id="edit-popup" data-position-to="origin">
-        <div data-role="header" data-theme="a">
-          <h1 class="node_class">Edit properties</h1>
-          <!-- XXX add this for jquery mobile version.
-          <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-          -->
-        </div>
-        <br/>
-        <form class="ui-content">
-          <fieldset></fieldset>
-          <input type="button" value="Delete" class="graph_editor_delete_button">
-          <input type="submit" value="Validate" class="graph_editor_validate_button">
-        </form>
-      </div>
-    </script>
   </head>
   <body>
     <div class="graph_container"></div>

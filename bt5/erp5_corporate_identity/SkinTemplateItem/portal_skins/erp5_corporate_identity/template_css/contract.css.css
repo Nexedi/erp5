@@ -1,0 +1,990 @@
+/* === font-size === */
+.ci-contract h1 {
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+.ci-contract h2 {
+  font-size: 7.9375mm; /* 22.5pt; */ /* 30px; */
+}
+.ci-contract h3 {
+  font-size: 6.879167mm; /* 19.5pt; */ /* 26px; */
+}
+.ci-contract .ci-contract-header .ci-contract-header-title
+/*,
+.ci-contract table thead tr:first-child:nth-last-child(2) th,
+.ci-contract table thead tr:first-child:nth-last-child(2) td
+*/
+{
+  font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+.ci-contract div.ci-contract-box-offer span,
+.ci-contract div.ci-contract-box-offer-milestone span {
+  font-size: 5.820833mm; /* 16.5pt; */ /* 22px */
+}
+.ci-contract div.ci-contract-box-offer *,
+.ci-contract div.ci-contract-box-offer-milestone * {
+  font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+  /*  font-size: 5.820833mm; 16.5pt; */ /* 22px */
+}
+.ci-contract-ci-contract-table-of-content li,
+.ci-contract h4,
+.ci-contract h5,
+.ci-contract h6,
+.ci-contract span,
+.ci-contract p,
+.ci-contract a,
+.ci-contract li,
+.ci-contract p,
+.ci-contract pre {
+  font-size: 5.29167mm; /* 15pt; */ /* 20px; */
+}
+.ci-contract .ci-contract-img + span,
+.ci-contract caption,
+.ci-contract table thead th,
+.ci-contract table thead td,
+.ci-contract table tbody td,
+.ci-contract table tbody td span,
+.ci-contract table tbody td p,
+.ci-contract table tbody td li,
+.ci-contract table tbody td em,
+.ci-contract table tbody td strong,
+.ci-contract table tbody td a,
+.ci-contract table tbody td em,
+.ci-contract pre code {
+  font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+}
+.ci-contract .ci-contract-header td:last-child div {
+  font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+}
+
+.ci-contract .ci-contract-header .ci-contract-header-subtitle,
+.ci-contract .ci-contract-header .ci-contract-header-value,
+.ci-contract .ci-contract-header .ci-contract-header-key {
+  font-size: 4.4979167mm; /* 12.75pt; */ /* 17px; */
+}
+.ci-contract .ci-contract-footer .ci-contract-footer-copy,
+.ci-contract .ci-contract-footer span {
+  font-size: 4.23333mm; /* 12pt; */ /* 16px; */
+}
+.ci-contract table tbody tr td ul li:before,
+.ci-contract .ci-contract-box-offer div,
+.ci-contract .ci-contract-box-offer-line div,
+.ci-contract .ci-contract-box-offer-milestone div,
+.ci-contract .ci-contract-box-offer div b,
+.ci-contract .ci-contract-box-offer-line div b,
+.ci-contract .ci-contract-box-offer-milestone div b {
+  font-size: 3.704167mm; /* 10.5pt; */ /* 14px; */ /* 8px; */
+}
+
+/* === cover === */
+.ci-contract .ci-contract-cover p.ci-contract-cover-faux-h1 {
+  font-family: "Roboto" !important;
+  font-weight: bold !important;
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+.ci-contract .ci-contract-cover p.ci-contract-cover-faux-h2 {
+  font-family: "Arial";
+  font-weight: lighter;
+  font-style: normal;
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+.ci-contract .ci-contract-cover p.ci-contract-cover-description {
+  font-family: "Roboto";
+  font-weight: lighter;
+  font-style: italic;
+  font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+.ci-contract .ci-contract-cover p.ci-contract-cover-author-list span {
+  font-family: "Roboto";
+  font-weight: lighter;
+  font-style: normal;
+  font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+.ci-contract p em,
+.ci-contract p i {
+  font-style: italic;
+}
+
+/* === color === */
+/* .ci-contract a:not([href*="#"]), */
+.ci-contract a:not([id]),
+.ci-contract td i,
+.ci-contract a span
+/*, .ci-contract .ci-contract-table table td[colspan]*/ {
+  color: #1c76bb !important;
+}
+.ci-contract * {
+  color: #000 /* XXX Why? !important */;
+}
+.ci-contract a {
+  text-decoration: none;
+}
+
+/* === text align === */
+/* text align */
+.ci-contract p {
+  text-align: justify;
+}
+.ci-contract table tbody td ul {
+  text-align: left;
+  font-weight: normal;
+  margin: 0;
+  margin-left: 4pt;
+  padding: 0;
+}
+/* Chinese */
+.ci-zh .ci-contract p {
+  text-align: initial;
+}
+
+/* === page breaks === */
+
+.ci-contract h1 {
+  page-break-before: always;
+  page-break-after: avoid;
+}
+.ci-contract .custom-force-page-break,
+.ci-contract .custom-resume {
+  page-break-before: always;
+}
+.ci-contract h2,
+.ci-contract h3,
+.ci-contract h4,
+.ci-contract h5 {
+  page-break-after: avoid;
+}
+.ci-contract h1 + img,
+.ci-contract h2 + img,
+.ci-contract h2 + p {
+  page-break-before: avoid;
+}
+.ci-contract table,
+.ci-contract table caption,
+.ci-contract img,
+.ci-contract tr {
+  page-break-inside: avoid;
+}
+.ci-contract section:not(:last-child) {
+  page-break-after: always;
+  page-break-inside: always;
+}
+/* clear blank page after custom tables */
+.ci-contract table.ci-contract-version-list {
+  page-break-after: avoid !important;
+}
+.ci-contract tbody + caption,
+.ci-contract .ci-contract-img + span {
+  page-break-inside: avoid;
+  page-break-before: avoid;
+  page-break-after: avoid;
+}
+.ci-contract .ci-contract-box-offer {
+  page-break-inside: avoid;
+}
+/* === header/footer === */
+.ci-contract .ci-contract-header,
+.ci-contract .ci-contract-footer {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+.ci-contract .ci-contract-header {
+  margin-top: 0;
+}
+.ci-contract .ci-contract-header td div,
+.ci-contract .ci-contract-header div,
+.ci-contract .ci-contract-header .ci-contract-header-sidebyside,
+.ci-contract .ci-contract-header .ci-contract-header-sidebyside-first,
+.ci-contract .ci-contract-header .ci-contract-header-sidebyside-last {
+  line-height: 18px;
+  height: 18px;
+}
+.ci-contract .ci-contract-header td,
+.ci-contract .ci-contract-footer td {
+  text-align: center;
+  margin: 0;
+  vertical-align: middle;
+  padding: 0;
+  padding-bottom: 3mm;
+}
+.ci-contract .ci-contract-footer td span {
+  font-weight: 300;
+}
+.ci-contract .ci-contract-header td {
+  padding-top: 2mm;
+  border: transparent;
+}
+
+/* freeze table cell widths */
+.ci-contract .ci-contract-header td:nth-child(1),
+.ci-contract .ci-contract-header td:nth-child(3),
+.ci-contract .ci-contract-footer td:nth-child(2),
+.ci-contract .ci-contract-footer td:nth-child(3) {
+  width: 30%;
+}
+.ci-contract .ci-contract-header td:nth-child(2),
+.ci-contract .ci-contract-footer td:nth-child(1) {
+  width: 40%;
+}
+.ci-contract .ci-contract-footer td:nth-child(1) {
+  text-align: left;
+}
+.ci-contract .ci-contract-footer td:nth-child(3) {
+  text-align: right;
+}
+
+/* header title/subtitle */
+.ci-contract .ci-contract-header .ci-contract-header-title,
+.ci-contract .ci-contract-header .ci-contract-header-subtitle {
+  font-weight: bold;
+}
+.ci-contract .ci-contract-header .ci-contract-header-title {
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+
+/* header image dimensions */
+.ci-contract .ci-contract-header .ci-contract-header-image-wkhtmltopdf-image-wrapper {
+  padding-top: 1mm;
+  min-height: 25mm;
+  display: inline;
+  vertical-align: middle;
+}
+
+/* BACKUP:
+   fits all logos, unless you have to use a really wiiiiide logo like Nexedi
+*/
+.ci-contract .ci-contract-header .ci-contract-header-image-wkhtmltopdf-image-wrapper img {
+  height: auto;
+  display: inline-block;
+  width: auto;
+}
+/* hardcode here we go.
+NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
+.ci-contract .ci-contract-header .ci-contract-header-image-wkhtmltopdf-image-wrapper img {
+  height: auto;
+  display: inline-block;
+  width: 60%;
+  vertical-align: -webkit-baseline-middle;
+}
+*/
+/* header spec section */
+.ci-contract .ci-contract-header td:last-child {
+  text-align: left;
+  padding-left: 2mm;
+}
+.ci-contract .ci-contract-header td:last-child .ci-contract-header-key {
+  min-width: 25%;
+  display: inline-block;
+  font-weight: 300;
+}
+.ci-contract .ci-contract-header td:last-child .ci-contract-header-value {
+  font-weight: bold;
+  width: auto;
+}
+.ci-contract .ci-contract-header .ci-contract-header-sidebyside-last {
+  display: inline-block;
+  width: 58%;
+}
+.ci-contract .ci-contract-header .ci-contract-header-sidebyside-first {
+  display: inline-block;
+  width: 40%;
+}
+.ci-contract .ci-contract-header .ci-contract-header-sidebyside-first .ci-contract-header-key {
+  width: 62.5%;
+}
+.ci-contract .ci-contract-header td div.ci-contract-header-sidebyside {
+  position: relative;
+  top: -2px;
+}
+.ci-contract .ci-contract-header td div:last-child {
+  padding-top: 2px;
+}
+.ci-contract .ci-contract-header td:last-child .ci-contract-header-minify {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+.ci-contract .ci-contract-header td:last-child div {
+  vertical-align: middle;
+}
+.ci-contract .ci-contract-header div span {
+  line-height: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.ci-contract .ci-contract-footer th,
+.ci-contract .ci-contract-footer td {
+  border: 0 none;
+}
+.ci-contract .ci-contract-footer .ci-contract-footer-copy {
+  padding-right: 2mm;
+}
+
+/* === document cover === */
+.ci-contract .ci-contract-cover p {
+  text-align: center;
+}
+.ci-contract .ci-contract-cover .ci-contract-cover-faux-h1 {
+  text-decoration: uppercase;
+  padding-top: 40%;
+  padding-bottom: 2%;
+}
+.ci-contract .ci-contract-cover .ci-contract-cover-description {
+  margin: 10mm 0;
+  font-weight: normal;
+}
+.ci-contract .ci-contract-cover {
+  margin-bottom: 20%;
+}
+/* === tables === */
+/* fix header/footer clipping content */
+.ci-contract thead {
+  display: table-header-group;
+}
+.ci-contract tfoot {
+  display: table-row-group;
+}
+.ci-contract table tr {
+  page-break-inside: avoid;
+}
+.ci-contract .ci-contract-table-highlight td,
+.ci-contract table tr[data-class='ci-contract-table-highlight'] td {
+  background-color: #ffa07a;
+}
+.ci-contract .ci-contract-table-section td,
+.ci-contract table tr[data-class='ci-contract-table-section'] td,
+.ci-contract .ci-contract-table-section-depth-1 td {
+  background-color: #e0e0e0;
+}
+.ci-contract .ci-contract-table-section-depth-2 td {
+  background-color: #f5f5f5;
+}
+.ci-contract table td[colspan] {
+  padding: 0;
+}
+.ci-contract table table td[colspan] {
+  padding-left: 2mm;
+  padding-right: 2mm;
+}
+.ci-contract .ci-contract-table table {
+  margin-right: 0;
+  margin-left: auto;
+  border-collapse: collapse;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  vertical-align: top;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ci-contract .ci-contract-table table td {
+  text-align: left;
+}
+.ci-contract .ci-contract-table table td[rowspan] {
+  border-left-color: transparent;
+  vertical-align:top;
+}
+.ci-contract .ci-contract-table table td[rowspan],
+.ci-contract .ci-contract-table table td[colspan] {
+  border-left-color: transparent;
+}
+.ci-contract .ci-contract-table table td[colspan] {
+  border-bottom-color: transparent;
+}
+.ci-contract .ci-contract-table table tr:nth-child(1) td {
+  border-top-color: transparent;
+}
+.ci-contract .ci-contract-table table tr td:last-child {
+  border-right-color: transparent;
+}
+
+/* multi-table headers */
+.ci-contract table thead {
+  display: table-header-group;
+}
+.ci-contract table tfoot {
+  display: table-row-group;
+}
+.ci-contract table tr {
+  page-break-inside: avoid;
+}
+
+/* spacing */
+.ci-contract table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 auto;
+}
+/* === table == */
+.ci-contract section table thead th {
+  vertical-align: middle;
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+.ci-contract table {
+  width: 100%;
+  margin: initial;
+  background-color: transparent !important;
+}
+.ci-contract table th,
+.ci-contract table td {
+  border: 1px solid #a1a1a1;
+  padding: 0 2mm;
+}
+.ci-contract table th {
+  text-align: center;
+}
+/* opinionated align for content tables, overwrite in html if required */
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer):not(.ci-contract-table) tbody td,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer):not(.ci-contract-table) tbody th {
+  /*text-align: center;*/
+}
+/*
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer):not(.ci-contract-table) tbody tr td:first-child,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer):not(.ci-contract-table) tbody tr th:first-child {
+  text-align: right;
+}
+*/
+.ci-contract table thead tr th p {
+  color: black !important;
+}
+.ci-contract a + table tbody tr td:first-child,
+.ci-contract a + table tbody tr th:first-child {
+  /*text-align: center;*/
+}
+.ci-contract a + table tbody tr td:not(:first-child),
+.ci-contract a + table tbody tr th:not(:first-child) {
+  /*text-align: right;*/
+}
+.ci-contract p + table td a {
+  display: block;
+}
+/* table formatting */
+.ci-contract table {
+  border-collapse: collapse;
+}
+.ci-contract table td {
+  padding-left: 2mm;
+  word-wrap: break-word;
+}
+/* sigh...  Fcuk Editor... backgrounds  */
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) thead tr td,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) thead tr th,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) thead tr th span,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) tbody tr:first-child td,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) tbody tr:first-child th {
+  background-color: #e0e0e0;
+  font-weight: bold;
+  /*text-align: center;*/
+}
+.ci-contract .ci-contract-table tbody tr td,
+.ci-contract .ci-contract-table tbody tr th {
+  text-align: center;
+}
+
+.ci-contract table thead tr td,
+.ci-contract table thead tr th {
+  text-align: center;
+}
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) thead + tbody tr:first-child td,
+.ci-contract table:not(.ci-contract-header):not(.ci-contract-footer) thead + tbody tr:first-child th {
+  background-color: #ffffff;
+  font-weight: normal;
+}
+.ci-contract table.ci-document-page-header tbody tr td,
+.ci-contract table.ci-document-page-footer tbody tr td {
+  /* background-color: #ffffff !important; */
+  /*text-align: center;*/
+  font-weight: 100;
+}
+.ci-contract table thead tr td,
+.ci-contract table thead tr th {
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+/* override header with p tags eating maring/padding */
+.ci-contract table thead tr td p
+.ci-contract table thead tr th p {
+  padding: 0;
+  margin: 0;
+}
+
+/* === list formatting === */
+.ci-contract ol {
+  list-style-position: inside;
+}
+.ci-contract ul {
+  list-style: none;
+  list-style-position: inside;
+}
+.ci-contract ul li,
+.ci-contract ol li {
+  padding-left: 16px;
+  /*text-indent: -24px;*/
+}
+.ci-contract ul li:before {
+  content: "•";
+  padding-right: 16px;
+  margin-top: 2px;
+}
+
+/* === header auto-numbering 1.2.3.4. === */
+/* table-of-content numbering (numbering x.x.x.x) */
+/* faux-h1 */
+.ci-contract p.ci-contract-toc-faux-h1 {
+  text-align: left;
+  font-weight: normal;
+  padding-top: 10mm;
+  margin-bottom: 25%;
+  padding-left: 2mm;
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+
+.ci-contract .ci-contract-table-of-content + ol,
+.ci-contract .ci-contract-table-of-content + ol ol {
+  counter-reset: item;
+  list-style: none;
+  margin: 0;
+}
+.ci-contract .ci-contract-table-of-content + ol > li,
+.ci-contract .ci-contract-table-of-content + ol ol > li {
+   counter-increment: item;
+}
+.ci-contract .ci-contract-table-of-content + ol > li:before,
+.ci-contract .ci-contract-table-of-content + ol ol > li:before {
+  content: counters(item, ".") ". ";
+  padding-right: 0.5em;
+}
+.ci-contract .ci-contract-table-of-content + ol li ol li:before {
+  content: counters(item, ".") " ";
+}
+.ci-contract .ci-contract-table-of-content ~ h1 ~ ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h1 ~ ol ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h2 ~ ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h2 ~ ol ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h3 ~ ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h3 ~ ol ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h4 ~ ol > li:before,
+.ci-contract .ci-contract-table-of-content ~ h4 ~ ol ol > li:before {
+ counter-increment: initial;
+ content: none;
+}
+.ci-contract {
+  counter-reset: h1;
+}
+.ci-contract h1 {
+  counter-reset: h2;
+}
+.ci-contract h2 {
+  counter-reset: h3;
+}
+.ci-contract h3 {
+  counter-reset: h4;
+}
+.ci-contract h4 {
+  counter-reset: h5;
+}
+.ci-contract h5 {
+  counter-reset: h6;
+}
+.ci-contract h1:before {
+  counter-increment: h1;
+  content: counter(h1) ". ";
+}
+.ci-contract h2:before {
+  counter-increment: h2;
+  content: counter(h1) "." counter(h2) ". ";
+}
+.ci-contract h3:before {
+  counter-increment: h3;
+  content: counter(h1) "." counter(h2) "." counter(h3) ". ";
+}
+.ci-contract h4:before {
+  counter-increment: h4;
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) ". ";
+}
+.ci-contract h5:before {
+  counter-increment: h5;
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". ";
+}
+.ci-contract h6:before {
+  counter-increment: h6;
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". ";
+}
+.ci-contract .ci-contract-table-of-content ol {
+  text-indent: 0;
+}
+.ci-contract .ci-contract-table-of-content ol ol {
+  text-indent: 3em;
+}
+.ci-contract .ci-contract-table-of-content ol ol ol {
+  text-indent: 6em;
+}
+.ci-contract .ci-contract-table-of-content ol ol ol ol {
+  text-indent: 9em;
+}
+.ci-contract .ci-contract-table-of-content ol ol ol ol ol {
+  text-indent: 12em;
+}
+.ci-contract .ci-contract-table-of-content ol ol ol ol ol ol {
+  text-indent: 15em;
+}
+.ci-contract .ci-contract-table-of-content-lead-item:not(:first-child) {
+  padding-top: 10mm;
+}
+
+.ci-contract-table-of-content ol li div {
+  position: relative;
+  overflow: hidden;
+}
+.ci-contract-table-of-content ol li div:after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  width: 100%;
+  border-bottom: 1px dotted #000;
+  z-index: 500;
+}
+.ci-contract .ci-contract-table-of-content ol li div {
+  height: 28px;
+  line-height: 24px;
+}
+.ci-contract .ci-contract-table-of-content ol ol li div {
+  height: 24px;
+  line-height: 20px;
+}
+.ci-contract .ci-contract-table-of-content ol li {
+  counter-increment: item;
+}
+.ci-contract .ci-contract-table-of-content ol li div:before {
+  content: counters(item, ".") ". ";
+  padding-right: 0.5em;
+}
+.ci-contract .ci-contract-table-of-content li ol li div:before {
+  content: counters(item, ".") " ";
+}
+.ci-contract .ci-contract-table-of-content {
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-right: 10px;
+}
+.ci-contract .ci-contract-table-of-content ol {
+  counter-reset: item;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  width: inherit;
+}
+.ci-contract .ci-contract-table-of-content li ol li {
+  margin: 0;
+}
+.ci-contract .ci-contract-table-of-content a {
+  text-decoration:none;
+  color: black;
+}
+
+
+/* === custom margins === */
+.ci-contract h1 {
+  text-align: left;
+  font-weight: normal;
+  padding-top: 10mm;
+  padding-left: 2mm;
+}
+.ci-contract h2 {
+  margin-top: 10mm; /* 0.67em */
+}
+.ci-contract h3 {
+  margin-top: 12mm; /* 1em */
+}
+.ci-contract h4 {
+  margin-top: 14mm; /* 1.33em */
+}
+.ci-contract h5 {
+  margin-top: 16mm /* 1.67em */;
+}
+.ci-contract h6 {
+  margin-top: 18mm /* 2.33em */;
+}
+.ci-contract p {
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+}
+
+/* === indent all paragraphs === */
+.ci-contract p {
+  text-indent: 5mm;
+}
+.ci-contract table {
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ci-contract table table {
+  margin-top: 0;
+}
+
+/* === image and table captions */
+/* XXX caption should be inside .ci-contract-img */
+.ci-contract .ci-contract-img > img {
+  display: block;
+  margin: 0 auto 0;
+  padding-top: 20px;
+  max-width: 240mm;
+  page-break-after: avoid;
+  width: 50%;
+}
+.ci-contract .ci-contract-img > img ~ span {
+  margin-left: 3cm;
+  display:inline-block;
+}
+
+.ci-contract .ci-contract-img + span {
+  margin-left: 3cm;
+  display:inline-block;
+}
+
+.ci-contract table caption,
+.ci-contract .ci-contract-caption {
+  text-align: center;
+  padding-top: 4mm;
+  padding-bottom: 5mm;
+  caption-side: bottom;
+  width: auto;
+}
+
+/* customizations */
+/* editor adding <p>... */
+html .ci-contract table td p {
+  margin: 0;
+  text-indent: 0;
+  display:inline-block;
+}
+html .ci-contract table td p:first-child {
+  padding: 0;
+}
+html .ci-contract table td p:not(:first-child){
+  padding-left: 5px;
+}
+/* === code boxes === */
+.ci-contract pre {
+	text-align: left;
+  font-family: TexGyreCursor;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+  padding: 10px 20px 36px;
+  background-color: rgb(234,246,246);
+  /*
+  white-space: pre;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  */
+  /*
+  break after 100 characters - https://stackoverflow.com/a/16756641
+  max-width: 40em;
+  max-width: 100ch;
+  */
+}
+.ci-contract pre code {
+  display: block;
+	background-color: rgb(234,246,246);
+}
+.ci-contract p code,
+.ci-contract blockquote {
+	background-color: rgb(234,246,246);
+}
+
+/* === special headers === */
+/* distribution list */
+.ci-contract .ci-contract thead th {
+  vertical-align: middle;
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+.ci-contract .ci-contract-distribution-list tbody tr td ul,
+/* backcompat */
+.ci-contract section tbody tr td ul {
+  vertical-align: top;
+  margin-left: 0;
+  padding-left: 0;
+  display: inline-block;
+  width: 49%;
+  padding-top: 5mm;
+  padding-bottom: 5mm;
+}
+.ci-contract .ci-contract-distribution-list tbody tr td ul li,
+/* backcompat */
+.ci-contract section tbody tr td ul li {
+  padding: 0;
+  list-style: none;
+  text-indent: 0;
+  line-height: 18pt;
+  text-align: left;
+}
+.ci-contract .ci-contract-distribution-list tbody tr td ul li:before,
+/* backcompat */
+.ci-contract section tbody tr td ul li:before {
+  content: "■";
+  padding-right: 8px;
+  vertical-align: middle;
+}
+.ci-contract .ci-contract-distribution-list tbody tr td ul li span,
+.ci-contract .ci-contract-distribution-list tbody tr td ul li div {
+  width: 46%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+}
+/* backcompat */
+.ci-contract section tbody tr td ul li span,
+.ci-contract section tbody tr td ul li div,
+.ci-contract section tbody tr td ul li p {
+  display: inline-block;
+  width: 46%;
+}
+.ci-contract .ci-contract-distribution-list tbody tr td ul li,
+.ci-contract .ci-contract-distribution-list tbody tr td ul div,
+.ci-contract .ci-contract-distribution-list tbody tr td ul span,
+/* backcompat */
+.ci-contract section tbody tr td ul li,
+.ci-contract section tbody tr td ul div,
+.ci-contract section tbody tr td ul span {
+  vertical-align: middle;
+}
+/* Version List */
+
+/* Signature List */
+.ci-contract .ci-contract-signature-list tbody td {
+  padding-top: 2mm;
+  padding-bottom: 5mm;
+}
+.ci-contract .ci-contract-signature-list tbody td i,
+.ci-contract .ci-contract-signature-list tbody td em {
+  display: block;
+  text-align: left;
+  text-indent: 2mm;
+}
+/* === reports === */
+/* should have their own .css/.pdf.css file eventually */
+.ci-contract .ci-contract-table .ci-contract-report-cell-left,
+.ci-contract .ci-contract-table td[colspan] {
+  text-align: left;
+}
+.ci-contract .ci-contract-table .ci-contract-report-cell-right {
+  text-align: right;
+}
+/* === box items === */
+/* Project Breakdown/Milestone List */
+.ci-contract .ci-contract-box-offer,
+.ci-contract div.ci-contract-box-offer-milestone,
+/* backcompat */
+.ci-document-box-offer,
+div.ci-document-box-offer-milestone {
+  width: 100%;
+}
+.ci-contract .ci-contract-box-offer,
+.ci-contract .ci-contract-box-id,
+.ci-contract .ci-contract-box-coverage,
+.ci-contract .ci-contract-box-begin,
+.ci-contract .ci-contract-box-end,
+.ci-contract .ci-contract-box-total-duration,
+.ci-contract .ci-contract-box-duration,
+.ci-contract .ci-contract-box-leader,
+.ci-contract .ci-contract-box-resources,
+.ci-contract .ci-contract-box-location,
+.ci-contract .ci-contract-box-result,
+.ci-contract .ci-contract-box-offer-milestone {
+
+}
+.ci-contract .ci-contract-box-offer b,
+.ci-contract .ci-contract-box-offer-milestone b,
+.ci-contract .ci-contract-box-offer-line b,
+/* backcompat */
+.ci-document-box-offer b,
+.ci-document-box-offer-milestone b,
+.ci-document-box-offer-line b{
+  font-weight: bold;
+}
+.ci-contract .ci-contract-box-detail,
+/* backcompat */
+.ci-document-box-detail {
+  table-layout: fixed;
+}
+.ci-contract .ci-contract-box-offer,
+.ci-contract .ci-contract-box-offer-line,
+.ci-contract .ci-contract-box-offer-milestone,
+/* backcompat */
+.ci-document-box-offer,
+.ci-document-box-offer-line,
+.ci-document-box-offer-milestone {
+  border: 1px solid #a1a1a1;
+  padding: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: 10px 10px 0 #a1a1a1;
+  -moz-box-shadow: 10px 10px 0 #a1a1a1;
+  box-shadow: 10px 10px 0 #a1a1a1;
+  background-color: #fff;
+}
+.ci-contract .ci-contract-box-coverage,
+/* backcompat */
+.ci-document-box-coverage {
+  display: inline-block;
+  vertical-align: top;
+  width: 66%;
+}
+.ci-contract-box-location,
+.ci-contract-box-resources,
+.ci-contract-box-leader,
+/* backcompat */
+.ci-document-box-location,
+.ci-document-box-resources,
+.ci-document-box-leader {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-contract .ci-contract-box-begin,
+.ci-contract .ci-contract-box-end,
+/* backcompat */
+.ci-document-box-begin,
+.ci-document-box-end {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-contract .ci-contract-box-id,
+/* backcompat */
+.ci-document-box-id {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-contract .ci-contract-box-duration,
+/* backcompat */
+.ci-document-box-duration {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-contract .ci-contract-box-end + .ci-contract-box-resources,
+/* backcompat */
+.ci-document-box-end + .ci-document-box-resources {
+  margin-left: 20%;
+}
+.ci-contract .ci-contract-box-end + .ci-contract-box-resources,
+/* backcompat */
+.ci-document-box-end + .ci-document-box-resources {
+  margin-left: 20%;
+}

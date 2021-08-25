@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal"
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
@@ -10,30 +11,72 @@
       dialog_category python: '';
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
-      no_style_gadget_url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='');
+      relative_url_prefix python: web_section.WebSection_generateRelativeUrlPrefix();
+      no_style_gadget_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_style_gadget_url');
+      no_style_css_url python: relative_url_prefix + 'jsstyle.css';
+      favicon_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_favicon_url');
+      site_name python: web_site.getTranslatedTitle();
+      document_title python: here.getTitle();
+      site_url python: web_site.absolute_url();
+      description python: here.getDescription();
+      preview_image_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_favicon_url');
+      keyword_list python: web_section.getSubjectList();
+      og_locale_dict python: web_site.WebSite_getOgLocaleDict();
+      current_language python: web_site.getPortalObject().Localizer.get_selected_language();
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
   <head>
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
-  <title tal:content="python: here.getTranslatedTitle() or web_site.getTranslatedTitle()"></title>
-  <noscript>
-    <link rel="stylesheet" href="jsstyle.css">
-  </noscript>
-  <tal:block tal:define="favicon_url python: web_site.getLayoutProperty('configuration_favicon_url', default='')" tal:condition="favicon_url">
+  <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
+  <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
-  <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
-  <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
-  <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
-  <script src="jsstyle.js"></script>
+   <tal:block tal:condition="keyword_list">
+    <meta name="keywords" tal:attributes="content python: ','.join(keyword_list)">
+  </tal:block>
+  <meta property="og:type" content="website" />
+  <tal:block tal:condition="site_url">
+    <meta name="url" tal:attributes="content site_url">
+    <meta property="og:url" tal:attributes="content site_url">
+    <meta name="twitter:url" tal:attributes="content site_url">
+  </tal:block>
+  <tal:block tal:condition="document_title">
+    <meta property="og:title" tal:attributes="content document_title">
+    <meta name="twitter:title" tal:attributes="content document_title">
+  </tal:block>
+  <tal:block tal:condition="preview_image_url">
+    <meta property="og:image" tal:attributes="content preview_image_url">
+    <meta name="twitter:image" tal:attributes="content preview_image_url">
+  </tal:block>
+  <tal:block tal:condition="site_name">
+    <meta name="application-name" tal:attributes="content site_name" >
+    <meta property="og:site_name" tal:attributes="content site_name">
+  </tal:block>
+  <tal:block tal:condition="description">
+    <meta name="description" tal:attributes="content description">
+    <meta property="og:description" tal:attributes="content description">
+    <meta name="twitter:description" tal:attributes="content description">
+  </tal:block>
+  <meta property="og:locale" tal:attributes="content python: og_locale_dict[current_language]">
+  <tal:block tal:condition="python: no_style_gadget_url == ''">
+    <link rel="stylesheet" tal:attributes="href no_style_css_url">
+  </tal:block>
   <tal:block tal:condition="python: no_style_gadget_url != ''">
-  <link rel="prerender" tal:attributes="href no_style_gadget_url">
+    <noscript>
+      <link rel="stylesheet" tal:attributes="href no_style_css_url">
+    </noscript>
+    <!-- Prevent conflicts with Web Page reference provided by erp5_web_renderjs_ui -->
+    <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/rsvp.js'"></script>
+    <script tal:attributes="src python: relative_url_prefix + 'portal_skins/erp5_xhtml_style/renderjs.js'"></script>
+    <script tal:attributes="src python: relative_url_prefix + 'jsstyle.js'"></script>
+    <link rel="prerender" tal:attributes="href no_style_gadget_url">
   </tal:block>
   </head>
-  <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url">
-    <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
+  <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url;
+                        data-nostyle-css-url no_style_css_url">
+    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
     <main>
 
     <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>

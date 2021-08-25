@@ -313,13 +313,26 @@ class DomainTool(BaseTool):
       predicate_list = self.searchPredicateList(context, test=test, **kw)
     if predicate_list:
       mapped_value_property_dict = defaultdict(list)
+      per_parent_mapped_value_property_dict = defaultdict(dict)
+      parent_sort_index = {}
       # Look for each property the first predicate with unique criterion
       # categories which defines the property
       for predicate in predicate_list:
         for mapped_value_property in predicate.getMappedValuePropertyList():
           value = predicate.getProperty(mapped_value_property)
           if value is not None:
-            mapped_value_property_dict[mapped_value_property].append(value)
+            # For base price defined per slice, we need a list of values from matched cells
+            # grouped by parent supply line.
+            if mapped_value_property in ('slice_base_price', 'slice_quantity_range'):
+              parent_uid = predicate.getParentUid()
+              if parent_uid not in parent_sort_index:
+                parent_sort_index[parent_uid] = len(parent_sort_index)
+              per_parent_mapped_value_property_dict[mapped_value_property].setdefault(parent_uid, []).append(value)
+            else:
+              mapped_value_property_dict[mapped_value_property].append(value)
+      for mapped_value_property, v in per_parent_mapped_value_property_dict.iteritems():
+        for _, mapped_value_list in sorted(v.iteritems(), key=lambda x: parent_sort_index[x[0]]):
+          mapped_value_property_dict[mapped_value_property].append(mapped_value_list)
       mapped_value = self.getPortalObject().newContent(temp_object=True,
         portal_type='Supply Cell', id='multivalued_mapped_value')
       mapped_value._setMappedValuePropertyList(

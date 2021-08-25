@@ -1,0 +1,2294 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test and Update Test Files for LETTER Template</title>
+</head>
+<body>
+<!--
+                     TEST UI and/or UPDATE FILES for live tests
+
+This Zuite updates all test files (diff-html, pdfs, bmp) used in the LiveTests
+based on the example web pages included in this bt5. The parameter no_file_update
+determines whether files are updated (default True). To update test files, 
+create a script Zuite_setSkipSave in custom folder which returns False
+
+Help:
+http://www.seleniumhq.org/docs/02_selenium_ide.jsp#selenium-commands-selenese
+http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automation/selenium-ide/114-selenium-ide-complete-list-of-commands
+
+Note:
+# uses pause when updating files to wait for Cloudooo pdf rendering
+# requires text-area editor
+# test waitForTitle does not work in FF
+-->
+
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+  <tr><td rowspan="1" colspan="3">Test Letter Template UI</td></tr>
+</thead>
+<tbody>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+  <tal:block tal:define="portal here/portal_url/getPortalObject;
+                         caller python: getattr(context, 'Zuite_setSkipSave', None);
+                         no_file_update python: caller() if caller is not None else True;">
+    <tr>
+      <td>open</td>
+      <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_setPreferredTextEditor</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Editor set to Textarea.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>echo</td>
+      <td tal:content="python: ''.join(['skipping save: ', str(no_file_update)])"></td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == True">
+      <tr>
+        <td>open</td>
+        <td>${base_url}/Zuite_setConversionServerUrl</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Conversion Server Url set.</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>echo</td>
+      <td>ACTION => EXPORT</td>
+      <td></td>
+    </tr>
+    <!-- CASE 1 - template_test_letter_output_expected_001_en_html -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 1 => template_test_letter_output_expected_001_en_html</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_page_module/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>001</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <!-- Save once to set modification date for live tests -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_showUpdateDialog:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Preview updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
+      <td>//span[contains(text(), 'IBAN')]</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch iframe source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) {var xhr = new XMLHttpRequest();return new Promise(function(resolve, reject) {var k;xhr.open("GET", url, true);xhr.addEventListener("load", function(e) {if (e.target.status >= 400) {return reject(e);}resolve(e);});xhr.addEventListener("error", reject);xhr.send();}, function() {xhr.abort();});};ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>page_source</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>goBackAndWait</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>%Template% AND %Output% AND %Letter%</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_reference</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template.Test.Letter.Expected.Output.Sample</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter.Expected.Output.Sample')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="input"]/div/textarea</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["page_source"].then(function (evt) {var content = evt.target.response || evt.target.responseText;document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter = content;})</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter;</td>
+        <td>dump</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[@class="input"]/div/textarea</td>
+        <td>${dump}</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <!-- CASE 2 - template_test_letter_output_expected_002_en_html -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 2 => template_test_letter_output_expected_002_en_html</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>002</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <!-- Save once to set modification date for live tests -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_showUpdateDialog:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Preview updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
+      <td>//span[contains(text(), 'IBAN')]</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch iframe source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) {var xhr = new XMLHttpRequest();return new Promise(function(resolve, reject) {var k;xhr.open("GET", url, true);xhr.addEventListener("load", function(e) {if (e.target.status >= 400) {return reject(e);}resolve(e);});xhr.addEventListener("error", reject);xhr.send();}, function() {xhr.abort();});};ajax(storedVars["url"]  + "&amp;batch_mode=True");</td>
+        <td>page_source</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>goBackAndWait</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>%Template% AND %Output% AND %Letter%</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>002</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_reference</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template.Test.Letter.Expected.Output.Sample</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter.Expected.Output.Sample')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="input"]/div/textarea</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["page_source"].then(function (evt) {var content = evt.target.response || evt.target.responseText;document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter = content;})</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter;</td>
+        <td>dump</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[@class="input"]/div/textarea</td>
+        <td>${dump}</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <!-- CASE 3 - template_test_letter_output_expected_003_en_html -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 3 => template_test_letter_output_expected_003_en_html</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>003</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <!-- Save once to set modification date for live tests -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_source_organisation_title</td>
+      <td>Test Association</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_source_person_title</td>
+      <td>Test Association Member</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_destination_organisation_title</td>
+      <td>Test Association</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_destination_person_title</td>
+      <td>Test Association Member</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=subfield_field_override_date_year</td>
+      <td>1999</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=subfield_field_override_date_month</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_override_date_day</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_showUpdateDialog:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_showUpdateDialog:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Preview updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
+      <td>//span[contains(text(), 'IBAN')]</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch iframe source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) {var xhr = new XMLHttpRequest();return new Promise(function(resolve, reject) {var k;xhr.open("GET", url, true);xhr.addEventListener("load", function(e) {if (e.target.status >= 400) {return reject(e);}resolve(e);});xhr.addEventListener("error", reject);xhr.send();}, function() {xhr.abort();});};ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>page_source</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>goBackAndWait</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>%Template% AND %Output% AND %Letter%</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>003</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_reference</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template.Test.Letter.Expected.Output.Sample</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter.Expected.Output.Sample')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="input"]/div/textarea</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["page_source"].then(function (evt) {var content = evt.target.response || evt.target.responseText;document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter = content;})</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter;</td>
+        <td>dump</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[@class="input"]/div/textarea</td>
+        <td>${dump}</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <!-- CASE 4 - template_test_letter_output_expected_004_de_html -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 4 => template_test_letter_output_expected_004_de_html</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>004</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <!-- Save once to set modification date for live tests -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>uncheck</td>
+      <td>name=field_display_head</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_showUpdateDialog:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Preview updated.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>name=Base_callDialogMethod:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
+      <td>//span[contains(text(), 'IBAN')]</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch iframe source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) {var xhr = new XMLHttpRequest();return new Promise(function(resolve, reject) {var k;xhr.open("GET", url, true);xhr.addEventListener("load", function(e) {if (e.target.status >= 400) {return reject(e);}resolve(e);});xhr.addEventListener("error", reject);xhr.send();}, function() {xhr.abort();});};ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>page_source</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>goBackAndWait</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForPageToLoad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Web Pages</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Web Pages')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>%Template% AND %Output% AND %Letter%</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>004</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_reference</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template.Test.Letter.Expected.Output.Sample</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter.Expected.Output.Sample')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a/span[contains(text(), 'Edit')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="input"]/div/textarea</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["page_source"].then(function (evt) {var content = evt.target.response || evt.target.responseText;document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter = content;})</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_parameter;</td>
+        <td>dump</td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>//div[@class="input"]/div/textarea</td>
+        <td>${dump}</td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="save"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+    <!-- CASE 1 (pdf) - template_test_letter_input_001_en_pdf -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 1 (pdf) => template_test_letter_input_001_en_pdf</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_page_module/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>001</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>name=field_format</td>
+      <td>index=1</td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!--
+       PDF viewer has no document.title, wait for "" means pdf is loaded
+       FIREFOX (51) will prompt to open PDF in new window = we're dead for now
+      -->
+      <tr>
+        <td>clickAndWait</td>
+        <td>name=Base_callDialogMethod:method</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTitle</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't access pdf source inside iframe, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("GET", url, true); xhr.responseType = "blob"; xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); xhr.send(); }, function() { xhr.abort(); }); }; ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>pdf_source</td>
+      </tr>
+      <!-- pause to let the ajax request finish. now if the table was a async, queue
+           that would be nice, 3000 not enough -->
+      <tr>
+        <td>pause</td>
+        <td>6000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>goBackAndWait</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Web Pages</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'ERP5')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Image.Source</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Image Source</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!-- manual form submit -->
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <!-- only handle pdf_source (a promise!) here, because it needs to be set on
+           the iframe and a page-reload resets all (bad) parameters manually set   -->
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["pdf_source"].then(function (evt) {document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter = new Blob([evt.target.response || evt.target.responseText], {"type": evt.target.getResponseHeader("Content-Type")});});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter</td>
+        <td>pdf_dump</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${pdf_dump}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyNotExpression</td>
+        <td>${pdf_dump}</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url, param) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("POST", url, true); xhr.responseType = param.dataType || ""; if (typeof param.headers === 'object' &amp;&amp; param.headers !== null) { for (k in param.headers) { if (param.headers.hasOwnProperty(k)) { xhr.setRequestHeader(k, param.headers[k]); } } } xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); if (typeof param.xhrFields === 'object' &amp;&amp; param.xhrFields !== null) { for (k in param.xhrFields) { if (param.xhrFields.hasOwnProperty(k)) { xhr[k] = param.xhrFields[k]; } } } xhr.send(param.data); }, function() { xhr.abort(); }); } var form_data = new FormData(); form_data.append("field_my_file", storedVars["pdf_dump"], "Template.Test.Letter-001-en.pdf"); form_data.append("form_id", "File_view");  x = ajax(storedVars["url"].split("?")[0] + "/Base_edit", {"xhrFields": {"with_credentials": true}, "data": form_data});</td>
+        <td>promise</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["promise"].then(function () {document.getElementById("selenium_myiframe").src=storedVars["url"].split("?")[0]+"/File_view?portal_status_message=Data%20updated."});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class="transition_message"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <!-- generate image - template_test_slideshow_input_slide_0_001_en_bmp -->
+      <tr>
+        <td>echo</td>
+        <td>update => template_test_slideshow_input_slide_0_001_en_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["url"].split("?")[0]</td>
+        <td>screenshot_url</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${screenshot_url}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_001_en_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Screenshot updated.</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <!-- CASE 2 (pdf) - template_test_letter_input_002_en_pdf -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 2 (pdf) => template_test_letter_input_002_en_pdf</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_page_module/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>002</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>name=field_format</td>
+      <td>index=1</td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!--
+       PDF viewer has no document.title, wait for "" means pdf is loaded
+       FIREFOX (51) will prompt to open PDF in new window = we're dead for now
+      -->
+      <tr>
+        <td>clickAndWait</td>
+        <td>name=Base_callDialogMethod:method</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTitle</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch pdf source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("GET", url, true); xhr.responseType = "blob", xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); xhr.send(); }, function() { xhr.abort(); }); }; ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>pdf_source</td>
+      </tr>
+      <!-- pause to let the ajax request finish. now if the table was a async, queue
+           that would be nice, 3000 not enough-->
+      <tr>
+        <td>pause</td>
+        <td>6000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>goBackAndWait</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Web Pages</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'ERP5')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Image.Source</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Image Source</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!-- manual form submit -->
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <!-- only handle pdf_source (a promise!) here, because it needs to be set on
+           the iframe and a page-reload resets all (bad) parameters manually set   -->
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["pdf_source"].then(function (evt) {document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter = new Blob([evt.target.response || evt.target.responseText], {"type": evt.target.getResponseHeader("Content-Type")});});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter</td>
+        <td>pdf_dump</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${pdf_dump}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyNotExpression</td>
+        <td>${pdf_dump}</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url, param) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("POST", url, true); xhr.responseType = param.dataType || ""; if (typeof param.headers === 'object' &amp;&amp; param.headers !== null) { for (k in param.headers) { if (param.headers.hasOwnProperty(k)) { xhr.setRequestHeader(k, param.headers[k]); } } } xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); if (typeof param.xhrFields === 'object' &amp;&amp; param.xhrFields !== null) { for (k in param.xhrFields) { if (param.xhrFields.hasOwnProperty(k)) { xhr[k] = param.xhrFields[k]; } } } xhr.send(param.data); }, function() { xhr.abort(); }); } var form_data = new FormData(); form_data.append("field_my_file", storedVars["pdf_dump"], "Template.Test.Letter-002-en.pdf"); form_data.append("form_id", "File_view");  x = ajax(storedVars["url"].split("?")[0] + "/Base_edit", {"xhrFields": {"with_credentials": true}, "data": form_data});</td>
+        <td>promise</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["promise"].then(function () {document.getElementById("selenium_myiframe").src=storedVars["url"].split("?")[0]+"/File_view?portal_status_message=Data%20updated."});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class="transition_message"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <!-- generate image - template_test_letter_input_page_0_002_en_bmp -->
+      <tr>
+        <td>echo</td>
+        <td>update => template_test_letter_input_page_0_002_en_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["url"].split("?")[0]</td>
+        <td>screenshot_url</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${screenshot_url}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_002_en_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Screenshot updated.</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <!-- CASE 3 (pdf) - template_test_letter_input_003_en_pdf -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 3 (pdf) => template_test_letter_input_003_en_pdf</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_page_module/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>003</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>name=field_format</td>
+      <td>index=1</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_source_organisation_title</td>
+      <td>Test Association</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_source_person_title</td>
+      <td>Test Association Member</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_destination_organisation_title</td>
+      <td>Test Association</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_destination_person_title</td>
+      <td>Test Association Member</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=subfield_field_override_date_year</td>
+      <td>1999</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=subfield_field_override_date_month</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>subfield_field_override_date_day</td>
+      <td>31</td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!--
+       PDF viewer has no document.title, wait for "" means pdf is loaded
+       FIREFOX (51) will prompt to open PDF in new window = we're dead for now
+      -->
+      <tr>
+        <td>clickAndWait</td>
+        <td>name=Base_callDialogMethod:method</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTitle</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch pdf source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("GET", url, true); xhr.responseType = "blob", xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); xhr.send(); }, function() { xhr.abort(); }); }; ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>pdf_source</td>
+      </tr>
+      <!-- pause to let the ajax request finish. now if the table was a async, queue
+           that would be nice, 3000 not enough-->
+      <tr>
+        <td>pause</td>
+        <td>6000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>goBackAndWait</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Web Pages</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'ERP5')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Image.Source</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Image Source</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!-- manual form submit -->
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <!-- only handle pdf_source (a promise!) here, because it needs to be set on
+           the iframe and a page-reload resets all (bad) parameters manually set   -->
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["pdf_source"].then(function (evt) {document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter = new Blob([evt.target.response || evt.target.responseText], {"type": evt.target.getResponseHeader("Content-Type")});});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter</td>
+        <td>pdf_dump</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${pdf_dump}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyNotExpression</td>
+        <td>${pdf_dump}</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url, param) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("POST", url, true); xhr.responseType = param.dataType || ""; if (typeof param.headers === 'object' &amp;&amp; param.headers !== null) { for (k in param.headers) { if (param.headers.hasOwnProperty(k)) { xhr.setRequestHeader(k, param.headers[k]); } } } xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); if (typeof param.xhrFields === 'object' &amp;&amp; param.xhrFields !== null) { for (k in param.xhrFields) { if (param.xhrFields.hasOwnProperty(k)) { xhr[k] = param.xhrFields[k]; } } } xhr.send(param.data); }, function() { xhr.abort(); }); } var form_data = new FormData(); form_data.append("field_my_file", storedVars["pdf_dump"], "Template.Test.Letter-003-en.pdf"); form_data.append("form_id", "File_view");  x = ajax(storedVars["url"].split("?")[0] + "/Base_edit", {"xhrFields": {"with_credentials": true}, "data": form_data});</td>
+        <td>promise</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["promise"].then(function () {document.getElementById("selenium_myiframe").src=storedVars["url"].split("?")[0]+"/File_view?portal_status_message=Data%20updated."});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class="transition_message"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <!-- generate image - template_test_letter_input_page_0_003_en_bmp -->
+      <tr>
+        <td>echo</td>
+        <td>update => template_test_letter_input_page_0_003_en_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["url"].split("?")[0]</td>
+        <td>screenshot_url</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${screenshot_url}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${screenshot_url}/Document_createScreenshot?shot?frame=0&amp;doc_id=template_test_letter_input_page_0_003_en_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Screenshot updated.</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <!-- CASE 4 (pdf) - template_test_slideshow_input_004_en_pdf -->
+    <tr>
+      <td>echo</td>
+      <td>CASE 4 (pdf) => template_test_slideshow_input_004_en_pdf</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_page_module/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>004</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="import_export"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>label=Export as Letter</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>name=field_format</td>
+      <td>index=1</td>
+    </tr>
+    <tr>
+      <td>uncheck</td>
+      <td>name=field_display_head</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!--
+       PDF viewer has no document.title, wait for "" means pdf is loaded
+       FIREFOX (51) will prompt to open PDF in new window = we're dead for now
+      -->
+      <tr>
+        <td>clickAndWait</td>
+        <td>name=Base_callDialogMethod:method</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTitle</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${url}</td>
+        <td></td>
+      </tr>
+      <!-- Can't fetch pdf source, so request page again -->
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("GET", url, true); xhr.responseType = "blob", xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); xhr.send(); }, function() { xhr.abort(); }); }; ajax(storedVars["url"] + "&amp;batch_mode=True");</td>
+        <td>pdf_source</td>
+      </tr>
+      <!-- pause to let the ajax request finish. now if the table was a async, queue
+           that would be nice, not 3000-->
+      <tr>
+        <td>pause</td>
+        <td>6000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>goBackAndWait</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForPageToLoad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Web Pages</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'ERP5')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Documents')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Image.Source</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Image Source</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tal:block tal:condition="python: no_file_update == False">
+      <!-- manual form submit -->
+      <tr>
+        <td>storeLocation</td>
+        <td>url</td>
+        <td></td>
+      </tr>
+      <!-- only handle pdf_source (a promise!) here, because it needs to be set on
+           the iframe and a page-reload resets all (bad) parameters manually set   -->
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["pdf_source"].then(function (evt) {document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter = new Blob([evt.target.response || evt.target.responseText], {"type": evt.target.getResponseHeader("Content-Type")});});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>document.getElementById("selenium_myiframe").contentDocument.body.bad_pdf_parameter</td>
+        <td>pdf_dump</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${pdf_dump}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyNotExpression</td>
+        <td>${pdf_dump}</td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>function ajax(url, param) { var xhr = new XMLHttpRequest(); return new Promise(function(resolve, reject) { var k; xhr.open("POST", url, true); xhr.responseType = param.dataType || ""; if (typeof param.headers === 'object' &amp;&amp; param.headers !== null) { for (k in param.headers) { if (param.headers.hasOwnProperty(k)) { xhr.setRequestHeader(k, param.headers[k]); } } } xhr.addEventListener("load", function(e) { if (e.target.status >= 400) { return reject(e); } resolve(e); }); xhr.addEventListener("error", reject); if (typeof param.xhrFields === 'object' &amp;&amp; param.xhrFields !== null) { for (k in param.xhrFields) { if (param.xhrFields.hasOwnProperty(k)) { xhr[k] = param.xhrFields[k]; } } } xhr.send(param.data); }, function() { xhr.abort(); }); } var form_data = new FormData(); form_data.append("field_my_file", storedVars["pdf_dump"], "Template.Test.Letter-004-de.pdf"); form_data.append("form_id", "File_view");  x = ajax(storedVars["url"].split("?")[0] + "/Base_edit", {"xhrFields": {"with_credentials": true}, "data": form_data});</td>
+        <td>promise</td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["promise"].then(function () {document.getElementById("selenium_myiframe").src=storedVars["url"].split("?")[0]+"/File_view?portal_status_message=Data%20updated."});</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@class="transition_message"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <!-- generate image - template_test_letter_input_page_1_004_de_bmp -->
+      <tr>
+        <td>echo</td>
+        <td>update => template_test_letter_input_page_1_004_de_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>storeEval</td>
+        <td>storedVars["url"].split("?")[0]</td>
+        <td>screenshot_url</td>
+      </tr>
+      <tr>
+        <td>echo</td>
+        <td>${screenshot_url}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${screenshot_url}/Document_createScreenshot?frame=1&amp;doc_id=template_test_letter_input_page_1_004_de_bmp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForTextPresent</td>
+        <td>Screenshot updated.</td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <!-- make sure print exchange works -->
+    <tr>
+      <td>echo</td>
+      <td>ACTION => PRINT</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_page_module/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>records</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_reference</td>
+      <td>Template.Test.Letter</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=listbox_version</td>
+      <td>001</td>
+    </tr>
+    <tr>
+      <td>keyPressAndWait</td>
+      <td>listbox_version</td>
+      <td>\13</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Template Test Letter</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Letter')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Short Title</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="print"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//button[@class="print"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Print As Slideshow</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>selectAndWait</td>
+      <td>name=select_dialog</td>
+      <td>index=1</td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Display Letter Head</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=Base_showUpdateDialog:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="transition_message"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Preview updated.</td>
+      <td></td>
+    </tr>
+  </tal:block>
+</tbody>
+</table>
+</body>
+</html>

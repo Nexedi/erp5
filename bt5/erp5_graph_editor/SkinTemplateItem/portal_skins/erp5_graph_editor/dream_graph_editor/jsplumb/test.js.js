@@ -296,7 +296,7 @@
                 jsplumb_gadget.render(sample_data_graph);
             }).then(runTest).fail(error_handler).always(start);
         });
-        test("Node can be connected", function () {
+        test("Nodes can be connected", function () {
             var jsplumb_gadget;
             stop();
             function runTest() {
@@ -308,6 +308,9 @@
                         source: node1.id,
                         target: node2.id
                     });
+                    // .connect insternal API is asynchronous, but there's no way to wait for the event to be processed.
+                    // for now we just wait for a short delay
+                    return RSVP.delay(1e3);
                 }).then(function () {
                     return jsplumb_gadget.getContent();
                 }).then(function (content) {
@@ -586,6 +589,25 @@
                     ok(node.coordinate.left !== undefined, "Node have left coordinate");
                     ok((0 <= node.coordinate.left) && (node.coordinate.left <= 1), "Node left coordinate is between [0..1]");
                 });
+            }).fail(error_handler).always(start);
+        });
+        test("Gadget can be rendered multiple times", function () {
+            var jsplumb_gadget;
+            stop();
+            g.declareGadget("./index.html", {
+                element: document.querySelector("#test-element")
+            }).then(function (new_gadget) {
+                jsplumb_gadget = new_gadget;
+                return jsplumb_gadget.render(sample_data_graph);
+            }).then(function () {
+                return jsplumb_gadget.getContent();
+            }).then(function () {
+                return jsplumb_gadget.render(sample_data_graph);
+            }).then(function () {
+                return jsplumb_gadget.getContent();
+            }).then(function (content) {
+                equal(sample_data_graph, content);
+                equal($(".window", document.querySelector("#test-element")).length, 2, "Graph is rendered only once");
             }).fail(error_handler).always(start);
         });
     });

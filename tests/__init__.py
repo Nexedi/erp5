@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from glob import glob
 import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
@@ -89,6 +90,19 @@ class ERP5(_ERP5):
       if not status_dict['status_code']:
         status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
+    elif test.startswith('testWendelinCore'):
+      # Combining Zope and WCFS working together requires data to be on a real
+      # storage, not on in-RAM MappingStorage inside Zope's Python process.
+      # Force this via --load --save for now.
+      #
+      # Also manually indicate via --with_wendelin_core, that this test needs
+      # WCFS server - corresponding to ZODB test storage - to be launched.
+      #
+      # In the future we might want to rework custom_zodb.py to always use
+      # FileStorage on tmpfs instead of δ=MappingStorage in DemoStorage(..., δ),
+      # and to always spawn WCFS for all tests, so that this hack becomes
+      # unnecessary.
+      return self.runUnitTest('--load', '--save', '--with_wendelin_core', full_test)
     elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
     elif test == 'testUpgradeInstanceWithOldDataFs':
@@ -133,20 +147,21 @@ class ERP5(_ERP5):
 
   def _updateFunctionalTestResponse(self, status_dict):
     """ Convert the Unit Test output into more accurate information
-        related to funcional test run.
+        related to functional test run.
     """
     # Parse relevant information to update response information
     try:
       summary, html_test_result = status_dict['stderr'].split("-"*79)[1:3]
     except ValueError:
       # In case of error when parse the file, preserve the original
-      # informations. This prevents we have unfinished tests.
+      # information. This prevents we have unfinished tests.
       return status_dict
     status_dict['html_test_result'] = html_test_result
     search = self.FTEST_PASS_FAIL_RE.search(summary)
     if search:
       group_dict = search.groupdict()
-      status_dict['failure_count'] = int(group_dict['failures'])
+      status_dict['failure_count'] = int(group_dict['failures']) \
+          + int(status_dict.get('failure_count', 0))
       status_dict['test_count'] = int(group_dict['total'])
       status_dict['skip_count'] = int(group_dict['expected_failure'])
     return status_dict
@@ -249,6 +264,7 @@ class RJS_Only(_ERP5):
   def getTestList(self):
     rjs_officejs_bt_list = ["erp5_officejs_",
                             "renderjs_ui_test",
+                            "erp5_web_monitoring_ui_test",
                             "erp5_monaco_editor_ui_test",
                             "erp5_travel_expense_ui_test",
                             "erp5_gadget_interface_validator_ui_test",

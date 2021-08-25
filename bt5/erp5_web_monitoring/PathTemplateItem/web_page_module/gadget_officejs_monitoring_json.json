@@ -1,0 +1,12 @@
+{
+      "short_name": "Monitor",
+      "name": "OfficeJS Monitor",
+      "description": "Cloud Monitoring Tool",
+      "icons": [{
+        "src": "NXD-Logo.Rapid.Space.png",
+        "sizes": "128x128",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

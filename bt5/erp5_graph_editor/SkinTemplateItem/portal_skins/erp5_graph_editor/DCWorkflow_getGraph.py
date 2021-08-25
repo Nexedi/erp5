@@ -1,6 +1,4 @@
-from Products.ERP5Type.Message import translateString
 import json
-portal = context.getPortalObject()
 
 # if a graph has been saved, we use this info for node coordinates.
 position_graph = context.getProperty('jsplumb_graph')

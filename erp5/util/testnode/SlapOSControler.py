@@ -31,11 +31,11 @@ import subprocess
 import time
 import xml_marshaller
 import argparse
+from six.moves import range
 from slapos import client
+from slapos.util import rmtree
 from . import logger
 from .Utils import createFolder
-
-from six.moves import range
 
 MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
@@ -53,7 +53,8 @@ class SlapOSControler(object):
       createFolder(shared)
       self.shared_part_list = self.shared_part_list + [shared]
 
-    self.instance_root = os.path.join(working_directory, 'inst')
+    self.old_instance_root = os.path.join(working_directory, 'inst')
+    self.instance_root = os.path.join(working_directory, 'i')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.instance_config = {}
@@ -277,6 +278,8 @@ class SlapOSControler(object):
       self._resetSoftware()
     else:
       createFolder(self.software_root)
+    if os.path.exists(self.old_instance_root): # BBB
+      rmtree(self.old_instance_root)
     instance_root = self.instance_root
     # Delete any existing partition in order to not get its data (ex.
     # MySQL DB content) from previous runs. To support changes of partition
@@ -287,7 +290,7 @@ class SlapOSControler(object):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
-      partition_reference = '%s-%s' %(config['partition_reference'], i)
+      partition_reference = '%s%s' %(config['partition_reference'], i)
       partition_path = os.path.join(instance_root, partition_reference)
       if not(os.path.exists(partition_path)):
         os.mkdir(partition_path)

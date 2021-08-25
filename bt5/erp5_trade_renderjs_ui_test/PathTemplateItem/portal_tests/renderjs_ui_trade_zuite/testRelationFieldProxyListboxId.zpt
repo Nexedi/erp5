@@ -1,0 +1,159 @@
+<html>
+<head><title>Test Proxy Listbox Ids on relation fields.</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test Proxy Listbox Ids on relation fields.
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:Zuite_createSaleOrderForTradeZuite;">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/sale_order_module/erp5_trade_ui_test_sale_order_1?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<!-- }}} -->
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_my_source_title']</td>
+  <td>%</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_source_title']</td>
+  <td>input</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li[@data-explore="true"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//input[@name="search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>proxy_form_id_list</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertSelected</td>
+  <td>proxy_form_id_list</td>
+  <td>All</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:repeat="node_title python: ('Organisation supplier', 'Organisation client', 'Person supplier', 'Person client')">
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+
+<tr>
+  <td>select</td>
+  <td>proxy_form_id_list</td>
+  <td>Suppliers</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:repeat="node_title python: ('Organisation supplier', 'Person supplier', )">
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+<tal:block tal:repeat="node_title python: ('Organisation client', 'Person client')">
+  <tr>
+    <td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tr>
+  <td>select</td>
+  <td>proxy_form_id_list</td>
+  <td>Clients</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:repeat="node_title python: ('Organisation client', 'Person client')">
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+<tal:block tal:repeat="node_title python: ('Organisation supplier', 'Person supplier', )">
+  <tr>
+    <td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tr>
+  <td>select</td>
+  <td>proxy_form_id_list</td>
+  <td>Organisations</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:repeat="node_title python: ('Organisation supplier', 'Organisation client', )">
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+<tal:block tal:repeat="node_title python: ('Person supplier', 'Person client')">
+  <tr>
+    <td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tr>
+  <td>select</td>
+  <td>proxy_form_id_list</td>
+  <td>Persons</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:repeat="node_title python: ('Person supplier', 'Person client')">
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+<tal:block tal:repeat="node_title python: ('Organisation supplier', 'Organisation client', )">
+  <tr>
+    <td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//tbody/tr/td[1]/a[text() = "<tal:block tal:replace="node_title"/>"]</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

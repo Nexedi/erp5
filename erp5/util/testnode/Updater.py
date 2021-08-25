@@ -29,8 +29,7 @@ import os
 import re
 from . import logger
 from .ProcessManager import SubprocessError
-from .Utils import rmtree
-from slapos.util import bytes2str, str2bytes
+from slapos.util import bytes2str, str2bytes, rmtree
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)

@@ -4,7 +4,7 @@ tmp_context = context.newContent(
     temp_object=True,
     quantity=1.0,
     variation_category_list=reference_variation_category_list,
-    resource=context.getRelativeUrl()) 
+    resource=context.getResource())
 price_currency = kw.get('price_currency', None)
 
 result = context.getAggregatedAmountList(tmp_context)

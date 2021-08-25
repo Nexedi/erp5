@@ -163,6 +163,7 @@ ul.ci-web-header-menu-lang{
   overflow: hidden;
   margin: 0;
   padding: 0;
+  top:2px;
 }
 
 ul.ci-web-header-menu-lang:hover {

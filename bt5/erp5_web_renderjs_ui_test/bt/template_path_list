@@ -4,6 +4,8 @@ portal_tests/renderjs_ui_date_time_field_zuite
 portal_tests/renderjs_ui_date_time_field_zuite/**
 portal_tests/renderjs_ui_developer_mode_zuite
 portal_tests/renderjs_ui_developer_mode_zuite/**
+portal_tests/renderjs_ui_disable_xhtml_zuite
+portal_tests/renderjs_ui_disable_xhtml_zuite/**
 portal_tests/renderjs_ui_dms_zuite
 portal_tests/renderjs_ui_dms_zuite/**
 portal_tests/renderjs_ui_editor_gadget_zuite

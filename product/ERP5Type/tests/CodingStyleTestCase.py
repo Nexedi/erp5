@@ -27,13 +27,17 @@
 #
 ##############################################################################
 
-import tarfile
-import os
+import collections
 import glob
+import os
+import tarfile
+
+from Acquisition import aq_base
+from Testing import ZopeTestCase
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Testing import ZopeTestCase
-from Acquisition import aq_base
+from Products.ERP5Type.tests.utils import findContentChain
+
 
 class CodingStyleTestCase(ERP5TypeTestCase):
   """Test case to test coding style in business templates.
@@ -61,17 +65,20 @@ class CodingStyleTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
+  def _getTestedBusinessTemplateValueList(self):
+    for business_template in self.portal.portal_templates.contentValues():
+      if business_template.getTitle() in self.getTestedBusinessTemplateList():
+        yield business_template
+
   def test_SkinCodingStyle(self):
     """
     Find all skin items of business templates to be checked
     and gather all consistency messages.
     """
     # Find the list if skins to test - we only test the last business template
-    portal_templates = self.portal.portal_templates
     skin_id_set = set()
-    for business_template in portal_templates.contentValues():
-      if business_template.getTitle() in self.getTestedBusinessTemplateList():
-        skin_id_set.update(business_template.getTemplateSkinIdList())
+    for business_template in self._getTestedBusinessTemplateValueList():
+      skin_id_set.update(business_template.getTemplateSkinIdList())
 
     # Init message list
     message_list = []
@@ -87,7 +94,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
           message_list.extend(document.checkConsistency())
     self.maxDiff = None
-    self.assertEqual([], message_list)
+    self.assertEqual(message_list, [])
 
   def test_PythonSourceCode(self):
     """test python script from the tested business templates.
@@ -95,9 +102,8 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     reuses BusinessTemplate_getPythonSourceCodeMessageList
     """
     self.maxDiff = None
-    for business_template in self.portal.portal_templates.contentValues():
-      if business_template.getTitle() in self.getTestedBusinessTemplateList():
-        self.assertEqual([], business_template.BusinessTemplate_getPythonSourceCodeMessageList())
+    for business_template in self._getTestedBusinessTemplateValueList():
+      self.assertEqual(business_template.BusinessTemplate_getPythonSourceCodeMessageList(), [])
 
   def test_rebuild_business_template(self):
     """Try to rebuild business template to catch packaging errors.
@@ -151,3 +157,43 @@ class CodingStyleTestCase(ERP5TypeTestCase):
             .upgrader_check_post_upgrade.Alarm_getReportResultList()
         ],
     )
+
+  def test_DuplicateActions(self):
+    """test actions from the tested business templates are not duplicated.
+    """
+    self.maxDiff = None
+    duplicate_action_list = []
+    for business_template in self._getTestedBusinessTemplateValueList():
+      # consider all portal types for which this business template defines actions
+      portal_type_list = set([
+          action_definition.split(' | ')[0] for action_definition in
+          business_template.getTemplateActionPathList()
+      ])
+      for portal_type in portal_type_list:
+        # ignore other actions providers, such as the ones for global actions.
+        if self.portal.portal_types.get(portal_type) is None:
+          continue
+
+        document, content_portal_type_list = findContentChain(
+            self.portal, portal_type)
+        for content_portal_type in content_portal_type_list:
+          document = document.newContent(
+              portal_type=content_portal_type,
+              temp_object=True,
+          )
+        for action_category, action_list in self.portal.portal_actions.listFilteredActionsFor(
+            document).iteritems():
+          # We ignore duplicate actions in action categories used by OfficeJS
+          # because OfficeJS only display actions referenced in the router
+          # gadget configuration.
+          if action_category in ('object_jio_view', 'object_jio_js_script'):
+            continue
+          for action_name, action_count in collections.Counter(
+              [action['name'] for action in action_list]).iteritems():
+            if action_count > 1:
+              duplicate_action_list.append({
+                  'portal_type': portal_type,
+                  'category': action_category,
+                  'action_name': action_name,
+              })
+      self.assertEqual(duplicate_action_list, [])

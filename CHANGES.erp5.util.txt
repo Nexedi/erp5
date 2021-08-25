@@ -1,6 +1,17 @@
 Changes
 =======
 
+0.4.70 (2021-06-14)
+-------------------
+
+  * testnode:
+
+    - fix ResourceWarnings on Python 3
+    - shorten instance partition paths
+
+  * testsuite: remove EggTestSuite
+
+
 0.4.69 (2020-10-29)
 -------------------
 

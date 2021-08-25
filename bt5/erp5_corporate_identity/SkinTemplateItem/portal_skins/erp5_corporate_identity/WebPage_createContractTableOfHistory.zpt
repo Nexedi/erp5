@@ -1,0 +1,40 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Contract sections (version, authors, etc).
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_theme                        python: options.get('contract_theme');
+                       contract_title                        python: options.get('contract_title');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_include_history              python: options.get('contract_include_history');
+                       contract_history_section_list         python: options.get('contract_history_section_list');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: contract_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url contract_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+    </head>
+    <body class="ci-contract" tal:condition="python: contract_include_history != 0">
+      <tal:block metal:use-macro="context/WebPage_createContractTableOfHistory/macros/contract_history" />
+    </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="contract_history">
+    <tal:block tal:repeat="contract_history_section contract_history_section_list">
+      <tal:block tal:replace="structure contract_history_section"></tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

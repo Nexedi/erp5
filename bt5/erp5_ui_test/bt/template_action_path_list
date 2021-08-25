@@ -13,14 +13,12 @@ Foo Line | view
 Foo Line | view_contentlist
 Foo Line | view_dynamic_matrixbox
 Foo Line | view_matrixbox
+Foo Line | view_matrixbox_tales
 Foo Module | do_nothing_action_jio
 Foo Module | do_nothing_report_jio
 Foo Module | empty_mass_action
 Foo Module | list
-Foo Module | list_ui
 Foo Module | other_context_action
-Foo Module | search
-Foo Module | sort_on
 Foo Module | view
 Foo | do_nothing_action_jio
 Foo | do_nothing_report_jio

@@ -305,7 +305,7 @@ def reassignWorkflowWithoutConversion(self):
 WorkflowTool.reassignWorkflowWithoutConversion = reassignWorkflowWithoutConversion
 WorkflowTool.security.declareProtected(Permissions.AccessContentsInformation,
                                        'getWorkflowTempObjectList')
-def getWorkflowTempObjectList(self, temp_object=1):
+def getWorkflowTempObjectList(self, temp_object=1, **kw):
   """ Return a list of converted temporary workflows. Only necessary in
       Workflow Tool to get temporarilly converted DCWorkflow.
   """

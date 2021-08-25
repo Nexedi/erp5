@@ -1,0 +1,94 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the complete contract (only called in HTML version)
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_raw_tables                   python: options.get('contract_raw_tables');
+                       contract_raw_report                   python: options.get('contract_raw_report');
+                       contract_theme                        python: options.get('contract_theme');
+                       contract_header                       python: options.get('contract_header');
+                       contract_footer                       python: options.get('contract_footer');
+                       contract_title                        python: options.get('contract_title');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_report_css_list              python: options.get('contract_report_css_list');
+                       contract_report_js_list               python: options.get('contract_report_js_list');
+                       contract_embed                        python: options.get('contract_embed');
+                       contract_short_title                  python: options.get('contract_short_title');
+                       contract_description                  python: options.get('contract_description');
+                       contract_source_person_title          python: options.get('contract_source_person_title');
+                       contract_include_history              python: options.get('contract_include_history');
+                       contract_signature_list               python: options.get('contract_signature_list');
+                       contract_version_list                 python: options.get('contract_version_list');
+                       contract_distribution_list            python: options.get('contract_distribution_list');
+                       contract_content                      python: options.get('contract_content');
+                       contract_format                       python: options.get('contract_format');
+                       contract_rendering_fix                python: options.get('contract_rendering_fix');
+                       contract_logo_url                     python: options.get('contract_logo_url');
+                       contract_logo_title                   python: options.get('contract_logo_title');
+                       contract_reference                    python: options.get('contract_reference');
+                       contract_revision                     python: options.get('contract_revision');
+                       contract_version                      python: options.get('contract_version');
+                       contract_short_date                   python: options.get('contract_short_date');
+                       contract_full_reference               python: options.get('contract_full_reference');
+                       contract_source_organisation_title    python: options.get('contract_source_organisation_title');
+                       contract_history_section_list         python: options.get('contract_history_section_list');
+                       contract_table_of_content             python: options.get('contract_table_of_content');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: contract_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url contract_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+    <link rel="stylesheet" href="template_css/highlight.css" />
+    <tal:block tal:condition="python: len(contract_report_css_list) > 0">
+      <tal:block tal:repeat="css_href contract_report_css_list">
+        <link rel="stylesheet" tal:attributes="href css_href" />
+      </tal:block>
+    </tal:block>
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+    </script>
+    </head>
+    	  <body class="ci-contract" onload="setPlaceholdersWithUrlParameters()">
+    	    <tal:block tal:condition="python: contract_embed != 1">
+            <tal:block metal:use-macro="context/WebPage_createContractHeader/macros/contract_header" />
+        	  <tal:block tal:condition="python: contract_raw_report != True">
+        	    <tal:block metal:use-macro="context/WebPage_createContractCover/macros/contract_cover" />
+      	    </tal:block>
+  	        <tal:block tal:condition="python: contract_include_history">
+    	        <tal:block metal:use-macro="context/WebPage_createContractTableOfHistory/macros/contract_history" />
+            </tal:block>
+            <tal:block tal:replace="structure contract_table_of_content"></tal:block>
+          </tal:block>
+          <tal:block metal:use-macro="context/WebPage_createContractContent/macros/contract_content" />
+      	  <tal:block tal:condition="python: contract_embed != 1">
+            <tal:block metal:use-macro="context/WebPage_createContractFooter/macros/contract_footer" />
+          </tal:block>
+          <script type="text/javascript" src="template_js/highlight.js"></script>
+          <tal:block tal:condition="python: len(contract_report_js_list) > 0">
+            <tal:block tal:repeat="js_src contract_report_js_list">
+              <script type="text/javascript" tal:attributes="src js_src"></script>
+            </tal:block>
+          </tal:block>
+        </body>
+	 </html>
+</tal:block>

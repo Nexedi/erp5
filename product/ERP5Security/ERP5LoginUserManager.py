@@ -232,6 +232,10 @@ class ERP5LoginUserManager(BasePlugin):
           special_user_name_set.add(user_login)
         else:
           login_list.append(user_login)
+          # Ignore leading or trailing space in login name
+          user_login_stripped = user_login.strip()
+          if user_login_stripped != user_login:
+            login_list.append(user_login_stripped)
       login_dict = {}
       if exact_match:
         requested = set(login_list).__contains__

@@ -1,8 +1,11 @@
 <tal:block metal:define-macro="init_test_environment">
   <tr>
+    <td colspan="3"><b>Init test environment</b></td>
+  </tr>
+  <tr>
     <td>store</td>
     <td tal:content="python:
-        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')]">erp5</td>
+        here.REQUEST.get('URL')[0:here.REQUEST.get('URL').find('/portal_tests/')] + '/web_site_module/osoe_runner/'"></td>
     <td>base_url</td>
   </tr>
   <!-- Always initialize browser to English language -->
@@ -18,24 +21,50 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
+    <td>&#36;{base_url}</td>
     <td></td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>
 </tal:block>
 
+<tal:block metal:define-macro="logout">
+  <tr>
+    <td colspan="3"><b>Logout</b></td>
+  </tr>
+  <!-- Logout -->
+  <tr>
+    <td>open</td>
+    <td>${base_url}</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  <tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+  </tal:block>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//h1/a[@data-i18n="Logout"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+</tal:block>
+
 <tal:block metal:define-macro="login_as_manager">
-  <!-- Login as manager -->
   <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/logout</td>
-    <td></td>
+    <td colspan="3"><b>Login as manager</b></td>
   </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/login_form</td>
-    <td></td>
-  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
@@ -49,25 +78,18 @@
         here.Zuite_getHowToInfo()['manager_password']"></td>
   </tr>
   <tr>
-    <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
+    <td>click</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>assertTextPresent</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['manager_username']"></td>
-    <td></td>
-  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 </tal:block>
 
 <tal:block metal:define-macro="wait_for_activities">
   <!-- Wait for activities to finish -->
+  <tr>
+    <td colspan="3"><b>Wait for activities to finish</b></td>
+  </tr>
   <tr>
     <td>openAndWait</td>
     <td>&#36;{base_url}/Zuite_waitForActivities</td>
@@ -77,7 +99,7 @@
     <td>assertTextPresent</td>
     <td>Done.</td>
     <td></td>
-  </tr> 
+  </tr>
 </tal:block>
 
 <tal:block metal:define-macro="invoke_simulation_alarms">
@@ -91,11 +113,14 @@
     <td>assertTextPresent</td>
     <td>Done.</td>
     <td></td>
-  </tr> 
+  </tr>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>
 </tal:block>
 
 <tal:block metal:define-macro="login_as_functional_test_user">
+  <tr>
+    <td colspan="3"><b>Login as functional test user</b></td>
+  </tr>
   <tr>
     <td>openAndWait</td>
     <td>&#36;{base_url}/Zuite_createFunctionalTestUser</td>
@@ -117,17 +142,15 @@
     <td>Cleared.</td>
     <td></td>
   </tr>
+  <tr>
+    <td>open</td>
+    <td>${base_url}</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
   <!-- login with functional test user -->
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/logout</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/login_form</td>
-    <td></td>
-  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
@@ -141,21 +164,11 @@
         here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
   </tr>
   <tr>
-    <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
+    <td>click</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>assertTextPresent</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['functional_test_username']"></td>
-    <td></td>
-  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
@@ -179,9 +192,10 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
+    <td>&#36;{base_url}</td>
     <td></td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 </tal:block>
 
 <tal:block metal:define-macro="login_as_functional_another_test_user">
@@ -207,16 +221,7 @@
     <td></td>
   </tr>
   <!-- login with functional test user -->
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/logout</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/login_form</td>
-    <td></td>
-  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
   <tr>
     <td>type</td>
     <td>//input[@name="__ac_name"]</td>
@@ -230,21 +235,11 @@
         here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
   </tr>
   <tr>
-    <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
+    <td>click</td>
+    <td>//input[@value="Login"]</td>
     <td></td>
   </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>assertTextPresent</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['functional_another_test_username']"></td>
-    <td></td>
-  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
@@ -268,9 +263,10 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
+    <td>&#36;{base_url}</td>
     <td></td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 </tal:block>
 
 <tal:block metal:define-macro="login_as_user">

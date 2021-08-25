@@ -22,7 +22,7 @@
 (function (RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy) {
     "use strict";
     /* TODO:
-    * less dependancies ( promise event listener ? )
+    * less dependencies ( promise event listener ? )
     * no more handlebars
     * id should not always be modifiable
     * drop zoom level
@@ -31,9 +31,30 @@
     */
     var gadget_klass = rJS(window);
     var domParser = new DOMParser();
-    var node_template_source = gadget_klass.__template_element.getElementById("node-template").innerHTML;
-    var node_template = Handlebars.compile(node_template_source);
-    var popup_edit_template = gadget_klass.__template_element.getElementById("popup-edit-template").innerHTML;
+    var node_template = Handlebars.compile(
+        '  <div class="window {{class}}"'
+        + '    id="{{element_id}}"'
+        + '    title="{{title}}">'
+        + '    {{name}}'
+        + '    <div class="ep"></div>'
+        + '</div>'
+    );
+    var popup_edit_template = (
+        '  <div id="edit-popup" data-position-to="origin">'
+        + '    <div data-role="header" data-theme="a">'
+        + '        <h1 class="node_class">Edit properties</h1>'
+        + '        <!-- XXX add this for jquery mobile version.'
+        + '        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>'
+        + '        -->'
+        + '    </div>'
+        + '    <br/>'
+        + '    <form class="ui-content">'
+        + '        <fieldset></fieldset>'
+        + '        <input type="button" value="Delete" class="graph_editor_delete_button">'
+        + '        <input type="submit" value="Validate" class="graph_editor_validate_button">'
+        + '    </form>'
+        + '</div>'
+    );
 
     function layoutGraph(graph_data) {
         // Promise returning the graph once springy calculated the layout.
@@ -204,8 +225,8 @@
 
     function updateConnectionData(gadget, connection, remove) {
         if (connection.ignoreEvent) {
-            // this hack is for edge edition. Maybe there I missed one thing and
-            // there is a better way.
+            // this hack is for edge edition and when the graph is re-rendered.
+            // Maybe there I missed one thing and there is a better way.
             return;
         }
         if (remove) {
@@ -353,25 +374,11 @@
     function addEdge(gadget, edge_id, edge_data) {
         var overlays = [];
         var connection;
-        var label = '';
         if (edge_data.name) {
-            label = edge_data.name;
-            if (edge_data.path) {
-                label = label.link(edge_data.path);
-            }
-        }
-        if (edge_data.name_path_dict) {
-            var linked_name_list = [];
-            for (var name in edge_data.name_path_dict) {
-                linked_name_list.push(name.link(edge_data.name_path_dict[name]));
-            }
-            label = linked_name_list.join(', ');
-        }
-        if (label) {
             overlays = [
                 ["Label", {
                     cssClass: "l1 component label",
-                    label: label
+                    label: edge_data.name
                 }]
             ];
         }
@@ -491,6 +498,82 @@
         return clone(expanded_class_definition);
     }
 
+    function openEdgeEditionDialog(gadget, connection) {
+        var edge_id = connection.id;
+        var edge_data = gadget.props.data.graph.edge[edge_id];
+        var edit_popup = $(gadget.props.element).find("#popup-edit-template");
+        var schema;
+        var fieldset_element;
+        var delete_promise;
+        var class_definition = gadget.props.data.class_definition[edge_data._class];
+        if (class_definition === undefined) {
+            return;
+        }
+        schema = expandSchema(class_definition, gadget.props.data);
+        // We do not edit source & destination on edge this way.
+        delete schema.properties.source;
+        delete schema.properties.destination;
+        gadget.props.element.insertAdjacentHTML("beforeend", popup_edit_template);
+        edit_popup = $(gadget.props.element).find("#edit-popup");
+        edit_popup.find(".node_class").text(connection.name || connection._class);
+        fieldset_element = edit_popup.find("fieldset")[0];
+        edit_popup.dialog();
+        edit_popup.show();
+
+        function save_promise(fieldset_gadget) {
+            return new RSVP.Queue().push(function () {
+                return promiseEventListener(edit_popup.find(".graph_editor_validate_button")[0], "click", false);
+            }).push(function (evt) {
+                var data = {
+                    id: $(evt.target[1]).val(),
+                    data: {}
+                };
+                return fieldset_gadget.getContent().then(function (r) {
+                    $.extend(data.data, gadget.props.data.graph.edge[connection.id]);
+                    $.extend(data.data, r);
+                    // to redraw, we remove the edge and add again.
+                    // but we want to disable events on connection, since event
+                    // handling promise are executed asynchronously in undefined order,
+                    // we cannot just remove and /then/ add, because the new edge is
+                    // added before the old is removed.
+                    connection.ignoreEvent = true;
+                    gadget.props.jsplumb_instance.detach(connection);
+                    addEdge(gadget, r.id, data.data);
+                });
+            });
+        }
+        delete_promise = new RSVP.Queue().push(function () {
+            return promiseEventListener(edit_popup.find(".graph_editor_delete_button")[0], "click", false);
+        }).push(function () {
+            // connectionDetached event will remove the edge from data
+            gadget.props.jsplumb_instance.detach(connection);
+        });
+        return gadget.declareGadget("dream_graph_editor/fieldset/index.html", {
+            element: fieldset_element,
+            scope: "fieldset"
+        }).push(function (fieldset_gadget) {
+            return RSVP.all([fieldset_gadget, fieldset_gadget.render({
+                value: edge_data,
+                property_definition: schema
+            }, edge_id)]);
+        }).push(function (fieldset_gadget) {
+            edit_popup.dialog("open");
+            return fieldset_gadget[0];
+        }).push(function (fieldset_gadget) {
+            fieldset_gadget.startService(); // XXX
+            return fieldset_gadget;
+        }).push(function (fieldset_gadget) {
+            // Expose the dialog handling promise so that we can wait for it in
+            // test.
+            gadget.props.dialog_promise = RSVP.any([save_promise(fieldset_gadget, edge_id), delete_promise]);
+            return gadget.props.dialog_promise;
+        }).push(function () {
+            edit_popup.dialog("close");
+            edit_popup.remove();
+            delete gadget.props.dialog_promise;
+        });
+    }
+
     function openNodeEditionDialog(gadget, element) {
         var node_id = getNodeId(gadget, element.id);
         var node_data = gadget.props.data.graph.node[node_id];
@@ -544,7 +627,7 @@
         }).push(function () {
             return removeElement(gadget, node_id);
         });
-        return gadget.declareGadget("../fieldset/index.html", {
+        return gadget.declareGadget("dream_graph_editor/fieldset/index.html", {
             element: fieldset_element,
             scope: "fieldset"
         }).push(function (fieldset_gadget) {
@@ -588,6 +671,12 @@
         });
     }
 
+    function waitForConnectionClick(gadget) {
+        return loopJsplumbBind(gadget, "click", function (connection) {
+            return openEdgeEditionDialog(gadget, connection);
+        });
+    }
+
     function addNode(gadget, node_id, node_data) {
         var render_element = $(gadget.props.main);
         var class_definition = gadget.props.data.class_definition[node_data._class];
@@ -612,8 +701,7 @@
             "class": node_data._class.replace(".", "-"),
             element_id: dom_element_id,
             title: node_data.name || node_data.id,
-            name: node_data.name || node_data.id,
-            name_href: node_data.path
+            name: node_data.name || node_data.id
         }), "text/html").querySelector(".window");
         render_element.append(domElement);
         box = $(gadget.props.element).find("#" + dom_element_id);
@@ -623,10 +711,6 @@
         }
         box.css("top", absolute_position[1]);
         box.css("left", absolute_position[0]);
-        if (node_data.is_initial_state) {
-            box.css("border", "double #000000");
-            box.css("font-weight", "bold");
-        }
         updateNodeStyle(gadget, dom_element_id);
         draggable(gadget);
         // XXX make only this element draggable.
@@ -731,6 +815,20 @@
            }
          });
         */
+
+            // reset previous graph, if any.
+            if ($(".window", this.props.element).length) {
+                $.each(
+                    // disable the "delete" event, otherwise after render load the
+                    // graph, loopJsplumbBind events will process the connection deleted
+                    // events 
+                    this.props.jsplumb_instance.getAllConnections(),
+                    function (i, connection) {
+                        connection.ignoreEvent = true;
+                    });
+                this.props.jsplumb_instance.reset();
+                $(".window", this.props.element).remove();
+            }
             if (data) {
                 this.props.data = JSON.parse(data);
 
@@ -803,7 +901,8 @@
             return RSVP.all([
                 waitForDrop(gadget),
                 waitForConnection(gadget),
-                waitForConnectionDetached(gadget)
+                waitForConnectionDetached(gadget),
+                waitForConnectionClick(gadget)
             ]);
         });
 

@@ -15,6 +15,7 @@ Creates the Book sections (version, authors, etc).
                        book_signature_list               python: options.get('book_signature_list');
                        book_distribution_list            python: options.get('book_distribution_list');
                        margin_15mm                       python: options.get('margin_15mm');
+                       book_history_section_list         python: options.get('book_history_section_list');
                        book_version_list                 python: options.get('book_version_list');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', book_theme, ' ci-', book_language])">
@@ -43,7 +44,10 @@ Creates the Book sections (version, authors, etc).
 
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="book_history">
-    <tal:comment replace="nothing">Directly called from WebPage_createBook, so need to check again</tal:comment>
+    <tal:block tal:repeat="book_history_section book_history_section_list">
+      <tal:block tal:replace="structure book_history_section"></tal:block>
+    </tal:block>
+    <!--tal:comment replace="nothing">Directly called from WebPage_createBook, so need to check again</tal:comment>
     <tal:block tal:condition="python: book_include_history != 0">
       <section>
         <table class="ci-book-table ci-book-signature-list" border="1" width="100%" cellpadding="0" cellspacing="0">
@@ -162,6 +166,6 @@ Creates the Book sections (version, authors, etc).
           </tbody>
         </table>
       </section>
-    </tal:block>
+    </tal:block-->
   </tal:block>
 </tal:block>

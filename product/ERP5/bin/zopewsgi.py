@@ -181,4 +181,5 @@ def runwsgi():
           listen=args.address,
           logger=logging.getLogger("access"),
           threads=getattr(conf, 'zserver_threads', 4),
+        asyncore_use_poll=True,
     ).run()

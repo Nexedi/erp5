@@ -159,10 +159,10 @@
                                                     render_prefix=render_prefix)">
                     <tal:block metal:define-macro="render_report_section">
                       <tal:block tal:condition="report_item/getTitle">
-                         <text:p
+                         <text:h
                             tal:content="report_item/getTitle"
-                            tal:attributes="text:style-name string:Heading_20_${report_item/getLevel}"
-                            >report item title</text:p><text:p/>
+                            tal:attributes="text:style-name string:Heading_20_${report_item/getLevel}; text:outline-level report_item/getLevel"
+                            >report item title</text:h><text:p/>
                         </tal:block>
   
                       <tal:block tal:condition="report_item/getFormId">

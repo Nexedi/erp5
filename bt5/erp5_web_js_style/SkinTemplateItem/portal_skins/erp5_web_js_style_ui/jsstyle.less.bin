@@ -30,16 +30,28 @@
 
 body {
   display: grid;
-  grid-template-raws: repeat(3, 1fr); 
+  grid-gap: 1em;
+  grid-template-areas:
+   "header"
+   "content"
+   "sidebar"
+   "footer";
+
+  @media only screen and (min-width: 50em) {
+    grid-template-areas:
+      "header  header  header"
+      "content content sidebar"
+      "footer  footer  footer";
+  }
 
   > nav#sitemap {
-    grid-row: 1;
+    grid-area: header;
 
     .flattenNav();
   }
 
   main {
-    grid-row: 2;
+    grid-area: content;
 
     fieldset {
       border: none;
@@ -55,8 +67,13 @@ body {
     }
   }
 
+  > aside#document_list {
+    grid-area: sidebar;
+    background-color: #DDD;
+  }
+
   > nav#language {
-    grid-row: 3;
+    grid-area: footer;
 
     .flattenNav();
   }

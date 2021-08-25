@@ -38,31 +38,27 @@ Update a book dialog with parameters manually entered
 
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
-  return context.Base_redirect(
-    dialog_id,
-    keep_items = dict(
-      portal_status_message=translateString('Preview updated.'),
-      cancel_url=cancel_url,
-      portal_skin=portal_skin,
-      format=format,
-      display_svg=display_svg,
-      document_save=document_save,
-      document_download=document_download,
-      override_document_description=override_document_description,
-      override_document_short_title=override_document_short_title,
-      override_document_title=override_document_title,
-      override_document_version=override_document_version,
-      override_logo_reference=override_logo_reference,
-      override_source_person_title=override_source_person_title,
-      override_document_reference=override_document_reference,
-      override_source_organisation_title=override_source_organisation_title,
-      transformation=transformation,
-      include_content_table=include_content_table,
-      include_history_table=include_history_table,
-      include_reference_table=include_reference_table,
-      include_linked_content=include_linked_content,
-      include_report_content=include_report_content,
-      margin15mm = margin15mm,
-      #**kw
-    )
-  )
+  request = container.REQUEST
+  request.form['portal_status_message'] = translateString('Preview updated.')
+  request.form['cancel_url'] = cancel_url
+  request.form['portal_skin'] = portal_skin
+  request.form['format'] = format
+  request.form['display_svg'] = display_svg
+  request.form['document_save'] = document_save
+  request.form['document_download'] = document_download
+  request.form['override_document_description'] = override_document_description
+  request.form['override_document_short_title'] = override_document_short_title
+  request.form['override_document_title'] = override_document_title
+  request.form['override_document_version'] = override_document_version
+  request.form['override_logo_reference'] = override_logo_reference
+  request.form['override_source_person_title'] = override_source_person_title
+  request.form['override_document_reference'] = override_document_reference
+  request.form['override_source_organisation_title'] = override_source_organisation_title
+  request.form['transformation'] = transformation
+  request.form['include_content_table'] = include_content_table
+  request.form['include_history_table'] = include_history_table
+  request.form['include_reference_table'] = include_reference_table
+  request.form['include_linked_content'] = include_linked_content
+  request.form['include_report_content'] = include_report_content
+  request.form['margin15mm'] = margin15mm
+  return context.Base_renderForm(dialog_id)

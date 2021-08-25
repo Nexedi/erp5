@@ -75,26 +75,20 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>my_jsplumb_graph</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_jsplumb_graph</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_int_index</string>
-                        <string>listbox_order_builder_title_list</string>
-                        <string>listbox_delivery_builder_title_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
