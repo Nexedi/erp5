@@ -1206,11 +1206,26 @@
               domain_id,
               domain;
 
-
             for (i = 0; i < column_list_json.length; i += 1) {
               if (column_list_json[i][0] === modification_dict.graphic_type) {
                 group_by = column_list_json[i][0];
                 group_by_title = column_list_json[i][1];
+                console.log({
+                  group_by: group_by,
+                  query_by: {},
+                  title: group_by_title,
+                  list_method_template: gadget.state.list_method_template,
+                  list_method: gadget.state.list_method,
+                  layout: {
+                    x: {
+                      "title": group_by_title,
+                      "key": group_by
+                    },
+                    y: {
+                      "title": "Quantity"
+                    }
+                  }
+                });
                 return graphic_gadget.render({
                   group_by: group_by,
                   query_by: {},
