@@ -81,7 +81,9 @@
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
         perfomance_mapping = {
-          "translated_simulation_state_title": "simulation_state"
+          "translated_simulation_state_title": [
+            "simulation_state", "getTranslatedSimulationStateTitle"
+          ]
         },
         domain_list,
         i,
@@ -97,17 +99,18 @@
         group_by = options.group_by;
       }
 
-      console.log(group_by);
       for (i = 0; i < group_by.length; i += 1) {
         if (perfomance_mapping.hasOwnProperty(group_by[i])) {
-          group_by[i] = perfomance_mapping[group_by[i]];
+          options.layout.x.key = perfomance_mapping[group_by[i]][1];
+          data.x = options.layout.x.key;
+          group_by[i] = perfomance_mapping[group_by[i]][0];
         }
       }
 
-      if (Array.isArray(options.group_by)) {
-        data.y = "count(" + (options.group_by[0] || options.layout.x.key) + ")";
+      if (Array.isArray(group_by)) {
+        data.y = "count(" + (group_by[0] || options.layout.x.key) + ")";
       } else {
-        data.y = "count(" + (options.group_by || options.layout.x.key) + ")";
+        data.y = "count(" + (group_by || options.layout.x.key) + ")";
       }
 
       for (i in query_by) {
@@ -136,10 +139,10 @@
           }
         }
       }
-
+      console.log(select_list, [data.y, options.layout.x.key]);
       select_list = select_list.concat(
-        [data.y, options.layout.x.key].filter(function (el) {
-          return el;
+        [data.y, options.layout.x.key].filter(function (el, index) {
+          return select_list.indexOf(el) !== index;
         })
       );
 
@@ -207,37 +210,6 @@
           return gadget.changeState(data);
         });
     })
-    /*.declareService(function () {
-      var gadget = this,
-        restore_filter_input = gadget.element.querySelectorAll("input")[0];
-      return gadget.getUrlParameter('extended_search')
-        .push(function (result) {
-          if (result !== undefined) {
-            restore_filter_input.disabled = false;
-            restore_filter_input.classList.remove("ui-disabled");
-          }
-        });
-    })
-    .declareService(function () {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          var restore_filter_input = gadget.element.querySelectorAll("input")[0],
-            one = loopEventListener(restore_filter_input, "click", false, function () {
-              restore_filter_input.disabled = true;
-              restore_filter_input.classList.add("ui-disabled");
-              return gadget.redirect({
-                command: "change",
-                options: {
-                  extended_search: undefined,
-                  field_listbox_begin_from: undefined
-                }
-              });
-            }, true);
-
-          return one;
-        });
-    })*/
     .onStateChange(function (modification_dict) {
       var i,
         gadget = this,
@@ -249,6 +221,9 @@
             element: gadget.element.querySelector(".wrap")
           })
         ];
+
+      console.log("query", gadget.state.query);
+      console.log("query_list", query_list);
       if (gadget.state.query) {
         queue_list.push(gadget.jio_allDocs(gadget.state.query));
       }
@@ -257,7 +232,6 @@
       }
       return new RSVP.Queue(RSVP.all(queue_list))
         .push(function (result_list) {
-          console.log(result_list);
           var bar_chart = gadget.element.querySelector(".wrap"),
             loader = gadget.element.querySelector(".graph-spinner"),
             graph_gadget = result_list[0],
@@ -276,7 +250,7 @@
           function avoidFunction(el) {
             return el && !el.match(/^\D+\(\w+\)$/);
           }
-
+          console.log(select_list);
           if (gadget.state.query &&
               "object" === typeof gadget.state.query &&
               gadget.state.query.select_list.filter(avoidFunction).length <= 1) {
@@ -377,12 +351,10 @@
             }
           }
           if (data_list.length === 0) {
-            console.log("I am here");
             return domsugar(gadget.element, [
               domsugar("p", {"text": "No data"})
             ]);
           }
-          console.log(data_list, data_list.length);
           return graph_gadget.render({
             value: {
               data: data_list,
