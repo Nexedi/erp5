@@ -1,8 +1,7 @@
-/*global document, window, Option, rJS, RSVP, console, Array, SimpleQuery, Query,
-         ComplexQuery, loopEventListener, domsugar */
+/*global window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery, domsugar */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery,
-           loopEventListener, domsugar) {
+           domsugar) {
   "use strict";
 
   var color_list = ["#CCA08D", "#58ADC4", "#F9B39B", "#B75937",
@@ -250,7 +249,6 @@
           function avoidFunction(el) {
             return el && !el.match(/^\D+\(\w+\)$/);
           }
-          console.log(select_list);
           if (gadget.state.query &&
               "object" === typeof gadget.state.query &&
               gadget.state.query.select_list.filter(avoidFunction).length <= 1) {
@@ -373,5 +371,4 @@
         });
     });
 
-}(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery,
-  rJS.loopEventListener, domsugar));
+}(window, rJS, RSVP, Array, SimpleQuery, Query, ComplexQuery, domsugar));
