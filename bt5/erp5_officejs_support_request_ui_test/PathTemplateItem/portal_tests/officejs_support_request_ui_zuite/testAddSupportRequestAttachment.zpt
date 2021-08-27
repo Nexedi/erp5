@@ -58,6 +58,11 @@
           <td></td>
         </tr>
         <tr>
+          <td>assertElementPresent</td>
+          <td>//select[@id="field_your_resource"]/option[text()="FeatureRequire"]</td>
+          <td></td>
+        </tr>
+        <tr>
           <td>select</td>
           <td>field_your_resource</td>
           <td>FeatureRequire</td>
@@ -70,6 +75,11 @@
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
         <tr>
           <td>waitForElementPresent</td>
+          <td>//input[@data-i18n="[value]Post Comment"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
           <td>//input[@data-i18n="[value]Post Comment"]</td>
           <td></td>
         </tr>
@@ -155,6 +165,11 @@
             <td></td>
           </tr>
           <tr>
+            <td>assertElementPresent</td>
+            <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Comment added']</td>
+            <td></td>
+          </tr>
+          <tr>
             <td>openAndWait</td>
             <td tal:content="string: ${here/portal_url}/Zuite_waitForActivities"></td>
             <td></td>
@@ -175,7 +190,17 @@
             <td></td>
           </tr>
           <tr>
+            <td>assertTextPresent</td>
+            <td tal:content="string:Post test ${filename}"></td>
+            <td></td>
+          </tr>
+          <tr>
             <td>waitForElementPresent</td>
+            <td>attachment</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertElementPresent</td>
             <td>attachment</td>
             <td></td>
           </tr>
@@ -241,6 +266,11 @@
           </tr>
           <tr>
             <td>waitForElementPresent</td>
+            <td>//p[contains(text(), '${current_reference}')]</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertElementPresent</td>
             <td>//p[contains(text(), '${current_reference}')]</td>
             <td></td>
           </tr>
