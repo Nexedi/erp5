@@ -26,6 +26,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>//div[contains(@class, "panel")]//a</td>
   <td></td>
