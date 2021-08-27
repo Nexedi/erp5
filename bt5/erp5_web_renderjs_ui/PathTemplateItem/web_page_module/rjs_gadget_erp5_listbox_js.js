@@ -477,7 +477,8 @@
             column_id,
             column_title,
             not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])],
-            option_list = field_json.domain_root_list || [];
+            option_list = field_json.domain_root_list || [],
+            key_list = [];
 
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
@@ -509,7 +510,9 @@
 
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
-              if (not_concatenated_list[i][j][0].indexOf("_state") !== -1) {
+              if (not_concatenated_list[i][j][0].indexOf("_state") !== -1 &&
+                  key_list.indexOf(not_concatenated_list[i][j][0]) === -1) {
+                key_list.push(not_concatenated_list[i][j][0]);
                 option_list.push([
                   not_concatenated_list[i][j][0],
                   not_concatenated_list[i][j][1]
@@ -1210,22 +1213,6 @@
               if (column_list_json[i][0] === modification_dict.graphic_type) {
                 group_by = column_list_json[i][0];
                 group_by_title = column_list_json[i][1];
-                console.log({
-                  group_by: group_by,
-                  query_by: {},
-                  title: group_by_title,
-                  list_method_template: gadget.state.list_method_template,
-                  list_method: gadget.state.list_method,
-                  layout: {
-                    x: {
-                      "title": group_by_title,
-                      "key": group_by
-                    },
-                    y: {
-                      "title": "Quantity"
-                    }
-                  }
-                });
                 return graphic_gadget.render({
                   group_by: group_by,
                   query_by: {},
@@ -1543,7 +1530,6 @@
 
       if ((evt.target.type === 'button') &&
           ((evt.target.name === 'SelectAction') || (evt.target.name === 'ClipboardAction'))) {
-        console.log("I am here");
         evt.preventDefault();
 
         checked_uid_list = [];
