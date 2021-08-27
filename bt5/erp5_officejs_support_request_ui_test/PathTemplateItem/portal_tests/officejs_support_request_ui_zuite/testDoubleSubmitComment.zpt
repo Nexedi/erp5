@@ -65,6 +65,11 @@
   <td>//input[@data-i18n="[value]Post Comment"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
+  <td></td>
+</tr>
 
 <tal:block tal:define="text_content string:Second Post Content">
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
@@ -77,6 +82,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment' and @disabled and contains(@class, "ui-disabled")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@data-i18n='[value]Post Comment' and @disabled and contains(@class, "ui-disabled")]</td>
   <td></td>
 </tr>
@@ -122,6 +132,13 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- The reply may need long time to show up. -->
+<tr>
+  <td>setTimeout</td>
+  <td>180000</td>
+  <td></td>
+</tr>
 
 <!-- The second post was submitted only once. -->
 <tr>

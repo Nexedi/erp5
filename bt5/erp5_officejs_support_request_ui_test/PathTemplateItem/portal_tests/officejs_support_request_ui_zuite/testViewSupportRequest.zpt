@@ -20,12 +20,22 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//a[@data-i18n="Support Requests"]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
   <td></td>
 </tr>
@@ -52,6 +62,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
   <td></td>
 </tr>
