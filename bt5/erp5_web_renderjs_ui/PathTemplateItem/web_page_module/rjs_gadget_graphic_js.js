@@ -138,7 +138,7 @@
           }
         }
       }
-      console.log(select_list, [data.y, options.layout.x.key]);
+
       select_list = select_list.concat(
         [data.y, options.layout.x.key].filter(function (el, index) {
           return select_list.indexOf(el) !== index;
@@ -221,8 +221,6 @@
           })
         ];
 
-      console.log("query", gadget.state.query);
-      console.log("query_list", query_list);
       if (gadget.state.query) {
         queue_list.push(gadget.jio_allDocs(gadget.state.query));
       }
