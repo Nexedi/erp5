@@ -9,18 +9,41 @@
 <tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
 <tr>
   <td>open</td>
   <td>${base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<!--
 <tr>
   <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Logout']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//a[@data-i18n='Logout']</td>
   <td></td>
 </tr>
@@ -29,8 +52,23 @@
   <td>//a[@data-i18n='Logout']</td>
   <td></td>
 </tr>
+-->
+<tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@value='Confirm']</td>
   <td></td>
 </tr>
@@ -39,10 +77,16 @@
   <td>//input[@value='Confirm']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <!-- Use waitForElementPresent command to make sure we are logged out -->
 <!-- Then access the homepage to make sure the login form still can appear -->
 <tr>
   <td>waitForElementPresent</td>
+  <td>//input[@name="WebSite_login:method"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@name="WebSite_login:method"]</td>
   <td></td>
 </tr>

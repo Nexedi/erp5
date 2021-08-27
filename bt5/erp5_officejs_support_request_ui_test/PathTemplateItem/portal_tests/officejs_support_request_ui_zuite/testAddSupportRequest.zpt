@@ -60,6 +60,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForTextPresent</td>
   <td>Comments:</td>
   <td></td>
@@ -101,6 +106,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//p[contains(text(), "RobotMaking")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//p[contains(text(), "RobotMaking")]</td>
   <td></td>
 </tr>
