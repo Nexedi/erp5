@@ -20,8 +20,12 @@ import ZConfig
 import Zope2
 from Zope2.Startup.run import make_wsgi_app
 
-from Products.ERP5Type.patches.WSGIPublisher import publish_module
-
+try:
+  from ZPublisher.WSGIPublisher import _MODULES
+  from ZPublisher.WSGIPublisher import publish_module
+except ImportError:
+  # BBB Zope2
+  from Products.ERP5Type.patches.WSGIPublisher import publish_module
 
 # this class licensed under the MIT license (stolen from pyramid_translogger)
 class TransLogger(object):
