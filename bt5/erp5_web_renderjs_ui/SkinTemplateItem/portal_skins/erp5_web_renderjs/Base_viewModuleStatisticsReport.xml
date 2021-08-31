@@ -65,9 +65,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>report_by_state_and_date_range_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
