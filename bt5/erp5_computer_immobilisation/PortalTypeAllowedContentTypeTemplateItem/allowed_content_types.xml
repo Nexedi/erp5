@@ -1,4 +1,15 @@
 <allowed_content_type_list>
+ <portal_type id="Compute Node">
+  <item>Compute Partition</item>
+  <item>Internet Protocol Address</item>
+  <item>Tcp Port Number</item>
+ </portal_type>
+ <portal_type id="Compute Node Module">
+  <item>Compute Node</item>
+ </portal_type>
+ <portal_type id="Compute Partition">
+  <item>Internet Protocol Address</item>
+ </portal_type>
  <portal_type id="Computer">
   <item>Computer Partition</item>
   <item>Internet Protocol Address</item>
