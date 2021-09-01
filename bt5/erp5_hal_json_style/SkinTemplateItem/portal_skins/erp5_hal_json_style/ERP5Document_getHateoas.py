@@ -1865,7 +1865,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           catalog_kw['group_by_list'] = [str(group_by)]
         # Include select, as user may want to count
         # For now, consider only functions, for example, count(column_name) or COUNT(column name) or count(*)
-        catalog_kw["select_list"] = [x for x in select_list if re.match(r"^\D+\(.*\)$", x)]
+        catalog_kw["select_list"] = [x for x in select_list if ((x in catalog_kw['group_by_list']) or re.match(r"^\D+\(.*\)$", x))]
 
       if limit:
         catalog_kw["limit"] = limit
