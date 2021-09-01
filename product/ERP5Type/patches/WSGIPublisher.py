@@ -469,8 +469,4 @@ def publish_module(environ, start_response,
     # Return the result body iterable.
     return result
 
-try:
-  from ZPublisher.WSGIPublisher import _MODULES
-except ImportError:
-  # BBB Zope2
-  sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
+sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
