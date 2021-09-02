@@ -20,12 +20,27 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>//div[@id='wrap1']</td>
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//div[@id='wrap1']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
+  <td>//div[@id='wrap2']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//div[@id='wrap2']</td>
   <td></td>
 </tr>

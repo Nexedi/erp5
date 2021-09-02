@@ -25,12 +25,23 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>assertElementPresent</td>
   <td>//a[@data-i18n='Logout']</td>
   <td></td>
 </tr>
 <tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Logout']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
   <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@value='Confirm']</td>
   <td></td>
 </tr>
@@ -44,6 +55,11 @@
 <!-- Then access the homepage to make sure the login form still can appear -->
 <tr>
   <td>waitForElementPresent</td>
+  <td>//input[@name="WebSite_login:method"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@name="WebSite_login:method"]</td>
   <td></td>
 </tr>

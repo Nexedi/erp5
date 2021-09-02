@@ -41,10 +41,20 @@
   <td>//select[@name="field_your_resource"]/option[text() = "FeatureRequire"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//select[@name="field_your_resource"]/option[text() = "FeatureRequire"]</td>
+  <td></td>
+</tr>
 <!-- this default project have a a sale supply line, defining that only FeatureRequire and
 RequireAssistant services are available for this project -->
 <tr>
   <td>waitForElementPresent</td>
+  <td>//select[@name="field_your_resource"]/option[text() = "RequireAssistant"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//select[@name="field_your_resource"]/option[text() = "RequireAssistant"]</td>
   <td></td>
 </tr>
