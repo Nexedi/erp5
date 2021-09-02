@@ -79,7 +79,7 @@
           column_list: column_list,
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
-        perfomance_mapping = {
+        performance_mapping = {
           "translated_simulation_state_title": [
             "simulation_state", "getTranslatedSimulationStateTitle"
           ]
@@ -99,10 +99,10 @@
       }
 
       for (i = 0; i < group_by.length; i += 1) {
-        if (perfomance_mapping.hasOwnProperty(group_by[i])) {
-          options.layout.x.key = perfomance_mapping[group_by[i]][1];
+        if (performance_mapping.hasOwnProperty(group_by[i])) {
+          options.layout.x.key = performance_mapping[group_by[i]][1];
           data.x = options.layout.x.key;
-          group_by[i] = perfomance_mapping[group_by[i]][0];
+          group_by[i] = performance_mapping[group_by[i]][0];
         }
       }
 
