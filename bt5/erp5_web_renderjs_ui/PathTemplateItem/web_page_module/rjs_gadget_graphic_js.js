@@ -99,10 +99,10 @@
       }
 
       for (i = 0; i < group_by.length; i += 1) {
-        if (perfomance_mapping.hasOwnProperty(group_by[i])) {
-          options.layout.x.key = perfomance_mapping[group_by[i]][1];
+        if (performance_mapping.hasOwnProperty(group_by[i])) {
+          options.layout.x.key = performance_mapping[group_by[i]][1];
           data.x = options.layout.x.key;
-          group_by[i] = perfomance_mapping[group_by[i]][0];
+          group_by[i] = performance_mapping[group_by[i]][0];
         }
       }
 
