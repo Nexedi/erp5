@@ -44,6 +44,10 @@ class _ERP5(ERP5TypeTestSuite):
             glob(path + '/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.testFunctionalOfficeJSCodeMirror.py'),
             glob(path + '/bt5/erp5_core_test/TestTemplateItem/portal_components/test.*.testWorkflowHistoryList.py'),
             glob(path + '/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.testFunctionalRJSRelationField.py'),
+            glob(path + '/bt5/erp5_user_tutorial/TestTemplateItem/portal_components/test.*.testFunctionalStandaloneUserTutorial.py'),
+            glob(path + '/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.testFunctionalOfficeJSoOoSpreadsheet.py'),
+            glob(path + '/bt5/erp5_accounting_renderjs_ui_test/TestTemplateItem/portal_components/test.*.testFunctionalRJSAccountingReport.py'),
+            glob(path + '/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.testFunctionalRJSServiceWorker.py'),
             glob(path + '/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.testFunctionalOfficeJSoOoPresentation.py')):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
