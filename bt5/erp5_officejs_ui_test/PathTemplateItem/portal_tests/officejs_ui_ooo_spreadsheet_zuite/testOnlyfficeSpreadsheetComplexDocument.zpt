@@ -37,6 +37,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_align_center"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_align_center"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
   <tr>
     <td>open</td>
