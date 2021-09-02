@@ -25,12 +25,6 @@
             }
           });
         })
-        .push(undefined, function (error) {
-          if (error instanceof RSVP.CancellationError) {
-            return;
-          }
-          throw error;
-        })
         .push(function () {
           var restore_filter_input = gadget.element.querySelectorAll("input")[0];
           restore_filter_input.disabled = false;
