@@ -79,7 +79,7 @@
           column_list: column_list,
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
-        perfomance_mapping = {
+        performance_mapping = {
           "translated_simulation_state_title": [
             "simulation_state", "getTranslatedSimulationStateTitle"
           ]
