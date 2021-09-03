@@ -463,7 +463,7 @@
             return getMonitorSetting(gadget);
           })
           .push(function (configuration_dict) {
-            return gadget.changeState({
+            return gadget.deferChangeState({
               options: options,
               is_exporter: is_exporter,
               config: JSON.stringify(configuration_dict),
@@ -473,7 +473,7 @@
           });
       }
 
-      return gadget.changeState({
+      return gadget.deferChangeState({
         options: options,
         is_exporter: is_exporter,
         config: "",
@@ -481,6 +481,12 @@
         sync: options.auto_sync,
         storage_url: options.url
       });
+    })
+    .declareJob('deferChangeState', function deferStateChange(state) {
+      // onStateChange does too many things (notification, ajax, redirect)
+      // which leads to infinite rendering loop currently
+      // Break this by decoupling all those things from render
+      return this.changeState(state);
     })
     .onStateChange(function () {
       var gadget = this;
