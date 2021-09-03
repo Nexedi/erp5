@@ -18,8 +18,11 @@
 
 <tr><td>click</td>
     <td>//input[@data-i18n='[value]Submit New Support Request']</td><td></td></tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_your_title']</td>
+  <td></td>
+</tr>
 <tr><td>type</td>
     <td>//input[@name='field_your_title']</td>
     <td>testLatestPostOnFrontPage</td></tr>
