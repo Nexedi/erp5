@@ -100,7 +100,7 @@
         .push(function (form_list) {
           var column_list = [
             ['status', 'Status'],
-            ['title', 'Hosting Subscription'],
+            ['title', 'Instance Tree'],
             ['instance_amount', 'Instance Amount'],
             ['status_date', 'Status Date']
           ];
@@ -113,17 +113,17 @@
                   "default_params": {},
                   "editable": 0,
                   "editable_column_list": [],
-                  "key": "hosting_subscription_listbox",
+                  "key": "instance_tree_listbox",
                   "lines": lines_limit,
                   "list_method": "portal_catalog",
                   "query": "urn:jio:allDocs?query=%28portal_type%3A%22" +
-                    "Hosting Subscription" + "%22%29",
+                    "Instance Tree" + "%22%29",
                   "portal_type": [],
-                  "search_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
-                  "sort_column_list": [['status', 'Status'], ['title', 'Hosting Subscription'],
+                  "search_column_list": [['status', 'Status'], ['title', 'Instance Tree']],
+                  "sort_column_list": [['status', 'Status'], ['title', 'Instance Tree'],
                                        ['instance_amount', 'Instance Amount'], ['status_date', 'Status Date']],
                   "sort": [['status', 'ascending'], ['title', 'ascending']],
-                  "title": "Hosting Subscriptions",
+                  "title": "Instance Trees",
                   "command": "index",
                   "type": "ListBox"
                 }
@@ -145,7 +145,7 @@
         })
         .push(function () {
           return gadget.updateHeader({
-            page_title: "Hosting Subscriptions Status",
+            page_title: "Instance Trees Status",
             filter_action: true
           });
         });
