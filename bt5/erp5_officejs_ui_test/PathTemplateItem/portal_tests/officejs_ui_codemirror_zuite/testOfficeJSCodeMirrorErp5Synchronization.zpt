@@ -72,6 +72,7 @@
   <td>link=Add</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Save']</td>
@@ -82,7 +83,6 @@
   <td>identifier=title</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>store</td>
   <td>Titre</td>
