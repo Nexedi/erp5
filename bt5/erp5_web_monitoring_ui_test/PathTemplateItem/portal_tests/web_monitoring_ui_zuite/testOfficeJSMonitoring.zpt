@@ -158,17 +158,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Hosting Subscriptions']</td>
+  <td>//a[@data-i18n='Instance Trees']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Hosting Subscriptions']</td>
+  <td>//a[@data-i18n='Instance Trees']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[text()='Hosting Subscriptions ']</td>
+  <td>//h1[text()='Instance Trees ']</td>
   <td></td>
 </tr>
 <tr>

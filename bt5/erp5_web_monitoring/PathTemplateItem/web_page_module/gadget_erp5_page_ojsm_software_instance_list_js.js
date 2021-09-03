@@ -96,7 +96,7 @@
           var column_list = [
             ['status', 'Status'],
             ['title', 'Instance Title'],
-            ['specialise_title', 'Hosting Subscription'],
+            ['specialise_title', 'Instance Tree'],
             ['aggregate_reference', 'Computer'],
             ['date', 'Status Date']
           ];

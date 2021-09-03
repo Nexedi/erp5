@@ -8,7 +8,7 @@
   gadget_klass
     .setState({
       ouline_list: "",
-      hosting_subscription: ""
+      instance_tree: ""
     })
     .ready(function (g) {
       g.props = {};
@@ -90,16 +90,16 @@
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.updateHeader({
-        title: 'Hosting Subscriptions View'
+        title: 'Instance Trees View'
       })
         .push(function () {
           return gadget.jio_get(options.jio_key);
         })
         .push(function (hosting_doc) {
-          return gadget.changeState({hosting_subscription: hosting_doc});
+          return gadget.changeState({instance_tree: hosting_doc});
         })
         .push(function () {
-          return gadget.jio_get(gadget.state.hosting_subscription.opml_url);
+          return gadget.jio_get(gadget.state.instance_tree.opml_url);
         })
         .push(function (opml_doc) {
           return gadget.changeState({opml: opml_doc});
@@ -292,27 +292,27 @@
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'store_and_change', options: {
               page: "ojsm_jump",
-              jio_key: gadget.state.hosting_subscription.opml_url,
-              title: gadget.state.hosting_subscription.title,
+              jio_key: gadget.state.instance_tree.opml_url,
+              title: gadget.state.instance_tree.title,
               view_title: "Related OPML",
               search_page: "ojsm_status_list"
             }})
           ]);
         })
         .push(function (url_list) {
-          if (gadget.state.hosting_subscription.instance_amount === 0) {
+          if (gadget.state.instance_tree.instance_amount === 0) {
             gadget.element.querySelector('.hosting-title').textContent =
-              gadget.state.hosting_subscription.title + " -  Not synchronized!";
+              gadget.state.instance_tree.title + " -  Not synchronized!";
             return gadget.updateHeader({
-              page_title: "Hosting Subscription: " + gadget.state.hosting_subscription.title,
+              page_title: "Instance Tree: " + gadget.state.instance_tree.title,
               selection_url: url_list[0],
               jump_url: url_list[1]
             });
           }
           gadget.element.querySelector('.hosting-title').textContent =
-            gadget.state.hosting_subscription.title;
+            gadget.state.instance_tree.title;
           return gadget.updateHeader({
-            page_title: "Hosting Subscription: " + gadget.state.hosting_subscription.title,
+            page_title: "Instance Tree: " + gadget.state.instance_tree.title,
             selection_url: url_list[0],
             jump_url: url_list[1],
             save_action: true

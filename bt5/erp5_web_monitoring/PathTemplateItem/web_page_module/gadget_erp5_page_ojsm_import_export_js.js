@@ -327,14 +327,14 @@
   }
 
   function getInstanceOPMLListFromMaster(gadget, limit) {
-    var hosting_subscription_list = [],
+    var instance_tree_list = [],
       opml_list = [],
       uid_dict = {};
     if (limit === undefined) {
       limit = 300;
     }
     return gadget.state.erp5_gadget.allDocs({
-      query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
+      query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
       select_list: ['title', 'default_predecessor_uid', 'uid', 'slap_state'],
       limit: [0, limit],
       sort_on: [
@@ -346,7 +346,7 @@
           uid_search_list = [];
         for (i = 0; i < result.data.total_rows; i += 1) {
           if (result.data.rows[i].value.slap_state !== "destroy_requested") {
-            hosting_subscription_list.push({
+            instance_tree_list.push({
               title: result.data.rows[i].value.title,
               relative_url: result.data.rows[i].id,
               active: (result.data.rows[i].value.slap_state ===
@@ -381,9 +381,9 @@
             }
             opml_list.push({
               portal_type: "opml",
-              title: hosting_subscription_list[uid_dict[tmp_uid]]
+              title: instance_tree_list[uid_dict[tmp_uid]]
                 .title,
-              relative_url: hosting_subscription_list[uid_dict[tmp_uid]]
+              relative_url: instance_tree_list[uid_dict[tmp_uid]]
                 .relative_url,
               url: tmp_parameter.opml_url || String(tmp_uid) + " NO MONITOR",
               has_monitor: tmp_parameter.opml_url !== undefined,
@@ -392,8 +392,8 @@
               basic_login: btoa(tmp_parameter.username + ':' +
                                 tmp_parameter.password),
               active: tmp_parameter.opml_url !== undefined &&
-                hosting_subscription_list[uid_dict[tmp_uid]].active,
-              state: hosting_subscription_list[uid_dict[tmp_uid]].state
+                instance_tree_list[uid_dict[tmp_uid]].active,
+              state: instance_tree_list[uid_dict[tmp_uid]].state
             });
           }
         }
