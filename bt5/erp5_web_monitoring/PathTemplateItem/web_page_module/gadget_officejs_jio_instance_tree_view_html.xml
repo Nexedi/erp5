@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_hosting_subscription_view.html</string> </value>
+            <value> <string>gadget_officejs_jio_instance_tree_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_hosting_subscription_view_html</string> </value>
+            <value> <string>gadget_officejs_jio_instance_tree_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Monitoring Hosting Subscription View</string> </value>
+            <value> <string>Monitoring Instance Tree View</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
