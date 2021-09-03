@@ -129,6 +129,7 @@
   }
 
   function displayErrorContent(gadget, original_error) {
+    console.warn('launcher displayErrorContent', original_error);
     var error_list = [original_error],
       i,
       error,
@@ -574,7 +575,13 @@
       })
 
     .allowPublicAcquisition("redirect", function redirect(param_list) {
-      return route(this, 'router', 'redirect', param_list);
+      console.log('launcher redirect', param_list);
+      // cancel asynchronous changeState
+      this.deferChangeState(null);
+      return route(this, 'router', 'redirect', param_list)
+        .push(function () {
+          console.log('router redirect called');
+        });
     })
     .allowPublicAcquisition('reload', function reload() {
       return location.reload();
@@ -721,9 +728,14 @@
     })
 
     .declareJob('deferChangeState', function deferChangeState(state) {
+      if (state === null) {
+        return;
+      }
+      console.log('launcher deferChangeState', state);
       return this.changeState(state);
     })
     .onStateChange(function onStateChange(modification_dict) {
+      console.log('launcher onStateChange', modification_dict);
       var gadget = this,
         route_result = gadget.state,
         promise_list;
@@ -791,6 +803,7 @@
             }
 
             // reset gadget state
+            console.warn('launcher reset gadget state');
             gadget.state = JSON.parse(default_state_json_string);
           });
       }
@@ -838,6 +851,7 @@
         // Same subgadget
         promise_list.push(gadget.getDeclaredGadget(MAIN_SCOPE)
           .push(function (page_gadget) {
+            console.log('launcher: calling subrender');
             return page_gadget.render(gadget.state.options);
           })
           .push(function () {
@@ -882,6 +896,7 @@
     })
     // Render the page
     .declareMethod('render', function render(route_result, keep_message) {
+      console.log('launcher.render', route_result, keep_message);
       var gadget = this;
       return gadget.changeState({
         first_bootstrap: true,
@@ -915,6 +930,7 @@
           throw error;
         })
         .push(undefined, function (error) {
+          console.warn('launcher.render error', error);
           return displayError(gadget, error);
         });
     })
