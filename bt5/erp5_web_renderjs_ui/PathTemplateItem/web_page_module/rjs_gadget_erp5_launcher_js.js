@@ -548,8 +548,6 @@
           if (main.render !== undefined) {
             return main.render(JSON.parse(gadget.props.m_options_string));
           }
-        }, function () {
-          return;
         });
     })
 
