@@ -335,7 +335,7 @@
     }
     return gadget.state.erp5_gadget.allDocs({
       query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
-      select_list: ['title', 'default_predecessor_uid', 'uid', 'slap_state'],
+      select_list: ['title', 'default_successor_uid', 'uid', 'slap_state'],
       limit: [0, limit],
       sort_on: [
         ["creation_date", "descending"]
@@ -355,15 +355,15 @@
                        "start_requested") ? "Started" : "Stopped"
             });
             uid_search_list.push(result.data.rows[i].value.uid);
-            if (result.data.rows[i].value.default_predecessor_uid) {
-              uid_dict[result.data.rows[i].value.default_predecessor_uid] = i;
+            if (result.data.rows[i].value.default_successor_uid) {
+              uid_dict[result.data.rows[i].value.default_successor_uid] = i;
             }
           }
         }
         return gadget.state.erp5_gadget.allDocs({
           query: '(portal_type:"Software Instance") AND ' +
-            '(predecessor_related_uid:("' + uid_search_list.join('","') + '"))',
-          select_list: ['uid', 'predecessor_related_uid', 'connection_xml'],
+            '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
+          select_list: ['uid', 'successor_related_uid', 'connection_xml'],
           limit: [0, limit]
         });
       })
