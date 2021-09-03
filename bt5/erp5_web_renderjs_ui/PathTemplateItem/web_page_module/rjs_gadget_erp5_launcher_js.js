@@ -548,8 +548,10 @@
           if (main.render !== undefined) {
             return main.render(JSON.parse(gadget.props.m_options_string));
           }
-        }, function () {
-          return;
+        }, function (error) {
+          console.warn('laucher refresh error', error);
+          throw error;
+          // return;
         });
     })
 
