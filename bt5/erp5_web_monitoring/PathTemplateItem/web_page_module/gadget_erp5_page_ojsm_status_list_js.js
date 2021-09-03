@@ -122,7 +122,7 @@
             ['category', 'Status'],
             ['source', 'Promise'],
             ['channel_item', 'Software Instance'],
-            ['channel', 'Hosting Subscription'],
+            ['channel', 'Instance Tree'],
             ['lastBuildDate', 'Promise Date'],
             ['description', 'Message']
           ];
