@@ -251,7 +251,6 @@
               title: gadget.state.x_title || gadget.state.title
             }];
             for (i = 0; i < row_list.length; i += 1) {
-              console.log([gadget.state.x, gadget.state.y]);
               data_list[0].value_dict['0'].push(
                 row_list[i].value[gadget.state.x]
               );
@@ -353,7 +352,7 @@
                     "value_type": "number"
                   }
                 },
-                title: gadget.state.title
+                title: ""
               }
             }
           });
