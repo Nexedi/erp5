@@ -25,6 +25,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>
+</tr>
+<tr>
   <td>clickAndWait</td>
   <td>name=Base_createCloneDocument:method</td>
   <td></td>
