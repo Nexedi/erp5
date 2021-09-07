@@ -23,6 +23,11 @@
   <td>//input[@name='field_your_title']</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='field_your_title']</td>
+  <td></td>
+</tr>
 <tr><td>type</td>
     <td>//input[@name='field_your_title']</td>
     <td>testLatestPostOnFrontPage</td></tr>
@@ -42,6 +47,10 @@
   <td>waitForElementPresent</td>
   <td>//option[@text="BugReport"]</td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//option[@text="BugReport"]</td>
+</tr>
 <tr><td>select</td>
   <td>field_your_project</td>
   <td>RobotMaking</td>
@@ -57,6 +66,10 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//option[@text="FeatureRequire"]</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//option[@text="FeatureRequire"]</td>
 </tr>
 <tr><td>select</td>
@@ -75,7 +88,9 @@
 <tr><td>waitForText</td>
     <td>//ol[@id="post_list"]//li/p</td>
     <td>Post test</td></tr>
-
+<tr><td>assertText</td>
+    <td>//ol[@id="post_list"]//li/p</td>
+    <td>Post test</td></tr>
 <tr><td colspan="3"><b>Go back ot front page and check "latest post" columns</b></td></tr>
 
 <tr><td>openAndWait</td>
