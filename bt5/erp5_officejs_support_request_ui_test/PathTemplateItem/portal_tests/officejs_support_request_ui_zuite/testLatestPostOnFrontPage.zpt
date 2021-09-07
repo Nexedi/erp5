@@ -31,6 +31,13 @@
   <td>field_your_project</td>
   <td></td>
 </tr>
+<!-- Wait for the gadget to update the resource according to the project type,
+ this done by an ajax call.-->
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//option[@text="BugReport"]</td>
@@ -38,6 +45,11 @@
 <tr><td>select</td>
   <td>field_your_project</td>
   <td>RobotMaking</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
