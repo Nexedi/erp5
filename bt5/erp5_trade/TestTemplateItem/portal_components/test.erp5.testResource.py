@@ -1266,10 +1266,10 @@ class TestResource(ERP5TypeTestCase):
       portal_type=self.sale_supply_cell_portal_type,
       id='path_0',
       slice_base_price=10.,
-      slice_quantity_range=(1, 11),
+      slice_quantity_range=(0, 11),
     )
     cell0.setCriterionPropertyList(('quantity', ))
-    cell0.setCriterion('quantity', min=1, max=None)
+    cell0.setCriterion('quantity', min=0, max=None)
     cell0.setMappedValuePropertyList(
       ["slice_base_price", "slice_quantity_range", "base_price", "base_unit_price"]
     )

@@ -101,7 +101,7 @@ Test quantity steps for price on purchase supply line
 <tr>
   <td>assertText</td>
   <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>
-  <td>Quantity &lt; 11.0</td>
+  <td>0 &lt;= Quantity &lt; 11.0</td>
 </tr>
 <tr>
   <td>assertText</td>
