@@ -201,7 +201,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
     unused_predicate_id_set = self.getQuantityPredicateIdList(price_parameter)
     if quantity_step_list:
       quantity_step_list.sort()
-      quantity_step_list = [None] + quantity_step_list + [None]
+      quantity_step_list = [0] + quantity_step_list + [None]
       getTitle = getattr(
         self,
         'SupplyLine_getTitle',
