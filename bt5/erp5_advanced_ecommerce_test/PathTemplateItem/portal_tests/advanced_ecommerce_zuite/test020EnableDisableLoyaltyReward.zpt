@@ -152,7 +152,17 @@
   <td>Your discount was enabled</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>storeLocation</td>
+  <td>discountEnable</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>openAndWait</td>
+  <td>${discountEnable}</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@class="header_login"]</td>
