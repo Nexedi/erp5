@@ -1324,7 +1324,11 @@ class TestResource(ERP5TypeTestCase):
         resource_value=product,
         quantity=quantity,
       )
-      self.assertEqual(price, sale_order_line.getPrice())
+      self.assertEqual(
+        price, sale_order_line.getPrice(),
+        "quantity: %s | price: %s, sale_order_line.getPrice(): %s," % (
+          quantity, price, sale_order_line.getPrice()
+        ))
       self.assertEqual(
         total_price,
         round(sale_order_line.getTotalPrice(), currency.getQuantityPrecision())
