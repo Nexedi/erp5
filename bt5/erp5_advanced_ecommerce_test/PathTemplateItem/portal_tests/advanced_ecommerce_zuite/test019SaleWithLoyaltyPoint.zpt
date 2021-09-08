@@ -159,6 +159,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForTextPresent</td>
+  <td>Your discount was enabled</td>
+  <td></td>
+</tr>
+<tr>
   <td>clickAndWait</td>
   <td>//a[contains(@href, "test_colour_variation_product")]</td>
   <td></td>
@@ -198,15 +203,30 @@
   <td>//div[@class="cart_right" and contains(text(), "-1.1")]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="cart_right" and contains(text(), "-1.1")]</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>verifyElementPresent</td>
   <td>//div[@class="cart_left" and contains(text(), "Discount")]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="cart_left" and contains(text(), "Discount")]</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>verifyElementPresent</td>
+  <td>//div[@class="cart_right" and contains(text(), "9.9")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//div[@class="cart_right" and contains(text(), "9.9")]</td>
   <td></td>
 </tr>
