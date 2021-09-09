@@ -50,7 +50,6 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-
 <tr>
   <td>assertText</td>
   <td>//div[contains(@class, "panel")]//a[contains(@class, "ui-icon-home")]</td>
