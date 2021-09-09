@@ -1336,9 +1336,14 @@ class TestResource(ERP5TypeTestCase):
 
     for case in [
        {'quantity': 9, 'price': 90./9, 'total_price': 90.},
+       {'quantity': 10, 'price': 100./10, 'total_price': 100.},
        {'quantity': 11, 'price': 109./11, 'total_price': 109.},
+       {'quantity': 12, 'price': 118./11, 'total_price': 118.},
        {'quantity': 15, 'price': 145./15, 'total_price': 145.},
        {'quantity': 19, 'price': 181./19, 'total_price': 181.},
+       {'quantity': 20, 'price': 190./19, 'total_price': 190.},
+       {'quantity': 21, 'price': 198./19, 'total_price': 198.},
+       {'quantity': 22, 'price': 198./19, 'total_price': 206.},
        {'quantity': 25, 'price': 230./25, 'total_price': 230.},
     ]:
       _test(**case)
