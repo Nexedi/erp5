@@ -133,6 +133,13 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
+<!-- The reply may need long time to show up. -->
+<tr>
+  <td>setTimeout</td>
+  <td>180000</td>
+  <td></td>
+</tr>
+
 <!-- The second post was submitted only once. -->
 <tr>
   <td>waitForText</td>
