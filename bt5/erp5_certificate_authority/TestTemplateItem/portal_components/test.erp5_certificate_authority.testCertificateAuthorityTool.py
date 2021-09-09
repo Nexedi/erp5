@@ -40,6 +40,15 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     return "Test Certificate Authority"
 
   def afterSetUp(self):
+    if getattr(self.portal.portal_types.Person, 
+        'user_can_see_himself', None) is None:
+      self.portal.portal_types.Person.newContent(
+            id="user_can_see_himself",
+            title="The User Himself",
+            role_name=("Assignee",),
+            role_base_category_script_id="ERP5Type_getSecurityCategoryFromSelf",
+            role_base_category="group",
+            portal_type="Role Information")
     if "TEST_CA_PATH" in os.environ:
       self.portal.portal_certificate_authority.certificate_authority_path = \
           os.environ['TEST_CA_PATH']
@@ -53,6 +62,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
       reference=login, password=login)
     person.newContent(portal_type='Assignment').open()
     person.newContent(portal_type='ERP5 Login', reference=login).validate()
+    person.updateLocalRolesOnSecurityGroups()
     self.tic()
     return person.getUserId(), login
 
