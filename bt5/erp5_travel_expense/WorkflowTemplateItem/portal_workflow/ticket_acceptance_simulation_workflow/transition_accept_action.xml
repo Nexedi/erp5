@@ -20,6 +20,7 @@
               <tuple>
                 <string>action_type/workflow</string>
                 <string>after_script/portal_workflow/ticket_acceptance_simulation_workflow/transition_accept</string>
+                <string>before_script/portal_workflow/ticket_acceptance_simulation_workflow/script_checkConsistency</string>
               </tuple>
             </value>
         </item>
