@@ -58,6 +58,11 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
+  <td>assertText</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
   <td>pause</td>
   <td>1000</td>
   <td></td>
