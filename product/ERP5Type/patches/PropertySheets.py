@@ -13,7 +13,8 @@
 #
 ##############################################################################
 
-from OFS.PropertySheets import DAVProperties, isDavCollection
+from OFS.PropertySheets import DAVProperties
+from webdav.common import isDavCollection
 from Acquisition import aq_base
 
 # This is required to make an ERP5 Document (folderish) look like a file (non folderish)
