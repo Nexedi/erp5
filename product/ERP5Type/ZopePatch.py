@@ -55,7 +55,7 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-#from Products.ERP5Type.patches import PropertySheets
+from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import OFSFile
@@ -96,7 +96,7 @@ from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-#from Products.ERP5Type.patches import Publish
+from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 from Products.ERP5Type.patches import urllib_opener
 
