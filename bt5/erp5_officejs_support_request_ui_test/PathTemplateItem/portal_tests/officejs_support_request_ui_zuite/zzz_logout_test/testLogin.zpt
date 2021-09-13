@@ -14,11 +14,16 @@
   <td>${base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<!--
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Logout']</td>
@@ -34,6 +39,10 @@
   <td>//a[@data-i18n='Logout']</td>
   <td></td>
 </tr>
+-->
+<tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>pause</td>
