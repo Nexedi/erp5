@@ -1,8 +1,8 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
 /*global window, document, rJS, RSVP, Node, asBoolean , ensureArray,
-         mergeGlobalActionWithRawActionList*/
+         mergeGlobalActionWithRawActionList, domsugar*/
 (function (window, document, rJS, RSVP, Node, asBoolean, ensureArray,
-           mergeGlobalActionWithRawActionList) {
+           mergeGlobalActionWithRawActionList, domsugar) {
   "use strict";
 
   function appendDt(fragment, dt_title, dt_icon,
@@ -13,26 +13,24 @@
 //   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
 // </dd>
 // {{/each}}
-    var dt_element = document.createElement('dt'),
-      dd_element,
-      a_element,
+    //////////////////////
+    var element_list = [
+      domsugar('dt', {
+        text: dt_title,
+        'class': 'ui-btn-icon-left ui-icon-' + dt_icon
+      })
+    ],
       i;
-    dt_element.textContent = dt_title;
-    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
-    fragment.appendChild(dt_element);
     for (i = 0; i < action_list.length; i += 1) {
-      dd_element = document.createElement('dd');
-      dd_element.setAttribute('class', 'document-listview');
-      a_element = document.createElement('a');
-      if (action_list[i].class_name) {
-        // Avoid add class='undefined' in HTML
-        a_element.setAttribute('class', action_list[i].class_name);
-      }
-      a_element.href = href_list[index + i];
-      a_element.textContent = action_list[i].title;
-      dd_element.appendChild(a_element);
-      fragment.appendChild(dd_element);
+      element_list.push(domsugar('dd', {'class': 'document-listview'}, [
+        domsugar('a', {
+          href: href_list[index + i],
+          text: action_list[i].title,
+          'class': action_list[i].class_name || null
+        })
+      ]));
     }
+    fragment.appendChild(domsugar(null, element_list));
   }
 
   rJS(window)
@@ -145,7 +143,6 @@
         clone_list,
         jump_list,
         dl_fragment,
-        dl_element,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -202,9 +199,7 @@
           })
           .push(function (result_list) {
             var editable_value = [],
-              ul_fragment = document.createDocumentFragment(),
-              a_element,
-              li_element,
+              element_list = [],
               icon_and_key_list = [
                 'home', null,
                 'puzzle-piece', 'm',
@@ -213,28 +208,22 @@
                 'search', 's',
                 'sliders', null,
                 'power-off', 'o'
-              ],
-              ul_element = gadget.element.querySelector("ul");
+              ];
 
             for (i = 0; i < result_list[0].length; i += 1) {
               // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
-              a_element = document.createElement('a');
-              li_element = document.createElement('li');
-              a_element.href = result_list[0][i];
-              a_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i]);
-              if (icon_and_key_list[2 * i + 1] !== null) {
-                a_element.setAttribute('accesskey', icon_and_key_list[2 * i + 1]);
-              }
-              a_element.textContent = result_list[1][i + 1];
-              li_element.appendChild(a_element);
-              ul_fragment.appendChild(li_element);
+              element_list.push(domsugar('li', [
+                domsugar('a', {
+                  href: result_list[0][i],
+                  'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
+                  accesskey: icon_and_key_list[2 * i + 1],
+                  text: result_list[1][i + 1]
+                })
+              ]));
             }
 
-            while (ul_element.firstChild) {
-              ul_element.removeChild(ul_element.firstChild);
-            }
-            ul_element.appendChild(ul_fragment);
-
+            domsugar(gadget.element.querySelector("ul"),
+                     [domsugar(null, element_list)]);
             // Update the checkbox field value
             if (gadget.state.editable) {
               editable_value = ['editable'];
@@ -327,11 +316,7 @@
       queue
         .push(function () {
           if (dl_fragment) {
-            dl_element = gadget.element.querySelector("dl");
-            while (dl_element.firstChild) {
-              dl_element.removeChild(dl_element.firstChild);
-            }
-            dl_element.appendChild(dl_fragment);
+            domsugar(gadget.element.querySelector("dl"), [dl_fragment]);
           }
         });
       return queue;
@@ -426,4 +411,4 @@
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
 }(window, document, rJS, RSVP, Node, asBoolean, ensureArray,
-  mergeGlobalActionWithRawActionList));
+  mergeGlobalActionWithRawActionList, domsugar));
