@@ -35,6 +35,10 @@ function makeUiSchema(schema, uiSchema, visited) {
             delete value.default;
           }
         }
+        if (value.const !== undefined) {
+          value.default = value.const;
+          uiSchema[key]["ui:readonly"] = true;
+        }
         // This is something used in SlapOS schemas
         if (value.textarea) {
           uiSchema[key]["ui:widget"] = "textarea"
@@ -73,7 +77,6 @@ function makeUiSchema(schema, uiSchema, visited) {
           .then(function (schema) {
             let uiSchema = {};
             makeUiSchema(schema, uiSchema, new Set())
-            console.log('after simplification', schema, uiSchema);
 
             const log = (type) => console.log.bind(console, type);
 
@@ -94,12 +97,12 @@ function makeUiSchema(schema, uiSchema, visited) {
                   }),
                 //     onSubmit: log('submitted'),
                 onError: log('errors'),
+                liveValidate: true,
               }),
               gadget.element
             );
           });
       }
-      console.log(this.element, modification_dict);
     })
 
     .declareMethod(
@@ -113,7 +116,9 @@ function makeUiSchema(schema, uiSchema, visited) {
     )
 
     .declareMethod('checkValidity', function () {
-      // TODO
+      if (this.state.errors !== undefined) {
+        return this.state.errors.length === 0;
+      }
       return true;
     });
 })(window, rJS, RSVP, document);
