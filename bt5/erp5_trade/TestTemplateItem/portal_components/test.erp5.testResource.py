@@ -1266,10 +1266,10 @@ class TestResource(ERP5TypeTestCase):
       portal_type=self.sale_supply_cell_portal_type,
       id='path_0',
       slice_base_price=10.,
-      slice_quantity_range=(1, 11),
+      slice_quantity_range=(0, 11),
     )
     cell0.setCriterionPropertyList(('quantity', ))
-    cell0.setCriterion('quantity', min=1, max=None)
+    cell0.setCriterion('quantity', min=0, max=None)
     cell0.setMappedValuePropertyList(
       ["slice_base_price", "slice_quantity_range", "base_price", "base_unit_price"]
     )
@@ -1324,7 +1324,11 @@ class TestResource(ERP5TypeTestCase):
         resource_value=product,
         quantity=quantity,
       )
-      self.assertEqual(price, sale_order_line.getPrice())
+      self.assertEqual(
+        price, sale_order_line.getPrice(),
+        "quantity: %s | price: %s, sale_order_line.getPrice(): %s," % (
+          quantity, price, sale_order_line.getPrice()
+        ))
       self.assertEqual(
         total_price,
         round(sale_order_line.getTotalPrice(), currency.getQuantityPrecision())
@@ -1332,9 +1336,14 @@ class TestResource(ERP5TypeTestCase):
 
     for case in [
        {'quantity': 9, 'price': 90./9, 'total_price': 90.},
+       {'quantity': 10, 'price': 100./10, 'total_price': 100.},
        {'quantity': 11, 'price': 109./11, 'total_price': 109.},
+       {'quantity': 12, 'price': 118./12, 'total_price': 118.},
        {'quantity': 15, 'price': 145./15, 'total_price': 145.},
        {'quantity': 19, 'price': 181./19, 'total_price': 181.},
+       {'quantity': 20, 'price': 190./20, 'total_price': 190.},
+       {'quantity': 21, 'price': 198./21, 'total_price': 198.},
+       {'quantity': 22, 'price': 206./22, 'total_price': 206.},
        {'quantity': 25, 'price': 230./25, 'total_price': 230.},
     ]:
       _test(**case)

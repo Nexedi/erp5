@@ -1,5 +1,13 @@
 <workflow_chain>
  <chain>
+  <type>Compute Node</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Compute Partition</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Computer</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

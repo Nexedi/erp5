@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.71 (2021-09-08)
+-------------------
+
+  * testnode:
+    - various changes relate to SlapOS' integration of Scalability tests
+
+
 0.4.70 (2021-06-14)
 -------------------
 

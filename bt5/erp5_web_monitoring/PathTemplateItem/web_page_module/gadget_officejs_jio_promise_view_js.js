@@ -180,7 +180,7 @@
             public_url: software_instance._links.public_url.href,
             instance_reference: software_instance.reference,
             instance_title: software_instance.title,
-            hosting_title: opml_doc.title,
+            instance_tree_title: opml_doc.title,
             hosting_url: hosting_url,
             partition_ipv6: software_instance.ipv6,
             partition_ipv4: software_instance.ipv4,
@@ -439,17 +439,17 @@
                   "hidden": 0,
                   "type": "EditorField"
                 },
-                "your_hosting_title": {
+                "your_instance_tree_title": {
                   "description": "",
-                  "title": "Hosting Subscription",
+                  "title": "Instance Tree",
                   "default": link_template({
                     url: gadget.state.hosting_url,
-                    title: gadget.state.hosting_title
+                    title: gadget.state.instance_tree_title
                   }),
                   "css_class": "",
                   "required": 0,
                   "editable": 0,
-                  "key": "hosting_title",
+                  "key": "instance_tree_title",
                   "hidden": 0,
                   "type": "EditorField"
                 },
@@ -545,7 +545,7 @@
                 [
                   "right",
                   [
-                    ["your_hosting_title"], ["your_instance_title"],
+                    ["your_instance_tree_title"], ["your_instance_title"],
                     ["your_computer_reference"], ["your_computer_partition"],
                     ["your_partition_ipv6"], ["your_software_release_url"]
                   ]

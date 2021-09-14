@@ -148,7 +148,7 @@
                   "type": "PasswordField"
                 },
                 "my_requested_state": {
-                  "description": "Hosting subscription state",
+                  "description": "Instance tree state",
                   "title": "Requested State",
                   "default": doc.state || (doc.active ? "Started" : "Stopped"),
                   "css_class": "",
@@ -221,7 +221,7 @@
                   page: "ojsm_jump",
                   jio_key: hosting_key,
                   title: gadget.state.opml_title,
-                  view_title: "Related Hosting Subscription"
+                  view_title: "Related Instance Tree"
                 }}),
                 gadget.getUrlFor({command: 'change', options: {
                   page: 'ojsm_opml_delete',

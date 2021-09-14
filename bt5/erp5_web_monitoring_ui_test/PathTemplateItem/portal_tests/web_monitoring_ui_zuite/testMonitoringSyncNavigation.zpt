@@ -185,7 +185,7 @@
 <tr>
   <td>storeText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>hosting_title</td>
+  <td>instance_tree_title</td>
 </tr>
 <tr>
   <td>click</td>
@@ -209,7 +209,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Hosting Subscriptions']</td>
+  <td>//a[@data-i18n='Instance Trees']</td>
   <td></td>
 </tr>
 <tr>
@@ -219,7 +219,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -239,7 +239,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -265,7 +265,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -296,7 +296,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -327,7 +327,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -378,7 +378,7 @@
 <tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -387,7 +387,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='&#36;hosting_title}']</td>
+  <td>//a[@data-i18n='&#36;{instance_tree_title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -453,7 +453,7 @@
 <tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -467,7 +467,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='&#36;hosting_title}']</td>
+  <td>//a[@data-i18n='&#36;{instance_tree_title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -492,12 +492,12 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Hosting Subscriptions']</td>
+  <td>//a[@data-i18n='Instance Trees']</td>
   <td></td>
 </tr>
 <tr>
@@ -507,7 +507,7 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>&#36;{hosting_title}</td>
+  <td>&#36;{instance_tree_title}</td>
   <td></td>
 </tr>
 </tbody></table>
