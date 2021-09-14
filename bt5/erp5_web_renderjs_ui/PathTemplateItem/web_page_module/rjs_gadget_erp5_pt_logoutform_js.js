@@ -56,7 +56,6 @@
           });
         })
         .push(function (came_from) {
-          throw new Error('' + logout_url_template + ' / ' + came_from + ' / ' + UriTemplate.parse(logout_url_template).expand({came_from: came_from}));
           return gadget.redirect({
             command: 'raw',
             options: {
