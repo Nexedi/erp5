@@ -32,7 +32,11 @@ getattr(
   response=REQUEST.RESPONSE,
 )
 
-raise NotImplementedError(REQUEST.RESPONSE.listHeaders())
+v = []
+for k in ["Content-Type", "Accept", "Accept-Language", "Range",
+          "Authorization", "Cookie", "Cookie2", "WWW-Authenticate", ""]:
+  v.append(REQUEST.getHeader(k, None))
+raise NotImplementedError(v)
 
 REQUEST.RESPONSE.setHeader('Location', came_from or context.getPermanentURL(context))
 REQUEST.RESPONSE.setStatus(303)
