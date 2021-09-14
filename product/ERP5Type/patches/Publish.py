@@ -35,7 +35,7 @@ from ZPublisher.pubevents import PubStart, PubBeforeCommit, PubAfterTraversal, P
 from zExceptions import Redirect
 from zope.security.management import newInteraction, endInteraction
 from zope.event import notify
-from zope.publisher.publish import mapply
+from ZPublisher.mapply import mapply
 from zope.publisher.skinnable import setDefaultSkin
 import sys
 
