@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <!--
-   data-i18n=Confirm
+   data-i18n=Preferences
+   data-i18n=Language
+   data-i18n=Profile
+   data-i18n=Logout
+   data-i18n=My Account
  -->
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
@@ -16,18 +20,10 @@
     <script src="domsugar.js" type="text/javascript"></script>
 
     <!-- custom script -->
-    <script src="gadget_erp5_page_logout.js" type="text/javascript"></script>
+    <script src="gadget_erp5_page_my_account.js" type="text/javascript"></script>
 
   </head>
   <body>
-    <form>
-      <button type="submit" class="ui-icon-edit ui-btn-icon-right ui-screen-hidden"></button>
-      <div data-gadget-url="gadget_erp5_form.html"
-          data-gadget-scope="erp5_form"
-          data-gadget-sandbox="public">
-      </div>
-      <div class="dialog_button_container">
-      </div>
-    </form>
+    <section class="document_list"></section>
   </body>
 </html>

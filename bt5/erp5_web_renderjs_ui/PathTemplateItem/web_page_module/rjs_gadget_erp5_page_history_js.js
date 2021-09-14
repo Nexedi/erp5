@@ -48,9 +48,7 @@
         .push(function (result) {
           var url_for_parameter_list = [
             // Back url
-            {command: 'display'},
-            // Change language
-            {command: 'display', options: {page: 'language'}}
+            {command: 'display'}
           ],
             i;
           row_list = result.data.rows;
@@ -67,11 +65,11 @@
             dom_list = [],
             document_dict = {};
 
-          for (i = 2; i < url_list.length; i += 1) {
-            document_dict[row_list[i - 2].id] = {
+          for (i = 1; i < url_list.length; i += 1) {
+            document_dict[row_list[i - 1].id] = {
               href: url_list[i],
-              text: (row_list[i - 2].value.title || row_list[i - 2].id) +
-                     " (" + row_list[i - 2].value.translated_portal_type + ")"
+              text: (row_list[i - 1].value.title || row_list[i - 1].id) +
+                     " (" + row_list[i - 1].value.translated_portal_type + ")"
             };
           }
           // Sort by access time
@@ -90,8 +88,7 @@
           return gadget.updateHeader({
             page_title: 'History',
             page_icon: 'history',
-            front_url: url_list[0],
-            language_url: url_list[1]
+            front_url: url_list[0]
           });
         });
     })
