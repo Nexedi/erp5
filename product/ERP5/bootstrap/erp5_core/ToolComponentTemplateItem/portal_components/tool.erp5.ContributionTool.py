@@ -196,7 +196,6 @@ class ContributionTool(BaseTool):
       if not (container is None or container.isModuleType() or
               container.getTypeInfo().allowType(portal_type)):
         portal_type = 'Embedded File'
-      input_parameter_dict.setdefault('portal_type', portal_type)
 
     if container is None:
       # If the portal_type was provided, we can go faster
