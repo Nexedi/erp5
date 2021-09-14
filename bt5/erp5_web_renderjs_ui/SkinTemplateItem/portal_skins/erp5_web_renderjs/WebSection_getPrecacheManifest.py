@@ -91,6 +91,8 @@ url_list = [
   'gadget_erp5_page_history.js',
   'gadget_erp5_page_jump.html',
   'gadget_erp5_page_jump.js',
+  'gadget_erp5_page_my_account.html',
+  'gadget_erp5_page_my_account.js',
   'gadget_erp5_page_language.html',
   'gadget_erp5_page_language.js',
   'gadget_erp5_page_logout.html',

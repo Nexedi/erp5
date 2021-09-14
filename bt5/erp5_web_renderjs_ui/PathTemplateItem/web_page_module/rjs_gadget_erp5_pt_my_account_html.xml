@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_front.js</string> </value>
+            <value> <string>gadget_erp5_page_my_account.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_frontpage_js</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_my_account_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Frontpage JS</string> </value>
+            <value> <string>Gadget ERP5 My Account</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +167,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>romain</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -185,8 +189,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1406898406.0</float>
-                              <string>GMT</string>
+                              <float>1631631331.87</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
@@ -234,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>994.13854.35574.25361</string> </value>
+                      <value> <string>994.61047.58814.54169</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1631892657.11</float>
+                              <float>1632221574.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -283,7 +287,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>romain</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -313,8 +317,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1406105846.14</float>
-                              <string>GMT</string>
+                              <float>1631631173.28</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
