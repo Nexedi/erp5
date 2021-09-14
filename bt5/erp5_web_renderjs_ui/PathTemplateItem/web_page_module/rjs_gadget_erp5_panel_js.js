@@ -182,8 +182,9 @@
                 {command: 'display', options: {page: "worklist"}},
                 {command: 'display', options: {page: "history"}},
                 {command: 'display_stored_state', options: {page: "search"}},
-                {command: 'display', options: {page: "preference"}},
-                {command: 'display', options: {page: "logout"}}
+                {command: 'display', options: {page: "my_account"}},
+                // {command: 'display', options: {page: "preference"}},
+                // {command: 'display', options: {page: "logout"}}
               ]),
               translation_list: gadget.getTranslationList([
                 'Editable',
@@ -192,8 +193,9 @@
                 'Worklists',
                 'History',
                 'Search',
-                'Preferences',
-                'Logout'
+                'My Account'
+                // 'Preferences',
+                // 'Logout'
               ]),
               checkbox_gadget: gadget.getDeclaredGadget("erp5_checkbox")
             });
@@ -207,8 +209,9 @@
                 'tasks', 'w',
                 'history', 'h',
                 'search', 's',
-                'sliders', null,
-                'power-off', 'o'
+                'sliders', 'o',
+                // 'sliders', null,
+                // 'power-off', 'o'
               ];
 
             for (i = 0; i < result_dict.url_list.length; i += 1) {
