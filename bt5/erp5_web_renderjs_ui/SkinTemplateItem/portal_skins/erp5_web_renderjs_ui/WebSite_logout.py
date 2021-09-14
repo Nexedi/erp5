@@ -31,6 +31,9 @@ getattr(
   request=REQUEST,
   response=REQUEST.RESPONSE,
 )
+
+raise NotImplementedError(REQUEST.RESPONSE.listHeaders())
+
 REQUEST.RESPONSE.setHeader('Location', came_from or context.getPermanentURL(context))
 REQUEST.RESPONSE.setStatus(303)
 # REQUEST.RESPONSE.redirect(came_from or context.getPermanentURL(context));
