@@ -42,6 +42,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
@@ -174,8 +175,8 @@
         queue
           // Update the global links
           .push(function () {
-            return RSVP.all([
-              gadget.getUrlForList([
+            return RSVP.hash({
+              url_list: gadget.getUrlForList([
                 {command: 'display'},
                 {command: 'display', options: {page: "front"}},
                 {command: 'display', options: {page: "worklist"}},
@@ -184,7 +185,7 @@
                 {command: 'display', options: {page: "preference"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
-              gadget.getTranslationList([
+              translation_list: gadget.getTranslationList([
                 'Editable',
                 'Home',
                 'Modules',
@@ -194,10 +195,10 @@
                 'Preferences',
                 'Logout'
               ]),
-              gadget.getDeclaredGadget("erp5_checkbox")
-            ]);
+              checkbox_gadget: gadget.getDeclaredGadget("erp5_checkbox")
+            });
           })
-          .push(function (result_list) {
+          .push(function (result_dict) {
             var editable_value = [],
               element_list = [],
               icon_and_key_list = [
@@ -210,14 +211,14 @@
                 'power-off', 'o'
               ];
 
-            for (i = 0; i < result_list[0].length; i += 1) {
+            for (i = 0; i < result_dict.url_list.length; i += 1) {
               // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
               element_list.push(domsugar('li', [
                 domsugar('a', {
-                  href: result_list[0][i],
+                  href: result_dict.url_list[i],
                   'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
                   accesskey: icon_and_key_list[2 * i + 1],
-                  text: result_list[1][i + 1]
+                  text: result_dict.translation_list[i + 1]
                 })
               ]));
             }
@@ -228,12 +229,12 @@
             if (gadget.state.editable) {
               editable_value = ['editable'];
             }
-            return result_list[2].render({field_json: {
+            return result_dict.checkbox_gadget.render({field_json: {
               editable: true,
               name: 'editable',
               key: 'editable',
               hidden: false,
-              items: [[result_list[1][0], 'editable']],
+              items: [[result_dict.translation_list[0], 'editable']],
               'default': editable_value
             }});
           });
@@ -269,25 +270,26 @@
               ).concat(clone_list).concat(jump_list).map(function (options) {
                 return options.url_kw;
               });
-              return RSVP.all([
-                gadget.getUrlForList(parameter_list),
-                gadget.getTranslationList(['Views', 'Workflows', 'Actions',
-                                           'Jumps'])
-              ]);
+              return RSVP.hash({
+                url_list: gadget.getUrlForList(parameter_list),
+                translation_dict: gadget.getTranslationDict([
+                  'Views', 'Workflows', 'Actions', 'Jumps'
+                ])
+              });
             })
-            .push(function (result_list) {
-              appendDt(dl_fragment, result_list[1][0], 'eye',
-                       view_list, result_list[0], 0);
+            .push(function (result_dict) {
+              appendDt(dl_fragment, result_dict.translation_dict.Views, 'eye',
+                       view_list, result_dict.url_list, 0);
               if (gadget.state.display_workflow_list) {
                 // show Workflows only on document
-                appendDt(dl_fragment, result_list[1][1], 'random',
-                  workflow_list, result_list[0], view_list.length);
+                appendDt(dl_fragment, result_dict.translation_dict.Workflows, 'random',
+                  workflow_list, result_dict.url_list, view_list.length);
               }
-              appendDt(dl_fragment, result_list[1][2], 'cogs',
-                       action_list.concat(clone_list), result_list[0],
+              appendDt(dl_fragment, result_dict.translation_dict.Actions, 'cogs',
+                       action_list.concat(clone_list), result_dict.url_list,
                        view_list.length + workflow_list.length);
-              appendDt(dl_fragment, result_list[1][3], 'plane',
-                       jump_list, result_list[0],
+              appendDt(dl_fragment, result_dict.translation_dict.Jumps, 'plane',
+                       jump_list, result_dict.url_list,
                        view_list.length + workflow_list.length +
                        action_list.length + clone_list.length);
             });
