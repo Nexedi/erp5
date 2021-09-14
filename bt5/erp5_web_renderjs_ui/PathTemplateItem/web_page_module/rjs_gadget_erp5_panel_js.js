@@ -182,7 +182,8 @@
                 {command: 'display', options: {page: "worklist"}},
                 {command: 'display', options: {page: "history"}},
                 {command: 'display_stored_state', options: {page: "search"}},
-                {command: 'display', options: {page: "preference"}},
+                {command: 'display', options: {page: "my_account"}},
+                // {command: 'display', options: {page: "preference"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
               translation_list: gadget.getTranslationList([
@@ -192,7 +193,8 @@
                 'Worklists',
                 'History',
                 'Search',
-                'Preferences',
+                'My Account',
+                // 'Preferences',
                 'Logout'
               ]),
               checkbox_gadget: gadget.getDeclaredGadget("erp5_checkbox")
@@ -208,6 +210,7 @@
                 'history', 'h',
                 'search', 's',
                 'sliders', null,
+                // 'sliders', null,
                 'power-off', 'o'
               ];
 

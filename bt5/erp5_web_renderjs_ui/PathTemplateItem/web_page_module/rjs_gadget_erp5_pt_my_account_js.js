@@ -1,0 +1,114 @@
+/*global window, rJS, UriTemplate, domsugar, RSVP */
+/*jslint indent: 2, maxerr: 3, nomen: true */
+(function (window, rJS, UriTemplate, domsugar, RSVP) {
+  "use strict";
+
+  rJS(window)
+    /////////////////////////////////////////////////////////////////
+    // handle acquisition
+    /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForDict", "getUrlForDict")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+    .declareMethod("render", function () {
+      var gadget = this;
+
+      return new RSVP.Queue(RSVP.hash({
+        translation: gadget.getTranslationDict([
+          'User',
+          'Preferences',
+          'Language',
+          'Change Password',
+          'Details',
+          'Logout'
+        ]),
+        me: gadget.getSetting('me')
+          .push(function (me) {
+            if (me !== undefined) {
+              return gadget.jio_allDocs({
+                query: 'relative_url:"' + me + '"',
+                select_list: ['title']
+              });
+            }
+          })
+          .push(function (result) {
+            var user;
+            // Calculate user name
+            if (result === undefined) {
+              user = "Who are you?";
+            } else {
+              user = result.data.rows[0].value.title;
+            }
+            return user;
+          }),
+        erp5_form: gadget.getDeclaredGadget("erp5_form"),
+        url_dict: gadget.getUrlForDict({
+          // Back url
+          back: {command: 'history_previous'},
+          preference: {command: 'push_history', options: {page: "preference"}},
+          // Change language
+          change_language: {command: 'push_history', options: {page: 'language'}},
+          logout: {command: 'push_history', options: {page: 'logout'}}
+        })
+      }))
+        .push(function (result_dict) {
+          domsugar(gadget.element.querySelector('.document_list'), [
+            domsugar('ul', {class: 'document-listview'}, [
+              domsugar('li', [domsugar('a', {href: result_dict.url_dict.preference, text: result_dict.translation.Preferences})]),
+              domsugar('li', [domsugar('a', {href: result_dict.url_dict.change_language, text: result_dict.translation.Language})]),
+              domsugar('li', [domsugar('a', {text: result_dict.translation.Details})]),
+              domsugar('li', [domsugar('a', {text: result_dict.translation['Change Password']})]),
+              domsugar('li', [domsugar('a', {href: result_dict.url_dict.logout, text: result_dict.translation.Logout})])
+            ])
+          ]);
+
+          return RSVP.all([
+            gadget.updateHeader({
+              page_title: 'My Account',
+              page_icon: 'sliders',
+              front_url: result_dict.url_dict.back
+              // language_url: result_dict.url_dict.change_language
+            }),
+
+            result_dict.erp5_form.render({
+              erp5_document: {"_embedded": {"_view": {
+                'User': {
+                  "default": result_dict.me,
+                  "editable": 0,
+                  "key": "field_user",
+                  "title": result_dict.translation.User,
+                  "type": "StringField"
+                }
+              }},
+                "_links": {
+                  "type": {
+                    // form_list display portal_type in header
+                    name: ""
+                  }
+                }
+                },
+              form_definition: {
+                group_list: [[
+                  "left",
+                  [["User"]]
+                ]]
+              }
+            })
+
+          ]);
+        });
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return;
+    });
+}(window, rJS, UriTemplate, domsugar, RSVP));
