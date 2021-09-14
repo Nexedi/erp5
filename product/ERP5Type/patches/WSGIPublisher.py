@@ -286,7 +286,7 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                 reraise(*exc_info)
 
             if err_hook:
-                parents = request['PARENTS']
+                parents = request.get('PARENTS')
                 if parents:
                     parents = parents[0]
                 retry = False
