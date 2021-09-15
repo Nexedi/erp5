@@ -4,6 +4,7 @@
  </portal_type>
  <portal_type id="Expense Validation Request">
   <item>ExpenseValidationRequest</item>
+  <item>ExpenseValidationRequestConstraint</item>
  </portal_type>
  <portal_type id="Leave Request Record">
   <item>LeaveRequestRecord</item>

@@ -1,24 +1,19 @@
-/*global window, rJS, RSVP, URI, location,
+/*global window, rJS, RSVP, URI, location, getSynchronizeQuery,
          btoa */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS, RSVP, loopEventListener) {
   "use strict";
 
   function setjIOERP5Configuration(gadget) {
-    var erp5_url = gadget.props.element.querySelector("input[name='erp5_url']").value;
+    var erp5_url = gadget.props.element.querySelector("input[name='erp5_url']").value,
+      original_query = getSynchronizeQuery(null);
+
     return gadget.setSetting("me", '')
       .push(function () {
         var configuration = {
           type: "replicate",
           query: {
-            query: '(portal_type: "Expense Record" AND (simulation_state:"draft" OR simulation_state:"sent" OR simulation_state:"stopped")) ' +
-                   'OR (portal_type: "Travel Request Record" AND (simulation_state:"draft" OR simulation_state:"sent" OR simulation_state:"stopped")) ' +
-                   'OR (portal_type: "Leave Report Record" AND simulation_state:"stopped") ' +
-                   'OR (portal_type: "Leave Request Record" AND (simulation_state:"draft" OR simulation_state:"sent" OR simulation_state:"stopped")) ' +
-                   'OR (portal_type: "Localisation Record" AND (simulation_state:"draft" OR simulation_state:"stopped")) ' +
-                   'OR (portal_type: "Expense Sheet" AND (reference: "expense_sheet")) ' +
-                   'OR (portal_type: "Currency" AND validation_state:"validated") ' +
-                   'OR (portal_type: "Service" AND validation_state:"validated") ',
+            query: original_query,
             limit: [0, 1234567890]
           },
           use_remote_post: true,

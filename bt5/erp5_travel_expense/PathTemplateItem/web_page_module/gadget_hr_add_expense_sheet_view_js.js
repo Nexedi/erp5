@@ -109,7 +109,7 @@
                 doc = {
                   parent_relative_url: "expense_sheet_module",
                   portal_type: "Expense Sheet",
-                  modification_date: new Date().toISOString()
+                  modification_date: new Date().toISOString().slice(0, 10).replace(/-/g, "/")
               };
               for (i = 0; i < submit_event.target.length; i += 1) {
                  if ((form[i].type == "radio") && !form[i].checked){
