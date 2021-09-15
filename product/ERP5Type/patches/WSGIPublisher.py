@@ -308,8 +308,8 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                         exc_view_created = True
                     except BaseException as e:
                         if e is not exc:
-                            raise
-                        exc_view_created = False
+                            response.exception()
+                        exc_view_created = True
                 else:
                     # Handle exception view
                     exc_view_created = _exc_view_created_response(
