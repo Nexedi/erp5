@@ -24,8 +24,12 @@
 
       return new RSVP.Queue(RSVP.hash({
         translation: gadget.getTranslationDict([
-          'Confirm',
-          'User'
+          'Logout',
+          'User',
+          'Preferences',
+          'Language',
+          'Change Password',
+          'Details'
         ]),
         me: gadget.getSetting('me')
           .push(function (me) {
@@ -49,23 +53,32 @@
         erp5_form: gadget.getDeclaredGadget("erp5_form"),
         url_dict: gadget.getUrlForDict({
           // Back url
-          back: {command: 'display'},
+          back: {command: 'history_previous'},
+          preference: {command: 'push_history', options: {page: "preference"}},
           // Change language
-          change_language: {command: 'display', options: {page: 'language'}}
+          change_language: {command: 'push_history', options: {page: 'language'}}
         })
       }))
         .push(function (result_dict) {
+          domsugar(gadget.element.querySelector('.document_list'), [
+            domsugar('ul', {class: 'document-listview'}, [
+              domsugar('li', [domsugar('a', {href: result_dict.url_dict.preference, text: result_dict.translation.Preferences})]),
+              domsugar('li', [domsugar('a', {href: result_dict.url_dict.change_language, text: result_dict.translation.Language})]),
+              domsugar('li', [domsugar('a', {text: result_dict.translation.Details})]),
+              domsugar('li', [domsugar('a', {text: result_dict.translation['Change Password']})])
+            ])
+          ]);
           domsugar(gadget.element.querySelector('.dialog_button_container'), [
             domsugar('input', {name: 'action_update',
                                type: 'submit',
-                               value: result_dict.translation.Confirm})
+                               value: result_dict.translation.Logout})
           ]);
           return RSVP.all([
             gadget.updateHeader({
-              page_title: 'Logout',
-              page_icon: 'power-off',
-              front_url: result_dict.url_dict.back,
-              language_url: result_dict.url_dict.change_language
+              page_title: 'My Account',
+              page_icon: 'sliders',
+              front_url: result_dict.url_dict.back
+              // language_url: result_dict.url_dict.change_language
             }),
 
             result_dict.erp5_form.render({
