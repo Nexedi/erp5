@@ -66,16 +66,20 @@ function makeUiSchema(schema, uiSchema, visited) {
         value: options.value,
         key: options.key,
         schema_url: options.schema,
+        readonly: options.readonly,
       });
     })
 
     .onStateChange(function (modification_dict) {
       var gadget = this;
-      if (modification_dict.schema_url) {
+      if (modification_dict.schema_url || modification_dict.value) {
         return $RefParser
-          .dereference(modification_dict.schema_url)
+          .dereference(gadget.state.schema_url)
           .then(function (schema) {
             let uiSchema = {};
+            if (gadget.state.readonly) {
+              uiSchema["ui:readonly"] = true;
+            }
             makeUiSchema(schema, uiSchema, new Set())
 
             const log = (type) => console.log.bind(console, type);
