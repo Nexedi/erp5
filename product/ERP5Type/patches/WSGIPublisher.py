@@ -19,6 +19,7 @@ from contextlib import closing
 from contextlib import contextmanager
 from io import BytesIO
 from io import IOBase
+import itertools
 import logging
 
 from six import binary_type
@@ -97,10 +98,24 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
 
     WSGIResponse.setBody = setBody
 
+    def write(self, data):
+        if not self._streaming:
+
+            notify(pubevents.PubBeforeStreaming(self))
+
+            self._streaming = 1
+            self._locked_body = 1
+            self.finalize()
+            self.stdout.flush()
+
+        self.stdout.write(data)
+
+    WSGIResponse.write = write
+
     # According to PEP 333, WSGI applications and middleware are forbidden from
     # using HTTP/1.1 "hop-by-hop" features or headers. This patch prevents Zope
     # from sending 'Connection' and 'Transfer-Encoding' headers.
-    def finalize(self):
+    def _finalize(self):
 
         headers = self.headers
         body = self.body
@@ -136,6 +151,13 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
         # </patch>
 
         return '%s %s' % (self.status, self.errmsg), self.listHeaders()
+
+    WSGIResponse._finalized = None
+
+    def finalize(self):
+        if not self._finalized:
+            self._finalized = _finalize(self)
+        return self._finalized
 
     WSGIResponse.finalize = finalize
 
@@ -456,13 +478,13 @@ def publish_module(environ, start_response,
         status, headers = response.finalize()
         start_response(status, headers)
 
-        if isinstance(response.body, _FILE_TYPES) or \
-           IUnboundStreamIterator.providedBy(response.body):
-            result = response.body
+        result = response.body
+        if isinstance(result, _FILE_TYPES):
+            result.write(response.stdout.getvalue())
+        elif IUnboundStreamIterator.providedBy(result):
+            result = itertools.chain(result, (response.stdout.getvalue(), ))
         else:
-            # If somebody used response.write, that data will be in the
-            # response.stdout BytesIO, so we put that before the body.
-            result = (response.stdout.getvalue(), response.body)
+            result = (result, response.stdout.getvalue())
 
         for func in response.after_list:
             func()
