@@ -309,7 +309,7 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                 if request.environ.get('x-wsgiorg.throw_errors', False):
                     reraise(*exc_info)
 
-                if err_hook:
+                if err_hook is not None:
                     parents = request.get('PARENTS')
                     if parents:
                         parents = parents[0]
