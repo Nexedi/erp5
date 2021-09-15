@@ -280,6 +280,7 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
         exc_info = (exc_type, exc, sys.exc_info()[2])
 
         try:
+            retry = False
             try:
                 # Raise exception from app if handle-errors is False
                 # (set by zope.testbrowser in some cases)
@@ -290,7 +291,6 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                     parents = request.get('PARENTS')
                     if parents:
                         parents = parents[0]
-                    retry = False
                     try:
                         try:
                             r = err_hook(parents, request, *exc_info)
@@ -308,8 +308,8 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                         exc_view_created = True
                     except BaseException as e:
                         if e is not exc:
-                            raise
-                        exc_view_created = False
+                            response.exception()
+                        exc_view_created = True
                 else:
                     # Handle exception view
                     exc_view_created = _exc_view_created_response(
