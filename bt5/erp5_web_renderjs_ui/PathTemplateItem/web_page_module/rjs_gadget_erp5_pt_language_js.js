@@ -25,7 +25,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            gadget.getUrlForList([{command: 'display'}]),
+            gadget.getUrlForList([{command: 'history_previous'}]),
             gadget.getSettingList(['language_map', 'selected_language',
                                    'default_selected_language']),
             gadget.getDeclaredGadget("erp5_form"),
