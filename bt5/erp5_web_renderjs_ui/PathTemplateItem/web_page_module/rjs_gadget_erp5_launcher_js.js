@@ -398,7 +398,14 @@
           });
         })
         .push(function () {
-          return setting_gadget.get(gadget.state.setting_id);
+
+          return setting_gadget.get(gadget.state.setting_id)
+            .push(undefined, function (error) {
+              if (error.status_code === 404) {
+                return {};
+              }
+              throw error;
+            });
         })
         .push(function (result) {
           setting = result;
