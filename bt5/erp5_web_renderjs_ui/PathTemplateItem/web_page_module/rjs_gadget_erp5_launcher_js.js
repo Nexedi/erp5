@@ -398,6 +398,15 @@
               if (error.status_code === 404) {
                 return {};
               }
+              if (error.status_code === 500) {
+                // If IDB is not working, use memory instead
+                return setting_gadget.createJio({
+                  type: "memory"
+                })
+                  .push(function () {
+                    return {};
+                  });
+              }
               throw error;
             });
         })
