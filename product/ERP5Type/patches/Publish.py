@@ -11,8 +11,8 @@
 #
 ##############################################################################
 from Products.ERP5Type.Timeout import getPublisherDeadlineValue
-from ZPublisher import Publish
-from ZPublisher.Publish import (
+from ZServer.ZPublisher import Publish
+from ZServer.ZPublisher.Publish import (
     # Produced using:
     #   dis.dis(
     #     compile(open(<this_file>, 'r').read(), 'foo', 'exec').co_consts[
