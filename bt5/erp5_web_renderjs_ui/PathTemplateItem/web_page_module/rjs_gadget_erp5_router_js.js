@@ -1069,8 +1069,14 @@
               return jio_gadget.createJio({
                 type: "sha",
                 sub_storage: {
-                  type: "indexeddb",
-                  database: "selection"
+                  type: "fallback",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "selection"
+                  },
+                  fallback_storage: {
+                    type: "memory"
+                  }
                 }
               });
             });
@@ -1082,8 +1088,14 @@
               return jio_gadget.createJio({
                 type: "query",
                 sub_storage: {
-                  type: "indexeddb",
-                  database: "navigation_history"
+                  type: "fallback",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "navigation_history"
+                  },
+                  fallback_storage: {
+                    type: "memory"
+                  }
                 }
               });
             });
@@ -1093,8 +1105,14 @@
             .push(function (jio_gadget) {
               gadget.props.jio_state_gadget = jio_gadget;
               return jio_gadget.createJio({
-                type: "indexeddb",
-                database: "document_state"
+                type: "fallback",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "document_state"
+                },
+                fallback_storage: {
+                  type: "memory"
+                }
               });
             });
         }()),
