@@ -387,28 +387,18 @@
         .push(function (result) {
           setting_gadget = result;
           return setting_gadget.createJio({
-            type: "indexeddb",
-            database: "setting"
+            type: "fallback",
+            sub_storage: {
+              type: "indexeddb",
+              database: "setting"
+            },
+            fallback_storage: {
+              type: "memory"
+            }
           });
         })
         .push(function () {
-
-          return setting_gadget.get(gadget.state.setting_id)
-            .push(undefined, function (error) {
-              if (error.status_code === 404) {
-                return {};
-              }
-              if (error.status_code === 500) {
-                // If IDB is not working, use memory instead
-                return setting_gadget.createJio({
-                  type: "memory"
-                })
-                  .push(function () {
-                    return {};
-                  });
-              }
-              throw error;
-            });
+          return setting_gadget.get(gadget.state.setting_id);
         })
         .push(function (result) {
           setting = result;
