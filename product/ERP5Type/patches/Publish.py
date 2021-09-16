@@ -29,7 +29,7 @@ from ZPublisher.Publish import (
     missing_name,
     publish,
 )
-
+from ZPublisher.utils import recordMetaData
 from zope.publisher.interfaces import ISkinnable
 from ZPublisher.pubevents import PubStart, PubBeforeCommit, PubAfterTraversal, PubBeforeAbort, PubFailure, PubSuccess
 from zExceptions import Redirect
@@ -103,7 +103,7 @@ def publish(request, module_name, after_list, debug=0,
             notify(PubAfterTraversal(request))
 
             if transactions_manager:
-                transactions_manager.recordMetaData(object, request)
+                recordMetaData(object, request)
 
             result=mapply(object, request.args, request,
                           call_object,1,
