@@ -8127,8 +8127,11 @@ return new Parser;
   "use strict";
 
   /* Safari does not define DOMError */
+  /* + compat issue with private Firefox */
   if (window.DOMError === undefined) {
-    window.DOMError = {};
+    window.DOMError = function FakeDOMError(message) {
+      this.message = message;
+    };
   }
 
   var util = {},
@@ -10924,6 +10927,100 @@ return new Parser;
   jIO.addStorage('replicate', ReplicateStorage);
 
 }(jIO, RSVP, Rusha, jIO.util.stringify));
+/*
+ * JIO extension for resource replication.
+ * Copyright (C) 2021  Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+
+/*jslint nomen: true*/
+/*global jIO*/
+
+(function (jIO) {
+  "use strict";
+
+  function FallbackStorage(spec) {
+    this._sub_storage = this._current_storage = jIO.createJIO(spec.sub_storage);
+    if (spec.hasOwnProperty('fallback_storage')) {
+      this._fallback_storage = jIO.createJIO(spec.fallback_storage);
+      this._checked = false;
+    } else {
+      this._checked = true;
+    }
+  }
+
+  var method_name_list = [
+    'get',
+    'put',
+    'post',
+    'remove',
+    'buildQuery',
+    'getAttachment',
+    'putAttachment',
+    'allAttachments',
+    'repair'
+  ],
+    i;
+
+  function methodFallback(method_name) {
+    return function () {
+      var storage = this,
+        queue =  storage._current_storage[method_name].apply(
+          storage._current_storage,
+          arguments
+        ),
+        argument_list = arguments;
+      if (!storage._checked) {
+        queue
+          .push(function (result) {
+            storage._checked = true;
+            return result;
+          }, function (error) {
+            storage._checked = true;
+            if ((error instanceof jIO.util.jIOError) &&
+                (error.status_code === 500)) {
+              // If storage is not working, use fallback instead
+              storage._current_storage = storage._fallback_storage;
+              return storage._current_storage[method_name].apply(
+                storage._current_storage,
+                argument_list
+              );
+            }
+            throw error;
+          });
+      }
+      return queue;
+    };
+  }
+
+  for (i = 0; i < method_name_list.length; i += 1) {
+    FallbackStorage.prototype[method_name_list[i]] =
+      methodFallback(method_name_list[i]);
+  }
+
+  FallbackStorage.prototype.hasCapacity = function hasCapacity(name) {
+    return (this._sub_storage.hasCapacity(name) &&
+      this._fallback_storage.hasCapacity(name));
+  };
+
+  jIO.addStorage('fallback', FallbackStorage);
+
+}(jIO));
 /*
  * Copyright 2015, Nexedi SA
  *
@@ -14556,11 +14653,8 @@ return new Parser;
                 if (atob(exec[1]) === id) {
                   attachments[atob(exec[2])] = {};
                 }
-              } catch (error) {
+              } catch (ignore) {
                 // Check if unable to decode base64 data
-                if (!error instanceof ReferenceError) {
-                  throw error;
-                }
               }
             }
           }
@@ -14626,11 +14720,8 @@ return new Parser;
                   if (DOCUMENT_REGEXP.test(key)) {
                     try {
                       id = atob(DOCUMENT_REGEXP.exec(key)[1]);
-                    } catch (error) {
+                    } catch (ignore) {
                       // Check if unable to decode base64 data
-                      if (!error instanceof ReferenceError) {
-                        throw error;
-                      }
                     }
                     if (id !== undefined) {
                       id_dict[id] = null;
@@ -14640,11 +14731,8 @@ return new Parser;
                     try {
                       id = atob(exec[1]);
                       attachment = atob(exec[2]);
-                    } catch (error) {
+                    } catch (ignore) {
                       // Check if unable to decode base64 data
-                      if (!error instanceof ReferenceError) {
-                        throw error;
-                      }
                     }
                     if (attachment !== undefined) {
                       if (!id_dict.hasOwnProperty(id)) {
@@ -14695,11 +14783,8 @@ return new Parser;
                   id: atob(DOCUMENT_REGEXP.exec(key)[1]),
                   value: {}
                 });
-              } catch (error) {
+              } catch (ignore) {
                 // Check if unable to decode base64 data
-                if (!error instanceof ReferenceError) {
-                  throw error;
-                }
               }
             }
           }
@@ -14901,14 +14986,15 @@ return new Parser;
 
 /*jslint nomen: true */
 /*global indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest,
-        DOMError, Event*/
+        DOMError, DOMException, Set*/
 
 (function (indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest,
-           DOMError) {
+           DOMError, DOMException, Set) {
   "use strict";
 
   // Read only as changing it can lead to data corruption
-  var UNITE = 2000000;
+  var UNITE = 2000000,
+    INDEX_PREFIX = 'doc.';
 
   function IndexedDBStorage(description) {
     if (typeof description.database !== "string" ||
@@ -14917,6 +15003,8 @@ return new Parser;
                           "must be a non-empty string");
     }
     this._database_name = "jio:" + description.database;
+    this._version = description.version;
+    this._index_key_list = description.index_key_list || [];
   }
 
   IndexedDBStorage.prototype.hasCapacity = function (name) {
@@ -14927,35 +15015,65 @@ return new Parser;
     return key_list.join("_");
   }
 
-  function handleUpgradeNeeded(evt) {
+  function handleUpgradeNeeded(evt, index_key_list) {
     var db = evt.target.result,
-      store;
+      store,
+      current_store_list = Array.from(db.objectStoreNames),
+      current_index_list,
+      i,
+      index_key;
 
-    store = db.createObjectStore("metadata", {
-      keyPath: "_id",
-      autoIncrement: false
-    });
-    // It is not possible to use openKeyCursor on keypath directly
-    // https://www.w3.org/Bugs/Public/show_bug.cgi?id=19955
-    store.createIndex("_id", "_id", {unique: true});
+    if (current_store_list.indexOf("metadata") === -1) {
+      store = db.createObjectStore("metadata", {
+        keyPath: "_id",
+        autoIncrement: false
+      });
+      // It is not possible to use openKeyCursor on keypath directly
+      // https://www.w3.org/Bugs/Public/show_bug.cgi?id=19955
+      store.createIndex("_id", "_id", {unique: true});
+    } else {
+      store = evt.target.transaction.objectStore("metadata");
+    }
 
-    store = db.createObjectStore("attachment", {
-      keyPath: "_key_path",
-      autoIncrement: false
-    });
-    store.createIndex("_id", "_id", {unique: false});
+    current_index_list = new Set(store.indexNames);
+    current_index_list.delete("_id");
+    for (i = 0; i < index_key_list.length; i += 1) {
+      // Prefix the index name to prevent conflict with _id
+      index_key = INDEX_PREFIX + index_key_list[i];
+      if (current_index_list.has(index_key)) {
+        current_index_list.delete(index_key);
+      } else {
+        store.createIndex(index_key, index_key,
+                          {unique: false});
+      }
+    }
+    current_index_list = Array.from(current_index_list);
+    for (i = 0; i < current_index_list.length; i += 1) {
+      store.deleteIndex(current_index_list[i]);
+    }
 
-    store = db.createObjectStore("blob", {
-      keyPath: "_key_path",
-      autoIncrement: false
-    });
-    store.createIndex("_id_attachment",
-                      ["_id", "_attachment"], {unique: false});
-    store.createIndex("_id", "_id", {unique: false});
+    if (current_store_list.indexOf("attachment") === -1) {
+      store = db.createObjectStore("attachment", {
+        keyPath: "_key_path",
+        autoIncrement: false
+      });
+      store.createIndex("_id", "_id", {unique: false});
+    }
+
+    if (current_store_list.indexOf("blob") === -1) {
+      store = db.createObjectStore("blob", {
+        keyPath: "_key_path",
+        autoIncrement: false
+      });
+      store.createIndex("_id_attachment",
+                        ["_id", "_attachment"], {unique: false});
+      store.createIndex("_id", "_id", {unique: false});
+    }
   }
 
-  function waitForOpenIndexedDB(db_name, callback) {
-    var request;
+  function waitForOpenIndexedDB(storage, callback) {
+    var request,
+      db_name = storage._database_name;
 
     function canceller() {
       if ((request !== undefined) && (request.result !== undefined)) {
@@ -14965,14 +15083,18 @@ return new Parser;
 
     function resolver(resolve, reject) {
       // Open DB //
-      request = indexedDB.open(db_name);
+      request = indexedDB.open(db_name, storage._version);
       request.onerror = function (error) {
         canceller();
         if ((error !== undefined) &&
             (error.target instanceof IDBOpenDBRequest) &&
-            (error.target.error instanceof DOMError)) {
-          reject("Connection to: " + db_name + " failed: " +
-                 error.target.error.message);
+            ((error.target.error instanceof DOMError) ||
+             (error.target.error instanceof DOMException))) {
+          reject(new jIO.util.jIOError(
+            "Connection to: " + db_name + " failed: " +
+              error.target.error.message,
+            500
+          ));
         } else {
           reject(error);
         }
@@ -14993,7 +15115,9 @@ return new Parser;
       };
 
       // Create DB if necessary //
-      request.onupgradeneeded = handleUpgradeNeeded;
+      request.onupgradeneeded = function (evt) {
+        handleUpgradeNeeded(evt, storage._index_key_list);
+      };
 
       request.onversionchange = function () {
         canceller();
@@ -15091,7 +15215,7 @@ return new Parser;
 
     function pushIncludedMetadata(cursor) {
       result_list.push({
-        "id": cursor.key,
+        "id": cursor.primaryKey,
         "value": {},
         "doc": cursor.value.doc
       });
@@ -15099,24 +15223,25 @@ return new Parser;
 
     function pushMetadata(cursor) {
       result_list.push({
-        "id": cursor.key,
+        "id": cursor.primaryKey,
         "value": {}
       });
     }
 
     return new RSVP.Queue()
       .push(function () {
-        return waitForOpenIndexedDB(context._database_name, function (db) {
+        return waitForOpenIndexedDB(context, function (db) {
           return waitForTransaction(db, ["metadata"], "readonly",
                                     function (tx) {
+              var key = "_id";
               if (options.include_docs === true) {
                 return waitForAllSynchronousCursor(
-                  tx.objectStore("metadata").index("_id").openCursor(),
+                  tx.objectStore("metadata").index(key).openCursor(),
                   pushIncludedMetadata
                 );
               }
               return waitForAllSynchronousCursor(
-                tx.objectStore("metadata").index("_id").openKeyCursor(),
+                tx.objectStore("metadata").index(key).openKeyCursor(),
                 pushMetadata
               );
             });
@@ -15131,7 +15256,7 @@ return new Parser;
     var context = this;
     return new RSVP.Queue()
       .push(function () {
-        return waitForOpenIndexedDB(context._database_name, function (db) {
+        return waitForOpenIndexedDB(context, function (db) {
           return waitForTransaction(db, ["metadata"], "readonly",
                                     function (tx) {
               return waitForIDBRequest(tx.objectStore("metadata").get(id));
@@ -15159,7 +15284,7 @@ return new Parser;
 
     return new RSVP.Queue()
       .push(function () {
-        return waitForOpenIndexedDB(context._database_name, function (db) {
+        return waitForOpenIndexedDB(context, function (db) {
           return waitForTransaction(db, ["metadata", "attachment"], "readonly",
                                     function (tx) {
               return RSVP.all([
@@ -15188,7 +15313,7 @@ return new Parser;
   };
 
   IndexedDBStorage.prototype.put = function (id, metadata) {
-    return waitForOpenIndexedDB(this._database_name, function (db) {
+    return waitForOpenIndexedDB(this, function (db) {
       return waitForTransaction(db, ["metadata"], "readwrite",
                                 function (tx) {
           return waitForIDBRequest(tx.objectStore("metadata").put({
@@ -15200,7 +15325,7 @@ return new Parser;
   };
 
   IndexedDBStorage.prototype.remove = function (id) {
-    return waitForOpenIndexedDB(this._database_name, function (db) {
+    return waitForOpenIndexedDB(this, function (db) {
       return waitForTransaction(db, ["metadata", "attachment", "blob"],
                                 "readwrite", function (tx) {
 
@@ -15244,10 +15369,10 @@ return new Parser;
     if (options === undefined) {
       options = {};
     }
-    var db_name = this._database_name,
-      start,
+    var start,
       end,
-      array_buffer_list = [];
+      array_buffer_list = [],
+      context = this;
 
     start = options.start || 0;
     end = options.end;
@@ -15268,7 +15393,7 @@ return new Parser;
 
       return new RSVP.Queue()
         .push(function () {
-          return waitForOpenIndexedDB(db_name, function (db) {
+          return waitForOpenIndexedDB(context, function (db) {
             return waitForTransaction(db, ["blob"], "readonly",
                                       function (tx) {
                 var key_path = buildKeyPath([id, name]),
@@ -15346,7 +15471,7 @@ return new Parser;
     // Request the full blob
     return new RSVP.Queue()
       .push(function () {
-        return waitForOpenIndexedDB(db_name, function (db) {
+        return waitForOpenIndexedDB(context, function (db) {
           return waitForTransaction(db, ["attachment", "blob"], "readonly",
                                     function (tx) {
               var key_path = buildKeyPath([id, name]),
@@ -15413,7 +15538,7 @@ return new Parser;
   };
 
   IndexedDBStorage.prototype.putAttachment = function (id, name, blob) {
-    var db_name = this._database_name;
+    var context = this;
     return new RSVP.Queue()
       .push(function () {
         // Split the blob first
@@ -15431,7 +15556,7 @@ return new Parser;
           handled_size += UNITE;
         }
 
-        return waitForOpenIndexedDB(db_name, function (db) {
+        return waitForOpenIndexedDB(context, function (db) {
           return waitForTransaction(db, ["attachment", "blob"], "readwrite",
                                     function (tx) {
               var blob_store,
@@ -15498,7 +15623,7 @@ return new Parser;
   };
 
   IndexedDBStorage.prototype.removeAttachment = function (id, name) {
-    return waitForOpenIndexedDB(this._database_name, function (db) {
+    return waitForOpenIndexedDB(this, function (db) {
       return waitForTransaction(db, ["attachment", "blob"], "readwrite",
                                 function (tx) {
           var promise_list = [],
@@ -15530,7 +15655,8 @@ return new Parser;
   };
 
   jIO.addStorage("indexeddb", IndexedDBStorage);
-}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest, DOMError));
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest, DOMError,
+  DOMException, Set));
 /*
  * Copyright 2015, Nexedi SA
  *
