@@ -1,6 +1,7 @@
-/*global window, rJS, RSVP, document, jIO, URI, URL, Blob */
+/*global window, rJS, RSVP, document, jIO, URI, URL, Blob, navigator */
 /*jslint nomen: true, indent: 2 */
-(function (window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob) {
+(function (window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob,
+           navigator) {
   "use strict";
 
   // Keep reference of the latest allDocs params which reach to this view
@@ -1069,8 +1070,14 @@
               return jio_gadget.createJio({
                 type: "sha",
                 sub_storage: {
-                  type: "indexeddb",
-                  database: "selection"
+                  type: "fallback",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "selection"
+                  },
+                  fallback_storage: {
+                    type: "memory"
+                  }
                 }
               });
             });
@@ -1082,8 +1089,14 @@
               return jio_gadget.createJio({
                 type: "query",
                 sub_storage: {
-                  type: "indexeddb",
-                  database: "navigation_history"
+                  type: "fallback",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "navigation_history"
+                  },
+                  fallback_storage: {
+                    type: "memory"
+                  }
                 }
               });
             });
@@ -1093,8 +1106,14 @@
             .push(function (jio_gadget) {
               gadget.props.jio_state_gadget = jio_gadget;
               return jio_gadget.createJio({
-                type: "indexeddb",
-                database: "document_state"
+                type: "fallback",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "document_state"
+                },
+                fallback_storage: {
+                  type: "memory"
+                }
               });
             });
         }()),
@@ -1177,6 +1196,19 @@
                 gadget.props.keep_message = false;
                 gadget.props.is_cancelled = false;
                 return result;
+              /*
+              })
+              .push(undefined, function (error) {
+                if (!navigator.onLine) {
+                  console.log('not online');
+                  // XXX couscous
+                  return loopEventListener(window, 'online', false,
+                                              function backOnline() {
+                    return location.reload();
+                  });
+                }
+                throw error;
+                */
               });
           }
         });
@@ -1239,4 +1271,5 @@
         false
       );
     });
-}(window, rJS, RSVP, rJS.loopEventListener, document, jIO, URI, URL, Blob));
+}(window, rJS, RSVP, rJS.loopEventListener, document, jIO, URI, URL, Blob,
+  navigator));

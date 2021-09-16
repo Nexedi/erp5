@@ -387,8 +387,14 @@
         .push(function (result) {
           setting_gadget = result;
           return setting_gadget.createJio({
-            type: "indexeddb",
-            database: "setting"
+            type: "fallback",
+            sub_storage: {
+              type: "indexeddb",
+              database: "setting"
+            },
+            fallback_storage: {
+              type: "memory"
+            }
           });
         })
         .push(function () {
