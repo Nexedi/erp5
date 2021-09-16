@@ -5392,6 +5392,9 @@ msgstr "Exploration fonctionnelle"
 msgid "Fonctional Exploration Examination"
 msgstr "Fiches d'examen d'exploration fonctionnelle"
 
+msgid "Foo Category"
+msgstr "Catégorie Foo"
+
 msgid "For each account, there will be a breakdown by each analytic checked here."
 msgstr "Le rapport inclura un détail pour chaque axe analytique sélectionné ici"
 

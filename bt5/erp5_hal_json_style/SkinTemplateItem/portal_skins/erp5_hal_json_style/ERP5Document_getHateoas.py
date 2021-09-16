@@ -534,6 +534,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
         for subdict in result['subfield_list']:
           if subdict['title'] == '&nbsp;':
             subdict['title'] = ''
+          if subdict['title']:
+            subdict['title'] = Base_translateString(subdict['title'])
           subdict['items'] = subdict['item_list']
           del subdict['item_list']
           subdict['key'] = field.generate_subfield_key(
