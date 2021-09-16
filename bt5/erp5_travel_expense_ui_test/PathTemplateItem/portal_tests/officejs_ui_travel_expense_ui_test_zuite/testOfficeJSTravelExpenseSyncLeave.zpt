@@ -75,66 +75,7 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href='#page=add_document']</td>
-  <td></td>
-</tr>
 
-<tr>
-  <td>click</td>
-  <td>//a[@href='#page=add_document']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href='#page=travel_request_record_list']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@href='#page=travel_request_record_list']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href='#page=add_travel_request_record']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@href='#page=add_travel_request_record']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href='#page=leave_request_record_list']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@href='#page=leave_request_record_list']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -154,40 +95,17 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href='#page=expense_sheet_list']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@href='#page=expense_sheet_list']</td>
-  <td></td>
-</tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@href='#page=add_expense_sheet']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@href='#page=add_expense_sheet']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='title']</td>
+  <td>//textarea[@name='comment']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>//input[@name='title']</td>
+  <td>//textarea[@name='comment']</td>
   <td>Test</td>
 </tr>
 
@@ -233,19 +151,19 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@href='#page=expense_sheet_list']</td>
+  <td>//a[@href='#page=leave_request_record_list']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@href='#page=expense_sheet_list']</td>
+  <td>//a[@href='#page=leave_request_record_list']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForTextPresent</td>
-  <td>Synced</td>
+  <td>Waiting for approval</td>
   <td></td>
 </tr>
 

@@ -1,0 +1,8 @@
+service_module/hr_test*
+portal_categories/use/hr/leave/*
+portal_categories/use/hr/leave
+portal_categories/publication_section/hr_document
+account_module/travel_expense_credit_account
+account_module/travel_expense_debit_account
+person_module/hr_user
+currency_module/hr_test*

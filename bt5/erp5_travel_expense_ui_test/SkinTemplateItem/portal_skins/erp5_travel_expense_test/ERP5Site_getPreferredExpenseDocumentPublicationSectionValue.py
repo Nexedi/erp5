@@ -1,0 +1,1 @@
+return context.getPortalObject().portal_categories.publication_section.hr_document
