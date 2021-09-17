@@ -80,7 +80,7 @@ class ImageFieldWidget(Widget.TextWidget):
                                description=(
         "The quality used when converting the image. "
         "This is only used with ERP5 Images."),
-                               default=75,
+                               default=100,
                                required=0)
 
     image_pre_converted_only = fields.CheckBoxField('image_pre_converted_only',
