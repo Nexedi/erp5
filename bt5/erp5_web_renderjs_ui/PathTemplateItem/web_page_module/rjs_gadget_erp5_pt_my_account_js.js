@@ -24,7 +24,6 @@
 
       return new RSVP.Queue(RSVP.hash({
         translation: gadget.getTranslationDict([
-          'Logout',
           'User',
           'Preferences',
           'Language',
@@ -68,11 +67,7 @@
               domsugar('li', [domsugar('a', {text: result_dict.translation['Change Password']})])
             ])
           ]);
-          domsugar(gadget.element.querySelector('.dialog_button_container'), [
-            domsugar('input', {name: 'action_update',
-                               type: 'submit',
-                               value: result_dict.translation.Logout})
-          ]);
+
           return RSVP.all([
             gadget.updateHeader({
               page_title: 'My Account',
@@ -110,28 +105,6 @@
         });
     })
 
-    .onEvent('submit', function () {
-      var gadget = this,
-        logout_url_template;
-
-      return gadget.jio_getAttachment('acl_users', 'links')
-        .push(function (links) {
-          logout_url_template = links._links.logout.href;
-          return gadget.getUrlFor({
-            command: 'display',
-            absolute_url: true,
-            options: {}
-          });
-        })
-        .push(function (came_from) {
-          return gadget.redirect({
-            command: 'raw',
-            options: {
-              url: UriTemplate.parse(logout_url_template).expand({came_from: came_from})
-            }
-          });
-        });
-    })
     .declareMethod("triggerSubmit", function () {
       return;
     });
