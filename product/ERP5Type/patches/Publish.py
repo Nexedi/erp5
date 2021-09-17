@@ -39,7 +39,175 @@ try:
         setDefaultSkin,
         sys,
         urlparse,
+        noSecurityManager,
     )
+
+    def publish(request, module_name, after_list, debug=0,
+            # Optimize:
+            call_object=call_object,
+            missing_name=missing_name,
+            dont_publish_class=dont_publish_class,
+            mapply=mapply,
+            ):
+
+        (bobo_before, bobo_after, object, realm, debug_mode, err_hook,
+         validated_hook, transactions_manager)= get_module_info(module_name)
+
+        parents=None
+        response=None
+
+        try:
+            with getPublisherDeadlineValue(request):
+                notify(pubevents.PubStart(request))
+                # TODO pass request here once BaseRequest implements IParticipation
+                newInteraction()
+
+                request.processInputs()
+
+                request_get = request.get
+                response = request.response
+
+                # First check for "cancel" redirect:
+                if request_get('SUBMIT', '').strip().lower() == 'cancel':
+                    cancel = request_get('CANCEL_ACTION', '')
+                    if cancel:
+                        # Relative URLs aren't part of the spec, but are accepted by
+                        # some browsers.
+                        for part, base in zip(urlparse(cancel)[:3],
+                                              urlparse(request['BASE1'])[:3]):
+                            if not part:
+                                continue
+                            if not part.startswith(base):
+                                cancel = ''
+                                break
+                    if cancel:
+                        raise Redirect(cancel)
+
+                after_list[0] = bobo_after
+                if debug_mode:
+                    response.debug_mode = debug_mode
+                if realm and not request.get('REMOTE_USER', None):
+                    response.realm = realm
+
+                noSecurityManager()
+                if bobo_before is not None:
+                    bobo_before()
+
+                # Get the path list.
+                # According to RFC1738 a trailing space in the path is valid.
+                path = request_get('PATH_INFO')
+
+                request['PARENTS'] = parents = [object]
+
+                if transactions_manager:
+                    transactions_manager.begin()
+
+                object = request.traverse(path, validated_hook=validated_hook)
+
+                if IBrowserPage.providedBy(object):
+                    request.postProcessInputs()
+
+                notify(pubevents.PubAfterTraversal(request))
+
+                if transactions_manager:
+                    recordMetaData(object, request)
+
+                result = mapply(object, request.args, request,
+                                call_object, 1,
+                                missing_name,
+                                dont_publish_class,
+                                request, bind=1)
+                if result is not response:
+                    response.setBody(result)
+
+                notify(pubevents.PubBeforeCommit(request))
+
+                if transactions_manager:
+                    transactions_manager.commit()
+
+                notify(pubevents.PubSuccess(request))
+                endInteraction()
+
+                return response
+        except:
+            # save in order to give 'PubFailure' the original exception info
+            exc_info = sys.exc_info()
+            # DM: provide nicer error message for FTP
+            sm = None
+            if response is not None:
+                sm = getattr(response, "setMessage", None)
+
+            if sm is not None:
+                from asyncore import compact_traceback
+                cl, val = sys.exc_info()[:2]
+                sm('%s: %s %s' % (
+                    getattr(cl, '__name__', cl), val,
+                    debug_mode and compact_traceback()[-1] or ''))
+
+            # debug is just used by tests (has nothing to do with debug_mode!)
+            if not debug and err_hook is not None:
+                retry = False
+                if parents:
+                    parents = parents[0]
+                try:
+                    try:
+                        with getPublisherDeadlineValue(request):
+                            return err_hook(parents, request,
+                                            sys.exc_info()[0],
+                                            sys.exc_info()[1],
+                                            sys.exc_info()[2],
+                                            )
+                    except Retry:
+                        if not request.supports_retry():
+                            with getPublisherDeadlineValue(request):
+                                return err_hook(parents, request,
+                                                sys.exc_info()[0],
+                                                sys.exc_info()[1],
+                                                sys.exc_info()[2],
+                                                )
+                            retry = True
+                finally:
+                    # Note: 'abort's can fail.
+                    # Nevertheless, we want end request handling.
+                    try:
+                        try:
+                            notify(pubevents.PubBeforeAbort(
+                                request, exc_info, retry))
+                        finally:
+                            if transactions_manager:
+                                transactions_manager.abort()
+                    finally:
+                        endInteraction()
+                        notify(pubevents.PubFailure(request, exc_info, retry))
+
+                # Only reachable if Retry is raised and request supports retry.
+                newrequest = request.retry()
+                request.close()  # Free resources held by the request.
+
+                # Set the default layer/skin on the newly generated request
+                if ISkinnable.providedBy(newrequest):
+                    setDefaultSkin(newrequest)
+                try:
+                    return publish(newrequest, module_name, after_list, debug)
+                finally:
+                    newrequest.close()
+
+            else:
+                # Note: 'abort's can fail.
+                # Nevertheless, we want end request handling.
+                try:
+                    try:
+                        notify(pubevents.PubBeforeAbort(request, exc_info, False))
+                    finally:
+                        if transactions_manager:
+                            transactions_manager.abort()
+                finally:
+                    endInteraction()
+                    notify(pubevents.PubFailure(request, exc_info, False))
+                raise
+
+    Publish.publish = publish
+
 except ImportError: # BBB Zope2
     from ZPublisher import Publish, pubevents
     from ZPublisher.Publish import (
@@ -68,171 +236,162 @@ except ImportError: # BBB Zope2
         sys,
         urlparse,
     )
+    def publish(request, module_name, after_list, debug=0,
+                # Optimize:
+                call_object=call_object,
+                missing_name=missing_name,
+                dont_publish_class=dont_publish_class,
+                mapply=mapply,
+                ):
 
-            
-    
-def publish(request, module_name, after_list, debug=0,
-            # Optimize:
-            call_object=call_object,
-            missing_name=missing_name,
-            dont_publish_class=dont_publish_class,
-            mapply=mapply,
-            ):
+        (bobo_before, bobo_after, object, realm, debug_mode, err_hook,
+         validated_hook, transactions_manager)= get_module_info(module_name)
 
-    (bobo_before, bobo_after, object, realm, debug_mode, err_hook,
-     validated_hook, transactions_manager)= get_module_info(module_name)
+        parents=None
+        response=None
 
-    parents=None
-    response=None
+        try:
+            with getPublisherDeadlineValue(request):
+                notify(PubStart(request))
+                # TODO pass request here once BaseRequest implements IParticipation
+                newInteraction()
 
-    try:
-        with getPublisherDeadlineValue(request):
-            notify(pubevents.PubStart(request))
-            # TODO pass request here once BaseRequest implements IParticipation
-            newInteraction()
+                request.processInputs()
 
-            request.processInputs()
+                request_get=request.get
+                response=request.response
 
-            request_get = request.get
-            response = request.response
+                # First check for "cancel" redirect:
+                if request_get('SUBMIT', '').strip().lower() == 'cancel':
+                    cancel = request_get('CANCEL_ACTION', '')
+                    if cancel:
+                        # Relative URLs aren't part of the spec, but are accepted by
+                        # some browsers.
+                        for part, base in zip(urlparse(cancel)[:3],
+                                              urlparse(request['BASE1'])[:3]):
+                            if not part:
+                                continue
+                            if not part.startswith(base):
+                                cancel = ''
+                                break
+                    if cancel:
+                        raise Redirect(cancel)
 
-            # First check for "cancel" redirect:
-            if request_get('SUBMIT', '').strip().lower() == 'cancel':
-                cancel = request_get('CANCEL_ACTION', '')
-                if cancel:
-                    # Relative URLs aren't part of the spec, but are accepted by
-                    # some browsers.
-                    for part, base in zip(urlparse(cancel)[:3],
-                                          urlparse(request['BASE1'])[:3]):
-                        if not part:
-                            continue
-                        if not part.startswith(base):
-                            cancel = ''
-                            break
-                if cancel:
-                    raise Redirect(cancel)
+                after_list[0]=bobo_after
+                if debug_mode:
+                    response.debug_mode=debug_mode
+                if realm and not request.get('REMOTE_USER',None):
+                    response.realm=realm
 
-            after_list[0] = bobo_after
-            if debug_mode:
-                response.debug_mode = debug_mode
-            if realm and not request.get('REMOTE_USER', None):
-                response.realm = realm
+                if bobo_before is not None:
+                    bobo_before()
 
-            noSecurityManager()
-            if bobo_before is not None:
-                bobo_before()
+                # Get the path list.
+                # According to RFC1738 a trailing space in the path is valid.
+                path=request_get('PATH_INFO')
 
-            # Get the path list.
-            # According to RFC1738 a trailing space in the path is valid.
-            path = request_get('PATH_INFO')
+                request['PARENTS']=parents=[object]
 
-            request['PARENTS'] = parents = [object]
+                if transactions_manager:
+                    transactions_manager.begin()
 
-            if transactions_manager:
-                transactions_manager.begin()
+                object=request.traverse(path, validated_hook=validated_hook)
 
-            object = request.traverse(path, validated_hook=validated_hook)
+                notify(PubAfterTraversal(request))
 
-            if IBrowserPage.providedBy(object):
-                request.postProcessInputs()
+                if transactions_manager:
+                    transactions_manager.recordMetaData(object, request)
 
-            notify(pubevents.PubAfterTraversal(request))
+                result=mapply(object, request.args, request,
+                              call_object,1,
+                              missing_name,
+                              dont_publish_class,
+                              request, bind=1)
 
-            if transactions_manager:
-                recordMetaData(object, request)
+                if result is not response:
+                    response.setBody(result)
 
-            result = mapply(object, request.args, request,
-                            call_object, 1,
-                            missing_name,
-                            dont_publish_class,
-                            request, bind=1)
-            if result is not response:
-                response.setBody(result)
+                notify(PubBeforeCommit(request))
 
-            notify(pubevents.PubBeforeCommit(request))
+                if transactions_manager:
+                    transactions_manager.commit()
+                endInteraction()
 
-            if transactions_manager:
-                transactions_manager.commit()
+                notify(PubSuccess(request))
 
-            notify(pubevents.PubSuccess(request))
-            endInteraction()
+                return response
+        except:
+            # save in order to give 'PubFailure' the original exception info
+            exc_info = sys.exc_info()
+            # DM: provide nicer error message for FTP
+            sm = None
+            if response is not None:
+                sm = getattr(response, "setMessage", None)
 
-            return response
-    except:
-        # save in order to give 'PubFailure' the original exception info
-        exc_info = sys.exc_info()
-        # DM: provide nicer error message for FTP
-        sm = None
-        if response is not None:
-            sm = getattr(response, "setMessage", None)
+            if sm is not None:
+                from asyncore import compact_traceback
+                cl,val= sys.exc_info()[:2]
+                sm('%s: %s %s' % (
+                    getattr(cl,'__name__',cl), val,
+                    debug_mode and compact_traceback()[-1] or ''))
 
-        if sm is not None:
-            from asyncore import compact_traceback
-            cl, val = sys.exc_info()[:2]
-            sm('%s: %s %s' % (
-                getattr(cl, '__name__', cl), val,
-                debug_mode and compact_traceback()[-1] or ''))
-
-        # debug is just used by tests (has nothing to do with debug_mode!)
-        if not debug and err_hook is not None:
-            retry = False
-            if parents:
-                parents = parents[0]
-            try:
-                try:
-                    with getPublisherDeadlineValue(request):
-                        return err_hook(parents, request,
-                                    sys.exc_info()[0],
-                                    sys.exc_info()[1],
-                                    sys.exc_info()[2],
-                                    )
-                except Retry:
-                    if not request.supports_retry():
-                        with getPublisherDeadlineValue(request):
-                            return err_hook(parents, request,
-                                        sys.exc_info()[0],
-                                        sys.exc_info()[1],
-                                        sys.exc_info()[2],
-                                        )
-                    retry = True
-            finally:
-                # Note: 'abort's can fail.
-                # Nevertheless, we want end request handling.
+            # debug is just used by tests (has nothing to do with debug_mode!)
+            if not debug and err_hook is not None:
+                retry = False
+                if parents:
+                    parents=parents[0]
                 try:
                     try:
-                        notify(pubevents.PubBeforeAbort(
-                            request, exc_info, retry))
+                        with getPublisherDeadlineValue(request):
+                            return err_hook(parents, request,
+                                            sys.exc_info()[0],
+                                            sys.exc_info()[1],
+                                            sys.exc_info()[2],
+                                            )
+                    except Retry:
+                        if not request.supports_retry():
+                            with getPublisherDeadlineValue(request):
+                                return err_hook(parents, request,
+                                                sys.exc_info()[0],
+                                                sys.exc_info()[1],
+                                                sys.exc_info()[2],
+                                                )
+                        retry = True
+                finally:
+                    # Note: 'abort's can fail. Nevertheless, we want end request handling
+                    try:
+                        try:
+                            notify(PubBeforeAbort(request, exc_info, retry))
+                        finally:
+                            if transactions_manager:
+                                transactions_manager.abort()
+                    finally:
+                        endInteraction()
+                        notify(PubFailure(request, exc_info, retry))
+
+                # Only reachable if Retry is raised and request supports retry.
+                newrequest=request.retry()
+                request.close()  # Free resources held by the request.
+
+                # Set the default layer/skin on the newly generated request
+                if ISkinnable.providedBy(newrequest):
+                    setDefaultSkin(newrequest)
+                try:
+                    return publish(newrequest, module_name, after_list, debug)
+                finally:
+                    newrequest.close()
+
+            else:
+                # Note: 'abort's can fail. Nevertheless, we want end request handling
+                try:
+                    try:
+                        notify(PubBeforeAbort(request, exc_info, False))
                     finally:
                         if transactions_manager:
                             transactions_manager.abort()
                 finally:
                     endInteraction()
-                    notify(pubevents.PubFailure(request, exc_info, retry))
+                    notify(PubFailure(request, exc_info, False))
+                raise
 
-            # Only reachable if Retry is raised and request supports retry.
-            newrequest = request.retry()
-            request.close()  # Free resources held by the request.
-
-            # Set the default layer/skin on the newly generated request
-            if ISkinnable.providedBy(newrequest):
-                setDefaultSkin(newrequest)
-            try:
-                return publish(newrequest, module_name, after_list, debug)
-            finally:
-                newrequest.close()
-
-        else:
-            # Note: 'abort's can fail.
-            # Nevertheless, we want end request handling.
-            try:
-                try:
-                    notify(pubevents.PubBeforeAbort(request, exc_info, False))
-                finally:
-                    if transactions_manager:
-                        transactions_manager.abort()
-            finally:
-                endInteraction()
-                notify(pubevents.PubFailure(request, exc_info, False))
-            raise
-
-Publish.publish = publish
+    Publish.publish = publish
