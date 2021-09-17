@@ -12,7 +12,8 @@
       var field_json = options.field_json || {},
         state_dict = {
           src: field_json.default,
-          alt: field_json.description || field_json.title
+          alt: field_json.description || field_json.title,
+          title: field_json.title || ""
         };
       return this.changeState(state_dict);
     })
