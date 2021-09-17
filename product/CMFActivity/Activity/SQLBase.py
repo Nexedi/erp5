@@ -28,6 +28,7 @@ from __future__ import absolute_import
 ##############################################################################
 
 from collections import defaultdict
+from contextlib import contextmanager
 from itertools import product
 import operator
 import sys
@@ -83,6 +84,24 @@ def render_datetime(x):
 _SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
 _SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
 
+@contextmanager
+def SQLLock(db, lock_name, timeout):
+  """
+  Attemp to acquire a named SQL lock. The outcome of this acquisition is
+  returned to the context statement and MUST be checked:
+  1: lock acquired
+  0: timeout
+  """
+  lock_name = db.string_literal(lock_name)
+  query = db.query
+  (_, ((acquired, ), )) = query('SELECT GET_LOCK(%s, %f)' % (lock_name, timeout))
+  if acquired is None:
+    raise ValueError('Error acquiring lock')
+  try:
+    yield acquired
+  finally:
+    if acquired:
+      query('SELECT RELEASE_LOCK(%s)' % (lock_name, ))
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
@@ -729,86 +748,106 @@ CREATE TABLE %s (
     db = activity_tool.getSQLConnection()
     now_date = getNow(db)
     uid_to_duplicate_uid_list_dict = {}
-    try:
-      while 1: # not a loop
-        # Select messages that were either assigned manually or left
-        # unprocessed after a shutdown. Most of the time, there's none.
-        # To minimize the probability of deadlocks, we also COMMIT so that a
-        # new transaction starts on the first 'FOR UPDATE' query, which is all
-        # the more important as the current on started with getPriority().
-        result = db.query("SELECT * FROM %s WHERE processing_node=%s"
-          " ORDER BY priority, date LIMIT 1\0COMMIT" % (
-          self.sql_table, processing_node), 0)
-        already_assigned = result[1]
-        if already_assigned:
-          result = Results(result)
-        else:
-          result = self.getReservedMessageList(db, now_date, processing_node,
-                                               1, node_set=node_family_id_list)
-          if not result:
-            break
-          # So reserved documents are properly released even if load raises.
-          for line in result:
-            uid_to_duplicate_uid_list_dict[line.uid] = []
-        load = self.getProcessableMessageLoader(db, processing_node)
-        m, uid, uid_list = load(result[0])
-        message_list = [m]
-        uid_to_duplicate_uid_list_dict[uid] = uid_list
-        group_method_id = m.line.group_method_id
-        if group_method_id[0] != '\0':
-          # Count the number of objects to prevent too many objects.
-          cost = m.getGroupMethodCost()
-          assert 0 < cost <= 1, (self.sql_table, uid)
-          count = m.getObjectCount(activity_tool)
-          # this is heuristic (messages with same group_method_id
-          # are likely to have the same group_method_cost)
-          limit = int(1. / cost + 1 - count)
-          if limit > 1: # <=> cost * count < 1
-            cost *= count
-            # Retrieve objects which have the same group method.
-            result = iter(already_assigned
-              and Results(db.query("SELECT * FROM %s"
-                " WHERE processing_node=%s AND group_method_id=%s"
-                " ORDER BY priority, date LIMIT %s" % (
-                self.sql_table, processing_node,
-                db.string_literal(group_method_id), limit), 0))
-                # Do not optimize rare case: keep the code simple by not
-                # adding more results from getReservedMessageList if the
-                # limit is not reached.
-              or self.getReservedMessageList(db, now_date, processing_node,
-                limit, group_method_id, node_family_id_list))
+    # Note: Not all write accesses to our table are protected by this lock.
+    # This lock is not here for data consistency reasons, but to avoid wasting
+    # time on SQL deadlocks caused by the varied lock ordering chosen by the
+    # database. These queries specifically seem to be extremely prone to such
+    # deadlocks, so prevent them from attempting to run in parallel on a given
+    # activity table.
+    # If more accesses are found to cause a significant waste of time because
+    # of deadlocks, then they should acquire such lock as well. But
+    # preemptively applying such lock everywhere without checking the amount
+    # of waste is unlikely to produce a net gain.
+    # XXX: timeout may benefit from being tweaked, but one second seem like a
+    # reasonable starting point.
+    # XXX: locking could probably be skipped altogether on clusters with few
+    # enough processing nodes, as there should be little deadlocks and the
+    # tradeoff becomes unfavorable to explicit locks. What threshold to
+    # choose ?
+    with SQLLock(db, self.sql_table, timeout=1) as acquired:
+      if not acquired:
+        # This table is busy, check for work to do elsewhere
+        return (), None, None
+      try:
+        while 1: # not a loop
+          # Select messages that were either assigned manually or left
+          # unprocessed after a shutdown. Most of the time, there's none.
+          # To minimize the probability of deadlocks, we also COMMIT so that a
+          # new transaction starts on the first 'FOR UPDATE' query, which is all
+          # the more important as the current on started with getPriority().
+          result = db.query("SELECT * FROM %s WHERE processing_node=%s"
+            " ORDER BY priority, date LIMIT 1\0COMMIT" % (
+            self.sql_table, processing_node), 0)
+          already_assigned = result[1]
+          if already_assigned:
+            result = Results(result)
+          else:
+            result = self.getReservedMessageList(db, now_date, processing_node,
+                                                 1, node_set=node_family_id_list)
+            if not result:
+              break
+            # So reserved documents are properly released even if load raises.
             for line in result:
-              if line.uid in uid_to_duplicate_uid_list_dict:
-                continue
-              m, uid, uid_list = load(line)
-              if m is None:
-                uid_to_duplicate_uid_list_dict[uid] += uid_list
-                continue
-              uid_to_duplicate_uid_list_dict[uid] = uid_list
-              cost += m.getObjectCount(activity_tool) * \
-                      m.getGroupMethodCost()
-              message_list.append(m)
-              if cost >= 1:
-                # Unreserve extra messages as soon as possible.
-                uid_list = [line.uid for line in result if line.uid != uid]
-                if uid_list:
-                  self.assignMessageList(db, 0, uid_list)
-        return message_list, group_method_id, uid_to_duplicate_uid_list_dict
-    except:
-      self._log(WARNING, 'Exception while reserving messages.')
-      if uid_to_duplicate_uid_list_dict:
-        to_free_uid_list = uid_to_duplicate_uid_list_dict.keys()
-        for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
-          to_free_uid_list += uid_list
-        try:
-          self.assignMessageList(db, 0, to_free_uid_list)
-        except:
-          self._log(ERROR, 'Failed to free messages: %r' % to_free_uid_list)
+              uid_to_duplicate_uid_list_dict[line.uid] = []
+          load = self.getProcessableMessageLoader(db, processing_node)
+          m, uid, uid_list = load(result[0])
+          message_list = [m]
+          uid_to_duplicate_uid_list_dict[uid] = uid_list
+          group_method_id = m.line.group_method_id
+          if group_method_id[0] != '\0':
+            # Count the number of objects to prevent too many objects.
+            cost = m.getGroupMethodCost()
+            assert 0 < cost <= 1, (self.sql_table, uid)
+            count = m.getObjectCount(activity_tool)
+            # this is heuristic (messages with same group_method_id
+            # are likely to have the same group_method_cost)
+            limit = int(1. / cost + 1 - count)
+            if limit > 1: # <=> cost * count < 1
+              cost *= count
+              # Retrieve objects which have the same group method.
+              result = iter(already_assigned
+                and Results(db.query("SELECT * FROM %s"
+                  " WHERE processing_node=%s AND group_method_id=%s"
+                  " ORDER BY priority, date LIMIT %s" % (
+                  self.sql_table, processing_node,
+                  db.string_literal(group_method_id), limit), 0))
+                  # Do not optimize rare case: keep the code simple by not
+                  # adding more results from getReservedMessageList if the
+                  # limit is not reached.
+                or self.getReservedMessageList(db, now_date, processing_node,
+                  limit, group_method_id, node_family_id_list))
+              for line in result:
+                if line.uid in uid_to_duplicate_uid_list_dict:
+                  continue
+                m, uid, uid_list = load(line)
+                if m is None:
+                  uid_to_duplicate_uid_list_dict[uid] += uid_list
+                  continue
+                uid_to_duplicate_uid_list_dict[uid] = uid_list
+                cost += m.getObjectCount(activity_tool) * \
+                        m.getGroupMethodCost()
+                message_list.append(m)
+                if cost >= 1:
+                  # Unreserve extra messages as soon as possible.
+                  uid_list = [line.uid for line in result if line.uid != uid]
+                  if uid_list:
+                    self.assignMessageList(db, 0, uid_list)
+          return message_list, group_method_id, uid_to_duplicate_uid_list_dict
+      except:
+        self._log(WARNING, 'Exception while reserving messages.')
+        if uid_to_duplicate_uid_list_dict:
+          to_free_uid_list = uid_to_duplicate_uid_list_dict.keys()
+          for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
+            to_free_uid_list += uid_list
+          try:
+            self.assignMessageList(db, 0, to_free_uid_list)
+          except:
+            self._log(ERROR, 'Failed to free messages: %r' % to_free_uid_list)
+          else:
+            if to_free_uid_list:
+              self._log(TRACE, 'Freed messages %r' % to_free_uid_list)
         else:
-          if to_free_uid_list:
-            self._log(TRACE, 'Freed messages %r' % to_free_uid_list)
-      else:
-        self._log(TRACE, '(no message was reserved)')
+          self._log(TRACE, '(no message was reserved)')
     return (), None, None
 
   def _abort(self):
