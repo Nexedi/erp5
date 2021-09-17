@@ -49,9 +49,7 @@
         erp5_form: gadget.getDeclaredGadget("erp5_form"),
         url_dict: gadget.getUrlForDict({
           // Back url
-          back: {command: 'history_previous'},
-          // Change language
-          change_language: {command: 'display', options: {page: 'language'}}
+          back: {command: 'history_previous'}
         })
       }))
         .push(function (result_dict) {
@@ -64,8 +62,7 @@
             gadget.updateHeader({
               page_title: 'Logout',
               page_icon: 'power-off',
-              front_url: result_dict.url_dict.back,
-              language_url: result_dict.url_dict.change_language
+              front_url: result_dict.url_dict.back
             }),
 
             result_dict.erp5_form.render({
