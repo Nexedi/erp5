@@ -37,9 +37,7 @@
           var query_string,
             url_for_parameter_list = [
               // Back URL
-              {command: 'display'},
-              // Change language URL
-              {command: 'display', options: {page: 'language'}}
+              {command: 'display'}
             ],
             display_options,
             i;
@@ -106,8 +104,7 @@
           return gadget.updateHeader({
             page_title: 'Worklist',
             page_icon: 'tasks',
-            front_url: url_list[0],
-            language_url: url_list[1]
+            front_url: url_list[0]
           });
         });
     })
