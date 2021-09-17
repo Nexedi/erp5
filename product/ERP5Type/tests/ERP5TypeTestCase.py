@@ -769,7 +769,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         '''Publishes the object at 'path' returning a response object.'''
 
         from ZPublisher.Response import Response
-        from ZServer.ZPublisher.Publish import publish_module_standard
+        try:
+          from ZServer.ZPublisher.Publish import publish_module_standard
+        except ImportError: # BBB Zope2
+          from ZPublisher.Publish import publish_module_standard
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
