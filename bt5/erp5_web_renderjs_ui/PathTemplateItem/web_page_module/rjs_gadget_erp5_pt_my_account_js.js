@@ -28,7 +28,8 @@
           'Preferences',
           'Language',
           'Change Password',
-          'Details'
+          'Details',
+          'Logout'
         ]),
         me: gadget.getSetting('me')
           .push(function (me) {
@@ -55,7 +56,8 @@
           back: {command: 'history_previous'},
           preference: {command: 'push_history', options: {page: "preference"}},
           // Change language
-          change_language: {command: 'push_history', options: {page: 'language'}}
+          change_language: {command: 'push_history', options: {page: 'language'}},
+          logout: {command: 'push_history', options: {page: 'logout'}}
         })
       }))
         .push(function (result_dict) {
@@ -64,7 +66,8 @@
               domsugar('li', [domsugar('a', {href: result_dict.url_dict.preference, text: result_dict.translation.Preferences})]),
               domsugar('li', [domsugar('a', {href: result_dict.url_dict.change_language, text: result_dict.translation.Language})]),
               domsugar('li', [domsugar('a', {text: result_dict.translation.Details})]),
-              domsugar('li', [domsugar('a', {text: result_dict.translation['Change Password']})])
+              domsugar('li', [domsugar('a', {text: result_dict.translation['Change Password']})]),
+              domsugar('li', [domsugar('a', {href: result_dict.url_dict.logout, text: result_dict.translation.Logout})])
             ])
           ]);
 
