@@ -49,7 +49,7 @@
         erp5_form: gadget.getDeclaredGadget("erp5_form"),
         url_dict: gadget.getUrlForDict({
           // Back url
-          back: {command: 'display'},
+          back: {command: 'history_previous'},
           // Change language
           change_language: {command: 'display', options: {page: 'language'}}
         })
