@@ -42,7 +42,7 @@ class JSONType(XMLObject):
                     , PropertySheet.TextDocument
                     )
 
-  def validateJsonSchema(self, list_error=False):
+  def validateLocalJsonSchema(self, list_error=False):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
@@ -61,3 +61,6 @@ class JSONType(XMLObject):
         return sorted(validator.iter_errors(current_schema), key=lambda e: e.path)
       return err
     return True
+
+  def validateJsonSchema(self, list_error=False):
+    return self.validateLocalJsonSchema(list_error=list_error)
