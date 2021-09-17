@@ -28,6 +28,7 @@ from __future__ import absolute_import
 ##############################################################################
 
 from collections import defaultdict
+from contextlib import contextmanager
 from itertools import product
 import operator
 import sys
@@ -83,6 +84,24 @@ def render_datetime(x):
 _SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
 _SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
 
+@contextmanager
+def SQLLock(db, lock_name, timeout):
+  """
+  Attemp to acquire a named SQL lock. The outcome of this acquisition is
+  returned to the context statement and MUST be checked:
+  1: lock acquired
+  0: timeout
+  """
+  lock_name = db.string_literal(lock_name)
+  query = db.query
+  (_, ((acquired, ), )) = query('SELECT GET_LOCK(%s, %f)' % (lock_name, timeout))
+  if acquired is None:
+    raise ValueError('Error acquiring lock')
+  try:
+    yield acquired
+  finally:
+    if acquired:
+      query('SELECT RELEASE_LOCK(%s)' % (lock_name, ))
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
@@ -648,39 +667,59 @@ CREATE TABLE %s (
             ' AND group_method_id=' + quote(group_method_id)
             if group_method_id else '' , limit)
 
-    # Get reservable messages.
-    # During normal operation, sorting by date (as last criteria) is fairer
-    # for users and reduce the probability to do the same work several times
-    # (think of an object that is modified several times in a short period of
-    # time).
-    if node_set is None:
-      result = Results(query(
-        "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
-        " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
-    else:
-      # We'd like to write
-      #   ORDER BY priority, IF(node, IF(node={node}, -1, 1), 0), date
-      # but this makes indices inefficient.
-      subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
-        " WHERE {} AND processing_node=0 AND %s%s"
-        " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
-      node = 'node=%s' % processing_node
-      result = Results(query(
-        # "ALL" on all but one, to incur deduplication cost only once.
-        # "UNION ALL" between the two naturally distinct sets.
-        "SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
-        " ORDER BY effective_priority, date LIMIT %s"% (
-            subquery(-1, node),
-            subquery('', 'node=0'),
-            subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
-            ' UNION ALL ' + subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set))) if node_set else '',
-            limit), 0))
-    if result:
-      # Reserve messages.
-      uid_list = [x.uid for x in result]
-      self.assignMessageList(db, processing_node, uid_list)
-      self._log(TRACE, 'Reserved messages: %r' % uid_list)
-      return result
+    # Note: Not all write accesses to our table are protected by this lock.
+    # This lock is not here for data consistency reasons, but to avoid wasting
+    # time on SQL deadlocks caused by the varied lock ordering chosen by the
+    # database. These queries specifically seem to be extremely prone to such
+    # deadlocks, so prevent them from attempting to run in parallel on a given
+    # activity table.
+    # If more accesses are found to cause a significant waste of time because
+    # of deadlocks, then they should acquire such lock as well. But
+    # preemptively applying such lock everywhere without checking the amount
+    # of waste is unlikely to produce a net gain.
+    # XXX: timeout may benefit from being tweaked, but one second seem like a
+    # reasonable starting point.
+    # XXX: locking could probably be skipped altogether on clusters with few
+    # enough processing nodes, as there should be little deadlocks and the
+    # tradeoff becomes unfavorable to explicit locks. What threshold to
+    # choose ?
+    with SQLLock(db, self.sql_table, timeout=1) as acquired:
+      if not acquired:
+        # This table is busy, check for work to do elsewhere
+        return ()
+      # Get reservable messages.
+      # During normal operation, sorting by date (as last criteria) is fairer
+      # for users and reduce the probability to do the same work several times
+      # (think of an object that is modified several times in a short period of
+      # time).
+      if node_set is None:
+        result = Results(query(
+          "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
+          " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
+      else:
+        # We'd like to write
+        #   ORDER BY priority, IF(node, IF(node={node}, -1, 1), 0), date
+        # but this makes indices inefficient.
+        subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
+          " WHERE {} AND processing_node=0 AND %s%s"
+          " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
+        node = 'node=%s' % processing_node
+        result = Results(query(
+          # "ALL" on all but one, to incur deduplication cost only once.
+          # "UNION ALL" between the two naturally distinct sets.
+          "SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
+          " ORDER BY effective_priority, date LIMIT %s"% (
+              subquery(-1, node),
+              subquery('', 'node=0'),
+              subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
+              ' UNION ALL ' + subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set))) if node_set else '',
+              limit), 0))
+      if result:
+        # Reserve messages.
+        uid_list = [x.uid for x in result]
+        self.assignMessageList(db, processing_node, uid_list)
+        self._log(TRACE, 'Reserved messages: %r' % uid_list)
+        return result
     return ()
 
   def assignMessageList(self, db, state, uid_list):
