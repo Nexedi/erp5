@@ -8886,7 +8886,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -10960,16 +10960,12 @@ return new Parser;
     this._fallback_storage = jIO.createJIO(spec.fallback_storage);
     this._checked = false;
   }
-/*
-
-*/
 
   var method_name_list = [
     'get',
     'put',
     'post',
     'remove',
-    'hasCapacity',
     'buildQuery',
     'getAttachment',
     'putAttachment',
@@ -11013,6 +11009,11 @@ return new Parser;
     FallbackStorage.prototype[method_name_list[i]] =
       methodFallback(method_name_list[i]);
   }
+
+  FallbackStorage.prototype.hasCapacity = function hasCapacity(name) {
+    return (this._sub_storage.hasCapacity(name) &&
+      this._fallback_storage.hasCapacity(name));
+  };
 
   jIO.addStorage('fallback', FallbackStorage);
 
