@@ -34,6 +34,7 @@ from OFS.Image import Image as OFSImage
 from lxml.etree import Element
 from lxml import etree
 import re
+from zLOG import LOG
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
@@ -119,13 +120,15 @@ class ImageFieldWidget(Widget.TextWidget):
                                if v])
         if parameters:
             image = '%s?%s' % (image, parameters)
-        return Widget.render_element(
+        x = Widget.render_element(
             "img",
             alt=alt,
             src=image,
             css_class=css_class,
             extra=extra,
         )
+        LOG('Testing... ', 0, x)
+        return x
 
     def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
                         render_prefix, attr_dict, local_name):
