@@ -24,6 +24,8 @@ try:
         # getPublisherDeadlineValue, and including publish parameter default
         # values.
         ISkinnable,
+        IBrowserPage,
+        recordMetaData,
         pubevents,
         Redirect,
         Retry,
