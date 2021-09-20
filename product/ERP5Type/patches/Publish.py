@@ -24,6 +24,8 @@ try:
         # getPublisherDeadlineValue, and including publish parameter default
         # values.
         ISkinnable,
+        IBrowserPage,
+        recordMetaData,
         pubevents,
         Redirect,
         Retry,
@@ -221,6 +223,12 @@ except ImportError: # BBB Zope2
         # getPublisherDeadlineValue, and including publish parameter default
         # values.
         ISkinnable,
+        PubAfterTraversal,
+        PubBeforeAbort,
+        PubBeforeCommit,
+        PubFailure,
+        PubStart,
+        PubSuccess,
         Redirect,
         Retry,
         call_object,
