@@ -77,13 +77,13 @@
             i,
             dom_list = [];
 
-          for (i = 2; i < url_list.length; i += 1) {
+          for (i = 1; i < url_list.length; i += 1) {
             dom_list.push(domsugar('li', {class: 'ui-li-has-count'}, [
               domsugar('a', {href: url_list[i]}, [
-                action_list[i - 2].name,
+                action_list[i - 1].name,
                 ' ',
                 domsugar('span', {class: 'ui-li-count',
-                                  text: action_list[i - 2].count})
+                                  text: action_list[i - 1].count})
               ])
             ]));
           }
