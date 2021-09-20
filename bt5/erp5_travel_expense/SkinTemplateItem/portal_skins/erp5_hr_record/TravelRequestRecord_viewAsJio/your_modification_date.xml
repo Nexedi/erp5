@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getModificationDate().HTML4()</string> </value>
+            <value> <string>python: here.getModificationDate().Date()</string> </value>
         </item>
       </dictionary>
     </pickle>

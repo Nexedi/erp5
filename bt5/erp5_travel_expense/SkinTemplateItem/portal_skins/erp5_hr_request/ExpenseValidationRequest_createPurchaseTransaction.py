@@ -27,6 +27,10 @@ transaction =  portal.accounting_module.newContent(
   causality=context.getRelativeUrl(),
 )
 
+document = context.getFollowUpRelatedValue(portal_type=['PDF', 'Image'])
+if document:
+  document.setFollowUpValueList(document.getFollowUpValueList() + [transaction])
+
 transaction.newContent(
   portal_type='Purchase Invoice Transaction Line',
   destination=mission_account,

@@ -17,6 +17,7 @@ else:
   )
   ticket = record.getFollowUpValue()
   ticket.setDestination(record.getSource())
+  ticket.setResource(record.getResource())
   ticket.plan()
 record.setDestinationReference(ticket.getReference())
 

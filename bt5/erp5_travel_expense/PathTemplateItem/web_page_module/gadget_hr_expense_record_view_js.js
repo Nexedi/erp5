@@ -37,7 +37,7 @@
             visible_in_html5_app_flag: 1,
             record_revision: (gadget.options.doc.record_revision || 1),
             photo_data: gadget.options.doc.photo_data || "",
-            modification_date: new Date().toISOString()
+            modification_date: new Date().toISOString().slice(0, 10).replace(/-/g, "/")
           };
         for (i = 0; i < form.length; i += 1) {
             // XXX Should check input type instead

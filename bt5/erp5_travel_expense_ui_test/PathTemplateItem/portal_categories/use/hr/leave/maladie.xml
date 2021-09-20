@@ -2,36 +2,39 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>_Change_local_roles_Permission</string> </key>
+            <key> <string>_Add_portal_folders_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
             <value>
               <tuple>
                 <string>Assignor</string>
@@ -46,41 +49,9 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Manager</string>
                 <string>Owner</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/2</string>
-                <string>contributor/person_module/5</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>gadget_hr_jio.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -90,29 +61,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_jio_js</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value> <string>maladie</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>HR Gadget JS</string> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>maladie</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -134,7 +91,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>document_publication_workflow</string> </key>
+                    <key> <string>category_publication_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -143,12 +100,6 @@
                     <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -170,7 +121,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -196,7 +149,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1479221739.78</float>
+                              <float>1631279222.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -205,7 +158,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
+                      <value> <string>embedded</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -245,7 +198,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>966.50115.49905.16025</string> </value>
+                      <value> <string>994.45363.2594.5444</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -263,68 +216,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1523364927.08</float>
-                              <string>GMT+2</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>0.0.0.0</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1479221698.05</float>
+                              <float>1631279234.05</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

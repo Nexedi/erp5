@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Service" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,13 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -26,15 +24,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_local_roles_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -45,6 +35,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -53,25 +44,27 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>content_md5</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>use/hr/travel_request/travel</string>
+              </tuple>
             </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>gadget_hr_translation.js</string> </value>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,33 +74,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_translation_js</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>hr_test_need_to_sync_travel</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Service</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Hr Translation JS</string> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>need_to_sync_travel</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -129,21 +104,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>document_publication_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>validation_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -153,63 +122,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1486474115.47</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -240,7 +152,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>957.10696.38833.4625</string> </value>
+                      <value> <string>994.55253.15580.36727</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +170,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486474204.83</float>
+                              <float>1631872643.72</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -272,7 +184,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -285,7 +197,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -300,14 +212,6 @@
                       <value> <string></string> </value>
                   </item>
                   <item>
-                      <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>0.0.0.0</string> </value>
-                  </item>
-                  <item>
                       <key> <string>time</string> </key>
                       <value>
                         <object>
@@ -319,12 +223,16 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486474082.13</float>
+                              <float>1631872647.56</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
                       </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>

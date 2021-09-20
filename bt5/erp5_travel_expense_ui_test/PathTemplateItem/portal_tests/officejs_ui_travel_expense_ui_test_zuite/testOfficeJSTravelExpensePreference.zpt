@@ -1,0 +1,59 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS HR</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_hr/#page=jio_configurator</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Local is Enough']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Local is Enough']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//a[@href='#page=preference']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@href='#page=preference']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=preference']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>User</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

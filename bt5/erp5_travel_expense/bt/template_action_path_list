@@ -7,6 +7,7 @@ Expense Sheet Module | view
 Expense Sheet | jio_view
 Expense Sheet | view
 Expense Validation Request Module | view
+Expense Validation Request | jump_to_related_document
 Expense Validation Request | jump_to_related_transaction
 Expense Validation Request | records
 Expense Validation Request | view
