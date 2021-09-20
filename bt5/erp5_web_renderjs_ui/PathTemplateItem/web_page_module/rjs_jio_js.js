@@ -8570,7 +8570,6 @@ return new Parser;
     return ensurePushableQueue(function () {
       if (context.hasCapacity("list") &&
           ((options.query === undefined) || context.hasCapacity("query")) &&
-          ((options.index === undefined) || context.hasCapacity("index")) &&
           ((options.sort_on === undefined) || context.hasCapacity("sort")) &&
           ((options.group_by === undefined) || context.hasCapacity("group")) &&
           ((options.select_list === undefined) ||
@@ -10956,9 +10955,13 @@ return new Parser;
   "use strict";
 
   function FallbackStorage(spec) {
-    this._sub_storage = jIO.createJIO(spec.sub_storage);
-    this._fallback_storage = jIO.createJIO(spec.fallback_storage);
-    this._checked = false;
+    this._sub_storage = this._current_storage = jIO.createJIO(spec.sub_storage);
+    if (spec.hasOwnProperty('fallback_storage')) {
+      this._fallback_storage = jIO.createJIO(spec.fallback_storage);
+      this._checked = false;
+    } else {
+      this._checked = true;
+    }
   }
 
   var method_name_list = [
@@ -10977,8 +10980,8 @@ return new Parser;
   function methodFallback(method_name) {
     return function () {
       var storage = this,
-        queue =  storage._sub_storage[method_name].apply(
-          storage._sub_storage,
+        queue =  storage._current_storage[method_name].apply(
+          storage._current_storage,
           arguments
         ),
         argument_list = arguments;
@@ -10992,9 +10995,9 @@ return new Parser;
             if ((error instanceof jIO.util.jIOError) &&
                 (error.status_code === 500)) {
               // If storage is not working, use fallback instead
-              storage._sub_storage = storage._fallback_storage;
-              return storage._sub_storage[method_name].apply(
-                storage._sub_storage,
+              storage._current_storage = storage._fallback_storage;
+              return storage._current_storage[method_name].apply(
+                storage._current_storage,
                 argument_list
               );
             }
@@ -14650,11 +14653,8 @@ return new Parser;
                 if (atob(exec[1]) === id) {
                   attachments[atob(exec[2])] = {};
                 }
-              } catch (error) {
+              } catch (ignore) {
                 // Check if unable to decode base64 data
-                if (!(error instanceof ReferenceError)) {
-                  throw error;
-                }
               }
             }
           }
@@ -14720,11 +14720,8 @@ return new Parser;
                   if (DOCUMENT_REGEXP.test(key)) {
                     try {
                       id = atob(DOCUMENT_REGEXP.exec(key)[1]);
-                    } catch (error) {
+                    } catch (ignore) {
                       // Check if unable to decode base64 data
-                      if (!(error instanceof ReferenceError)) {
-                        throw error;
-                      }
                     }
                     if (id !== undefined) {
                       id_dict[id] = null;
@@ -14734,11 +14731,8 @@ return new Parser;
                     try {
                       id = atob(exec[1]);
                       attachment = atob(exec[2]);
-                    } catch (error) {
+                    } catch (ignore) {
                       // Check if unable to decode base64 data
-                      if (!(error instanceof ReferenceError)) {
-                        throw error;
-                      }
                     }
                     if (attachment !== undefined) {
                       if (!id_dict.hasOwnProperty(id)) {
@@ -14789,11 +14783,8 @@ return new Parser;
                   id: atob(DOCUMENT_REGEXP.exec(key)[1]),
                   value: {}
                 });
-              } catch (error) {
+              } catch (ignore) {
                 // Check if unable to decode base64 data
-                if (!(error instanceof ReferenceError)) {
-                  throw error;
-                }
               }
             }
           }
@@ -15017,7 +15008,7 @@ return new Parser;
   }
 
   IndexedDBStorage.prototype.hasCapacity = function (name) {
-    return ((name === "list") || (name === "include") || (name === "index"));
+    return ((name === "list") || (name === "include"));
   };
 
   function buildKeyPath(key_list) {
@@ -15220,9 +15211,7 @@ return new Parser;
 
   IndexedDBStorage.prototype.buildQuery = function (options) {
     var result_list = [],
-      context = this,
-      key = "_id",
-      value;
+      context = this;
 
     function pushIncludedMetadata(cursor) {
       result_list.push({
@@ -15239,30 +15228,20 @@ return new Parser;
       });
     }
 
-    if (options.index) {
-      if (context._index_key_list.indexOf(options.index.key) === -1) {
-        throw new jIO.util.jIOError(
-          "IndexedDB: unsupported index '" + options.index.key + "'",
-          400
-        );
-      }
-      key = INDEX_PREFIX + options.index.key;
-      value = options.index.value;
-    }
-
     return new RSVP.Queue()
       .push(function () {
         return waitForOpenIndexedDB(context, function (db) {
           return waitForTransaction(db, ["metadata"], "readonly",
                                     function (tx) {
+              var key = "_id";
               if (options.include_docs === true) {
                 return waitForAllSynchronousCursor(
-                  tx.objectStore("metadata").index(key).openCursor(value),
+                  tx.objectStore("metadata").index(key).openCursor(),
                   pushIncludedMetadata
                 );
               }
               return waitForAllSynchronousCursor(
-                tx.objectStore("metadata").index(key).openKeyCursor(value),
+                tx.objectStore("metadata").index(key).openKeyCursor(),
                 pushMetadata
               );
             });
