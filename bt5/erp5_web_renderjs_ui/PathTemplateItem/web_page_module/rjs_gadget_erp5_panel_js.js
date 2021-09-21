@@ -183,7 +183,6 @@
                 {command: 'display', options: {page: "history"}},
                 {command: 'display_stored_state', options: {page: "search"}},
                 {command: 'display', options: {page: "my_account"}},
-                // {command: 'display', options: {page: "preference"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
               translation_list: gadget.getTranslationList([
@@ -194,7 +193,6 @@
                 'History',
                 'Search',
                 'My Account',
-                // 'Preferences',
                 'Logout'
               ]),
               checkbox_gadget: gadget.getDeclaredGadget("erp5_checkbox")
