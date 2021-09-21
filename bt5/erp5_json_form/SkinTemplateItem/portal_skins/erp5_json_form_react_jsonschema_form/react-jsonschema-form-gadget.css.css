@@ -1,3 +1,7 @@
+.rjsf .panel-danger.errors {
+  display: none;
+}
+
 .rjsf button.array-item-move-down::before {
     font-family: "FontAwesome";
     content: "\f0d7"
