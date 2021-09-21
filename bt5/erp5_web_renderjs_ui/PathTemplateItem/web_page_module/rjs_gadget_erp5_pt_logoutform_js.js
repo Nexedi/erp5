@@ -24,28 +24,8 @@
 
       return new RSVP.Queue(RSVP.hash({
         translation: gadget.getTranslationDict([
-          'Confirm',
-          'User'
+          'Confirm'
         ]),
-        me: gadget.getSetting('me')
-          .push(function (me) {
-            if (me !== undefined) {
-              return gadget.jio_allDocs({
-                query: 'relative_url:"' + me + '"',
-                select_list: ['title']
-              });
-            }
-          })
-          .push(function (result) {
-            var user;
-            // Calculate user name
-            if (result === undefined) {
-              user = "Who are you?";
-            } else {
-              user = result.data.rows[0].value.title;
-            }
-            return user;
-          }),
         erp5_form: gadget.getDeclaredGadget("erp5_form"),
         url_dict: gadget.getUrlForDict({
           // Back url
@@ -67,13 +47,6 @@
 
             result_dict.erp5_form.render({
               erp5_document: {"_embedded": {"_view": {
-                'User': {
-                  "default": result_dict.me,
-                  "editable": 0,
-                  "key": "field_user",
-                  "title": result_dict.translation.User,
-                  "type": "StringField"
-                }
               }},
                 "_links": {
                   "type": {
@@ -83,10 +56,7 @@
                 }
                 },
               form_definition: {
-                group_list: [[
-                  "left",
-                  [["User"]]
-                ]]
+                group_list: []
               }
             })
 
