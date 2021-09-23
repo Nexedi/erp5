@@ -23,6 +23,8 @@
   <td>window.matchMedia = function () {return {matches:true}}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@data-i18n='[value]Submit New Support Request']</td>
