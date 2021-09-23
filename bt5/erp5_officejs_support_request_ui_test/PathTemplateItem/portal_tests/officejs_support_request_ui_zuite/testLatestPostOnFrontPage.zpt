@@ -18,11 +18,8 @@
 
 <tr><td>click</td>
     <td>//input[@data-i18n='[value]Submit New Support Request']</td><td></td></tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_your_title']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@name='field_your_title']</td>
@@ -31,18 +28,8 @@
 <tr><td>type</td>
     <td>//input[@name='field_your_title']</td>
     <td>testLatestPostOnFrontPage</td></tr>
-<tr>
-  <td>select</td>
-  <td>field_your_project</td>
-  <td></td>
-</tr>
 <!-- Wait for the gadget to update the resource according to the project type,
  this done by an ajax call.-->
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//option[@text="BugReport"]</td>
@@ -56,12 +43,11 @@
   <td>RobotMaking</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
+  <td>waitForElementNotPresent</td>
+  <td>//option[@text="BugReport"]</td>
 </tr>
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//option[@text="BugReport"]</td>
 </tr>
 <tr>
