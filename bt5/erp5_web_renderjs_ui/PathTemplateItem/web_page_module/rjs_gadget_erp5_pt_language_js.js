@@ -50,7 +50,7 @@
           domsugar(gadget.element.querySelector('.dialog_button_container'), [
             domsugar('input', {name: 'action_update',
                                type: 'submit',
-                               value: first_result_list[3][2]})
+                               value: first_result_list[3][1]})
           ]);
 
           return RSVP.all([
