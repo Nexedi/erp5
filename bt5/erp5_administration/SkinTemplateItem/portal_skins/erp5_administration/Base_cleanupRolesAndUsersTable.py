@@ -1,9 +1,11 @@
 portal = context.getPortalObject()
+req = portal.cmf_activity_sql_connection().query
+
 security_uid_field_list = [x + ("_" if x != "" else "") + "security_uid" for x in portal.portal_catalog.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict().keys()]
-security_uid_set_list = []
+security_uid_set = set()
 for security_uid_field in security_uid_field_list:
-  security_uid_set_list.append({getattr(x, security_uid_field) for x in context.z_get_referenced_security_uid_set_for(security_uid_field=security_uid_field)})
-security_uid_set = reduce(lambda p, v: p.union(v), security_uid_set_list)
+  security_uid_set.update([row[0] for row in req("select distinct %s from catalog" % (security_uid_field), max_rows=0)[1]])
+
 filtered_set = context.Base_filterSecurityUidDict(
   portal.portal_catalog.getSQLCatalog(catalog_id).security_uid_dict,
   security_uid_set
