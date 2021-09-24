@@ -897,6 +897,15 @@
         result = new RSVP.Queue();
       }
 
+      // Reload the app to prevent memory leak due to webgl issue on
+      // samsung browser
+      if (modification_dict.first_render) {
+        result
+          .push(function () {
+            return gadget.reload();
+          });
+      }
+
       // Only refresh the full gadget content after the first render call
       // or if the display_step is modified
       // or if displaying another image
@@ -1115,6 +1124,7 @@
       return has_thumbnail;
     }, {mutex: 'changestate'})
 
+    .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
 }(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
