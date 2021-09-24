@@ -11,6 +11,7 @@
     default_state_json_string = JSON.stringify({
       panel_visible: false,
       service_worker_claimed: false,
+      app_reload_requested: false,
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
       ).textContent,
@@ -579,7 +580,7 @@
       return route(this, 'router', 'redirect', param_list);
     })
     .allowPublicAcquisition('reload', function reload() {
-      return location.reload();
+      this.state.app_reload_requested = true;
     })
     .allowPublicAcquisition("getUrlParameter", function getUrlParameter(
       param_list
@@ -707,7 +708,8 @@
     .allowPublicAcquisition("renderApplication", function renderApplication(
       param_list
     ) {
-      if (this.state.service_worker_claimed &&
+      if ((this.state.service_worker_claimed ||
+           this.state.app_reload_requested) &&
           (this.state.notification_options === undefined)) {
         // As a new service worker claimed the client,
         // reload the page to ensure it uses the lastest gadget versions
