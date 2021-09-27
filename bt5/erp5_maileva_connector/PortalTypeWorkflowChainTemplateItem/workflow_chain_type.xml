@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Maileva Exchange</type>
+  <workflow>edit_workflow, system_event_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Maileva SOAP Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+</workflow_chain>

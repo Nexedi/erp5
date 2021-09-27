@@ -1,0 +1,12 @@
+<property_sheet_list>
+ <portal_type id="Maileva Exchange">
+  <item>Amount</item>
+  <item>Arrow</item>
+  <item>Event</item>
+ </portal_type>
+ <portal_type id="Maileva SOAP Connector">
+  <item>Login</item>
+  <item>Reference</item>
+  <item>Url</item>
+ </portal_type>
+</property_sheet_list>
