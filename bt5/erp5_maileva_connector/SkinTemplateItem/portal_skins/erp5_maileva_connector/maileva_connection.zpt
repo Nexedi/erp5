@@ -1,0 +1,117 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="recipient_region python: options.get('recipient_region');
+                       recipient python: options.get('recipient');
+                       sender_region python: options.get('sender_region');
+                       sender_address_line_list python: options.get('sender_address_line_list');
+                       recipient_address_line_list python: options.get('recipient_address_line_list');">
+  <SOAP-ENV:Envelope xmlns:ns0="http://connector.services.siclv2.maileva.fr/"
+                     xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                     xmlns:com="http://www.maileva.fr/CommonSchema"
+                     xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema"
+                     xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema"
+                     >
+  <SOAP-ENV:Header/>
+   <ns1:Body>
+      <ns0:submit>
+        <campaign Version="5.0" Application="connecteur_Maileva">
+          <pjs:Requests>
+            <pjs:Request MediaType="DIGITAL" tal:attributes="TrackId python: options.get('track_id')">
+              <pjs:Recipients>
+                <pjs:Internal>
+                  <pjs:Recipient Id="1">
+                    <com:PaperAddress>
+                      <com:AddressLines>
+                        <com:AddressLine1 tal:content="python: recipient_address_line_list[0]" tal:condition="python: recipient_address_line_list[0]"></com:AddressLine1>
+                        <com:AddressLine2 tal:content="python: recipient_address_line_list[1]" tal:condition="python: recipient_address_line_list[1]"></com:AddressLine2>
+                        <com:AddressLine3 tal:content="python: recipient_address_line_list[2]" tal:condition="python: recipient_address_line_list[2]"></com:AddressLine3>
+                        <com:AddressLine4 tal:content="python: recipient_address_line_list[3]" tal:condition="python: recipient_address_line_list[3]"></com:AddressLine4>
+                        <com:AddressLine5 tal:content="python: recipient_address_line_list[4]" tal:condition="python: recipient_address_line_list[4]"></com:AddressLine5>
+                        <com:AddressLine6 tal:content="python: recipient_address_line_list[5]" tal:condition="python: recipient_address_line_list[5]"></com:AddressLine6>
+                      </com:AddressLines>
+                      <com:Country tal:content="recipient_region/getTitle"></com:Country>
+                      <com:CountryCode tal:content="recipient_region/getCodification"></com:CountryCode>
+                    </com:PaperAddress>
+                    <com:DigitalAddress>
+                      <com:FirstName tal:content="recipient/getFirstName"></com:FirstName>
+                      <com:LastName tal:content="recipient/getLastName"></com:LastName>
+                      <com:Identifier tal:content="options/employee_number"></com:Identifier>
+                    </com:DigitalAddress>
+                  </pjs:Recipient>
+                </pjs:Internal>
+              </pjs:Recipients>
+              <pjs:Senders>
+                <pjs:Sender Id="001">
+                  <com:PaperAddress>
+                    <com:AddressLines>
+                      <com:AddressLine1 tal:content="python: sender_address_line_list[0]" tal:condition="python: sender_address_line_list[0]"></com:AddressLine1>
+                      <com:AddressLine2 tal:content="python: sender_address_line_list[1]" tal:condition="python: sender_address_line_list[1]"></com:AddressLine2>
+                      <com:AddressLine3 tal:content="python: sender_address_line_list[2]" tal:condition="python: sender_address_line_list[2]"></com:AddressLine3>
+                      <com:AddressLine4 tal:content="python: sender_address_line_list[3]" tal:condition="python: sender_address_line_list[3]"></com:AddressLine4>
+                      <com:AddressLine5 tal:content="python: sender_address_line_list[4]" tal:condition="python: sender_address_line_list[4]"></com:AddressLine5>
+                      <com:AddressLine6 tal:content="python: sender_address_line_list[5]" tal:condition="python: sender_address_line_list[5]"></com:AddressLine6>
+                    </com:AddressLines>
+                    <com:Country tal:content="sender_region/getTitle"></com:Country>
+                    <com:CountryCode tal:content="sender_region/getCodification"></com:CountryCode>
+                  </com:PaperAddress>
+                </pjs:Sender>
+              </pjs:Senders>
+              <pjs:DocumentData>
+                <pjs:Documents>
+                  <pjs:Document Id="001">
+                    <com:Content>
+                      <com:Value tal:content="options/content"></com:Value>
+                    </com:Content>
+                    <com:MergeFields>
+                      <com:MergeField>
+                        <com:PageNumber>1</com:PageNumber>
+                        <com:FontName>Arial</com:FontName>
+                        <com:FontSize>12</com:FontSize>
+                        <com:FontColor>#000000</com:FontColor>
+                        <com:FontBold>false</com:FontBold>
+                        <com:FontItalic>false</com:FontItalic>
+                        <com:FontUnderline>false</com:FontUnderline>
+                        <com:PosUnit>CM</com:PosUnit>
+                        <com:PosX>12.0</com:PosX>
+                        <com:PosY>7.0</com:PosY>
+                        <com:Content>
+                          <com:Automatic>DIGITAL_SECURITY_CODE</com:Automatic>
+                        </com:Content>
+                        <com:Orientation>0</com:Orientation>
+                        <com:Halign>CENTER</com:Halign>
+                      </com:MergeField>
+                    </com:MergeFields>
+                  </pjs:Document>
+                </pjs:Documents>
+              </pjs:DocumentData>
+              <pjs:Options>
+                <pjs:RequestOption>
+                  <spec:DigitalOption>
+                    <spec:FoldOption>
+                      <spec:PostageClass>ECOPLI_GRAND_COMPTE</spec:PostageClass>
+                      <spec:DepositTitle tal:content="here/getTitle"></spec:DepositTitle>
+                      <spec:DepositDescription tal:content="here/getTitle"></spec:DepositDescription>
+                    </spec:FoldOption>
+                    <spec:DepositType>PAYSLIP</spec:DepositType>
+                    <spec:DigitalArchiving>600</spec:DigitalArchiving>
+                  </spec:DigitalOption>
+                </pjs:RequestOption>
+              </pjs:Options>
+              <pjs:Notifications>
+                <pjs:Notification Type="GENERAL">
+                 <spec:Format>XML</spec:Format>
+                  <spec:Protocols>
+                    <spec:Protocol>
+                      <spec:Ws/>
+                    </spec:Protocol>
+                  </spec:Protocols>
+                </pjs:Notification>
+              </pjs:Notifications>
+            </pjs:Request>
+          </pjs:Requests>
+        </campaign>
+     </ns0:submit>
+    </ns1:Body>
+  </SOAP-ENV:Envelope>
+</tal:block>
