@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="recipient_region python: options.get('recipient_region');
+                       recipient python: options.get('recipient');
+                       sender_region python: options.get('sender_region');
+                       sender_address_line_list python: options.get('sender_address_line_list');
+                       recipient_address_line_list python: options.get('recipient_address_line_list');">
+  <pjs:Campaign xmlns:com="http://www.maileva.fr/CommonSchema"
+                xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:mlv="http://www.maileva.fr/MailevaSpecificSchema"
+                xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema"
+                Version="5.0" Application="connecteur_Maileva">
+    <pjs:User AuthType="PLAINTEXT">
+      <pjs:Login tal:content="options/user"></pjs:Login>
+      <pjs:Password tal:content="options/password"></pjs:Password>
+    </pjs:User>
+    <pjs:Requests>
+      <pjs:Request MediaType="DIGITAL" TrackId="Bulletindesalaires">
+        <pjs:Recipients>
+          <pjs:Internal>
+            <pjs:Recipient Id="1">
+              <com:PaperAddress>
+                <com:AddressLines>
+                  <com:AddressLine1 tal:content="python: recipient_address_line_list[0]" tal:condition="python: recipient_address_line_list[0]"></com:AddressLine1>
+                  <com:AddressLine2 tal:content="python: recipient_address_line_list[1]" tal:condition="python: recipient_address_line_list[1]"></com:AddressLine2>
+                  <com:AddressLine3 tal:content="python: recipient_address_line_list[2]" tal:condition="python: recipient_address_line_list[2]"></com:AddressLine3>
+                  <com:AddressLine4 tal:content="python: recipient_address_line_list[3]" tal:condition="python: recipient_address_line_list[3]"></com:AddressLine4>
+                  <com:AddressLine5 tal:content="python: recipient_address_line_list[4]" tal:condition="python: recipient_address_line_list[4]"></com:AddressLine5>
+                  <com:AddressLine6 tal:content="python: recipient_address_line_list[5]" tal:condition="python: recipient_address_line_list[5]"></com:AddressLine6>
+                </com:AddressLines>
+                <com:Country tal:content="recipient_region/getTitle"></com:Country>
+                <com:CountryCode tal:content="recipient_region/getCodification"></com:CountryCode>
+              </com:PaperAddress>
+              <com:DigitalAddress>
+                <com:FirstName tal:content="recipient/getFirstName"></com:FirstName>
+                <com:LastName tal:content="recipient/getLastName"></com:LastName>
+                <com:Identifier tal:content="options/employee_number"></com:Identifier>
+                <com:JobPosition tal:content="recipient/getCareerTitle"></com:JobPosition>
+                <com:JobStartDate tal:content="options/career_start_date"></com:JobStartDate>
+              </com:DigitalAddress>
+            </pjs:Recipient>
+          </pjs:Internal>
+        </pjs:Recipients>
+        <pjs:Senders>
+          <pjs:Sender Id="001">
+            <com:PaperAddress>
+              <com:AddressLines>
+                <com:AddressLine1 tal:content="python: sender_address_line_list[0]" tal:condition="python: sender_address_line_list[0]"></com:AddressLine1>
+                <com:AddressLine2 tal:content="python: sender_address_line_list[1]" tal:condition="python: sender_address_line_list[1]"></com:AddressLine2>
+                <com:AddressLine3 tal:content="python: sender_address_line_list[2]" tal:condition="python: sender_address_line_list[2]"></com:AddressLine3>
+                <com:AddressLine4 tal:content="python: sender_address_line_list[3]" tal:condition="python: sender_address_line_list[3]"></com:AddressLine4>
+                <com:AddressLine5 tal:content="python: sender_address_line_list[4]" tal:condition="python: sender_address_line_list[4]"></com:AddressLine5>
+                <com:AddressLine6 tal:content="python: sender_address_line_list[5]" tal:condition="python: sender_address_line_list[5]"></com:AddressLine6>
+              </com:AddressLines>
+              <com:Country tal:content="sender_region/getTitle"></com:Country>
+              <com:CountryCode tal:content="sender_region/getCodification"></com:CountryCode>
+            </com:PaperAddress>
+          </pjs:Sender>
+        </pjs:Senders>
+        <pjs:DocumentData>
+          <pjs:Documents>
+            <pjs:Document Id="001">
+              <com:Content>
+                <com:Value tal:content="options/content"></com:Value>
+              </com:Content>
+            </pjs:Document>
+          </pjs:Documents>
+        </pjs:DocumentData>
+        <pjs:Options>
+          <pjs:RequestOption>
+            <mlv:DigitalOption>
+              <mlv:FoldOption>
+                <mlv:DepositTitle tal:content="here/getTitle"></mlv:DepositTitle>
+              </mlv:FoldOption>
+              <mlv:DepositType>PAYSLIP</mlv:DepositType>
+              <mlv:DigitalArchiving>600</mlv:DigitalArchiving>
+            </mlv:DigitalOption>
+          </pjs:RequestOption>
+        </pjs:Options>
+      </pjs:Request>
+    </pjs:Requests>
+  </pjs:Campaign>
+</tal:block>
