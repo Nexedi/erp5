@@ -397,6 +397,11 @@ Require valid-user
       self.frontend_address = configuration.get("frontend-address")
       self.instance_software_release = configuration.get('instance-software-release')
       self.use_existing_setup = self.instance_name is not None and self.frontend_address is not None
+
+      # update from Test Suite's configuration the frontend details
+      self.frontend_slave_instance_title = configuration.get("frontend-slave-instance-title")
+      self.frontend_slave_domain = configuration.get("frontend-slave-domain")
+      self.frontend_slave_software_release_url = configuration.get("frontend-slave-software-release-url") 
  
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
@@ -514,7 +519,8 @@ Require valid-user
     bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
     metric_url = suite.getScalabilityTestMetricUrl(instance_information)
     site_availability_url = suite.getSiteAvailabilityUrl(instance_information)
-    return instance_url, bootstrap_url, metric_url, site_availability_url
+    balancer_user_v6 = instance_information.get("balancer-user-v6")
+    return instance_url, bootstrap_url, metric_url, site_availability_url,balancer_user_v6
 
   def bootstrapInstance(self, bootstrap_url):
     bootstrap_password = error_message = None
@@ -613,10 +619,36 @@ Require valid-user
       logger.info("Test case for count : %d is in a running state." % count)
 
       try:
-        instance_url, bootstrap_url, metric_url, site_availability_url = self.getInstanceInformation(suite, count, node_test_suite)
+        instance_url, bootstrap_url, metric_url, site_availability_url, balancer_user_v6 = self.getInstanceInformation(suite, count, node_test_suite)
       except Exception as e:
         error_message = "Error getting testsuite information: " + str(e)
         break
+
+      # update local front end slave if specified
+      frontend_slave_instance_title = self.frontend_slave_instance_title
+      frontend_slave_domain = self.frontend_slave_domain
+      frontend_slave_software_release_url =  self.frontend_slave_software_release_url
+      if frontend_slave_instance_title is not None and \
+         frontend_slave_domain is not None  and \
+         frontend_slave_software_release_url is not None:
+        # set frontend one as API of slapos_commpunicator is doesn't allow it
+        erp5_software_release = self.slapos_communicator.url
+        self.slapos_communicator.url = frontend_slave_software_release_url
+        logger.info("Update frontend slave: %s" %balancer_user_v6)
+        config = {"custom_domain": frontend_slave_domain,
+                  "url": balancer_user_v6,
+                  "type": "zope",
+                  "https-only": "false"}
+        request_kw = {"partition_parameter_kw": config}
+        self.slapos_communicator.requestInstanceStart(frontend_slave_instance_title, \
+                                                      request_kw, \
+                                                      shared=True, \
+                                                      software_type='default')
+        self.slapos_communicator.url = erp5_software_release
+        logger.info("Wait frontend until gets updated.")
+        time.sleep(120)
+        # use frontend slave rather than previously generate Nexedi CDN one
+        instance_url = "http://%s/erp5" %frontend_slave_domain
 
       software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
       self.requestUrlScript = software_bin_directory + REQUEST_URL_SCRIPT
