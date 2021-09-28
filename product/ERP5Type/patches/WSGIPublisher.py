@@ -100,7 +100,8 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
         if lock:
             self._locked_body = 1
 
-    WSGIResponse.setBody = setBody
+    if not isZope4:
+        WSGIResponse.setBody = setBody
 
     # According to PEP 333, WSGI applications and middleware are forbidden from
     # using HTTP/1.1 "hop-by-hop" features or headers. This patch prevents Zope
