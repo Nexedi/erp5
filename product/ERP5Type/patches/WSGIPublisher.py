@@ -101,7 +101,8 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
         if lock:
             self._locked_body = 1
 
-    WSGIResponse.setBody = setBody
+    if not isZope4:
+        WSGIResponse.setBody = setBody
 
     def write(self, data):
         if not self._streaming:
