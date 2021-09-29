@@ -65,6 +65,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -72,6 +73,14 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>content</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
@@ -89,6 +98,7 @@
                     <value>
                       <list>
                         <string>your_format</string>
+                        <string>your_send_to_maileva</string>
                       </list>
                     </value>
                 </item>
@@ -129,7 +139,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>PaySheetTransaction_updatePayslipReportDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
