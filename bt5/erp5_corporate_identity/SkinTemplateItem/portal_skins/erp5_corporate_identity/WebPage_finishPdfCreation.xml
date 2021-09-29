@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>doc_download=None, doc_aggregate_list=None, doc_title=None, doc_save=None, doc_version=None, doc_relative_url=None, doc_language=None, doc_modification_date=None, doc_reference=None, doc_full_reference=None, doc_pdf_file=None</string> </value>
+            <value> <string>doc_download=None, doc_aggregate_list=None, doc_title=None, doc_save=None, doc_version=None, doc_relative_url=None, doc_language=None, doc_modification_date=None, doc_reference=None, doc_full_reference=None, doc_pdf_file=None, get_doc_after_save = None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
