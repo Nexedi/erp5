@@ -30,6 +30,7 @@
         <span tal:condition='other_data_dict/source_section_default_career_start_date' tal:content='python:other_data_dict["source_section_default_career_start_date"]'>12/09/2005</span>
         <span tal:condition='other_data_dict/source_section_career_title' tal:content='python:other_data_dict["source_section_career_title"]'>Réceptionniste</span>
         <span tal:condition='other_data_dict/source_section_default_career_coefficient' tal:content='python:other_data_dict["source_section_default_career_coefficient"]'>100</span>
+        <span tal:condition='other_data_dict/source_section_career_employee_number' tal:content='python: other_data_dict["source_section_career_employee_number"]'></span>
       </div>
   </div>
 </tal:block>
