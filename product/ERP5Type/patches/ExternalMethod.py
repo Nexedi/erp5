@@ -61,7 +61,7 @@ class _(PatchClass(ExternalMethod)):
         if component_module is None:
             # Fall back on filesystem
             if not reload:
-                from Globals import DevelopmentMode
+                from Products.ERP5Type.Globals import DevelopmentMode
                 if DevelopmentMode:
                     try:
                         last_read, path = self._v_fs
