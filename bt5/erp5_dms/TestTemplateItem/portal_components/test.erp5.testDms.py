@@ -2530,9 +2530,9 @@ return 1
     self.tic()
     # full text indexation
     full_text_result = portal.erp5_sql_connection.manage_test('select * from full_text where uid="%s"' %document.getUid())
-    self.assertTrue('subject2' in full_text_result[0]['searchabletext'])
-    self.assertTrue('subject1' in full_text_result[0]['searchabletext'])
-    self.assertTrue(document.getReference() in full_text_result[0]['searchabletext'])
+    self.assertTrue('subject2' in full_text_result[0]['SearchableText'])
+    self.assertTrue('subject1' in full_text_result[0]['SearchableText'])
+    self.assertTrue(document.getReference() in full_text_result[0]['SearchableText'])
 
     # subject indexation
     for subject_list in (['subject1',], ['subject2',],
