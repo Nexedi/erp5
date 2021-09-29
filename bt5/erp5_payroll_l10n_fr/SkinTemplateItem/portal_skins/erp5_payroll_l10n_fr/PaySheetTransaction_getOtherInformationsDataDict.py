@@ -14,6 +14,12 @@ def getFieldAsLineList(field):
   text_list = text.split('\n')
   return [x for x in text_list if x]
 
+def getRegistrationNumber(registration_number):
+  s = ''
+  if registration_number:
+    s = '%s: %s' % (translateString('Employee Registration Number'), registration_number)
+  return s
+
 def getSocialCodeId(social_code_id):
   s = ''
   if social_code_id:
@@ -212,6 +218,7 @@ data_dict = {
   'total_employee_tax': getTotalEmployeeTaxId(total_employee_tax),
   'total_employer_tax': getTotalEmployerTaxId(total_employer_tax),
   'year_to_date_total_employer_tax': year_to_date_total_employer_tax,
+  'source_section_registration_number': getRegistrationNumber(source_section.getRegistrationNumber())
 }
 
 return unicodeDict(data_dict)
