@@ -376,9 +376,9 @@ class Zuite( OrderedFolder ):
                               , reg( 'SERVER_SOFTWARE', 'unknown' )
                               )
 
-        result._updateProperty( 'product_info'
-                              , self._listProductInfo()
-                              )
+        #result._updateProperty( 'product_info'
+        #                      , self._listProductInfo()
+        #                      )
 
         result._setObject( 'suite.html'
                          , File( 'suite.html'
