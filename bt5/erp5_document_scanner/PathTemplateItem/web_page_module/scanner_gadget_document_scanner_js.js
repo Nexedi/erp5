@@ -902,7 +902,7 @@
       if (modification_dict.first_render) {
         result
           .push(function () {
-            return gadget.reload();
+            return gadget.reload(true);
           });
       }
 

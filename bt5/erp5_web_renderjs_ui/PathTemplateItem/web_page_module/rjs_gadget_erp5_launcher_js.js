@@ -579,8 +579,13 @@
     .allowPublicAcquisition("redirect", function redirect(param_list) {
       return route(this, 'router', 'redirect', param_list);
     })
-    .allowPublicAcquisition('reload', function reload() {
-      this.state.app_reload_requested = true;
+    .allowPublicAcquisition('reload', function reload(param_list) {
+      if (param_list[0] === true) {
+        // reload in async mode
+        this.state.app_reload_requested = true;
+      } else {
+        return location.reload();
+      }
     })
     .allowPublicAcquisition("getUrlParameter", function getUrlParameter(
       param_list
