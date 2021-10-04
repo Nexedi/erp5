@@ -17,39 +17,21 @@
   <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Storages'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Local is Enough'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Storages']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Storages']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Local is Enough</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Local is Enough</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//label[@for='upload']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//label[@for='image']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td>//a[@id='audio']</td>
   <td></td>
 </tr>
 <tr>
@@ -57,14 +39,21 @@
   <td>//a[@id='audio']</td>
   <td></td>
 </tr>
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//button[text()="We can't access to your microphone"]</td>
   <td></td>
 </tr>
+<!--tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'We can\'t access to your microphone'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block-->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[contains(@href,'smart_assistant_text')]</td>
+  <td>//a[@id='text']</td>
   <td></td>
 </tr>
 <tr>
@@ -72,54 +61,41 @@
   <td>//a[@id='text']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define="text_content python: 'This is a test too simple'">
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
 </tal:block>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()='Data created']</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data created'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[contains(@href,'smart_assistant_audio')]</td>
   <td></td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Document']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Filter']</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr>
   <td>store</td>
-  <td tal:content="python: 'This_is_a_test'">Title</td>
+  <td>This_is_a_test</td>
   <td>title</td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': '${title}'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define="text_content python: '<p>This is a test too simple</p>'">
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
 </tal:block>
@@ -130,26 +106,18 @@
   <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Storages</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Storages</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Erp5</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Erp5</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Storages'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Erp5'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>name=erp5_url</td>
@@ -165,6 +133,9 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <!-- Create two documents : audio, text -->
 <tr>
   <td>waitForElementPresent</td>
@@ -181,6 +152,8 @@
   <td>//button[text()="We can't access to your microphone"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[contains(@href,'smart_assistant_text')]</td>
@@ -191,58 +164,39 @@
   <td>//a[@id='text']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define="text_content python: 'This is a test too simple'">
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
 </tal:block>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()='Data created']</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data created'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@id='audio']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Document']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Document']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Filter']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <!-- Check in ERP5 -->
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Synchronize'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>store</td>
-  <td tal:content="python: 'This_is_a_test'">Title</td>
+  <td>This_is_a_test</td>
   <td>title</td>
 </tr>
 <tr>
@@ -265,51 +219,42 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/smart_assistant_text_module/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': '${title}'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Filter']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//pre[contains(text(), "This is a test too simple")]</td>
   <td></td>
 </tr>
 <!-- Check in ERP5: Query -->
-  <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-  </tal:block>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text() = 'Post a Query']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text() = 'Post a Query']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//label[@for='field_your_description']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Post a Query'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>type</td>
   <td>//textarea[@name='field_your_description']</td>
   <td>This is a reply test</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<!--tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'XXX'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block-->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//label[@for='field_my_title']</td>
@@ -319,88 +264,47 @@
   <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
   </tal:block>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text() = 'New Person']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text() = 'New Person']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='action_confirm' and @value='Create Person']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='action_confirm' and @value='Create Person']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()="Action succeeded."]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+
+<tal:block tal:define="click_configuration python: {'text': 'New Person'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Action succeeded.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <!-- Check in ERP5: New Expense -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text() = 'New Expense']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text() = 'New Expense']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='action_confirm' and @value='Create Expense']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='action_confirm' and @value='Create Expense']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()="Action succeeded."]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'New Expense'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Action succeeded.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <!-- Check in ERP5: New Event-->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text() = 'New Event']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text() = 'New Event']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_your_text_content']//iframe</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='action_confirm' and @value='Create Event']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='action_confirm' and @value='Create Event']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()="Action succeeded."]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'New Event'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Action succeeded.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>open</td>
   <td>${base_url}/Zuite_waitForActivities</td>
@@ -416,26 +320,18 @@
   <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Storages']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Storages']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Erp5</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Erp5</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Storages'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Erp5'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>name=erp5_url</td>
@@ -451,16 +347,15 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': '${title}'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//pre[contains(text(), "This is a reply test")]</td>
