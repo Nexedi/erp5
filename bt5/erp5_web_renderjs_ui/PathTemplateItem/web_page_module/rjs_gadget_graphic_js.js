@@ -64,13 +64,13 @@
         sub_query_list = [],
         column_list = options.layout.x.column_list,
         domain_id = options.layout.x.domain_id,
-        extended_search_mapping = {},
         data = {
           x: options.layout.x.key,
           title: options.title || options.layout.x.title,
           x_title: options.layout.x.title,
           y_title: options.layout.y.title,
           column_list: column_list,
+          extended_search_mapping: {},
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
         performance_mapping = {
@@ -138,7 +138,7 @@
       if (domain_id) {
         domain_list = options.layout.x.domain_list || [];
         for (i = 0; i < domain_list.length; i += 1) {
-          extended_search_mapping[column_list[i]] = {
+          data.extended_search_mapping[column_list[i]] = {
             "key": "selection_domain_" + domain_id,
             "value": domain_list[i]
           };
@@ -162,7 +162,6 @@
           });
           sub_query_list = [];
         }
-        data.extended_search_mapping = extended_search_mapping;
         data.query_list = query_list;
       } else if (group_by instanceof Array && group_by.length > 1) {
         data.query = {
