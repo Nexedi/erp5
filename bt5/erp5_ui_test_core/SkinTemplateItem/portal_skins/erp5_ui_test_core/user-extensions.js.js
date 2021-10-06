@@ -94,6 +94,20 @@ Selenium.prototype.doSetFile = function(locator, url_filename_mimetype) {
       }));
 };
 
+/**
+ * If used to type and active the onChange event in react forms.
+ * @param {string} locator the selenium locator
+ * @param {string} text the text to type in the field
+ */
+Selenium.prototype.doTypeReact = function(locator, newText) {
+    var input = this.page().findElement(locator);
+    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+    nativeInputValueSetter.call(input, newText);
+
+    var ev2 = new Event('input', { bubbles: true});
+    input.dispatchEvent(ev2);
+};
+
 
 /**
  * Checks the element referenced by `locator` is a float equals to `text`.
@@ -136,6 +150,7 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {
     var actualValue = getText(this.page().findElement(psm_locator));
     Assert.matches(text, actualValue);
 };
+
 
 /*
  * Get the location of the current page. This function is missing in
