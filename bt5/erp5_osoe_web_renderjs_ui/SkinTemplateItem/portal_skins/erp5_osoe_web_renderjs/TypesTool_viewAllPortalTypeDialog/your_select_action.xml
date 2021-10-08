@@ -57,6 +57,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -129,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'erp5_add_list\', here.TypesTool_getCategorizedModuleActionInformationDict().get(\'add\', []))]</string> </value>
+            <value> <string>python: [(\'action_script\', \'Base_doSiteAction\'), (\'erp5_add_list\', here.TypesTool_getCategorizedModuleActionInformationDict().get(\'add\', []))]</string> </value>
         </item>
       </dictionary>
     </pickle>
