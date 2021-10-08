@@ -121,12 +121,12 @@ class DomainTool(BaseTool):
               ),
               ComplexQuery(
                 SimpleQuery(**{range_min: None}),
-                SimpleQuery(comparison_operator='>=', **{range_max: value}),
+                SimpleQuery(comparison_operator='>', **{range_max: value}),
                 logical_operator='AND',
               ),
               ComplexQuery(
                 SimpleQuery(comparison_operator='<=', **{range_min: value}),
-                SimpleQuery(comparison_operator='>=', **{range_max: value}),
+                SimpleQuery(comparison_operator='>', **{range_max: value}),
                 logical_operator='AND',
               ),
               logical_operator='OR',
