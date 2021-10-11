@@ -1236,10 +1236,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     result_dict = json.loads(result)
     self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
 
-    # The parent is OFS.Folder: portal_skins/erp5_ui_test, and it does not have relative_url,
-    # so the hal+json hateoas result does not contain the parent link.
-    self.assertTrue('parent' not in result_dict['_links'])
-
+    self.assertEqual(result_dict['_links']['parent'],
+                     {"href": "urn:jio:get:", "name": self.portal.getTitle()})
 #    self.assertEqual(result_dict['_links']['view'][0]['href'],
 #                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=consistency" % (
 #                       self.portal.absolute_url(),
