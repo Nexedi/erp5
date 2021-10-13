@@ -1433,7 +1433,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         try:
           # ignore aquisition of the called context: Web Site
           container_name = container.Base_aqSelf().getTranslatedTitle()
-        except AttributeError:
+        except (AttributeError, Unauthorized):
           container_name = container.getTitle()
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
