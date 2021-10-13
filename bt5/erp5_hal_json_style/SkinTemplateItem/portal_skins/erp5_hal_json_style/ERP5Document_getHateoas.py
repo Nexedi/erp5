@@ -1430,10 +1430,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       container = traversed_document.getParentValue()
       if container != portal:
         # Jio does not support fetching the root document for now
-        try:
-          # ignore aquisition of the called context: Web Site
-          container_name = container.Base_aqSelf().getTranslatedTitle()
-        except (AttributeError, Unauthorized):
+        if container.getRelativeUrl():
+          container_name = container.getTranslatedTitle()
+        else:
+          # for example in portal_skin
           container_name = container.getTitle()
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
