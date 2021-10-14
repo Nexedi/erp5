@@ -32,10 +32,10 @@ from Products.ExternalMethod.ExternalMethod import \
   ExternalMethod as ZopeExternalMethod
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.expression import ExpressionMixin
+from Products.ERP5Type.mixin.expression import ExpressionMixin
 
 
-class ExternalMethod(XMLObject, ZopeExternalMethod, ExpressionMixin):
+class ExternalMethod(XMLObject, ZopeExternalMethod, ExpressionMixin()):
     """ External Method for ERP5
     """
 
