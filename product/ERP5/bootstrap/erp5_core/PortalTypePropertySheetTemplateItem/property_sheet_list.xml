@@ -41,9 +41,6 @@
  <portal_type id="Extension Component">
   <item>SortIndex</item>
  </portal_type>
- <portal_type id="External Method">
-  <item>CatalogFilter</item>
- </portal_type>
  <portal_type id="Interface Component">
   <item>SortIndex</item>
  </portal_type>

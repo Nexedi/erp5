@@ -36,7 +36,6 @@
   <item>Python Script</item>
  </portal_type>
  <portal_type id="Catalog">
-  <item>External Method</item>
   <item>Python Script</item>
   <item>SQL Method</item>
  </portal_type>

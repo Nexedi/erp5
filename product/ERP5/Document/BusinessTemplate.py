@@ -3109,7 +3109,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       # If there is no filter archive and the the meta_type of the catalog
       # method isn't one of the ERP5-ified Catalog Method Document, then
       # set the filter to 0
-      elif not method.meta_type.startswith('ERP5 '):
+      elif method.meta_type not in ('ERP5 SQL Method', 'ERP5 Python Script'):
         method.setFiltered(0)
 
       # backward compatibility
