@@ -335,12 +335,16 @@ for filename in os.listdir(os.path.dirname(lxml.__file__)):
 # with `No name 'bigarray' in module 'wendelin' (no-name-in-module)`.
 #
 # -> Teach pylint to properly understand wendelin package nature.
-import wendelin
-def wendelin_transform(node):
-    m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
-    m.package = True
-    return m
-MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
+try:
+    import wendelin
+except ImportError:
+    pass
+else:
+    def wendelin_transform(node):
+        m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
+        m.package = True
+        return m
+    MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
 
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
