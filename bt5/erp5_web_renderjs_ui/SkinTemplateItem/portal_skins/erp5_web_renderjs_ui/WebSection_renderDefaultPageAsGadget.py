@@ -15,27 +15,32 @@ portal = context.getPortalObject()
 default_language = web_section.getLayoutProperty("default_available_language", default='en')
 website_url_set = {}
 
-#simplify code of Base_doLanguage, can't ues Base_doLanguage directly
-root_website_url = web_section.getOriginalDocument().absolute_url()
-website_url_pattern = r'^%s(?:%s)*(/|$)' % (
-  re.escape(root_website_url),
-  '|'.join('/' + re.escape(x) for x in available_language_set))
+selected_language = portal.Localizer.get_selected_language()
 
-for language in available_language_set:
-  if language == default_language:
-    website_url_set[language] = re.sub(website_url_pattern, r'%s/\1' % root_website_url, web_section.absolute_url())
-  else:
-    website_url_set[language]=  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section.absolute_url())
+if (web_section.getPortalType() == 'Web Section'):
+  # do not allow language echange
+  website_url_set[selected_language] = web_section.absolute_url() + '/'
+  available_language_set = [selected_language]
+else:
+  #simplify code of Base_doLanguage, can't ues Base_doLanguage directly
+  root_website_url = web_section.getOriginalDocument().absolute_url()
+  website_url_pattern = r'^%s(?:%s)*(/|$)' % (
+    re.escape(root_website_url),
+    '|'.join('/' + re.escape(x) for x in available_language_set))
+
+  for language in available_language_set:
+    if language == default_language:
+      website_url_set[language] = re.sub(website_url_pattern, r'%s/\1' % root_website_url, web_section.absolute_url())
+    else:
+      website_url_set[language] =  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section.absolute_url())
 
 view_as_web_method = default_web_page.getTypeBasedMethod(
   "viewAsWeb",
   fallback_script_id="WebPage_viewAsWeb"
   )
 
-selected_language = portal.Localizer.get_selected_language()
-
 # base tag
-if selected_language == default_language:
+if (selected_language == default_language) or (web_section.getPortalType() == 'Web Section'):
   base_prefix = ""
 else:
   base_prefix = '../'
