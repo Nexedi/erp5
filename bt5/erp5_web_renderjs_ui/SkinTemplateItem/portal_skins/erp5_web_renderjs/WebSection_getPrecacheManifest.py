@@ -171,7 +171,7 @@ default_url = './'
 available_language_set = web_section.getLayoutProperty("available_language_set", default=['en'])
 default_language = web_section.getLayoutProperty("default_available_language", default='en')
 for language in available_language_set:
-  if language == default_language:
+  if (language == default_language) or (web_section.getPortalType() == 'Web Section'):
     url_list.append(default_url)
   else:
     url_list.append('%s/' % language)
