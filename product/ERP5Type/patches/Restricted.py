@@ -463,22 +463,21 @@ else:
   allow_class(pd.DataFrame)
 
   # Note: These black_list methods are for pandas 0.19.2
+  series_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                       'to_sql', 'to_msgpack')
   ContainerAssertions[pd.Series] = _check_access_wrapper(
-    pd.Series, dict.fromkeys((
-      'to_csv', 'to_json', 'to_pickle', 'to_hdf', 'to_sql', 'to_msgpack',
-    ), restrictedMethod))
+    pd.Series, dict.fromkeys(series_black_list, restrictedMethod))
 
-  ModuleSecurityInfo('pandas').declarePrivate(
-    'read_csv', 'read_json', 'read_pickle', 'read_hdf', 'read_fwf',
-    'read_excel', 'read_html', 'read_msgpack',
-    'read_gbq', 'read_sas', 'read_stata',
-  )
+  pandas_black_list = ('read_csv', 'read_json', 'read_pickle', 'read_hdf',
+                       'read_fwf', 'read_excel', 'read_html', 'read_msgpack',
+                       'read_gbq', 'read_sas', 'read_stata')
+  ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
 
+  dataframe_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                          'to_excel', 'to_html', 'to_sql', 'to_msgpack',
+                          'to_latex', 'to_gbq', 'to_stata')
   ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
-    pd.DataFrame, dict.fromkeys((
-      'to_csv', 'to_json', 'to_pickle', 'to_hdf', 'to_excel', 'to_html',
-      'to_sql', 'to_msgpack', 'to_latex', 'to_gbq', 'to_stata',
-    ), restrictedMethod))
+    pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
 
   safetype.update(dict.fromkeys((
     pd.DataFrame,
