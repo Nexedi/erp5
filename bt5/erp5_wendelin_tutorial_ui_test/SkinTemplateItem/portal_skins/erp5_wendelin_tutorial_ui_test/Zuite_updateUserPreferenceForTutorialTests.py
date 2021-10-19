@@ -1,6 +1,6 @@
 preference_tool = context.getPortalObject().portal_preferences
 
-preference = preference_tool.getActivePreference()
+preference = preference_tool.getActiveUserPreference()
 
 if preference is not None: # XXX: 3 is Priority.USER
   preference.setPreferredTextEditor('text_area')

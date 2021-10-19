@@ -4,7 +4,7 @@
 portal = context.getPortalObject()
 howto_dict = context.Zuite_getHowToInfo()
 
-functional_test_username = 'functional_test_tutorial_username'
+functional_test_username = howto_dict['functional_test_username']
 person = getattr(portal.person_module, functional_test_username, None)
 if person is None:
   person = portal.person_module.newContent(portal_type='Person',
@@ -25,12 +25,18 @@ if person is None:
   login = person.newContent(
     portal_type='ERP5 Login',
     reference=functional_test_username,
-    password='secret',
+    password=howto_dict['functional_test_user_password'],
   )
   login.validate()
 
   # XXX (lucas): These tests must be able to run on an instance without security.
-  for role in ('Manager','Assignee', 'Assignor', 'Associate', 'Auditor', 'Owner'):
-    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, person.Person_getUserId())
+  # BBB for PAS 1.9.0 we pass a response and undo the redirect
+  response = container.REQUEST.RESPONSE
+  for role in ('Manager', 'Assignee', 'Assignor', 'Associate', 'Auditor', 'Owner'):
+    portal.acl_users.zodb_roles.manage_assignRoleToPrincipals(
+        role,
+        (person.Person_getUserId(),),
+        RESPONSE=response)
+    response.setStatus(200)
 
 return 'Done.'
