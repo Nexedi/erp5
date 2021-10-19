@@ -2,25 +2,8 @@
 <test>
   <table style="display: none;" class="test">
     <tbody>
-      <tr>
-        <td>store</td>
-        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
-        <td>base_url_x</td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_setUpPersonTest</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyTextPresent</td>
-        <td></td>
-      </tr>
       <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
+        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewWendelinTestMacroLibrary/macros/init_wendelin_test_environment"&gt;Init Wendlin Test Environment&lt;/span&gt;</td>
       </tr>
     </tbody>
   </table>
@@ -81,7 +64,7 @@
     <tbody>
       <tr>
         <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
+        <td>${default_front_url}</td>
         <td></td>
       </tr>
       <tr>
@@ -245,8 +228,6 @@
         <td>//li[@name='Organisation']</td>
         <td></td>
       </tr>
-      
-      
       <tr>
         <td>type</td>
         <td>//input[@id="field_my_source_section_title"]</td>
@@ -267,7 +248,6 @@
         <td>//li[@name='Organisation']</td>
         <td></td>
       </tr>
-      
       <tr>
         <td>type</td>
         <td>//input[@id="field_my_destination_title"]</td>
@@ -304,9 +284,9 @@
         <td></td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
@@ -338,19 +318,16 @@
         <td>//button[@type="submit" and @class="success"]</td>
         <td></td>
       </tr>
-      
       <tr>
         <td>waitForElementPresent</td>
         <td>//label[@for="field_my_translated_validation_state_title"]</td>
         <td></td>
       </tr>
-      
       <tr>
         <td>assertTextPresent</td>
         <td>Validated</td>
         <td></td>
       </tr>
-      
       <tr>
         <td>waitForElementPresent</td>
         <td>//input[@id="field_my_destination_section_title"]</td>
@@ -382,9 +359,9 @@
         <td></td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
@@ -580,9 +557,9 @@
         <td></td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
@@ -595,9 +572,9 @@
         <td></td>
       </tr>
       <tr>
-       <td>pause</td>
-       <td>5000</td>
-       <td></td>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
       </tr>
     </tbody>
   </table>
@@ -689,15 +666,15 @@
         <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
       </tr>
-       <tr>
-         <td>pause</td>
-         <td>5000</td>
-         <td></td>
-       </tr>
       <tr>
         <td>click</td>
         <td>//input[@type="submit" and @value="Create Document"]</td>
         <td></td>
+      </tr>
+      <tr>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
       </tr>
       <tr>
         <td>waitForElementPresent</td>
@@ -745,10 +722,10 @@
         <td></td>
       </tr>
       <tr>
-         <td>pause</td>
-         <td>5000</td>
-         <td></td>
-       </tr>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
+      </tr>
       <tr>
         <td>waitForElementPresent</td>
         <td>//button[@type="submit" and @class="success"]</td>
@@ -760,9 +737,9 @@
         <td></td>
       </tr>
       <tr>
-        <td>pause</td>
-        <td>5000</td>
-        <td></td>
+        <td colspan="3">&lt;tal:block
+          metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot;&gt;
+          &lt;/tal:block&gt;</td>
       </tr>
       <tr>
         <td>verifyElementPresent</td>
@@ -786,22 +763,12 @@
       </tr>
       <tr>
         <td>open</td>
-        <td>${base_url_x}/portal_skins/erp5_wendelin_data_lake/Ingestion_ingestDataStream?reference=sensor_1-sample-environment-raw-data</td>
+        <td>${base_url}/Ingestion_ingestDataStream?reference=sensor_1-sample-environment-raw-data</td>
         <td></td>
       </tr>
       <tr>
         <td>assertTextPresent</td>
         <td>Data ingested</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>60000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
         <td></td>
       </tr>
     </tbody>
