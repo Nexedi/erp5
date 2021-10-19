@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -35,7 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Person_setRegistrationNumber</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,7 +36,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -74,9 +57,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -88,48 +69,21 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_start_date</string>
-                        <string>listbox_stop_date</string>
-                        <string>listbox_title</string>
-                        <string>listbox_function</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_registration_number</string>
-                        <string>my_start_date</string>
-                        <string>my_default_birthplace_address_city</string>
-                        <string>my_birth_name</string>
-                        <string>my_middle_name</string>
-                        <string>my_prefix</string>
-                        <string>my_suffix</string>
-                        <string>my_marital_status</string>
-                        <string>my_head_of_family</string>
-                        <string>my_default_image_absolute_url</string>
-                        <string>my_default_image_file</string>
+                        <string>your_warning</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_career_title</string>
-                        <string>my_social_code</string>
-                        <string>my_career_reference</string>
-                        <string>my_career_collective_agreement_title</string>
-                        <string>my_career_grade</string>
-                        <string>my_career_salary_coefficient</string>
-                        <string>my_career_salary_level</string>
-                        <string>my_career_skill_list</string>
-                        <string>my_child_count</string>
-                        <string>my_partner_count</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -137,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_viewDetails</string> </value>
+            <value> <string>Person_setRegistrationNumberDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -145,11 +99,15 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Person_viewDetails</string> </value>
+            <value> <string>Person_setRegistrationNumberDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>ERP5 Form</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -161,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Details</string> </value>
+            <value> <string>Reset Registration Number</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -169,6 +127,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

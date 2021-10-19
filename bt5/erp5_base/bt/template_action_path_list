@@ -87,6 +87,8 @@ Person | document_view
 Person | financial_view
 Person | jump_to_document
 Person | person_detailed_report
+Person | reset_registration_number
+Person | set_registration_number
 Person | terminate_career
 Person | view
 Preference Tool | advanced
