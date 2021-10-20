@@ -2990,9 +2990,10 @@ return msg"
       field_editable = 1,
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
       field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
-      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
-      # modify this for test
-      field_sort_columns = 'title|Title_test_nested_message_catalog',
+      # modify these two for test
+      field_search_columns = 'id|ID\ntitle|Title_test_nested_message_catalog\nquantity|Quantity\nstart_date|Date',
+      # if sort_columns is empty search_columns are used for the fallback
+      field_sort_columns = '',
     )
     self.portal.Base_addUITestTranslation(message='Title_test_nested_message_catalog',
                                           translation='biaoti_test_nested_message_catalog', language='wo')
@@ -3009,12 +3010,13 @@ return msg"
 
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['column_list'],
                      [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'Quantity'], ['start_date', 'Date'], ['catalog.uid', 'Uid']])
-    self.assertEqual(result_dict['_embedded']['_view']['listbox']['search_column_list'],
-                     [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'],
                      [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'quantity'], ['start_date', 'Date']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['search_column_list'],
+                     [['id', 'ID'], ['title', 'biaoti_test_nested_message_catalog'], ['quantity', 'Quantity'], ['start_date', 'Date']])
+    # If sort_column is empty, search_column_list is used as the fall-back
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'],
-                     [['title', 'biaoti_test_nested_message_catalog']])
+                     [['id', 'ID'], ['title', 'biaoti_test_nested_message_catalog'], ['quantity', 'Quantity'], ['start_date', 'Date']])
 
     # check traversing listbox does not adding the 'wo' message as a 'en' message
     self.assertFalse(message_catalog.message_exists('biaoti_test_nested_message_catalog'))
@@ -3030,7 +3032,6 @@ return msg"
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
       field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
       field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
-      field_sort_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
     )
 
 class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
