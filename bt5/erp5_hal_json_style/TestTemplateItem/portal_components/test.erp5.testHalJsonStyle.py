@@ -2972,6 +2972,66 @@ return msg"
     result_dict = json.loads(result)
     self.assertEqual(result_dict['title'], 'Foo_zhongwen')
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasForm_listbox_nested_message_catalog(self, document):
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
+      # modify this for test
+      field_sort_columns = 'title|Title_test_nested_message_catalog',
+    )
+    self.portal.Base_addUITestTranslation(message='Title_test_nested_message_catalog',
+                                          translation='biaoti_test_nested_message_catalog', language='wo')
+    message_catalog = self.portal.Localizer.erp5_ui
+    # Check the 'wo' message is not in the 'en' message_catalog before running the test
+    self.assertFalse(message_catalog.message_exists('biaoti_test_nested_message_catalog'))
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request, mode="traverse",
+      relative_url=document.getRelativeUrl(), view="view")
+
+    result_dict = json.loads(result)
+
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['column_list'],
+                     [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'Quantity'], ['start_date', 'Date'], ['catalog.uid', 'Uid']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['search_column_list'],
+                     [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'Quantity'], ['start_date', 'Date']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'],
+                     [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'quantity'], ['start_date', 'Date']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'],
+                     [['title', 'biaoti_test_nested_message_catalog']])
+
+    # check traversing listbox does not adding the 'wo' message as a 'en' message
+    self.assertFalse(message_catalog.message_exists('biaoti_test_nested_message_catalog'))
+
+    # reset to default
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
+      field_sort_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+    )
 
 class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
 
