@@ -1590,7 +1590,7 @@ def optimize():
   if not 'portal_types' in full_indexing_set:
     from Products.ERP5Type.Core.ActionInformation import ActionInformation
     from Products.ERP5Type.Core.RoleInformation import RoleInformation
-    ActionInformation.isIndexable = RoleInformation.isIndexable = \
+    RoleInformation.isIndexable = \
       ConstantGetter('isIndexable', value=False)
   if not 'portal_property_sheets' in full_indexing_set:
     from Products.ERP5Type.Core.StandardProperty import StandardProperty
