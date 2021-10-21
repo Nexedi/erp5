@@ -28,7 +28,7 @@ function makeUiSchema(schema, uiSchema, visited) {
       for (const [key, value] of Object.entries(schema.properties)) {
         uiSchema[key] = {};
         if (value.default && !(value.default instanceof Object)) {
-          if (value?.type === 'string' && value.const === undefined) {
+          if (typeof(value) === 'string' && value.const === undefined) {
             uiSchema[key]['ui:placeholder'] = value.default;
           }
           if (value.const === undefined) {
@@ -43,7 +43,7 @@ function makeUiSchema(schema, uiSchema, visited) {
         if (value.textarea) {
           uiSchema[key]["ui:widget"] = "textarea"
         }
-        if (value?.type === 'object') {
+        if (typeof(value) === 'object') {
           makeUiSchema(value, uiSchema[key], visited);
         }
         for (const oneOf of value.oneOf || []) {
