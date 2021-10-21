@@ -411,7 +411,7 @@ class ProxyField(ZMIField):
     """
     Return template field of the proxy field.
     """
-    if cache is True:
+    if cache:
       tales = self.tales
       if self._p_oid is None or tales['field_id'] or tales['form_id']:
         cache = False
@@ -478,30 +478,35 @@ class ProxyField(ZMIField):
       LOG('ProxyField', WARNING,
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
-    if cache is True:
+    if cache:
       self._setTemplateFieldCache(proxy_field)
     return proxy_field
 
   security.declareProtected('Access contents information', 'getRecursiveTemplateField')
-  def getRecursiveTemplateField(self):
+  def getRecursiveTemplateField(self, delegated_id=None):
     """
     Return template field of the proxy field.
-    This result must not be a ProxyField.
+    If delegated_id is None, the result is not a ProxyField,
+    else it is the field that defines the value (possibly an
+    intermediate proxy field).
     """
-    field = self
-    chain = []
-    while True:
-      template_field = field.getTemplateField()
-      if template_field.__class__ != ProxyField:
+    seen = [aq_base(self)]
+    while delegated_id is None or self.is_delegated(delegated_id):
+      field = self.getTemplateField()
+      if not isinstance(field, ProxyField):
+        if field is None:
+          error = "Can't find the template field of %s"
+          break
+        return field
+      self = field
+      field = aq_base(field)
+      if field in seen:
+        error = "Infinite loop detected in %s"
         break
-      template_field_base = aq_base(template_field)
-      if template_field_base in chain:
-        LOG('ProxyField', WARNING, 'Infinite loop detected in %s.' %
-            '/'.join(self.getPhysicalPath()))
-        return
-      chain.append(template_field_base)
-      field = template_field
-    return template_field
+      seen.append(field)
+    else:
+      return self
+    raise ValueError(error % '/'.join(self.getPhysicalPath()))
 
   def _get_sub_form(self, field=None):
     if field is None:
@@ -631,154 +636,24 @@ class ProxyField(ZMIField):
       return self.getTemplateField().get_orig_value(id)
     return ZMIField.get_orig_value(self, id)
 
-  #
-  # Performance improvement
-  #
   def get_tales_expression(self, id):
-    field = self
-    while True:
-      if (id in field.widget.property_names or
-          not field.is_delegated(id)):
-        tales = field.get_tales(id)
-        if tales:
-          return TALESMethod(tales._text)
-        else:
-          return None
-      proxied_field = field.getTemplateField()
-      if proxied_field.__class__ == ProxyField:
-        field = proxied_field
-      elif proxied_field is None:
-        raise ValueError("Can't find the template field of %s" % self.id)
-      else:
-        tales = proxied_field.get_tales(id)
-        if tales:
-          return TALESMethod(tales._text)
-        else:
-          return None
-
-  security.declareProtected('Access contents information', 'getFieldValue')
-  def getFieldValue(self, field, id, **kw):
-    """
-      Return a callable expression and cacheable boolean flag
-    """
-    # Some field types have their own get_value implementation,
-    # then we must use it always. This check must be done at first.
-    template_field = self.getRecursiveTemplateField()
-    # Old ListBox instance might have default attribute. so we need to check it.
-    if checkOriginalGetValue(template_field, id):
-      return _USE_ORIGINAL_GET_VALUE_MARKER, True
-
-    try:
-      tales_expr = self.get_tales_expression(id)
-    except ValueError:
-      return None, False
-    if tales_expr:
-      tales_expr = copyMethod(tales_expr)
-      return TALESValue(tales_expr), isCacheable(tales_expr)
-
-    # FIXME: backwards compat hack to make sure overrides dict exists
-    if not hasattr(self, 'overrides'):
-        self.overrides = {}
-
-    override = self.overrides.get(id, "")
-    if override:
-      override = copyMethod(override)
-      return OverrideValue(override), isCacheable(override)
-
-    # Get a normal value.
-    try:
-      value = self.get_recursive_orig_value(id)
-    except KeyError:
-      # For ListBox and other exceptional fields.
-      return self._get_value(id, **kw), False
-
-    field_id = field.id
-
-    value = copyMethod(value)
-    cacheable = isCacheable(value)
-
-    if id == 'default' and (field_id.startswith('my_') or
-                            field_id.startswith('listbox_')):
-      # XXX far from object-oriented programming
-      if template_field.meta_type == 'CheckBoxField':
-        return DefaultCheckBoxValue(field_id, value), cacheable
-      return DefaultValue(field_id, value), cacheable
-
-    # For the 'editable' value, we try to get a default value
-    if id == 'editable':
-      return EditableValue(value), cacheable
-
-    # Return default value in callable mode
-    if callable(value):
-      return StaticValue(value), cacheable
-
-    # Return default value in non callable mode
-    return_value = StaticValue(value)(field, id, **kw)
-    return return_value, isCacheable(return_value)
+    if id not in self.widget.property_names:
+      self = self.getRecursiveTemplateField(id)
+    tales = self.get_tales(id)
+    if tales:
+      return TALESMethod(tales._text)
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
     if id in self.widget.property_names:
       return ZMIField.get_value(self, id, **kw)
-    if not self.is_delegated(id):
-      original_template_field = self.getRecursiveTemplateField()
-      function = getOriginalGetValueFunction(original_template_field, id)
-      if function is not None:
-        return function(self, id, **kw)
-      else:
-        return ZMIField.get_value(self, id, **kw)
-
-    field = self
-    proxy_field = self.getTemplateField()
-    REQUEST = kw.get('REQUEST', get_request())
-    if proxy_field is not None and REQUEST is not None:
-      field = REQUEST.get(
-        'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
-        self)
-      REQUEST.set(
-        'field__proxyfield_%s_%s_%s' % (proxy_field.id, proxy_field._p_oid, id),
-        field)
-
-    # Don't use cache if field is not stored in zodb, or if target field is
-    # defined by a TALES
-    if self._p_oid is None or self.tales['field_id'] or self.tales['form_id']:
-      return self._get_value(id, **kw)
-      # XXX: Are these disabled?
-      proxy_field = self.getTemplateField(cache=False)
-      if proxy_field is not None:
-        return proxy_field.get_value(id, **kw)
-      else:
-        return None
-
-    cache_id = ('ProxyField.get_value',
-                self._p_oid,
-                field._p_oid,
-                id)
-
-    from Products.ERP5Form.Form import field_value_cache
-    try:
-      value = field_value_cache[cache_id]
-    except KeyError:
-      # either returns non callable value (ex. "Title")
-      # or a FieldValue instance of appropriate class
-      value, cacheable = self.getFieldValue(field, id, **kw)
-      if cacheable:
-        field_value_cache[cache_id] = value
-
-    if value is _USE_ORIGINAL_GET_VALUE_MARKER:
-      return proxy_field.get_value(id, **kw)
-
-    if callable(value):
-      return value(field, id, **kw)
-    return value
-
-  def _get_value(self, id, **kw):
-    proxy_field = self.getTemplateField(cache=False)
-    if proxy_field is not None:
-      return proxy_field.get_value(id, **kw)
+    field = self.getRecursiveTemplateField(id)
+    return field.getRecursiveTemplateField().get_value.__func__(
+      field, id, field=self, **kw)
 
   def _getCacheId(self):
-    return '%s%s' % ('ProxyField', self._p_oid or repr(self))
+    assert self._p_oid
+    return 'ProxyField', self._p_oid
 
   def _setTemplateFieldCache(self, field):
     getTransactionalVariable()[self._getCacheId()] = field
@@ -815,46 +690,3 @@ class ProxyField(ZMIField):
              message="Internal proxy field data structures are inconsistent. "
                      "Differences: {}".format(difference))]
     return []
-
-#
-# get_value exception dict
-#
-_get_value_exception_dict = {}
-
-def registerOriginalGetValueClassAndArgument(class_, argument_name_list=(), get_value_function=None):
-  """
-  if field class has its own get_value implementation and
-  must use it rather than ProxyField's one, then register it.
-
-  if argument_name_list is '*' , original get_value is
-  applied for all arguments.
-  """
-  if not isinstance(argument_name_list, (list, tuple)):
-    argument_name_list = (argument_name_list,)
-  if get_value_function is None:
-    get_value_function = ZMIField.get_value
-  _get_value_exception_dict[class_] = {'argument_name_list':argument_name_list,
-                                       'get_value_function':get_value_function}
-
-def checkOriginalGetValue(instance, argument_name):
-  """
-  if exception data is registered, then return True
-  """
-  class_ = aq_base(instance).__class__
-  dict_ = _get_value_exception_dict.get(class_, {})
-  argument_name_list = dict_.get('argument_name_list')
-
-  if argument_name_list is None:
-    return False
-
-  if len(argument_name_list)==1 and argument_name_list[0]=='*':
-    return True
-
-  if argument_name in argument_name_list:
-    return True
-  return False
-
-def getOriginalGetValueFunction(instance, argument_name):
-  class_ = aq_base(instance).__class__
-  dict_ = _get_value_exception_dict.get(class_, {})
-  return dict_.get('get_value_function')
