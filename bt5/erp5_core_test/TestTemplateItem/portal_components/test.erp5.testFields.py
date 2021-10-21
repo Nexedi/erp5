@@ -48,7 +48,7 @@ from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
-from Products.ERP5Form import ProxyField
+from Products.ERP5Form.ProxyField import BrokenProxyField, ProxyField
 from DateTime import DateTime
 import lxml.html
 
@@ -67,7 +67,7 @@ class TestRenderViewAPI(ERP5TypeTestCase):
     for field in FieldRegistry.get_field_classes().itervalues(): # pylint: disable=no-value-for-parameter
       self.assertEqual(('self', 'value', 'REQUEST', 'render_prefix'),
                         field.render_view.im_func.func_code.co_varnames)
-      if field is not ProxyField.ProxyField:
+      if field is not ProxyField:
         self.assertEqual(('self', 'field', 'value', 'REQUEST'),
           field.widget.render_view.im_func.func_code.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.im_func.func_code.co_varnames[:4]))
 
@@ -712,6 +712,9 @@ class TestMultiListField(ERP5TypeTestCase):
 
 class TestProxyField(ERP5TypeTestCase):
 
+  def getBusinessTemplateList(self):
+    return 'erp5_core_proxy_field_legacy',
+
   def getTitle(self):
     return "Proxy Field"
 
@@ -731,9 +734,9 @@ class TestProxyField(ERP5TypeTestCase):
                                    'my_title', 'Title', 'StringField')
     proxy_field = self.addField(self.container.Base_view,
                                 'my_title', 'Not Title', 'ProxyField')
-    self.assertEqual(None, proxy_field.getTemplateField())
-    self.assertEqual(None, proxy_field.get_value('enable'))
-    self.assertEqual(None, proxy_field.get_value('default'))
+    self.assertIsNone(proxy_field.getTemplateField())
+    self.assertFalse(proxy_field.get_value('enabled'))
+    self.assertRaises(BrokenProxyField, proxy_field.get_value, 'default')
 
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
@@ -871,7 +874,7 @@ class TestProxyField(ERP5TypeTestCase):
     proxy_field = self.addField(self.container.Base_view,
                                 'my_String', '', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
-                                        field_id='my_date',))
+                                        field_id='my_string',))
 
     proxy_field.manage_edit_surcharged_xmlrpc(dict(title='Title'))
     self.assertFalse(proxy_field.is_delegated('title'))
@@ -1106,12 +1109,12 @@ class TestFieldValueCache(ERP5TypeTestCase):
       'default': 'python: repr(here)'})
     form.my_on_memory_field._p_oid = None
     # proxy field
-    addField(ProxyField.ProxyField('proxy_field'))
+    addField(ProxyField('proxy_field'))
     form.proxy_field._p_oid = makeDummyOid()
     form.proxy_field.values['form_id'] = 'form'
     form.proxy_field.values['field_id'] = 'field'
     # proxy field with tales
-    addField(ProxyField.ProxyField('proxy_field_tales'))
+    addField(ProxyField('proxy_field_tales'))
     form.proxy_field_tales._p_oid = makeDummyOid()
     form.proxy_field_tales.tales['form_id'] = TALESMethod('string:form')
     form.proxy_field_tales.tales['field_id'] = TALESMethod('string:field')
@@ -1141,7 +1144,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
     # make sure that this will use cache.
     cache_size = self._getCacheSize('Form.get_value')
     self.root.form.field.get_value('title')
-    self.assertEqual(True, cache_size < self._getCacheSize('Form.get_value'))
+    self.assertLess(cache_size, self._getCacheSize('Form.get_value'))
 
     # check on-memory field
     # make sure that this will not use cache.
@@ -1150,19 +1153,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
       self.root.form.my_on_memory_tales_field.get_value('default'))
     self.assertEqual('123',
       self.root.form.my_on_memory_field.get_value('default'))
-    self.assertEqual(True, cache_size == self._getCacheSize('Form.get_value'))
-
-    # check proxy field
-    # make sure that this will use cache.
-    cache_size = self._getCacheSize('ProxyField.get_value')
-    self.root.form.proxy_field.get_value('title')
-    self.assertEqual(True, cache_size < self._getCacheSize('ProxyField.get_value'))
-
-    # check proxy field with tales
-    # make sure that this will not use cache.
-    cache_size = self._getCacheSize('ProxyField.get_value')
-    self.root.form.proxy_field_tales.get_value('title')
-    self.assertEqual(True, cache_size == self._getCacheSize('ProxyField.get_value'))
+    self.assertEqual(cache_size, self._getCacheSize('Form.get_value'))
 
 
 class TestCaptchaField(ERP5TypeTestCase):

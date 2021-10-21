@@ -26,12 +26,16 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.Formulator.XMLToForm import XMLToForm
+import re
+from functools import partial
+from unittest import expectedFailure
+from lxml import etree
 from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
-from lxml import etree
-from unittest import expectedFailure
+from Products.Formulator.XMLToForm import XMLToForm
+from Products.ERP5Form.ProxyField import BrokenProxyField
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
 
 class TestProxyField(ERP5TypeTestCase):
   """
@@ -396,15 +400,19 @@ return printed
     form = skin_folder._getOb('Base_viewGeek', None)
     form.manage_addField('my_title', 'Title', 'ProxyField')
 
-    field = getattr(form, 'my_title')
+    field = form.my_title
+
+    self.assertFalse(form.get_fields())
+    self.assertEqual([field], form.get_fields(include_disabled=True))
 
     self.assertIsNone(field.getTemplateField())
-    self.assertEqual('', field.render())
     self.assertEqual('', field.get_tales('default'))
-    self.assertIsNone(field.get_value('default'))
 
-    with self.assertRaisesRegexp(
-        AttributeError,
-        'The proxy field <ProxyField at /%s/portal_skins/erp5_geek/Base_viewGeek/my_title> cannot find a template field'
-        % self.portal.getId()):
-      field.get_recursive_tales('default')
+    regexp = '^%s$' % re.escape("Can't find the template field of"
+      " <ProxyField at /%s/portal_skins/erp5_geek/Base_viewGeek/my_title>"
+      % self.portal.getId())
+    for func in ( field.render
+                , partial(field.get_value, 'default')
+                , partial(field.get_recursive_tales, 'default')
+                ):
+      self.assertRaisesRegexp(BrokenProxyField, regexp, func)
