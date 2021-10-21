@@ -228,8 +228,12 @@
                           <string>expire</string>
                         </tuple>
                         <tuple>
-                          <string>Delete Categories</string>
+                          <string>Delete Categories (Unless They are Used)</string>
                           <string>delete</string>
+                        </tuple>
+                        <tuple>
+                          <string>Delete Categories (Even if They are Used)</string>
+                          <string>force_delete</string>
                         </tuple>
                       </list>
                     </value>

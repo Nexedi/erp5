@@ -153,15 +153,14 @@ for base_category, category_list in category_list_spreadsheet_dict.iteritems():
         message="Kept category",
       )
       kept_category_counter += 1
-    elif hasRelation(category):
-      # TODO: add a dialog parameter allowing to delete this path
+    elif hasRelation(category) and existing_category_list != 'force_delete':
       report(
         level='warning',
         field_type='Warning',
         field_category=category.getRelativeUrl(),
         message="Category is used and can not be deleted or expired ",
       )
-    elif existing_category_list == 'delete':
+    elif existing_category_list in ('delete', 'force_delete'):
       recurse = False
       deleted_category_counter += 1
       report(
