@@ -179,15 +179,6 @@ class TALESValue(StaticValue):
 
   def __call__(self, field, id, **kw):
     REQUEST = kw.get('REQUEST', get_request())
-    if REQUEST is not None:
-      # Proxyfield stores the "real" field in the request. Look if the
-      # corresponding field exists in request, and use it as field in the
-      # TALES context
-      field = REQUEST.get(
-        'field__proxyfield_%s_%s_%s' % (field.id, field._p_oid, id),
-        field)
-
-    kw['field'] = field
 
     form = field.aq_parent # XXX (JPS) form for default is wrong apparently in listbox - double check
     obj = getattr(form, 'aq_parent', None)
@@ -196,6 +187,7 @@ class TALESValue(StaticValue):
     else:
         container = None
 
+    kw['field'] = field
     kw['form'] = form
     kw['request'] = REQUEST
     kw['here'] = obj
@@ -339,15 +331,13 @@ def getFieldValue(self, field, id, **kw):
   value = copyMethod(value)
   cacheable = isCacheable(value)
 
-  field_id = field.id
-
-  if id == 'default' and (field_id.startswith('my_') or
-                          field_id.startswith('listbox_')):
-    if field.meta_type == 'ProxyField' and \
-        field.getRecursiveTemplateField().meta_type == 'CheckBoxField' or \
-        self.meta_type == 'CheckBoxField':
-      return DefaultCheckBoxValue(field_id, value), cacheable
-    return DefaultValue(field_id, value), cacheable
+  if id == 'default':
+    field_id = field.id
+    if field_id.startswith(('my_', 'listbox_')):
+      if (self.getRecursiveTemplateField() if self.meta_type == 'ProxyField'
+          else self).meta_type == 'CheckBoxField':
+        return DefaultCheckBoxValue(field_id, value), cacheable
+      return DefaultValue(field_id, value), cacheable
 
   # For the 'editable' value, we try to get a default value
   if id == 'editable':
@@ -358,24 +348,15 @@ def getFieldValue(self, field, id, **kw):
     return StaticValue(value), cacheable
 
   # Return default value in non callable mode
-  return_value = StaticValue(value)(field, id, **kw)
+  return_value = StaticValue(value)(None, id, **kw)
   return return_value, isCacheable(return_value)
 
 def get_value(self, id, REQUEST=None, **kw):
-  if REQUEST is None:
-    REQUEST = get_request()
-  if REQUEST is not None:
-    field = REQUEST.get(
-      'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
-      self)
-  else:
-    field = self
-
+  field = kw.pop('field', self)
   cache_id = ('Form.get_value',
               self._p_oid,
-              field._p_oid,
+              field._p_oid if id == 'default' else
               id)
-
   try:
     value = field_value_cache[cache_id]
   except KeyError:
@@ -386,10 +367,12 @@ def get_value(self, id, REQUEST=None, **kw):
     # because such field must be used for editing field in ZMI
     # and caching sometimes break these field settings at initialization.
     # As the result, we would see broken field editing screen in ZMI.
-    if cacheable and self._p_oid:
+    if cacheable and None not in cache_id:
       field_value_cache[cache_id] = value
 
   if callable(value):
+    if REQUEST is None:
+      REQUEST = get_request()
     return value(field, id, REQUEST=REQUEST, **kw)
   return value
 
