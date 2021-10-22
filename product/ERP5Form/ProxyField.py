@@ -648,8 +648,20 @@ class ProxyField(ZMIField):
     if id in self.widget.property_names:
       return ZMIField.get_value(self, id, **kw)
     field = self.getRecursiveTemplateField(id)
-    return field.getRecursiveTemplateField().get_value.__func__(
-      field, id, field=self, **kw)
+    if isinstance(field, ProxyField):
+      cls = field.getRecursiveTemplateField().__class__
+      try:
+        _ProxyField = cls.__ProxyField
+      except AttributeError:
+        class _ProxyField(cls):
+          def __init__(self):
+            pass
+        cls.__ProxyField = _ProxyField
+      tmp_field = _ProxyField()
+      for attr in 'values', 'tales', 'overrides':
+        setattr(tmp_field, attr, getattr(field, attr).copy())
+      field = tmp_field
+    return field.get_value(id, field=self, **kw)
 
   def _getCacheId(self):
     assert self._p_oid
