@@ -1289,6 +1289,7 @@ class TestKeyAuthentication(RoleManagementTestCase):
     """This test also uses web and dms
     """
     return super(TestKeyAuthentication, self).getBusinessTemplateList() + (
+        'erp5_core_proxy_field_legacy', # for erp5_web
         'erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms', 'erp5_administration')
 
 
