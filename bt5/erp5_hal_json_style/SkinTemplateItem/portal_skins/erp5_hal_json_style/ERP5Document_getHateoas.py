@@ -695,26 +695,25 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     the original REQUEST with sent POST values from the parent form. We can save those
     values into our query method and reconstruct them meanwhile calling asynchronous jio.allDocs.
     """
-    _translate = Base_translateString
 
     # column definition in ListBox own value 'columns' is superseded by dynamic
     # column definition from Selection for specific Report ListBoxes; the same for editable_columns
-    column_list = [(name, _translate(title)) for name, title in (selection_params.get('selection_columns', [])
+    column_list = [(name, title) for name, title in (selection_params.get('selection_columns', [])
                                                                  or field.get_value("columns"))]
-    editable_column_list = [(name, _translate(title)) for name, title in (selection_params.get('editable_columns', [])
+    editable_column_list = [(name, title) for name, title in (selection_params.get('editable_columns', [])
                                                                           or field.get_value("editable_columns"))]
-    all_column_list = [(name, _translate(title)) for name, title in field.get_value("all_columns")]
+    all_column_list = [(name, title) for name, title in field.get_value("all_columns")]
     catalog_column_list = [(name, title)
                            for name, title in OrderedDict(column_list + all_column_list).items()
                            if sql_catalog.isValidColumn(name)]
 
     # try to get specified searchable columns and fail back to all searchable columns
-    search_column_list = [(name, _translate(title))
+    search_column_list = [(name, title)
                           for name, title in (field.get_value("search_columns") or catalog_column_list)
                           if sql_catalog.isValidColumn(name)]
 
     # try to get specified sortable columns and fail back to searchable fields
-    sort_column_list = [(name, _translate(title))
+    sort_column_list = [(name, title)
                         for name, title in (selection_params.get('selection_sort_order', [])
                                             or field.get_value("sort_columns") or search_column_list)
                         if sql_catalog.isValidColumn(name)]
@@ -824,13 +823,16 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
 #         line["_relative_url"] = document.getRelativeUrl()
 #       line_list.append(line)
 
+    def translateColumnListTitle(column_list):
+      return [(name, Base_translateString(title)) for (name, title) in column_list]
+
     result.update({
-      "column_list": column_list,
-      "all_column_list": all_column_list,
-      "search_column_list": search_column_list,
+      "column_list": translateColumnListTitle(column_list),
+      "all_column_list": translateColumnListTitle(all_column_list),
+      "search_column_list": translateColumnListTitle(search_column_list),
       "sort" :field.get_value('sort'),
-      "sort_column_list": sort_column_list,
-      "editable_column_list": editable_column_list,
+      "sort_column_list": translateColumnListTitle(sort_column_list),
+      "editable_column_list": translateColumnListTitle(editable_column_list),
       "show_anchor": field.get_value("anchor"),
       "show_select": field.get_value("select"),
       "portal_type": portal_type_list,
@@ -1428,13 +1430,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       container = traversed_document.getParentValue()
       if container != portal:
         # Jio does not support fetching the root document for now
+        if container.getRelativeUrl():
+          container_name = ensureUTF8(container.getTranslatedTitle())
+        else:
+          # for example in portal_skin
+          container_name = ensureUTF8(container.getTitle())
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
             "relative_url": container.getRelativeUrl(),
             "script_id": script.id
           },
-          "name": Base_translateString(container.getTitle()),
+          "name": container_name
         }
 
     # Find current action URL and extract embedded view
