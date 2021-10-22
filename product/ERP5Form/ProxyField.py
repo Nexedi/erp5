@@ -495,18 +495,18 @@ class ProxyField(ZMIField):
       field = self.getTemplateField()
       if not isinstance(field, ProxyField):
         if field is None:
-          error = "Can't find the template field of %s"
+          error = "Can't find the template field of %r"
           break
         return field
       self = field
       field = aq_base(field)
       if field in seen:
-        error = "Infinite loop detected in %s"
+        error = "Infinite loop when searching template field of %r"
         break
       seen.append(field)
     else:
       return self
-    raise ValueError(error % '/'.join(self.getPhysicalPath()))
+    raise ValueError(error % self)
 
   def _get_sub_form(self, field=None):
     if field is None:
@@ -550,22 +550,15 @@ class ProxyField(ZMIField):
         return proxied_field.get_orig_value(id)
 
   security.declareProtected('View management screens', 'get_recursive_tales')
-  def get_recursive_tales(self, id, include=1):
+  def get_recursive_tales(self, id):
     """
     Get tales expression method for id.
     """
-    if include and \
-      ((id in self.widget.property_names) or \
-       not self.is_delegated(id)):
-      return self.get_tales(id)
-    else:
-      proxied_field = self.getTemplateField()
-      if proxied_field is None:
-        raise AttributeError('The proxy field %r cannot find a template field' % self)
-      if proxied_field.__class__ == ProxyField:
-        return proxied_field.get_recursive_tales(id)
-      else:
-        return proxied_field.get_tales(id)
+    if id not in self.widget.property_names:
+      self = self.getRecursiveTemplateField(id)
+    tales = self.get_tales(id)
+    if tales:
+      return TALESMethod(tales._text)
 
   # XXX Not implemented
   security.declareProtected('View management screens', 'get_recursive_override')
@@ -635,13 +628,6 @@ class ProxyField(ZMIField):
     if id not in self.widget.property_names and self.is_delegated(id):
       return self.getTemplateField().get_orig_value(id)
     return ZMIField.get_orig_value(self, id)
-
-  def get_tales_expression(self, id):
-    if id not in self.widget.property_names:
-      self = self.getRecursiveTemplateField(id)
-    tales = self.get_tales(id)
-    if tales:
-      return TALESMethod(tales._text)
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
