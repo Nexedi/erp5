@@ -351,7 +351,7 @@ def getFieldValue(self, field, id, **kw):
   return_value = StaticValue(value)(None, id, **kw)
   return return_value, isCacheable(return_value)
 
-def get_value(self, id, REQUEST=None, **kw):
+def get_value(self, id, **kw):
   field = kw.pop('field', self)
   cache_id = ('Form.get_value',
               self._p_oid,
@@ -371,9 +371,7 @@ def get_value(self, id, REQUEST=None, **kw):
       field_value_cache[cache_id] = value
 
   if callable(value):
-    if REQUEST is None:
-      REQUEST = get_request()
-    return value(field, id, REQUEST=REQUEST, **kw)
+    return value(field, id, **kw)
   return value
 
 psyco.bind(get_value)

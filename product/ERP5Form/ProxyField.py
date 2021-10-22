@@ -28,38 +28,28 @@
 #
 ##############################################################################
 
+from thread import get_ident
+
+from AccessControl import allow_class, ClassSecurityInfo
+from Acquisition import aq_base
+from MethodObject import Method
+from zLOG import LOG, WARNING
+
+from Products.CMFCore.Skinnable import SKINDATA
+
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Errors import ValidationError
-from Products.Formulator import MethodField
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.ObjectMessage import ObjectMessage
-
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-
-from Products.ERP5Type.Globals import get_request
-from Products.PythonScripts.Utility import allow_class
-
-from Products.PythonScripts.standard import url_quote_plus
-
-from AccessControl import ClassSecurityInfo
-from MethodObject import Method
-
-from zLOG import LOG, WARNING, DEBUG, PROBLEM
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Products.ERP5Type.Globals import DTMLFile
 
-from Products.Formulator.TALESField import TALESMethod
-from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, \
-        DefaultValue, EditableValue, DefaultCheckBoxValue
-from Products.ERP5Form.Form import copyMethod, isCacheable
 
-from Products.CMFCore.Skinnable import SKINDATA
-from thread import get_ident
-
-_USE_ORIGINAL_GET_VALUE_MARKER = []
+class BrokenProxyField(Exception):
+  pass
+allow_class(BrokenProxyField)
 
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
@@ -495,18 +485,18 @@ class ProxyField(ZMIField):
       field = self.getTemplateField()
       if not isinstance(field, ProxyField):
         if field is None:
-          error = "Can't find the template field of %s"
+          error = "Can't find the template field of %r"
           break
         return field
       self = field
       field = aq_base(field)
       if field in seen:
-        error = "Infinite loop detected in %s"
+        error = "Infinite loop when searching template field of %r"
         break
       seen.append(field)
     else:
       return self
-    raise ValueError(error % '/'.join(self.getPhysicalPath()))
+    raise BrokenProxyField(error % self)
 
   def _get_sub_form(self, field=None):
     if field is None:
@@ -550,22 +540,15 @@ class ProxyField(ZMIField):
         return proxied_field.get_orig_value(id)
 
   security.declareProtected('View management screens', 'get_recursive_tales')
-  def get_recursive_tales(self, id, include=1):
+  def get_recursive_tales(self, id):
     """
     Get tales expression method for id.
     """
-    if include and \
-      ((id in self.widget.property_names) or \
-       not self.is_delegated(id)):
-      return self.get_tales(id)
-    else:
-      proxied_field = self.getTemplateField()
-      if proxied_field is None:
-        raise AttributeError('The proxy field %r cannot find a template field' % self)
-      if proxied_field.__class__ == ProxyField:
-        return proxied_field.get_recursive_tales(id)
-      else:
-        return proxied_field.get_tales(id)
+    if id not in self.widget.property_names:
+      self = self.getRecursiveTemplateField(id)
+    tales = self.get_tales(id)
+    if tales:
+      return TALESMethod(tales._text)
 
   # XXX Not implemented
   security.declareProtected('View management screens', 'get_recursive_override')
@@ -636,20 +619,31 @@ class ProxyField(ZMIField):
       return self.getTemplateField().get_orig_value(id)
     return ZMIField.get_orig_value(self, id)
 
-  def get_tales_expression(self, id):
-    if id not in self.widget.property_names:
-      self = self.getRecursiveTemplateField(id)
-    tales = self.get_tales(id)
-    if tales:
-      return TALESMethod(tales._text)
-
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
     if id in self.widget.property_names:
       return ZMIField.get_value(self, id, **kw)
-    field = self.getRecursiveTemplateField(id)
-    return field.getRecursiveTemplateField().get_value.__func__(
-      field, id, field=self, **kw)
+    try:
+      field = self.getRecursiveTemplateField(id)
+      if isinstance(field, ProxyField):
+        cls = field.getRecursiveTemplateField().__class__
+        try:
+          _ProxyField = cls.__ProxyField
+        except AttributeError:
+          class _ProxyField(cls):
+            def __init__(self):
+              pass
+          cls.__ProxyField = _ProxyField
+        tmp_field = _ProxyField()
+        for attr in 'values', 'tales', 'overrides':
+          setattr(tmp_field, attr, getattr(field, attr).copy())
+        field = tmp_field
+    except BrokenProxyField:
+      # do not break Form.get_field
+      if id != 'enabled':
+        raise
+    else:
+      return field.get_value(id, field=self, **kw)
 
   def _getCacheId(self):
     assert self._p_oid
