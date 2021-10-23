@@ -28,38 +28,28 @@
 #
 ##############################################################################
 
+from thread import get_ident
+
+from AccessControl import allow_class, ClassSecurityInfo
+from Acquisition import aq_base
+from MethodObject import Method
+from zLOG import LOG, WARNING
+
+from Products.CMFCore.Skinnable import SKINDATA
+
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Errors import ValidationError
-from Products.Formulator import MethodField
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.ObjectMessage import ObjectMessage
-
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-
-from Products.ERP5Type.Globals import get_request
-from Products.PythonScripts.Utility import allow_class
-
-from Products.PythonScripts.standard import url_quote_plus
-
-from AccessControl import ClassSecurityInfo
-from MethodObject import Method
-
-from zLOG import LOG, WARNING, DEBUG, PROBLEM
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Products.ERP5Type.Globals import DTMLFile
 
-from Products.Formulator.TALESField import TALESMethod
-from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, \
-        DefaultValue, EditableValue, DefaultCheckBoxValue
-from Products.ERP5Form.Form import copyMethod, isCacheable
 
-from Products.CMFCore.Skinnable import SKINDATA
-from thread import get_ident
-
-_USE_ORIGINAL_GET_VALUE_MARKER = []
+class BrokenProxyField(Exception):
+  pass
+allow_class(BrokenProxyField)
 
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
@@ -506,7 +496,7 @@ class ProxyField(ZMIField):
       seen.append(field)
     else:
       return self
-    raise ValueError(error % self)
+    raise BrokenProxyField(error % self)
 
   def _get_sub_form(self, field=None):
     if field is None:
@@ -633,21 +623,27 @@ class ProxyField(ZMIField):
   def get_value(self, id, **kw):
     if id in self.widget.property_names:
       return ZMIField.get_value(self, id, **kw)
-    field = self.getRecursiveTemplateField(id)
-    if isinstance(field, ProxyField):
-      cls = field.getRecursiveTemplateField().__class__
-      try:
-        _ProxyField = cls.__ProxyField
-      except AttributeError:
-        class _ProxyField(cls):
-          def __init__(self):
-            pass
-        cls.__ProxyField = _ProxyField
-      tmp_field = _ProxyField()
-      for attr in 'values', 'tales', 'overrides':
-        setattr(tmp_field, attr, getattr(field, attr).copy())
-      field = tmp_field
-    return field.get_value(id, field=self, **kw)
+    try:
+      field = self.getRecursiveTemplateField(id)
+      if isinstance(field, ProxyField):
+        cls = field.getRecursiveTemplateField().__class__
+        try:
+          _ProxyField = cls.__ProxyField
+        except AttributeError:
+          class _ProxyField(cls):
+            def __init__(self):
+              pass
+          cls.__ProxyField = _ProxyField
+        tmp_field = _ProxyField()
+        for attr in 'values', 'tales', 'overrides':
+          setattr(tmp_field, attr, getattr(field, attr).copy())
+        field = tmp_field
+    except BrokenProxyField:
+      # do not break Form.get_field
+      if id != 'enabled':
+        raise
+    else:
+      return field.get_value(id, field=self, **kw)
 
   def _getCacheId(self):
     assert self._p_oid

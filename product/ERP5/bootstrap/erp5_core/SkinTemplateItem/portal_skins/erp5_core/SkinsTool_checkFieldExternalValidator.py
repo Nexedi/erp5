@@ -14,11 +14,6 @@ for skin_name, skin_path_list in skins_tool.getSkinPaths():
     ):
       for field in form.get_fields():
         if field.meta_type == 'ProxyField':
-          if form.getId() == 'Base_viewRelatedObjectList' and \
-             field.getId() == 'listbox':
-            # This field has tales expressions for form_id & field_id
-            # and needs to be used in appropriate context.
-            continue
           if field.get_recursive_tales('external_validator'):
             continue
           try:

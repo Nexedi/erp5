@@ -28,12 +28,14 @@
 
 import re
 from functools import partial
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.Formulator.XMLToForm import XMLToForm
+from unittest import expectedFailure
+from lxml import etree
 from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
-from lxml import etree
-from unittest import expectedFailure
+from Products.Formulator.XMLToForm import XMLToForm
+from Products.ERP5Form.ProxyField import BrokenProxyField
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
 
 class TestProxyField(ERP5TypeTestCase):
   """
@@ -400,6 +402,9 @@ return printed
 
     field = form.my_title
 
+    self.assertFalse(form.get_fields())
+    self.assertEqual([field], form.get_fields(include_disabled=True))
+
     self.assertIsNone(field.getTemplateField())
     self.assertEqual('', field.get_tales('default'))
 
@@ -410,4 +415,4 @@ return printed
                 , partial(field.get_value, 'default')
                 , partial(field.get_recursive_tales, 'default')
                 ):
-      self.assertRaisesRegexp(ValueError, regexp, func)
+      self.assertRaisesRegexp(BrokenProxyField, regexp, func)
