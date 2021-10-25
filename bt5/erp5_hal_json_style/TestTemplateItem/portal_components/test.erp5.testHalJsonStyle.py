@@ -2973,6 +2973,32 @@ return msg"
     result_dict = json.loads(result)
     self.assertEqual(result_dict['title'], 'Foo_zhongwen')
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasForm_not_adding_parent_title_translation(self, document):
+    document_title = document.getTitle() + "_not_translate_parent_message_catalog"
+    document.setTitle(document_title)
+    message_catalog = self.portal.Localizer.erp5_ui
+    self.assertFalse(message_catalog.message_exists(document_title))
+    foo_line = document.newContent(portal_type='Foo Line')
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request, mode="traverse",
+      relative_url=foo_line.getRelativeUrl(), view="view")
+
+    result_dict = json.loads(result)
+    # The document title includes 'ö' at the last in this test class, so calling decode("UTF-8")
+    self.assertEqual(result_dict['_links']['parent'],
+      {"href": "urn:jio:get:%s" % document.getRelativeUrl(), "name": document.getTitle().decode("UTF-8")})
+
+    # make sure traversing the child document does not adding the parent title translation
+    self.assertFalse(message_catalog.message_exists(document_title))
 
 class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
 
