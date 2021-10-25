@@ -94,6 +94,8 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
     return "Test Maileva SOAP Connector"
 
   def test_send_pdf_to_maileva(self):
+    self.portal.system_event_module.manage_delObjects([x.getId() for x in self.document.getFollowUpRelatedValueList(portal_type='Maileva Exchange')])
+    self.tic()
     with mock.patch(
         'erp5.component.document.MailevaSOAPConnector.MailevaSOAPConnector.submitRequest',
         side_effect=submitRequest,
@@ -110,10 +112,29 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(event.getFollowUpValue(), self.document)
       self.assertEqual(event.getProperty('request', ''), 'request')
       self.assertEqual(event.getProperty('response', ''), 'response')
-      self.portal.system_event_module.manage_delObjects([event.getId()])
       self.tic()
 
   def test_maileva_xml(self):
     xml = self.maileva_connector.generateRequestXML(self.recipient, self.sender, self.document)
-    self.assertEqual(xml, '\n    <?xml version="1.0" encoding="UTF-8"?>\n<pjs:Campaign  xmlns:com="http://www.maileva.fr/CommonSchema"\n  xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema"\n  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n  xmlns:mlv="http://www.maileva.fr/MailevaSpecificSchema"\n  xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema">\n  Version="5.0" Application="connecteur_Maileva">\n    \n    <pjs:User AuthType="PLAINTEXT">\n      <pjs:Login>test</pjs:Login>\n      <pjs:Password>test</pjs:Password>\n    </pjs:User>\n    \n    \n    <pjs:Requests>\n      <pjs:Request MediaType="DIGITAL" TrackId="Bulletindesalaires">\n        \n    <pjs:Senders>\n      <pjs:Sender Id="001">\n        \n    <com:PaperAddress>\n\t  \t<com:AddressLines>\n        <com:AddressLine1>None</com:AddressLine1><com:AddressLine2>122</com:AddressLine2>\n<com:AddressLine3>Rue 11</com:AddressLine3>\n<com:AddressLine6> </com:AddressLine6>\n\n  \t\t</com:AddressLines>\n  \t\t<com:Country>France</com:Country>\n  \t\t<com:CountryCode>FR</com:CountryCode>\n\t</com:PaperAddress>\n  \n      </pjs:Sender>\n    </pjs:Senders>\n    \n        \n    <pjs:Recipients>\n      <pjs:Internal>\n        <pjs:Recipient Id="1">\n          \n    <com:PaperAddress>\n\t  \t<com:AddressLines>\n        <com:AddressLine1>None test_maileva_connector_recipient</com:AddressLine1><com:AddressLine2>123</com:AddressLine2>\n<com:AddressLine3>Rue 12</com:AddressLine3>\n<com:AddressLine6> </com:AddressLine6>\n\n  \t\t</com:AddressLines>\n  \t\t<com:Country>France</com:Country>\n  \t\t<com:CountryCode>FR</com:CountryCode>\n\t</com:PaperAddress>\n  \n          \n    <com:DigitalAddress>\n     <com:FirstName>None</com:FirstName>\n     <com:LastName>None</com:LastName>\n\t   <com:Identifier>None</com:Identifier>\n     <com:JobPosition>None</com:JobPosition>\n     <com:JobStartDate>None</com:JobStartDate>\n    </com:DigitalAddress>\n    \n        </pjs:Recipient>\n      </pjs:Internal>\n    </pjs:Recipients>\n     \n        \n    <pjs:DocumentData>\n      <pjs:Documents>\n\t    \t<pjs:Document Id="001">\n          \n    <com:Content>\n      <com:Value></com:Value>\n\t  </com:Content>\n    \n\t  \t  </pjs:Document>\n\t    </pjs:Documents>\n    </pjs:DocumentData>\n    \n        \n      <pjs:Options>\n        <pjs:RequestOption>\n          <mlv:DigitalOption>\n            <mlv:FoldOption>\n              <mlv:DepositTitle>test_maileva_connector_document</mlv:DepositTitle>\n            </mlv:FoldOption>\n            <mlv:DepositType>PAYSLIP</mlv:DepositType>\n            <mlv:DigitalArchiving>600</mlv:DigitalArchiving>\n          </mlv:DigitalOption>\n        </pjs:RequestOption>\n      </pjs:Options>\n    \n      </pjs:Request>\n   </pjs:Requests>\n   \n</pjs:Campaign>\n  ')
+    self.assertEqual(xml, '\n<?xml version="1.0" encoding="UTF-8"?>\n  <pjs:campaign xmlns:com="http://www.maileva.fr/CommonSchema" xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mlv="http://www.maileva.fr/MailevaSpecificSchema" xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema">\n    Version="5.0" Application="connecteur_Maileva">\n    <pjs:user authtype="PLAINTEXT">\n      <pjs:login>test</pjs:login>\n      <pjs:password>test</pjs:password>\n    </pjs:user>\n    <pjs:requests>\n      <pjs:request mediatype="DIGITAL" trackid="Bulletindesalaires">\n        <pjs:senders>\n          <pjs:sender id="001">\n            <com:paperaddress>\n              <com:addresslines>\n                <com:addressline1>None</com:addressline1>\n                <com:addressline2>122</com:addressline2>\n                <com:addressline3>Rue 11</com:addressline3>\n                \n                \n                \n              </com:addresslines>\n              <com:country>France</com:country>\n              <com:countrycode>FR</com:countrycode>\n            </com:paperaddress>\n          </pjs:sender>\n        </pjs:senders>\n        <pjs:recipients>\n          <pjs:internal>\n            <pjs:recipient id="1">\n              <com:paperaddress>\n                <com:addresslines>\n                  <com:addressline1>None test_maileva_connector_recipient</com:addressline1>\n                  <com:addressline2>123</com:addressline2>\n                  <com:addressline3>Rue 12</com:addressline3>\n                  \n                  \n                  \n                </com:addresslines>\n                <com:country>France</com:country>\n                <com:countrycode>FR</com:countrycode>\n              </com:paperaddress>\n              <com:digitaladdress>\n                <com:firstname></com:firstname>\n                <com:lastname></com:lastname>\n                <com:identifier></com:identifier>\n                <com:jobposition>default_career</com:jobposition>\n                <com:jobstartdate></com:jobstartdate>\n              </com:digitaladdress>\n            </pjs:recipient>\n          </pjs:internal>\n        </pjs:recipients>\n        <pjs:documentdata>\n          <pjs:documents>\n            <pjs:document id="001">\n              <com:content>\n                <com:value></com:value>\n              </com:content>\n            </pjs:document>\n          </pjs:documents>\n        </pjs:documentdata>\n        <pjs:options>\n          <pjs:requestoption>\n            <mlv:digitaloption>\n              <mlv:foldoption>\n                <mlv:deposittitle>test_maileva_connector_document</mlv:deposittitle>\n              </mlv:foldoption>\n              <mlv:deposittype>PAYSLIP</mlv:deposittype>\n              <mlv:digitalarchiving>600</mlv:digitalarchiving>\n            </mlv:digitaloption>\n          </pjs:requestoption>\n        </pjs:options>\n      </pjs:request>\n    </pjs:requests>\n</pjs:campaign>\n')
 
+  def test_send_state_workflow(self):
+    pdf = self.portal.document_module.newContent(portal_type='PDF')
+    self.tic()
+    self.assertEqual(pdf.getSendState(),'draft')
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'send'))
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'fail'))
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'succeed'))
+    pdf.send()
+    self.assertEqual(pdf.getSendState(),'sending')
+    self.tic()
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'fail'))
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'succeed'))
+    pdf.fail()
+    self.assertEqual(pdf.getSendState(), 'failed')
+    self.tic()
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'succeed'))
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(pdf, 'send'))
+    pdf.succeed()
+    self.tic()
+    self.assertEqual(pdf.getSendState(), 'success')
