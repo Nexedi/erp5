@@ -145,7 +145,7 @@
     return result;
   }
 
-  function parsePageContent(body_element, base_uri) {
+  function parsePageContent(body_element, language, base_uri) {
     var i,
       element,
       element_list,
@@ -174,6 +174,7 @@
     return {
       original_content: body_element.innerHTML,
       html_content: body_element.querySelector('main').innerHTML,
+      language: language,
       language_list: parseLanguageElement(
         body_element.querySelector('nav#language')
       ),
@@ -215,7 +216,9 @@
           // consider this must be reloaded
           throw new Error('Trigger an error to force reload');
         }
-        parsed_content = parsePageContent(dom_parser.body, dom_parser.baseURI);
+        parsed_content = parsePageContent(dom_parser.body,
+                                          dom_parser.documentElement.lang,
+                                          dom_parser.baseURI);
         gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
         return result_dict.style_gadget.render(parsed_content.html_content,
@@ -312,7 +315,8 @@
         return rJS.declareCSS(style_css_url, document.head);
       }
 
-      parsed_content = parsePageContent(gadget.element);
+      parsed_content = parsePageContent(gadget.element,
+                                        document.documentElement.lang);
       gadget.parsed_content = parsed_content;
       parsed_content.page_title = document.title;
       gadget.style_gadget_url =
