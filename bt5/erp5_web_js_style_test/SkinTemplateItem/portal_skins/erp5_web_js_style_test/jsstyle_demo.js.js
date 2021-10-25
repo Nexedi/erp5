@@ -36,6 +36,7 @@
     .declareMethod("render", function (html_content, parsed_content) {
       var state = {
         document_list: JSON.stringify(parsed_content.document_list || []),
+        current_language: parsed_content.language || "",
         language_list: JSON.stringify(parsed_content.language_list || []),
         sitemap: JSON.stringify(parsed_content.sitemap || {}),
         page_title: parsed_content.page_title || "",
@@ -85,6 +86,11 @@
       if (modification_dict.hasOwnProperty('render_count')) {
         domsugar(gadget.element.querySelector('p#render_count'), {
           text: 'render count: ' + gadget.state.render_count
+        });
+      }
+      if (modification_dict.hasOwnProperty('current_language')) {
+        domsugar(gadget.element.querySelector('p#current_language'), {
+          text: gadget.state.current_language
         });
       }
       if (modification_dict.hasOwnProperty('language_list')) {

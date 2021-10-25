@@ -25,7 +25,7 @@
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
-<html>
+<html tal:attributes="lang current_language">
   <head>
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
