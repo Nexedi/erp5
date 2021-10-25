@@ -13,3 +13,5 @@ context.activate().PDF_sendToMailevaByActivity(
   sender = sender.getRelativeUrl(),
   connector = maileva_connector.getRelativeUrl()
 )
+
+context.send()

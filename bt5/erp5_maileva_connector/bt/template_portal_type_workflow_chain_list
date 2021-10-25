@@ -2,3 +2,4 @@ Maileva Exchange | edit_workflow
 Maileva Exchange | system_event_workflow
 Maileva SOAP Connector | edit_workflow
 Maileva SOAP Connector | validation_workflow
+PDF | send_state_workflow

@@ -19,6 +19,14 @@ except socket.error, e:
       runtime_environment.edit(max_retry=None)
   raise e
 
+########XXXXXXXX should processing response to check if submit success or failed
+# response is a xml??
+##### just set to failed for now
+context.failed()
+
+
+############
+
 http_event = context.system_event_module.newContent(
   portal_type='Maileva Exchange',
   source_value = sender,
