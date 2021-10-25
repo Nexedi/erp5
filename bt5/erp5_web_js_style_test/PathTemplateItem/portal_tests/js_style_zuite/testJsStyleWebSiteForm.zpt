@@ -57,6 +57,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'en')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
@@ -119,6 +124,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//main//form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'en')]</td>
   <td></td>
 </tr>
 <tr>
@@ -186,6 +196,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//main//form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'en')]</td>
   <td></td>
 </tr>
 <tr>

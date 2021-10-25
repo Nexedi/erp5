@@ -47,6 +47,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'en')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//main//p[text()='Frontpage content']</td>
   <td></td>
 </tr>
@@ -76,6 +81,11 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>//main//p[text()="Contenu de la page d'accueil"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'fr')]</td>
   <td></td>
 </tr>
 <tr>
@@ -113,6 +123,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'zh')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//main//p[text()="主页内容"]</td>
   <td></td>
 </tr>
@@ -142,6 +157,11 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>//main//p[text()='Frontpage content']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='current_language'][contains(text(), 'en')]</td>
   <td></td>
 </tr>
 <tr>
