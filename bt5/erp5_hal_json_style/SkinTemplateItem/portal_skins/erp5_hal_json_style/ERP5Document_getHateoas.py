@@ -1428,13 +1428,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       container = traversed_document.getParentValue()
       if container != portal:
         # Jio does not support fetching the root document for now
+        if container.getRelativeUrl():
+          container_name = ensureUTF8(container.getTranslatedTitle())
+        else:
+          # for example in portal_skin
+          container_name = ensureUTF8(container.getTitle())
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
             "relative_url": container.getRelativeUrl(),
             "script_id": script.id
           },
-          "name": Base_translateString(container.getTitle()),
+          "name": container_name
         }
 
     # Find current action URL and extract embedded view
