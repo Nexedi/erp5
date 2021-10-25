@@ -7,4 +7,8 @@
   <type>Maileva SOAP Connector</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
+ <chain>
+  <type>PDF</type>
+  <workflow>send_state_workflow</workflow>
+ </chain>
 </workflow_chain>
