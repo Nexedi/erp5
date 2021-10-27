@@ -1,764 +1,758 @@
 <section>
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>store</td>
-        <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
-        <td>base_url_x</td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_setUpPersonTest</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyTextPresent</td>
-        <td></td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
-      </tr>
-      <tr class="" style="opacity: 1;">
-        <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>
-      </tr>
-      <tr>
-       <td>openAndWait</td>
-       <td>${base_url}/Zuite_updateUserPreferenceForTutorialTests</td>
-       <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
-<h1>Agenda</h1>
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_transformDataSetup</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Init ok.</td>
+          <td></td>
+        </tr>
+        <tr class="" style="opacity: 1;">
+          <td colspan="3">&lt;span
+            metal:use-macro="container/Zuite_viewWendelinTestMacroLibrary/macros/init_wendelin_test_environment"&gt;Init
+            Wendlin Test Environment&lt;/span&gt;</td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+  <h1>Agenda</h1>
 
-<ul>
-	<li>Create Data Operation</li>
-	<li>Create Data Product</li>
-	<li>Create Transformation Script</li>
-	<li>Create Data Transformation</li>
-	<li>See Data Analysis</li>
-	<li>See&nbsp;Data Array</li>
-</ul>
+  <ul>
+    <li>Create Data Operation</li>
+    <li>Create Data Product</li>
+    <li>Create Transformation Script</li>
+    <li>Create Data Transformation</li>
+    <li>See Data Analysis</li>
+    <li>See&nbsp;Data Array</li>
+  </ul>
 
-<details open="">
-<p>&nbsp;</p>
+  <details open="">
+    <p>&nbsp;</p>
 
-<p>This tutorial teaches how to transform raw data and write it in Data Arrays.</p>
+    <p>This tutorial teaches how to transform raw data and write it in Data Arrays.</p>
 
-<p>Before doing this tutorial make sure you read and completed the following tutorial and have data in your wendelin instance:</p>
+    <p>Before doing this tutorial make sure you read and completed the following tutorial and have data in your wendelin
+      instance:</p>
 
-<ul>
-	<li><a href="wendelin-Tutorial.Check.Data.Arrival">HowTo Check Data Arrival</a></li>
-</ul>
+    <ul>
+      <li><a href="wendelin-Tutorial.Check.Data.Arrival">HowTo Check Data Arrival</a></li>
+    </ul>
 
-<p>&nbsp;</p>
-</details>
+    <p>&nbsp;</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Data Operation</h1>
-<img alt="" src="wendelin-Data.Operation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Open your Wendelin dashboard.&nbsp;</p>
+  <h1>Data Operation</h1>
+  <img alt="" src="wendelin-Data.Operation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Open your Wendelin dashboard.&nbsp;</p>
 
-<p>In Modules click on Data Operations Module</p>
-</details>
+    <p>In Modules click on Data Operations Module</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Add Data Operation</h1>
-<img alt="" src="wendelin-Data.Operation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on <strong>Add</strong> to add a new Data Operation.</p>
-</details>
+  <h1>Add Data Operation</h1>
+  <img alt="" src="wendelin-Data.Operation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on <strong>Add</strong> to add a new Data Operation.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Add Data Operation</h1>
-<img alt="" src="wendelin-Data.Operation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click <strong>Proceed</strong> to continue.</p>
-</details>
+  <h1>Add Data Operation</h1>
+  <img alt="" src="wendelin-Data.Operation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click <strong>Proceed</strong> to continue.</p>
+  </details>
 
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Done.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'data_operation_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'data_operation_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${default_front_url}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'data_operation_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'data_operation_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
 </section>
 
 <section class="screenshot">
-<h1>Fill the Form</h1>
-<img alt="" src="wendelin-Data.Operation.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Fill the form to create Data Operation.</p>
+  <h1>Fill the Form</h1>
+  <img alt="" src="wendelin-Data.Operation.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Fill the form to create Data Operation.</p>
 
-<p><strong>Title&nbsp;</strong>-&nbsp; we name it&nbsp;<strong>Convert Raw Environment Data to Array</strong></p>
+    <p><strong>Title&nbsp;</strong>-&nbsp; we name it&nbsp;<strong>Convert Raw Environment Data to Array</strong></p>
 
-<p><strong>Reference&nbsp;</strong>&nbsp;-&nbsp;<strong>data-operation-convert-raw-data-to-array&nbsp;</strong></p>
+    <p><strong>Reference&nbsp;</strong>&nbsp;-&nbsp;<strong>data-operation-convert-raw-data-to-array&nbsp;</strong></p>
 
-<p><strong>Script ID&nbsp;</strong>-&nbsp;<strong>DataAnalysisLine_convertEnvironmentDataStreamToArray </strong>:&nbsp;this script will do all the magic. It doesn&#39;t exist yet, we will create it later in this tutorial.&nbsp;</p>
+    <p><strong>Script ID&nbsp;</strong>-&nbsp;<strong>DataAnalysisLine_convertEnvironmentDataStreamToArray
+      </strong>:&nbsp;this script will do all the magic. It doesn&#39;t exist yet, we will create it later in this
+      tutorial.&nbsp;</p>
 
-<p><strong><label for="field_my_aggregated_portal_type_list">Item Types&nbsp;</label></strong><label for="field_my_aggregated_portal_type_list">- <strong>Data Array&nbsp;</strong>: we choose Data Array as we will&nbsp;convert the raw data to Data Array</label></p>
-</details>
+    <p><strong><label for="field_my_aggregated_portal_type_list">Item Types&nbsp;</label></strong><label
+        for="field_my_aggregated_portal_type_list">- <strong>Data Array&nbsp;</strong>: we choose Data Array as we
+        will&nbsp;convert the raw data to Data Array</label></p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Save</h1>
-<img alt="" src="wendelin-Data.Operation.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click <strong>Save</strong> to save the changes.</p>
-</details>
+  <h1>Save</h1>
+  <img alt="" src="wendelin-Data.Operation.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click <strong>Save</strong> to save the changes.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Validate</h1>
-<img alt="" src="wendelin-Data.Operation.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on Validate on left side panel to validate Data Operation.</p>
-</details>
+  <h1>Validate</h1>
+  <img alt="" src="wendelin-Data.Operation.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on Validate on left side panel to validate Data Operation.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Confirm Validation</h1>
-<img alt="" src="wendelin-Data.Operation.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click <strong>Proceed</strong> to confirm validation.</p>
-</details>
+  <h1>Confirm Validation</h1>
+  <img alt="" src="wendelin-Data.Operation.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click <strong>Proceed</strong> to confirm validation.</p>
+  </details>
 
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>Convert Raw Environment Data to Array</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>data-operation-convert-raw-data-to-array</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_version"]</td>
-        <td>001</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_script_id"]</td>
-        <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Data Array</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
-        <td>Unit/Piece</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'Dvalidate_action')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'Dvalidate_action')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Validate"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Validate"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//label[@for="field_my_translated_validation_state_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Validated</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>Convert Raw Environment Data to Array</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>data-operation-convert-raw-data-to-array</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_version"]</td>
+          <td>001</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_script_id"]</td>
+          <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
+          <td>Data Array</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
+          <td>Unit/Piece</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'Dvalidate_action')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'Dvalidate_action')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Validate"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Validate"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//label[@for="field_my_translated_validation_state_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Validated</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
 </section>
 
 <section>
-<h1>Data Product</h1>
-<img alt="" src="wendelin-new.Interface.add.Data.Product.1.screenshot?format=" title="" type="image/svg+xml" />
-<details open="">
-<p>&nbsp;</p>
+  <h1>Data Product</h1>
+  <img alt="" src="wendelin-new.Interface.add.Data.Product.1.screenshot?format=" title="" type="image/svg+xml" />
+  <details open="">
+    <p>&nbsp;</p>
 
-<p>Next we need to create a new Data Product which will the output Data Product of the Transformation.&nbsp;</p>
+    <p>Next we need to create a new Data Product which will the output Data Product of the Transformation.&nbsp;</p>
 
-<p>&nbsp;</p>
-</details>
+    <p>&nbsp;</p>
+  </details>
 </section>
 
 <section>
-<h1>Create Data Product</h1>
-<img alt="" src="wendelin-Data.Transformation.17?format=" title="" type="image/svg+xml" />
-<details open="">
-<p>&nbsp;</p>
+  <h1>Create Data Product</h1>
+  <img alt="" src="wendelin-Data.Transformation.17?format=" title="" type="image/svg+xml" />
+  <details open="">
+    <p>&nbsp;</p>
 
-<p>Create a new Data Product as described in <a href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a> tutorial with following values</p>
+    <p>Create a new Data Product as described in <a href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data
+        Product</a> tutorial with following values</p>
 
-<p>Title -&nbsp; <strong>Environment Raw Array</strong></p>
+    <p>Title -&nbsp; <strong>Environment Raw Array</strong></p>
 
-<p>Reference -&nbsp;<strong>environment-raw-array</strong></p>
+    <p>Reference -&nbsp;<strong>environment-raw-array</strong></p>
 
-<p>Item Types</p>
+    <p>Item Types</p>
 
-<ul>
-	<li><strong>Data Stream</strong></li>
-	<li><strong>Progress Indicator</strong></li>
-	<li><strong>Data Array</strong></li>
-</ul>
+    <ul>
+      <li><strong>Data Stream</strong></li>
+      <li><strong>Progress Indicator</strong></li>
+      <li><strong>Data Array</strong></li>
+    </ul>
 
-<p>&nbsp;</p>
-</details>
+    <p>&nbsp;</p>
+  </details>
 
-<p>&nbsp;</p>
+  <p>&nbsp;</p>
 
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@accesskey="m"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@accesskey="m"]</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'data_product_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'data_product_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>Environment Raw Array</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
-        <td>Unit/Piece</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>environment-raw-array</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Data Stream</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[2]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Progress Indicator</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[3]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Data Array</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="subfield_field_my_use_list_default:list"]</td>
-        <td>Big Data/Ingestion/Stream Ingestion</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'Dvalidate_action')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'Dvalidate_action')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Validate"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Validate"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@accesskey="m"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@accesskey="m"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'data_product_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'data_product_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>Environment Raw Array</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="subfield_field_my_quantity_unit_list_default:list"]</td>
+          <td>Unit/Piece</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>environment-raw-array</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>
+            //div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]
+          </td>
+          <td>Data Stream</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>
+            //div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[2]//div//select[@id="field_my_aggregated_portal_type_list"]
+          </td>
+          <td>Progress Indicator</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>
+            //div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[3]//div//select[@id="field_my_aggregated_portal_type_list"]
+          </td>
+          <td>Data Array</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="subfield_field_my_use_list_default:list"]</td>
+          <td>Big Data/Ingestion/Stream Ingestion</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'Dvalidate_action')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'Dvalidate_action')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Validate"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Validate"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
 </section>
 
 <section class="screenshot">
-<h1>Portal Callables</h1>
-<img alt="" src="wendelin-Data.Transformation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>After Data Product is created and validated, navigate to page called Portal Callables by clicking on&nbsp;<strong>Callables&nbsp;</strong> on the left side panel.</p>
+  <h1>Portal Callables</h1>
+  <img alt="" src="wendelin-Data.Transformation.1?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>After Data Product is created and validated, navigate to page called Portal Callables by clicking
+      on&nbsp;<strong>Callables&nbsp;</strong> on the left side panel.</p>
 
-<p>There we will create and store a python script that will transform raw data to arrays.&nbsp;</p>
+    <p>There we will create and store a python script that will transform raw data to arrays.&nbsp;</p>
 
-<h1>&nbsp;</h1>
-</details>
+    <h1>&nbsp;</h1>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Add Transformation Script</h1>
-<img alt="" src="wendelin-Data.Transformation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on Add button to add a new script.</p>
-</details>
+  <h1>Add Transformation Script</h1>
+  <img alt="" src="wendelin-Data.Transformation.2?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on Add button to add a new script.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Add Transformation Script Cont.</h1>
-<img alt="" src="wendelin-Data.Transformation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Choose Python Script as Document Type and click on Create Document to create an empty python script.</p>
-</details>
+  <h1>Add Transformation Script Cont.</h1>
+  <img alt="" src="wendelin-Data.Transformation.3?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Choose Python Script as Document Type and click on Create Document to create an empty python script.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Fill The Form</h1>
-<img alt="" src="wendelin-Data.Transformation.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Define <strong>ID</strong>, <strong>Title</strong> and <strong>Reference</strong> of your script.</p>
+  <h1>Fill The Form</h1>
+  <img alt="" src="wendelin-Data.Transformation.4?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Define <strong>ID</strong>, <strong>Title</strong> and <strong>Reference</strong> of your script.</p>
 
-<p>We name it <strong>DataAnalysisLine_convertEnvironmentDataStreamToArray </strong> as we did in Data Operation.</p>
+    <p>We name it <strong>DataAnalysisLine_convertEnvironmentDataStreamToArray </strong> as we did in Data Operation.
+    </p>
 
-<p>And click <strong>Save</strong> to save the changes.</p>
-</details>
+    <p>And click <strong>Save</strong> to save the changes.</p>
+  </details>
 
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <!--<tr class="" style="opacity: 1;">
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <!--<tr class="" style="opacity: 1;">
         <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
       </tr>-->
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Done.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=portal_callables')]</td>
-        <td></td>
-      </tr>
-      <tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${default_front_url}/</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=portal_callables')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=portal_callables')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[text()="IngestionPolicy_parseSimpleIngestionTag"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="field_your_select_action"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_your_select_action"]</td>
+          <td>Python Script</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>5000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${default_front_url}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=portal_callables')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=portal_callables')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[text()='DataAnalysisLine_convertEnvironmentDataStreamToArray']</td>
+          <td></td>
+        </tr>
         <td>click</td>
-        <td>//a[contains(@href,'page=portal_callables')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[text()="IngestionPolicy_parseSimpleIngestionTag"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_your_select_action"]</td>
-        <td>Python Script</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Done.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=portal_callables')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=portal_callables')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
         <td>//a[text()='DataAnalysisLine_convertEnvironmentDataStreamToArray']</td>
         <td></td>
-      </tr>
-      <td>click</td>
-        <td>//a[text()='DataAnalysisLine_convertEnvironmentDataStreamToArray']</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Python Script: DataAnalysisLine_convertEnvironmentDataStreamToArray"]</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="editable"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@id="editable"]</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>waitForElementPresent</td>
-        <td>//label[@for="field_my_reference"]</td>
-        <td></td>
-      </tr>
-      
-
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_id"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_id"]</td>
-        <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Python Script: DataAnalysisLine_convertEnvironmentDataStreamToArray"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="editable"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@id="editable"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//label[@for="field_my_reference"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_id"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_id"]</td>
+          <td>DataAnalysisLine_convertEnvironmentDataStreamToArray</td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
 </section>
 
 <section class="screenshot">
-<h1>Parameters</h1>
-<img alt="" src="wendelin-Data.Transformation.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Next we define the parameters we will give to our script.&nbsp;</p>
+  <h1>Parameters</h1>
+  <img alt="" src="wendelin-Data.Transformation.5?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Next we define the parameters we will give to our script.&nbsp;</p>
 
-<p><strong>in_stream&nbsp;</strong>- the input Data Stream where raw data is stored</p>
+    <p><strong>in_stream&nbsp;</strong>- the input Data Stream where raw data is stored</p>
 
-<p><strong>out_array&nbsp;</strong>&nbsp;- the output Data Array where data will be stored.&nbsp;</p>
+    <p><strong>out_array&nbsp;</strong>&nbsp;- the output Data Array where data will be stored.&nbsp;</p>
 
-<p>At the end click <strong>Save</strong> to save the changes.</p>
-</details>
+    <p>At the end click <strong>Save</strong> to save the changes.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Transformation Script</h1>
-<img alt="" src="wendelin-Data.Transformation.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">The script we write in the textbox area at the bottom of the page.</details>
+  <h1>Transformation Script</h1>
+  <img alt="" src="wendelin-Data.Transformation.6?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">The script we write in the textbox area at the bottom of the page.</details>
 </section>
 
 <section class="screenshot">
-<h1>Transformation Script Cont.</h1>
+  <h1>Transformation Script Cont.</h1>
 
-<pre>
+  <pre>
 <code>
 import pandas as pd
 
@@ -796,58 +790,63 @@ if end &lt; in_data_stream.getSize():
 </code>
 </pre>
 
-<details open="">
-<p>This script will simply write raw data to Data Array.&nbsp; More sophisticated example like resampling data or data predictions are shown in following tutorials.&nbsp;</p>
+  <details open="">
+    <p>This script will simply write raw data to Data Array.&nbsp; More sophisticated example like resampling data or
+      data predictions are shown in following tutorials.&nbsp;</p>
 
-<p>First we extract data from the Data stream and read a chunk of data at a time.&nbsp;</p>
+    <p>First we extract data from the Data stream and read a chunk of data at a time.&nbsp;</p>
 
-<p>As data is in <a href="https://msgpack.org/">msgpack</a> format we unpack it using iterUnpack method of wendelin Data Stream which is based on&nbsp; Unpacker of msgpack.&nbsp;</p>
+    <p>As data is in <a href="https://msgpack.org/">msgpack</a> format we unpack it using iterUnpack method of wendelin
+      Data Stream which is based on&nbsp; Unpacker of msgpack.&nbsp;</p>
 
-<p>Next we create a data frame using <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas DataFrame</a>.&nbsp;</p>
+    <p>Next we create a data frame using <a
+        href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">pandas
+        DataFrame</a>.&nbsp;</p>
 
-<p>After we convert it to ndarray and append it to <a href="https://lab.nexedi.com/nexedi/wendelin.core">zbigarray</a>.</p>
+    <p>After we convert it to ndarray and append it to <a
+        href="https://lab.nexedi.com/nexedi/wendelin.core">zbigarray</a>.</p>
 
-<p>We use Progress Indicator to keep track of how much raw data we already processed.&nbsp;</p>
-</details>
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_parameter_signature"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_parameter_signature"]</td>
-        <td>in_stream=None, out_array=None</td>
-      </tr>
-       <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
-        <!--td>//pre[@class=" CodeMirror-line " and @role="presentation"]</td-->
-        <td>
-<pre>
+    <p>We use Progress Indicator to keep track of how much raw data we already processed.&nbsp;</p>
+  </details>
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_parameter_signature"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_parameter_signature"]</td>
+          <td>in_stream=None, out_array=None</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//div[contains(@data-gadget-url,'gadget_editor.html')]//textarea</td>
+          <!--td>//pre[@class=" CodeMirror-line " and @role="presentation"]</td-->
+          <td>
+            <pre>
 import pandas as pd
 
 progress_indicator = in_stream[&quot;Progress Indicator&quot;]
@@ -882,1028 +881,1079 @@ if end &gt; start:
 if end &lt; in_data_stream.getSize():
   return 1
 </pre>
-</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@type="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
-</section>
-
-<section class="screenshot">
-<h1>Data Transformations</h1>
-<img alt="" src="wendelin-Data.Transformation.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>After your transformation script is ready, it&#39;s time to create Data Transformation.</p>
-
-<p>On Modules page click on Data Transformations.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Add Data Transformations</h1>
-<img alt="" src="wendelin-Data.Transformation.8?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on Add to add a new Data Transformation.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Create Data Transformation</h1>
-<img alt="" src="wendelin-Data.Transformation.9?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on Create Document to continue.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Fill The Form</h1>
-<img alt="" src="wendelin-Data.Transformation.10?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Chose descriptive title and reference. For example</p>
-
-<p>Title : Convert Environment Raw Data</p>
-
-<p>Reference : convert-environment-raw-data</p>
-
-<p>For Initial Product we choose the Data Product we created in&nbsp;<a href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a>&nbsp;tutorial.&nbsp;</p>
-
-<p>At the end click Save to save the changes.&nbsp;</p>
-</details>
-
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'data_transformation_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'data_transformation_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>Convert Environment Raw Data</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>convert-environment-raw-data</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_resource_title"]</td>
-        <td>Sample Environment Raw Data</td>
-      </tr>
-      <tr>
-        <td>fireEvent</td>
-        <td>//input[@name='field_my_resource_title']</td>
-        <td>input</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
-</section>
-
-<section class="screenshot">
-<h1>Data Transformation Lines</h1>
-<img alt="" src="wendelin-Data.Transformation.11?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on Add button to add a Data Transformation Line.</p>
-
-<p>&nbsp;</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Create Operation Line</h1>
-<img alt="" src="wendelin-Data.Transformation.12?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>&nbsp;</p>
-
-<p>Choose <strong>Data Transformation Operation Line&nbsp;</strong>for Document Type and click on Create Document.&nbsp;</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Fill The Form</h1>
-<img alt="" src="wendelin-Data.Transformation.13?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Fill the form.</p>
-
-<p>For Data Operation put the name of the Data operation that we created at the beginning of this tutorial - <strong>Convert Raw Environment Data to Array</strong>.</p>
-
-<p>At the end click on Save to save the changes.&nbsp;</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Back To Data Transformation</h1>
-<img alt="" src="wendelin-Data.Transformation.14?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Once needed fields are filled click Save to save the changes and go back to Data Transformations view by clicking on the upper panel.</p>
-</details>
-
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>Convert Raw Data to Array</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>data_operation</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_resource_title"]</td>
-        <td>Convert Raw Environment Data to Array</td>
-      </tr>
-      <tr>
-        <td>fireEvent</td>
-        <td>//input[@name='field_my_resource_title']</td>
-        <td>input</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_trade_phase"]</td>
-        <td>Data/Convert</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_quantity_unit"]</td>
-        <td>Unit/Piece</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_quantity"]</td>
-        <td>1</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
-</section>
-
-<section class="screenshot">
-<h1>Data Transformation Lines</h1>
-<img alt="" src="wendelin-Data.Transformation.15?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Add another Data Transformation Line.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Create Transformation Line</h1>
-<img alt="" src="wendelin-Data.Transformation.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Now for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create Document</strong>.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Fill The Form</h1>
-<img alt="" src="wendelin-Data.Transformation.18?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Fill the form.</p>
-
-<p>For <strong>Data Product</strong> put the name of the Data Product that we created in <a href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a>&nbsp;tutorial.</p>
-
-<p>After filling in the Data Product name click Save to save the intermediate changes.&nbsp;</p>
-
-<p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Fill The Form Cont.</h1>
-<img alt="" src="wendelin-Data.Transformation.19?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Continue filling the form as shown on the screenshot</p>
-
-<p>At the end don&#39;t forget to save the changes.</p>
-</details>
-
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//select[@id="field_your_select_action"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_your_select_action"]</td>
-        <td>Data Transformation Resource Line</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>Raw Data</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>in_stream</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_resource_title"]</td>
-        <td>Sample Environment Raw Data</td>
-      </tr>
-      <tr>
-        <td>fireEvent</td>
-        <td>//input[@name='field_my_resource_title']</td>
-        <td>input</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_quantity_unit"]</td>
-        <td>Unit/Piece</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_quantity"]</td>
-        <td>-1</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Data Stream</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[2]//div//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Progress Indicator</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_trade_phase"]</td>
-        <td>Data/Convert</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
-</section>
-
-<section class="screenshot">
-<h1>Add Output Line</h1>
-<img alt="" src="wendelin-Data.Transformation.20?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Head back to Data Transformation and add one more Transformation line.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Create Transformation Line</h1>
-<img alt="" src="wendelin-Data.Transformation.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Once again&nbsp;for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create Document</strong>.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Fill The Form</h1>
-<img alt="" src="wendelin-Data.Transformation.21?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Fill the form.</p>
-
-<p>For <strong>Data Product</strong> put the name of the Data Product that we created earlier in this tutorial - <strong>Environment Raw Array</strong>.</p>
-
-<p>Once filling in the Data Product name click Save to save the intermediate changes.&nbsp;</p>
-
-<p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Fill The Form Cont.</h1>
-<img alt="" src="wendelin-Data.Transformation.22?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Continue filling the form as shown on the screenshot</p>
-
-<p>At the end don&#39;t forget to save the changes.</p>
-</details>
-
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[@data-i18n="Add"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//select[@id="field_your_select_action"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_your_select_action"]</td>
-        <td>Data Transformation Resource Line</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Create Document"]</td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_title"]</td>
-        <td>Raw Data</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_reference"]</td>
-        <td>out_array</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_resource_title"]</td>
-        <td>Environment Raw Array</td>
-      </tr>
-      <tr>
-        <td>fireEvent</td>
-        <td>//input[@name='field_my_resource_title']</td>
-        <td>input</td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_quantity_unit"]</td>
-        <td>Unit/Piece</td>
-      </tr>
-      <tr>
-        <td>type</td>
-        <td>//input[@id="field_my_quantity"]</td>
-        <td>1</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
-        <td>Data Array</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_trade_phase"]</td>
-        <td>Data/Convert</td>
-      </tr>
-      <tr>
-        <td>select</td>
-        <td>//select[@id="field_my_use"]</td>
-        <td>Big Data/Ingestion/Stream Ingestion</td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//button[@name="submit" and @data-i18n="Save"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>pause</td>
-        <td>3000</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
-</section>
-
-<section class="screenshot">
-<h1>Data Transformation</h1>
-<img alt="" src="wendelin-Data.Transformation.23?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Head back to Data Transformation.</p>
-
-<p>Now you can see that we have 3 Data Transformation Lines.</p>
-
-<p>The first line defines what operation will be done.&nbsp;</p>
-
-<p>The second line defines on what the operation will be done - the input.</p>
-
-<p>And the third line defines the output.</p>
-
-<p>Note the <strong>Quantity</strong> column of the Transformation Lines. Make sure the values are the same as shown on the screenshot.</p>
-
-<p>The very&nbsp;last step is to validate the&nbsp;Data Transformation.&nbsp;</p>
-
-<p>Click on Validate on the left side panel to validate the Data Transformation.</p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Confirm Validation</h1>
-<img alt="" src="wendelin-Data.Transformation.24?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on Validate to confirm the Validation.</p>
-</details>
-
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr[1]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr[1]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr[2]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>verifyElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr[3]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'Dvalidate_action')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'Dvalidate_action')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//input[@type="submit" and @value="Validate"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//input[@type="submit" and @value="Validate"]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//button[@type="submit" and @class="success"]</td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//label[@for="field_my_translated_validation_state_title"]</td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Validated</td>
-        <td></td>
-      </tr>
-      
-      
-    </tbody>
-  </table>
-</test>
-</section>
-
-<section class="screenshot">
-<h1>Data Analysis</h1>
-<img alt="" src="wendelin-Data.Transformation.25?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Go to <strong>Data Analyses </strong>module<strong>.</strong></p>
-</details>
-</section>
-
-<section class="screenshot">
-<h1>Data Analysis</h1>
-<img alt="" src="wendelin-Data.Transformation.26?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>After few minutes in Data Analysis Module a new Data Analysis called&nbsp;<strong>Convert Environment Raw Data&nbsp;</strong>will appear.&nbsp;</p>
-</details>
-
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-     <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>assertTextPresent</td>
-        <td>Alarm Called.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Done.</td>
-        <td></td>
-      </tr>
+          </td>
         </tr>
-     <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>assertTextPresent</td>
-        <td>Alarm Called.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Done.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'data_analysis_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'data_analysis_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Convert Environment Raw Data</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@type="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
 </section>
 
 <section class="screenshot">
-<h1>Data Array Module</h1>
-<img alt="" src="wendelin-Data.Transformation.27?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Go to Data Array Module to see the data.&nbsp;&nbsp;</p>
-</details>
+  <h1>Data Transformations</h1>
+  <img alt="" src="wendelin-Data.Transformation.7?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>After your transformation script is ready, it&#39;s time to create Data Transformation.</p>
+
+    <p>On Modules page click on Data Transformations.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Data Array</h1>
-<img alt="" src="wendelin-Data.Transformation.28?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Here we can see the newly created Data Array called&nbsp;<strong>Convert Environment Raw Data.</strong></p>
-
-<p>Click on it to navigate to array.</p>
-</details>
+  <h1>Add Data Transformations</h1>
+  <img alt="" src="wendelin-Data.Transformation.8?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on Add to add a new Data Transformation.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Data Array</h1>
-<img alt="" src="wendelin-Data.Transformation.29?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Click on <strong>Preview</strong> to see the data.</p>
-
-<p>Note it might take few minutes (&lt;10) until data appears.</p>
-</details>
+  <h1>Create Data Transformation</h1>
+  <img alt="" src="wendelin-Data.Transformation.9?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on Create Document to continue.</p>
+  </details>
 </section>
 
 <section class="screenshot">
-<h1>Data Array</h1>
-<img alt="" src="wendelin-Data.Transformation.30?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
-<details open="">
-<p>Data is here!</p>
-</details>
+  <h1>Fill The Form</h1>
+  <img alt="" src="wendelin-Data.Transformation.10?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Chose descriptive title and reference. For example</p>
 
-<test>
-  <table style="display: none;" class="test">
-    <tbody>
+    <p>Title : Convert Environment Raw Data</p>
 
-     <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
-        <td></td>
-      </tr>
-       <tr>
-        <td>assertTextPresent</td>
-        <td>Alarm Called.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url}/Zuite_waitForActivities</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Done.</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>openAndWait</td>
-        <td>${base_url_x}/web_site_module/default_wendelin_front/</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'page=front')]</td>
-        <td></td>
-      </tr>
+    <p>Reference : convert-environment-raw-data</p>
 
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'data_array_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'data_array_module')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>assertTextPresent</td>
-        <td>Convert Environment Raw Data</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>waitForElementPresent</td>
-        <td>//a[contains(@href,'preview')]</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>click</td>
-        <td>//a[contains(@href,'preview')]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</test>
+    <p>For Initial Product we choose the Data Product we created in&nbsp;<a
+        href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a>&nbsp;tutorial.&nbsp;</p>
+
+    <p>At the end click Save to save the changes.&nbsp;</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'data_transformation_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'data_transformation_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>Convert Environment Raw Data</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>convert-environment-raw-data</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_resource_title"]</td>
+          <td>Sample Environment Raw Data</td>
+        </tr>
+        <tr>
+          <td>fireEvent</td>
+          <td>//input[@name='field_my_resource_title']</td>
+          <td>input</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+</section>
+
+<section class="screenshot">
+  <h1>Data Transformation Lines</h1>
+  <img alt="" src="wendelin-Data.Transformation.11?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on Add button to add a Data Transformation Line.</p>
+
+    <p>&nbsp;</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Create Operation Line</h1>
+  <img alt="" src="wendelin-Data.Transformation.12?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>&nbsp;</p>
+
+    <p>Choose <strong>Data Transformation Operation Line&nbsp;</strong>for Document Type and click on Create
+      Document.&nbsp;</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Fill The Form</h1>
+  <img alt="" src="wendelin-Data.Transformation.13?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Fill the form.</p>
+
+    <p>For Data Operation put the name of the Data operation that we created at the beginning of this tutorial -
+      <strong>Convert Raw Environment Data to Array</strong>.</p>
+
+    <p>At the end click on Save to save the changes.&nbsp;</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Back To Data Transformation</h1>
+  <img alt="" src="wendelin-Data.Transformation.14?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Once needed fields are filled click Save to save the changes and go back to Data Transformations view by clicking
+      on the upper panel.</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>Convert Raw Data to Array</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>data_operation</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_resource_title"]</td>
+          <td>Convert Raw Environment Data to Array</td>
+        </tr>
+        <tr>
+          <td>fireEvent</td>
+          <td>//input[@name='field_my_resource_title']</td>
+          <td>input</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//li[contains(@data-relative-url,'data_operation_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_trade_phase"]</td>
+          <td>Data/Convert</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_quantity_unit"]</td>
+          <td>Unit/Piece</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_quantity"]</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@data-i18n,'Data Transformation Operation Line')]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+</section>
+
+<section class="screenshot">
+  <h1>Data Transformation Lines</h1>
+  <img alt="" src="wendelin-Data.Transformation.15?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Add another Data Transformation Line.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Create Transformation Line</h1>
+  <img alt="" src="wendelin-Data.Transformation.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Now for Document Type choose <strong>Data Transformation Resource Line</strong> and click on <strong>Create
+        Document</strong>.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Fill The Form</h1>
+  <img alt="" src="wendelin-Data.Transformation.18?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Fill the form.</p>
+
+    <p>For <strong>Data Product</strong> put the name of the Data Product that we created in <a
+        href="wendelin-Tutorial.Howto.Create.Data.Product">HowTo Create Data Product</a>&nbsp;tutorial.</p>
+
+    <p>After filling in the Data Product name click Save to save the intermediate changes.&nbsp;</p>
+
+    <p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Fill The Form Cont.</h1>
+  <img alt="" src="wendelin-Data.Transformation.19?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Continue filling the form as shown on the screenshot</p>
+
+    <p>At the end don&#39;t forget to save the changes.</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="field_your_select_action"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_your_select_action"]</td>
+          <td>Data Transformation Resource Line</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>Raw Data</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>in_stream</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_resource_title"]</td>
+          <td>Sample Environment Raw Data</td>
+        </tr>
+        <tr>
+          <td>fireEvent</td>
+          <td>//input[@name='field_my_resource_title']</td>
+          <td>input</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_quantity_unit"]</td>
+          <td>Unit/Piece</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_quantity"]</td>
+          <td>-1</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>
+            //div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[1]//div//select[@id="field_my_aggregated_portal_type_list"]
+          </td>
+          <td>Data Stream</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>
+            //div[@data-gadget-scope="field_my_aggregated_portal_type_list"]//div//div//div[2]//div//select[@id="field_my_aggregated_portal_type_list"]
+          </td>
+          <td>Progress Indicator</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_trade_phase"]</td>
+          <td>Data/Convert</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+</section>
+
+<section class="screenshot">
+  <h1>Add Output Line</h1>
+  <img alt="" src="wendelin-Data.Transformation.20?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Head back to Data Transformation and add one more Transformation line.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Create Transformation Line</h1>
+  <img alt="" src="wendelin-Data.Transformation.16?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Once again&nbsp;for Document Type choose <strong>Data Transformation Resource Line</strong> and click on
+      <strong>Create Document</strong>.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Fill The Form</h1>
+  <img alt="" src="wendelin-Data.Transformation.21?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Fill the form.</p>
+
+    <p>For <strong>Data Product</strong> put the name of the Data Product that we created earlier in this tutorial -
+      <strong>Environment Raw Array</strong>.</p>
+
+    <p>Once filling in the Data Product name click Save to save the intermediate changes.&nbsp;</p>
+
+    <p>After saving a new field <strong>Item Types&nbsp;</strong>will appear.&nbsp;</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Fill The Form Cont.</h1>
+  <img alt="" src="wendelin-Data.Transformation.22?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Continue filling the form as shown on the screenshot</p>
+
+    <p>At the end don&#39;t forget to save the changes.</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Add"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="field_your_select_action"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_your_select_action"]</td>
+          <td>Data Transformation Resource Line</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Create Document"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_title"]</td>
+          <td>Raw Data</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_reference"]</td>
+          <td>out_array</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_resource_title"]</td>
+          <td>Environment Raw Array</td>
+        </tr>
+        <tr>
+          <td>fireEvent</td>
+          <td>//input[@name='field_my_resource_title']</td>
+          <td>input</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//li[contains(@data-relative-url,'data_product_module/')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_quantity_unit"]</td>
+          <td>Unit/Piece</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td>//input[@id="field_my_quantity"]</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_aggregated_portal_type_list"]</td>
+          <td>Data Array</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_trade_phase"]</td>
+          <td>Data/Convert</td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="field_my_use"]</td>
+          <td>Big Data/Ingestion/Stream Ingestion</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//button[@name="submit" and @data-i18n="Save"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@data-i18n,'Data Transformation Resource Line')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+</section>
+
+<section class="screenshot">
+  <h1>Data Transformation</h1>
+  <img alt="" src="wendelin-Data.Transformation.23?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Head back to Data Transformation.</p>
+
+    <p>Now you can see that we have 3 Data Transformation Lines.</p>
+
+    <p>The first line defines what operation will be done.&nbsp;</p>
+
+    <p>The second line defines on what the operation will be done - the input.</p>
+
+    <p>And the third line defines the output.</p>
+
+    <p>Note the <strong>Quantity</strong> column of the Transformation Lines. Make sure the values are the same as shown
+      on the screenshot.</p>
+
+    <p>The very&nbsp;last step is to validate the&nbsp;Data Transformation.&nbsp;</p>
+
+    <p>Click on Validate on the left side panel to validate the Data Transformation.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Confirm Validation</h1>
+  <img alt="" src="wendelin-Data.Transformation.24?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on Validate to confirm the Validation.</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@class='document_table']//table//tbody//tr[1]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>verifyElementPresent</td>
+          <td>//div[@class='document_table']//table//tbody//tr[1]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>verifyElementPresent</td>
+          <td>//div[@class='document_table']//table//tbody//tr[2]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>verifyElementPresent</td>
+          <td>//div[@class='document_table']//table//tbody//tr[3]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'Dvalidate_action')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'Dvalidate_action')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@type="submit" and @value="Validate"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit" and @value="Validate"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//button[@type="submit" and @class="success"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//label[@for="field_my_translated_validation_state_title"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Validated</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+</section>
+
+<section class="screenshot">
+  <h1>Data Analysis</h1>
+  <img alt="" src="wendelin-Data.Transformation.25?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Go to <strong>Data Analyses </strong>module<strong>.</strong></p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Data Analysis</h1>
+  <img alt="" src="wendelin-Data.Transformation.26?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>After few minutes in Data Analysis Module a new Data Analysis called&nbsp;<strong>Convert Environment Raw
+        Data&nbsp;</strong>will appear.&nbsp;</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${default_front_url}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Alarm Called.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Alarm Called.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${default_front_url}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'data_analysis_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'data_analysis_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Convert Environment Raw Data</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
+</section>
+
+<section class="screenshot">
+  <h1>Data Array Module</h1>
+  <img alt="" src="wendelin-Data.Transformation.27?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Go to Data Array Module to see the data.&nbsp;&nbsp;</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Data Array</h1>
+  <img alt="" src="wendelin-Data.Transformation.28?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Here we can see the newly created Data Array called&nbsp;<strong>Convert Environment Raw Data.</strong></p>
+
+    <p>Click on it to navigate to array.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Data Array</h1>
+  <img alt="" src="wendelin-Data.Transformation.29?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Click on <strong>Preview</strong> to see the data.</p>
+
+    <p>Note it might take few minutes (&lt;10) until data appears.</p>
+  </details>
+</section>
+
+<section class="screenshot">
+  <h1>Data Array</h1>
+  <img alt="" src="wendelin-Data.Transformation.30?format=" style="font-size: 13px;" title="" type="image/svg+xml" />
+  <details open="">
+    <p>Data is here!</p>
+  </details>
+
+  <test>
+    <table style="display: none;" class="test">
+      <tbody>
+
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_callHandleAnalysisAlarm</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Alarm Called.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${base_url}/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>openAndWait</td>
+          <td>${default_front_url}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'page=front')]</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'data_array_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'data_array_module')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Convert Environment Raw Data</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//div[@class='document_table']//table//tbody//tr//td[1]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">&lt;tal:block
+            metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;
+            &lt;/tal:block&gt;</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[contains(@href,'preview')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[contains(@href,'preview')]</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </test>
 </section>

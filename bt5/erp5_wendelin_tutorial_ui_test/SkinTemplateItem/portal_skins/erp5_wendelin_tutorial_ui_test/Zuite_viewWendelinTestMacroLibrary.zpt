@@ -1,0 +1,156 @@
+<tal:block metal:define-macro="init_wendelin_test_environment">
+  <tr>
+    <td>store</td>
+    <td tal:content="python:here.getPortalObject().absolute_url()"></td>
+    <td>base_url</td>
+  </tr>
+  <tr>
+    <td>store</td>
+    <td tal:content="python:here.getPortalObject().absolute_url() + '/web_site_module/default_wendelin_data_lake/'"></td>
+    <td>wendelin_data_lake_url</td>
+  </tr>
+  <tr>
+    <td>store</td>
+    <td tal:content="python:here.getPortalObject().absolute_url() + '/web_site_module/default_wendelin_front/'"></td>
+    <td>default_front_url</td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_setUpPersonTest</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>verifyTextPresent</td>
+    <td>Init Ok</td>
+    <td></td>
+  </tr>
+  <tr class="" style="opacity: 1;">
+    <td colspan="3"><span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span></td>
+  </tr>
+  <tr class="" style="opacity: 1;">
+    <td colspan="3"><span metal:use-macro="container/Zuite_viewWendelinTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span></td>
+  </tr>
+</tal:block>
+
+<tal:block metal:define-macro="login_as_functional_test_user">
+  <tr>
+    <td colspan="3"><b>Login as functional test user</b></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_createFunctionalTestUserForTutorial</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Done.</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>open</td>
+    <td>${wendelin_data_lake_url}</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  <!-- login with functional test user -->
+  <span metal:use-macro="container/Zuite_viewWendelinTestMacroLibrary/macros/logout">Logout</span>
+  <tr>
+    <td>click</td>
+    <td>//a[@data-i18n="Login"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@name="__ac_name"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_name"]</td>
+    <td tal:content="python:
+          here.Zuite_getHowToInfo()['functional_test_username']"></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>//input[@name="__ac_password"]</td>
+    <td tal:content="python:
+        here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//input[@value="Login"]</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Base_clearCache</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Cleared.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>openAndWait</td>
+    <td>${base_url}/Zuite_updateUserPreferenceForTutorialTests</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Init Ok.</td>
+    <td></td>
+  </tr>
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
+  <tr>
+    <td>openAndWait</td>
+    <td>${wendelin_data_lake_url}</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+</tal:block>
+
+<tal:block metal:define-macro="logout">
+  <tr>
+    <td colspan="3"><b>Logout</b></td>
+  </tr>
+  <!-- Logout -->
+  <tr>
+    <td>open</td>
+    <td>${wendelin_data_lake_url}</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  <tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+  </tal:block>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//h1/a[@data-i18n="Logout"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//input[@value="Confirm"]</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+</tal:block>
