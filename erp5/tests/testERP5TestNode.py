@@ -439,7 +439,7 @@ shared = true
   def test_05e_IgnoringIncorrectRepository(self):
     """
     If someone add a test suite with a bad url for git repository (or wrong
-    crendentials), the testnode should not block forever and should work on
+    credentials), the testnode should not block forever and should work on
     other test suites. This method should be able to run
     """
     self.generateTestRepositoryList()
@@ -824,7 +824,7 @@ shared = true
     def patch_startTestSuite(self,node_title,computer_guid='unknown'):
       global counter
       config_list = []
-      # Sclalability slave testnode is not directly in charge of testsuites
+      # Scalability slave testnode is not directly in charge of testsuites
       if my_test_type == 'ScalabilityTest' and grade == 'slave':
         if counter == 5:
           raise StopIteration
