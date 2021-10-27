@@ -1162,44 +1162,38 @@ shared = true
         set(['buildoutA', 'tmpC', 'tmp-cannot-delete']).intersection(
             set(os.listdir(temp_directory))))
 
-  def test_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='UnitTest'):
+  def test_resetSoftwareAfterManyBuildFailures(self):
     """
     Check that after several building failures that the software is resetted
     """
-    initial_initializeSlapOSControler = \
-      SlapOSControler.initializeSlapOSControler
-    initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
     test_node = self.getTestNode()
-    runner = test_type_registry[my_test_type](test_node)
+    runner = test_type_registry['UnitTest'](test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
-    init_call_kw_list = []
-    def initializeSlapOSControler(self, **kw):
-      init_call_kw_list.append(kw)
-    def runSoftwareRelease(self, *args, **kw):
-      return {"status_code": 1}
-    SlapOSControler.initializeSlapOSControler = initializeSlapOSControler
-    SlapOSControler.runSoftwareRelease = runSoftwareRelease
-    def callPrepareSlapOS():
-      runner._prepareSlapOS(self.working_directory, node_test_suite,
-         create_partition=0)
+
     def callRaisingPrepareSlapos():
-      self.assertRaises(SubprocessError, callPrepareSlapOS)
+      with self.assertRaises(SubprocessError):
+        runner._prepareSlapOS(self.working_directory,
+                              node_test_suite,
+                              create_partition=0)
 
     self.assertEqual(node_test_suite.retry_software_count, 0)
-    for _ in range(11):
+    with mock.patch.object(SlapOSControler, 'initializeSlapOSControler') as initializeSlapOSControler, \
+        mock.patch.object(SlapOSControler, 'runSoftwareRelease', return_value={"status_code": 1}):
+      for _ in range(11):
+        callRaisingPrepareSlapos()
+
+      self.assertEqual(len(initializeSlapOSControler.mock_calls), 11)
+      self.assertEqual(
+          initializeSlapOSControler.mock_calls[-1][2]['reset_software'], False)
+      self.assertEqual(node_test_suite.retry_software_count, 11)
       callRaisingPrepareSlapos()
-    self.assertEqual(len(init_call_kw_list), 11)
-    self.assertEqual(init_call_kw_list[-1]['reset_software'], False)
-    self.assertEqual(node_test_suite.retry_software_count, 11)
-    callRaisingPrepareSlapos()
-    self.assertEqual(init_call_kw_list[-1]['reset_software'], True)
-    self.assertEqual(node_test_suite.retry_software_count, 1)
-    callRaisingPrepareSlapos()
-    self.assertEqual(init_call_kw_list[-1]['reset_software'], False)
-    self.assertEqual(node_test_suite.retry_software_count, 2)
-    SlapOSControler.initializeSlapOSControler = \
-      initial_initializeSlapOSControler
-    SlapOSControler.runSoftwareRelease = initial_runSoftwareRelease
+      self.assertEqual(
+          initializeSlapOSControler.mock_calls[-1][2]['reset_software'], True)
+      self.assertEqual(node_test_suite.retry_software_count, 1)
+      callRaisingPrepareSlapos()
+      self.assertEqual(
+          initializeSlapOSControler.mock_calls[-1][2]['reset_software'], False)
+      self.assertEqual(node_test_suite.retry_software_count, 2)
 
   def test_scalability_04_constructProfile(self, my_test_type='ScalabilityTest'):
     self.test_04_constructProfile(my_test_type)
