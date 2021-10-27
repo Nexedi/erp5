@@ -88,7 +88,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'employee_registration_number\', None)</string> </value>
+            <value> <string>python: object.Person_getRegistrationNumber()</string> </value>
         </item>
       </dictionary>
     </pickle>

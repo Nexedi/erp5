@@ -15,10 +15,10 @@ def getFieldAsLineList(field):
   return [x for x in text_list if x]
 
 def getRegistrationNumber(source_section):
-  registration_number = getattr(source_section, 'employee_registration_number', None)
+  registration_number = source_section.Person_getRegistrationNumber()
   s = ''
   if registration_number:
-    s = '%s: %s' % (translateString('Employee Registration Number'), registration_number.getCoordinateText())
+    s = '%s: %s' % (translateString('Employee Registration Number'), registration_number)
   return s
 
 def getSocialCodeId(social_code_id):

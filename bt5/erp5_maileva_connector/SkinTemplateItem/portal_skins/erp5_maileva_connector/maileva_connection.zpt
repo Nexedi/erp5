@@ -53,7 +53,7 @@
               <com:DigitalAddress>
                 <com:FirstName tal:content="python: recipient.getFirstName()"></com:FirstName>
                 <com:LastName tal:content="python: recipient.getLastName()"></com:LastName>
-                <com:Identifier tal:content="python: recipient.getRegistrationNumber()"></com:Identifier>
+                <com:Identifier tal:content="python: recipient.Person_getRegistrationNumber()"></com:Identifier>
                 <com:JobPosition tal:content="python: recipient.getCareerTitle()"></com:JobPosition>
                 <com:JobStartDate tal:content="python: career_start_date"></com:JobStartDate>
               </com:DigitalAddress>
