@@ -27,13 +27,22 @@
 ##############################################################################
 import json
 import jsonschema
+import zope.interface
+
+from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet
+
+from erp5.component.interface.IJSONConvertable import IJSONConvertable
 
 class JSONType(XMLObject):
   """
   Represents a portal type with JSON Schema
   """
+  zope.interface.implements(
+    IJSONConvertable,
+  )
+
   # Default Properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
@@ -42,13 +51,17 @@ class JSONType(XMLObject):
                     , PropertySheet.TextDocument
                     )
 
-  def validateLocalJsonSchema(self, list_error=False):
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'validateLocalJSONSchema')
+  def validateLocalJSONSchema(self, list_error=False):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
     portal = self.getPortalObject()
-    defined_schema = json.loads(portal.portal_types[self.getPortalType()].getTextContent())
-    text_content = self.getTextContent()
+    defined_schema = json.loads(portal.portal_types[self.getPortalType()].asJSONText())
+    text_content = self.asJSONText()
 	
     if text_content is None:
       return False
@@ -62,5 +75,19 @@ class JSONType(XMLObject):
       return err
     return True
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'validateJSONSchema')
+  def validateJSONSchema(self, list_error=False):
+    return self.validateLocalJSONSchema(list_error=list_error)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'validateJsonSchema')
   def validateJsonSchema(self, list_error=False):
-    return self.validateLocalJsonSchema(list_error=list_error)
+    # Deprecated, please use validateJSONSchema
+    return self.validateJSONSchema(list_error=list_error)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'asJSONText')
+  def asJSONText(self):
+    return self.getTextContent()
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromJSONText')
+  def fromJSONText(self, json_text):
+    return self.setTextContent(json_text)
