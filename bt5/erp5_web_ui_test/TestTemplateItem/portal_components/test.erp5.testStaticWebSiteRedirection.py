@@ -176,6 +176,12 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
   def test_queryStringPortalSkin(self):
     self.runTestRedirect("?portal_skin=FOOBAR")
 
+  def test_queryStringIgnoreLayoutWithQueryStringPortalSkin(self):
+    self.runTestRedirect("?portal_skin=FOOBAR&ignore_layout=1")
+
+  def test_queryStringEditableModeWithQueryStringPortalSkin(self):
+    self.runTestRedirect("?portal_skin=FOOBAR&editable_mode=1")
+
   def test_plainRedirectGetId(self):
     self.runTestRedirect("getId")
 
