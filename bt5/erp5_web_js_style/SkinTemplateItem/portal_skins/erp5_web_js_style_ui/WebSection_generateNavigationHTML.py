@@ -74,6 +74,7 @@ generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_
 result_list.append('</nav>')
 
 # Documents
-generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date', 'contributor_title')))
+if include_document:
+  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date', 'contributor_title')))
 
 return ''.join(result_list)
