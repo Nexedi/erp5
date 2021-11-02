@@ -109,6 +109,84 @@
     return sitemap;
   }
 
+  function parseDate(date_string) {
+    var date = Date.parse(date_string);
+    if (isNaN(date)) {
+      // Hack to fix a specific non-ISO date format.
+      // "Mon, 07 Oct 2013 16:49:10 Z" = "D, d M Y H:i:s Z"
+      date_string = date_string.substring(0, date_string.length - 1);
+      date = Date.parse(date_string);
+    }
+    if (!isNaN(date)) {
+      return new Date(date).toUTCString();
+    }
+    return;
+  }
+
+  function parseMicroFormat(item) {
+    // http://indiewebcamp.com/page-name-discovery
+    // http://indiewebcamp.com/h-entry#How_to_consume_h-entry
+    // http://indiewebcamp.com/comment-presentation#How_to_display
+
+    var result = {},
+      element_name = item.querySelector(".p-name"),
+      element_content = item.querySelector(".e-content"),
+      element_summary = item.querySelector(".p-summary"),
+      element_permalink = item.querySelector("a[rel='permalink']"),
+      element_publication_date = item.querySelector("time.dt-published"),
+      element_author = item.querySelector(".p-author"),
+      element_link;
+
+    // publication date
+    if (element_publication_date !== null) {
+      result.date = element_publication_date.getAttribute('datetime');
+      if (result.date === null) {
+        // Get text content?
+        delete result.date;
+
+      } else {
+        result.date = parseDate(result.date);
+      }
+    }
+
+    // title
+    if (element_name !== null) {
+      result.text = element_name.textContent;
+      // Drop title from content
+      element_name.parentElement.removeChild(element_name);
+    }
+
+    // title
+    if (element_author !== null) {
+      result.author = element_author.textContent;
+      // Drop author from content
+      element_author.parentElement.removeChild(element_author);
+    }
+
+    // content
+    if (element_summary !== null) {
+      element_content = element_summary;
+    } else if (element_content === null) {
+      element_content = item;
+    }
+
+    if (element_content !== null) {
+      result.description = element_content.textContent;
+    }
+
+    // Search for the URL
+    if (element_permalink === null) {
+      element_link = item.querySelector(".u-url");
+    } else {
+      element_link = element_permalink;
+    }
+    if (element_link !== null) {
+      result.href = element_link.getAttribute('href');
+    }
+
+    return result;
+  }
+
   function parseDocumentListElement(document_list_element) {
     var document_list = [],
       li_list,
@@ -117,12 +195,9 @@
       return document_list;
     }
 
-    li_list = document_list_element.querySelectorAll('a');
+    li_list = document_list_element.querySelectorAll('.h-entry');
     for (i = 0; i < li_list.length; i += 1) {
-      document_list.push({
-        href: li_list[i].href,
-        text: li_list[i].textContent
-      });
+      document_list.push(parseMicroFormat(li_list[i]));
     }
     return document_list;
   }
@@ -145,13 +220,15 @@
     return result;
   }
 
-  function parsePageContent(body_element, language, base_uri) {
+  function parsePageContent(body_element, language, alternate_element,
+                            base_uri) {
     var i,
       element,
       element_list,
       j,
       url_attribute_list = ['src', 'href', 'srcset', 'action'],
-      url_attribute;
+      url_attribute,
+      feed_url = null;
 
     if (base_uri !== undefined) {
       // Rewrite relative url (copied from renderjs)
@@ -171,7 +248,15 @@
 
     }
 
+    if (alternate_element !== null) {
+      feed_url = alternate_element.getAttribute('href');
+      if (base_uri !== undefined) {
+        feed_url = new URL(feed_url, base_uri).href;
+      }
+    }
+
     return {
+      feed_url: feed_url,
       original_content: body_element.innerHTML,
       html_content: body_element.querySelector('main').innerHTML,
       language: language,
@@ -216,9 +301,12 @@
           // consider this must be reloaded
           throw new Error('Trigger an error to force reload');
         }
-        parsed_content = parsePageContent(dom_parser.body,
-                                          dom_parser.documentElement.lang,
-                                          dom_parser.baseURI);
+        parsed_content = parsePageContent(
+          dom_parser.body,
+          dom_parser.documentElement.lang,
+          dom_parser.querySelector('link[rel=alternate]'),
+          dom_parser.baseURI
+        );
         gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
         return result_dict.style_gadget.render(parsed_content.html_content,
@@ -315,8 +403,11 @@
         return rJS.declareCSS(style_css_url, document.head);
       }
 
-      parsed_content = parsePageContent(gadget.element,
-                                        document.documentElement.lang);
+      parsed_content = parsePageContent(
+        gadget.element,
+        document.documentElement.lang,
+        document.querySelector('link[rel=alternate]')
+      );
       gadget.parsed_content = parsed_content;
       parsed_content.page_title = document.title;
       gadget.style_gadget_url =
