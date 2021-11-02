@@ -57,6 +57,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
@@ -96,6 +101,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='current_language'][contains(text(), 'en')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
   <td></td>
 </tr>
 <tr>
@@ -143,6 +153,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_1/erp5_web_js_style_test_section_11/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
@@ -182,6 +197,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='current_language'][contains(text(), 'en')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
   <td></td>
 </tr>
 <tr>
@@ -229,6 +249,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_2/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
@@ -268,6 +293,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='current_language'][contains(text(), 'en')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
   <td></td>
 </tr>
 <tr>
