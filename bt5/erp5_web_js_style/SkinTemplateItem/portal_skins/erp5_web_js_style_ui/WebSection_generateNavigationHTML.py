@@ -38,8 +38,8 @@ def generateDocumentListHTML(result_list, document_list):
   <p><a class="u-url" rel="permalink" href="%s"><time class="dt-published" datetime="%s">%s</time></a></p>
 </li>""" % (
   _(section['translated_title']),
-  ('<p class="p-summary">%s</p>' % _(section.get['description'])) if section.get('description', '') else '',
-  ('<p class="p-author h-card">%s</p>' % _(section.get['contributor_title'])) if section.get('contributor_title', '') else '',
+  ('<p class="p-summary">%s</p>' % _(section['description'])) if section.get('description', '') else '',
+  ('<p class="p-author h-card">%s</p>' % _(section['contributor_title'])) if section.get('contributor_title', '') else '',
   __(section['url']),
   _(section['modification_date'].HTML4()),
   _(section['modification_date'].rfc822())
