@@ -35,6 +35,7 @@
     })
     .declareMethod("render", function (html_content, parsed_content) {
       var state = {
+        feed_url: parsed_content.feed_url || "",
         document_list: JSON.stringify(parsed_content.document_list || []),
         current_language: parsed_content.language || "",
         language_list: JSON.stringify(parsed_content.language_list || []),
@@ -93,6 +94,11 @@
           text: gadget.state.current_language
         });
       }
+      if (modification_dict.hasOwnProperty('feed_url')) {
+        domsugar(gadget.element.querySelector('p#feed_url'), {
+          text: gadget.state.feed_url
+        });
+      }
       if (modification_dict.hasOwnProperty('language_list')) {
         language_list = JSON.parse(gadget.state.language_list);
         child_list = [];
@@ -109,10 +115,16 @@
         document_list = JSON.parse(gadget.state.document_list);
         child_list = [];
         for (i = 0; i < document_list.length; i += 1) {
-          child_list.push(domsugar('li', [domsugar('a', {
-            text: document_list[i].text,
-            href: document_list[i].href
-          })]));
+          child_list.push(domsugar('li', [
+            domsugar('a', {
+              text: document_list[i].text,
+              href: document_list[i].href
+            }),
+            domsugar('p', {text: 'Author: ' + document_list[i].author}),
+            domsugar('p', {text: 'Description: ' +
+                                 document_list[i].description}),
+            domsugar('p', {text: 'Date: ' + document_list[i].date})
+          ]));
         }
         domsugar(gadget.element.querySelector('aside#document_list'),
                  [domsugar('ul', child_list)]);
