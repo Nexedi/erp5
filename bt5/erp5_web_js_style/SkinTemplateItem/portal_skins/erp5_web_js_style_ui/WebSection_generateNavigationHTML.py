@@ -26,9 +26,24 @@ def generateSectionListHTML(result_list, section_list):
 
 def generateDocumentListHTML(result_list, document_list):
   if (document_list):
-    result_list.append('<aside id="document_list"><ul>')
+    result_list.append('<aside id="document_list"><ul class="h-feed">')
     for section in document_list:
-      result_list.append('<li><a href="%s">%s</a></li>' % (__(section['url']), _(section['translated_title'])))
+      result_list.append("""
+<li class="h-entry">
+  <div class="e-content">
+    <h2 class="p-name">%s</h2>
+    %s
+  </div>
+  %s
+  <p><a class="u-url" rel="permalink" href="%s"><time class="dt-published" datetime="%s">%s</time></a></p>
+</li>""" % (
+  _(section['translated_title']),
+  ('<p class="p-summary">%s</p>' % _(section['description'])) if section.get('description', '') else '',
+  ('<p class="p-author h-card">%s</p>' % _(section['document'].Document_getContributorTitleList()[0])),
+  __(section['url']),
+  _(section['modification_date'].HTML4()),
+  _(section['modification_date'].rfc822())
+))
     result_list.append('</ul></aside>')
 
 
@@ -59,6 +74,7 @@ generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_
 result_list.append('</nav>')
 
 # Documents
-generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1))
+if include_document:
+  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date')))
 
 return ''.join(result_list)
