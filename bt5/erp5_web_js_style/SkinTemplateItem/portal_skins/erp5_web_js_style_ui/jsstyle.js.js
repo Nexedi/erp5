@@ -109,6 +109,76 @@
     return sitemap;
   }
 
+  function parseDate(date_string) {
+    var date = Date.parse(date_string);
+    if (isNaN(date)) {
+      // Hack to fix a specific non-ISO date format.
+      // "Mon, 07 Oct 2013 16:49:10 Z" = "D, d M Y H:i:s Z"
+      date_string = date_string.substring(0, date_string.length - 1);
+      date = Date.parse(date_string);
+    }
+    if (!isNaN(date)) {
+      return new Date(date).toUTCString();
+    }
+    return;
+  }
+
+  function parseMicroFormat(item) {
+    // http://indiewebcamp.com/page-name-discovery
+    // http://indiewebcamp.com/h-entry#How_to_consume_h-entry
+    // http://indiewebcamp.com/comment-presentation#How_to_display
+
+    var result = {},
+      element_name = item.querySelector(".p-name"),
+      element_content = item.querySelector(".e-content"),
+      element_summary = item.querySelector(".p-summary"),
+      element_permalink = item.querySelector("a[rel='permalink']"),
+      element_publication_date = item.querySelector("time.dt-published"),
+      element_link;
+
+    // publication date
+    if (element_publication_date !== null) {
+      result.date = element_publication_date.getAttribute('datetime');
+      if (result.date === null) {
+        // Get text content?
+        delete result.date;
+
+      } else {
+        result.date = parseDate(result.date);
+      }
+    }
+
+    // title
+    if (element_name !== null) {
+      result.text = element_name.textContent;
+      // Drop title from content
+      element_name.parentElement.removeChild(element_name);
+    }
+
+    // content
+    if (element_summary !== null) {
+      element_content = element_summary;
+    } else if (element_content === null) {
+      element_content = item;
+    }
+
+    if (element_content !== null) {
+      result.description = element_content.textContent;
+    }
+
+    // Search for the URL
+    if (element_permalink === null) {
+      element_link = item.querySelector(".u-url");
+    } else {
+      element_link = element_permalink;
+    }
+    if (element_link !== null) {
+      result.href = element_link.getAttribute('href');
+    }
+
+    return result;
+  }
+
   function parseDocumentListElement(document_list_element) {
     var document_list = [],
       li_list,
@@ -117,12 +187,9 @@
       return document_list;
     }
 
-    li_list = document_list_element.querySelectorAll('a');
+    li_list = document_list_element.querySelectorAll('.h-entry');
     for (i = 0; i < li_list.length; i += 1) {
-      document_list.push({
-        href: li_list[i].href,
-        text: li_list[i].textContent
-      });
+      document_list.push(parseMicroFormat(li_list[i]));
     }
     return document_list;
   }
