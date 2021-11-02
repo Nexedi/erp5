@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+           tal:define="
+  web_section python: here.getWebSectionValue();
+  include_document python: web_section.isSiteMapDocumentParent() and (here.getRelativeUrl() == web_section.getRelativeUrl());">
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title tal:content="python: web_section.getTranslatedTitle()"></title>
+    <link tal:content="python: web_section.absolute_url()"></link>
+    <lastBuildDate tal:content="python: DateTime().rfc822()"></lastBuildDate>
+    <description tal:condition="python: web_section.getDescription()" tal:content="python: web_section.getDescription()"></description>
+  </channel>
+  <tal:block tal:condition="include_document">
+    <tal:block tal:repeat="item python: web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date'))">
+      <item>
+        <author tal:content="python: item['document'].Document_getContributorTitleList()[0]"></author>
+        <guid tal:content="python: item['url']"></guid>
+        <pubDate tal:content="python: item['modification_date'].rfc822()"></pubDate>
+        <title tal:content="python: item['translated_title']"></title>
+        <description tal:condition="python: item.get('description', '')" tal:content="python: item['description']"></description>
+      </item>
+    </tal:block>
+  </tal:block>
+</rss>
+</tal:block>
