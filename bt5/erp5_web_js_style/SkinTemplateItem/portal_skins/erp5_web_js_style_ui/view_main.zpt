@@ -22,7 +22,8 @@
       keyword_list python: web_section.getSubjectList();
       og_locale_dict python: web_site.WebSite_getOgLocaleDict();
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
-      global_definitions_macros here/global_definitions/macros;">
+      global_definitions_macros here/global_definitions/macros;
+      include_document python: web_section.isSiteMapDocumentParent() and ((here.getRelativeUrl() == web_section.getRelativeUrl()) or request.get('is_web_section_default_document', False));">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html tal:attributes="lang current_language">
   <head>
@@ -32,6 +33,7 @@
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
+  <link tal:condition="include_document" rel="alternate" type="application/rss+xml" href="feed.rss" />
   <tal:block tal:condition="keyword_list">
     <meta name="keywords" tal:attributes="content python: ','.join(keyword_list)">
   </tal:block>
@@ -75,7 +77,7 @@
   </head>
   <body tal:attributes="data-nostyle-gadget-url no_style_gadget_url;
                         data-nostyle-css-url no_style_css_url">
-    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
+    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML(include_document=include_document)"></tal:block>
     <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>
 
     <main><tal:block metal:define-slot="main"/></main>
