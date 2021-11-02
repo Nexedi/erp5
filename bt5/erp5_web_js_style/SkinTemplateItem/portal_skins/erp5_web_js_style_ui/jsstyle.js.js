@@ -134,6 +134,7 @@
       element_summary = item.querySelector(".p-summary"),
       element_permalink = item.querySelector("a[rel='permalink']"),
       element_publication_date = item.querySelector("time.dt-published"),
+      element_author = item.querySelector(".p-author"),
       element_link;
 
     // publication date
@@ -153,6 +154,13 @@
       result.text = element_name.textContent;
       // Drop title from content
       element_name.parentElement.removeChild(element_name);
+    }
+
+    // title
+    if (element_author !== null) {
+      result.author = element_author.textContent;
+      // Drop author from content
+      element_author.parentElement.removeChild(element_author);
     }
 
     // content
