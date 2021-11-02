@@ -32,13 +32,13 @@ def generateDocumentListHTML(result_list, document_list):
 <li class="h-entry">
   <div class="e-content">
     <h2 class="p-name">%s</h2>
-    <p>%s</p>
+    %s
   </div>
   %s
   <p><a class="u-url" rel="permalink" href="%s"><time class="dt-published" datetime="%s">%s</time></a></p>
 </li>""" % (
   _(section['translated_title']),
-  _(section.get('description', '') or ''),
+  ('<p class="p-summary">%s</p>' % _(section.get['description'])) if section.get('description', '') else '',
   ('<p class="p-author h-card">%s</p>' % _(section.get['contributor_title'])) if section.get('contributor_title', '') else '',
   __(section['url']),
   _(section['modification_date'].HTML4()),
