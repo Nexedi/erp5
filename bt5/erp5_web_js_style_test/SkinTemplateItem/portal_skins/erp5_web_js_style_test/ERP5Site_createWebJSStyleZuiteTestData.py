@@ -6,9 +6,23 @@ portal = context.getPortalObject()
 web_page_portal_type = "Web Page"
 web_site_portal_type = "Web Site"
 web_section_portal_type = "Web Section"
+person_portal_type = "Person"
 
 web_site_id = "erp5_web_js_style_test_site"
 web_section_id_prefix = "erp5_web_js_style_test_section_"
+
+contributor_title = "erp5_web_js_style_test_contributor"
+contributor_id = "erp5_web_js_style_test_contributor"
+
+### English web page
+module = portal.getDefaultModule(person_portal_type)
+if getattr(module, contributor_id, None) is not None:
+  module.manage_delObjects([contributor_id])
+contributor = module.newContent(
+  portal_type=person_portal_type,
+  id=contributor_id,
+  title=contributor_title
+)
 
 web_page_frontend_reference = "erp5_web_js_style_test_frontpage"
 web_page_frontend_en_id = "erp5_web_js_style_test_frontpage_en"
@@ -28,6 +42,7 @@ web_page = module.newContent(
   portal_type=web_page_portal_type,
   id=web_page_frontend_en_id,
   reference=web_page_frontend_reference,
+  contributor_value=contributor,
   language="en",
   version="001",
   text_content="""
@@ -45,6 +60,7 @@ web_page = module.newContent(
   portal_type=web_page_portal_type,
   id=web_page_content_en_id,
   reference=web_page_content_reference,
+  contributor_value=contributor,
   title="%s title" % web_page_content_reference,
   description="%s description" % web_page_content_reference,
   language="en",
@@ -62,6 +78,7 @@ web_page = module.newContent(
   portal_type=web_page_portal_type,
   id=web_page_frontend_fr_id,
   reference=web_page_frontend_reference,
+  contributor_value=contributor,
   language="fr",
   version="001",
   text_content="""
@@ -79,6 +96,7 @@ web_page = module.newContent(
   portal_type=web_page_portal_type,
   id=web_page_content_fr_id,
   reference=web_page_content_reference,
+  contributor_value=contributor,
   title="%s title" % web_page_content_reference,
   description="%s description" % web_page_content_reference,
   language="fr",
@@ -96,6 +114,7 @@ web_page = module.newContent(
   portal_type=web_page_portal_type,
   id=web_page_frontend_zh_id,
   reference=web_page_frontend_reference,
+  contributor_value=contributor,
   language="zh",
   version="001",
   text_content="""
@@ -113,6 +132,7 @@ web_page = module.newContent(
   portal_type=web_page_portal_type,
   id=web_page_content_zh_id,
   reference=web_page_content_reference,
+  contributor_value=contributor,
   title="%s title" % web_page_content_reference,
   description="%s description" % web_page_content_reference,
   language="zh",
