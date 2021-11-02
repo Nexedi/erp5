@@ -43,6 +43,15 @@
 </tr>
 
 <tr>
+  <td colspan="3"><b>Check no document list is rendered</b></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//aside[@id='document_list']</td>
+  <td></td>
+</tr>
+
+<tr>
   <td colspan="3"><b>Check the form content</b></td>
 </tr>
 <tr>

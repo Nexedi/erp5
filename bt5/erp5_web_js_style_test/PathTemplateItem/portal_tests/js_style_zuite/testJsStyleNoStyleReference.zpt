@@ -28,7 +28,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage</td>
   <td></td>
 </tr>
 
@@ -62,29 +62,14 @@
 </tr>
 
 <tr>
-  <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//ul[@class="h-feed"]//li[@class="h-entry"]//div[@class="e-content"]//h2[@class="p-name" and text()='erp5_web_js_style_test_contentpage title']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//ul[@class="h-feed"]//li[@class="h-entry"]//div[@class="e-content"]//p[@class="p-summary" and text()='erp5_web_js_style_test_contentpage description']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//ul[@class="h-feed"]//li[@class="h-entry"]//p[@class="p-author h-card" and text()='erp5_web_js_style_test_contributor']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//ul[@class="h-feed"]//li[@class="h-entry"]//a[@class="u-url" and @rel='permalink' and contains(@href, 'web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage')]//time[@class="dt-published" and contains(@datetime, 'T')]</td>
+  <td>assertElementNotPresent</td>
+  <td>//aside[@id='document_list']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='input']/span[@class='headline' and text()='No Style']</td>
+  <td>//div[@class='input']//p[text()='Subpage content']</td>
   <td></td>
 </tr>
 
