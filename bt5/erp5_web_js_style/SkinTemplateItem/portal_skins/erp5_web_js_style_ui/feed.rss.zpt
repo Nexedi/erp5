@@ -10,7 +10,7 @@
     <title tal:content="python: web_section.getTranslatedTitle()"></title>
     <link tal:content="python: web_section.absolute_url()"></link>
     <lastBuildDate tal:content="python: DateTime().rfc822()"></lastBuildDate>
-    <description tal:content="python: web_section.getDescription()"></description>
+    <description tal:condition="python: web_section.getDescription()" tal:content="python: web_section.getDescription()"></description>
   </channel>
   <tal:block tal:condition="include_document">
     <tal:block tal:repeat="item python: web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date', 'contributor_title'))">
