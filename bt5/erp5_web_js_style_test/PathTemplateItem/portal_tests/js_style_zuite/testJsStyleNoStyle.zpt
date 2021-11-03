@@ -37,6 +37,11 @@
   <td>//head/link[@rel='prerender']</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//head/link[@rel='alternate' and @type='application/rss+xml' and @href='feed.rss']</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>waitForElementPresent</td>

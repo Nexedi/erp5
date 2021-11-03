@@ -37,6 +37,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementNotPresent</td>
+  <td>//head/link[@rel='alternate' and @type='application/rss+xml' and @href='feed.rss']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForTextPresent</td>
   <td>No Style Form</td>
   <td></td>
