@@ -220,13 +220,15 @@
     return result;
   }
 
-  function parsePageContent(body_element, language, base_uri) {
+  function parsePageContent(body_element, language, alternate_element,
+                            base_uri) {
     var i,
       element,
       element_list,
       j,
       url_attribute_list = ['src', 'href', 'srcset', 'action'],
-      url_attribute;
+      url_attribute,
+      feed_url = null;
 
     if (base_uri !== undefined) {
       // Rewrite relative url (copied from renderjs)
@@ -246,7 +248,15 @@
 
     }
 
+    if (alternate_element !== null) {
+      feed_url = alternate_element.getAttribute('href');
+      if (base_uri !== undefined) {
+        feed_url = new URL(feed_url, base_uri).href;
+      }
+    }
+
     return {
+      feed_url: feed_url,
       original_content: body_element.innerHTML,
       html_content: body_element.querySelector('main').innerHTML,
       language: language,
@@ -291,9 +301,12 @@
           // consider this must be reloaded
           throw new Error('Trigger an error to force reload');
         }
-        parsed_content = parsePageContent(dom_parser.body,
-                                          dom_parser.documentElement.lang,
-                                          dom_parser.baseURI);
+        parsed_content = parsePageContent(
+          dom_parser.body,
+          dom_parser.documentElement.lang,
+          dom_parser.querySelector('link[rel=alternate]'),
+          dom_parser.baseURI
+        );
         gadget.parsed_content = parsed_content;
         parsed_content.page_title = dom_parser.title;
         return result_dict.style_gadget.render(parsed_content.html_content,
@@ -390,8 +403,11 @@
         return rJS.declareCSS(style_css_url, document.head);
       }
 
-      parsed_content = parsePageContent(gadget.element,
-                                        document.documentElement.lang);
+      parsed_content = parsePageContent(
+        gadget.element,
+        document.documentElement.lang,
+        document.querySelector('link[rel=alternate]')
+      );
       gadget.parsed_content = parsed_content;
       parsed_content.page_title = document.title;
       gadget.style_gadget_url =
