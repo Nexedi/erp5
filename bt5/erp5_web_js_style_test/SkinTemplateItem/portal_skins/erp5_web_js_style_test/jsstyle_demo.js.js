@@ -35,6 +35,7 @@
     })
     .declareMethod("render", function (html_content, parsed_content) {
       var state = {
+        feed_url: parsed_content.feed_url || "",
         document_list: JSON.stringify(parsed_content.document_list || []),
         current_language: parsed_content.language || "",
         language_list: JSON.stringify(parsed_content.language_list || []),
@@ -91,6 +92,11 @@
       if (modification_dict.hasOwnProperty('current_language')) {
         domsugar(gadget.element.querySelector('p#current_language'), {
           text: gadget.state.current_language
+        });
+      }
+      if (modification_dict.hasOwnProperty('feed_url')) {
+        domsugar(gadget.element.querySelector('p#feed_url'), {
+          text: gadget.state.feed_url
         });
       }
       if (modification_dict.hasOwnProperty('language_list')) {

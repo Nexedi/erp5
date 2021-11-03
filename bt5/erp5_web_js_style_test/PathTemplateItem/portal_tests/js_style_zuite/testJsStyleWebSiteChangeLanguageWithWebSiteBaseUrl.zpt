@@ -52,6 +52,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//main//p[text()='Frontpage content']</td>
   <td></td>
 </tr>
@@ -86,6 +91,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='current_language'][contains(text(), 'fr')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
   <td></td>
 </tr>
 <tr>
@@ -128,6 +138,11 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//main//p[text()="主页内容"]</td>
   <td></td>
 </tr>
@@ -162,6 +177,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='current_language'][contains(text(), 'en')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id='feed_url' and not(text())]</td>
   <td></td>
 </tr>
 <tr>
