@@ -114,9 +114,10 @@
               text: document_list[i].text,
               href: document_list[i].href
             }),
-            domsugar('p', ['Author: ', document_list[i].author]),
-            domsugar('p', ['Description: ', document_list[i].description]),
-            domsugar('p', ['Date: ', document_list[i].date])
+            domsugar('p', {text: 'Author: ' + document_list[i].author}),
+            domsugar('p', {text: 'Description: ' +
+                                 document_list[i].description}),
+            domsugar('p', {text: 'Date: ' + document_list[i].date})
           ]));
         }
         domsugar(gadget.element.querySelector('aside#document_list'),
