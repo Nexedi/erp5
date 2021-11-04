@@ -75,16 +75,6 @@
           });
         })
         .push(function () {
-          return gadget.jio_allDocs({
-            query: 'portal_type: "Leave Report Record"',
-            select_list: ["confirmed_leaves_days_left"],
-          });
-        })
-        .push(function (result) {
-          var options = {};
-          if (result.data.total_rows > 0) {
-            options.day_left = result.data.rows[0].value.confirmed_leaves_days_left;
-          }
           return gadget.translateHtml(template(options));
         })
         .push(function (html) {
