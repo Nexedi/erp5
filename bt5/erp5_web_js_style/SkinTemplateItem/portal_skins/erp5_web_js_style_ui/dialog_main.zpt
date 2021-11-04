@@ -33,6 +33,7 @@
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
+  <meta name="robots" content="index, follow" />
    <tal:block tal:condition="keyword_list">
     <meta name="keywords" tal:attributes="content python: ','.join(keyword_list)">
   </tal:block>
