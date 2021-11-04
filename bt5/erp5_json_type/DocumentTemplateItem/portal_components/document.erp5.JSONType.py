@@ -60,11 +60,12 @@ class JSONType(XMLObject):
     Validate contained JSON with the Schema defined in the Portal Type.
     """
     portal = self.getPortalObject()
-    defined_schema = json.loads(portal.portal_types[self.getPortalType()].asJSONText())
+    defined_schema = portal.portal_types[self.getPortalType()].getTextContent()
     text_content = self.asJSONText()
-	
-    if text_content is None:
-      return False
+    if not defined_schema or text_content is None:
+      # No errors if nothing is defined
+      return True
+    defined_schema = json.loads(defined_schema)
     current_schema = json.loads(text_content)
     try:
       jsonschema.validate(current_schema, defined_schema, format_checker=jsonschema.FormatChecker())
