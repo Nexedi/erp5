@@ -34,6 +34,7 @@
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
   <link tal:condition="include_document" rel="alternate" type="application/rss+xml" href="feed.rss" />
+  <meta name="robots" content="index, follow" />
   <tal:block tal:condition="keyword_list">
     <meta name="keywords" tal:attributes="content python: ','.join(keyword_list)">
   </tal:block>
