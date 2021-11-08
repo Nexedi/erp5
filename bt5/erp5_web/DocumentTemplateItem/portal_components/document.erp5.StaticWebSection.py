@@ -102,6 +102,8 @@ class StaticWebSection(WebSection):
     except AttributeError:
       raise KeyError(name)
 
+  def _checkIfRenderDefaultDocument(self):
+    return self.REQUEST.get('portal_skin', None) or super(StaticWebSection, self)._checkIfRenderDefaultDocument()
 
   security.declareProtected(Permissions.View, '__bobo_traverse__')
   def __bobo_traverse__(self, request, name):
