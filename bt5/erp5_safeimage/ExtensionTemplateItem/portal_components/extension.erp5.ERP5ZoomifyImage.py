@@ -22,7 +22,10 @@ from zLOG import LOG,ERROR,INFO,WARNING
 from OFS.Image import File, Image
 import os, transaction
 from AccessControl import getSecurityManager, ClassSecurityInfo
-from Globals import package_home
+try:
+  from App.Common import package_home
+except ImportError: # BBB Zope2
+  from Globals import package_home
 import PIL.Image as PIL_Image
 import thread
 import random
