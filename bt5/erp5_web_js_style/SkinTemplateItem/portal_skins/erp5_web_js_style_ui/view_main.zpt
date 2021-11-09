@@ -23,7 +23,7 @@
       og_locale_dict python: web_site.WebSite_getOgLocaleDict();
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
       global_definitions_macros here/global_definitions/macros;
-      include_document python: web_section.isSiteMapDocumentParent() and (here.getRelativeUrl() == web_section.getRelativeUrl());">
+      include_document python: web_section.isSiteMapDocumentParent() and ((here.getRelativeUrl() == web_section.getRelativeUrl()) or (here.getReference() == web_section.getAggregateReference()));">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html tal:attributes="lang current_language">
   <head>
