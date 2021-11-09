@@ -57,9 +57,31 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='feed_url' and not(text())]</td>
+  <td>//p[@id='feed_url' and text()='feed.rss']</td>
   <td></td>
 </tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//a[text()='erp5_web_js_style_test_contentpage title' and contains(@href, 'web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//p[text()='Author: erp5_web_js_style_test_contributor']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//p[text()='Description: erp5_web_js_style_test_contentpage description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//p[contains(text(), 'Date: ') and contains(text(), 'GMT')]</td>
+  <td></td>
+</tr>
+
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
@@ -272,9 +294,31 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='feed_url' and not(text())]</td>
+  <td>//p[@id='feed_url' and contains(text(), 'web_site_module/erp5_web_js_style_test_site/feed.rss')]</td>
   <td></td>
 </tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//a[text()='erp5_web_js_style_test_contentpage title' and contains(@href, 'web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//p[text()='Author: erp5_web_js_style_test_contributor']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//p[text()='Description: erp5_web_js_style_test_contentpage description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//aside[@id='document_list']//p[contains(text(), 'Date: ') and contains(text(), 'GMT')]</td>
+  <td></td>
+</tr>
+
 <tr>
   <td>assertElementPresent</td>
   <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
