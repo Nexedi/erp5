@@ -9,8 +9,8 @@ trade_condition_list = order.getSpecialiseValueList(
     portal_type=trade_condition_portal_type)
 
 tested_base_category_list = [ ]
-for base_category in ('source_section', 'source',
-                      'destination_section', 'destination', ):
+for base_category in ('source_section', 'source', 'source_project',
+                      'destination_section', 'destination', 'destination_project'):
   if context.getProperty(base_category):
     tested_base_category_list.append(base_category)
 
@@ -24,6 +24,12 @@ else:
 
 def rank_method(trade_condition):
   rank = 0
+  destination_project = trade_condition.getDestinationProject()
+  if destination_project:
+    if destination_project == context.getDestinationProject():
+      rank += 10
+    else:
+      rank -= 2
   destination_section = trade_condition.getDestinationSection()
   if destination_section:
     if destination_section == context.getDestinationSection():
@@ -36,6 +42,8 @@ def rank_method(trade_condition):
       rank += 10
     else:
       rank -= 2
+  if trade_condition.getSourceProject():
+    rank += 1
   if trade_condition.getSourceSection():
     rank += 1
   if trade_condition.getSource():
