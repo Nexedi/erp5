@@ -39,6 +39,9 @@ body > nav#sitemap a:not(:first-child) {
 body main {
   grid-area: content;
 }
+body main img {
+  max-width: 100%;
+}
 body main fieldset {
   border: none;
 }
