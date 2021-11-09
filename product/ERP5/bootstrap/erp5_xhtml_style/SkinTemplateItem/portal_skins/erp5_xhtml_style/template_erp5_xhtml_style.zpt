@@ -22,7 +22,12 @@ DEPRECATION:
         <head>
           <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />
           <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2015. All rights reserved." />
-          <meta name="robots" content="noindex, nofollow, noarchive, noimageindex, nosnippet" />
+          <tal:block tal:condition='python: here.getPortalObject().portal_skins.getCurrentSkinName() != "View"'>
+            <meta name="robots" content="index, follow" />
+          </tal:block>
+          <tal:block tal:condition='python: here.getPortalObject().portal_skins.getCurrentSkinName() == "View"'>
+            <meta name="robots" content="noindex, nofollow, noarchive, noimageindex, nosnippet" />
+          </tal:block>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="google" content="notranslate">
           <tal:block metal:use-macro="global_definitions_macros/render_css_js" />
