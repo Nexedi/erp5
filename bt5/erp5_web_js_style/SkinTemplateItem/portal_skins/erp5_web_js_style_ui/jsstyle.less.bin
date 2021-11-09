@@ -65,6 +65,9 @@ body {
         }
       }
     }
+    img, video {
+      max-width: 100%;
+    }
   }
 
   > aside#document_list {
