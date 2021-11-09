@@ -51,6 +51,10 @@ body main fieldset > div > label {
   font-weight: bold;
   min-width: 10%;
 }
+body main img,
+body main video {
+  max-width: 100%;
+}
 body > aside#document_list {
   grid-area: sidebar;
   background-color: #DDD;
