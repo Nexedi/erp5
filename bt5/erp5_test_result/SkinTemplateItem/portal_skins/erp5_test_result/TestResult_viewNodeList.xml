@@ -89,7 +89,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_debug_shell</string>
                         <string>listbox_log_viewer</string>
                       </list>
                     </value>
