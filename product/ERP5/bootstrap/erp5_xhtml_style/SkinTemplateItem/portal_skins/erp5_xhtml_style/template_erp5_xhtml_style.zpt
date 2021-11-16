@@ -22,7 +22,7 @@ DEPRECATION:
         <head>
           <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />
           <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2015. All rights reserved." />
-          <meta name="robots" tal:attributes="content python: 'noindex, nofollow, noarchive, noimageindex, nosnippet' if here.getWebSiteValue() is None else 'index, follow'"/>
+          <meta name="robots" tal:attributes="content python: 'noindex, nofollow, noarchive, noimageindex, nosnippet' if ((here.getWebSiteValue() is None) or (here.REQUEST.get('ignore_layout', 0))) else 'index, follow'"/>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="google" content="notranslate">
           <tal:block metal:use-macro="global_definitions_macros/render_css_js" />
