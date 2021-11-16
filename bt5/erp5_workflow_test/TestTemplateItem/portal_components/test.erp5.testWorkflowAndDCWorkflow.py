@@ -14,6 +14,7 @@ class TestERP5WorkflowMixin(TestWorkflowMixin):
     module = self.portal.workflow_test_module
     module.manage_delObjects(list(module.objectIds()))
 
+    self.portal.portal_workflow[self.initial_dc_workflow_id].setStateVariable('validation_state')
     self.copyWorkflow(self.portal.portal_workflow, self.initial_dc_workflow_id, self.workflow_id)
     self.copyWorkflow(self.portal.portal_workflow, self.initial_dc_interaction_workflow_id, self.interaction_workflow_id)
 
@@ -190,6 +191,16 @@ class TestERP5WorkflowMixin(TestWorkflowMixin):
     # XXX required ????, it should not be called: self.clearCache()
     self.checkDocumentState(new_object, 'validated')
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 1)
+
+  def test_13_testAccessWorkflowStateAfterChangeStateVariable(self):
+    new_object = self.getTestObject()
+    self.tic()
+    self.assertEqual(new_object.getValidationState(), 'draft')
+    self.portal.portal_workflow[self.initial_dc_workflow_id].setStateVariable('simulation_state')
+    self.portal.portal_workflow[self.workflow_id].setStateVariable('simulation_state')
+    self.tic()
+    self.assertEqual(new_object.getSimulationState(), 'draft')
+    self.tic()
 
 class TestConvertedWorkflow(TestERP5WorkflowMixin):
   """
