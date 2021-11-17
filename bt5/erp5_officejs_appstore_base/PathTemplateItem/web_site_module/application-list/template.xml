@@ -144,6 +144,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -176,7 +196,15 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; script-src \'unsafe-inline\';</string> </value>
+            <value> <string>default-src \'self\';</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_version</string> </key>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_precache_manifest_script</string> </key>
+            <value> <string>WebSection_getAppstorePrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -425,7 +453,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>975.65259.47363.59801</string> </value>
+                      <value> <string>996.31313.30780.31453</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -443,7 +471,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1559055460.25</float>
+                              <float>1639493797.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
