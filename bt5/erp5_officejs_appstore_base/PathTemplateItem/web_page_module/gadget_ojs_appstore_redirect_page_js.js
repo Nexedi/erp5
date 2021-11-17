@@ -18,7 +18,7 @@
           );
         })
         .push(function (registration) {
-          console.log('(OJS Redirect) SW REGISTERED with scope: ', registration.scope);
+          console.log('(OJS Redirect) ROOT SW REGISTERED with scope: ', registration.scope);
           window.setTimeout(redirect_version, 1);
         })
     });
