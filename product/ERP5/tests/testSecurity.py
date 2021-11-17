@@ -41,6 +41,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 #     return (...)
 
 class TestSecurityMixin(ERP5TypeTestCase):
+  workflow_transition_protection_ignored_workflow_id_list = (
+  )
 
   def _prepareDocumentList(self):
     if getattr(self, '_prepareDocumentList_finished', None):
@@ -114,6 +116,8 @@ class TestSecurityMixin(ERP5TypeTestCase):
     """
     error_list = []
     for wf in self.portal.portal_workflow.objectValues():
+      if wf.getId() in self.workflow_transition_protection_ignored_workflow_id_list:
+        continue
       if wf.__class__.__name__ in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
         continue
       for transition in wf.getTransitionValueList():
