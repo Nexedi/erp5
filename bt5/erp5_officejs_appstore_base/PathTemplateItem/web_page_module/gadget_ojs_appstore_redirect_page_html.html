@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html manifest="WebSection_renderOfficeJSRedirectAppCache">
-  <body>
-    <script language="JavaScript">
-      function redirect_version() {
-        document.location.replace("${latest_version}/" + document.location.hash)
-      };
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="jiodev.js"></script>
+    <script src="officejs-redirect.js"></script>
+    <title>OfficeJS Redirect</title>
+    <script app-configuration="latest_version" type="text/x-renderjs-configuration">${latest_version}</script>
+  </head>
 
-      var timeout_duration = 10000;
-      try {
-        window.applicationCache.addEventListener('cached',redirect_version);
-        window.applicationCache.addEventListener('noupdate',redirect_version);
-        window.applicationCache.addEventListener('error',redirect_version);
-        window.applicationCache.addEventListener('updateready', function(){window.location.reload()});
-      } catch (e) {
-        timeout_duration = 1;
-      }
-      // XXX This is a hack for when the network is too slow, or if appcache is not supported anymore
-      window.setTimeout(redirect_version, timeout_duration);
-    </script>
+  <body>
   </body>
 </html>
