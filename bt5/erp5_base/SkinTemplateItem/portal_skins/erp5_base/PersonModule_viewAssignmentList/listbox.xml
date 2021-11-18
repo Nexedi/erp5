@@ -169,6 +169,14 @@
                           <string>function</string>
                           <string>Function</string>
                         </tuple>
+                        <tuple>
+                          <string>role</string>
+                          <string>Role</string>
+                        </tuple>
+                        <tuple>
+                          <string>site</string>
+                          <string>Site</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
