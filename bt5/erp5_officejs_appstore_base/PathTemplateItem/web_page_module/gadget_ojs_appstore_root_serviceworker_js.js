@@ -6,8 +6,25 @@ var global = self, window = self;
   "use strict";
 
   var required_url_list = [],
-    CACHE_NAME = location.toString() + '_v1';
-  self.DOMParser = {};
+    CACHE_NAME = location.toString() + '_v1',
+    REQUIRED_FILES = [
+      "/",
+      "rsvp.js",
+      "renderjs.js",
+      "jiodev.js",
+      "officejs-redirect.js",
+      "favicon.ico"
+    ],
+    i,
+    len = REQUIRED_FILES.length;
+
+  for (i = 0; i < len; i += 1) {
+    required_url_list.push(
+      new URL(REQUIRED_FILES[i], location.toString()).toString()
+    );
+  }
+
+  /*self.DOMParser = {};
   self.sessionStorage = {};
   self.localStorage = {};
   self.openDatabase = {};
@@ -17,14 +34,19 @@ var global = self, window = self;
   self.DOMParser = Object;
   self.postMessage = function () {return; };
 
-  //self.importScripts('app/rsvp.js', 'app/jiodev.js');
-
   self.storage = {};
 
-  self.cache_list = [];
+  self.cache_list = [];*/
 
   self.addEventListener('install', function (event) {
-    console.log("(ROOT SW) Bootloader Service Worker INSTALL. event:", event);
+    console.log("(ROOT SW) Root Service Worker INSTALL");
+    
+    //TODO: in real appstore server this could be just the required file "/"
+    //but for dev it is necessary to get the root app url like this
+    var app_url = window.location.href.replace("gadget_officejs_root_serviceworker.js", "");
+    console.log("app_url:", app_url);
+    required_url_list.push(app_url);
+    
     // Perform install step:  loading each required file into cache
     event.waitUntil(
       caches.open(CACHE_NAME)
@@ -39,8 +61,7 @@ var global = self, window = self;
                 return cache.add(url_to_cache);
               });
           }
-
-          var i, len = required_url_list.length;
+          len = required_url_list.length;
           for (i = 0; i < len; i += 1) {
             append(required_url_list[i]);
           }
@@ -85,6 +106,7 @@ var global = self, window = self;
     var relative_url = './' + event.request.url.split("#")[0]
       .replace(self.registration.scope, "")
       .replace(self.version_url, "");
+    console.log("event.request.url:", event.request.url);
     console.log("relative_url:", relative_url);
     return event.respondWith(
       caches.open(CACHE_NAME)
@@ -101,11 +123,27 @@ var global = self, window = self;
             console.log("response from cache !!");
             return response;
           }
-          // Not in cache - return the result from the live server
-          // `fetch` is essentially a "fallback"
+          //return fetch(event.request);
           console.log("no response from cache. fetching url from live server");
-          console.log("TODO: save response in cache");
-          return fetch(event.request);
+          var fetchRequest = event.request.clone();
+          return fetch(fetchRequest).then(
+            function (response) {
+              console.log("server response:", response);
+              // Check if we received a valid response
+              if (!response || response.status !== 200 || response.type !== 'basic') {
+                console.log("server response with error");
+                return response;
+              }
+              var responseToCache = response.clone();
+              console.log("adding response to cache");
+              caches.open(CACHE_NAME)
+                .then(function (cache) {
+                  cache.put(event.request, responseToCache);
+                });
+
+              return response;
+            }
+          );
         })
     );
   });
