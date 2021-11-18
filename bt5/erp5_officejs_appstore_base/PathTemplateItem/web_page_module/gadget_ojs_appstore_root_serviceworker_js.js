@@ -6,7 +6,8 @@ var global = self, window = self;
   "use strict";
 
   var required_url_list = [],
-    CACHE_NAME = location.toString() + '_v1',
+    prefix = location.origin.toString() + '_',
+    CACHE_NAME = prefix + '${modification_date}',
     REQUIRED_FILES = [
       "/",
       "rsvp.js",
@@ -25,7 +26,8 @@ var global = self, window = self;
   }
 
   self.addEventListener('install', function (event) {
-    console.log("(ROOT SW) Root Service Worker INSTALL");
+    console.log("(ROOT SW) Root Service Worker INSTALL. CACHE_NAME:", CACHE_NAME);
+    //var app_hash = new URL(location).searchParams.get('appHash');
     //TODO: in real appstore server this could be just the required file "/"
     //but for dev it is necessary to get the root app url like this
     var app_url = window.location.href.replace("gadget_officejs_root_serviceworker.js", "");
@@ -71,15 +73,61 @@ var global = self, window = self;
     );
   });
 
-  self.addEventListener('activate', function (event) {
-    console.log("(ROOT SW) Bootloader Service Worker ACTIVATE. event:", event);
+  /*self.addEventListener('activate', function (event) {
+    console.log("(ROOT SW) Bootloader Service Worker ACTIVATE. CACHE_NAME:", CACHE_NAME);
     event.waitUntil(self.clients.claim());
+  });*/
+  self.addEventListener("activate", function (event) {
+    console.log("(ROOT SW) Bootloader Service Worker ACTIVATE. CACHE_NAME:", CACHE_NAME);
+    /* Just like with the install event, event.waitUntil blocks activate on a promise.
+     Activation will fail unless the promise is fulfilled.
+    */
+    event.waitUntil(
+      caches
+        /* This method returns a promise which will resolve to an array of available
+           cache keys.
+        */
+        .keys()
+        .then(function (keys) {
+          // We return a promise that settles when all outdated caches are deleted.
+          return Promise.all(
+            keys
+              .filter(function (key) {
+                // Filter by keys that don't start with the latest version prefix.
+                // return !key.startsWith(version);
+                return ((key !== CACHE_NAME) &&
+                        key.startsWith(prefix));
+              })
+              .map(function (key) {
+                console.log("deleting cache key:", key);
+                /* Return a promise that's fulfilled
+                   when each outdated cache is deleted.
+                */
+                return caches.delete(key);
+              })
+          );
+        })
+        .then(function () {
+          return self.clients.claim();
+        })
+        .then(function () {
+          return self.clients.matchAll();
+        })
+        .then(function (client_list) {
+          // Notify all clients that they can reload the page
+          var j,
+            client_len = client_list.length;
+          for (j = 0; j < client_len; j += 1) {
+            client_list[j].postMessage('claim');
+          }
+
+        })
+    );
   });
 
   self.addEventListener('fetch', function (event) {
     var url = new URL(event.request.url);
     url.hash = '';
-    console.log("");
     console.log("(ROOT SW) FETCH url:", url.href);
     if ((event.request.method !== 'GET') ||
         (required_url_list.indexOf(url.toString()) === -1)) {
