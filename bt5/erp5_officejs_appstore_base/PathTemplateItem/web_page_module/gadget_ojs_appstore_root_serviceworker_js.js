@@ -24,20 +24,6 @@ var global = self, window = self;
     );
   }
 
-  /*self.DOMParser = {};
-  self.sessionStorage = {};
-  self.localStorage = {};
-  self.openDatabase = {};
-  self.DOMError = {};
-  self.Node = {};
-  self.XMLSerializer = Object;
-  self.DOMParser = Object;
-  self.postMessage = function () {return; };
-
-  self.storage = {};
-
-  self.cache_list = [];*/
-
   self.addEventListener('install', function (event) {
     console.log("(ROOT SW) Root Service Worker INSTALL");
     
@@ -97,24 +83,20 @@ var global = self, window = self;
     url.hash = '';
     console.log("");
     console.log("(ROOT SW) FETCH url:", url.href);
-    /*if ((event.request.method !== 'GET') ||
+    if ((event.request.method !== 'GET') ||
         (required_url_list.indexOf(url.toString()) === -1)) {
       // Try not to use the untrustable fetch function
       // It can only be skip synchronously
       return;
-    }*/
-    var relative_url = './' + event.request.url.split("#")[0]
-      .replace(self.registration.scope, "")
-      .replace(self.version_url, "");
+    }
     console.log("event.request.url:", event.request.url);
-    console.log("relative_url:", relative_url);
     return event.respondWith(
       caches.open(CACHE_NAME)
         .then(function (cache) {
           console.log("checking if in cache...");
           // Don't give request object itself. Firefox's Cache Storage
           // does not work properly when VARY contains Accept-Language.
-          // Give URL string instead, then cache.match works on both Firefox and Chrome.
+          // Give URL string instead, then cache.match works on any browser
           return cache.match(event.request.url);
         })
         .then(function (response) {
@@ -123,8 +105,10 @@ var global = self, window = self;
             console.log("response from cache !!");
             return response;
           }
-          //return fetch(event.request);
+          // No cache - return the response from live server
           console.log("no response from cache. fetching url from live server");
+          return fetch(event.request);
+          /* NO NEED TO CACHE HERE, ALREADY DONE IN INSTALL
           var fetchRequest = event.request.clone();
           return fetch(fetchRequest).then(
             function (response) {
@@ -143,7 +127,7 @@ var global = self, window = self;
 
               return response;
             }
-          );
+          );*/
         })
     );
   });
