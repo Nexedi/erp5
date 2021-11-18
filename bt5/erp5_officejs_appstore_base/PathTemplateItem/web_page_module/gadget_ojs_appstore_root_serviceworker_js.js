@@ -1,8 +1,8 @@
 /*jslint indent: 2*/
-/*global self, fetch, Request, Response, URL, Blob, caches, location, console */
+/*global self, fetch, URL, caches, location, Promise */
 var global = self, window = self;
 
-(function (self, fetch, Response, Blob, caches, location) {
+(function (self, fetch, URL, caches, location, Promise) {
   "use strict";
 
   var required_url_list = [],
@@ -26,13 +26,11 @@ var global = self, window = self;
 
   self.addEventListener('install', function (event) {
     console.log("(ROOT SW) Root Service Worker INSTALL");
-    
     //TODO: in real appstore server this could be just the required file "/"
     //but for dev it is necessary to get the root app url like this
     var app_url = window.location.href.replace("gadget_officejs_root_serviceworker.js", "");
-    console.log("app_url:", app_url);
     required_url_list.push(app_url);
-    
+    console.log("required_url_list:", required_url_list);
     // Perform install step:  loading each required file into cache
     event.waitUntil(
       caches.open(CACHE_NAME)
@@ -108,28 +106,8 @@ var global = self, window = self;
           // No cache - return the response from live server
           console.log("no response from cache. fetching url from live server");
           return fetch(event.request);
-          /* NO NEED TO CACHE HERE, ALREADY DONE IN INSTALL
-          var fetchRequest = event.request.clone();
-          return fetch(fetchRequest).then(
-            function (response) {
-              console.log("server response:", response);
-              // Check if we received a valid response
-              if (!response || response.status !== 200 || response.type !== 'basic') {
-                console.log("server response with error");
-                return response;
-              }
-              var responseToCache = response.clone();
-              console.log("adding response to cache");
-              caches.open(CACHE_NAME)
-                .then(function (cache) {
-                  cache.put(event.request, responseToCache);
-                });
-
-              return response;
-            }
-          );*/
         })
     );
   });
 
-}(self, fetch, Response, Blob, caches, location));
+}(self, fetch, URL, caches, location, Promise));
