@@ -27,7 +27,6 @@ var global = self, window = self;
 
   self.addEventListener('install', function (event) {
     console.log("(ROOT SW) Root Service Worker INSTALL. CACHE_NAME:", CACHE_NAME);
-    //var app_hash = new URL(location).searchParams.get('appHash');
     //TODO: in real appstore server this could be just the required file "/"
     //but for dev it is necessary to get the root app url like this
     var app_url = window.location.href.replace("gadget_officejs_root_serviceworker.js", "");
@@ -128,13 +127,12 @@ var global = self, window = self;
   self.addEventListener('fetch', function (event) {
     var url = new URL(event.request.url);
     url.hash = '';
-    console.log("(ROOT SW) FETCH url:", url.href);
-    if ((event.request.method !== 'GET') ||
-        (required_url_list.indexOf(url.toString()) === -1)) {
-      // Try not to use the untrustable fetch function
-      // It can only be skip synchronously
+    if (required_url_list.indexOf(url.toString()) === -1) {
+      // Appstore sw only catches the required list of files
+      // the rest is up to user's app
       return;
     }
+    console.log("(ROOT SW) FETCH url:", url.href);
     console.log("event.request.url:", event.request.url);
     return event.respondWith(
       caches.open(CACHE_NAME)

@@ -102,6 +102,10 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Officejs Root ServiceWorker JS</string> </value>
         </item>
@@ -246,7 +250,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>996.16657.26762.29286</string> </value>
+                      <value> <string>996.17076.51875.16110</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +268,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1637337389.54</float>
+                              <float>1637360053.26</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
