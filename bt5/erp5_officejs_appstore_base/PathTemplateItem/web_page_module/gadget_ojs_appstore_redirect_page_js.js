@@ -11,16 +11,20 @@
       ).textContent,
         queue = new RSVP.Queue();
       function redirect_version() {
+        console.log("latest_version:", latest_version);
         document.location.replace(latest_version + "/" +
                                   document.location.hash);
       }
       return queue
         .push(function () {
+          console.log("Register SW");
           return navigator.serviceWorker.register(
             "gadget_officejs_root_serviceworker.js"
           );
         })
         .push(function (registration) {
+          console.log("Calling registration.update() BEFORE redirect");
+          registration.update();
           window.setTimeout(redirect_version, 1);
         });
     });
