@@ -606,9 +606,11 @@ class Workflow(XMLObject):
     if status is None:
       state = self.getSourceValue()
     else:
-      state_id = 'state_' + status.get(self.getStateVariable(), None)
-      state = self._getOb(state_id)
-      if state is None:
+      state_parameter = status.get(self.getStateVariable(), None)
+      if state_parameter:
+        state_id = 'state_' + state_parameter
+        state = self._getOb(state_id)
+      if (state_parameter is None) or (state is None):
         state = self.getSourceValue()
     if id_only:
       if state is None:
