@@ -25,10 +25,7 @@ var global = self, window = self;
     );
   }
 
-  self.importScripts('cache.js');
-
   self.addEventListener('install', function (event) {
-    console.log("self.cache_name:", self.cache_name);
     console.log("(ROOT SW) Root Service Worker INSTALL. CACHE_NAME:", CACHE_NAME);
     //var app_hash = new URL(location).searchParams.get('appHash');
     //TODO: in real appstore server this could be just the required file "/"

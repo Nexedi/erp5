@@ -17,14 +17,15 @@
       }
       return queue
         .push(function () {
-          console.log("Register SW");
+          console.log("Register SW with URL:", "gadget_officejs_root_serviceworker.js");
+          return navigator.serviceWorker.register("gadget_officejs_root_serviceworker.js");
+          /*console.log("Register SW with URL:", "gadget_officejs_root_serviceworker.js?app_version=" + latest_version);
           return navigator.serviceWorker.register(
-            "gadget_officejs_root_serviceworker.js"
-          );
+            "gadget_officejs_root_serviceworker.js?app_version=" + latest_version
+          );*/
         })
         .push(function (registration) {
-          console.log("Calling registration.update() BEFORE redirect");
-          registration.update();
+          //registration.update();
           window.setTimeout(redirect_version, 1);
         });
     });
