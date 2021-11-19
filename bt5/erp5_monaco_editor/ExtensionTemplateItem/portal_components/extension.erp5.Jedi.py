@@ -21,6 +21,9 @@ import time
 
 import erp5.portal_type
 
+import tempfile
+STUBS_BASE_PATH = os.path.join(tempfile.gettempdir(), 'erp5-stubs')
+
 last_reload_time = time.time()
 
 # increase default cache duration
@@ -356,7 +359,7 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
         data['position']['line'],
         data['position']['column'] - 1,
         script_name,
-        sys_path=['/tmp/ahaha/'] + list(sys.path),
+        sys_path=[STUBS_BASE_PATH] + list(sys.path),
     )
 
     def _get_param_name(p):
@@ -763,7 +766,7 @@ def XXX_skins_class_exists(name):
   """Returns true if a skin class exists for this name.
   """
   return os.path.exists(
-      "/tmp/ahaha/erp5/skins_tool/{name}.pyi".format(name=name))
+      "{STUBS_BASE_PATH}/erp5/skins_tool/{name}.pyi".format(STUBS_BASE_PATH=STUBS_BASE_PATH, name=name))
 
 
 def TypeInformation_getStub(self):
@@ -1404,7 +1407,8 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
       f.write(content)
 
   portal = self.getPortalObject()
-  module_dir = '/tmp/ahaha/erp5/'  # TODO
+  mkdir_p(STUBS_BASE_PATH)
+  module_dir = os.path.join(STUBS_BASE_PATH, 'erp5')
   mkdir_p(module_dir)
 
   # generate erp5/__init__.py
