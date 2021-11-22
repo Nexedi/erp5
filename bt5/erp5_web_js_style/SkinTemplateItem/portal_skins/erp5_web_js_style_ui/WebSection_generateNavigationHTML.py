@@ -39,7 +39,7 @@ def generateDocumentListHTML(result_list, document_list):
 </li>""" % (
   _(section['translated_title']),
   ('<p class="p-summary">%s</p>' % _(section['description'])) if section.get('description', '') else '',
-  ('<p class="p-author h-card">%s</p>' % _(section['contributor_title'])) if section.get('contributor_title', '') else '',
+  ('<p class="p-author h-card">%s</p>' % _(section['document'].Document_getContributorTitleList()[0])),
   __(section['url']),
   _(section['modification_date'].HTML4()),
   _(section['modification_date'].rfc822())
@@ -75,6 +75,6 @@ result_list.append('</nav>')
 
 # Documents
 if include_document:
-  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date', 'contributor_title')))
+  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date')))
 
 return ''.join(result_list)
