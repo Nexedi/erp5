@@ -2,6 +2,9 @@
  <portal_type id="Bank Account">
   <item>Comment</item>
  </portal_type>
+ <portal_type id="Career">
+  <item>CareerConstraint</item>
+ </portal_type>
  <portal_type id="External Identifier">
   <item>Base</item>
   <item>Coordinate</item>
