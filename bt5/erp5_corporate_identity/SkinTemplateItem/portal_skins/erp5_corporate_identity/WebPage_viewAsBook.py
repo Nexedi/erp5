@@ -97,7 +97,7 @@ if override_batch_mode:
 
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
 if book_language:
-  book.REQUEST['AcceptLanguage'].set(book_language, 10)
+  book.REQUEST['AcceptLanguage'].set(book_language, 150)
 else:
   book_language = blank
 

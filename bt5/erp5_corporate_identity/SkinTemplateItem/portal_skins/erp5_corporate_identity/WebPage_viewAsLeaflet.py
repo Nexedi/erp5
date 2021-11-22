@@ -68,7 +68,7 @@ if override_batch_mode:
   leaflet_date="Nov-1976"
   leaflet_year="1976"
 if leaflet_language and leaflet_language != blank:
-  leaflet.REQUEST['AcceptLanguage'].set(leaflet_language, 10)
+  leaflet.REQUEST['AcceptLanguage'].set(leaflet_language, 150)
 else:
   leaflet_language = blank
 if leaflet_reference is None:

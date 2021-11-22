@@ -101,7 +101,7 @@ if doc_language is None or doc_language == "":
 doc_language = html_quote(override_document_language) if override_document_language else doc_language
 
 if doc_language is not None:
-  doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
+  doc.REQUEST['AcceptLanguage'].set(doc_language, 150)
 else:
   doc_language = blank
 

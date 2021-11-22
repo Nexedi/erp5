@@ -86,7 +86,7 @@ if override_batch_mode:
   letter_modification_date = DateTime("1976-11-04")
 
 if letter_language and letter_language != blank:
-  letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
+  letter.REQUEST['AcceptLanguage'].set(letter_language, 150)
 else:
   letter_language = blank
 if letter_reference is None:

@@ -4,7 +4,7 @@
 context.Base_updateListboxSelection()
 
 if target_language:
-  container.REQUEST['AcceptLanguage'].set(target_language, 10)
+  container.REQUEST['AcceptLanguage'].set(target_language, 150)
 
 if print_mode == 'list_view':
   return context.Folder_viewContentListReport()

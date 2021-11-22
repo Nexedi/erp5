@@ -254,7 +254,7 @@ if override_batch_mode:
   doc_version = "001"
   doc_creation_year = "1976"
 if doc_language and doc_language != blank:
-  doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
+  doc.REQUEST['AcceptLanguage'].set(doc_language, 150)
 else:
   doc_language = blank
 if doc_reference is None:

@@ -9,7 +9,7 @@ if use_ods_style:
   request.set('reset', 1) # Some TALES expressions checks this
 
 if target_language:
-  request['AcceptLanguage'].set(target_language, 10)
+  request['AcceptLanguage'].set(target_language, 150)
 
 form_report = getattr(context, print_mode)
 return form_report(**kw)

@@ -70,7 +70,7 @@ release_version = release.getVersion() or "001"
 if override_batch_mode:
   release_creation_year="1976"
 if release_language is not None:
-  release.REQUEST['AcceptLanguage'].set(release_language, 10)
+  release.REQUEST['AcceptLanguage'].set(release_language, 150)
 if release_language is None:
   release_language = blank
 if release_reference is None:

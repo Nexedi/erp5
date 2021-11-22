@@ -1,6 +1,6 @@
 # This script uses format= argument
 # pylint: disable=redefined-builtin
 if target_language:
-  container.REQUEST['AcceptLanguage'].set(target_language, 10)
+  container.REQUEST['AcceptLanguage'].set(target_language, 150)
 
 return context.Invoice_viewAsODT(format=format)

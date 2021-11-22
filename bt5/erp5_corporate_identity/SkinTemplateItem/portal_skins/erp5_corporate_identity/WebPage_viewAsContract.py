@@ -64,7 +64,7 @@ if override_batch_mode:
 
 contract_short_date = contract_modification_date.strftime('%Y-%m-%d')
 if contract_language:
-  context.REQUEST['AcceptLanguage'].set(contract_language, 10)
+  context.REQUEST['AcceptLanguage'].set(contract_language, 150)
 else:
   contract_language = blank
 

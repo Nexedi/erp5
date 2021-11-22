@@ -1,5 +1,5 @@
 if target_language:
-  container.REQUEST['AcceptLanguage'].set(target_language, 10)
+  container.REQUEST['AcceptLanguage'].set(target_language, 150)
 
 container.REQUEST.set('format', 'pdf')
 return context.getPortalObject().web_page_module.newContent(
