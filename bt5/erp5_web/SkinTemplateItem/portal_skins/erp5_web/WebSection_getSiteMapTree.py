@@ -46,6 +46,8 @@ def mapObject(property_dict):
   result['url'] = property_dict['url']
   result['level'] = property_dict['level']
   result['subsection'] = property_dict['subsection']
+  result['section'] = property_dict.get('section', None)
+  result['document'] = property_dict.get('document', None)
   return result
 
 def getSiteMapItemTree(section, depth=0, level=None):   
