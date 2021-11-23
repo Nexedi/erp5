@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="
+      dummy python: request.set('is_web_mode', True);
+      dummy python: request.set('ignore_layout', False);
+      dummy python: request.set('editable_mode', False);
+      web_site python: here.getWebSiteValue();
+      web_section python: here.getWebSectionValue();
+      relative_url_prefix python: web_section.WebSection_generateRelativeUrlPrefix();
+      no_style_css_url python: relative_url_prefix + 'jsstyle.css';
+      favicon_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_favicon_url');
+      og_locale_dict python: web_site.WebSite_getOgLocaleDict();
+      current_language python: web_site.getPortalObject().Localizer.get_selected_language();
+      global_definitions_macros here/global_definitions/macros;">
+      <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+<html tal:attributes="lang current_language">
+  <head>
+  <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
+  <title tal:content="python: web_section.getTranslatedTitle()"></title>
+  <tal:block tal:condition="favicon_url">
+    <link rel="icon" tal:attributes="href favicon_url" />
+  </tal:block>
+  <meta name="robots" content="noindex,follow">
+  <link rel="stylesheet" tal:attributes="href no_style_css_url">
+  </head>
+  <body>
+    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
+    <main><h1>Not Found</h1>
+  The requested URL <code><tal:block tal:content="request/URL"></tal:block></code> was not found on this server. </main>
+  </body>
+</html>
+    </tal:block>
+  </tal:block>
+</tal:block>
