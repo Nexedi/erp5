@@ -57,7 +57,7 @@ if doc_save or get_doc_after_save:
     if context.getWebSiteValue():
       context.getPortalObject().portal_skins.changeSkin('HalRestricted')
     if get_doc_after_save:
-      return doc_pdf_file, document
+      return document
     return document.Base_redirect(form_id='view',
       keep_items=dict(portal_status_message=message)
     )
