@@ -1,0 +1,11 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  metal:use-macro="context/error_main/macros/master"
+>
+  <metal:slot metal:fill-slot="main" i18n:domain="erp5_ui">
+    <h2 i18n:translate="" tal:define="dummy python: request.response.setStatus(403);">Unauthorized</h2>
+    <p i18n:translate="">You do not have enough permissions to access this page.</p>
+  </metal:slot>
+</tal:block>
