@@ -80,7 +80,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//h1[text()='Not Found']</td>
+  <td>//main//h2[text()='Not Found']</td>
   <td></td>
 </tr>
 

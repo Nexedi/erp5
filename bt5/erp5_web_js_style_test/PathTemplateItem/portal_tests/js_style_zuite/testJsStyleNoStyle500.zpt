@@ -28,7 +28,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/404</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/WebSite_raiseNotImplementedError</td>
   <td></td>
 </tr>
 
@@ -80,13 +80,13 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//h2[text()='Not Found']</td>
+  <td>//main//h2[text()='Site Error']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//main//p[contains(text(), 'The requested URL ')]</td>
+  <td>//main//p[text()='An error was encountered while publishing this resource.']</td>
   <td></td>
 </tr>
 
