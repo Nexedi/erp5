@@ -176,7 +176,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; script-src \'unsafe-inline\';</string> </value>
+            <value> <string>default-src \'self\';</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -425,7 +425,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>975.65259.47363.59801</string> </value>
+                      <value> <string>996.22661.623.32392</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -443,7 +443,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1559055460.25</float>
+                              <float>1637695024.69</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
