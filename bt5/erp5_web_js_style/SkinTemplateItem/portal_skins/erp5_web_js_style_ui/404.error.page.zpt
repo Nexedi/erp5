@@ -1,0 +1,11 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  metal:use-macro="context/error_main/macros/master"
+>
+  <metal:slot metal:fill-slot="main" i18n:domain="erp5_ui">
+    <h2 i18n:translate="">Not Found</h2>
+    <p>The requested URL <code tal:content="request/URL"></code> was not found on this server.</p>
+  </metal:slot>
+</tal:block>
