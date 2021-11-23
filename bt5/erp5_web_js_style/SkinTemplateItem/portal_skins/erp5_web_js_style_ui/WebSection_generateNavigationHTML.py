@@ -41,7 +41,7 @@ def generateDocumentListHTML(result_list, document_list):
   ('<p class="p-summary">%s</p>' % _(section['description'])) if section.get('description', '') else '',
   ('<p class="p-author h-card">%s</p>' % _(section['document'].Document_getContributorTitleList()[0])),
   __(section['url']),
-  _(section['modification_date'].HTML4()),
+  __(section['modification_date'].HTML4()),
   _(section['modification_date'].rfc822())
 ))
     result_list.append('</ul></aside>')
