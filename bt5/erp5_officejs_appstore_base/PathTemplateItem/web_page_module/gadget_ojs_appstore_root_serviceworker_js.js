@@ -26,18 +26,15 @@ var global = self, window = self;
   }
 
   self.addEventListener('install', function (event) {
-    console.log("(ROOT SW) Root Service Worker INSTALL. CACHE_NAME:", CACHE_NAME);
-    //TODO: in real appstore server this could be just the required file "/"
-    //but for dev it is necessary to get the root app url like this
+    // TODO: in real appstore server this could be just the required file "/"
+    // but for dev it is necessary to get the root app url like this
     var app_url = window.location.href.replace("gadget_officejs_root_serviceworker.js", "");
     required_url_list.push(app_url);
-    console.log("required_url_list:", required_url_list);
     // Perform install step:  loading each required file into cache
     event.waitUntil(
       caches.open(CACHE_NAME)
         .then(function (cache) {
-          // Add all offline dependencies to the cache, one by one, to not
-          // hammer zopes.
+          // Add all offline dependencies to the cache, one by one, to not hammer zopes.
           var promise = Promise.resolve();
 
           function append(url_to_cache) {
@@ -72,20 +69,13 @@ var global = self, window = self;
     );
   });
 
-  /*self.addEventListener('activate', function (event) {
-    console.log("(ROOT SW) Bootloader Service Worker ACTIVATE. CACHE_NAME:", CACHE_NAME);
-    event.waitUntil(self.clients.claim());
-  });*/
   self.addEventListener("activate", function (event) {
-    console.log("(ROOT SW) Bootloader Service Worker ACTIVATE. CACHE_NAME:", CACHE_NAME);
-    /* Just like with the install event, event.waitUntil blocks activate on a promise.
-     Activation will fail unless the promise is fulfilled.
-    */
+    // Just like with the install event, event.waitUntil blocks activate on a promise.
+    // Activation will fail unless the promise is fulfilled.
     event.waitUntil(
       caches
-        /* This method returns a promise which will resolve to an array of available
-           cache keys.
-        */
+        // This method returns a promise which will resolve to an array of available
+        // cache keys.
         .keys()
         .then(function (keys) {
           // We return a promise that settles when all outdated caches are deleted.
@@ -98,10 +88,8 @@ var global = self, window = self;
                         key.startsWith(prefix));
               })
               .map(function (key) {
-                console.log("deleting cache key:", key);
-                /* Return a promise that's fulfilled
-                   when each outdated cache is deleted.
-                */
+                // Return a promise that's fulfilled
+                // when each outdated cache is deleted.
                 return caches.delete(key);
               })
           );
@@ -128,16 +116,13 @@ var global = self, window = self;
     var url = new URL(event.request.url);
     url.hash = '';
     if (required_url_list.indexOf(url.toString()) === -1) {
-      // Appstore sw only catches the required list of files
+      // Appstore service worker only catches the required list of files
       // the rest is up to user's app
       return;
     }
-    console.log("(ROOT SW) FETCH url:", url.href);
-    console.log("event.request.url:", event.request.url);
     return event.respondWith(
       caches.open(CACHE_NAME)
         .then(function (cache) {
-          console.log("checking if in cache...");
           // Don't give request object itself. Firefox's Cache Storage
           // does not work properly when VARY contains Accept-Language.
           // Give URL string instead, then cache.match works on any browser
@@ -146,11 +131,9 @@ var global = self, window = self;
         .then(function (response) {
           // Cache hit - return the response from the cached version
           if (response) {
-            console.log("response from cache !!");
             return response;
           }
           // No cache - return the response from live server
-          console.log("no response from cache. fetching url from live server");
           return fetch(event.request);
         })
     );
