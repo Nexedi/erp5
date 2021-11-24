@@ -19,6 +19,8 @@
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html tal:attributes="lang current_language">
   <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+  <meta name="referrer" content="same-origin">
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
   <title tal:content="python: web_section.getTranslatedTitle()"></title>
@@ -29,8 +31,8 @@
   <link rel="stylesheet" tal:attributes="href no_style_css_url">
   </head>
   <body>
-    <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
-    <main><tal:block metal:define-slot="main"/></main>
+  <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML()"></tal:block>
+  <main><tal:block metal:define-slot="main"/></main>
   </body>
 </html>
     </tal:block>
