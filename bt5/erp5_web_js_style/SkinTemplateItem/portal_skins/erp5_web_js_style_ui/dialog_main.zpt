@@ -27,6 +27,9 @@
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html tal:attributes="lang current_language">
   <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+  <meta name="referrer" content="same-origin">
+  <meta http-equiv="Feature-Policy" content="accelerometer 'none'; ambient-light-sensor 'none'; autoplay: 'none'; battery: 'none'; camera: 'none'; display-capture: 'none'; document-domain: 'none'; encrypted-media: 'none'; geolocation: 'none'; gyroscope: 'none'; magnetometer: 'none'; microphone: 'none'; payment: 'none'; usb: 'none'" />
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
   <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
