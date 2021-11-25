@@ -111,6 +111,8 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
         person.validate(comment=translateString("Validated by Configurator"))
         assignment.open(comment=translateString("Open by Configuration"))
         login.validate(comment=translateString("Validated by Configurator"))
+        current_career = person.getDefaultCareerValue()
+        current_career.Career_setEmployeeNumber(batch=1)
 
         ## add to customer template
         business_configuration = self.getBusinessConfigurationValue()
