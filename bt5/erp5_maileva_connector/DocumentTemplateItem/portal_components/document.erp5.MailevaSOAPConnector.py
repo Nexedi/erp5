@@ -35,8 +35,8 @@ import base64
 
 class MailevaSOAPConnector(XMLObject):
   # CMF Type Definition
-  meta_type = 'Mail Eval Soap Connector'
-  portal_type = 'Mail Eval Soap Connector'
+  meta_type = 'Maileva SOAP Connector'
+  portal_type = 'Maileva SOAP Connector'
 
   # Declarative security
   security = ClassSecurityInfo()
