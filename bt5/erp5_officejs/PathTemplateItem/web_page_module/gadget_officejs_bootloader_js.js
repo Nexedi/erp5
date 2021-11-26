@@ -94,10 +94,8 @@ var repair = false;
         if (hash_properties.hasOwnProperty('access_token')) {
           // This is a bad hack to support dropbox.
           gadget.props.redirect_url.hash =
-            gadget.props.redirect_url.hash.replace("#", "#/?").replace(
-            'access_token',
-            'page=ojs_dropbox_configurator&access_token'
-          );
+            gadget.props.redirect_url.hash
+              .replace("#", "#/?page=ojs_dropbox_configurator&");
         } else if (gadget.props.redirect_url.hash
             .startsWith('#page=settings_configurator')) {
           // Make monitoring app still compatible with old instances setup URLs
