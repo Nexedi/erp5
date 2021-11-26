@@ -35,7 +35,7 @@ import base64
 
 class MailevaSOAPConnector(XMLObject):
   # CMF Type Definition
-  meta_type = 'Mail Eva Soap Connector'
+  meta_type = 'Mail Eval Soap Connector'
   portal_type = 'Mail Eval Soap Connector'
 
   # Declarative security
@@ -52,25 +52,27 @@ class MailevaSOAPConnector(XMLObject):
     response =suds.client.Client(self.getUrlString()).service.submit(xml)
     return xml, response
 
-  def _generateAddressLineList(self, actor):
+  def _generateAddressLineList(self, entity):
     address_line_list = []
-    address_line = actor.getDefaultAddressText()
-    if actor.getPortalType() == 'Person':
-      address_line_list.append("%s %s" % (actor.getSocialTitleTitle(), actor.getTitle()))
+    address_line = entity.getDefaultAddressText()
+    portal_type = entity.getPortalType()
+    if portal_type == 'Person':
+      address_line_list.append("%s %s" % (entity.getSocialTitleTitle(), entity.getTitle()))
     else:
-      address_line_list.append("%s" % actor.getCorporateName())
+      address_line_list.append("%s" % entity.getCorporateName())
 
     tmp_list = address_line.split('\n')
     if len(tmp_list) > 5:
       raise ValueError('Address %s has more than 5 lines' % tmp_list)
-    if len(tmp_list) < 2:
-      raise ValueError('Address %s has less than 2 lines' % tmp_list)
     for index in range(5):
       if index < len(tmp_list) - 1:
         address_line_list.append(tmp_list[index])
       else:
         address_line_list.append(None)
-    address_line_list.append(tmp_list[-1])
+    if portal_type == "Person":
+      address_line_list.append(tmp_list[-1])
+    else:
+      address_line_list.append("%s CEDEX" % tmp_list[-1])
     return address_line_list
 
   def generateRequestXML(self, recipient, sender, document, page_template='maileva_connection'):
@@ -92,9 +94,9 @@ class MailevaSOAPConnector(XMLObject):
       password = self.getPassword(),
       career_start_date = source_section_career.getStartDate(),
       employee_number = source_section_career.getReference(),
-      recipient=recipient,
+      recipient_region=recipient.getDefaultAddress().getRegionValue(),
       recipient_address_line_list = recipient_address_line_list,
-      sender=sender,
+      sender_region=sender.getDefaultAddress().getRegionValue(),
       sender_address_line_list = sender_address_line_list,
       content = base64.b64encode(document.getData())
     )
