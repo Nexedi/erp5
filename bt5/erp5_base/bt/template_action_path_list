@@ -9,6 +9,8 @@ Assignment | view
 Bank Account | view
 Base Variant Movement Group | view
 Career | change_function
+Career | reset_employee_number
+Career | set_employee_number
 Career | view
 Category Movement Group | view
 Causality Assignment Movement Group | view
