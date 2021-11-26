@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tal:block tal:define="recipient_region python:  options.get('recipient_region');
+<tal:block tal:define="recipient_region python: options.get('recipient_region');
+                       recipient python: options.get('recipient');
                        sender_region python: options.get('sender_region');
                        sender_address_line_list python: options.get('sender_address_line_list');
                        recipient_address_line_list python: options.get('recipient_address_line_list');">
@@ -47,10 +48,10 @@
                 <com:CountryCode tal:content="recipient_region/getCodification"></com:CountryCode>
               </com:PaperAddress>
               <com:DigitalAddress>
-                <com:FirstName tal:content="python: recipient.getFirstName()"></com:FirstName>
-                <com:LastName tal:content="python: recipient.getLastName()"></com:LastName>
+                <com:FirstName tal:content="recipient/getFirstName"></com:FirstName>
+                <com:LastName tal:content="recipient/getLastName"></com:LastName>
                 <com:Identifier tal:content="options/employee_number"></com:Identifier>
-                <com:JobPosition tal:content="python: recipient.getCareerTitle()"></com:JobPosition>
+                <com:JobPosition tal:content="recipient/getCareerTitle"></com:JobPosition>
                 <com:JobStartDate tal:content="options/career_start_date"></com:JobStartDate>
               </com:DigitalAddress>
             </pjs:Recipient>
