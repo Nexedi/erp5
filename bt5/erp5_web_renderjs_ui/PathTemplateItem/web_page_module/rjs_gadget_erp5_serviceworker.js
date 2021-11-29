@@ -6,6 +6,7 @@
   var prefix = location.toString() + '_',
     CACHE_NAME = prefix + '${modification_date}',
     REQUIRED_FILES = JSON.parse('${required_url_list}'),
+    app_latest_version = '${app_latest_version}',
     required_url_list = [],
     i,
     len = REQUIRED_FILES.length;
@@ -65,6 +66,12 @@
         (required_url_list.indexOf(url.toString()) === -1)) {
       // Try not to use the untrustable fetch function
       // It can only be skip synchronously
+      return;
+    }
+    if ((app_latest_version != 'None') &&
+        (required_url_list.indexOf(url.toString()) === -1)) {
+      // appstore service worker only catches the required list of files
+      // the rest is up to user's app
       return;
     }
     return event.respondWith(

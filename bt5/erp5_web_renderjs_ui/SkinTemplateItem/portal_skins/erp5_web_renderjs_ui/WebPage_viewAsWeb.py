@@ -32,6 +32,7 @@ if (portal_type == "Web Script"):
   if web_page.getTextContentSubstitutionMappingMethodId():
     web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
       'modification_date': modification_date_string,
+      'app_latest_version': web_section.getLayoutProperty("configuration_latest_version"),
       # Make JSLint happy for the service worker code
       'required_url_list': json.dumps(web_section.WebSection_getPrecacheManifest())
     })
