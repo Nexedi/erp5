@@ -34,6 +34,9 @@ web_page_content_en_id = "erp5_web_js_style_test_contentpage_en"
 web_page_content_fr_id = "erp5_web_js_style_test_contentpage_fr"
 web_page_content_zh_id = "erp5_web_js_style_test_contentpage_zh"
 
+web_page_xss_content_en_id = "erp5_web_js_style_test_xss_contentpage_en"
+web_page_xss_content_reference = '<script>alert("xss reference")</script>'
+
 publicate_date = DateTime('2011/12/13 11:22:33 GMT+5')
 
 ### English web page
@@ -151,7 +154,28 @@ web_page = module.newContent(
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
 
+### English xss web page
+module = portal.getDefaultModule(web_page_portal_type)
+if getattr(module, web_page_xss_content_en_id, None) is not None:
+  module.manage_delObjects([web_page_xss_content_en_id])
+web_page = module.newContent(
+  portal_type=web_page_portal_type,
+  id=web_page_xss_content_en_id,
+  reference=web_page_xss_content_reference,
+  contributor_value=contributor,
+  language="en",
+  version="001",
+  text_content="""
+<script>alert("xss content")</script>
+"""
+)
+portal.portal_workflow.doActionFor(web_page, 'publish_action')
+
 configuration_dict = {
+  'xss': {
+    'title': '<script>alert("xss")</script>',
+    'site_map_section_parent': True
+  },
   'nostyle': {
     'title': 'No Style',
     'site_map_section_parent': True
@@ -251,7 +275,10 @@ web_site = module.newContent(
   criterion_property_list=('reference',),
   **configuration_dict[configuration]
 )
-web_site.setCriterion('reference', identity='erp5_web_js_style_test_contentpage')
+if configuration == 'xss':
+  web_site.setCriterion('reference', identity=web_page_xss_content_reference)
+else:
+  web_site.setCriterion('reference', identity=web_page_content_reference)
 
 web_section = web_site.newContent(
   portal_type=web_section_portal_type,
@@ -282,6 +309,15 @@ if configuration == 'form':
     id='%sform' % web_section_id_prefix,
     title="Demo Section Form",
     custom_render_method_id='WebSite_viewJSStyleTestDialog'
+  )
+
+if configuration == 'xss':
+  web_site.newContent(
+    portal_type=web_section_portal_type,
+    id='%s4' % web_section_id_prefix,
+    aggregate_value=web_site.getAggregateValue(),
+    title='<script>alert("xss section")</script>',
+    visible=True
   )
 
 return "Web Site created."
