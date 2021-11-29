@@ -67,6 +67,14 @@
       // It can only be skip synchronously
       return;
     }
+    // XXX HARDCODED, GET FROM SERVER
+    var appstore_service_worker = false;
+    if ((appstore_service_worker) &&
+        (required_url_list.indexOf(url.toString()) === -1)) {
+      // appstore service worker only catches the required list of files
+      // the rest is up to user's app
+      return;
+    }
     return event.respondWith(
       caches.open(CACHE_NAME)
         .then(function (cache) {
