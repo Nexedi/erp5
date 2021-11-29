@@ -24,7 +24,6 @@
               <tuple>
                 <string>action_type/workflow</string>
                 <string>destination/portal_workflow/officejs_software_publication_workflow/state_accepted</string>
-                <string>after_script/portal_workflow/officejs_software_publication_workflow/script_updateSiteConfigurationDate</string>
               </tuple>
             </value>
         </item>
