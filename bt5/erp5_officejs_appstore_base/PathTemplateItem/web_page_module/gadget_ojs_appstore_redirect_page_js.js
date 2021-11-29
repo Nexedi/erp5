@@ -14,7 +14,7 @@
       if ('serviceWorker' in navigator) {
         queue.push(function () {
           return navigator.serviceWorker.register(
-            "gadget_officejs_root_serviceworker.js");
+            "gadget_erp5_serviceworker.js");
         });
       }
       return queue
