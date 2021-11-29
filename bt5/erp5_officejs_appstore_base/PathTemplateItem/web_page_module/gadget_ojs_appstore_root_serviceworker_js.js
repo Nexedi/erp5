@@ -8,14 +8,7 @@ var global = self, window = self;
   var required_url_list = [],
     prefix = location.origin.toString() + '_',
     CACHE_NAME = prefix + '${modification_date}',
-    REQUIRED_FILES = [
-      "/",
-      "rsvp.js",
-      "renderjs.js",
-      "jiodev.js",
-      "officejs-redirect.js",
-      "favicon.ico"
-    ],
+    REQUIRED_FILES = JSON.parse('${required_url_list}'),
     i,
     len = REQUIRED_FILES.length;
 
