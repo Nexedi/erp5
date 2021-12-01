@@ -32,7 +32,10 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 import suds
 import base64
-import lxml
+from lxml import etree
+import os.path
+import Products
+
 
 class MailevaSOAPConnector(XMLObject):
   # CMF Type Definition
@@ -50,14 +53,6 @@ class MailevaSOAPConnector(XMLObject):
                       )
   def submitRequest(self, recipient, sender, document):
     xml = self.generateRequestXML(recipient, sender, document)
-    for xsd in [
-      "https://webservices.recette.maileva.com/java/public/connector/ConnectorWebService?xsd=CommonSchema.xsd",
-      "https://webservices.recette.maileva.com/java/public/connector/ConnectorWebService?xsd=MailevaSpecificSchema.xsd",
-      "https://webservices.recette.maileva.com/java/public/connector/ConnectorWebService?xsd=MailevaPJSSchema.xsd"
-    ]:
-      schema_validator = lxml.etree.XMLSchema(file=xsd)
-      if not schema_validator.validate(xml):
-        raise ValueError('request xml %s is not validated')
     response =suds.client.Client(self.getUrlString()).service.submit(xml)
     return xml, response
 
@@ -97,7 +92,7 @@ class MailevaSOAPConnector(XMLObject):
     source_section_career = (source_section_career_results[0].getObject()if len(source_section_career_results) else recipient.getDefaultCareerValue() or '')
     if not source_section_career.getReference():
       raise ValueError('%s has no employee number defined' % source_section_career.getRelativeUrl())
-    return getattr(document, page_template)(
+    xml = getattr(document, page_template)(
       user = self.getUserId(),
       password = self.getPassword(),
       career_start_date = source_section_career.getStartDate(),
@@ -109,3 +104,9 @@ class MailevaSOAPConnector(XMLObject):
       sender_address_line_list = sender_address_line_list,
       content = base64.b64encode(document.getData())
     )
+    # lxml doesn't support https in schemaLocation
+    src = open(os.path.join(os.path.dirname(os.path.dirname(Products.__file__)), "bt5", "erp5_maileva_connector","SkinTemplateItem","portal_skins","erp5_maileva_connector", "MailevaPJSSchema.xsd"))
+    xsd = etree.parse(src)
+    schema_validator = etree.XMLSchema(xsd)
+    schema_validator.assertValid(etree.fromstring(xml.encode("UTF-8")))
+    return xml
