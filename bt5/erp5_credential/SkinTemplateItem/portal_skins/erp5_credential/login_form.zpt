@@ -3,10 +3,12 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
   <tal:block tal:define="form_action string:logged_in;
              global form_id string:login_form;
-             available_oauth_login_list python: context.getPortalObject().ERP5Site_getAvailableOAuthLoginList();
+             portal context/getPortalObject;
+             available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
              enable_google_login python: 'google' in available_oauth_login_list;
              enable_facebook_login python: 'facebook' in available_oauth_login_list;
              enable_openidconnect_login python: 'openidconnect' in available_oauth_login_list;
+             enable_account_creation python: portal.portal_preferences.getPreferredEnableAccountCreation();
              css_list python: (enable_google_login or enable_facebook_login) and ['%s/zocial.min.css' % here.portal_url()] or [];
              js_list python: ['%s/login_form.js' % (here.portal_url(), ), '%s/erp5.js' % (here.portal_url(), )]">
     <tal:block metal:use-macro="here/main_template/macros/master">
@@ -78,6 +80,16 @@
                 <div class="input">
                   <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToOpenIdLoginPage"
                      i18n:translate="" i18n:domain="ui" class="zocial openid">Login with OpenId Connect</a>
+                </div>
+              </div>
+            </tal:block>
+                <br>
+            <tal:block tal:condition="enable_account_creation">
+              <div class="ui-field-contain">
+                <label></label>
+                <div>
+                  <a tal:attributes="href string:join_form" i18n:translate=""
+                     i18n:domain="ui" class="zocial secondary"> Create New Account </a>
                 </div>
               </div>
             </tal:block>
