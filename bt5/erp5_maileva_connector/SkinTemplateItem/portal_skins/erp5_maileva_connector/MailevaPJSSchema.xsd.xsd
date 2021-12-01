@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8'?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.maileva.fr/MailevaPJSSchema" xmlns:ns2="http://www.maileva.fr/MailevaSpecificSchema" xmlns:ns1="http://www.maileva.fr/CommonSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.maileva.fr/MailevaPJSSchema">
+  <xs:import namespace="http://www.maileva.fr/CommonSchema" schemaLocation="CommonSchema.xsd"/>
+  <xs:import namespace="http://www.maileva.fr/MailevaSpecificSchema" schemaLocation="MailevaSpecificSchema.xsd"/>
+  <xs:element name="Campaign" type="tns:Campaign"/>
+  <xs:complexType name="Campaign">
+    <xs:sequence>
+      <xs:element name="Requests" type="tns:Requests"/>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string"/>
+    <xs:attribute name="TrackId" type="xs:string"/>
+    <xs:attribute name="PartnerTrackId" type="xs:string"/>
+    <xs:attribute name="Application" type="xs:string"/>
+    <xs:attribute name="BreakdownCode" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="Requests">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Request" type="tns:Request"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Request">
+    <xs:sequence>
+      <xs:element name="Recipients">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="Internal">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="Recipient" type="ns1:Recipient"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Senders">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Sender" type="tns:Sender"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DocumentData">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="MergeFields">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="MergeField" type="ns1:MergeField"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="Documents">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="Document">
+                    <xs:complexType>
+                      <xs:complexContent>
+                        <xs:extension base="ns1:document">
+                          <xs:sequence/>
+                        </xs:extension>
+                      </xs:complexContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Options" type="tns:Options"/>
+      <xs:element minOccurs="0" name="Folds">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Fold">
+              <xs:complexType>
+                <xs:all>
+                  <xs:element name="RecipientId" type="xs:string"/>
+                  <xs:element minOccurs="0" name="SenderId" type="xs:string"/>
+                  <xs:element minOccurs="0" name="FoldOptionId" type="xs:string"/>
+                  <xs:element minOccurs="0" name="Documents">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="Document" type="ns1:DocInFold"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element minOccurs="0" name="MergeValues">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="MergeValue" type="ns1:MergeValue"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element maxOccurs="1" minOccurs="0" name="Indexes">
+					<xs:complexType>
+						<xs:sequence maxOccurs="100" minOccurs="1">
+							<xs:element name="Index" type="ns1:FoldIndex"/>
+						</xs:sequence>
+					</xs:complexType>
+				  </xs:element>
+                </xs:all>
+                <xs:attribute name="Id" type="xs:string" use="required"/>
+                <xs:attribute name="TrackId" type="xs:string"/>                
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Notifications" type="tns:Notifications"/>
+      <xs:element minOccurs="0" name="ProductionDate" type="tns:ProductionDate"/>
+      <xs:element minOccurs="0" name="ErlDeliveryDate" type="tns:ErlDeliveryDate"/>
+    </xs:sequence>
+    <xs:attribute name="MediaType" type="ns1:ComMediaType" use="required"/>
+    <xs:attribute name="TrackId" type="xs:string"/>
+    <xs:attribute name="MediaSubType" type="ns1:ComMediaSubType" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="Sender">
+    <xs:complexContent>
+      <xs:extension base="ns1:Sender">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Options">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="RequestOption" type="ns2:RequestOption"/>
+      <xs:element minOccurs="0" name="FoldOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="FoldOption">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ns2:FoldOption">
+                    <xs:sequence/>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DocumentOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="DocumentOption">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ns2:DocumentOption">
+                    <xs:sequence/>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="PageOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="PageOption">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="ns2:PageOption">
+                    <xs:sequence/>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Notifications">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Notification" type="ns2:Notification"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProductionDate">
+    <xs:simpleContent>
+      <xs:extension base="xs:dateTime">
+        <xs:attribute name="UseLocalDate" type="xs:boolean"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ErlDeliveryDate">
+    <xs:simpleContent>
+      <xs:extension base="xs:dateTime">
+        <xs:attribute name="UseLocalDate" type="xs:boolean"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element name="Login" type="xs:string"/>
+      <xs:element name="Password" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="AuthType" type="ns1:ComAuthType" use="required"/>
+  </xs:complexType>
+</xs:schema>
