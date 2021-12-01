@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/boolean</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>If set it will enable the "create new account" section in the login form</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>preferred_enable_account_creation_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>preference</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: False</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
