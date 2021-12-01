@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tal:block tal:define="recipient_region python: options.get('recipient_region');
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           tal:define="recipient_region python: options.get('recipient_region');
                        recipient python: options.get('recipient');
                        sender_region python: options.get('sender_region');
                        sender_address_line_list python: options.get('sender_address_line_list');
@@ -16,22 +17,6 @@
     </pjs:User>
     <pjs:Requests>
       <pjs:Request MediaType="DIGITAL" TrackId="Bulletindesalaires">
-        <pjs:Senders>
-          <pjs:Sender Id="001">
-            <com:PaperAddress>
-              <com:AddressLines>
-                <com:AddressLine1 tal:content="python: sender_address_line_list[0]" tal:condition="python: sender_address_line_list[0]"></com:AddressLine1>
-                <com:AddressLine2 tal:content="python: sender_address_line_list[1]" tal:condition="python: sender_address_line_list[1]"></com:AddressLine2>
-                <com:AddressLine3 tal:content="python: sender_address_line_list[2]" tal:condition="python: sender_address_line_list[2]"></com:AddressLine3>
-                <com:AddressLine4 tal:content="python: sender_address_line_list[3]" tal:condition="python: sender_address_line_list[3]"></com:AddressLine4>
-                <com:AddressLine5 tal:content="python: sender_address_line_list[4]" tal:condition="python: sender_address_line_list[4]"></com:AddressLine5>
-                <com:AddressLine6 tal:content="python: sender_address_line_list[5]" tal:condition="python: sender_address_line_list[5]"></com:AddressLine6>
-              </com:AddressLines>
-              <com:Country tal:content="sender_region/getTitle"></com:Country>
-              <com:CountryCode tal:content="sender_region/getCodification"></com:CountryCode>
-            </com:PaperAddress>
-          </pjs:Sender>
-        </pjs:Senders>
         <pjs:Recipients>
           <pjs:Internal>
             <pjs:Recipient Id="1">
@@ -57,6 +42,22 @@
             </pjs:Recipient>
           </pjs:Internal>
         </pjs:Recipients>
+        <pjs:Senders>
+          <pjs:Sender Id="001">
+            <com:PaperAddress>
+              <com:AddressLines>
+                <com:AddressLine1 tal:content="python: sender_address_line_list[0]" tal:condition="python: sender_address_line_list[0]"></com:AddressLine1>
+                <com:AddressLine2 tal:content="python: sender_address_line_list[1]" tal:condition="python: sender_address_line_list[1]"></com:AddressLine2>
+                <com:AddressLine3 tal:content="python: sender_address_line_list[2]" tal:condition="python: sender_address_line_list[2]"></com:AddressLine3>
+                <com:AddressLine4 tal:content="python: sender_address_line_list[3]" tal:condition="python: sender_address_line_list[3]"></com:AddressLine4>
+                <com:AddressLine5 tal:content="python: sender_address_line_list[4]" tal:condition="python: sender_address_line_list[4]"></com:AddressLine5>
+                <com:AddressLine6 tal:content="python: sender_address_line_list[5]" tal:condition="python: sender_address_line_list[5]"></com:AddressLine6>
+              </com:AddressLines>
+              <com:Country tal:content="sender_region/getTitle"></com:Country>
+              <com:CountryCode tal:content="sender_region/getCodification"></com:CountryCode>
+            </com:PaperAddress>
+          </pjs:Sender>
+        </pjs:Senders>
         <pjs:DocumentData>
           <pjs:Documents>
             <pjs:Document Id="001">
@@ -79,5 +80,5 @@
         </pjs:Options>
       </pjs:Request>
     </pjs:Requests>
-</pjs:Campaign>
+  </pjs:Campaign>
 </tal:block>

@@ -27,6 +27,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import mock
+from DateTime import DateTime
 
 def submitRequest(recipient, sender, document):
   return 'request', 'response'
@@ -69,10 +70,12 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
         default_address_region='europe/west/france',
         default_address_street_address="123\nRue 12"
       )
-      recipient.newContent(
+      career = recipient.newContent(
         portal_type='Career',
-        subordination_value = sender
+        subordination_value = sender,
+        start_date = DateTime()
       ).start()
+      career.Career_setEmployeeNumber(batch=1)
 
     document = self.portal.portal_catalog.getResultValue(
       portal_type='PDF',

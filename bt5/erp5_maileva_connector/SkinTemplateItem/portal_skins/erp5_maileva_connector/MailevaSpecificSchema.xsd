@@ -1,0 +1,518 @@
+<?xml version='1.0' encoding='UTF-8'?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.maileva.fr/MailevaSpecificSchema" xmlns:ns1="http://www.maileva.fr/CommonSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.maileva.fr/MailevaSpecificSchema">
+  <xs:import namespace="http://www.maileva.fr/CommonSchema" schemaLocation="CommonSchema.xsd"/>
+  <xs:complexType name="RequestOption">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PaperOption" type="tns:RequestOptionPaper"/>
+      <xs:element minOccurs="0" name="FaxOption" type="tns:RequestOptionFax"/>
+      <xs:element minOccurs="0" name="EmailOption" type="tns:RequestOptionEmail"/>
+      <xs:element minOccurs="0" name="SmsOption" type="tns:RequestOptionSms"/>
+      <xs:element minOccurs="0" name="DigitalOption" type="tns:RequestOptionDigital"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RequestOptionPaper">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpectedGrouping" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="GroupingDate" type="tns:GroupingDate"/>
+      <xs:element minOccurs="0" name="ExpectedSplitting" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="StampAdjust" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="RemoveInvalidReturnEnvelope" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="DocumentsRestitution" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PostalTracking" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="FoldOption" type="tns:FoldOptionPaper"/>
+       <!-- for invoice use -->
+      <xs:element minOccurs="0" name="InvoiceOption" type="tns:RequestOptionInvoice"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+   <xs:complexType name="RequestOptionInvoice">
+    <xs:all>
+      <xs:element maxOccurs="1" minOccurs="0" name="UseAddressBook" type="xs:boolean"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmailFrom">
+   		<xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmailReply">
+	       <xs:simpleType>
+	          <xs:restriction base="xs:string">
+	          	<xs:pattern value="[^@]+@[^\.]+\..+"/>
+	            <xs:maxLength value="80"/>
+	          </xs:restriction>
+	        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmailFooter">
+      		<xs:simpleType>
+	          <xs:restriction base="xs:string">
+	            <xs:maxLength value="255"/>
+	          </xs:restriction>
+	        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MsgObject">
+      		<xs:simpleType>
+	          <xs:restriction base="xs:string">
+	            <xs:maxLength value="255"/>
+	          </xs:restriction>
+	        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SenderTaxNumber">
+      		<xs:simpleType>
+	          <xs:restriction base="xs:string">
+	            <xs:maxLength value="13"/>
+	          </xs:restriction>
+	        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SenderSiret">
+      		<xs:simpleType>
+	          <xs:restriction base="xs:string">
+	            <xs:maxLength value="14"/>
+	          </xs:restriction>
+	        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SenderCompanyName">
+      		<xs:simpleType>
+	          <xs:restriction base="xs:string">
+	            <xs:maxLength value="255"/>
+	          </xs:restriction>
+	        </xs:simpleType>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SenderCountryCode" type="ns1:ComCountryCode"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="SenderPaymentType" type="tns:MlvSenderPaymentType"/> 
+      
+    </xs:all>
+  </xs:complexType>
+  
+   <xs:simpleType name="MlvSenderPaymentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="VAT_DEBIT"/>
+      <xs:enumeration value="VAT_CASHING"/>
+      <xs:enumeration value="VAT_EXEMPT"/>
+      <xs:enumeration value="VAT_FREE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="GroupingDate">
+    <xs:simpleContent>
+      <xs:extension base="xs:dateTime">
+        <xs:attribute name="UseLocalDate" type="xs:boolean"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="FoldOptionPaper">
+    <xs:all>
+      <xs:element minOccurs="0" name="EnvelopeType" type="tns:MlvEnvelopeType"/>
+      <xs:element minOccurs="0" name="EnvelopeWindowType" type="tns:MlvEnvelopeWindowType"/>
+      <xs:element minOccurs="0" name="PostageClass" type="tns:MlvPostageClass"/>
+      <xs:element minOccurs="0" name="PrintSenderAddress" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PrintRecipAddress" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="ClearSenderArea" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="ClearRecipArea" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PrintRecipTrackId" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="TreatUndeliveredMail" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="TreatAR" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="DigitalArchiving" type="tns:DigitalArchiving"/>
+      <xs:element minOccurs="0" name="GroupingPriority" type="xs:positiveInteger"/>
+      <xs:element minOccurs="0" name="UseFlyLeaf" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="LogoRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="ReturnEnvelopeRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="DocumentOption" type="tns:DocumentOptionPaper"/>
+      <xs:element minOccurs="0" name="SwitchingPolicy" type="ns1:ComSwitchingPolicy"/>
+      <xs:element minOccurs="0" name="ForceSendingMode" type="ns1:ComForceSendingMode"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="DigitalArchiving">
+    <xs:all>
+      <xs:element name="Online" type="xs:string"/>
+      <xs:element name="Standard" type="xs:string"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="DocumentOptionPaper">
+    <xs:all>
+      <xs:element minOccurs="0" name="PrintDuplex" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PageOption" type="tns:PageOptionPaper"/>
+      <xs:element minOccurs="0" name="Staple" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="PageOptionPaper">
+    <xs:all>
+      <xs:element minOccurs="0" name="PrintColor" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="BackgroundId" type="xs:string"/>
+      <xs:element minOccurs="0" name="InsertPageId" type="tns:InsertPageId"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="InsertPageId">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Type" type="ns1:ComInsertPageType" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="RequestOptionFax">
+    <xs:sequence>
+      <xs:element name="FoldOption" type="tns:FoldOptionFax"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FoldOptionFax">
+    <xs:all>
+      <xs:element minOccurs="0" name="EmissionMode" type="tns:MlvOfferType"/>
+      <xs:element minOccurs="0" name="FlyLeaf" type="tns:FlyLeaf"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="FlyLeaf">
+    <xs:all>
+      <xs:element minOccurs="0" name="Object" type="xs:string"/>
+      <xs:element minOccurs="0" name="Warning" type="xs:string"/>
+      <xs:element name="Type" type="tns:MlvFlyLeafType"/>
+    </xs:all>
+    <xs:attribute name="CustomRef" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="RequestOptionEmail">
+    <xs:all>
+      <xs:element minOccurs="0" name="RemoveEmailNoteText" type="xs:boolean"/>
+      <xs:element name="FoldOption" type="tns:FoldOptionEmail"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="FoldOptionEmail">
+    <xs:sequence>
+      <xs:element name="MsgObject" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RequestOptionSms">
+    <xs:all>
+      <xs:element minOccurs="0" name="RemoveEmailNoteText" type="xs:boolean"/>
+      <xs:element name="FoldOption" type="tns:FoldOptionSms"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="FoldOptionSms">
+    <xs:sequence>
+      <xs:element name="EmissionMode" type="tns:MlvOfferType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RequestOptionDigital">
+    <xs:all>
+      <xs:element minOccurs="0" name="FoldOption" type="tns:FoldOptionDigital"/>
+      <xs:element name="DepositType" type="xs:string"/>
+      <xs:element name="DigitalArchiving" type="xs:string"/>
+      <xs:element minOccurs="0" name="StampAdjust" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="ExpectedGrouping" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="GroupingDate">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:anySimpleType">
+              <xs:attribute name="UseLocalDate" type="xs:boolean"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ExpectedSplitting" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="FoldOptionDigital">
+    <xs:all>
+      <xs:element minOccurs="0" name="EnvelopeType" type="tns:MlvEnvelopeType"/>
+      <xs:element minOccurs="0" name="EnvelopeWindowType" type="tns:MlvEnvelopeWindowType"/>
+      <xs:element minOccurs="0" name="PostageClass" type="tns:MlvPostageClass"/>
+      <xs:element minOccurs="0" name="PrintSenderAddress" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PrintRecipAddress" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="ClearSenderArea" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="ClearRecipArea" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PrintRecipTrackId" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="DigitalArchiving" type="tns:DigitalArchiving"/>
+      <xs:element minOccurs="0" name="GroupingPriority" type="xs:positiveInteger"/>
+      <xs:element minOccurs="0" name="UseFlyLeaf" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="LogoRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="DocumentOption" type="tns:DocumentOptionDigital"/>
+      <xs:element name="DepositTitle" type="xs:string"/>
+      <xs:element minOccurs="0" name="DepositDescription" type="xs:string"/>
+      <xs:element minOccurs="0" name="TreatAR" type="xs:boolean"/>
+	  <xs:element minOccurs="0" name="TreatUndeliveredMail" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="DocumentOptionDigital">
+    <xs:all>
+      <xs:element minOccurs="0" name="PrintDuplex" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PageOption" type="tns:PageOptionDigital"/>
+      <xs:element minOccurs="0" name="Staple" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="PageOptionDigital">
+    <xs:all>
+      <xs:element minOccurs="0" name="PrintColor" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="BackgroundId" type="xs:string"/>
+      <xs:element minOccurs="0" name="InsertPageId">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="Type" type="ns1:ComInsertPageType" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="FoldOption">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PaperOption" type="tns:FoldOptionPaper"/>
+      <xs:element minOccurs="0" name="FaxOption" type="tns:FoldOptionFax"/>
+      <xs:element minOccurs="0" name="EmailOption" type="tns:FoldOptionEmail"/>
+      <xs:element minOccurs="0" name="SmsOption" type="tns:FoldOptionSms"/>
+      <xs:element minOccurs="0" name="VoteOption" type="tns:FoldOptionVote"/>
+      <xs:element minOccurs="0" name="DigitalOption" type="tns:FoldOptionDigital"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="FoldOptionVote">
+    <xs:all>
+      <xs:element minOccurs="0" name="EnvelopeType" type="tns:MlvEnvelopeType"/>
+      <xs:element minOccurs="0" name="EnvelopeWindowType" type="tns:MlvEnvelopeWindowType"/>
+      <xs:element minOccurs="0" name="PostageClass" type="tns:MlvPostageClass"/>
+      <xs:element minOccurs="0" name="UseFlyLeaf" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="LogoRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="ClearSenderArea" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PrintSenderAdress" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="ReturnEnvelopeRef" type="xs:string"/>
+      <xs:element minOccurs="0" name="DocumentOption" type="tns:DocumentOptionVote"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="DocumentOptionVote">
+    <xs:all>
+      <xs:element minOccurs="0" name="PrintDuplex" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="PageOption" type="tns:PageOptionVote"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="PageOptionVote">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PrintColor" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentOption">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PaperOption" type="tns:DocumentOptionPaper"/>
+      <xs:element minOccurs="0" name="FaxOption">
+        <xs:complexType>
+          <xs:all/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="EmailOption">
+        <xs:complexType>
+          <xs:all/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="SmsOption">
+        <xs:complexType>
+          <xs:all/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DigitalOption" type="tns:DocumentOptionDigital"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="PageOption">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PaperOption" type="tns:PageOptionPaper"/>
+      <xs:element minOccurs="0" name="FaxOption">
+        <xs:complexType>
+          <xs:all/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="EmailOption">
+        <xs:complexType>
+          <xs:all/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="SmsOption">
+        <xs:complexType>
+          <xs:all/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="VoteOption" type="tns:PageOptionVote"/>
+      <xs:element minOccurs="0" name="DigitalOption" type="tns:PageOptionDigital"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="Notification">
+    <xs:sequence>
+      <xs:element name="Format" type="tns:MlvNotificationFormat"/>
+      <xs:element minOccurs="0" name="Language" type="xs:language"/>
+      <xs:element name="Protocols">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Protocol" type="tns:Protocol"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Type" type="tns:MlvNotificationType" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="Protocol">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Email" type="xs:string"/>
+      <xs:element minOccurs="0" name="Ftp" type="ns1:FtpNotificationProtocol"/>
+      <xs:element minOccurs="0" name="Cft" type="ns1:CftNotificationProtocol"/>
+      <xs:element minOccurs="0" name="Http" type="ns1:HttpNotificationProtocol"/>
+      <xs:element minOccurs="0" name="Ws" type="ns1:WsNotificationProtocol"/>
+      <xs:element minOccurs="0" name="NotificationCenter" type="ns1:NotificationCenterNotificationProtocol"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="VoteCategory">
+    <xs:all>
+      <xs:element name="VoteCategoryType">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="tns:MlvVoteCategoryType">
+              <xs:attribute name="Name" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CandidateLists">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="CandidateList" type="tns:CandidateList"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="CandidateList">
+    <xs:all>
+      <xs:element name="Candidates">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Candidate" type="tns:Candidate"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Order" type="xs:positiveInteger"/>
+      <xs:element name="VoteFunction" type="tns:MlvVoteFunction"/>
+      <xs:element name="VoteColor" type="ns1:ComPageColor"/>
+      <xs:element minOccurs="0" name="UnionName" type="xs:string"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="Candidate">
+    <xs:all>
+      <xs:element name="Order" type="xs:positiveInteger"/>
+      <xs:element name="Name" type="xs:string"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="RequestOptionVote">
+    <xs:all>
+      <xs:element name="VoteCollege">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="tns:MlvVoteCollege">
+              <xs:attribute name="Name" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="VoteType" type="ns1:ComVoteType"/>
+      <xs:element name="VoteRound" type="tns:MlvVoteRound"/>
+      <xs:element name="VoteCategories">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="VoteCategory" type="tns:VoteCategory"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FoldOption" type="tns:FoldOptionVote"/>
+      <xs:element minOccurs="0" name="VoteQuantity" type="xs:positiveInteger"/>
+      <xs:element name="Company" type="xs:string"/>
+      <xs:element name="PollDate" type="xs:date"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:simpleType name="MlvEnvelopeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="C4"/>
+      <xs:enumeration value="C6"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvEnvelopeWindowType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SMPL"/>
+      <xs:enumeration value="DBL"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvPostageClass">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LETTRE_VERTE"/>
+      <xs:enumeration value="LETTRE_VERTE_NB"/>
+      <xs:enumeration value="STANDARD"/>
+      <xs:enumeration value="LPL"/>
+      <xs:enumeration value="LSM"/>
+      <xs:enumeration value="SLOW"/>
+      <xs:enumeration value="SLOW_NB"/>
+      <xs:enumeration value="RECOMMANDE_AR"/>
+      <xs:enumeration value="RECOMMANDE"/>
+      <xs:enumeration value="LRE"/>
+      <xs:enumeration value="LRE_AR"/>
+      <xs:enumeration value="LRE_TE"/>
+      <xs:enumeration value="LRE_TE_AR"/>
+      <xs:enumeration value="LP_RECO"/>
+      <xs:enumeration value="DESTINEO_EL"/>
+      <xs:enumeration value="DESTINEO_EL_STD_S1"/>
+      <xs:enumeration value="DESTINEO_EL_STD_S2"/>
+      <xs:enumeration value="DESTINEO_EL_MECA_S1"/>
+      <xs:enumeration value="DESTINEO_EL_MECA_S2"/>
+      <xs:enumeration value="LETTRE_GRAND_COMPTE"/>
+      <xs:enumeration value="ECOPLI_GRAND_COMPTE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvOfferType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DIRECT_MKT"/>
+      <xs:enumeration value="OTHER"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvFlyLeafType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="STANDARD"/>
+      <xs:enumeration value="CUSTOM"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvNotificationFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INI"/>
+      <xs:enumeration value="TXT"/>
+      <xs:enumeration value="XML"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvNotificationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GENERAL"/>
+      <xs:enumeration value="NPAI"/>
+      <xs:enumeration value="PND"/>
+      <xs:enumeration value="LRE"/>
+      <xs:enumeration value="ENCOURS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvVoteCategoryType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DP"/>
+      <xs:enumeration value="CE"/>
+      <xs:enumeration value="DU"/>
+      <xs:enumeration value="CSE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvVoteFunction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PERMANENT"/>
+      <xs:enumeration value="SUBSTITUTE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvVoteCollege">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FIRST"/>
+      <xs:enumeration value="SECOND"/>
+      <xs:enumeration value="THIRD"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MlvVoteRound">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FIRST"/>
+      <xs:enumeration value="SECOND"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
