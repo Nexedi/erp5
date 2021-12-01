@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>zuite_id=\'tutorial_zuite\', url=None, user="", password=""</string> </value>
+            <value> <string>zuite_id=\'tutorial_zuite\', **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
