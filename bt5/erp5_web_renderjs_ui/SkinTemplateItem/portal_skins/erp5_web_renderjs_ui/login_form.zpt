@@ -85,6 +85,13 @@
                   </div>
                 </div>
               </div>
+              <div class="ui-field-contain">
+                <label></label>
+                <div>
+                  <a tal:attributes="href string:join_form" i18n:translate=""
+                     i18n:domain="ui" class="zocial secondary"> Create New Account </a>
+                </div>
+              </div>
 
               <input type="hidden" name="url" tal:attributes="value absolute_url" />
               <input tal:condition="exists: request/came_from"
