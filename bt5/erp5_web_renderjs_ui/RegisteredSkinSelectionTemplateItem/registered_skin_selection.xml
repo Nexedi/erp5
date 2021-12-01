@@ -1,5 +1,9 @@
 <registered_skin_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_hal_json_style</skin_folder>
+  <skin_selection>RJS</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_web_renderjs_ui</skin_folder>
   <skin_selection>RJS</skin_selection>
  </skin_folder_selection>
