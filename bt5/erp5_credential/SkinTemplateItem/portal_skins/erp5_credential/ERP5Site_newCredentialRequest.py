@@ -72,7 +72,6 @@ else:
     # no email verification is needed
     credential_request.submit("Automatic submit")
     message_str = "Credential Request Created."
-    
 
-return portal.Base_redirect(form_id='login_form', 
-                     keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
+return portal.Base_redirect(form_id='login_form',
+                            keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
