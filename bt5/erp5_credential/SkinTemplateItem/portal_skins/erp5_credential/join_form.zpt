@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title tal:content="python: here.getPortalObject().getTitle()"></title>
+    <link rel="stylesheet" href="gadget_erp5_nojqm.css">
+  </head>
+
+  <body tal:define="form_action string:ERP5Site_newCredentialRequest;">
+  <div data-role='page'>
+
+
+    <div data-gadget-scope='header'>
+      <div class="ui-header">
+        <h1><span i18n:domain="ui" i18n:translate="">Join</span></h1>
+      </div>
+    </div>
+
+    <div data-gadget-scope='panel'>
+      <div data-role="header">
+        <div class="panel_img">
+          <img alt="Join" src="join_form_logo.png"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="ui-content gadget-content">
+      <article>
+        <section>
+          <tal:block tal:condition="exists: request/portal_status_message">
+            <span tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></span>
+          </tal:block>
+        </section>
+
+        <section>
+          <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
+            <div class="field_container">
+            <div class="left" style="width:49% !important">
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" >First Name</label>
+              <div><input autofocus type="text" name="first_name" value="" required=""></div>
+            </div><br/>
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" >Last Name</label>
+              <div><input autofocus type="text" name="last_name" value="" required=""></div>
+            </div><br/>
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" >Email</label>
+              <div><input autofocus type="email" name="default_email_text" value="" required=""></div>
+            </div><br/>
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" >User Login</label>
+              <div><input autofocus type="text" name="reference" value="" required=""></div>
+            </div><br/>
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" >Password</label>
+              <div><input autofocus type="password" name="password" value="" required=""></div>
+            </div><br/>
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" >Password Confirmation</label>
+              <div><input type="password" name="password_confirmation" value="" required=""></div>
+            </div><br/>
+            <div class="ui-field-contain">
+              <label i18n:domain="ui" i18n:translate="" ></label>
+            </div><br/>
+            </div>
+            <div class="bottom">
+              <div class="ui-field-contain">
+                <label></label>
+                <div><strong> You will receive a confirmation email to activate your account. </strong></div>
+              </div>
+              <div class="ui-field-contain">
+                <label></label>
+                <div><input type="submit" value='Register' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
+              </div><br/>
+            <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
+            <input tal:condition="exists: request/came_from"
+                   type="hidden" name="came_from"
+                   tal:attributes="value request/came_from" />
+              </div>
+            </div>
+          </form>
+         </section>
+      </article>
+    </div>
+   </div>
+  </body>
+</html>

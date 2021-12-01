@@ -12,4 +12,5 @@ else:
   mail_message.deliver()
   message = translateString("Your account is being activated. You will receive an e-mail when activation is complete.")
 
-return portal.Base_redirect("login_form", keep_items=dict(portal_status_message=message))
+redirect_url = context.absolute_url() + "/login_form"
+return portal.Base_redirect(redirect_url=redirect_url, keep_items=dict(portal_status_message=message))
