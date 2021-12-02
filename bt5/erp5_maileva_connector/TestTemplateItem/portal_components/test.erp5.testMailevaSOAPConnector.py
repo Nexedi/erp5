@@ -48,19 +48,26 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
         url_string='mytest',
         reference='test_maileva_soap_connector')
       maileva_connector.validate()
-    sender = self.portal.portal_catalog.getResultValue(
-      portal_type='Organisation',
-      reference='test_maileva_connector_sender',
-    )
     if not getattr(self.portal.portal_categories.region, 'france', None):
       self.portal.portal_categories.region.newContent(
         portal_type='Category',
         id='france',
         codification='FR')
+    if not getattr(self.portal.portal_categories.social_title, 'testmr', None):
+      self.portal.portal_categories.social_title.newContent(
+        portal_type='Category',
+        id='testmr',
+        title='MR')
+
+    sender = self.portal.portal_catalog.getResultValue(
+      portal_type='Organisation',
+      reference='test_maileva_connector_sender',
+    )
     if not sender:
       sender = self.portal.organisation_module.newContent(
         portal_type='Organisation',
         reference='test_maileva_connector_sender',
+        corporate_name='test_maileva_connector_sender',
         default_address_region='france',
         default_address_street_address="122\nRue 11",
         default_address_zip_code="59000",
@@ -73,6 +80,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
     if not recipient:
       recipient = self.portal.person_module.newContent(
         portal_type='Person',
+        social_title="testmr",
         reference='test_maileva_connector_recipient',
         default_address_region='france',
         default_address_street_address="123\nRue 12",
@@ -144,7 +152,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
             <pjs:Recipient Id="1">
               <com:PaperAddress>
                 <com:AddressLines>
-                  <com:AddressLine1>None test_maileva_connector_recipient</com:AddressLine1>
+                  <com:AddressLine1>MR test_maileva_connector_recipient</com:AddressLine1>
                   <com:AddressLine2>123</com:AddressLine2>
                   <com:AddressLine3>Rue 12</com:AddressLine3>
                   
@@ -168,7 +176,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
           <pjs:Sender Id="001">
             <com:PaperAddress>
               <com:AddressLines>
-                <com:AddressLine1>None</com:AddressLine1>
+                <com:AddressLine1>test_maileva_connector_sender</com:AddressLine1>
                 <com:AddressLine2>122</com:AddressLine2>
                 <com:AddressLine3>Rue 11</com:AddressLine3>
                 
