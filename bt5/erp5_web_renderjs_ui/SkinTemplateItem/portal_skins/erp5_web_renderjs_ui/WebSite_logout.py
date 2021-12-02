@@ -22,6 +22,9 @@ if getattr(portal.portal_skins, "erp5_oauth_google_login", None):
 if getattr(portal.portal_skins, "erp5_oauth_facebook_login", None):
   REQUEST.RESPONSE.expireCookie('__ac_facebook_hash', path='/')
 
+if getattr(portal.portal_skins, "erp5_openid_connect_client", None):
+  REQUEST.RESPONSE.expireCookie('__ac_openidconnect_hash', path='/')
+
 # PAS logout, if user is from a PAS user folder (which is the acquisition parent of the user)
 getattr(
   user,
