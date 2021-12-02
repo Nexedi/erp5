@@ -62,7 +62,9 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
         portal_type='Organisation',
         reference='test_maileva_connector_sender',
         default_address_region='france',
-        default_address_street_address="122\nRue 11"
+        default_address_street_address="122\nRue 11",
+        default_address_zip_code="59000",
+        default_address_city="LILLE"
       )
     recipient = self.portal.portal_catalog.getResultValue(
       portal_type='Person',
@@ -74,7 +76,9 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
         reference='test_maileva_connector_recipient',
         default_address_region='france',
         default_address_street_address="123\nRue 12",
-        career_subordination_value=sender
+        career_subordination_value=sender,
+        default_address_zip_code="59000",
+        default_address_city="LILLE"
       )
       career = recipient.getDefaultCareerValue()
       career.edit(
@@ -145,7 +149,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
                   <com:AddressLine3>Rue 12</com:AddressLine3>
                   
                   
-                  
+                  <com:AddressLine6>59000 LILLE</com:AddressLine6>
                 </com:AddressLines>
                 <com:Country>france</com:Country>
                 <com:CountryCode>FR</com:CountryCode>
@@ -169,7 +173,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
                 <com:AddressLine3>Rue 11</com:AddressLine3>
                 
                 
-                
+                <com:AddressLine6>59000 LILLE CEDEX</com:AddressLine6>
               </com:AddressLines>
               <com:Country>france</com:Country>
               <com:CountryCode>FR</com:CountryCode>

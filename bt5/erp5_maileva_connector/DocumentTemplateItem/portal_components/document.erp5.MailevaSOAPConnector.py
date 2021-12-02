@@ -68,7 +68,7 @@ class MailevaSOAPConnector(XMLObject):
     tmp_list = address_line.split('\n')
     if len(tmp_list) > 5:
       raise ValueError('Address %s has more than 5 lines' % tmp_list)
-    for index in range(5):
+    for index in range(4):
       if index < len(tmp_list) - 1:
         address_line_list.append(tmp_list[index])
       else:
