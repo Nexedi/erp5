@@ -60,9 +60,18 @@
                     <label i18n:domain="ui" i18n:translate="" >Password</label>
                     <div><input type="password" name="__ac_password" value="" autocomplete="off" /></div>
                   </div>
-                  <div class="dialog_button_container">
-                    <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
-                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                  <div class="ui-field-contain">
+                    <label></label>
+                    <div>
+                      <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="ui-field-contain">
+                    <label></label>
+                    <div>
+                      <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
+                    </div>
                   </div>
                   <div class="dialog_button_container" tal:condition="enable_google_login"
                        tal:define="current_url python: context.getWebSiteValue().absolute_url()">
@@ -85,6 +94,7 @@
                   </div>
                 </div>
               </div>
+                  <br>
               <div class="ui-field-contain">
                 <label></label>
                 <div>
