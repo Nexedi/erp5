@@ -4,6 +4,7 @@
                   available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
                   enable_google_login python: 'google' in available_oauth_login_list;
                   enable_openidconnect_login python: 'openidconnect' in available_oauth_login_list;
+                  enable_account_creation python: portal.ERP5Site_getCreationAccountPreference();
                   ">
   <head>
     <meta charset="UTF-8">
@@ -95,7 +96,7 @@
                 </div>
               </div>
                   <br>
-              <div class="ui-field-contain">
+              <div class="ui-field-contain" tal:condition="enable_account_creation">
                 <label></label>
                 <div>
                   <a tal:attributes="href string:join_form" i18n:translate=""
