@@ -232,7 +232,10 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
           if value:
             (setHeader if value_replace else appendHeader)(header_name, value)
           elif value_replace:
-            removeHeader(header_name)
+            try:
+              removeHeader(header_name)
+            except KeyError:
+              pass
           # else, no value and append: nothing to do.
       return super(
         ResponseHeaderGenerator,
