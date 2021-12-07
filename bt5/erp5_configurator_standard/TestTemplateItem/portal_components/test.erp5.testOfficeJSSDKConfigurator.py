@@ -247,7 +247,8 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_web_renderjs_ui_test_core',
       'erp5_web_service',
       'erp5_xhtml_style',
-      'officejs_todomvc'
+      'officejs_todomvc',
+      'erp5_credential'
     ]
     self.assertSameSet(expected_business_template_list,
       self.portal.portal_templates.getInstalledBusinessTemplateTitleList())
