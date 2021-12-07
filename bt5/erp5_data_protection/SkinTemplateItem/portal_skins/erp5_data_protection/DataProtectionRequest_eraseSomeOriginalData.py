@@ -11,7 +11,7 @@ clean_up_done = False
 if flush_worklfow_history_comment:
   document_to_cleanup.Base_purgeWorkflowHistoryCommentList()
   edit_message = translateString('Workflow comments deleted by data protection manager')
-  portal.portal_workflow.doActionFor(document_to_cleanup, 'edit_action', comment=edit_message)
+  document_to_cleanup.Base_addEditWorkflowComment(comment=edit_message)
   clean_up_done = True
 
 # Second: erase properties
@@ -21,7 +21,7 @@ if property_id_list:
 
   edit_message = translateString('Properties deleted by data protection manager: ${items}',
                                              mapping={'items': ', '.join(property_id_list)})
-  portal.portal_workflow.doActionFor(document_to_cleanup, 'edit_action', comment=edit_message)
+  document_to_cleanup.Base_addEditWorkflowComment(comment=edit_message)
 
   if 'data' in edit_kw:
     # Drop filename too, to prevent triggering guess mime type interaction workflow which run with user permission
