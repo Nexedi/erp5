@@ -109,15 +109,11 @@ if object_to_remove_list:
         return context.Base_renderMessage(str(error), "error")
   try:
     # record object deletion in workflow history
-    portal.portal_workflow.doActionFor(
-      context,
-      'edit_action',
-      comment=Message(
+    context.Base_addEditWorkflowComment(comment=Message(
         domain='ui',
         message='Deleted objects: ${object_ids}',
         mapping={'object_ids': [x.getId() for x in object_to_remove_list]},
-      ),
-    )
+      ))
   except WorkflowException:
     # no 'edit_action' transition for this container
     pass

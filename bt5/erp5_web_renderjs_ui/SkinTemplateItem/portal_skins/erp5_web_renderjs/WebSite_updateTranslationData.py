@@ -1,5 +1,4 @@
 from Products.ERP5Type.Message import translateString
-portal = context.getPortalObject()
 
 gadget_translation_data_js = context.WebSite_getTranslationDataWebScriptValue()
 if gadget_translation_data_js is None:
@@ -10,18 +9,12 @@ if gadget_translation_data_js is None:
 
 gadget_translation_data_js.setTextContent(
     context.WebSite_getTranslationDataTextContent())
-portal.portal_workflow.doActionFor(
-    gadget_translation_data_js,
-    'edit_action',
-    comment=translateString(
+gadget_translation_data_js.Base_addEditWorkflowComment(comment=translateString(
         "Translation data updated from web site ${web_site_id}.",
         mapping={'web_site_id': context.getId()}))
 
 # Edit web section modification date
-portal.portal_workflow.doActionFor(
-    context,
-    'edit_action',
-    comment=translateString("Translation data updated.",))
+context.Base_addEditWorkflowComment(comment=translateString("Translation data updated.",))
 
 if REQUEST is not None:
   return context.Base_redirect(
