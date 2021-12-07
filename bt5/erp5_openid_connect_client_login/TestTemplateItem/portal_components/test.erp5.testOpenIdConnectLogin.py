@@ -290,20 +290,6 @@ return credential_request
     oidc_login = person.objectValues(portal_types="OpenId Connect Login")[0]
     self.assertEqual(getUserId(None), oidc_login.getReference())
 
-  def test_redirect(self):
-    """
-      Check URL generate to redirect to OpenId Connect
-    """
-    return "EXpected Failure"
-    self.logout()
-    self.portal.ERP5Site_redirectToOpenIdLoginPage()
-    location = self.portal.REQUEST.RESPONSE.getHeader("Location")
-    self.assertIn(URL_STRING, location)
-    self.assertIn("response_type=code", location)
-    self.assertIn("client_id=%s" % CLIENT_ID, location)
-    self.assertNotIn("secret_key=", location)
-    self.assertIn("https://testdomain.erp5.net/hateoas/connection/oid_auth", location)
-
 
 class TestERP5JSOpenIdConnectLogin(OpenIdConnectLoginTestCase):
   def _getWebSite(self):
