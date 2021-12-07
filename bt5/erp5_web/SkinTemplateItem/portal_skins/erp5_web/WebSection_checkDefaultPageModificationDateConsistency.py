@@ -23,9 +23,6 @@ if context.getAggregate():
         "Web Section {} is older than default page".format(
             context.getRelativeUrl()))
     if fixit:
-      portal.portal_workflow.doActionFor(
-          context,
-          'edit_action',
-          comment=translateString('Edited Web Section, it was older than default page'))
+      context.Base_addEditWorkflowComment(comment=translateString('Edited Web Section, it was older than default page'))
 
 return error_list

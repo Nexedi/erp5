@@ -1150,6 +1150,18 @@ class TestERP5Base(ERP5TypeTestCase):
     # workflow is affected
     self.assertTrue(comment in [q['comment'] for q in workflow_history ])
 
+  def test_Base_addEditWorkflowComment(self):
+    # rather than using low level doActionFor, an helper script Base_addEditWorkflowComment
+    # is available. This scrit also has a proxy role, so that we can programatically
+    # add comment to workflow history, which can be good for traceability of autamated
+    # actions.
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.logout()
+    person.Base_addEditWorkflowComment(comment=comment)
+    workflow_history = self.getWorkflowHistory(person, 'edit_workflow')
+    self.assertIn(('Anonymous User', comment), [(q['actor'], q['comment']) for q in workflow_history ])
+
   def test_comment_validation_workflow(self):
     comment = 'some comment'
     person = self.portal.person_module.newContent(portal_type='Person')
