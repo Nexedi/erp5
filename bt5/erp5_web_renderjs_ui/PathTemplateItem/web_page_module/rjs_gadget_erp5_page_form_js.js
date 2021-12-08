@@ -274,6 +274,23 @@ and handling data send&receive.
 
           new_state.erp5_document = JSON.stringify(new_state.erp5_document);
           return gadget.changeState(new_state);
+        })
+        .push(undefined, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            // If user is authenticated, hal style return 404 in case of unauthorized
+            // XXX use 403 instead?
+            // redirect user to the parent page with a message?
+            // XXX couscous
+            return gadget.notifySubmitted({
+              'message': error.message,
+              'status': 'error'
+            })
+              .push(function () {
+                return gadget.redirect({command: 'history_previous'});
+              });
+          }
+          throw error;
         });
     })
 
