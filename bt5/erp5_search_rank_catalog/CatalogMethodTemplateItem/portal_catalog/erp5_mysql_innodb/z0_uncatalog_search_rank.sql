@@ -1,0 +1,1 @@
+DELETE FROM search_rank WHERE <dtml-sqltest uid op=eq type=int>
