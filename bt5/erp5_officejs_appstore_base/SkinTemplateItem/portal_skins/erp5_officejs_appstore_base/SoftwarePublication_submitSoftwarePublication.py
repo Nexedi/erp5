@@ -76,6 +76,7 @@ base_length = len(getBaseDirectory(zip_reader.namelist()))
 tag = "preparing_sr_%s" % software_release_url
 default_page = ""
 web_manifest_url = None
+doc_tag = "creating_doc_for_%s" % software_release_url
 
 try:
   publication_source_category = "contributor/" + software_publication.getSource()
@@ -94,7 +95,7 @@ for name in zip_reader.namelist():
   else:
     publication_section = application_publication_section.getRelativeUrl()
 
-  document = portal.portal_contributions.newContent(
+  document = portal.document_module.newContent(
     file=temp_file,
     filename=url,
     redirect_to_document=False,
@@ -104,7 +105,8 @@ for name in zip_reader.namelist():
     version=version,
     publication_section_value=publication_section,
     follow_up=software_release_url,
-    portal_type="File"
+    portal_type="File",
+    activate_kw=dict(tag=doc_tag)
   )
 
   # XX Hackish
@@ -113,7 +115,7 @@ for name in zip_reader.namelist():
   if url in ("index.html", "index.htm"):
     default_page = document.getRelativeUrl()
     web_manifest_url = extractWebManifest(document.getData())
-  document.activate(tag=tag).publish()
+  document.activate(tag=tag, after_tag=doc_tag).publish()
 
 software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page, web_manifest = web_manifest_url)
 
