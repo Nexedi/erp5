@@ -1,0 +1,4 @@
+erp5_mysql_innodb/z0_drop_search_rank
+erp5_mysql_innodb/z0_uncatalog_search_rank
+erp5_mysql_innodb/z_catalog_search_rank_list
+erp5_mysql_innodb/z_create_search_rank
