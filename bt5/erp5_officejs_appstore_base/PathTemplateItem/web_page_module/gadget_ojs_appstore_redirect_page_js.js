@@ -7,7 +7,7 @@
   rJS(window)
     .ready(function (gadget) {
       var latest_version = document.head.querySelector(
-        'script[app-configuration="latest_version"]'
+        'script[data-appconfig="latest_version"]'
       ).textContent,
         queue = new RSVP.Queue();
       // Make this redirection compatible with no-service-worker browsers
