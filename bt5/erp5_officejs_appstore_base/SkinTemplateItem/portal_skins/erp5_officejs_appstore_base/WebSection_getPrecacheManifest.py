@@ -1,10 +1,9 @@
 # minimum list of required files for appstore service worker
 
 url_list = [
-  '/',
+  './',
   'rsvp.js',
   'renderjs.js',
-  'jiodev.js',
   'officejs-redirect.js',
   'favicon.ico'
 ]
