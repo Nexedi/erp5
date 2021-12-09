@@ -1,11 +1,4 @@
-DELETE FROM
-  search_rank
-WHERE
-<dtml-sqltest uid type="int" multiple>
-
-<dtml-var sql_delimiter>
-
-INSERT INTO search_rank VALUES
+INSERT IGNORE INTO search_rank VALUES
     <dtml-in prefix="loop" expr="uid">
       <dtml-if sequence-start><dtml-else>,</dtml-if>
 (
