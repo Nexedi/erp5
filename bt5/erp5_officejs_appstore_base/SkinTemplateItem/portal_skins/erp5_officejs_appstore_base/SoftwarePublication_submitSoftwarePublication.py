@@ -76,6 +76,13 @@ base_length = len(getBaseDirectory(zip_reader.namelist()))
 tag = "preparing_sr_%s" % software_release_url
 default_page = ""
 web_manifest_url = None
+
+try:
+  publication_source_category = "contributor/" + software_publication.getSource()
+except TypeError:
+  rejectSoftwarePublication(software_publication)
+  return
+
 for name in zip_reader.namelist():
   if zip_reader.getinfo(name).file_size == 0:
     continue
@@ -97,13 +104,9 @@ for name in zip_reader.namelist():
     version=version,
     publication_section_value=publication_section,
     follow_up=software_release_url,
-    portal_type="File",
+    portal_type="File"
   )
-  try:
-    publication_source_category = "contributor/" + software_publication.getSource()
-  except TypeError:
-    rejectSoftwarePublication(software_publication)
-    return
+
   # XX Hackish
   document.setCategoryList(
     document.getCategoryList() + [publication_source_category])
