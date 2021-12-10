@@ -26,15 +26,11 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -42,7 +38,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>leaves</string> </value>
+            <value> <string>view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -53,12 +49,16 @@
             </value>
         </item>
         <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Action Information</string> </value>
+        </item>
+        <item>
             <key> <string>priority</string> </key>
-            <value> <float>8.5</float> </value>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Leaves</string> </value>
+            <value> <string>View</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -75,20 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Entity_viewLeaveRequestPeriodList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:portal.Base_checkPermission(\'leave_request_module\', \'View\')</string> </value>
+            <value> <string>string:${object_url}/HolidayAcquisition_view</string> </value>
         </item>
       </dictionary>
     </pickle>

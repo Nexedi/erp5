@@ -1,5 +1,6 @@
 group_calendar_interaction_workflow
 group_calendar_workflow
+holiday_acquisition_workflow
 leave_request_interaction_workflow
 leave_request_workflow
 presence_request_interaction_workflow
