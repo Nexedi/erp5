@@ -86,9 +86,7 @@
         <item>
             <key> <string>searchable_text_method_id</string> </key>
             <value>
-              <tuple>
-                <string>DiscussionThread_getChildDiscussionPostRawText</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
