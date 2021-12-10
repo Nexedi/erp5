@@ -5,6 +5,8 @@ Group Calendar Module | view
 Group Calendar | view
 Group Presence Period | periodicity_view
 Group Presence Period | view
+Holiday Acquisition Module | view
+Holiday Acquisition | view
 Leave Request Module | view
 Leave Request Period | periodicity_view
 Leave Request Period | view
@@ -13,9 +15,9 @@ Organisation | planning_task_list
 Person Module | leave_request_export
 Person Module | leave_request_report
 Person Module | planning
+Person | holidays
 Person | jump_leave_requests
 Person | jump_presence_requests
-Person | leaves
 Person | planning
 Presence Request Module | view
 Presence Request Period | periodicity_view
