@@ -12,6 +12,9 @@ for sql_result in portal_catalog(
   select_list=['search_rank'],
   **{'category.category_uid': context.getUid()}
 ):
-  rank += (float(sql_result.search_rank)) / len(sql_result.getCategoryList())
+  # In case of acquired category, it is not explicitely defined on the document
+  category_list_length = len(sql_result.getObject().getCategoryList()) or 1
+
+  rank += (float(sql_result.search_rank) / multiplier) / category_list_length
 
 return int(((1 - d) + d * rank) * multiplier)
