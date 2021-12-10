@@ -1,3 +1,3 @@
 UPDATE `search_rank`
-SET `search_rank` = search_rank
-WHERE `uid` = uid
+SET `search_rank` = <dtml-sqlvar search_rank type="int">
+WHERE `uid` = <dtml-sqlvar uid type="int">
