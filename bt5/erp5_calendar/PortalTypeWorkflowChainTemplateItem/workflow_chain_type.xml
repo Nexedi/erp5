@@ -16,6 +16,10 @@
   <workflow>edit_workflow, group_calendar_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Holiday Acquisition</type>
+  <workflow>edit_workflow, holiday_acquisition_workflow</workflow>
+ </chain>
+ <chain>
   <type>Leave Request</type>
   <workflow>edit_workflow, leave_request_interaction_workflow, leave_request_workflow</workflow>
  </chain>
