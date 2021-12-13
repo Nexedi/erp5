@@ -125,10 +125,10 @@
       // throw new Error('do not use all docs');
 
       if (options.list_method_template === undefined) {
-        if (!options.sort_on) {
+        if ((!options.sort_on) || (options.sort_on.length === 0)) {
           options.sort_on = [["search_rank", "DESC"]];
         }
-        return wrapJioCall(this, 'allDocs', arguments);
+        return wrapJioCall(this, 'allDocs', [options]);
       }
 
       function triggerAllDocs() {
