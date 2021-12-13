@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal"
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
@@ -25,6 +24,7 @@
       global_definitions_macros here/global_definitions/macros;
       include_document python: web_section.isSiteMapDocumentParent() and ((here.getRelativeUrl() == web_section.getRelativeUrl()) or request.get('is_web_section_default_document', False));">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+<!DOCTYPE html>
 <html tal:attributes="lang current_language">
   <head>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/" />
