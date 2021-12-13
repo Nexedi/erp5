@@ -18,10 +18,6 @@
         });
       }
       return queue
-        .push(function (registration) {
-          // XXX This is a hack for when the network is too slow
-          return RSVP.delay(1);
-        })
         .push(function () {
           document.location.replace(latest_version + "/" +
                                     document.location.hash);
