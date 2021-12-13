@@ -4,12 +4,12 @@ portal_catalog = portal.portal_catalog
 
 if context.getRelativeUrl().startswith('portal_'):
   # Show module content before tools content (Category)
-  d = 0.90
+  d = 0.80
 else:
   d = 0.85
 
 decimal_length = 10
-multiplier = pow(10, decimal_length)
+multiplier = pow(10, decimal_length - 5)
 
 rank = 0
 
