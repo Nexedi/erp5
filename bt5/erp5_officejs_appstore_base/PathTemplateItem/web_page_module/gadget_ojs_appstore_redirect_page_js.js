@@ -5,7 +5,7 @@
   "use strict";
 
   rJS(window)
-    .ready(function (gadget) {
+    .declareService(function () {
       var latest_version = document.head.querySelector(
         'script[data-appconfig="latest_version"]'
       ).textContent,
