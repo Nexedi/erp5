@@ -1,7 +1,13 @@
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 # PR(B) = (1-d) + d x ( PR(A1) / N(A1) + ... + PR(An) / N(An) )
-d = 0.85
+
+if context.getRelativeUrl().startswith('portal_'):
+  # Show module content before tools content (Category)
+  d = 0.90
+else:
+  d = 0.85
+
 decimal_length = 10
 multiplier = pow(10, decimal_length)
 
