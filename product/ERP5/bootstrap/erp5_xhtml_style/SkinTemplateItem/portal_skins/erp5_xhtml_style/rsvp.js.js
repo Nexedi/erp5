@@ -48,14 +48,14 @@ define("rsvp/all",
         throw new TypeError('You must pass an array to all.');
       }
 
-      function canceller() {
+      function canceller(msg) {
         var promise;
         for (var i = 0; i < promises.length; i++) {
           promise = promises[i];
 
           if (promise && typeof promise.then === 'function' &&
               typeof promise.cancel === 'function') {
-            promise.cancel();
+            promise.cancel(msg);
           }
         }
       }
@@ -396,7 +396,7 @@ define("rsvp/hash",
 
     function hash(promises) {
 
-      function canceller() {
+      function canceller(msg) {
         var promise,
           key;
         for (key in promises) {
@@ -405,7 +405,7 @@ define("rsvp/hash",
 
             if (promise && typeof promise.then === 'function' &&
                 typeof promise.cancel === 'function') {
-              promise.cancel();
+              promise.cancel(msg);
             }
           }
         }
@@ -552,21 +552,21 @@ define("rsvp/promise",
 
       this.on('error', onerror);
 
-      this.cancel = function () {
+      this.cancel = function (msg) {
         // For now, simply reject the promise and does not propagate the cancel
         // to parent or children
         if (resolved) { return; }
         promise.isCancelled = true;
         if (canceller !== undefined) {
           try {
-            canceller();
+            canceller(msg);
           } catch (e) {
             rejectPromise(e);
             return;
           }
         }
         // Trigger cancel?
-        rejectPromise(new CancellationError());
+        rejectPromise(new CancellationError(msg));
       };
 
       try {
@@ -629,8 +629,8 @@ define("rsvp/promise",
         this.off('error', onerror);
 
         var thenPromise = new this.constructor(function() {},
-            function () {
-              thenPromise.trigger('promise:cancelled', {});
+            function (msg) {
+              thenPromise.trigger('promise:cancelled', { msg: msg});
             });
 
         if (this.isFulfilled) {
@@ -690,7 +690,7 @@ define("rsvp/promise",
           if (isFunction(then)) {
             promise.on('promise:cancelled', function(event) {
               if (isFunction(value.cancel)) {
-                value.cancel();
+                value.cancel(event.msg);
               }
             });
             then.call(value, function(val) {
@@ -773,9 +773,9 @@ define("rsvp/queue",
         return new Queue(thenable);
       }
 
-      function canceller() {
+      function canceller(msg) {
         for (var i = promise_list.length; i > 0; i--) {
-          promise_list[i - 1].cancel();
+          promise_list[i - 1].cancel(msg);
         }
       }
 
@@ -818,10 +818,10 @@ define("rsvp/queue",
 
       checkPromise(resolve(thenable));
 
-      queue.cancel = function () {
+      queue.cancel = function (msg) {
         if (resolved) {return;}
         resolved = true;
-        promise.cancel();
+        promise.cancel(msg);
         promise.fail(function (rejectedReason) {
           queue.isRejected = true;
           queue.rejectedReason = rejectedReason;
@@ -884,9 +884,9 @@ define("rsvp/resolve",
           }
         }
         return resolve(thenable);
-      }, function () {
+      }, function (msg) {
         if ((thenable !== undefined) && (thenable.cancel !== undefined)) {
-          thenable.cancel();
+          thenable.cancel(msg);
         }
       });
     }
