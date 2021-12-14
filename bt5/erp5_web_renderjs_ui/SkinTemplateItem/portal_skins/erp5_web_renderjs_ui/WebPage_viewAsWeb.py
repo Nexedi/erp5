@@ -30,15 +30,12 @@ web_content = web_page.getTextContent()
 if (portal_type == "Web Script"):
   response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
   if web_page.getTextContentSubstitutionMappingMethodId():
-    is_appstore_app = web_section.getLayoutProperty("configuration_latest_version", default=None)
-    if (is_appstore_app):
-      precache_manifest = web_section.WebSection_getAppstorePrecacheManifest()
-    else:
-      precache_manifest = web_section.WebSection_getPrecacheManifest()
+    precache_manifest = web_section.getLayoutProperty("configuration_precache_manifest_script", default="WebSection_getPrecacheManifest")
+    precache_manifest_content = getattr(web_section, precache_manifest)()
     web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
       'modification_date': modification_date_string,
       # Make JSLint happy for the service worker code
-      'required_url_list': json.dumps(precache_manifest)
+      'required_url_list': json.dumps(precache_manifest_content)
     })
 
 elif (portal_type == "Web Style"):
