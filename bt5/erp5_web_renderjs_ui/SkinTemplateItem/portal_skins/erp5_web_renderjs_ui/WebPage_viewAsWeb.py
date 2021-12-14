@@ -30,12 +30,13 @@ web_content = web_page.getTextContent()
 if (portal_type == "Web Script"):
   response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
   if web_page.getTextContentSubstitutionMappingMethodId():
-    precache_manifest = web_section.getLayoutProperty("configuration_precache_manifest_script", default="WebSection_getPrecacheManifest")
-    precache_manifest_content = getattr(web_section, precache_manifest)()
     web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
       'modification_date': modification_date_string,
       # Make JSLint happy for the service worker code
-      'required_url_list': json.dumps(precache_manifest_content)
+      'required_url_list': json.dumps(
+        getattr(web_section, web_section.getLayoutProperty("configuration_precache_manifest_script",
+                                                           default="WebSection_getPrecacheManifest"))()
+      )
     })
 
 elif (portal_type == "Web Style"):
