@@ -629,8 +629,8 @@ define("rsvp/promise",
         this.off('error', onerror);
 
         var thenPromise = new this.constructor(function() {},
-            function () {
-              thenPromise.trigger('promise:cancelled', {});
+            function (msg) {
+              thenPromise.trigger('promise:cancelled', { msg: msg});
             });
 
         if (this.isFulfilled) {
@@ -690,7 +690,7 @@ define("rsvp/promise",
           if (isFunction(then)) {
             promise.on('promise:cancelled', function(event) {
               if (isFunction(value.cancel)) {
-                value.cancel();
+                value.cancel(event.msg);
               }
             });
             then.call(value, function(val) {
