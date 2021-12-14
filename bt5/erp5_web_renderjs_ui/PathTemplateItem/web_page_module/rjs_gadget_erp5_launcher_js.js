@@ -245,7 +245,7 @@
 
   function triggerMaximize(gadget, maximize) {
     if (gadget.props.deferred_minimize !== undefined) {
-      gadget.props.deferred_minimize.cancel();
+      gadget.props.deferred_minimize.cancel("triggerMaximize called");
       gadget.props.deferred_minimize = undefined;
     }
     hideDesktopPanel(gadget, maximize);
