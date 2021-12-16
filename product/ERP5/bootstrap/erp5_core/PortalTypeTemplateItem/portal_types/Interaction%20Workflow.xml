@@ -47,6 +47,18 @@
             <value> <string>Base Type</string> </value>
         </item>
         <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+                <string>description</string>
+                <string>reference</string>
+                <string>short_title</string>
+                <string>id</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
             <value> <string>InteractionWorkflow</string> </value>
         </item>
