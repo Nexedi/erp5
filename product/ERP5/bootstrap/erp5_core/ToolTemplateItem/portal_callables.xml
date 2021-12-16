@@ -250,12 +250,36 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_callables</string> </value>
         </item>
         <item>
+            <key> <string>id_generator</string> </key>
+            <value> <string>_generatePerDayId</string> </value>
+        </item>
+        <item>
+            <key> <string>id_group</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Callable Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>None</string> </value>
         </item>
       </dictionary>
     </pickle>
