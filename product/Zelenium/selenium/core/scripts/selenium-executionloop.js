@@ -157,7 +157,7 @@ TestLoop.prototype = {
             this.result.failed = true;
             this.result.failureMessage = extractExceptionMessage(e);
             this.commandComplete(this.result);
-            this.continueTest();
+            // this.continueTest();
         }
     },
 
