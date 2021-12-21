@@ -11,13 +11,11 @@ category_list = portal_preferences.getPreferredSubscriptionAssignmentCategoryLis
 if password_confirmation:
   if password != password_confirmation:
     message_str = "Password and Confirmation Password must be same"
-    redirect_url = context.absolute_url() + "/join_form"
-    return portal.Base_redirect(redirect_url=redirect_url, keep_items = dict(portal_status_message=context.Base_translateString(message_str), notification_status='error'))
+    return context.Base_redirect("join_form", keep_items=dict(portal_status_message=message_str), notification_status='error')
 
 if not context.CredentialRequest_checkLoginAvailability(reference):
   message_str = "Selected login is already in use, please choose different one."
-  redirect_url = context.absolute_url() + "/join_form"
-  return portal.Base_redirect(redirect_url=redirect_url, keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
+  return context.Base_redirect("join_form", keep_items=dict(portal_status_message=message_str))
 
 credential_request = module.newContent(
                 portal_type="Credential Request",
@@ -75,5 +73,4 @@ else:
     credential_request.submit("Automatic submit")
     message_str = "Credential Request Created."
 
-redirect_url = context.absolute_url() + "/login_form"
-return portal.Base_redirect(redirect_url=redirect_url, keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
+return context.Base_redirect("login_form", keep_items=dict(portal_status_message=message_str))
