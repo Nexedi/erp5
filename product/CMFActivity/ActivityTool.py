@@ -1293,8 +1293,9 @@ class ActivityTool (BaseTool):
             self.registerNode(currentNode)
             processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
 
+            is_distributing_node = self.getDistributingNode() == currentNode
             # only distribute when we are the distributingNode
-            if self.getDistributingNode() == currentNode:
+            if is_distributing_node:
               self.distribute(len(processing_node_list))
 
             # SkinsTool uses a REQUEST cache to store skin objects, as
@@ -1310,7 +1311,20 @@ class ActivityTool (BaseTool):
             # the processing_node numbers are the indices of the elements
             # in the node tuple +1 because processing_node starts form 1
             if currentNode in processing_node_list:
-              self.tic(processing_node_list.index(currentNode) + 1)
+              self.tic(
+                processing_node=processing_node_list.index(currentNode) + 1,
+                # Tell tic it cannot keep processing activities forever when
+                # current node is also the distribution node: it must return
+                # in order for validation to happen. Otherwise, there can be
+                # an accumulation of activities in processing_node=-1 which
+                # would otherwise be possible to execute.
+                # To minimize the impact of this control, this is computed
+                # here, so if the current node is given the distribution node
+                # role while already in the "tic" method, it will keep looping.
+                # Node role changes are rare and several are dangerous on a
+                # busy cluster, so it should not be a big drawback.
+                can_loop=is_distributing_node,
+              )
           except:
             # Catch ALL exception to avoid killing timerserver.
             LOG('ActivityTool', ERROR, 'process_timer received an exception',
@@ -1330,7 +1344,7 @@ class ActivityTool (BaseTool):
         activity.distribute(aq_inner(self), node_count)
 
     security.declarePublic('tic')
-    def tic(self, processing_node=1, force=0):
+    def tic(self, processing_node=1, force=0, can_loop=True):
       """
         Starts again an activity
         processing_node starts from 1 (there is not node 0)
@@ -1370,6 +1384,8 @@ class ActivityTool (BaseTool):
                 activity_list.append(activity_list.pop(i))
                 break
             else:
+              break
+            if not can_loop:
               break
           finally:
             is_running_lock.release()
@@ -1462,9 +1478,13 @@ class ActivityTool (BaseTool):
         elif node != 'same':
           kw['node'] = self.getFamilyId(node)
           break
+        processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
+        if len(processing_node_list) < 2:
+          # If there is less than 2 processing nodes at the time this activity
+          # is spawned, then ignore "same" (including implicit "same").
+          break
         try:
-          kw['node'] = 1 + self.getNodeList(
-            role=ROLE_PROCESSING).index(getCurrentNode())
+          kw['node'] = 1 + processing_node_list.index(getCurrentNode())
         except ValueError:
           pass
         break
