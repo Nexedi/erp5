@@ -101,8 +101,8 @@ class TimerServer(threading.Thread):
                 err = StringIO()
                 response = TimerResponse(out, err)
                 handle(module, TimerRequest(response, interval), response)
-            except:
-                pass
+            except Exception:
+                logger.warn("Ignoring exception in run loop", exc_info=True)
 
 
 TIMER_SERVICE_PATH = '/Control_Panel/timer_service'
