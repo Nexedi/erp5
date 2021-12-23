@@ -110,7 +110,7 @@ TIMER_ENVIRON = {
     'REQUEST_METHOD': 'GET',
     'SERVER_SOFTWARE': 'TimerServer for Zope',
     'SERVER_NAME': '',
-    'SERVER_PORT': '',
+    'SERVER_PORT': '-1',
     'REMOTE_ADDR': '',
     'GATEWAY_INTERFACE': 'CGI/1.1',
     'SERVER_PROTOCOL': 'HTTP/1.0',
