@@ -24,32 +24,17 @@
               extended_search: result
             }
           });
-        })
-        .push(function () {
-          var restore_filter_input = gadget.element.querySelectorAll("input")[0];
-          restore_filter_input.disabled = false;
-          restore_filter_input.classList.remove("ui-disabled");
         });
     })
     .declareMethod('getSearchCriteria', function (a, b) {
-      return Query.objectToSearchText(new ComplexQuery({
-        operator: "AND",
-        type: "complex",
-        query_list: [
-          new SimpleQuery({
-            operator: "",
-            key: this.state.extended_search_mapping[a].key,
-            type: "simple",
-            value: this.state.extended_search_mapping[a].value
-          }),
-          new SimpleQuery({
-            operator: "",
-            key: this.state.x,
-            type: "simple",
-            value: b
-          })
-        ]
-      }));
+      return Query.objectToSearchText(
+        new SimpleQuery({
+          operator: "",
+          key: this.state.extended_search_mapping[b].value,
+          type: "simple",
+          value: a
+        })
+      );
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -177,6 +162,10 @@
           "select_list": select_list.concat(group_by)
         };
       } else {
+        data.extended_search_mapping[options.title] = {
+          "key": group_by,
+          "value": options.group_by
+        };
         data.query = {
           "query": Query.objectToSearchText(new ComplexQuery({
             operator: "AND",
