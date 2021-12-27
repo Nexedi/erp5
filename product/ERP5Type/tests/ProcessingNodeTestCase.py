@@ -84,7 +84,7 @@ def patchActivityTool():
   # When there is more than 1 node, prevent the distributing node from
   # processing activities.
   @patch
-  def tic(self, processing_node=1, force=0):
+  def tic(self, processing_node=1, force=0, can_loop=True):
     processing_node_list = self.getProcessingNodeList()
     if len(processing_node_list) > 1 and \
        getCurrentNode() == self.getDistributingNode():
@@ -93,7 +93,7 @@ def patchActivityTool():
       transaction.commit()
       transaction.begin()
     else:
-      self._orig_tic(processing_node, force)
+      self._orig_tic(processing_node, force, can_loop=can_loop)
 
 
 def Application_resolveConflict(self, old_state, saved_state, new_state):
