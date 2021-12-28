@@ -16,5 +16,6 @@ DSN Monthly Report | select_paysheet_list
 DSN Monthly Report | view
 DSN Monthly Report | view_editor
 Leave Request Period | dsn_report_leave_view
+Leave Request | jump_to_pay_sheet_transaction
 Organisation | dsn_report_configuration
 Pay Sheet Transaction | pay_sheet_simplified_print
