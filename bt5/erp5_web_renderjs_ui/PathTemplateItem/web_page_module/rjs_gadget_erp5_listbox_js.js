@@ -520,62 +520,67 @@
               }
             }
           }
+          return gadget.getUrlParameter("graphic_type")
+            .push(function (graphic_type) {
+              return gadget.changeState({
+                key: field_json.key,
+                title: field_json.title,
+                editable: field_json.editable,
 
-          return gadget.changeState({
-            key: field_json.key,
-            title: field_json.title,
-            editable: field_json.editable,
+                begin_from: parseInt(result_list[0] || '0', 10) || 0,
 
-            begin_from: parseInt(result_list[0] || '0', 10) || 0,
+                // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
+                sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
-            // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
-            sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
+                selection_name: field_json.selection_name,
+                checked_uid_list: field_json.checked_uid_list || [],
 
-            selection_name: field_json.selection_name,
-            checked_uid_list: field_json.checked_uid_list || [],
+                show_anchor: field_json.show_anchor,
+                show_stat: field_json.show_stat,
+                show_count: field_json.show_count,
+                show_select: field_json.show_select,
+                form_id: result_list[3].pt,
 
-            show_anchor: field_json.show_anchor,
-            show_stat: field_json.show_stat,
-            show_count: field_json.show_count,
-            show_select: field_json.show_select,
-            form_id: result_list[3].pt,
+                line_icon: field_json.line_icon,
+                query: field_json.query,
+                query_string: query_string,
+                lines: field_json.lines,
+                list_method: field_json.list_method,
+                list_method_template: field_json.list_method_template,
 
-            line_icon: field_json.line_icon,
-            query: field_json.query,
-            query_string: query_string,
-            lines: field_json.lines,
-            list_method: field_json.list_method,
-            list_method_template: field_json.list_method_template,
+                option_list: option_list,
+                domain_list_json: JSON.stringify(field_json.domain_root_list || []),
+                domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
 
-            option_list: option_list,
-            domain_list_json: JSON.stringify(field_json.domain_root_list || []),
-            domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
+                column_list_json: JSON.stringify(displayed_column_item_list),
+                displayable_column_list_json:
+                  JSON.stringify(displayable_column_item_list),
 
-            column_list_json: JSON.stringify(displayed_column_item_list),
-            displayable_column_list_json:
-              JSON.stringify(displayable_column_item_list),
+                sort_column_list_json: JSON.stringify(sort_column_list),
+                search_column_list_json: JSON.stringify(search_column_list),
+                sort_class: field_json.sort_column_list.length ? "" : "ui-disabled",
 
-            sort_column_list_json: JSON.stringify(sort_column_list),
-            search_column_list_json: JSON.stringify(search_column_list),
-            sort_class: field_json.sort_column_list.length ? "" : "ui-disabled",
+                field_id: options.field_id,
+                extended_search: options.extended_search,
+                hide_class: options.hide_enabled ? "" : "ui-disabled",
+                configure_class: options.configure_enabled ? "" : "ui-disabled",
+                command: field_json.command || 'index',
 
-            field_id: options.field_id,
-            extended_search: options.extended_search,
-            hide_class: options.hide_enabled ? "" : "ui-disabled",
-            configure_class: options.configure_enabled ? "" : "ui-disabled",
-            command: field_json.command || 'index',
+                // Force line calculation in any case
+                render_timestamp: new Date().getTime(),
+                allDocs_result: undefined,
+                default_value: field_json["default"],
 
-            // Force line calculation in any case
-            render_timestamp: new Date().getTime(),
-            allDocs_result: undefined,
-            default_value: field_json.default,
+                // No error message
+                has_error: false,
+                show_line_selector: false,
+                show_select_action: false,
+                show_clipboard_action: false,
 
-            // No error message
-            has_error: false,
-            show_line_selector: false,
-            show_select_action: false,
-            show_clipboard_action: false
-          });
+                // graphic
+                graphic_type: graphic_type
+              });
+            });
         });
       return queue;
     })
@@ -1186,97 +1191,99 @@
                   );
                 }
                 domsugar(gadget.element.querySelector(".graphic_section"), [
-                  domsugar("select", sub_element_list),
+                  domsugar("select", {
+                    "name": "GraphicSelect",
+                    "value": gadget.state.graphic_type
+                  }, sub_element_list),
                   domsugar("div", {"class": "graphic_area"})
                 ]);
               });
           });
-      } else if (modification_dict.hasOwnProperty("graphic_type") &&
-                 modification_dict.graphic_type !== "") {
-        return result_queue
-          .push(function () {
-            return gadget.declareGadget('gadget_graphic.html', {
-              scope: 'gadget_graphic',
-              element: gadget.element.querySelector(".graphic_area")
-            });
-          })
-          .push(function (graphic_gadget) {
-            var group_by,
-              group_by_title,
-              column_list_json = JSON.parse(gadget.state.column_list_json),
-              domain_dict = JSON.parse(gadget.state.domain_dict_json),
-              domain_list = [],
-              domain_id,
-              domain;
+        if (gadget.state.graphic_type && gadget.state.graphic_type !== "") {
+          result_queue
+            .push(function () {
+              return gadget.declareGadget('gadget_graphic.html', {
+                scope: 'gadget_graphic',
+                element: gadget.element.querySelector(".graphic_area")
+              });
+            })
+            .push(function (graphic_gadget) {
+              var group_by,
+                group_by_title,
+                column_list_json = JSON.parse(gadget.state.column_list_json),
+                domain_dict = JSON.parse(gadget.state.domain_dict_json),
+                domain_list = [],
+                domain_id,
+                domain;
 
-            for (i = 0; i < column_list_json.length; i += 1) {
-              if (column_list_json[i][0] === modification_dict.graphic_type) {
-                group_by = column_list_json[i][0];
-                group_by_title = column_list_json[i][1];
-                return graphic_gadget.render({
-                  group_by: group_by,
-                  query_by: {},
-                  title: group_by_title,
-                  list_method_template: gadget.state.list_method_template,
-                  list_method: gadget.state.list_method,
-                  layout: {
-                    x: {
-                      "title": group_by_title,
-                      "key": group_by
-                    },
-                    y: {
-                      "title": "Quantity"
+              for (i = 0; i < column_list_json.length; i += 1) {
+                if (column_list_json[i][0] === gadget.state.graphic_type) {
+                  group_by = column_list_json[i][0];
+                  group_by_title = column_list_json[i][1];
+                  return graphic_gadget.render({
+                    group_by: group_by,
+                    query_by: {},
+                    title: group_by_title,
+                    list_method_template: gadget.state.list_method_template,
+                    list_method: gadget.state.list_method,
+                    layout: {
+                      x: {
+                        "title": group_by_title,
+                        "key": group_by
+                      },
+                      y: {
+                        "title": "Quantity"
+                      }
                     }
-                  }
-                });
-              }
-            }
-
-            for (domain_id in domain_dict) {
-              if (domain_dict.hasOwnProperty(domain_id)) {
-                domain = {
-                  "domain_id": domain_id,
-                  "domain_list": [],
-                  "column_list": []
-                };
-                for (i = 0; i < domain_dict[domain_id].length; i += 1) {
-                  domain.column_list.push(domain_dict[domain_id][i][0]);
-                  domain.domain_list.push(domain_dict[domain_id][i][1]);
+                  });
                 }
-                domain_list.push(domain);
               }
-            }
-            for (i = 0; i < column_list_json.length; i += 1) {
-              if (column_list_json[i][0].indexOf("_state") !== -1) {
-                group_by = column_list_json[i][0];
-                group_by_title = column_list_json[i][1];
-              }
-            }
-            for (i = 0; i < domain_list.length; i += 1) {
-              if (domain_list[i].domain_id === modification_dict.graphic_type) {
-                return graphic_gadget.render({
-                  group_by: group_by,
-                  query_by: {},
-                  title: gadget.state.title,
-                  list_method_template: gadget.state.list_method_template,
-                  list_method: gadget.state.list_method,
-                  layout: {
-                    x: {
-                      "title": group_by_title,
-                      "key": group_by,
-                      "domain_id": domain_list[i].domain_id,
-                      "domain_list": domain_list[i].domain_list,
-                      "column_list": domain_list[i].column_list
-                    },
-                    y: {
-                      "title": "Quantity"
-                    }
+              for (domain_id in domain_dict) {
+                if (domain_dict.hasOwnProperty(domain_id)) {
+                  domain = {
+                    "domain_id": domain_id,
+                    "domain_list": [],
+                    "column_list": []
+                  };
+                  for (i = 0; i < domain_dict[domain_id].length; i += 1) {
+                    domain.column_list.push(domain_dict[domain_id][i][0]);
+                    domain.domain_list.push(domain_dict[domain_id][i][1]);
                   }
-                });
+                  domain_list.push(domain);
+                }
               }
-            }
-          });
-      }
+              for (i = 0; i < column_list_json.length; i += 1) {
+                if (column_list_json[i][0].indexOf("_state") !== -1) {
+                  group_by = column_list_json[i][0];
+                  group_by_title = column_list_json[i][1];
+                }
+              }
+              for (i = 0; i < domain_list.length; i += 1) {
+                if (domain_list[i].domain_id === gadget.state.graphic_type) {
+                  return graphic_gadget.render({
+                    group_by: group_by,
+                    query_by: {},
+                    title: gadget.state.title,
+                    list_method_template: gadget.state.list_method_template,
+                    list_method: gadget.state.list_method,
+                    layout: {
+                      x: {
+                        "title": group_by_title,
+                        "key": group_by,
+                        "domain_id": domain_list[i].domain_id,
+                        "domain_list": domain_list[i].domain_list,
+                        "column_list": domain_list[i].column_list
+                      },
+                      y: {
+                        "title": "Quantity"
+                      }
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
       return result_queue;
     })
 
@@ -1458,6 +1465,21 @@
           return result;
         });
     }, {mutex: 'changestate'})
+    .onEvent('change', function change(evt) {
+      var gadget = this,
+        graphic_select = gadget.element.querySelector(
+          'select[name="GraphicSelect"]'
+        );
+
+      if (evt.target == graphic_select) {
+        return gadget.redirect({
+          command: 'change',
+          options: {
+            graphic_type: evt.target.value
+          }
+        });
+      }
+    })
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks
@@ -1518,13 +1540,6 @@
           show_line_selector: false,
           show_select_action: false,
           show_clipboard_action: false
-        });
-      }
-
-      if (evt.target.type === "select-one") {
-        // XXX Move it to onEvent > "change" probably
-        return gadget.changeState({
-          "graphic_type": evt.target.value
         });
       }
 
