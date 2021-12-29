@@ -192,6 +192,22 @@
           return gadget.changeState(data);
         });
     })
+    .onEvent("click", function (evt) {
+      var gadget = this,
+        restore_filter_input = gadget.element.querySelectorAll("input")[0];
+      if (evt.target === restore_filter_input) {
+        evt.preventDefault();
+        restore_filter_input.disabled = true;
+        restore_filter_input.classList.add("ui-disabled");
+        return gadget.redirect({
+          command: "change",
+          options: {
+            extended_search: undefined,
+            graphic_type: undefined
+          }
+        });
+      }
+    })
     .onStateChange(function (modification_dict) {
       var i,
         gadget = this,
@@ -349,6 +365,11 @@
               }
             }
           });
+        })
+        .push(function () {
+          var restore_filter_input = gadget.element.querySelectorAll("input")[0];
+          restore_filter_input.disabled = false;
+          restore_filter_input.classList.remove("ui-disabled");
         });
     });
 
