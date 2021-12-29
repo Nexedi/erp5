@@ -27,12 +27,20 @@
         });
     })
     .declareMethod('getSearchCriteria', function (a, b) {
+      var key, value;
+      if (this.state.extended_search_mapping.hasOwnProperty(b)) {
+        key = this.state.extended_search_mapping[b].value;
+        value = a;
+      } else {
+        key = this.state.extended_search_mapping[a].key;
+        value = this.state.extended_search_mapping[a].value;
+      }
       return Query.objectToSearchText(
         new SimpleQuery({
           operator: "",
-          key: this.state.extended_search_mapping[b].value,
+          key: key,
           type: "simple",
-          value: a
+          value: value
         })
       );
     })
