@@ -1215,7 +1215,9 @@
                 domain_list = [],
                 domain_id,
                 domain;
-
+              gadget.element.querySelector(
+                'select[name="GraphicSelect"]'
+              ).value = gadget.state.graphic_type;
               for (i = 0; i < column_list_json.length; i += 1) {
                 if (column_list_json[i][0] === gadget.state.graphic_type) {
                   group_by = column_list_json[i][0];
