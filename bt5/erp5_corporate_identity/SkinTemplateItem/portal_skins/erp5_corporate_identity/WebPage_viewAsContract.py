@@ -22,6 +22,8 @@ contract_relative_url = context.getRelativeUrl()
 contract_prefix='Contract.'
 contract_rendering_fix = context.WebPage_getPdfOutputRenderingFix() or blank
 contract_content = context.getTextContent()
+if not contract_content:
+  return
 contract_aggregate_list = []
 contract_revision = context.getRevision()
 contract_modification_date = context.getModificationDate()
