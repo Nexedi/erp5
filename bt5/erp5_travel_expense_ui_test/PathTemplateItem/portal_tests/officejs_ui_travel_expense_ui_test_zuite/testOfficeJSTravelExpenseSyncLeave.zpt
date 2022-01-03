@@ -110,6 +110,12 @@
 </tr>
 
 <tr>
+  <td>type</td>
+  <td>//input[@name='quantity']</td>
+  <td>1</td>
+</tr>
+
+<tr>
   <td>click</td>
   <td>//input[@name='sync_flag']</td>
   <td></td>
