@@ -88,6 +88,7 @@
        state = getWorkflowState(options),
        not_sync_checked;
       gadget.options = options;
+      gadget.options.readonly = state.readonly;
 
       return new RSVP.Queue()
         .push (function () {
@@ -234,6 +235,9 @@
             'submit',
             false,
             function (submit_event) {
+              if (gadget.options.readonly) {
+                return;
+              }
               return getSequentialID(gadget, 'LRR')
                 .push(function (source_reference) {
                   var i,
