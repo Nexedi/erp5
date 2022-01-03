@@ -187,13 +187,8 @@
           "select_list": select_list
         };
       }
-      return new RSVP.Queue(RSVP.all([
-          gadget.getUrlParameter('extended_search'),
-          gadget.getUrlParameter('graphic_select_id')
-        ]))
-        .push(function (result_list) {
-          var extended_search = result_list[0],
-              graphic_select_id = result_list[1];
+      return gadget.getUrlParameter('extended_search')
+        .push(function (extended_search) {
           if (extended_search) {
             jio_query_list.push(Query.parseStringToObject(extended_search));
           }
