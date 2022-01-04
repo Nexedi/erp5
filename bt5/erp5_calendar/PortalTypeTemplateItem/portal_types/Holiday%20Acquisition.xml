@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Event</string> </value>
+            <value> <string>HolidayAcquisition</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
