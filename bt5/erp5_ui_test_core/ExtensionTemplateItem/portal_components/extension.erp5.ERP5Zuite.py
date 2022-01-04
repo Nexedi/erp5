@@ -22,7 +22,7 @@ def waitForActivities(self, delay=100, count=None):
       return 'Done.'
     if all(x.processing_node == -2 for x in x):
       raise RuntimeError(
-        'tic is looping forever: one failing activity (%s %s)' % (x[0].path, x[0].method_id)
+        'tic is looping forever: one failing activity (%s %s)' % (x[0].object_path, x[0].method_id)
       )
     activity_tool.process_timer(None, None)
     if time.time() > deadline:
