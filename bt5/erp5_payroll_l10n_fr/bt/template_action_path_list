@@ -18,4 +18,5 @@ DSN Monthly Report | view_editor
 Leave Request Period | dsn_report_leave_view
 Leave Request | jump_to_pay_sheet_transaction
 Organisation | dsn_report_configuration
+Pay Sheet Transaction | add_holiday_acquisition
 Pay Sheet Transaction | pay_sheet_simplified_print
