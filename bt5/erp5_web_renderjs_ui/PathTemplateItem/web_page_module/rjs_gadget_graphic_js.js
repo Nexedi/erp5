@@ -197,11 +197,13 @@
     })
     .onEvent("click", function (evt) {
       var gadget = this,
-        restore_filter_input = gadget.element.querySelectorAll("input")[0];
+        restore_filter_input = gadget.element.querySelector(".reset-filter");
       if (evt.target === restore_filter_input) {
         evt.preventDefault();
-        restore_filter_input.disabled = true;
-        restore_filter_input.classList.add("ui-disabled");
+        if (restore_filter_input) {
+          restore_filter_input.disabled = true;
+          restore_filter_input.classList.add("ui-disabled");
+        }
         return gadget.redirect({
           command: "change",
           options: {
@@ -370,9 +372,11 @@
           });
         })
         .push(function () {
-          var restore_filter_input = gadget.element.querySelectorAll("input")[0];
-          restore_filter_input.disabled = false;
-          restore_filter_input.classList.remove("ui-disabled");
+          var restore_filter_input = gadget.element.querySelector(".reset-filter");
+          if (restore_filter_input) {
+            restore_filter_input.disabled = false;
+            restore_filter_input.classList.remove("ui-disabled");
+          }
         });
     });
 
