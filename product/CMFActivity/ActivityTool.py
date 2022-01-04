@@ -1323,7 +1323,7 @@ class ActivityTool (BaseTool):
                 # role while already in the "tic" method, it will keep looping.
                 # Node role changes are rare and several are dangerous on a
                 # busy cluster, so it should not be a big drawback.
-                can_loop=is_distributing_node,
+                can_loop=not is_distributing_node,
               )
           except:
             # Catch ALL exception to avoid killing timerserver.
