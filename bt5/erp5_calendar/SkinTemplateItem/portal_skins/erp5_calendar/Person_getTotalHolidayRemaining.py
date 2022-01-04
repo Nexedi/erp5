@@ -1,9 +1,11 @@
+kw_query = {
+  "portal_type" : ("Holiday Acquisition", "Leave Request Period"),
+  "simulation_state": "confirmed"
+}
 if context.getPortalType() == 'Holiday Acquisition':
-  node_uid = context.getDestinationUid()
+  kw_query["node_uid"] = context.getDestinationUid()
+  kw_query['at_date'] = context.getStartDate()
 else:
-  node_uid = context.getUid()
+  kw_query["node_uid"] = context.getUid()
 
-return context.portal_simulation.getFutureInventory(
-  portal_type=("Holiday Acquisition", "Leave Request Period"),
-  node_uid=node_uid
-)
+return context.portal_simulation.getInventory(**kw_query)

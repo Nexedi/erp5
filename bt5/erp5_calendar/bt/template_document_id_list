@@ -3,3 +3,4 @@ document.erp5.CalendarException
 document.erp5.GroupCalendarAssignment
 document.erp5.LeavePeriod
 document.erp5.PresencePeriod
+document.erp5.HolidayAcquisition

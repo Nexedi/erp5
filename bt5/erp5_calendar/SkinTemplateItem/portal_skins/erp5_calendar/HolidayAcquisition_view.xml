@@ -94,6 +94,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_quantity</string>
+                        <string>my_is_total_holiday</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
