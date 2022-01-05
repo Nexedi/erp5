@@ -43,7 +43,10 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
             None,
         )
         if pref is not None:
-            pref.changeOwnership(getSecurityManager().getUser(), True)
+            self.setSubtreeOwner(
+                document_value=pref,
+                user=getSecurityManager().getUser(),
+            )
         super(TestZeleniumCore, self).afterSetUp()
 
     def getBusinessTemplateList(self):
