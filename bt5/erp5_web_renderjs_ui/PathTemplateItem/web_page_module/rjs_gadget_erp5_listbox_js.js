@@ -346,11 +346,14 @@
       })
       .push(function () {
         var table =  gadget.element.querySelector("table"),
+          old_container;
+        if (table) {
           old_container = table.querySelector(container_name);
-        if (old_container) {
-          table.replaceChild(container, old_container);
-        } else {
-          table.appendChild(container);
+          if (old_container) {
+            table.replaceChild(container, old_container);
+          } else {
+            table.appendChild(container);
+          }  
         }
         return table;
       });
@@ -914,13 +917,15 @@
 
             domsugar(table_element.querySelector('tr'), th_element_list);
 
-            domsugar(container, [
-              domsugar('div', {
-                "class": 'ui-table-header ui-header'
-              }, div_element_list),
-              table_element,
-              domsugar('nav')
-            ]);
+            if (gadget.state.extended_search) {
+              domsugar(container, [
+                domsugar('div', {
+                  "class": 'ui-table-header ui-header'
+                }, div_element_list),
+                table_element,
+                domsugar('nav')
+              ]);
+            }
           });
       }
 
@@ -932,14 +937,17 @@
         result_queue
           .push(function () {
             var loading_element = gadget.element.querySelector(".listboxloader"),
-              loading_element_classList = loading_element.classList,
+              loading_element_classList,
+              tbody_classList;
+            if (loading_element) {
+              loading_element_classList = loading_element.classList;
               tbody_classList = gadget.element.querySelector("table").querySelector("tbody").classList;
-            // Set the loading icon and trigger line calculation
-            loading_element_classList.add.apply(loading_element_classList, loading_class_list);
-            // remove pagination information
-            loading_element.textContent = '';
-            tbody_classList.add(disabled_class);
-
+              // Set the loading icon and trigger line calculation
+              loading_element_classList.add.apply(loading_element_classList, loading_class_list);
+              // remove pagination information
+              loading_element.textContent = '';
+              tbody_classList.add(disabled_class); 
+            }
             return gadget.fetchLineContent(false);
           });
 
@@ -1171,9 +1179,12 @@
               })
               .push(function () {
                 var loading_element = gadget.element.querySelector(".listboxloader"),
+                  loading_element_classList;
+                if (loading_element) {
                   loading_element_classList = loading_element.classList;
-                loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
-                loading_element.textContent = '(' + pagination_message + ')';
+                  loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
+                  loading_element.textContent = '(' + pagination_message + ')';
+                }
               })
               .push(function () {
                 var sub_element_list = [
@@ -1190,16 +1201,20 @@
                     })
                   );
                 }
-                domsugar(gadget.element.querySelector(".graphic_section"), [
-                  domsugar("select", {
-                    "name": "GraphicSelect",
-                    "value": gadget.state.graphic_type
-                  }, sub_element_list),
-                  domsugar("div", {"class": "graphic_area"})
-                ]);
+                if (!gadget.state.extended_search) {
+                  domsugar(gadget.element.querySelector(".graphic_section"), [
+                    domsugar("select", {
+                      "name": "GraphicSelect",
+                      "value": gadget.state.graphic_type
+                    }, sub_element_list),
+                    domsugar("div", {"class": "graphic_area"})
+                  ]);
+                }
               });
           });
-        if (gadget.state.graphic_type && gadget.state.graphic_type !== "") {
+        if (!gadget.state.extended_search &&
+            gadget.state.graphic_type &&
+            gadget.state.graphic_type !== "") {
           result_queue
             .push(function () {
               return gadget.declareGadget('gadget_graphic.html', {
