@@ -1187,12 +1187,7 @@
                 }
               })
               .push(function () {
-                var sub_element_list = [
-                  domsugar("option", {
-                    "value": "",
-                    "text": " ---------- "
-                  })
-                ];
+                var sub_element_list = [];
                 for (i = 0; i < gadget.state.option_list.length; i += 1) {
                   sub_element_list.push(
                     domsugar("option", {
