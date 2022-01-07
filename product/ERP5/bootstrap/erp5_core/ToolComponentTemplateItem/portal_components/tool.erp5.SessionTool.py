@@ -32,6 +32,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base
 from UserDict import UserDict
+import collections
 
 # the ERP5 cache factory used as a storage
 SESSION_CACHE_FACTORY = 'erp5_session_cache'
@@ -44,6 +45,34 @@ _marker=[]
 
 # global storage plugin
 storage_plugin = None
+
+
+def remove_acquisition_wrapper(obj):
+  if isinstance(obj, basestring):
+    return obj
+  obj = aq_base(obj)
+  if isinstance(obj, collections.Mapping):
+    return obj.__class__({
+        remove_acquisition_wrapper(k): remove_acquisition_wrapper(v)
+        for k, v in obj.items()})
+  if isinstance(obj, (collections.Sequence, collections.Set)):
+    return obj.__class__([remove_acquisition_wrapper(o) for o in obj])
+  return obj
+
+
+def restore_acquisition_wrapper(obj, context):
+  if isinstance(obj, basestring):
+    return obj
+  if hasattr(obj, '__of__'):
+    obj = obj.__of__(context)
+  if isinstance(obj, collections.Mapping):
+    return obj.__class__({
+        restore_acquisition_wrapper(k, context): restore_acquisition_wrapper(v, context)
+        for k, v in obj.items()})
+  if isinstance(obj, (collections.Sequence, collections.Set)):
+    return obj.__class__([restore_acquisition_wrapper(o, context) for o in obj])
+  return obj
+
 
 class Session(UserDict):
   """ Session acts as a plain python dictionary stored in respecitve Cache Factory/Cache Plugin.
@@ -80,11 +109,8 @@ class Session(UserDict):
 
   def __getitem__(self, key):
     if key in self.data:
-      value = self.data[key]
-      if hasattr(value, '__of__'):
-        # returned it wrapped in aquisition context
-        value = value.__of__(self._aq_context)
-      return value
+      # returned it wrapped in aquisition context
+      return restore_acquisition_wrapper(self.data[key], self._aq_context)
     raise KeyError(key)
 
   def _updateSessionDuration(self, session_duration):
@@ -103,7 +129,7 @@ class Session(UserDict):
 
   def __setitem__(self, key, item):
     # save value without its acquisition context
-    UserDict.__setitem__(self, key, aq_base(item))
+    UserDict.__setitem__(self, key, remove_acquisition_wrapper(item))
 
   def update(self, dict=None, **kwargs):  # pylint: disable=redefined-builtin
     for k, v in (dict or kwargs).iteritems():
