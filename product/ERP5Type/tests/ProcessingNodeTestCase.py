@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import errno, logging, os, socket, time
+import itertools
 from threading import Thread
 from UserDict import IterableUserDict
 import Lifetime
@@ -278,12 +279,14 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
       if verbose:
         ZopeTestCase._print('Executing pending activities ...')
         old_message_count = 0
-        start = time.time()
-      count = 1000
+      start = time.time()
+      deadline = start + 100 # This prevents an infinite loop.
       getMessageList = portal_activities.getMessageList
       message_list = getMessageList()
       message_count = len(message_list)
-      while message_count and not stop_condition(message_list):
+      for call_count in itertools.count():
+        if not message_count or stop_condition(message_list):
+          break
         if verbose and old_message_count != message_count:
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
@@ -293,9 +296,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
-        # This prevents an infinite loop.
-        count -= 1
-        if not count or message_count and all(x.processing_node == -2
+        if time.time() >= deadline or message_count and all(x.processing_node == -2
                                               for x in message_list):
           # We're about to raise RuntimeError, but maybe we've reached
           # the stop condition, so check just once more:
@@ -308,7 +309,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages
-        if count % 10 == 0:
+        if call_count % 10 == 0:
           portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
       if verbose:
         ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
