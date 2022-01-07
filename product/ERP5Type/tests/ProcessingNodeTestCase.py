@@ -280,7 +280,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         ZopeTestCase._print('Executing pending activities ...')
         old_message_count = 0
       start = time.time()
-      deadline = start + 100 # This prevents an infinite loop.
+      deadline = start + 600 # This prevents an infinite loop.
       getMessageList = portal_activities.getMessageList
       message_list = getMessageList()
       message_count = len(message_list)
