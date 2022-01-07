@@ -60,7 +60,12 @@ class UserManagementTestCase(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_administration',)
+    return (
+      'erp5_full_text_mroonga_catalog',
+      'erp5_core_proxy_field_legacy',
+      'erp5_base',
+      'erp5_administration',
+    )
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
