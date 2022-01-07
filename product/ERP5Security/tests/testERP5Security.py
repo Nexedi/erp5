@@ -548,6 +548,7 @@ class DuplicatePrevention(UserManagementTestCase):
         'user id P%i already exists' % (latest_user_id + 1),
         self.portal.person_module.newContent,
         portal_type='Person')
+    self.abort()
 
     # This error is not permanent, the id is skipped and next generation should succeed
     self.assertEqual(
@@ -928,16 +929,18 @@ class TestMigration(UserManagementTestCase):
         self.portal.person_module.newContent,
         portal_type='Person',
         reference='old_user_id')
+    self.abort()
 
     self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
     def stop_condition(message_list):
-      if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+      if any(m.method_id != 'immediateReindexObject' for m in message_list):
         self.assertRaisesRegexp(
           ValidationFailed,
           'user id old_user_id already exists',
           self.portal.person_module.newContent,
           portal_type='Person',
           reference='old_user_id')
+        self.abort()
       return False
     self.tic(stop_condition=stop_condition)
     self.portal.person_module.newContent(portal_type='Person', reference='old_user_id')
@@ -947,6 +950,7 @@ class TestMigration(UserManagementTestCase):
         self.portal.person_module.newContent,
         portal_type='Person',
         user_id='old_user_id')
+    self.abort()
 
   def test_DuplicateUserIdFromInitUserIdPreventionDuringMigration(self):
     self._enableERP5UsersPlugin()
@@ -964,15 +968,17 @@ class TestMigration(UserManagementTestCase):
             'user id P1234 already exists',
             self.portal.person_module.newContent,
             portal_type='Person',)
+      self.abort()
   
       self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
       def stop_condition(message_list):
-        if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+        if any(m.method_id != 'immediateReindexObject' for m in message_list):
           self.assertRaisesRegexp(
             ValidationFailed,
             'user id P1234 already exists',
             self.portal.person_module.newContent,
             portal_type='Person',)
+          self.abort()
         return False
       self.tic(stop_condition=stop_condition)
 
@@ -981,6 +987,7 @@ class TestMigration(UserManagementTestCase):
           'user id P1234 already exists',
           self.portal.person_module.newContent,
           portal_type='Person',)
+      self.abort()
 
   def test_NonMigratedPersonCanBecomeUserLater(self):
     self._enableERP5UsersPlugin()
