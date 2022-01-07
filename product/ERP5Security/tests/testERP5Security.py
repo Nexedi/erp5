@@ -937,8 +937,20 @@ class TestMigration(UserManagementTestCase):
     self.abort()
 
     self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.commit()
+    # Sanity check
+    self.assertTrue(
+      self.portal.portal_activities.countMessage(
+        method_id='ERP5Site_disableERP5UserManager',
+      ),
+    )
     def stop_condition(message_list):
-      if any(m.method_id != 'immediateReindexObject' for m in message_list):
+      # Once ERP5Site_disableERP5UserManager has been executed, the unicity
+      # constraint on Person.reference disappears (and re-appears on
+      # Person.user_id and ERP5User.reference, but this is not what is being
+      # tested here). So only check this constraint for as long as that
+      # activity is present.
+      if any(m.method_id == 'ERP5Site_disableERP5UserManager' for m in message_list):
         self.assertRaisesRegexp(
           ValidationFailed,
           'user id old_user_id already exists',
