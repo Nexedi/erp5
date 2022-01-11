@@ -581,6 +581,7 @@
                 show_clipboard_action: false,
 
                 // graphic
+                enable_graphic: options.enable_graphic,
                 graphic_type: graphic_type
               });
             });
@@ -946,7 +947,7 @@
               loading_element_classList.add.apply(loading_element_classList, loading_class_list);
               // remove pagination information
               loading_element.textContent = '';
-              tbody_classList.add(disabled_class); 
+              tbody_classList.add(disabled_class);
             }
             return gadget.fetchLineContent(false);
           });
@@ -1196,7 +1197,7 @@
                     })
                   );
                 }
-                if (!gadget.state.extended_search) {
+                if (!gadget.state.extended_search && gadget.state.enable_graphic) {
                   domsugar(gadget.element.querySelector(".graphic_section"), [
                     domsugar("select", {
                       "name": "GraphicSelect",
@@ -1208,6 +1209,7 @@
               });
           });
         if (!gadget.state.extended_search &&
+            gadget.state.enable_graphic &&
             gadget.state.graphic_type &&
             gadget.state.graphic_type !== "") {
           result_queue

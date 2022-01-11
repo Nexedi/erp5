@@ -34,7 +34,8 @@
       extended_search: (is_first_bottom_listbox && (form_definition.extended_search)), // searchfield specific
       field_type: rendered_document[field_name].type,
       label: ((group_name !== "bottom") && (rendered_document[field_name].title.length > 0)), // no label for bottom group and field without title
-      field_json: rendered_document[field_name] // pass
+      field_json: rendered_document[field_name], // pass
+      enable_graphic: modification_dict.enable_graphic
     };
 
     // XXX: what is the purpose of this?
@@ -190,6 +191,7 @@
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
+        enable_graphic: options.enable_graphic,
         jio_key: options.jio_key,
         hash: hash,
         view: options.view,
