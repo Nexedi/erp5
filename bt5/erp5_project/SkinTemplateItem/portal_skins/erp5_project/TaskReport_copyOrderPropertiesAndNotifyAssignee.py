@@ -24,9 +24,6 @@ if task_report.getSimulationState() == 'draft':
     title=related_order.getTitle()
   )
 
-# If security definitions are implemented on the packing list, it is time to apply them
-task_report.assignRoleToSecurityGroup()
-
 # Notify the requester.
 source_person = task_report.getSourceValue(portal_type="Person")
 destination_decision_person = task_report.getDestinationDecisionValue(portal_type="Person")
