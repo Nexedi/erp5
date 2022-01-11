@@ -135,7 +135,7 @@
           if (form_gadget.state.extended_search) {
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
-
+          form_options.enable_graphic = true;
           return erp5_form.render(form_options);
         })
 
