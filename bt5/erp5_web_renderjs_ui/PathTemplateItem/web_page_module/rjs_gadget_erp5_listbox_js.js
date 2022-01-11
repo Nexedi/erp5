@@ -353,7 +353,7 @@
             table.replaceChild(container, old_container);
           } else {
             table.appendChild(container);
-          }  
+          }
         }
         return table;
       });
@@ -598,12 +598,12 @@
         i,
         j,
         result_queue = new RSVP.Queue(),
+        graphic_option_list = [],
         button_selector_list = ['button[name="Sort"]', 'button[name="Hide"]',
                                 'button[name="Clipboard"]',
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
         button;
-
 /*
       if (modification_dict.hasOwnProperty('error_text') && this.state.error_text !== undefined) {
         // XXX TODO
@@ -917,8 +917,7 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-
-            if (gadget.state.extended_search) {
+            if (gadget.state.extended_search || !gadget.state.option_list.length) {
               domsugar(container, [
                 domsugar('div', {
                   "class": 'ui-table-header ui-header'
@@ -1180,37 +1179,41 @@
               })
               .push(function () {
                 var loading_element = gadget.element.querySelector(".listboxloader"),
+                  graphic_option_list = [],
                   loading_element_classList;
                 if (loading_element) {
                   loading_element_classList = loading_element.classList;
                   loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
                   loading_element.textContent = '(' + pagination_message + ')';
                 }
-              })
-              .push(function () {
-                var sub_element_list = [];
-                for (i = 0; i < gadget.state.option_list.length; i += 1) {
-                  sub_element_list.push(
-                    domsugar("option", {
-                      "value": gadget.state.option_list[i][0],
-                      "text": gadget.state.option_list[i][1]
-                    })
-                  );
-                }
-                if (!gadget.state.extended_search && gadget.state.enable_graphic) {
-                  domsugar(gadget.element.querySelector(".graphic_section"), [
-                    domsugar("select", {
-                      "name": "GraphicSelect",
-                      "value": gadget.state.graphic_type
-                    }, sub_element_list),
-                    domsugar("div", {"class": "graphic_area"})
-                  ]);
+                if (gadget.state.option_list.length > 0 &&
+                    gadget.state.enable_graphic &&
+                    !gadget.state.extended_search) {
+                  for (i = 0; i < gadget.state.option_list.length; i += 1) {
+                    graphic_option_list.push(
+                      domsugar("option", {
+                        "value": gadget.state.option_list[i][0],
+                        "text": gadget.state.option_list[i][1]
+                      })
+                    );
+                  }
+                  if (!gadget.state.extended_search &&
+                       gadget.state.enable_graphic) {
+                    domsugar(gadget.element.querySelector(".graphic_section"), [
+                      domsugar("select", {
+                        "name": "GraphicSelect",
+                        "value": gadget.state.graphic_type
+                      }, graphic_option_list),
+                      domsugar("div", {"class": "graphic_area"})
+                   ]);
+                  }
                 }
               });
           });
         if (!gadget.state.extended_search &&
             gadget.state.enable_graphic &&
             gadget.state.graphic_type &&
+            gadget.state.option_list.length > 0 &&
             gadget.state.graphic_type !== "") {
           result_queue
             .push(function () {
@@ -1484,7 +1487,6 @@
         graphic_select = gadget.element.querySelector(
           'select[name="GraphicSelect"]'
         );
-
       if (evt.target == graphic_select) {
         return gadget.redirect({
           command: 'change',
