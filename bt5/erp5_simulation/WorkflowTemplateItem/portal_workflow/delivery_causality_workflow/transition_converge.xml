@@ -29,7 +29,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This state is shown when the goods that are shipped equal the previsions</string> </value>
+            <value> <string>This state is for when the delivery is consistent with the prevision.</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: user.has_permission("Modify portal content", here) or user.has_role(("Associate",), here)</string> </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
@@ -40,9 +44,7 @@
         <item>
             <key> <string>guard_permission</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -67,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Convergent</string> </value>
+            <value> <string>Converge</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
