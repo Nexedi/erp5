@@ -19,7 +19,7 @@
       return gadget.getSearchCriteria(params[0][0], params[0][1])
         .push(function (result) {
           return gadget.redirect({
-            command: 'change',
+            command: 'store_and_change',
             options: {
               extended_search: result
             }
