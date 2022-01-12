@@ -269,7 +269,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     transaction.commit()
     self.abort()
 
-  def tic(self, verbose=0, stop_condition=lambda message_list: False):
+  def tic(self, verbose=0, stop_condition=lambda message_list: False, delay=600):
     """Execute pending activities"""
     transaction.commit()
     # Some tests like testDeferredStyle require that we use self.getPortal()
@@ -280,7 +280,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         ZopeTestCase._print('Executing pending activities ...')
         old_message_count = 0
       start = time.time()
-      deadline = start + 600 # This prevents an infinite loop.
+      deadline = start + delay # This prevents an infinite loop.
       getMessageList = portal_activities.getMessageList
       message_list = getMessageList()
       message_count = len(message_list)
