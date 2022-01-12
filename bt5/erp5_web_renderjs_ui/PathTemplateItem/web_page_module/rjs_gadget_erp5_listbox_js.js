@@ -1489,7 +1489,7 @@
         );
       if (evt.target == graphic_select) {
         return gadget.redirect({
-          command: 'change',
+          command: 'store_and_change',
           options: {
             graphic_type: evt.target.value
           }
