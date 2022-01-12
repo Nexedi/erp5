@@ -27,22 +27,43 @@
         });
     })
     .declareMethod('getSearchCriteria', function (a, b) {
-      var key, value;
-      if (this.state.extended_search_mapping.hasOwnProperty(b)) {
-        key = this.state.extended_search_mapping[b].value;
-        value = a;
-      } else {
-        key = this.state.extended_search_mapping[a].key;
-        value = this.state.extended_search_mapping[a].value;
-      }
-      return Query.objectToSearchText(
-        new SimpleQuery({
+      var query;
+      if (this.state.extended_search_mapping.hasOwnProperty(a) &&
+          this.state.extended_search_mapping.hasOwnProperty(b)) {
+        query = new ComplexQuery({
+          operator: "AND",
+          type: "complex",
+          query_list: [
+            new SimpleQuery({
+              operator: "",
+              key: this.state.extended_search_mapping[a].key,
+              type: "simple",
+              value: this.state.extended_search_mapping[a].value
+            }),
+            new SimpleQuery({
+              operator: "",
+              key: this.state.extended_search_mapping[b].key,
+              type: "simple",
+              value: this.state.extended_search_mapping[b].value
+            })
+          ]
+        });
+      } else if (this.state.extended_search_mapping.hasOwnProperty(b)) {
+        query = new SimpleQuery({
           operator: "",
-          key: key,
+          key: this.state.extended_search_mapping[b].value,
           type: "simple",
-          value: value
-        })
-      );
+          value: a
+        });
+      } else {
+        query = new SimpleQuery({
+          operator: "",
+          key: this.state.extended_search_mapping[a].key,
+          type: "simple",
+          value: this.state.extended_search_mapping[a].value
+        });
+      }
+      return Query.objectToSearchText(query);
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -187,6 +208,7 @@
           "select_list": select_list
         };
       }
+
       return gadget.getUrlParameter('extended_search')
         .push(function (extended_search) {
           if (extended_search) {
@@ -310,6 +332,11 @@
                   data_mapping[label_list[i - 1]][state] =
                     result_list[i].data.rows[j].value[gadget.state.y];
                 }
+                // Can I change state here?
+                gadget.state.extended_search_mapping[state] = {
+                  key: gadget.state.x,
+                  value: state
+                };
                 if (state_list.indexOf(state) === -1) {
                   state_list.push(state);
                 }
