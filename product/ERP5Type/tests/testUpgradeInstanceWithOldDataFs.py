@@ -132,7 +132,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
 
     alarm.Alarm_solve()
 
-    self.tic()
+    self.tic(delay=2400)
 
     self.assertEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
