@@ -1,4 +1,3 @@
-from Products.PythonScripts.standard import Object
 request = container.REQUEST
 portal = context.getPortalObject()
 stool = portal.portal_simulation
