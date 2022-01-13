@@ -683,10 +683,10 @@ def test_suite():
   def setUp(self):
     self._original_AuthEncoding_schemes = AccessControl.AuthEncoding._schemes[::]
     AccessControl.AuthEncoding._schemes = [s for s in AccessControl.AuthEncoding._schemes if s[0] != 'CRYPT']
-  AccessControl.tests.testPasswordDigest.setUp = setUp
+  AccessControl.tests.testPasswordDigest.PasswordDigestTests.setUp = setUp
   def tearDown(self):
     AccessControl.AuthEncoding._schemes = self._original_AuthEncoding_schemes
-  AccessControl.tests.testPasswordDigest.tearDown = tearDown
+  AccessControl.tests.testPasswordDigest.PasswordDigestTests.tearDown = tearDown
   suite.addTest(AccessControl.tests.testPasswordDigest.test_suite())
   import AccessControl.tests.testPermissionMapping
   suite.addTest(AccessControl.tests.testPermissionMapping.test_suite())
