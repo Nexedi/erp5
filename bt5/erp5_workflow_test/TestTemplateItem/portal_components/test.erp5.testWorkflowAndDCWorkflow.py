@@ -1,3 +1,4 @@
+import urlparse
 import unittest
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
 from Products.ERP5Type.Core.Workflow import ValidationFailed
@@ -434,7 +435,10 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     modified_role_dict['View'] = ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager')
     self.workflow.state_draft.setStatePermissionRoleListDict(modified_role_dict)
     self.tic()
-    self.workflow.Workflow_updateSecurityRoles()
+    ret = self.workflow.Workflow_updateSecurityRoles()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["1 documents updated"])
     self.tic()
     self.assertEqual(text_document._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager'))
     self.workflow.state_draft.setStatePermissionRoleListDict(default_role_dict)
