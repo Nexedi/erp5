@@ -19,8 +19,9 @@
       return gadget.getSearchCriteria(params[0][0], params[0][1])
         .push(function (result) {
           return gadget.redirect({
-            command: 'store_and_change',
+            command: 'display_with_history',
             options: {
+              jio_key: gadget.state.jio_key,
               extended_search: result
             }
           });
@@ -79,6 +80,7 @@
         column_list = options.layout.x.column_list,
         domain_id = options.layout.x.domain_id,
         data = {
+          jio_key: options.jio_key,
           x: options.layout.x.key,
           title: options.title || options.layout.x.title,
           x_title: options.layout.x.title,
