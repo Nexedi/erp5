@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CalendarPeriodicity_view</string> </value>
+            <value> <string>PresencePeriod_viewPeriodicity</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -115,7 +115,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CalendarPeriodicity_view</string> </value>
+            <value> <string>PresencePeriod_viewPeriodicity</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
