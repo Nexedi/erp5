@@ -27,7 +27,6 @@
     if (!rendered_document.hasOwnProperty(field_name)) {
       return;
     }
-
     suboptions = {
       hide_enabled: form_definition.hide_enabled, // listbox specific
       configure_enabled: form_definition.configure_enabled, // listbox specific
@@ -35,6 +34,7 @@
       field_type: rendered_document[field_name].type,
       label: ((group_name !== "bottom") && (rendered_document[field_name].title.length > 0)), // no label for bottom group and field without title
       field_json: rendered_document[field_name], // pass
+      jio_key: modification_dict.jio_key,
       enable_graphic: modification_dict.enable_graphic
     };
 
@@ -187,7 +187,6 @@
       if (options.form_definition.hasOwnProperty("edit_form_update_href")) {
         hash += "edit_form_update_action";
       }
-
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,

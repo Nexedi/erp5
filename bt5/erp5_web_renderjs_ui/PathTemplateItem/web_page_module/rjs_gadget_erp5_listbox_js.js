@@ -414,7 +414,6 @@
         query_string,
         url_query,
         queue;
-
       /** Transform sort arguments (column_name, sort_direction) to jIO's "ascending" and "descending" **/
       function jioize_sort(column_sort) {
         if (column_sort[1].toLowerCase().startsWith('asc')) {
@@ -526,6 +525,7 @@
           return gadget.getUrlParameter("graphic_type")
             .push(function (graphic_type) {
               return gadget.changeState({
+                jio_key: options.jio_key,
                 key: field_json.key,
                 title: field_json.title,
                 editable: field_json.editable,
@@ -1238,6 +1238,7 @@
                   group_by = column_list_json[i][0];
                   group_by_title = column_list_json[i][1];
                   return graphic_gadget.render({
+                    jio_key: gadget.state.jio_key,
                     group_by: group_by,
                     query_by: {},
                     title: group_by_title,
@@ -1278,6 +1279,7 @@
               for (i = 0; i < domain_list.length; i += 1) {
                 if (domain_list[i].domain_id === gadget.state.graphic_type) {
                   return graphic_gadget.render({
+                    jio_key: gadget.state.jio_key,
                     group_by: group_by,
                     query_by: {},
                     title: gadget.state.title,
