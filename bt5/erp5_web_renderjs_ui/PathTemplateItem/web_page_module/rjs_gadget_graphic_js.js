@@ -27,7 +27,7 @@
         });
     })
     .declareMethod('getSearchCriteria', function (a, b) {
-      var key, value, query;
+      var query;
       if (this.state.extended_search_mapping.hasOwnProperty(a) &&
           this.state.extended_search_mapping.hasOwnProperty(b)) {
         query = new ComplexQuery({
@@ -49,11 +49,19 @@
           ]
         });
       } else if (this.state.extended_search_mapping.hasOwnProperty(b)) {
-        key = this.state.extended_search_mapping[b].value;
-        value = a;
+        query = new SimpleQuery({
+          operator: "",
+          key: this.state.extended_search_mapping[b].value,
+          type: "simple",
+          value: a
+        });
       } else {
-        key = this.state.extended_search_mapping[a].key;
-        value = this.state.extended_search_mapping[a].value;
+        query = new SimpleQuery({
+          operator: "",
+          key: this.state.extended_search_mapping[a].key,
+          type: "simple",
+          value: this.state.extended_search_mapping[a].value
+        });
       }
       return Query.objectToSearchText(query);
     })
