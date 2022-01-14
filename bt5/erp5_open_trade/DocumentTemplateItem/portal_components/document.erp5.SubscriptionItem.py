@@ -39,6 +39,7 @@ from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.Base import Base
 from erp5.component.interface.IMovementGenerator import IMovementGenerator
+from DateTime import DateTime
 
 @zope.interface.implementer(IMovementGenerator,)
 class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
@@ -99,6 +100,29 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
     # Default implementation bellow can be overriden by subclasses
     return {}
 
+  def _getLatestOpenOrderPath(self):
+    catalog_tool = getToolByName(self, 'portal_catalog')
+    # Try to find the source open order
+    line_list = catalog_tool(
+      portal_type=["Open Sale Order Line", "Open Sale Order Cell"],
+      aggregate__uid=self.getUid(),
+      validation_state=('open', 'validated', 'archived'), # XXX-JPS hard coding
+      sort_on=(('effective_date', 'descending'),
+                # Do not return archived if effective dates are identical
+                ('validation_state', 'descending')),
+      limit=1 # Note Luke: Support the newest Open Order which defines
+              # something for current subscription item
+    )
+    """
+      if line.hasCellContent(base_id='path'):
+        movement_list = line.getCellValueList(base_id='path')
+      else:
+        movement_list = [line]
+    """
+    if len(line_list) == 1:
+      return line_list[0]
+    return None
+
   def _getInputMovementList(self, movement_list=None, rounding=None):
     """
       Generate the list of input movements by looking at all
@@ -108,158 +132,170 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       of resource, ie. float or unit)
     """
     result = []
-    catalog_tool = getToolByName(self, 'portal_catalog')
 
-    # Try to find the source open order
-    for movement in catalog_tool(portal_type="Open Sale Order Line",
-        default_aggregate_uid=self.getUid(),
-        validation_state=('open', 'validated', 'archived'), # XXX-JPS hard coding
-        sort_on=(('effective_date', 'descending'),
-                # Do not return archived if effective dates are identical
-                ('validation_state', 'descending')),
-        limit=1 # Note Luke: Support the newest Open Order which defines
-                # something for current subscription item
-        ): # YXU-Why we have a list here?
-        resource = movement.getResource()
-        start_date = movement.getStartDate()
-        stop_date = movement.getStopDate()
-        if start_date is None or stop_date is None or start_date>=stop_date:
-          # infinity nor time back machine does not exist
-          continue
-        source = movement.getSource()
-        source_section = movement.getSourceSection()
-        source_decision = movement.getSourceDecision()
-        destination = movement.getDestination()
-        destination_section = movement.getDestinationSection()
-        destination_decision = movement.getDestinationDecision()
-        quantity = movement.getQuantity()
-        quantity_unit = movement.getQuantityUnit()
-        price = movement.getPrice()
-        price_currency = movement.getPriceCurrency()
-        base_application_list = movement.getBaseApplicationList()
-        base_contribution_list = movement.getBaseContributionList()
-        use_list = movement.getUseList()
+    movement = self._getLatestOpenOrderPath()
+    if movement is not None:
+      resource = movement.getResource()
+      start_date = movement.getStartDate()
+      # if there is no stop_date, block the generation
+      # to today
+      stop_date = movement.getStopDate()
+      if (start_date == stop_date) or (stop_date is None):
+        # stop_date seems acquired from start_date
+        stop_date = DateTime()
+      if (start_date is None) or (stop_date < start_date):
+        # infinity nor time back machine does not exist
+        return result
+      source = movement.getSource()
+      source_section = movement.getSourceSection()
+      source_project = movement.getSourceProject()
+      source_decision = movement.getSourceDecision()
+      source_payment = movement.getSourcePayment()
+      destination = movement.getDestination()
+      destination_section = movement.getDestinationSection()
+      destination_project = movement.getDestinationProject()
+      destination_decision = movement.getDestinationDecision()
+      destination_payment = movement.getDestinationPayment()
+      quantity = movement.getQuantity()
+      quantity_unit = movement.getQuantityUnit()
+      price = movement.getPrice()
+      price_currency = movement.getPriceCurrency()
+      # XXX no acquisition
+      base_application_list = movement.getBaseApplicationList()
+      base_contribution_list = movement.getBaseContributionList()
+      # XXX no acquisition
+      use_list = movement.getUseList()
+      # XXX no acquisition
+      aggregate_list = movement.getAggregateList()
 
-        specialise = movement.getSpecialise()
-        current_date = start_date
-        id_index = 0
-        while current_date < stop_date:
-          next_date = self.getNextPeriodicalDate(current_date)
-          generated_movement = self.newContent(temp_object=True,
-                                               portal_type='Movement',
-                                               id='subscription_%s' % id_index)
-          generated_movement._edit(  aggregate_value=self,
-                                     resource=resource,
-                                     quantity=quantity,
-                                     quantity_unit=quantity_unit,
-                                     price=price,
-                                     price_currency=price_currency,
-                                     start_date=current_date,
-                                     stop_date=next_date,
-                                     source=source,
-                                     source_section=source_section,
-                                     source_decision=source_decision,
-                                     destination=destination,
-                                     destination_section=destination_section,
-                                     destination_decision=destination_decision,
-                                     specialise=specialise,
-                                     base_application_list=base_application_list,
-                                     base_contribution_list=base_contribution_list,
-                                     use_list=use_list
-                                    )
-          result.append(generated_movement)
-          current_date = next_date
-          id_index += 1
+      variation_category_list = movement.getVariationCategoryList()
+
+      # XXX no acquisition
+      specialise = movement.getSpecialise()
+      current_date = start_date
+      id_index = 0
+      while current_date < stop_date:
+        next_date = self.getNextPeriodicalDate(current_date)
+        generated_movement = self.newContent(temp_object=True,
+                                             portal_type='Movement',
+                                             id='subscription_%s' % id_index)
+        generated_movement._edit(  aggregate_list=aggregate_list,
+                                   resource=resource,
+                                   quantity=quantity,
+                                   quantity_unit=quantity_unit,
+                                   price=price,
+                                   price_currency=price_currency,
+                                   start_date=current_date,
+                                   stop_date=next_date,
+                                   source=source,
+                                   source_section=source_section,
+                                   source_project=source_project,
+                                   source_decision=source_decision,
+                                   source_payment=source_payment,
+                                   destination=destination,
+                                   destination_section=destination_section,
+                                   destination_project=destination_project,
+                                   destination_decision=destination_decision,
+                                   destination_payment=destination_payment,
+                                   specialise=specialise,
+                                   base_application_list=base_application_list,
+                                   base_contribution_list=base_contribution_list,
+                                   use_list=use_list,
+                                   variation_category_list=variation_category_list
+                                  )
+        result.append(generated_movement)
+        current_date = next_date
+        id_index += 1
 
     return result
 
   # XXX BELOW HACKS
   def getResource(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getResource()
 
   def getStartDate(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getStartDate()
 
   def getStopDate(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getStopDate()
 
   def getSource(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getSource()
 
   def getSourceSection(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getSourceSection()
 
   def getDestination(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getDestination()
 
   def getDestinationSection(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getDestinationSection()
 
   def getQuantity(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getQuantity()
 
   def getQuantityUnit(self, checked_permission=None):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getQuantityUnit(checked_permission=checked_permission)
 
   def getPrice(self, context=None):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getPrice()
 
   def getPriceCurrency(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getPriceCurrency()
 
   def getSpecialise(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getSpecialise()
 
   def getSpecialiseList(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return []
     return open_order_line.getSpecialiseList()
 
   def getSpecialiseValue(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return None
     return open_order_line.getSpecialiseValue()
 
   def getSpecialiseValueList(self):
-    open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
+    open_order_line = self._getLatestOpenOrderPath()
     if open_order_line is None:
       return []
     return open_order_line.getSpecialiseValueList()
@@ -275,10 +311,11 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       checked_permission=None,
       **kw):
     if category == 'specialise':
-      open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
-      return open_order_line._getCategoryMembershipList(category, spec=spec, filter=filter,
-                             portal_type=portal_type, base=base, keep_default=keep_default,
-                             checked_permission=checked_permission, **kw)
+      open_order_line = self._getLatestOpenOrderPath()
+      if open_order_line is not None:
+        return open_order_line._getCategoryMembershipList(category, spec=spec, filter=filter,
+                               portal_type=portal_type, base=base, keep_default=keep_default,
+                               checked_permission=checked_permission, **kw)
     return Base._getCategoryMembershipList(self, category, spec=spec, filter=filter,
                 portal_type=portal_type, base=base, keep_default=keep_default,
                 checked_permission=checked_permission, **kw)
