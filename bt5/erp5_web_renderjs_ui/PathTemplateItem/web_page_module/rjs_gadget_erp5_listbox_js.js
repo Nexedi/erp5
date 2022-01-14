@@ -7,6 +7,21 @@
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
 
+  function getDefaultGraphicType(option_list) {
+    var i,
+      default_option_list = [
+        "translated_simulation_state_title",
+        "translated_validation_state_title"
+      ];
+
+    for (i = 0; i < option_list.length; i += 1) {
+      if (default_option_list.indexOf(option_list[i][0]) !== -1) {
+        return option_list[i][0];
+      }
+    }
+    return option_list[0][0];
+  }
+
   function buildFieldGadgetParam(value) {
     var field_gadget_param;
 
@@ -582,7 +597,7 @@
 
                 // graphic
                 enable_graphic: options.enable_graphic,
-                graphic_type: graphic_type || option_list[0][0]
+                graphic_type: graphic_type || getDefaultGraphicType(option_list)
               });
             });
         });
@@ -1215,11 +1230,11 @@
             gadget.state.graphic_type &&
             gadget.state.option_list.length > 0 &&
             gadget.state.graphic_type !== "") {
-          gadget.element.querySelector(
-            'select[name="GraphicSelect"]'
-          ).value = gadget.state.graphic_type;
           result_queue
             .push(function () {
+              gadget.element.querySelector(
+                'select[name="GraphicSelect"]'
+              ).value = gadget.state.graphic_type;
               return gadget.declareGadget('gadget_graphic.html', {
                 scope: 'gadget_graphic',
                 element: gadget.element.querySelector(".graphic_area")
