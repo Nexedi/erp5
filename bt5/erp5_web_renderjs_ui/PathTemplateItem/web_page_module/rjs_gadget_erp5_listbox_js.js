@@ -582,7 +582,7 @@
 
                 // graphic
                 enable_graphic: options.enable_graphic,
-                graphic_type: graphic_type
+                graphic_type: graphic_type || option_list[0][0]
               });
             });
         });
@@ -1215,6 +1215,9 @@
             gadget.state.graphic_type &&
             gadget.state.option_list.length > 0 &&
             gadget.state.graphic_type !== "") {
+          gadget.element.querySelector(
+            'select[name="GraphicSelect"]'
+          ).value = gadget.state.graphic_type;
           result_queue
             .push(function () {
               return gadget.declareGadget('gadget_graphic.html', {
@@ -1230,9 +1233,6 @@
                 domain_list = [],
                 domain_id,
                 domain;
-              gadget.element.querySelector(
-                'select[name="GraphicSelect"]'
-              ).value = gadget.state.graphic_type;
               for (i = 0; i < column_list_json.length; i += 1) {
                 if (column_list_json[i][0] === gadget.state.graphic_type) {
                   group_by = column_list_json[i][0];
