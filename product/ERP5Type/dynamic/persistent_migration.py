@@ -41,7 +41,7 @@ from OFS.Folder import Folder as OFS_Folder
 from persistent import Persistent, wref
 from ZODB.serialize import ObjectWriter, ObjectReader
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import Base, WorkflowMethod
+from Products.ERP5Type.Base import Base, TempBase, WorkflowMethod
 
 log = logging.getLogger('ERP5Type')
 log.trace = lambda *args, **kw: log.log(5, *args, **kw)
@@ -164,6 +164,8 @@ if 1:
     klass = self.__class__
 
     if klass.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
+      return Base__setstate__(self, value)
+    if klass is TempBase:
       return Base__setstate__(self, value)
     try:
       portal_type = value.get('portal_type') or klass.portal_type

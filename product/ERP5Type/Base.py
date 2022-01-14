@@ -70,6 +70,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
+from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from .Accessor import WorkflowState
@@ -3626,51 +3627,16 @@ def removeIContentishInterface(cls):
 
 removeIContentishInterface(Base)
 
-class TempBase(Base):
-  """A  version of Base that does not persist in ZODB.
+class TempBase(TemporaryDocumentMixin, Base):
+  """A version of Base that does not persist in ZODB.
 
   This class only has the Base methods, so most of the times it is
   preferable to use a temporary portal type instead.
   """
-  isIndexable = ConstantGetter('isIndexable', value=False)
-  isTempDocument = ConstantGetter('isTempDocument', value=True)
-
   # Declarative security
   security = ClassSecurityInfo()
-
-  def reindexObject(self, *args, **kw):
-    pass
-
-  def recursiveReindexObject(self, *args, **kw):
-    pass
-
-  def activate(self, *args, **kw):
-    return self
-
-  def setUid(self, value):
-    self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
-
-  def setTitle(self, value):
-    """
-    Required so that getProperty('title') will work on tempBase objects
-    The dynamic acquisition work very well for a lot of properties, but
-    not for title. For example, if we do setProperty('organisation_url'), then
-    even if organisation_url is not in a propertySheet, the method getOrganisationUrl
-    will be generated. But this does not work for title, because I(seb)'m almost sure
-    there is somewhere a method '_setTitle' or 'setTitle' with no method getTitle on Base.
-    That why setProperty('title') and getProperty('title') does not work.
-    """
-    self.title = value
-
-  def getTitle(self):
-    """
-      Returns the title of this document
-    """
-    return getattr(aq_base(self), 'title', None)
-
   security.declarePublic('setProperty')
   security.declarePublic('getProperty')
-
   security.declarePublic('edit')
 
 # Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8
