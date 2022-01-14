@@ -168,6 +168,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       self.getWorkflowTool().manage_delObjects(['geek_workflow'])
     if 'custom_geek_workflow' in self.getWorkflowTool().objectIds():
       self.getWorkflowTool().manage_delObjects(['custom_geek_workflow'])
+    if 'mixin.erp5.GeekMixin' in self.portal.portal_components.objectIds():
+      self.portal.portal_components.manage_delObjects(['mixin.erp5.GeekMixin'])
     for business_template in self.getTemplateTool().contentValues():
       if business_template.getTitle() == 'geek template':
         self.getTemplateTool().manage_delObjects([business_template.getId()])
@@ -431,6 +433,40 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(trash.objectIds()), 1)
     bt_id = sequence.get('import_bt').getId()
     self.assertNotIn(bt_id, trash_ids[0])
+
+  # Components
+  def stepCreateMixinComponent(self, sequence=None, **kw):
+    document_id =  'mixin.erp5.GeekMixin'
+    component = self.portal.portal_components.newContent(
+      id=document_id,
+      version='erp5',
+      reference='GeekMixin',
+      text_content='''class GeekMixin:
+  def getGeekMessage(self):
+    return 'Geek Message'
+''',
+      portal_type='Mixin Component')
+
+    component.validate()
+    sequence.edit(mixin_reference=component.getReference())
+
+  def stepSetPortalTypeMixin(self, sequence=None, **kw):
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    object_pt.setTypeMixinList((sequence.get('mixin_reference'),))
+
+  def stepCheckPortalTypeMixinIsSet(self, sequence=None, **kw):
+    """
+    Check presence of portal type
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_type = pt._getOb(object_id, None)
+    self.assertTrue(object_type is not None)
+    self.assertTrue(object_type.getTypeMixinList())
+    self.assertEqual(object_type.getTypeMixinList(),
+      (sequence.get('mixin_reference'),))
 
   # portal types
   def stepCreatePortalType(self, sequence=None, **kw):
@@ -2764,6 +2800,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                  'template_portal_type_hidden_content_type_list',
                  'template_portal_type_property_sheet_list',
                  'template_portal_type_base_category_list',
+                 'template_portal_type_type_mixin',
                  # test_20_checkUpdateTool recreates portal_simulation
                  'template_tool_component_id_list',
                  'template_keep_path_list',
@@ -5818,6 +5855,46 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_36_CheckPortalTypeMixin(self):
+    """Test Portal Type Mixin"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateMixinComponent \
+                       SetPortalTypeMixin \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       AddPortalTypeToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       RemovePortalType \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckPortalTypeExists \
+                       CheckPortalTypeMixinIsSet \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckPortalTypeRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def test_37_UpdatePortalType(self):
     """Test Update Portal Type"""
     sequence_list = SequenceList()
@@ -8701,6 +8778,7 @@ class TestExtensionTemplateItem(_LocalTemplateItemMixin,
   # Specific to ZODB Extension Component
   component_id_prefix = ExtensionComponent.getIdPrefix()
   component_portal_type = ExtensionComponent.portal_type
+
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 # bt5 (instancehome (legacy) and ZODB Component) and Products
