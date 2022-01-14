@@ -433,7 +433,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       ))
       # We need ERP5 Form portal_type to exist during migration we would be
       # indexing some ERP5 Form objects.
-      ERP5Generator.bootstrap(portal_types, 'erp5_hal_json_style', 'PortalTypeTemplateItem', (
+      ERP5Generator.bootstrap(portal_types, 'erp5_core', 'PortalTypeTemplateItem', (
         'ERP5 Form',
       ))
 
