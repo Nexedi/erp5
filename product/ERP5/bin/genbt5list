@@ -87,6 +87,7 @@ item_name_list = (
   'portal_type_hidden_content_type',
   'portal_type_property_sheet',
   'portal_type_base_category',
+  'portal_type_type_mixin',
   'category',
   'module',
   'portal_type_roles',

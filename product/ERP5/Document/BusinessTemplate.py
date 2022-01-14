@@ -2923,6 +2923,12 @@ class PortalTypeBaseCategoryTemplateItem(PortalTypeAllowedContentTypeTemplateIte
   class_property = 'base_category_list'
   business_template_class_property = '_portal_type_base_category_item'
 
+class PortalTypeTypeMixinTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
+
+  name = 'Type Mixin'
+  xml_tag = 'type_mixin'
+  class_property = 'type_mixin'
+  business_template_class_property = '_portal_type_type_mixin_item'
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
   """Template Item for catalog methods.
@@ -5232,6 +5238,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._portal_type_base_category_item = \
            PortalTypeBaseCategoryTemplateItem(
                self.getTemplatePortalTypeBaseCategoryList())
+      self._portal_type_type_mixin_item = \
+           PortalTypeTypeMixinTemplateItem(
+               self.getTemplatePortalTypeTypeMixinList())
       self._path_item = \
                PathTemplateItem(self.getTemplatePathList())
       self._preference_item = \
@@ -5699,6 +5708,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_base_category')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeTypeMixiniList')
+    def getTemplatePortalTypeTypeMixinList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_portal_type_type_mixin')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateActionPathList')
     def getTemplateActionPathList(self):
       """
@@ -6057,6 +6074,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'PortalHiddenAllowedContentType' : '_portal_type_hidden_content_type_item',
         'PortalTypePropertySheet' : '_portal_type_property_sheet_item',
         'PortalTypeBaseCategory' : '_portal_type_base_category_item',
+        'PortalTypeTypeMixin' : '_portal_type_type_mixin_item',
         'Category' : '_category_item',
         'Module' : '_module_item',
         'Skin' : '_skin_item',
@@ -6149,6 +6167,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_portal_type_property_sheet_item',
                      '_portal_type_roles_item',
                      '_portal_type_base_category_item',
+                     '_portal_type_type_mixin',
                      '_local_roles_item',
                      '_portal_type_workflow_chain_item',]
 
@@ -6242,6 +6261,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         self.getTemplatePortalTypePropertySheetList())
       bt_base_category_list = list(
         self.getTemplatePortalTypeBaseCategoryList())
+      bt_type_mixin_list = list(
+        self.getTemplatePortalTypeTypeMixinList())
       bt_action_list = list(self.getTemplateActionPathList())
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
       bt_portal_type_roles_list = list(self.getTemplatePortalTypeRoleList())
@@ -6260,6 +6281,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         property_sheet_list = []
         base_category_list = []
         action_list = []
+        type_mixin_list = []
         if hasattr(portal_type, 'allowed_content_types'):
           allowed_content_type_list = portal_type.allowed_content_types
         if hasattr(portal_type, 'hidden_content_type_list'):
@@ -6268,6 +6290,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           property_sheet_list = portal_type.property_sheet_list
         if hasattr(portal_type, 'base_category_list'):
           base_category_list = portal_type.base_category_list
+        if hasattr(portal_type, 'type_mixin'):
+          type_mixin_list = portal_type.type_mixin
         for action in portal_type.getActionInformationList():
           action_list.append(action.getReference())
 
@@ -6291,6 +6315,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
           if base_cat_id not in bt_base_category_list:
             bt_base_category_list.append(base_cat_id)
 
+        for tm_id in type_mixin_list:
+          type_mixin_id = id+' | '+tm_id
+          if type_mixin_id not in type_mixin_list:
+            bt_type_mixin_list.append(tm_id)
+
         for act_id in action_list:
           action_id = id+' | '+act_id
           if action_id not in bt_action_list:
@@ -6308,6 +6337,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_base_category_list.sort()
       bt_action_list.sort()
       bt_wf_chain_list.sort()
+      bt_type_mixin_list.sort()
 
       self.setTemplatePortalTypeWorkflowChainList(bt_wf_chain_list)
       self.setTemplatePortalTypeRoleList(bt_portal_type_roles_list)
@@ -6316,7 +6346,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.setTemplatePortalTypePropertySheetList(bt_property_sheet_list)
       self.setTemplatePortalTypeBaseCategoryList(bt_base_category_list)
       self.setTemplateActionPathList(bt_action_list)
-
+      self.setTemplatePortalTypeTypeMixin(bt_type_mixin_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'guessPortalTypes')
@@ -6397,6 +6427,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       setattr(self, 'template_portal_type_id', ())
       setattr(self, 'template_portal_type_allowed_content_type', ())
+      setattr(self, 'template_portal_type_type_mixin', ())
       setattr(self, 'template_portal_type_hidden_content_type', ())
       setattr(self, 'template_portal_type_property_sheet', ())
       setattr(self, 'template_portal_type_base_category', ())
