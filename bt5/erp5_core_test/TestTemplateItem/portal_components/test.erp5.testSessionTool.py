@@ -82,6 +82,14 @@ class SessionToolTestCase(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     self.assertEqual(primitives_kw, session)
 
+  def test_store_temp_base(self):
+    portal_sessions =  self.portal.portal_sessions
+    from Products.ERP5Type.Document import newTempBase
+    session = portal_sessions.newContent(
+        self.session_id,
+        temp_base=newTempBase(self.portal, 'temp_base', title='Temp Base'))
+    self.assertEqual(session['temp_base'].getTitle(), 'Temp Base')
+
   def test_store_temp_object(self):
     portal_sessions =  self.portal.portal_sessions
     session = portal_sessions.newContent(
