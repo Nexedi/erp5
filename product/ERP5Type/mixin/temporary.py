@@ -40,7 +40,7 @@ class TemporaryDocumentMixin(object):
   """
   Setters and attributes that are attached to temporary documents.
   """
-  isIndexable = 0
+  isIndexable = PropertyConstantGetter('isIndexable', value=False)
   isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
   __roles__ = None
 
@@ -85,7 +85,9 @@ class TemporaryDocumentMixin(object):
     self.title = value
 
   def getTitle(self):
-    return getattr(self,'title',None)
+    """Returns the title of this document
+    """
+    return getattr(aq_base(self), 'title', None)
 
   def edit(self, *args, **kw):
     if getattr(self, "_original", None) is None:
