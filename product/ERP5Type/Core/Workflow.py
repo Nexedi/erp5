@@ -834,7 +834,6 @@ class Workflow(XMLObject):
       if object_context is None:
         # XXX(WORKFLOW): investigate: should I keep source value here, or can I use  old_state (see test results also)
         object_context = self.getStateChangeInformation(ob, self.getSourceValue())
-      object_context.REQUEST.other.update(kwargs)
 
     for vdef in self.getVariableValueList():
       variable_id = vdef.getId()
