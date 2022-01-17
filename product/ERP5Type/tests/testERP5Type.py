@@ -236,7 +236,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
           'newTemp*(self, ID) will be removed, use self.newContent(temp_object=True, id=ID, portal_type=...)',
           DeprecationWarning, 2)
 
-    def test_03_NewTempObject(self):
+    def test_newTempBase(self):
       # Products.ERP5Type.Document.newTempBase is another (not recommended) way
       # of creating temp objects
       import Products.ERP5Type.Document
@@ -246,18 +246,32 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertTrue(o.isTempObject())
       self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
 
-    def test_TempObjectPersistent(self):
+    def _test_temp_object_persistent(self, temp_object):
       # Temp objects can not be stored in ZODB
-      temp_object = self.portal.person_module.newContent(portal_type='Person', temp_object=True)
       self.assertTrue(temp_object.isTempObject())
 
       # they can be pickled
       self.assertTrue(pickle.dumps(aq_base(temp_object)))
+      # they can be unpickled
+      import ZODB.broken
+      self.assertNotIsInstance(
+          pickle.loads(pickle.dumps(aq_base(temp_object))),
+          ZODB.broken.Broken,
+      )
 
       # but they can not be saved in ZODB accidentally
       self.portal.person_module.oops = temp_object
       self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
       self.abort()
+
+    def test_temp_object_persistent(self):
+      temp_object = self.portal.person_module.newContent(portal_type='Person', temp_object=True)
+      self._test_temp_object_persistent(temp_object)
+
+    def test_newTempBase_persistent(self):
+      import Products.ERP5Type.Document
+      temp_object = Products.ERP5Type.Document.newTempBase(self.portal, 'id')
+      self._test_temp_object_persistent(temp_object)
 
     def test_warnings_redirected_to_event_log(self):
       self._catch_log_errors()

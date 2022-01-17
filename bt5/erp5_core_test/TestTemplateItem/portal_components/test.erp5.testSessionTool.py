@@ -82,6 +82,14 @@ class SessionToolTestCase(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     self.assertEqual(primitives_kw, session)
 
+  def test_store_temp_base(self):
+    portal_sessions =  self.portal.portal_sessions
+    from Products.ERP5Type.Document import newTempBase
+    session = portal_sessions.newContent(
+        self.session_id,
+        temp_base=newTempBase(self.portal, 'temp_base', title='Temp Base'))
+    self.assertEqual(session['temp_base'].getTitle(), 'Temp Base')
+
   def test_store_temp_object(self):
     portal_sessions =  self.portal.portal_sessions
     session = portal_sessions.newContent(
@@ -96,7 +104,7 @@ class SessionToolTestCase(ERP5TypeTestCase):
       self.assertEqual(str(i), attr.getId())
       self.assertEqual(0, len(attr.objectIds()))
 
-  def test_store_recursive_temp_object(self):
+  def test_store_temp_object_with_sub_object(self):
     doc = self.portal.newContent(
         temp_object=True, portal_type='Document', id='doc', title='Doc')
     doc.newContent(
@@ -107,6 +115,35 @@ class SessionToolTestCase(ERP5TypeTestCase):
     self.assertEqual(doc.getTitle(), 'Doc')
     self.assertEqual(doc.sub_doc.getTitle(), 'Sub doc')
     self.assertEqual(len(doc.contentValues()), 1)
+
+  def test_store_temp_object_in_list(self):
+    doc = self.portal.newContent(
+        temp_object=True, portal_type='Document', id='doc', title='Doc')
+    self.portal.portal_sessions.newContent(self.session_id, doc_list=[doc])
+    self.commit()
+    doc, = self.portal.portal_sessions[self.session_id]['doc_list']
+    self.assertEqual(doc.getTitle(), 'Doc')
+
+  def test_store_temp_object_in_dict(self):
+    doc = self.portal.newContent(
+        temp_object=True, portal_type='Document', id='doc', title='Doc')
+    self.portal.portal_sessions.newContent(self.session_id, doc_dict={'doc': doc})
+    self.commit()
+    doc = self.portal.portal_sessions[self.session_id]['doc_dict']['doc']
+    self.assertEqual(doc.getTitle(), 'Doc')
+
+  def test_store_temp_object_in_nested_container(self):
+    doc = self.portal.newContent(
+        temp_object=True, portal_type='Document', id='doc', title='Doc')
+    self.portal.portal_sessions.newContent(
+        self.session_id, data={'doc_set_list': [set([doc])]})
+    self.commit()
+    doc_set_list = self.portal.portal_sessions[self.session_id]['data']['doc_set_list']
+    self.assertIsInstance(doc_set_list, list)
+    doc_set, = doc_set_list
+    self.assertIsInstance(doc_set, set)
+    doc, = list(doc_set)
+    self.assertEqual(doc.getTitle(), 'Doc')
 
   def test_modify_session(self):
     """ Modify session and check that modifications are updated in storage backend."""
