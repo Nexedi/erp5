@@ -14,6 +14,9 @@
         "translated_validation_state_title"
       ];
 
+    if (!option_list.length) {
+      return;
+    }
     for (i = 0; i < option_list.length; i += 1) {
       if (default_option_list.indexOf(option_list[i][0]) !== -1) {
         return option_list[i][0];
