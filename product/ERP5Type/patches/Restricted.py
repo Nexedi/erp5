@@ -479,3 +479,7 @@ full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIn
 full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
 full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
 full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
+
+from wendelin.bigarray.array_zodb import ZBigArray
+full_write_guard.func_closure[1].cell_contents.__self__[ZBigArray] = True
+allow_type(ZBigArray)
