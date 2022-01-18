@@ -136,6 +136,13 @@
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
           form_options.enable_graphic = true;
+          if (!form_gadget.state.extended_search) {
+            form_gadget.element.querySelector(
+              ".graphic-button").classList.add("ui-screen-hidden");
+          } else {
+            form_gadget.element.querySelector(
+              ".graphic-button").classList.remove("ui-screen-hidden");
+          }
           return erp5_form.render(form_options);
         })
 
@@ -201,6 +208,17 @@
         });
     }, {mutex: 'changestate'})
 
+    .onEvent('click', function click(evt) {
+      var gadget = this;
+      if (evt.target.classList.contains("display-graphic")) {
+        return gadget.redirect({
+          command: "display_with_history",
+          options: {
+            jio_key: gadget.state.jio_key
+          }
+        });
+      }
+    })
     .onEvent('submit', function submit() {
       var gadget = this;
 
