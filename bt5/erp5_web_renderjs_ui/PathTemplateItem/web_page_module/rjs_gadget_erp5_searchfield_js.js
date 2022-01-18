@@ -1,8 +1,8 @@
 /*global window, rJS, document, Node,
-         QueryFactory, SimpleQuery, ComplexQuery, Query*/
+         QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, document, Node,
-           QueryFactory, SimpleQuery, ComplexQuery, Query) {
+           QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar) {
   "use strict";
 
   function convertQueryToSearchText(query) {
@@ -114,15 +114,17 @@
       button_container.innerHTML = '';
       len = query_text_list.length;
       for (i = 0; i < len; i += 1) {
-        button = document.createElement('button');
-        button.textContent = query_text_list[i];
-        button.value = i;
-        button_container.appendChild(button);
+        button_container.appendChild(
+          domsugar("button", {
+            "text": query_text_list[i],
+            "value": i
+          })
+        );
       }
-      button = document.createElement('input');
-      button.setAttribute("type", "hidden");
-      button.value = parsed_value;
-      button_container.appendChild(button);
+      button_container.appendChild(domsugar("input", {
+        "type": "hidden",
+        "value": parsed_value
+      }));
 
       return gadget.getDeclaredGadget('input')
         .push(function (input_gadget) {
@@ -235,4 +237,4 @@
     }, false, false);
 
 }(window, rJS, document, Node,
-  QueryFactory, SimpleQuery, ComplexQuery, Query));
+  QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar));
