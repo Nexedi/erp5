@@ -83,6 +83,7 @@
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>
                 <string>destination_account</string>
+                <string>destination_account_value</string>
                 <string>destination_function</string>
                 <string>destination_function_value</string>
                 <string>destination_function_value_list</string>
@@ -92,6 +93,7 @@
                 <string>destination_funding_value_list</string>
                 <string>destination_funding_title</string>
                 <string>source_account</string>
+                <string>source_account_value</string>
                 <string>source_function</string>
                 <string>source_function_title</string>
                 <string>source_function_value</string>

@@ -1045,7 +1045,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         individual_variation_base_category='variation',
         base_contribution='base_amount/taxable',
         default_sale_supply_line_base_price=10,
-        default_sale_supply_line_source_account=sales_account.getRelativeUrl(),
+        default_sale_supply_line_source_account_value=sales_account,
     )
     portal.portal_workflow.doActionFor(resource, 'validate_action')
     self.tic()
@@ -1053,7 +1053,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         portal_type='Service',
         title="VAT",
         use_value=self.portal.portal_categories.use.trade.tax,
-        default_sale_supply_line_source_account=vat_account.getRelativeUrl(),
+        default_sale_supply_line_source_account_value=vat_account,
     )
     portal.portal_workflow.doActionFor(vat_service, 'validate_action')
 
@@ -1483,7 +1483,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         individual_variation_base_category='variation',
         base_contribution='base_amount/taxable',
         default_purchase_supply_line_base_price=10,
-        default_purchase_supply_line_destination_account=expense_account.getRelativeUrl(),
+        default_purchase_supply_line_destination_account_value=expense_account,
     )
     portal.portal_workflow.doActionFor(resource, 'validate_action')
     self.tic()
@@ -1491,7 +1491,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         portal_type='Service',
         title="VAT",
         use_value=self.portal.portal_categories.use.trade.tax,
-        default_purchase_supply_line_destination_account=vat_account.getRelativeUrl(),
+        default_purchase_supply_line_destination_account_value=vat_account,
     )
     portal.portal_workflow.doActionFor(vat_service, 'validate_action')
 
