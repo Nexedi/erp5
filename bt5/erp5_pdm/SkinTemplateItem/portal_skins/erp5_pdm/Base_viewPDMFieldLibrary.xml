@@ -233,6 +233,8 @@
                         <string>my_dialog_mode_section_category</string>
                         <string>my_dialog_mode_quantity_unit</string>
                         <string>my_dialog_mode_metric_type</string>
+                        <string>my_source_function</string>
+                        <string>my_destination_function</string>
                       </list>
                     </value>
                 </item>
