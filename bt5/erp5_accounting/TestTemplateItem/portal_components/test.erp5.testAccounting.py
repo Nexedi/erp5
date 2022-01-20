@@ -30,6 +30,9 @@
 
 """
 
+from StringIO import StringIO
+import lxml
+
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
@@ -4411,6 +4414,93 @@ class TestTransactions(AccountingTestCase):
     self.assertIn(
       ('getSourceSectionTitle', 'Third Party'),
       at.AccountingTransaction_getListBoxColumnList(source=False))
+
+  def test_AccountingTransaction_getListBoxColumnList_item_column(self):
+    item1 = self.portal.item_module.newContent(title='Item 1')
+    item2 = self.portal.item_module.newContent(title='Item 2')
+    aggregate_column_item = ('aggregate_title_list', 'Items')
+
+    for view_id, at in (
+        (
+            'view',
+            self._makeOne(
+                portal_type='Accounting Transaction',
+                source_section_value=self.section,
+                destination_section_value=self.organisation_module.client_1,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+        (
+            'SaleInvoiceTransaction_viewAccounting',
+            self._makeOne(
+                portal_type='Sale Invoice Transaction',
+                source_section_value=self.section,
+                destination_section_value=self.organisation_module.client_1,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+        (
+            'view',
+            self._makeOne(
+                portal_type='Payment Transaction',
+                source_section_value=self.section,
+                destination_section_value=self.organisation_module.client_1,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+        (
+            'PurchaseInvoiceTransaction_viewAccounting',
+            self._makeOne(
+                portal_type='Purchase Invoice Transaction',
+                destination_section_value=self.section,
+                source_section_value=self.organisation_module.supplier,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+    ):
+      self.assertNotIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=True),
+      )
+      self.assertNotIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=False),
+      )
+
+      at.line_with_aggregate.setAggregateValueList((item1, item2))
+      html = getattr(at, view_id)()
+      tree = lxml.etree.parse(StringIO(html), lxml.etree.HTMLParser())
+      self.assertIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=True),
+      )
+      self.assertIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=False),
+      )
+      self.assertEqual(
+          tree.xpath(
+              '//table[contains(@class, "listbox-table")]/thead/tr/th/text()'),
+          [u'\xa0', 'ID', 'Account', 'Items', 'Debit', 'Credit'],
+      )
+      self.assertEqual(
+          tree.xpath(
+              '//table[contains(@class, "listbox-table")]/tbody/tr[1]/td[4]/a/div/text()'
+          ),
+          ['Item 1', 'Item 2'],
+      )
 
   def test_AccountingTransaction_getSourcePaymentItemList(self):
     # AccountingTransaction_getSourcePaymentItemList allows to select bank accounts
