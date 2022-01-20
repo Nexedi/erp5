@@ -83,6 +83,7 @@
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>
                 <string>destination_account</string>
+                <string>destination_account_value</string>
                 <string>destination_function</string>
                 <string>destination_function_value</string>
                 <string>destination_function_value_list</string>
