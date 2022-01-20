@@ -84,6 +84,7 @@
                         <string>listbox_source_credit</string>
                         <string>listbox_source_function</string>
                         <string>listbox_source_funding</string>
+                        <string>listbox_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>
