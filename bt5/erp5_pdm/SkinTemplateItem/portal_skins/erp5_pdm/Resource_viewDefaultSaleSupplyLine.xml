@@ -109,6 +109,7 @@
                         <string>my_sale_supply_line_priced_quantity</string>
                         <string>my_sale_supply_line_quantity_unit</string>
                         <string>my_sale_supply_line_source_account</string>
+                        <string>my_sale_supply_line_source_function</string>
                         <string>my_sale_supply_line_start_date_range_min</string>
                         <string>my_sale_supply_line_start_date_range_max</string>
                         <string>my_sale_supply_line_min_delay</string>
