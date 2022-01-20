@@ -84,6 +84,7 @@
                         <string>listbox_destination_debit</string>
                         <string>listbox_destination_function</string>
                         <string>listbox_destination_funding</string>
+                        <string>listbox_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>
