@@ -113,6 +113,7 @@
                         <string>my_base_unit_price</string>
                         <string>my_price_currency</string>
                         <string>my_source_account</string>
+                        <string>my_source_function</string>
                         <string>my_start_date_range_min</string>
                         <string>my_start_date_range_max</string>
                         <string>my_ledger</string>
