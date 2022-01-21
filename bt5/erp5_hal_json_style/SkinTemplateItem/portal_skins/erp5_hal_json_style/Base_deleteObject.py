@@ -39,7 +39,7 @@ request.RESPONSE.setStatus(400)
 return context.Base_renderForm(
   dialog_id,
   keep_items={
-    'portal_status_message': translate("Document can not be deleted"),
+    'portal_status_message': translate("You are not authorised to delete the document"),
     'portal_status_level': 'warning'
   }
 )
