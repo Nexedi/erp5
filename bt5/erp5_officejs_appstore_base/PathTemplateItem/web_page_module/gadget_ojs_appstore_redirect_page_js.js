@@ -1,7 +1,7 @@
 /*globals window, document, RSVP, rJS, navigator*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
 
-(function (window, document, RSVP, rJS, navigator) {
+(function (window, document, RSVP, rJS, navigator, console) {
   "use strict";
 
   rJS(window)
@@ -15,6 +15,11 @@
         queue.push(function () {
           return navigator.serviceWorker.register(
             "gadget_erp5_serviceworker.js");
+        })
+        .push(undefined, function (error) {
+          // If service worker installation is rejected,
+          // do not prevent the site to be usable, even if slower
+          console.warn("Service worker registration failed", error);
         });
       }
       return queue
@@ -24,4 +29,4 @@
         });
     });
 
-}(window, document, RSVP, rJS, navigator));
+}(window, document, RSVP, rJS, navigator, console));
