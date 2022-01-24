@@ -13,7 +13,6 @@
         "translated_simulation_state_title",
         "translated_validation_state_title"
       ];
-
     if (!option_list.length) {
       return;
     }
@@ -616,7 +615,6 @@
         i,
         j,
         result_queue = new RSVP.Queue(),
-        graphic_option_list = [],
         button_selector_list = ['button[name="Sort"]', 'button[name="Hide"]',
                                 'button[name="Clipboard"]',
                                 'button[name="Configure"]',
@@ -1197,7 +1195,6 @@
               })
               .push(function () {
                 var loading_element = gadget.element.querySelector(".listboxloader"),
-                  graphic_option_list = [],
                   loading_element_classList;
                 if (loading_element) {
                   loading_element_classList = loading_element.classList;
@@ -1207,21 +1204,9 @@
                 if (gadget.state.option_list.length > 0 &&
                     gadget.state.enable_graphic &&
                     !gadget.state.extended_search) {
-                  for (i = 0; i < gadget.state.option_list.length; i += 1) {
-                    graphic_option_list.push(
-                      domsugar("option", {
-                        "value": gadget.state.option_list[i][0],
-                        "text": gadget.state.option_list[i][1]
-                      })
-                    );
-                  }
                   if (!gadget.state.extended_search &&
                        gadget.state.enable_graphic) {
                     domsugar(gadget.element.querySelector(".graphic_section"), [
-                      domsugar("select", {
-                        "name": "GraphicSelect",
-                        "value": gadget.state.graphic_type
-                      }, graphic_option_list),
                       domsugar("div", {"class": "graphic_area"})
                    ]);
                   }
@@ -1235,9 +1220,18 @@
             gadget.state.graphic_type !== "") {
           result_queue
             .push(function () {
-              gadget.element.querySelector(
-                'select[name="GraphicSelect"]'
-              ).value = gadget.state.graphic_type;
+              return gadget.getUrlParameter("display_graphic_panel")
+            })
+            .push(function (result) {
+              if (result) {
+                return gadget.renderEditorPanel(
+                  "gadget_erp5_graphic_editor.html", {
+                    graphic_option_list: gadget.state.option_list,
+                    graphic_type: gadget.state.graphic_type
+                });
+              }
+            })
+            .push(function () {
               return gadget.declareGadget('gadget_graphic.html', {
                 scope: 'gadget_graphic',
                 element: gadget.element.querySelector(".graphic_area")
@@ -1502,20 +1496,6 @@
           return result;
         });
     }, {mutex: 'changestate'})
-    .onEvent('change', function change(evt) {
-      var gadget = this,
-        graphic_select = gadget.element.querySelector(
-          'select[name="GraphicSelect"]'
-        );
-      if (evt.target == graphic_select) {
-        return gadget.redirect({
-          command: 'store_and_change',
-          options: {
-            graphic_type: evt.target.value
-          }
-        });
-      }
-    })
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks

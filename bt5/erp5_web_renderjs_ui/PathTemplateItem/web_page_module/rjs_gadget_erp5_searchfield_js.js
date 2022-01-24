@@ -31,16 +31,20 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
       var state_dict = {
-        extended_search: options.extended_search || ""
+        extended_search: options.extended_search || "",
+        enable_graphic: options.enable_graphic || false
       };
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var gadget = this,
         i,
         len,
         button_container = gadget.element.querySelector('div.search_parsed_value'),
+        button_graphic = gadget.element.querySelector(".graphic-button"),
+        select_button_graphic = gadget.element.querySelector(".change-graphic-button"),
+        graphic_css_class = "ui-screen-hidden",
         button,
         operator = 'AND',
         jio_query_list = [],
@@ -53,6 +57,12 @@
         continue_full_text_query_search = true;
 
       if (gadget.state.extended_search) {
+        if (modification_dict.enable_graphic &&
+              button_graphic && button_graphic.classList.contains(
+            graphic_css_class)) {
+          button_graphic.classList.remove(graphic_css_class);
+        }
+
         // Parse the raw query
         try {
           jio_query = QueryFactory.create(gadget.state.extended_search);
@@ -109,8 +119,13 @@
             }));
           }
         }
+      } else if (modification_dict.enable_graphic &&
+                   button_graphic && !button_graphic.classList.contains(
+                 graphic_css_class)) {
+        button_graphic.classList.add(graphic_css_class);
+      } else if (modification_dict.enable_graphic && select_button_graphic) {
+        select_button_graphic.classList.remove(graphic_css_class);
       }
-
       button_container.innerHTML = '';
       len = query_text_list.length;
       for (i = 0; i < len; i += 1) {
@@ -224,15 +239,32 @@
       // But, in the case of panel, we don't need to handle anything.
       return;
     })
-
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
-      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
-          (evt.target.tagName === 'BUTTON') &&
-          (evt.target.value)) {
-        // Open the filter panel if one 'search' button is clicked
-        evt.preventDefault();
-        return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
+      if (evt.target.tagName === 'BUTTON') {
+        if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
+            (evt.target.value)) {
+          // Open the filter panel if one 'search' button is clicked
+          evt.preventDefault();
+          return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
+        } else if (evt.target.classList.contains("graphic-button")) {
+          return this.redirect({
+            command: "change",
+            options: {
+              extended_search: ""
+            }
+          });
+        } else if (evt.target.classList.contains("change-graphic-button")) {
+          return this.redirect({
+            command: "change",
+            options: {
+              display_graphic_panel: true,
+              extended_search: ""
+            }
+          });
+        }
+
       }
     }, false, false);
 
