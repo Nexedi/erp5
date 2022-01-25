@@ -151,70 +151,69 @@
         })
       );
 
-      if (domain_id) {
-        domain_list = options.layout.x.domain_list || [];
-        for (i = 0; i < domain_list.length; i += 1) {
-          data.extended_search_mapping[column_list[i]] = {
-            "key": "selection_domain_" + domain_id,
-            "value": domain_list[i]
-          };
-          sub_query_list.push(new SimpleQuery({
-            key: "selection_domain_" + domain_id,
-            operator: "",
-            type: "simple",
-            value: domain_list[i]
-          }));
-          query_list.push({
-            "query": Query.objectToSearchText(new ComplexQuery({
-              operator: "AND",
-              query_list: jio_query_list.concat(sub_query_list),
-              type: "complex"
-            })),
-            "list_method_template": options.list_method_template,
-            "list_method": options.list_method,
-            "relative_url": options.relative_url,
-            "group_by": group_by,
-            "select_list": select_list
-          });
-          sub_query_list = [];
-        }
-        data.query_list = query_list;
-      } else if (group_by instanceof Array && group_by.length > 1) {
-        data.query = {
-          "query": Query.objectToSearchText(new ComplexQuery({
-            operator: "AND",
-            query_list: jio_query_list,
-            type: "complex"
-          })),
-          "list_method_template": options.list_method_template,
-          "list_method": options.list_method,
-          "relative_url": options.relative_url,
-          "group_by": group_by,
-          "select_list": select_list.concat(group_by)
-        };
-      } else {
-        data.extended_search_mapping[options.title] = {
-          "key": group_by,
-          "value": options.group_by
-        };
-        data.query = {
-          "query": Query.objectToSearchText(new ComplexQuery({
-            operator: "AND",
-            query_list: jio_query_list,
-            type: "complex"
-          })),
-          "list_method_template": options.list_method_template,
-          "list_method": options.list_method,
-          "relative_url": options.relative_url,
-          "group_by": group_by,
-          "select_list": select_list
-        };
-      }
-
       return gadget.getUrlParameter('extended_search')
         .push(function (extended_search) {
           if (extended_search) {
             jio_query_list.push(Query.parseStringToObject(extended_search));
+          }
+          if (domain_id) {
+            domain_list = options.layout.x.domain_list || [];
+            for (i = 0; i < domain_list.length; i += 1) {
+              data.extended_search_mapping[column_list[i]] = {
+                "key": "selection_domain_" + domain_id,
+                "value": domain_list[i]
+              };
+              sub_query_list.push(new SimpleQuery({
+                key: "selection_domain_" + domain_id,
+                operator: "",
+                type: "simple",
+                value: domain_list[i]
+              }));
+              query_list.push({
+                "query": Query.objectToSearchText(new ComplexQuery({
+                  operator: "AND",
+                  query_list: jio_query_list.concat(sub_query_list),
+                  type: "complex"
+                })),
+                "list_method_template": options.list_method_template,
+                "list_method": options.list_method,
+                "relative_url": options.relative_url,
+                "group_by": group_by,
+                "select_list": select_list
+              });
+              sub_query_list = [];
+            }
+            data.query_list = query_list;
+          } else if (group_by instanceof Array && group_by.length > 1) {
+            data.query = {
+              query: Query.objectToSearchText(new ComplexQuery({
+                operator: "AND",
+                query_list: jio_query_list,
+                type : "complex"
+              })),
+              list_method_template: options.list_method_template,
+              list_method: options.list_method,
+              relative_url: options.relative_url,
+              group_by: group_by,
+              select_list: select_list.concat(group_by)
+            };
+          } else {
+            data.extended_search_mapping[options.title] = {
+              key: group_by,
+              value: options.group_by
+            };
+            data.query = {
+              query: Query.objectToSearchText(new ComplexQuery({
+                operator: "AND",
+                query_list: jio_query_list,
+                type: "complex"
+              })),
+              list_method_template: options.list_method_template,
+              list_method: options.list_method,
+              relative_url: options.relative_url,
+              group_by: group_by,
+              select_list: select_list
+            };
           }
           return gadget.changeState(data);
         });

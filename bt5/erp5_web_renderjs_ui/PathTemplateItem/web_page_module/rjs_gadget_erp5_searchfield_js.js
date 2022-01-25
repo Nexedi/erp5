@@ -32,7 +32,8 @@
     .declareMethod('render', function (options) {
       var state_dict = {
         extended_search: options.extended_search || "",
-        enable_graphic: options.enable_graphic || false
+        enable_graphic: options.enable_graphic || false,
+        graphic_type: options.graphic_type
       };
       return this.changeState(state_dict);
     })
@@ -58,10 +59,15 @@
         continue_full_text_query_search = true;
 
       if (gadget.state.extended_search) {
+        console.log(modification_dict);
         if (modification_dict.enable_graphic &&
-              button_graphic && button_graphic.classList.contains(
-            graphic_css_class)) {
+            modification_dict.graphic_type &&
+              button_graphic) {
+          button_graphic.classList.add(graphic_css_class);
+          select_button_graphic.classList.remove(graphic_css_class);
+        } else {
           button_graphic.classList.remove(graphic_css_class);
+          select_button_graphic.classList.add(graphic_css_class);
         }
 
         // Parse the raw query
@@ -124,9 +130,13 @@
                    button_graphic && !button_graphic.classList.contains(
                  graphic_css_class)) {
         button_graphic.classList.add(graphic_css_class);
-      } else if (modification_dict.enable_graphic && select_button_graphic) {
+        select_button_graphic.classList.remove(graphic_css_class);
+      } else if (select_button_graphic &&
+          modification_dict.enable_graphic &&
+          !modification_dict.extended_search ){
         select_button_graphic.classList.remove(graphic_css_class);
       }
+      console.log(modification_dict);
       button_container.innerHTML = '';
       len = query_text_list.length;
       for (i = 0; i < len; i += 1) {
@@ -250,8 +260,14 @@
           // Open the filter panel if one 'search' button is clicked
           evt.preventDefault();
           return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
-        } else if (evt.target.classList.contains("graphic-button") ||
-                   evt.target.classList.contains("change-graphic-button")) {
+        } else if (evt.target.classList.contains("graphic-button")) {
+          return gadget.redirect({
+            command: "store_and_change",
+            options: {
+              graphic_type: gadget.state.graphic_type
+            }
+          });
+        } else if (evt.target.classList.contains("change-graphic-button")) {
           return gadget.triggerListboxGraphicSelection();
         }
 

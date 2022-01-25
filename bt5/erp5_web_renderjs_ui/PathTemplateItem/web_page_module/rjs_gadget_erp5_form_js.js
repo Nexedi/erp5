@@ -300,6 +300,15 @@
         begin_from: 0
       };
     }, {mutex: 'changestate'})
+
+    .declareMethod("getGraphicType", function () {
+      var gadget = this;
+      if (gadget.props.listbox_gadget) {
+        return gadget.props.listbox_gadget.getGraphicType();
+      }
+      return;
+    }, {mutex: 'changestate'})
+
     .declareMethod("getContent", function (options) {
       var form_gadget = this,
         k,

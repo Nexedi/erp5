@@ -9,6 +9,23 @@
            declareGadgetClassCanHandleListboxClipboardAction, RSVP) {
   "use strict";
 
+  function getDefaultGraphicType(option_list) {
+    var i,
+      default_option_list = [
+        "translated_simulation_state_title",
+        "translated_validation_state_title"
+      ];
+    if (!option_list.length) {
+      return;
+    }
+    for (i = 0; i < option_list.length; i += 1) {
+      if (default_option_list.indexOf(option_list[i][0]) !== -1) {
+        return option_list[i][0];
+      }
+    }
+    return option_list[0][0];
+  }
+
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
                                           key, to_include) {
     var i,
@@ -114,12 +131,19 @@
     })
 
     .onStateChange(function onStateChange() {
-      var form_gadget = this;
+      var erp5_form,
+        graphic_type,
+        form_gadget = this;
 
       // render the erp5 form
-      return form_gadget.getDeclaredGadget("erp5_form")
-        .push(function (erp5_form) {
+      return new RSVP.Queue(RSVP.all([
+        form_gadget.getDeclaredGadget("erp5_form"),
+        form_gadget.getUrlParameter("graphic_type")
+      ]))
+        .push(function (result_list) {
           var form_options = form_gadget.state.erp5_form;
+          graphic_type = result_list[1];
+          erp5_form = result_list[0];
 
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
@@ -135,21 +159,37 @@
           if (form_gadget.state.extended_search) {
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
-          form_options.enable_graphic = true;
+
+          form_options.enable_graphic = false;
+          if (graphic_type || (
+              !form_gadget.state.extended_search && !graphic_type)) {
+            form_options.enable_graphic = true;
+          }
+
           return erp5_form.render(form_options);
         })
 
         // render the search field
-        .push(function () {
-          return form_gadget.getDeclaredGadget("erp5_searchfield");
+        .push(function (result) {
+          return RSVP.all([
+            form_gadget.getDeclaredGadget("erp5_searchfield"),
+            erp5_form.getGraphicType()
+          ])
         })
-        .push(function (search_gadget) {
-          var search_options = {};
+        .push(function (result_list) {
+          var search_gadget = result_list[0],
+            search_options = {};
           // XXX not generic, fix later
           if (form_gadget.state.extended_search) {
             search_options.extended_search = form_gadget.state.extended_search;
           }
-          search_options.enable_graphic = true;
+          search_options.enable_graphic = false;
+          if (graphic_type || (
+              !form_gadget.state.extended_search && !graphic_type)) {
+            search_options.enable_graphic = true;
+          }
+
+          search_options.graphic_type = result_list[1];
           return search_gadget.render(search_options);
         })
 
