@@ -1,12 +1,12 @@
 /*global window, rJS, renderFormViewHeader, renderFormListHeader,
          SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
-         declareGadgetClassCanHandleListboxClipboardAction*/
+         declareGadgetClassCanHandleListboxClipboardAction, RSVP*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, renderFormViewHeader, renderFormListHeader,
            SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
-           declareGadgetClassCanHandleListboxClipboardAction) {
+           declareGadgetClassCanHandleListboxClipboardAction, RSVP) {
   "use strict";
 
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
@@ -268,7 +268,25 @@
           return result_list;
         });
     })
-
+   .allowPublicAcquisition("triggerListboxGraphicSelection", function triggerListboxGraphicSelection() {
+      var gadget = this;
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return RSVP.all([
+            declared_gadget.getListboxInfo(),
+            gadget.getUrlParameter("graphic_type")
+          ]);
+        })
+        .push(function (result_list) {
+          var result_dict = result_list[0],
+            graphic_type = result_list[1];
+          return gadget.renderEditorPanel(
+            "gadget_erp5_graphic_editor.html", {
+              graphic_option_list: result_dict.graphic_option_list,
+              graphic_type: result_list[1]
+            });
+        });
+    })
     .allowPublicAcquisition("triggerListboxSelectAction", function triggerListboxSelectAction(argument_list) {
       var action = argument_list[0],
         checked_uid_list = argument_list[1],
@@ -312,4 +330,4 @@
 }(window, rJS, renderFormViewHeader, renderFormListHeader, SimpleQuery,
   ComplexQuery, Query,
   QueryFactory, ensureArray, triggerListboxClipboardAction,
-  declareGadgetClassCanHandleListboxClipboardAction));
+  declareGadgetClassCanHandleListboxClipboardAction, RSVP));
