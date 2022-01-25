@@ -36,7 +36,8 @@
       };
       return this.changeState(state_dict);
     })
-
+    .declareAcquiredMethod("triggerListboxGraphicSelection",
+                           "triggerListboxGraphicSelection")
     .onStateChange(function (modification_dict) {
       var gadget = this,
         i,
@@ -242,27 +243,16 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
+      var gadget = this;
       if (evt.target.tagName === 'BUTTON') {
         if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
             (evt.target.value)) {
           // Open the filter panel if one 'search' button is clicked
           evt.preventDefault();
           return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
-        } else if (evt.target.classList.contains("graphic-button")) {
-          return this.redirect({
-            command: "change",
-            options: {
-              extended_search: ""
-            }
-          });
-        } else if (evt.target.classList.contains("change-graphic-button")) {
-          return this.redirect({
-            command: "change",
-            options: {
-              display_graphic_panel: true,
-              extended_search: ""
-            }
-          });
+        } else if (evt.target.classList.contains("graphic-button") ||
+                   evt.target.classList.contains("change-graphic-button")) {
+          return gadget.triggerListboxGraphicSelection();
         }
 
       }

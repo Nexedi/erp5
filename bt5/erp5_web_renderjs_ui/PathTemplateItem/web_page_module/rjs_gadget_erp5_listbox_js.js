@@ -1220,18 +1220,6 @@
             gadget.state.graphic_type !== "") {
           result_queue
             .push(function () {
-              return gadget.getUrlParameter("display_graphic_panel")
-            })
-            .push(function (result) {
-              if (result) {
-                return gadget.renderEditorPanel(
-                  "gadget_erp5_graphic_editor.html", {
-                    graphic_option_list: gadget.state.option_list,
-                    graphic_type: gadget.state.graphic_type
-                });
-              }
-            })
-            .push(function () {
               return gadget.declareGadget('gadget_graphic.html', {
                 scope: 'gadget_graphic',
                 element: gadget.element.querySelector(".graphic_area")
@@ -1337,6 +1325,7 @@
         search_column_list: JSON.parse(this.state.search_column_list_json),
         domain_list: domain_list,
         domain_dict: domain_dict,
+        graphic_option_list: this.state.option_list,
         begin_from: this.state.key + "_begin_from"
       };
     })
