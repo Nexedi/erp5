@@ -1202,19 +1202,16 @@
                   loading_element.textContent = '(' + pagination_message + ')';
                 }
                 if (gadget.state.option_list.length > 0 &&
-                    gadget.state.enable_graphic &&
-                    !gadget.state.extended_search) {
-                  if (!gadget.state.extended_search &&
-                       gadget.state.enable_graphic) {
+                    gadget.state.enable_graphic) {
+                  if (gadget.state.enable_graphic) {
                     domsugar(gadget.element.querySelector(".graphic_section"), [
                       domsugar("div", {"class": "graphic_area"})
-                   ]);
+                    ]);
                   }
                 }
               });
           });
-        if (!gadget.state.extended_search &&
-            gadget.state.enable_graphic &&
+        if (gadget.state.enable_graphic &&
             gadget.state.graphic_type &&
             gadget.state.option_list.length > 0 &&
             gadget.state.graphic_type !== "") {
@@ -1301,9 +1298,12 @@
                 }
               }
             });
-          }
         }
+      }
       return result_queue;
+    })
+    .declareMethod('getGraphicType', function getGraphicType() {
+      return this.state.graphic_type;
     })
 
     .declareMethod('getListboxInfo', function getListboxInfo() {
