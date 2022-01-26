@@ -16,14 +16,21 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .allowPublicAcquisition("chartItemClick", function (params) {
       var gadget = this;
-      return gadget.getSearchCriteria(params[0][0], params[0][1])
-        .push(function (result) {
+      return new RSVP.Queue(RSVP.all([
+        gadget.getSearchCriteria(params[0][0], params[0][1]),
+        gadget.getUrlParameter("graphic_type")
+      ]))
+        .push(function (result_list) {
+          var options = {
+            extended_search: result_list[0],
+            jio_key: gadget.state.jio_key
+          }
+          if (result_list[1]) {
+            options.graphic_type = result_list[1];
+          }
           return gadget.redirect({
             command: 'display_with_history',
-            options: {
-              jio_key: gadget.state.jio_key,
-              extended_search: result
-            }
+            options: options
           });
         });
     })

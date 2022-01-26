@@ -174,7 +174,7 @@
           return RSVP.all([
             form_gadget.getDeclaredGadget("erp5_searchfield"),
             erp5_form.getGraphicType()
-          ])
+          ]);
         })
         .push(function (result_list) {
           var search_gadget = result_list[0],
@@ -190,6 +190,7 @@
           }
 
           search_options.graphic_type = result_list[1];
+          search_options.jio_key = form_gadget.state.jio_key;
           return search_gadget.render(search_options);
         })
 
@@ -323,6 +324,7 @@
           return gadget.renderEditorPanel(
             "gadget_erp5_graphic_editor.html", {
               graphic_option_list: result_dict.graphic_option_list,
+              jio_key: gadget.state.jio_key,
               graphic_type: result_list[1]
             });
         });

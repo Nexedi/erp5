@@ -33,7 +33,8 @@
       var state_dict = {
         extended_search: options.extended_search || "",
         enable_graphic: options.enable_graphic || false,
-        graphic_type: options.graphic_type
+        graphic_type: options.graphic_type,
+        jio_key: options.jio_key
       };
       return this.changeState(state_dict);
     })
@@ -45,7 +46,7 @@
         len,
         button_container = gadget.element.querySelector('div.search_parsed_value'),
         button_graphic = gadget.element.querySelector(".graphic-button"),
-        select_button_graphic = gadget.element.querySelector(".change-graphic-button"),
+        change_button_graphic = gadget.element.querySelector(".change-graphic-button"),
         graphic_css_class = "ui-screen-hidden",
         button,
         operator = 'AND',
@@ -59,15 +60,15 @@
         continue_full_text_query_search = true;
 
       if (gadget.state.extended_search) {
-        console.log(modification_dict);
+
         if (modification_dict.enable_graphic &&
-            modification_dict.graphic_type &&
-              button_graphic) {
-          button_graphic.classList.add(graphic_css_class);
-          select_button_graphic.classList.remove(graphic_css_class);
+            modification_dict.extended_search &&
+            modification_dict.graphic_type) {
+          button_graphic.classList.remove(graphic_css_class);
+          change_button_graphic.classList.add(graphic_css_class);
         } else {
           button_graphic.classList.remove(graphic_css_class);
-          select_button_graphic.classList.add(graphic_css_class);
+          change_button_graphic.classList.add(graphic_css_class);
         }
 
         // Parse the raw query
@@ -130,13 +131,13 @@
                    button_graphic && !button_graphic.classList.contains(
                  graphic_css_class)) {
         button_graphic.classList.add(graphic_css_class);
-        select_button_graphic.classList.remove(graphic_css_class);
-      } else if (select_button_graphic &&
+        change_button_graphic.classList.remove(graphic_css_class);
+      } else if (change_button_graphic &&
           modification_dict.enable_graphic &&
           !modification_dict.extended_search ){
-        select_button_graphic.classList.remove(graphic_css_class);
+        change_button_graphic.classList.remove(graphic_css_class);
       }
-      console.log(modification_dict);
+
       button_container.innerHTML = '';
       len = query_text_list.length;
       for (i = 0; i < len; i += 1) {
@@ -262,15 +263,15 @@
           return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
         } else if (evt.target.classList.contains("graphic-button")) {
           return gadget.redirect({
-            command: "store_and_change",
+            command: "display_with_history",
             options: {
+              jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type
             }
           });
         } else if (evt.target.classList.contains("change-graphic-button")) {
           return gadget.triggerListboxGraphicSelection();
         }
-
       }
     }, false, false);
 
