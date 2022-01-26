@@ -190,7 +190,7 @@
             <value>
               <tuple>
                 <string>aggregate/web_page_module/gadget_ojs_appstore_redirect_page_html</string>
-                <string>caching_policy/must-revalidate</string>
+                <string>caching_policy/one-hour-max-modification-date</string>
               </tuple>
             </value>
         </item>
@@ -453,7 +453,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>997.11625.18843.11400</string> </value>
+                      <value> <string>996.31313.30780.31453</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -471,7 +471,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1643033560.26</float>
+                              <float>1639493797.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
