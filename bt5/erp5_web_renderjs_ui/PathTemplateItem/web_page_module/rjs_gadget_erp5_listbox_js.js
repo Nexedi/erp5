@@ -539,8 +539,11 @@
               }
             }
           }
-          return gadget.getUrlParameter("graphic_type")
-            .push(function (graphic_type) {
+          return new RSVP.Queue(RSVP.all([
+            gadget.getUrlParameter("graphic_type"),
+            gadget.getUrlParameter("only_graphic")
+          ]))
+            .push(function (parameter_list) {
               return gadget.changeState({
                 jio_key: options.jio_key,
                 key: field_json.key,
@@ -599,7 +602,8 @@
 
                 // graphic
                 enable_graphic: options.enable_graphic,
-                graphic_type: graphic_type || getDefaultGraphicType(option_list)
+                graphic_type: parameter_list[0] || getDefaultGraphicType(option_list),
+                only_graphic: parameter_list[1]
               });
             });
         });
@@ -933,7 +937,7 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-            if (gadget.state.extended_search || !gadget.state.option_list.length) {
+            if (gadget.state.extended_search && !gadget.state.only_graphic) {
               domsugar(container, [
                 domsugar('div', {
                   "class": 'ui-table-header ui-header'
@@ -1201,8 +1205,11 @@
                   loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
                   loading_element.textContent = '(' + pagination_message + ')';
                 }
-                if (gadget.state.option_list.length > 0 &&
-                    gadget.state.enable_graphic) {
+                // XXX if is duplicated. Look at line 1222
+                if (gadget.state.enable_graphic && ((
+                    gadget.state.graphic_type && !gadget.state.extended_search
+                  ) || (gadget.state.graphic_type && gadget.state.extended_search &&
+                        gadget.state.only_graphic))) {
                   domsugar(gadget.element.querySelector(".graphic_section"), [
                     domsugar("div", {"class": "graphic_area"})
                   ]);
@@ -1210,11 +1217,11 @@
               });
           });
 
-        if (gadget.state.enable_graphic &&
-            gadget.state.graphic_type &&
-            !gadget.state.extended_search &&
-            gadget.state.option_list.length > 0 &&
-            gadget.state.graphic_type !== "") {
+        if (gadget.state.enable_graphic && ((
+            gadget.state.graphic_type && !gadget.state.extended_search
+          ) || (
+            gadget.state.graphic_type && gadget.state.extended_search && gadget.state.only_graphic
+          ))) {
           result_queue
             .push(function () {
               return gadget.declareGadget('gadget_graphic.html', {

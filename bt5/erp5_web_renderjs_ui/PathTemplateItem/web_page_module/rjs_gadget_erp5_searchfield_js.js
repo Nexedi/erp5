@@ -1,7 +1,7 @@
-/*global window, rJS, document, Node,
+/*global window, rJS, Node,
          QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, document, Node,
+(function (window, rJS, Node,
            QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar) {
   "use strict";
 
@@ -48,7 +48,6 @@
         button_graphic = gadget.element.querySelector(".graphic-button"),
         change_button_graphic = gadget.element.querySelector(".change-graphic-button"),
         graphic_css_class = "ui-screen-hidden",
-        button,
         operator = 'AND',
         jio_query_list = [],
         query_text_list = [],
@@ -60,15 +59,8 @@
         continue_full_text_query_search = true;
 
       if (gadget.state.extended_search) {
-
-        if (modification_dict.enable_graphic &&
-            modification_dict.extended_search &&
-            modification_dict.graphic_type) {
+        if (modification_dict.graphic_type) {
           button_graphic.classList.remove(graphic_css_class);
-          change_button_graphic.classList.add(graphic_css_class);
-        } else {
-          button_graphic.classList.remove(graphic_css_class);
-          change_button_graphic.classList.add(graphic_css_class);
         }
 
         // Parse the raw query
@@ -128,13 +120,8 @@
           }
         }
       } else if (modification_dict.enable_graphic &&
-                   button_graphic && !button_graphic.classList.contains(
-                 graphic_css_class)) {
-        button_graphic.classList.add(graphic_css_class);
-        change_button_graphic.classList.remove(graphic_css_class);
-      } else if (change_button_graphic &&
-          modification_dict.enable_graphic &&
-          !modification_dict.extended_search ){
+                 modification_dict.graphic_type &&
+                 !modification_dict.extended_search) {
         change_button_graphic.classList.remove(graphic_css_class);
       }
 
@@ -261,19 +248,29 @@
           // Open the filter panel if one 'search' button is clicked
           evt.preventDefault();
           return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
-        } else if (evt.target.classList.contains("graphic-button")) {
+        }
+        if (evt.target.classList.contains("graphic-button")) {
+          evt.target.classList.add("ui-screen-hidden");
+          gadget.element.querySelector(
+            ".change-graphic-button"
+          ).classList.remove("ui-screen-hidden");
+
           return gadget.redirect({
             command: "display_with_history",
             options: {
               jio_key: gadget.state.jio_key,
-              graphic_type: gadget.state.graphic_type
+              graphic_type: gadget.state.graphic_type,
+              extended_search: gadget.state.extended_search,
+              only_graphic: true
             }
           });
-        } else if (evt.target.classList.contains("change-graphic-button")) {
+        }
+        if (evt.target.classList.contains("change-graphic-button")) {
+          evt.target.classList.add("ui-screen-hidden");
           return gadget.triggerListboxGraphicSelection();
         }
       }
     }, false, false);
 
-}(window, rJS, document, Node,
+}(window, rJS, Node,
   QueryFactory, SimpleQuery, ComplexQuery, Query, domsugar));
