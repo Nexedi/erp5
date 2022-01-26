@@ -202,6 +202,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
       Check if after the configuration the Person objects are validated.
       The Assignments must be opened and valid.
+      Employee number is defined
     """
     business_configuration = sequence.get("business_configuration")
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
@@ -217,6 +218,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         self.assertNotEquals(None, assignment.getStopDate())
         self.assertEqual(assignment.getGroup(), "my_group")
         assignment.Base_checkConsistency()
+      current_career = person.getDefaultCareerValue()
+      employee_number = current_career.getReference()
+      self.assertNotEqual(employee_number, None)
+      self.assertEqual(len(current_career.checkConsistency()), 0)
+      current_career.edit(reference='')
+      self.assertEqual(len(current_career.checkConsistency()), 1)
+      current_career.edit(reference=employee_number)
+
 
   def stepCheckPersonInformationList(self, sequence=None, sequence_list=None, **kw):
     """
