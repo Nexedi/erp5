@@ -24,7 +24,7 @@
           var options = {
             extended_search: result_list[0],
             jio_key: gadget.state.jio_key
-          }
+          };
           if (result_list[1]) {
             options.graphic_type = result_list[1];
           }
