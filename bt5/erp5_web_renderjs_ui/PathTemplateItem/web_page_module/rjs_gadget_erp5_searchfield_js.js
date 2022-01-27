@@ -29,14 +29,24 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("getUrlParameter",
+                           "getUrlParameter")
     .declareMethod('render', function (options) {
-      var state_dict = {
-        extended_search: options.extended_search || "",
-        enable_graphic: options.enable_graphic || false,
-        graphic_type: options.graphic_type,
-        jio_key: options.jio_key
-      };
-      return this.changeState(state_dict);
+      var gadget = this,
+        state_dict = {
+          // XXX probably get from url
+          extended_search: options.extended_search || "",
+          // XXX probably get from url
+          enable_graphic: options.enable_graphic || false,
+          // XXX probably get from url
+          graphic_type: options.graphic_type,
+          jio_key: options.jio_key
+        };
+      return gadget.getUrlParameter("only_graphic")
+        .push(function (only_graphic) {
+          state_dict.only_graphic = only_graphic || false;
+          return gadget.changeState(state_dict);
+        });
     })
     .declareAcquiredMethod("triggerListboxGraphicSelection",
                            "triggerListboxGraphicSelection")
@@ -59,8 +69,10 @@
         continue_full_text_query_search = true;
 
       if (gadget.state.extended_search) {
-        if (modification_dict.graphic_type) {
+        if (modification_dict.graphic_type && !modification_dict.only_graphic) {
           button_graphic.classList.remove(graphic_css_class);
+        } else if (modification_dict.only_graphic) {
+          change_button_graphic.classList.remove(graphic_css_class);
         }
 
         // Parse the raw query
