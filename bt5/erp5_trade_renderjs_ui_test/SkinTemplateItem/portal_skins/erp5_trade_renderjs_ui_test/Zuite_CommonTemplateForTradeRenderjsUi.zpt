@@ -5,12 +5,12 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>store</td>
-      <td>&#36;{base_url}/web_site_module/renderjs_runner/#</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#</td>
       <td>renderjs_url</td>
     </tr>
     <tr>
       <td>store</td>
-      <td>&#36;{renderjs_url}/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
+      <td>${renderjs_url}/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
       <td>order_url</td>
     </tr>
   </tal:block>
@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>&#36;{base_url}/Zuite_deleteDataForTradeRenderjsUi</td>
+      <td>${base_url}/Zuite_deleteDataForTradeRenderjsUi</td>
       <td></td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>&#36;{base_url}/Zuite_createSaleOrderForTradeRenderjsUi</td>
+      <td>${base_url}/Zuite_createSaleOrderForTradeRenderjsUi</td>
       <td></td>
     </tr>
     <tr>
@@ -64,7 +64,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>&#36;{base_url}/Zuite_createPackingListForTradeRenderjsUi</td>
+      <td>${base_url}/Zuite_createPackingListForTradeRenderjsUi</td>
       <td></td>
     </tr>
     <tr>
@@ -76,7 +76,7 @@
 
     <tr>
       <td>open</td>
-      <td>&#36;{base_url}/portal_deliveries/erp5_trade_renderjs_ui_test_spl_builder/build</td>
+      <td>${base_url}/portal_deliveries/erp5_trade_renderjs_ui_test_spl_builder/build</td>
       <td></td>
     </tr>
     <tr>
@@ -98,7 +98,7 @@
 
     <tr>
       <td>open</td>
-      <td>&#36;{renderjs_url}/sale_packing_list_module/?extended_search=causality_relative_url%3A%20%20"sale_order_module%2Ferp5_trade_renderjs_ui_test_order"&amp;editable=true</td>
+      <td>${renderjs_url}/sale_packing_list_module/?extended_search=causality_relative_url%3A%20%20"sale_order_module%2Ferp5_trade_renderjs_ui_test_order"&amp;editable=true</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -124,7 +124,7 @@
 
     <tr>
       <td>open</td>
-      <td>&#36;{delivery_url}</td>
+      <td>${delivery_url}</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />

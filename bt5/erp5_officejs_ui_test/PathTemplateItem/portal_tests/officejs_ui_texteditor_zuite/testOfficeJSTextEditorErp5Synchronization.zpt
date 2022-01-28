@@ -13,7 +13,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/officejs_text_editor/</td>
+  <td>${base_url}/web_site_module/officejs_text_editor/</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 <tr>
   <td>type</td>
   <td>name=erp5_url</td>
-  <td>&#36;{base_url}/web_site_module/</td>
+  <td>${base_url}/web_site_module/</td>
 </tr>
 <tr>
   <td>click</td>
@@ -103,17 +103,17 @@
 <tr>
   <td>type</td>
   <td>name=reference</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>identifier=description</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>pause</td>
@@ -180,12 +180,12 @@
 <tr>
   <td>type</td>
   <td>name=reference</td>
-  <td>&#36;{search}</td>
+  <td>${search}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>&#36;{search}</td>
+  <td>${search}</td>
 </tr>
 <tr>
   <td>pause</td>
@@ -226,12 +226,12 @@
 </tal:block>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
@@ -241,12 +241,12 @@
 </tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>link=&#36;{search}</td>
+  <td>link=${search}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
@@ -261,18 +261,18 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value='&#36;title}']</td>
+  <td>//input[@value='${title}']</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -282,7 +282,7 @@
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -302,7 +302,7 @@
 <tr>
   <td>type</td>
   <td>name=search</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -321,17 +321,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
@@ -342,21 +342,21 @@
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -371,7 +371,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_page_module/</td>
+  <td>${base_url}/web_page_module/</td>
   <td></td>
 </tr>
 <tr>
@@ -397,7 +397,7 @@
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -406,17 +406,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
   <td></td>
 </tr>
 </tbody></table>

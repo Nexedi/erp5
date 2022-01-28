@@ -13,7 +13,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/officejs_slideshow_editor/</td>
+  <td>${base_url}/web_site_module/officejs_slideshow_editor/</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 <tr>
   <td>type</td>
   <td>name=erp5_url</td>
-  <td>&#36;{base_url}/web_site_module/</td>
+  <td>${base_url}/web_site_module/</td>
 </tr>
 <tr>
   <td>click</td>
@@ -117,27 +117,27 @@
 <tr>
   <td>type</td>
   <td>//input[@name='title']</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='reference']</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='version']</td>
-  <td>&#36;{version}</td>
+  <td>${version}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//input[@name='language']</td>
-  <td>&#36;{language}</td>
+  <td>${language}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>//textarea[@name='description']</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
 </tr>
 <tr>
  <td>waitForElementPresent</td>
@@ -171,17 +171,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
@@ -246,7 +246,7 @@
 </tal:block>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
@@ -256,13 +256,13 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=title</td>
-  <td>&#36;{cloned_title}</td>
+  <td>${cloned_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -290,17 +290,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{cloned_title}</td>
+  <td>link=${cloned_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=&#36;{cloned_title}</td>
+  <td>link=${cloned_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -315,18 +315,18 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value='&#36;cloned_title}']</td>
+  <td>//input[@value='${cloned_title}']</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>&#36;{cloned_title}</td>
+  <td>${cloned_title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -336,17 +336,17 @@
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>language</td>
-  <td>&#36;{language}</td>
+  <td>${language}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>version</td>
-  <td>&#36;{version}</td>
+  <td>${version}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -366,7 +366,7 @@
 <tr>
   <td>type</td>
   <td>name=search</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -385,17 +385,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=&#36;{title}</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
@@ -406,21 +406,21 @@
 <tr>
   <td>verifyValue</td>
   <td>title</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>reference</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>description</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -435,7 +435,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_page_module/</td>
+  <td>${base_url}/web_page_module/</td>
   <td></td>
 </tr>
 <tr>
@@ -461,7 +461,7 @@
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -470,17 +470,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{title}</td>
+  <td>${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
   <td></td>
 </tr>
 <tr>
@@ -501,7 +501,7 @@
 <tr>
   <td>type</td>
   <td>name=listbox_title</td>
-  <td>&#36;{cloned_title}</td>
+  <td>${cloned_title}</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -510,17 +510,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{cloned_title}</td>
+  <td>${cloned_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{reference}</td>
+  <td>${reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{description}</td>
+  <td>${description}</td>
   <td></td>
 </tr>
 </tbody></table>

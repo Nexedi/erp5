@@ -23,7 +23,7 @@
   <!-- Initialize -->
   <tr>
     <td>open</td>
-    <td>&#36;{base_url}/document_module/test_officejs_onlyoffice_spreadsheet_replication_xlsy</td>
+    <td>${base_url}/document_module/test_officejs_onlyoffice_spreadsheet_replication_xlsy</td>
     <td></td>
   </tr>
   <tr>
@@ -49,7 +49,7 @@
   <tr>
     <td>type</td>
     <td>name=field_my_title</td>
-    <td>&#36;{title}</td>
+    <td>${title}</td>
   </tr>
   <tr>
     <td>clickAndWait</td>
@@ -73,7 +73,7 @@
   </tr>
   <tr>
     <td>open</td>
-    <td>&#36;{base_url}/document_module/Zuite_waitForActivities</td>
+    <td>${base_url}/document_module/Zuite_waitForActivities</td>
     <td></td>
   </tr>
   <tr>

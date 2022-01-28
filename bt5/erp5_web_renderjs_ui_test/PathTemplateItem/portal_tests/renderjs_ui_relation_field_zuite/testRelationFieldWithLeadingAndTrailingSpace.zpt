@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2&amp;title_format=%20%20leading and trailing spaces {index:d}%20%20</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2&amp;title_format=%20%20leading and trailing spaces {index:d}%20%20</td>
   <td></td>
 </tr>
 <tr>
@@ -38,7 +38,7 @@
 
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -62,7 +62,7 @@
 <tr>
   <td>type</td>
   <td>//input[@name='field_my_successor_title']</td>
-  <td>&#36;{space}${space}leading and trailing spaces 1${space}${space}</td>
+  <td>${space}${space}leading and trailing spaces 1${space}${space}</td>
 </tr>
 
 <tr>

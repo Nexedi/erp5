@@ -19,11 +19,11 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
 <tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
 <tr><td>store</td>
-    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{renderjs_url}/#/accounting_module/</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
@@ -41,7 +41,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>value=group/demo_group</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>&#36;{year}-12-31</td></tr>
+    <td>${year}-12-31</td></tr>
 
 <!-- We cannot easily ensure correctness because the report renders always as
      an attachment. Even in unittest we only check validity of such attachment.

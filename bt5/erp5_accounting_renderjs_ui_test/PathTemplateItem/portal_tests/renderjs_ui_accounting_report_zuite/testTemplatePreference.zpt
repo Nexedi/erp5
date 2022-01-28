@@ -14,7 +14,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -45,7 +45,7 @@
 <tr>
   <td>type</td>
   <td>name=field_my_title</td>
-  <td>&#36;{original_title}</td>
+  <td>${original_title}</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
@@ -70,7 +70,7 @@
 <tr>
   <td>type</td>
   <td>name=field_my_title</td>
-  <td>&#36;{original_title} old</td>
+  <td>${original_title} old</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
@@ -80,7 +80,7 @@
 <!-- go to the module, and create a document from the template -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/accounting_module</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -93,7 +93,7 @@
 <tr>
   <td>select</td>
   <td>//select[@name='field_your_select_action']</td>
-  <td>label=&#36;{original_title}</td>
+  <td>label=${original_title}</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -105,7 +105,7 @@
 <tr>
   <td>assertValue</td>
   <td>name=field_my_title</td>
-  <td>&#36;{original_title}</td>
+  <td>${original_title}</td>
 </tr>
 
 </tbody></table>

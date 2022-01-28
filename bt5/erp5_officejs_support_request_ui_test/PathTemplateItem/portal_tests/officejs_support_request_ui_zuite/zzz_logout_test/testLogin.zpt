@@ -23,12 +23,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td>${base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>
   <td></td>
 </tr>
 
@@ -76,7 +71,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
 <tr>

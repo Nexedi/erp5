@@ -14,7 +14,7 @@
 <!-- create one cell -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -34,7 +34,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
+  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBox</td>
   <td></td>
 </tr>
 
@@ -67,7 +67,7 @@
 
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/0/1/FooLine_viewMatrixBoxTALESContext</td>
+  <td>${base_url}/foo_module/0/1/FooLine_viewMatrixBoxTALESContext</td>
   <td></td>
 </tr>
 <!-- When a cell exist at these coordinate, `cell` in TALES context is the cell. -->

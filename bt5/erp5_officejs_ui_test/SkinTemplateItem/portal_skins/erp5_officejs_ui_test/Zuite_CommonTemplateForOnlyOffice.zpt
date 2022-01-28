@@ -72,7 +72,7 @@
     <tr>
       <td>type</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
-      <td>&#36;{title}</td>
+      <td>${title}</td>
     </tr>
     <tr>
       <td>click</td>
@@ -94,12 +94,12 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
     <tr>
       <td>waitForElementPresent</td>
-      <td>link=&#36;{title}</td>
+      <td>link=${title}</td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td>link=&#36;{title}</td>
+      <td>link=${title}</td>
       <td></td>
     </tr>
   </tal:block>
@@ -231,7 +231,7 @@
     <tr>
       <td>type</td>
       <td>name=erp5_url</td>
-      <td><tal:block metal:define-slot="hateoas_url">&#36;{base_url}/web_site_module/</tal:block></td>
+      <td><tal:block metal:define-slot="hateoas_url">${base_url}/web_site_module/</tal:block></td>
     </tr>
     <tr>
       <td>click</td>
@@ -241,11 +241,11 @@
   </tal:block>
   <tal:block metal:define-macro="remove_document_by_id">
     <tr>
-      <td colspan="3"><b>Remove Document with &#36;{id}</b></td>
+      <td colspan="3"><b>Remove Document with ${id}</b></td>
     </tr>
     <tr>
       <td>open</td>
-      <td>&#36;{base_url}/document_module/manage_main</td>
+      <td>${base_url}/document_module/manage_main</td>
       <td></td>
     </tr>
     <tr>
@@ -256,7 +256,7 @@
     <tr>
       <td>type</td>
       <td>name=ids:list</td>
-      <td>&#36;{id}</td>
+      <td>${id}</td>
     </tr>
     <tr>
       <td>clickAndWait</td>

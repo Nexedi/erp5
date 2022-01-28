@@ -14,11 +14,11 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr><td>store</td>
-    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
@@ -74,10 +74,10 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 </tal:block>
 
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>&#36;{table}//../nav//span[text()="9 Records"]</td><td></td></tr>
+    <td>${table}//../nav//span[text()="9 Records"]</td><td></td></tr>
 
 <tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>

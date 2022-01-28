@@ -11,11 +11,11 @@ Check that user gets notified if there is an error on a hidden field.
 <tbody>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr><td>store</td>
-    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{renderjs_url}/#/foo_module/1/?editable=1</td><td></td></tr>
+    <td>${renderjs_url}/#/foo_module/1/?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Originaly the field was required and we tested here an empty value. Problem is that Firefox

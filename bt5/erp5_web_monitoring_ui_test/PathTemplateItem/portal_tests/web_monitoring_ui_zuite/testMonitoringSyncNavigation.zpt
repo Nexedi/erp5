@@ -13,7 +13,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/officejs_monitoring/</td>
+  <td>${base_url}/web_site_module/officejs_monitoring/</td>
   <td></td>
 </tr>
 <tr>
@@ -115,17 +115,17 @@
 <tr>
   <td>type</td>
   <td>name=url</td>
-  <td>&#36;{opml_url}</td>
+  <td>${opml_url}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=username</td>
-  <td>&#36;{username}</td>
+  <td>${username}</td>
 </tr>
 <tr>
   <td>type</td>
   <td>name=password</td>
-  <td>&#36;{password}</td>
+  <td>${password}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -174,7 +174,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{opml_url}</td>
+  <td>${opml_url}</td>
   <td></td>
 </tr>
 <tr>
@@ -219,7 +219,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -239,17 +239,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_root}</td>
+  <td>${instance_root}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_1}</td>
+  <td>${instance_1}</td>
   <td></td>
 </tr>
 <tr>
@@ -260,12 +260,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Instance: &#36;{instance_root}']</td>
+  <td>//a[@data-i18n='Instance: ${instance_root}']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -296,17 +296,17 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_root}</td>
+  <td>${instance_root}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_1}</td>
+  <td>${instance_1}</td>
   <td></td>
 </tr>
 <tr>
@@ -322,12 +322,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Promise: &#36;{promise_title}']</td>
+  <td>//a[@data-i18n='Promise: ${promise_title}']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -342,7 +342,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -352,7 +352,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/officejs_monitoring/app/#!display?n.page=settings_configurator</td>
+  <td>${base_url}/web_site_module/officejs_monitoring/app/#!display?n.page=settings_configurator</td>
   <td></td>
 </tr>
 <tr>
@@ -378,7 +378,7 @@
 <tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -387,7 +387,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='&#36;{instance_tree_title}']</td>
+  <td>//a[@data-i18n='${instance_tree_title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -403,7 +403,7 @@
 <tr>
   <td>type</td>
   <td>name=password</td>
-  <td>&#36;{password}</td>
+  <td>${password}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -453,7 +453,7 @@
 <tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -467,7 +467,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='&#36;{instance_tree_title}']</td>
+  <td>//a[@data-i18n='${instance_tree_title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -487,12 +487,12 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>&#36;{opml_url}</td>
+  <td>${opml_url}</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 <tr>
@@ -507,7 +507,7 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>&#36;{instance_tree_title}</td>
+  <td>${instance_tree_title}</td>
   <td></td>
 </tr>
 </tbody></table>

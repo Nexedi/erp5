@@ -21,7 +21,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}</td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -92,7 +92,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Zuite_waitForActivities</td>
+    <td>${base_url}/Zuite_waitForActivities</td>
     <td></td>
   </tr>
   <tr>
@@ -106,7 +106,7 @@
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\  <!-- Wait for activities to finish -->
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Zuite_invokeSimulationAlarmList</td>
+    <td>${base_url}/Zuite_invokeSimulationAlarmList</td>
     <td></td>
   </tr>
   <tr>
@@ -123,7 +123,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Zuite_createFunctionalTestUser</td>
+    <td>${base_url}/Zuite_createFunctionalTestUser</td>
     <td></td>
   </tr>
   <tr>
@@ -134,7 +134,7 @@
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Base_clearCache</td>
+    <td>${base_url}/Base_clearCache</td>
     <td></td>
   </tr>
   <tr>
@@ -172,7 +172,7 @@
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Base_clearCache</td>
+    <td>${base_url}/Base_clearCache</td>
     <td></td>
   </tr>
   <tr>
@@ -182,7 +182,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Zuite_updateUserPreference</td>
+    <td>${base_url}/Zuite_updateUserPreference</td>
     <td></td>
   </tr>
   <tr>
@@ -192,7 +192,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}</td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -201,7 +201,7 @@
 <tal:block metal:define-macro="login_as_functional_another_test_user">
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Zuite_createAnotherFunctionalTestUser</td>
+    <td>${base_url}/Zuite_createAnotherFunctionalTestUser</td>
     <td></td>
   </tr>
   <tr>
@@ -212,7 +212,7 @@
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Base_clearCache</td>
+    <td>${base_url}/Base_clearCache</td>
     <td></td>
   </tr>
   <tr>
@@ -243,7 +243,7 @@
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Base_clearCache</td>
+    <td>${base_url}/Base_clearCache</td>
     <td></td>
   </tr>
   <tr>
@@ -253,7 +253,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/Zuite_updateUserPreference</td>
+    <td>${base_url}/Zuite_updateUserPreference</td>
     <td></td>
   </tr>
   <tr>
@@ -263,7 +263,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}</td>
+    <td>${base_url}</td>
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
@@ -273,17 +273,17 @@
   <!-- login with newly created user from Express configuration -->
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
+    <td>${base_url}/view</td>
     <td></td>
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/logout</td>
+    <td>${base_url}/logout</td>
     <td></td>
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/login_form</td>
+    <td>${base_url}/login_form</td>
     <td></td>
   </tr>
   <tr>
@@ -305,7 +305,7 @@
   </tr>
   <tr>
     <td>openAndWait</td>
-    <td>&#36;{base_url}/view</td>
+    <td>${base_url}/view</td>
     <td></td>
   </tr>
   <tr>

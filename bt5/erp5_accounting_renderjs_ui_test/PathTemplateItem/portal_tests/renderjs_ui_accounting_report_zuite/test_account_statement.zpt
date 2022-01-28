@@ -25,11 +25,11 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td><td tal:content="python: '{:d}-{:0>#2d}-{:0>#2d}'.format(yesterday.year(), yesterday.month(), yesterday.day())"></td><td>yesterday</td></tr>
 
 <tr><td>store</td>
-    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tal:block tal:define="click_configuration python: {'text': 'Export'}">
@@ -50,7 +50,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>value=group/demo_group/sub1</td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
-    <td>&#36;{today}</td></tr>
+    <td>${today}</td></tr>
 <!-- field_your_section_category_strict is False by default -->
 <!-- field_your_portal_type is good by default -->
 
@@ -77,10 +77,10 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 </tal:block>
 
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>assertElementPresent</td>
-    <td>&#36;{table}//../nav//span[text()="6 Records"]</td><td></td></tr>
+    <td>${table}//../nav//span[text()="6 Records"]</td><td></td></tr>
 
 <tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>

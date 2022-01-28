@@ -13,27 +13,27 @@
 <tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
-    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_matrixbox.html"]//table</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//table</td>
     <td>matrixbox_table</td></tr>
 <tr><td>store</td>
-    <td>//div[@data-gadget-url="&#36;{renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>listbox_table</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
+    <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>&#36;{base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Done.</td><td></td></tr>
 
 
 <tr><td>open</td>
-    <td>&#36;{renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />

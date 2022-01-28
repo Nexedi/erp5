@@ -14,11 +14,11 @@ Check that use gets notified if they are using wrong 'Report Style' (UI) Prefere
 
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr><td>store</td>
-    <td>&#36;{base_url}/web_site_module/renderjs_runner</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>&#36;{renderjs_url}/#/accounting_module</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
 
 <!-- Select random Report and fill in just the necessary values for valid submission. -->
 

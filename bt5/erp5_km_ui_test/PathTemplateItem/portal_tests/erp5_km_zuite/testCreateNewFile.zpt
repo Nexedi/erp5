@@ -21,7 +21,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 <tr>
   <td>setFile</td>
   <td>field_your_file</td>
-  <td>&#36;{base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
+  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -51,7 +51,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/Zuite_waitForActivities</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{file_url}?editable_mode:int=1</td>
+  <td>${file_url}?editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -106,7 +106,7 @@
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/Zuite_waitForActivities</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
@@ -116,7 +116,7 @@
 </tr> 
 <tr>
   <td>openAndWait</td>
-  <td>&#36;{base_url}/web_site_module/km_test_web_site</td>
+  <td>${base_url}/web_site_module/km_test_web_site</td>
   <td></td>
 </tr>
 <tr>
