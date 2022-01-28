@@ -72,7 +72,8 @@ var repair = false;
     .ready(function (gadget) {
       var i,
         element_list =
-          gadget.element.querySelectorAll('[data-install-configuration]');
+          gadget.element.querySelectorAll('[data-install-configuration]'),
+        hash_properties;
 
       gadget.props = {};
       for (i = 0; i < element_list.length; i += 1) {
@@ -83,13 +84,18 @@ var repair = false;
       gadget.props.redirect_url = new URL(window.location);
       gadget.props.redirect_url.pathname += gadget.props.version_url;
       if (gadget.props.redirect_url.hash) {
-        if (gadget.props.redirect_url.hash.startsWith('#access_token')) {
+        hash_properties = gadget.props.redirect_url.hash
+          .substr(1).split('&').reduce(function (res, item) {
+            var parts = item.split('=');
+            res[parts[0]] = parts[1];
+            return res;
+          },
+        {});
+        if (hash_properties.hasOwnProperty('access_token')) {
           // This is a bad hack to support dropbox.
           gadget.props.redirect_url.hash =
-            gadget.props.redirect_url.hash.replace(
-            '#access_token',
-            '#/?page=ojs_dropbox_configurator&access_token'
-          );
+            gadget.props.redirect_url.hash
+              .replace("#", "#/?page=ojs_dropbox_configurator&");
         } else if (gadget.props.redirect_url.hash
             .startsWith('#page=settings_configurator')) {
           // Make monitoring app still compatible with old instances setup URLs

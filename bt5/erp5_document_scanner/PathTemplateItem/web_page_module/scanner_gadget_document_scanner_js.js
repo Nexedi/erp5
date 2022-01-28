@@ -4,7 +4,7 @@
          FileReader, DataView, URL, fx, loadImage */
 (function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
            promiseEventListener, domsugar, createImageBitmap, FormData, caman,
-           FileReader, DataView, URL, fx) {
+           FileReader, DataView, URL, fx, loadImage) {
   "use strict";
 
   var CROPPER_DATA_JIO_KEY = 'cropperjs_data_',
@@ -568,10 +568,13 @@
             canvas = document.createElement('canvas');
             webgl_context = canvas.getContext('webgl');
 
-            expected_width = Math.min(
-              expected_width || webgl_context.getParameter(webgl_context.MAX_TEXTURE_SIZE),
-              webgl_context.getParameter(webgl_context.MAX_TEXTURE_SIZE) - 1
-            );
+            if (webgl_context !== null) {
+              // Browser fails sometimes to initialize the webgl context
+              expected_width = Math.min(
+                expected_width || webgl_context.getParameter(webgl_context.MAX_TEXTURE_SIZE),
+                webgl_context.getParameter(webgl_context.MAX_TEXTURE_SIZE) - 1
+              );
+            }
 
             if ((!!expected_width) && (expected_width < higher_dimension_value)) {
               load_image_options[higher_dimension_key] = expected_width;
@@ -894,6 +897,15 @@
         result = new RSVP.Queue();
       }
 
+      // Reload the app to prevent memory leak due to webgl issue on
+      // samsung browser
+      if (modification_dict.first_render) {
+        result
+          .push(function () {
+            return gadget.reload(true);
+          });
+      }
+
       // Only refresh the full gadget content after the first render call
       // or if the display_step is modified
       // or if displaying another image
@@ -1112,8 +1124,9 @@
       return has_thumbnail;
     }, {mutex: 'changestate'})
 
+    .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
 }(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
   promiseEventListener, domsugar, createImageBitmap, FormData, Caman,
-  FileReader, DataView, URL, fx));
+  FileReader, DataView, URL, fx, loadImage));

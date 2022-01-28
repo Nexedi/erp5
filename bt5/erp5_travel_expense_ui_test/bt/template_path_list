@@ -1,2 +1,14 @@
+account_module/travel_expense_credit_account
+account_module/travel_expense_debit_account
+currency_module/hr_test*
+person_module/hr_user
+portal_categories/publication_section/hr_document
+portal_categories/use/hr/expense_validation_request
+portal_categories/use/hr/expense_validation_request/*
+portal_categories/use/hr/leave
+portal_categories/use/hr/leave/*
+portal_categories/use/hr/travel_request
+portal_categories/use/hr/travel_request/*
 portal_tests/officejs_ui_travel_expense_ui_test_zuite
 portal_tests/officejs_ui_travel_expense_ui_test_zuite/**
+service_module/hr_test*

@@ -918,6 +918,67 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       )
       self.tic()
 
+    def setDocumentOwner(self, document_value, user):
+      """
+      Change both ownership and Owner local role on given document to given
+      user.
+      """
+      try:
+        _, old_owner_user_id = document_value.getOwnerTuple()
+      except ValueError:
+        pass
+      else:
+        old_owner_local_role_set = list(document_value.get_local_roles_for_userid(
+          old_owner_user_id,
+        ))
+        try:
+          old_owner_local_role_set.remove('Owner')
+        except ValueError:
+          pass
+        else:
+          if old_owner_local_role_set:
+            document_value.manage_setLocalRoles(
+              old_owner_user_id,
+              tuple(old_owner_local_role_set),
+            )
+          else:
+            document_value.manage_delLocalRoles(old_owner_user_id)
+      document_value.changeOwnership(user)
+      user_id = user.getId()
+      document_value.manage_setLocalRoles(
+        user_id,
+        document_value.get_local_roles_for_userid(user_id) + ('Owner', ),
+      )
+      document_value.reindexObject()
+
+    def immediateRecursiveCall(self, document_value, callback):
+      """
+      Call given callback on document and all its subdocuments.
+
+      Obviously not scalable to large document trees (and hence is only in
+      tests and not in the regular ERP5 document API).
+      """
+      stack = [document_value]
+      while stack:
+        document_value = stack.pop()
+        callback(document_value)
+        stack.extend(getattr(document_value, 'objectValues', lambda: ())())
+        stack.extend(getattr(document_value, 'opaqueValues', lambda: ())())
+
+    def setSubtreeOwner(self, document_value, user):
+      """
+      Change owner of document_value and all its subdocuments to user.
+      See also setDocumentOwner.
+      """
+      setDocumentOwner = self.setDocumentOwner
+      self.immediateRecursiveCall(
+        document_value=document_value,
+        callback=lambda document_value: setDocumentOwner(
+          document_value=document_value,
+          user=user,
+        ),
+      )
+
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     __original_ZMySQLDA_connect = None
 
@@ -1625,10 +1686,10 @@ def fortify():
     rng = random.Random(seed)
     from Products.CMFActivity.ActivityTool import Message
     Message__init__ = Message.__init__
-    def __init__(self, url, oid, active_process, active_process_uid,
+    def __init__(self, url, document_uid, active_process, active_process_uid,
                  activity_kw, *args, **kw):
       activity_kw['priority'] = rng.randint(-128, 127)
-      Message__init__(self, url, oid, active_process, active_process_uid,
+      Message__init__(self, url, document_uid, active_process, active_process_uid,
                       activity_kw, *args, **kw)
     Message.__init__ = __init__
 

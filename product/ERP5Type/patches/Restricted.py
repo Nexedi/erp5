@@ -34,6 +34,8 @@ def checkNameLax(self, node, name=_MARKER, allow_magic_methods=False):
   If ``allow_magic_methods is True`` names in `ALLOWED_FUNC_NAMES`
   are additionally allowed although their names start with `_`.
 
+TODO: zope4py2: we don't really use ALLOWED_FUNC_NAMES here
+
   """
   if name is None:
     return
@@ -108,6 +110,7 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
+# TODO: zope4py2 clean up this
 #if "next" not in safe_builtins: # BBB
 # override the default next if exists
 safe_builtins.update(next=guarded_next)
@@ -257,16 +260,40 @@ ModuleSecurityInfo('collections').declarePublic('defaultdict')
 from collections import Counter
 ModuleSecurityInfo('collections').declarePublic('Counter')
 
+
+def allow_full_write(t):
+  """Allow setattr and delattr for this type.
+  
+  This supports both RestrictedPython-3.6.0, where the safetype is implemented as:
+  
+      safetype = {dict: True, list: True}.has_key
+      ...
+      safetype(t)
+
+  and RestrictedPython-5.1, where the safetype is implemented as:
+
+      safetypes = {dict, list}
+      ...
+      safetype(t)
+
+  """
+  # Modify 'safetype' dict in full_write_guard function of RestrictedPython
+  # (closure) directly to allow write access (using __setattr__ and __delattr__)
+  # to ndarray and pandas DataFrame below.
+  from RestrictedPython.Guards import full_write_guard
+  safetype = full_write_guard.func_closure[1].cell_contents.__self__
+  if isinstance(safetype, dict): # 3.6.0
+    safetype.update({t: True})
+  else: # 5.1
+    safetype.add(t)
+
+
 from AccessControl.ZopeGuards import _dict_white_list
 
-# Attributes cannot be set on defaultdict, thus modify 'safetype' dict
-# (closure) directly to ignore defaultdict like dict/list
+# Attributes cannot be set on defaultdict, thus ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-if isinstance(full_write_guard.func_closure[1].cell_contents, set):
-  full_write_guard.func_closure[1].cell_contents.add(defaultdict)
-else: # BBB RestrictedPython 3.6
-  full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+allow_full_write(defaultdict)
 
 # In contrary to builtins such as dict/defaultdict, it is possible to set
 # attributes on OrderedDict instances, so only allow setitem/delitem
@@ -445,8 +472,7 @@ ModuleSecurityInfo('os').declarePublic('urandom')
 #
 # backport from wendelin
 #
-# we neeed to allow access to numpy's internal types
-import pandas as pd
+# we need to allow access to numpy's internal types
 import numpy as np
 allow_module('numpy')
 allow_module('numpy.lib.recfunctions')
@@ -469,70 +495,55 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
 allow_type(type(np.dtype('int16')))
-
-allow_module('pandas')
-
-allow_type(pd.Series)
-allow_type(pd.Timestamp)
-allow_type(pd.DatetimeIndex)
-# XXX: pd.DataFrame has its own security thus disable until we can fully integrate it
-#allow_type(pd.DataFrame)
-allow_type(pd.MultiIndex)
-allow_type(pd.indexes.range.RangeIndex)
-allow_type(pd.indexes.numeric.Int64Index)
-allow_type(pd.core.groupby.DataFrameGroupBy)
-allow_type(pd.core.groupby.SeriesGroupBy)
-allow_class(pd.DataFrame)
+allow_full_write(np.ndarray)
+allow_full_write(np.core.records.recarray)
+allow_full_write(np.core.records.record)
 
 def restrictedMethod(s,name):
   def dummyMethod(*args, **kw):
     raise Unauthorized(name)
   return dummyMethod
 
-# Note: These black_list methods are for pandas 0.19.2
-series_black_list = ['to_csv', 'to_json', 'to_pickle', 'to_hdf',
-                     'to_sql', 'to_msgpack']
-series_black_list_dict = {m: restrictedMethod for m in series_black_list}
-ContainerAssertions[pd.Series] = _check_access_wrapper(pd.Series,
-                                                       series_black_list_dict)
+try:
+  import pandas as pd
+except ImportError:
+  pass
+else:
+  allow_module('pandas')
+  allow_type(pd.Series)
+  allow_type(pd.Timestamp)
+  allow_type(pd.DatetimeIndex)
+  # XXX: pd.DataFrame has its own security thus disable
+  #      until we can fully integrate it
+  #allow_type(pd.DataFrame)
+  allow_type(pd.MultiIndex)
+  allow_type(pd.indexes.range.RangeIndex)
+  allow_type(pd.indexes.numeric.Int64Index)
+  allow_type(pd.core.groupby.DataFrameGroupBy)
+  allow_type(pd.core.groupby.SeriesGroupBy)
+  allow_class(pd.DataFrame)
 
-pandas_black_list = ['read_csv', 'read_json', 'read_pickle', 'read_hdf', 'read_fwf',
-                     'read_excel', 'read_html', 'read_msgpack',
-                     'read_gbq', 'read_sas', 'read_stata']
-ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
+  # Note: These black_list methods are for pandas 0.19.2
+  series_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                       'to_sql', 'to_msgpack')
+  ContainerAssertions[pd.Series] = _check_access_wrapper(
+    pd.Series, dict.fromkeys(series_black_list, restrictedMethod))
 
-dataframe_black_list = ['to_csv', 'to_json', 'to_pickle', 'to_hdf',
-                        'to_excel', 'to_html', 'to_sql', 'to_msgpack',
-                        'to_latex', 'to_gbq', 'to_stata']
-dataframe_black_list_dict = {m: restrictedMethod for m in dataframe_black_list}
-ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
-                                      pd.DataFrame, dataframe_black_list_dict)
+  pandas_black_list = ('read_csv', 'read_json', 'read_pickle', 'read_hdf',
+                       'read_fwf', 'read_excel', 'read_html', 'read_msgpack',
+                       'read_gbq', 'read_sas', 'read_stata')
+  ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
 
-# Modify 'safetype' dict in full_write_guard function
-# of RestrictedPython (closure) directly to allow
-# write access to ndarray and pandas DataFrame.
-from RestrictedPython.Guards import full_write_guard
-if isinstance(full_write_guard.func_closure[1].cell_contents, set):
-  full_write_guard.func_closure[1].cell_contents.update((
-    np.ndarray,
-    np.core.records.recarray,
-    np.core.records.record,
-    pd.DataFrame,
-    pd.Series,
-    pd.tseries.index.DatetimeIndex,
-    pd.core.indexing._iLocIndexer,
-    pd.core.indexing._LocIndexer,
-    pd.MultiIndex,
-    pd.Index
-    ))
-else:  # BBB RestrictedPython 3.6
-  full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.DataFrame] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.Series] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
-  full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
+  dataframe_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
+                          'to_excel', 'to_html', 'to_sql', 'to_msgpack',
+                          'to_latex', 'to_gbq', 'to_stata')
+  ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
+    pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
+
+  allow_full_write(pd.DataFrame)
+  allow_full_write(pd.Series)
+  allow_full_write(pd.tseries.index.DatetimeIndex)
+  allow_full_write(pd.core.indexing._iLocIndexer)
+  allow_full_write(pd.core.indexing._LocIndexer)
+  allow_full_write(pd.MultiIndex)
+  allow_full_write(pd.Index)

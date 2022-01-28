@@ -26,10 +26,12 @@ discussion_post = discussion_thread.newContent(
 
 # handle attachments
 if getattr(file, 'filename', '') != '':
-  document_kw = {'batch_mode': True,
-                 'redirect_to_document': False,
-                 'file': file}
-  document = context.Base_contribute(**document_kw)
+  document = context.Base_contribute(
+    batch_mode=True,
+    redirect_to_document=False,
+    synchronous_metadata_discovery=True,
+    file=file,
+  )
 
   # set relation between post and document
   discussion_post.setSuccessorValueList([document])

@@ -5,7 +5,7 @@
   rJS(window)
     .declareMethod('render', function (options) {
       var value = "Not found";
-      if (options.metadata.message) {
+      if (options.metadata && options.metadata.message) {
         value = options.metadata.message;
       }
       return this.changeState({

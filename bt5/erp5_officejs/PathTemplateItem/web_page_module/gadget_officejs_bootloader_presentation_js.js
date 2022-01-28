@@ -3,64 +3,65 @@
 (function (window, rJS, RSVP, Event, XMLHttpRequest) {
   "use strict";
 
-  function displayErrorContent(original_error) {
+  function displayErrorContent(error_div, original_error) {
     var error_list = [original_error],
       i,
       error,
-      error_text = "";
+      line = "-----------------------------------------------",
+      addErrorMessage = function (parent_div, content) {
+        var sub_error_div = document.createElement('div');
+        sub_error_div.classList.add('error-message');
+        sub_error_div.textContent = content;
+        parent_div.appendChild(sub_error_div);
+      };
+    error_div.textContent = line;
+    addErrorMessage(error_div, "ERROR");
+    if (original_error.message) {
+      addErrorMessage(error_div, original_error.message);
+    }
+    if (original_error.currentTarget) {
+      addErrorMessage(error_div, "URL: " +
+        original_error.currentTarget.responseURL);
+    }
+    addErrorMessage(error_div, line);
+    addErrorMessage(error_div, "FULL ERROR INFORMATION:");
     error_list.push(new Error('stopping ERP5JS'));
     for (i = 0; i < error_list.length; i += 1) {
       error = error_list[i];
-      if (error instanceof Event) {
-        error = {
-          string: error.toString(),
-          message: error.message,
-          type: error.type,
-          target: error.target
-        };
+      if (error instanceof XMLHttpRequest) {
+        addErrorMessage(error_div, "- readyState: " + error.readyState);
+        addErrorMessage(error_div, "- status: " + error.status);
+        addErrorMessage(error_div, "- statusText: " + error.statusText);
+        addErrorMessage(error_div, "- response: " + error.response);
+        addErrorMessage(error_div, "- responseUrl: " + error.responseUrl);
+        addErrorMessage(error_div, "- response_headers: " +
+                        error.getAllResponseHeaders());
+      } else if (error instanceof Event) {
+        addErrorMessage(error_div, "- type: " + error.type);
+        addErrorMessage(error_div, "- target: " + error.target);
         if (error.target !== undefined) {
           error_list.splice(i + 1, 0, error.target);
         }
       }
-      if (error instanceof XMLHttpRequest) {
-        error = {
-          message: error.toString(),
-          readyState: error.readyState,
-          status: error.status,
-          statusText: error.statusText,
-          response: error.response,
-          responseUrl: error.responseUrl,
-          response_headers: error.getAllResponseHeaders()
-        };
-      }
       if (error.constructor === Array ||
           error.constructor === String ||
           error.constructor === Object) {
-        try {
-          error = JSON.stringify(error);
-        } catch (ignore) {
-        }
+        addErrorMessage(error_div, "- Full error: " + JSON.stringify(error));
       }
-      error_text += error.message || error;
-      error_text += '\n';
+      if (error.message) {
+        addErrorMessage(error_div, "- message: " + error.message);
+      }
       if (error.fileName !== undefined) {
-        error_text += 'File: ' +
-          error.fileName +
-          ': ' + error.lineNumber + '\n';
+        addErrorMessage(error_div, "- file: " + error.fileName +
+                        ': ' + error.lineNumber);
       }
       if (error.stack !== undefined) {
-        error_text += 'Stack: ' + error.stack + '\n';
+        addErrorMessage(error_div, line);
+        addErrorMessage(error_div, "STACK");
+        addErrorMessage(error_div, error.stack);
       }
-      error_text += '---\n';
+      addErrorMessage(error_div, line);
     }
-    return error_text;
-  }
-
-  function displayError(error) {
-    if (error instanceof RSVP.CancellationError) {
-      return "RSVP cancelation error";
-    }
-    return displayErrorContent(error);
   }
 
   rJS(window)
@@ -68,7 +69,7 @@
       return this.changeState(options);
     })
     .onStateChange(function (modification_dict) {
-      var skip_link, error_div, app_name_div, message, error_text,
+      var skip_link, error_div, app_name_div,
         gadget = this;
       if (modification_dict.app_name) {
         app_name_div = gadget.element.querySelector(".app-name");
@@ -81,21 +82,11 @@
       }
       if (modification_dict.error) {
         error_div = gadget.element.querySelector(".error-message");
-        message = "Last Error: ";
-        error_text = displayError(gadget.state.error);
-        if (gadget.state.error.message) {
-          message += gadget.state.error.message;
+        if (gadget.state.error instanceof RSVP.CancellationError) {
+          error_div.textContent = "RSVP cancelation error";
         } else {
-          message += JSON.stringify(gadget.state.error);
+          displayErrorContent(error_div, gadget.state.error);
         }
-        if (modification_dict.error.currentTarget) {
-          message += " - URL: " +
-            modification_dict.error.currentTarget.responseURL;
-        } else {
-          message += " " + modification_dict.error;
-        }
-        message += " - FULL ERROR: " + error_text;
-        error_div.textContent = message;
       }
       if (modification_dict.redirect_url) {
         skip_link = gadget.element.querySelector(".skip-link");

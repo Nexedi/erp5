@@ -82,7 +82,7 @@ class SQLMethod(XMLObject, ZSQL, ExpressionMixin('expression')):
   # View content list, replace /view, Standard option in SQLMethod
   manage_options = ( ZSQL.manage_options[0], ) + \
      ({'icon':'', 'label':'View','action':'view'},) + \
-     ZSQL.manage_options[2:]
+     ZSQL.manage_options[1:]
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

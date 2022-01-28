@@ -202,6 +202,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
       Check if after the configuration the Person objects are validated.
       The Assignments must be opened and valid.
+      Employee number is defined
     """
     business_configuration = sequence.get("business_configuration")
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
@@ -217,6 +218,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         self.assertNotEquals(None, assignment.getStopDate())
         self.assertEqual(assignment.getGroup(), "my_group")
         assignment.Base_checkConsistency()
+      current_career = person.getDefaultCareerValue()
+      employee_number = current_career.getReference()
+      self.assertNotEqual(employee_number, None)
+      self.assertEqual(len(current_career.checkConsistency()), 0)
+      current_career.edit(reference='')
+      self.assertEqual(len(current_career.checkConsistency()), 1)
+      current_career.edit(reference=employee_number)
+
 
   def stepCheckPersonInformationList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1045,7 +1054,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         individual_variation_base_category='variation',
         base_contribution='base_amount/taxable',
         default_sale_supply_line_base_price=10,
-        default_sale_supply_line_source_account=sales_account.getRelativeUrl(),
+        default_sale_supply_line_source_account_value=sales_account,
     )
     portal.portal_workflow.doActionFor(resource, 'validate_action')
     self.tic()
@@ -1053,7 +1062,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         portal_type='Service',
         title="VAT",
         use_value=self.portal.portal_categories.use.trade.tax,
-        default_sale_supply_line_source_account=vat_account.getRelativeUrl(),
+        default_sale_supply_line_source_account_value=vat_account,
     )
     portal.portal_workflow.doActionFor(vat_service, 'validate_action')
 
@@ -1483,7 +1492,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         individual_variation_base_category='variation',
         base_contribution='base_amount/taxable',
         default_purchase_supply_line_base_price=10,
-        default_purchase_supply_line_destination_account=expense_account.getRelativeUrl(),
+        default_purchase_supply_line_destination_account_value=expense_account,
     )
     portal.portal_workflow.doActionFor(resource, 'validate_action')
     self.tic()
@@ -1491,7 +1500,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         portal_type='Service',
         title="VAT",
         use_value=self.portal.portal_categories.use.trade.tax,
-        default_purchase_supply_line_destination_account=vat_account.getRelativeUrl(),
+        default_purchase_supply_line_destination_account_value=vat_account,
     )
     portal.portal_workflow.doActionFor(vat_service, 'validate_action')
 

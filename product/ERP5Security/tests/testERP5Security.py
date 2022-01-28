@@ -60,7 +60,12 @@ class UserManagementTestCase(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_administration',)
+    return (
+      'erp5_full_text_mroonga_catalog',
+      'erp5_core_proxy_field_legacy',
+      'erp5_base',
+      'erp5_administration',
+    )
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -548,6 +553,7 @@ class DuplicatePrevention(UserManagementTestCase):
         'user id P%i already exists' % (latest_user_id + 1),
         self.portal.person_module.newContent,
         portal_type='Person')
+    self.abort()
 
     # This error is not permanent, the id is skipped and next generation should succeed
     self.assertEqual(
@@ -781,6 +787,14 @@ class TestPASAPI(UserManagementTestCase):
                 ERP5BearerExtractionPlugin
     verifyClass(ILoginPasswordHostExtractionPlugin, ERP5BearerExtractionPlugin)
 
+  def test_ERP5OpenIdConnectExtractionPluginInterfaces(self):
+    """Tests openid connect extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5ExternalOpenIdConnectExtractionPlugin import\
+                ERP5OpenIdConnectExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5OpenIdConnectExtractionPlugin)
+
   def test_ERP5DumbHTTPExtractionPluginInterfaces(self):
     """Tests dumb HTTP extraction plugin respects interfaces."""
     from Products.PluggableAuthService.interfaces.plugins import\
@@ -920,16 +934,30 @@ class TestMigration(UserManagementTestCase):
         self.portal.person_module.newContent,
         portal_type='Person',
         reference='old_user_id')
+    self.abort()
 
     self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.commit()
+    # Sanity check
+    self.assertTrue(
+      self.portal.portal_activities.countMessage(
+        method_id='ERP5Site_disableERP5UserManager',
+      ),
+    )
     def stop_condition(message_list):
-      if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+      # Once ERP5Site_disableERP5UserManager has been executed, the unicity
+      # constraint on Person.reference disappears (and re-appears on
+      # Person.user_id and ERP5User.reference, but this is not what is being
+      # tested here). So only check this constraint for as long as that
+      # activity is present.
+      if any(m.method_id == 'ERP5Site_disableERP5UserManager' for m in message_list):
         self.assertRaisesRegexp(
           ValidationFailed,
           'user id old_user_id already exists',
           self.portal.person_module.newContent,
           portal_type='Person',
           reference='old_user_id')
+        self.abort()
       return False
     self.tic(stop_condition=stop_condition)
     self.portal.person_module.newContent(portal_type='Person', reference='old_user_id')
@@ -939,6 +967,7 @@ class TestMigration(UserManagementTestCase):
         self.portal.person_module.newContent,
         portal_type='Person',
         user_id='old_user_id')
+    self.abort()
 
   def test_DuplicateUserIdFromInitUserIdPreventionDuringMigration(self):
     self._enableERP5UsersPlugin()
@@ -956,15 +985,17 @@ class TestMigration(UserManagementTestCase):
             'user id P1234 already exists',
             self.portal.person_module.newContent,
             portal_type='Person',)
+      self.abort()
   
       self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
       def stop_condition(message_list):
-        if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+        if any(m.method_id != 'immediateReindexObject' for m in message_list):
           self.assertRaisesRegexp(
             ValidationFailed,
             'user id P1234 already exists',
             self.portal.person_module.newContent,
             portal_type='Person',)
+          self.abort()
         return False
       self.tic(stop_condition=stop_condition)
 
@@ -973,6 +1004,7 @@ class TestMigration(UserManagementTestCase):
           'user id P1234 already exists',
           self.portal.person_module.newContent,
           portal_type='Person',)
+      self.abort()
 
   def test_NonMigratedPersonCanBecomeUserLater(self):
     self._enableERP5UsersPlugin()

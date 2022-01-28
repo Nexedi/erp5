@@ -19,7 +19,7 @@ if payment_mode:
   reference = '%s_%s' % (reference, payment_mode.lower())
 sale_trade_condition = portal.portal_catalog.getResultValue(
   portal_type='Sale Trade Condition',
-  reference='%' + reference + '%',
+  reference=reference + '%',
   validation_state='published',
   limit=1,
   sort_on=(('version', 'descending'),))

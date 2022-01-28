@@ -52,6 +52,8 @@ override_batch_mode = kw.get('batch_mode')
 
 # -------------------------- Document Parameters  ------------------------------
 leaflet_content = leaflet.getTextContent()
+if not leaflet_content:
+  return
 leaflet_title = leaflet.getTitle()
 leaflet_relative_url = leaflet.getRelativeUrl()
 leaflet_language = leaflet.getLanguage()

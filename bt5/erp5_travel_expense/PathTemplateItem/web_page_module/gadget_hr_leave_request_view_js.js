@@ -88,6 +88,7 @@
        state = getWorkflowState(options),
        not_sync_checked;
       gadget.options = options;
+      gadget.options.readonly = state.readonly;
 
       return new RSVP.Queue()
         .push (function () {
@@ -234,6 +235,9 @@
             'submit',
             false,
             function (submit_event) {
+              if (gadget.options.readonly) {
+                return;
+              }
               return getSequentialID(gadget, 'LRR')
                 .push(function (source_reference) {
                   var i,
@@ -241,7 +245,7 @@
                       parent_relative_url: "record_module",
                       portal_type: "Leave Request Record",
                       source_reference: source_reference,
-                      modification_date: new Date().toISOString()
+                      modification_date: new Date().toISOString().slice(0, 10).replace(/-/g, "/")
                     };
                   for (i = 0; i < submit_event.target.length; i += 1) {
                     // XXX Should check input type instead

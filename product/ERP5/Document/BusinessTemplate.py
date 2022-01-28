@@ -3112,7 +3112,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       # If there is no filter archive and the the meta_type of the catalog
       # method isn't one of the ERP5-ified Catalog Method Document, then
       # set the filter to 0
-      elif method.meta_type not in ('ERP5 SQL Method', 'ERP5 Python Script'):
+      elif not method.meta_type.startswith('ERP5 '):
         method.setFiltered(0)
 
       # backward compatibility
@@ -6495,7 +6495,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
           seen_cls_set.add(cls)
 
-    _migrate_exception_set = set([
+    _migrate_exception_set = {
       ## Bootstrap
       'Products.ERP5.ERP5Defaults',
       'Products.ERP5Type.mixin.response_header_generator',
@@ -6521,7 +6521,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.interfaces.action',
       'Products.ERP5Type.interfaces.action_container',
       'Products.ERP5Type.ERP5Type',
-      'Products.ERP5.mixin.expression',
       'Products.ERP5.Document.SQLMethod',
       'Products.ERP5Type.Globals',
       'Products.ERP5Type.TransactionalVariable',
@@ -6776,7 +6775,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5OOo.tests.testFormPrintoutAsODT',
       'Products.ERP5OOo.tests.testIngestion',
       'Products.ERP5OOo.tests.testOOoDynamicStyle',
-    ])
+    }
 
     security.declareProtected(Permissions.ManagePortal,
                               'getMigratableSourceCodeFromFilesystemList')

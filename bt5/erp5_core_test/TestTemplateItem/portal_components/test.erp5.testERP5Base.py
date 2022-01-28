@@ -61,6 +61,8 @@ class TestERP5Base(ERP5TypeTestCase):
     self.portal_catalog    = self.getCatalogTool()
     self.portal_preferences = self.getPreferenceTool()
     self.createCategories()
+    self._addPropertySheet('Career', 'CareerConstraint')
+    self.commit()
 
   def beforeTearDown(self):
     self.abort()
@@ -979,6 +981,40 @@ class TestERP5Base(ERP5TypeTestCase):
     age_as_text = person.Person_getAge(at_date=DateTime(2002, 2, 4))
     self.assertEqual(age_as_text, "1 years old")
 
+  def test_career_constraint(self):
+    organisation = self.getOrganisationModule().newContent(portal_type='Organisation')
+    person = self.getPersonModule().newContent(
+      portal_type='Person',
+      default_career_subordination_value = organisation)
+    self.tic()
+    current_career = person.getDefaultCareerValue()
+    message_list = current_career.checkConsistency()
+    self.assertEqual(len(message_list), 0)
+    self.portal_preferences.default_site_preference.setPreferredSectionCategory('group/nexedi')
+    if self.portal_preferences.default_site_preference.getPreferenceState() == "disabled":
+      self.portal_preferences.default_site_preference.enable()
+    organisation.setGroup('nexedi')
+    self.tic()
+    message_list = current_career.checkConsistency()
+    self.assertEqual(len(message_list), 1)
+    self.assertEqual(str(message_list[0].getMessage()), 'Employee Number is not defined')
+    self.tic()
+    current_career.Career_setEmployeeNumber(batch=1)
+    message_list = current_career.checkConsistency()
+    self.assertEqual(len(message_list), 0)
+    current_career.start()
+    self.tic()
+    new_career = person.newContent(portal_type='Career', subordination_value = organisation)
+    new_career.Career_setEmployeeNumber(batch=1, employee_number=current_career.getReference())
+    self.tic()
+    message_list = new_career.checkConsistency()
+    self.assertEqual(len(message_list), 1)
+    self.assertEqual(str(message_list[0].getMessage()), 'There already is a started career with the same employee number')
+    new_career.Career_setEmployeeNumber(batch=1, force=1)
+    self.tic()
+    message_list = new_career.checkConsistency()
+    self.assertEqual(len(message_list), 0)
+
   def test_AssignmentWorkflow(self):
     person = self.getPersonModule().newContent(portal_type='Person',)
     assignment = person.newContent(portal_type='Assignment')
@@ -1149,6 +1185,18 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual(getattr(person, 'comment', None), None)
     # workflow is affected
     self.assertTrue(comment in [q['comment'] for q in workflow_history ])
+
+  def test_Base_addEditWorkflowComment(self):
+    # rather than using low level doActionFor, an helper script Base_addEditWorkflowComment
+    # is available. This scrit also has a proxy role, so that we can programatically
+    # add comment to workflow history, which can be good for traceability of autamated
+    # actions.
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.logout()
+    person.Base_addEditWorkflowComment(comment=comment)
+    workflow_history = self.getWorkflowHistory(person, 'edit_workflow')
+    self.assertIn(('Anonymous User', comment), [(q['actor'], q['comment']) for q in workflow_history ])
 
   def test_comment_validation_workflow(self):
     comment = 'some comment'

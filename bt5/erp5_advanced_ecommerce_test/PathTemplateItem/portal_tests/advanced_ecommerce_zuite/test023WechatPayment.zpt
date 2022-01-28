@@ -30,6 +30,8 @@
 
 <tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/reset_shopcart" />
 
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/disable_loyalty_reward_by_default" />
+
 <tr>
   <td>setTimeout</td>
   <td>300000</td>

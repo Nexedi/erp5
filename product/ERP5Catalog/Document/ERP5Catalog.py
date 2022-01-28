@@ -140,7 +140,7 @@ class ERP5Catalog(Folder, Catalog):
 
   meta_type = "ERP5 Catalog"
   portal_type = 'Catalog'
-  allowed_types = ('Python Script', 'SQL Method',)
+  allowed_types = 'External Method', 'Python Script', 'SQL Method'
   #TODO(low priority): Add an icon to display at ERP5 Zope interface
   icon = None
   # Activate isRADContent cause we need to generate accessors and default values
@@ -185,6 +185,7 @@ class ERP5Catalog(Folder, Catalog):
     "ERP5 SQL Method",
   )
   HAS_FUNC_CODE_METATYPE_SET = (
+    "ERP5 External Method",
     "ERP5 Python Script",
   )
 
@@ -265,8 +266,8 @@ class ERP5Catalog(Folder, Catalog):
     self._baseSetSqlSearchResultKeysList(sorted(value), **kw)
 
   security.declarePublic('getCatalogMethodIds')
-  def getCatalogMethodIds(self,
-        valid_method_meta_type_list=('ERP5 SQL Method', 'ERP5 Python Script')):
+  def getCatalogMethodIds(self, valid_method_meta_type_list=
+      HAS_ARGUMENT_SRC_METATYPE_SET + HAS_FUNC_CODE_METATYPE_SET):
     """Find ERP5 SQL methods in the current folder and above
     This function return a list of ids.
     """
@@ -279,8 +280,9 @@ class ERP5Catalog(Folder, Catalog):
       Returns a list of all python scripts available in
       current sql catalog.
     """
-    return self.getCatalogMethodIds(
-                  valid_method_meta_type_list=('ERP5 Python Script',))
+    return self.getCatalogMethodIds(valid_method_meta_type_list=(
+      'ERP5 External Method',
+      'ERP5 Python Script'))
 
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ Clears the catalog

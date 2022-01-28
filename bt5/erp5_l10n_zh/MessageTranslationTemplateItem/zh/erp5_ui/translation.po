@@ -439,6 +439,9 @@ msgstr "单件产品的价格"
 msgid "A version identifier"
 msgstr "版本标识符"
 
+msgid "About"
+msgstr "关于"
+
 msgid "Absence Hours"
 msgstr "缺席时数"
 
@@ -1117,6 +1120,9 @@ msgstr "出生地"
 msgid "Block Account"
 msgstr "封闭账户"
 
+msgid "Blog"
+msgstr "博客"
+
 msgid "Body Background"
 msgstr "整体背景"
 
@@ -1572,6 +1578,9 @@ msgstr "评论"
 msgid "Comments which can be read by internal users but unlike description, are not printed out on official documents."
 msgstr "内部用户可以阅读评论，但不像描述那样可以在正式文件中打印出来。"
 
+msgid "Company"
+msgstr "公司"
+
 msgid "Company Size (staff number)"
 msgstr "公司员工人数"
 
@@ -1709,6 +1718,9 @@ msgstr "联系方式类型"
 
 msgid "Contact us"
 msgstr "联系我们"
+
+msgid "Contact"
+msgstr "联系方式"
 
 msgid "Contacts"
 msgstr "联系方式"
@@ -2048,6 +2060,9 @@ msgstr "文件管理系统偏好设置"
 
 msgid "Dashboard"
 msgstr "仪表板"
+
+msgid "Data Privacy"
+msgstr "数据隐私"
 
 msgid "Data Updated"
 msgstr "数据已更新"
@@ -2923,6 +2938,9 @@ msgstr "失败..."
 
 msgid "Fallback Base Categories"
 msgstr "备用基本类别"
+
+msgid "Faq"
+msgstr "常见问题与解答"
 
 msgid "Fast Input"
 msgstr "快捷输入"
@@ -3825,6 +3843,9 @@ msgstr "包含板块布局"
 
 msgid "Legal Form"
 msgstr "公司形式"
+
+msgid "Legal Notice"
+msgstr "法律声明"
 
 msgid "Legal form of business company."
 msgstr "该商业公司的法律形式"
@@ -5095,6 +5116,9 @@ msgstr "没有标签产品的单价"
 
 msgid "Priced Quantity"
 msgstr "定价数量"
+
+msgid "Pricing"
+msgstr "价格"
 
 msgid "Print Invoice"
 msgstr "打印发票"
@@ -6676,6 +6700,9 @@ msgstr "来源会计操作日期"
 msgid "Source Carrier"
 msgstr "货物来源运输公司"
 
+msgid "Source Code"
+msgstr "源代码"
+
 msgid "Source Decision"
 msgstr "决策来源"
 
@@ -7164,6 +7191,9 @@ msgstr "已临时关闭"
 
 msgid "Term (days)"
 msgstr "期限（天）"
+
+msgid "Terms"
+msgstr "条款"
 
 msgid "Terminate the Current Career Step"
 msgstr "终止当前事业阶段"

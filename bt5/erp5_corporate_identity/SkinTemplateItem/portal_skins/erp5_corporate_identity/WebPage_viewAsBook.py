@@ -69,6 +69,8 @@ book_relative_url = book.getRelativeUrl()
 book_prefix = pref.getPreferredCorporateIdentityTemplateBookDocumentPrefix() or "Book."
 book_rendering_fix = book.WebPage_getPdfOutputRenderingFix() or blank
 book_content = book.getTextContent()
+if not book_content:
+  return
 book_aggregate_list = []
 book_revision = book.getRevision()
 book_modification_date = book.getModificationDate()

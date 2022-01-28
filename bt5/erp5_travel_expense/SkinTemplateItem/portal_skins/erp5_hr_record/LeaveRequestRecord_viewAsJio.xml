@@ -86,6 +86,7 @@
                         <string>my_title</string>
                         <string>your_state</string>
                         <string>your_sync_flag</string>
+                        <string>my_quantity</string>
                       </list>
                     </value>
                 </item>

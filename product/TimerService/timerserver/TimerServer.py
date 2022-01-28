@@ -101,8 +101,8 @@ class TimerServer(threading.Thread):
                 err = StringIO()
                 response = TimerResponse(out, err)
                 handle(module, TimerRequest(response, interval), response)
-            except:
-                pass
+            except Exception:
+                logger.warn("Ignoring exception in run loop", exc_info=True)
 
 
 TIMER_SERVICE_PATH = '/Control_Panel/timer_service'
@@ -110,7 +110,7 @@ TIMER_ENVIRON = {
     'REQUEST_METHOD': 'GET',
     'SERVER_SOFTWARE': 'TimerServer for Zope',
     'SERVER_NAME': '',
-    'SERVER_PORT': '',
+    'SERVER_PORT': '-1',
     'REMOTE_ADDR': '',
     'GATEWAY_INTERFACE': 'CGI/1.1',
     'SERVER_PROTOCOL': 'HTTP/1.0',

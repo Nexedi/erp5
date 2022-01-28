@@ -23,8 +23,15 @@
   <td>window.matchMedia = function () {return {matches:true}}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@data-i18n='[value]Submit New Support Request']</td>
   <td></td>
 </tr>
@@ -34,12 +41,16 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class="document_table"]//tr/td[1]</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//div[@class="document_table"]//tr/td[1]/a</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 
 <tr>
   <td>assertText</td>

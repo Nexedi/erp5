@@ -37,6 +37,17 @@
     </td>
   </tr>
   <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    List of Login Portal Types (One per line)
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <textarea name="login_portal_type_list:lines" rows="6" cols="35">ERP5 Login
+    </textarea>
+    </td>
+  </tr>
+  <tr>
     <td colspan="2"> <input type="submit" value="add plugin"/>
     </td>
   </tr>

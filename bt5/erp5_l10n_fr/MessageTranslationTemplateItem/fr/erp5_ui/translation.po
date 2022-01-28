@@ -5944,6 +5944,9 @@ msgstr "Présente la version en anglais et la version traduite de chaque terme"
 msgid "Income"
 msgstr "Produits"
 
+msgid "Income Tax"
+msgstr "Impôt Sur Le Revenu"
+
 msgid "Incoming"
 msgstr "Entrant"
 

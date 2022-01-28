@@ -56,6 +56,7 @@
 
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
 
     .declareMethod('createJio', function (jio_options) {
@@ -99,31 +100,87 @@
     .declareMethod('repair', function () {
       var gadget = this;
       return this.getSetting("jio_storage_name")
-        .push(function (jio_storage_name) {
-          //try to specify me
-          if (jio_storage_name === 'ERP5') {
-            return gadget.getSetting('me')
-              .push(function (me) {
-                if (!me) {
-                  return gadget.getSetting('jio_storage_description')
-                    .push(function (configuration) {
-                      gadget.state_parameter_dict.jio_storage = jIO.createJIO(configuration.remote_sub_storage);
-                      return wrapJioCall(gadget, 'getAttachment', ['acl_users', configuration.remote_sub_storage.url, {format: "json"}])
-                       .push(function (result) {
-                         //recreate erp5 storage with indexeddb
-                         me = result._links.me ? result._links.me.href : 'manager';
-                         configuration.query.query += 'OR (portal_type: "Person" AND id: "' + me.split("/")[1] + '")',
-                         gadget.state_parameter_dict.jio_storage = jIO.createJIO(configuration);
-                         return gadget.setSetting('me', me);
-                       })
-                       .push(function () {
-                         return gadget.setSetting('jio_storage_description', configuration);
-                       });
-                    });
-               }
-          });
+       .push(function (jio_storage_name) {
+         if (jio_storage_name === 'ERP5') {
+           return gadget.getSettingList(['jio_storage_description', 'me'])
+             .push(function (result_list) {
+               var additional_query_list = [],
+                 service_query =  new ComplexQuery({
+                   operator: 'OR',
+                   query_list: [],
+                   type: "complex"
+                 }),
+                 me;
+               gadget.state_parameter_dict.jio_storage = jIO.createJIO(result_list[0].remote_sub_storage);
+               return wrapJioCall(gadget, 'allDocs', [
+                   {
+                     "query": '(selection_domain_use:"hr" AND translated_validation_state_title: "validated")',
+                     "limit": [0, 1000]
+                   }
+                 ])
+                 .push(function (result) {
+                   var i;
+                   if (result.data.rows.length) {
+                     for (i = 0; i < result.data.rows.length; i += 1) {
+                       service_query.query_list.push(new SimpleQuery({
+                         key: 'id',
+                         operator: '',
+                         type: "simple",
+                         value: result.data.rows[i].id.split('/')[1]
+                       }));
+                     }
+                     additional_query_list.push(new ComplexQuery({
+                       operator: 'AND',
+                       query_list: [
+                         new SimpleQuery({
+                           key: 'portal_type',
+                           operator: '',
+                           type: "simple",
+                           value: 'Service'
+                         }),
+                         service_query
+                       ],
+                       type: "complex"
+                     }));
+                   }
+
+                  if (! result_list[1]) {
+                    return wrapJioCall(gadget, 'getAttachment', ['acl_users', result_list[0].remote_sub_storage.url, {format: "json"}])
+                      .push(function (result) {
+                        me = result._links.me ? result._links.me.href : 'manager';
+                        return gadget.setSetting('me', me);
+                      })
+                  } else {
+                    me = result_list[1];
+                  }
+                })
+                .push(function () {
+                  additional_query_list.push(new ComplexQuery({
+                    operator: 'AND',
+                    query_list: [
+                      new SimpleQuery({
+                        key: 'portal_type',
+                        operator: '',
+                        type: "simple",
+                        value: 'Person'
+                      }),
+                      new SimpleQuery({
+                        key: 'id',
+                        operator: '',
+                        type: "simple",
+                        value: me.split("/")[1]
+                      })
+                    ],
+                    type: "complex"
+                   }));
+
+                   result_list[0].query.query = getSynchronizeQuery(additional_query_list);
+                   gadget.state_parameter_dict.jio_storage = jIO.createJIO(result_list[0]);
+                   return gadget.setSetting('jio_storage_description', result_list[0]);
+                });
+             });
          }
-      })
+       })
       .push(function () {
         return wrapJioCall(gadget, 'repair', arguments);
       })

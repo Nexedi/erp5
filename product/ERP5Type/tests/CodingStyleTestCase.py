@@ -177,10 +177,8 @@ class CodingStyleTestCase(ERP5TypeTestCase):
         document, content_portal_type_list = findContentChain(
             self.portal, portal_type)
         for content_portal_type in content_portal_type_list:
-          document = document.newContent(
-              portal_type=content_portal_type,
-              temp_object=True,
-          )
+          document = document.newContent(portal_type=content_portal_type)
+
         for action_category, action_list in self.portal.portal_actions.listFilteredActionsFor(
             document).iteritems():
           # We ignore duplicate actions in action categories used by OfficeJS

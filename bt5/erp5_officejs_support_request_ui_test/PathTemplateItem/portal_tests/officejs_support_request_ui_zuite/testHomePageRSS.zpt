@@ -20,7 +20,17 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//a[@data-i18n="Support Requests"]</td>
   <td></td>
 </tr>
@@ -31,6 +41,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "Actions")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//a[contains(text(), "Actions")]</td>
   <td></td>
 </tr>
@@ -46,12 +61,22 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//a[contains(text(), "Generate RSS")]</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//a[contains(text(), "Generate RSS")]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//button[contains(text(), "Copy to Clipboard")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//button[contains(text(), "Copy to Clipboard")]</td>
   <td></td>
 </tr>

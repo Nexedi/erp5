@@ -52,6 +52,8 @@ override_batch_mode = kw.get('batch_mode')
 
 # -------------------------- Document Parameters  ------------------------------
 release_content = release.getTextContent()
+if not release_content:
+  return
 release_title = release.getTitle()
 release_language = release.getLanguage()
 release_short_title = release.getShortTitle()

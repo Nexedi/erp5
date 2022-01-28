@@ -12,6 +12,7 @@ Category Related Membership State Constraint | ConstraintType
 Content Existence Constraint | ConstraintType
 Document Component | SortIndex
 Extension Component | SortIndex
+External Method | CatalogFilter
 Interface Component | SortIndex
 Mixin Component | SortIndex
 Module Component | SortIndex

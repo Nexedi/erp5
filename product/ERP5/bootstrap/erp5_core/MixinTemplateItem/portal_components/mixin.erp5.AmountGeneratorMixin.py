@@ -322,6 +322,9 @@ class AmountGeneratorMixin:
       property_dict_list = []
       # If several amount generator lines have same reference, the first
       # (sorted by int_index or float_index) matching one will mask the others.
+      # Note that this is possible when a model (i.e. Trade Condition) contains
+      # several lines with same reference; Composition only does masking by
+      # reference between lines from different parents.
       reference_set = set()
       while recurse_queue:
         self = recurse_queue.popleft()

@@ -4,11 +4,13 @@
   "use strict";
 
   rJS(window)
-    .declareAcquiredMethod("notifySubmit", "notifySubmit")
+    .declareAcquiredMethod("submitDialogWithCustomDialogMethod",
+                           "submitDialogWithCustomDialogMethod")
     .declareMethod('render', function (options) {
       return this.changeState({
         key: options.key,
-        erp5_add_list: JSON.stringify(options.erp5_add_list)
+        erp5_add_list: JSON.stringify(options.erp5_add_list),
+        action_script: options.action_script
       });
     })
     .onStateChange(function () {
@@ -67,8 +69,10 @@
     .onEvent('click', function (evt) {
       if (evt.target.tagName === 'BUTTON') {
         this.state.value = evt.target.getAttribute('data-value');
+        return this.submitDialogWithCustomDialogMethod(
+          this.state.action_script
+        );
       }
-      return this.notifySubmit();
     }, false);
 
 }(domsugar, window, rJS));

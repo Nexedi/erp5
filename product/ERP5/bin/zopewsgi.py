@@ -162,6 +162,7 @@ def runwsgi():
     parser.add_argument('-w', '--webdav', action='store_true')
     parser.add_argument('address', help='<ip>:<port>')
     parser.add_argument('zope_conf', help='path to zope.conf')
+    parser.add_argument('--timerserver-interval', help='Interval for timerserver', type=float)
     args = parser.parse_args()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
@@ -175,6 +176,13 @@ def runwsgi():
 
     from Signals.SignalHandler import SignalHandler
     SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
+
+    if args.timerserver_interval:
+      import Products.TimerService
+      Products.TimerService.timerserver.TimerServer.TimerServer(
+          module='Zope2',
+          interval=args.timerserver_interval,
+      )
 
     ip, port = splitport(args.address)
     port = int(port)

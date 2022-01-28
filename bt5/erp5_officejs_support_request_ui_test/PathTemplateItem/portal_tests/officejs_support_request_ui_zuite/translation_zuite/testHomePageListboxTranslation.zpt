@@ -17,8 +17,15 @@
   <td>&#36;{base_url}/web_site_module/erp5_officejs_support_request_ui/fr/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//input[@data-i18n='[value]Submit New Support Request']</td>
   <td></td>
 </tr>

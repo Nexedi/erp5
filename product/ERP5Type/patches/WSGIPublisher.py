@@ -19,6 +19,7 @@ from contextlib import closing
 from contextlib import contextmanager
 from io import BytesIO
 from io import IOBase
+import itertools
 import logging
 
 from six import binary_type
@@ -103,10 +104,24 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
     if not isZope4:
         WSGIResponse.setBody = setBody
 
+    def write(self, data):
+        if not self._streaming:
+
+            notify(pubevents.PubBeforeStreaming(self))
+
+            self._streaming = 1
+            self._locked_body = 1
+            self.finalize()
+            self.stdout.flush()
+
+        self.stdout.write(data)
+
+    WSGIResponse.write = write
+
     # According to PEP 333, WSGI applications and middleware are forbidden from
     # using HTTP/1.1 "hop-by-hop" features or headers. This patch prevents Zope
     # from sending 'Connection' and 'Transfer-Encoding' headers.
-    def finalize(self):
+    def _finalize(self):
 
         headers = self.headers
         body = self.body
@@ -142,6 +157,13 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
         # </patch>
 
         return '%s %s' % (self.status, self.errmsg), self.listHeaders()
+
+    WSGIResponse._finalized = None
+
+    def finalize(self):
+        if not self._finalized:
+            self._finalized = _finalize(self)
+        return self._finalized
 
     WSGIResponse.finalize = finalize
 
@@ -286,53 +308,54 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
         exc_info = (exc_type, exc, sys.exc_info()[2])
 
         try:
-            # Raise exception from app if handle-errors is False
-            # (set by zope.testbrowser in some cases)
-            if request.environ.get('x-wsgiorg.throw_errors', False):
-                reraise(*exc_info)
+            retry = False
+            try:
+                # Raise exception from app if handle-errors is False
+                # (set by zope.testbrowser in some cases)
+                if request.environ.get('x-wsgiorg.throw_errors', False):
+                    reraise(*exc_info)
 
-            if err_hook:
-                parents = request.get('PARENTS')
-                if parents:
-                    parents = parents[0]
-                retry = False
-                try:
+                if err_hook is not None:
+                    parents = request.get('PARENTS')
+                    if parents:
+                        parents = parents[0]
                     try:
-                        r = err_hook(parents, request, *exc_info)
-                        assert r is response
-                        exc_view_created = True
-                    except Retry:
-                        if request.supports_retry():
-                            retry = True
-                        else:
-                            r = err_hook(parents, request, *sys.exc_info())
+                        try:
+                            r = err_hook(parents, request, *exc_info)
                             assert r is response
                             exc_view_created = True
-                except (Redirect, Unauthorized):
-                    response.exception()
-                    exc_view_created = True
-                except BaseException as e:
-                    if e is not exc:
-                        raise
-                    exc_view_created = False
-            else:
-                # Handle exception view
-                exc_view_created = _exc_view_created_response(
-                    exc, request, response)
+                        except Retry:
+                            if request.supports_retry():
+                                retry = True
+                            else:
+                                r = err_hook(parents, request, *sys.exc_info())
+                                assert r is response
+                                exc_view_created = True
+                    except (Redirect, Unauthorized):
+                        response.exception()
+                        exc_view_created = True
+                    except BaseException as e:
+                        if e is not exc:
+                            raise
+                        exc_view_created = True
+                else:
+                    # Handle exception view
+                    exc_view_created = _exc_view_created_response(
+                        exc, request, response)
 
-                if isinstance(exc, Unauthorized):
-                    # _unauthorized modifies the response in-place. If this hook
-                    # is used, an exception view for Unauthorized has to merge
-                    # the state of the response and the exception instance.
-                    exc.setRealm(response.realm)
-                    response._unauthorized()
-                    response.setStatus(exc.getStatus())
+                    if isinstance(exc, Unauthorized):
+                        # _unauthorized modifies the response in-place. If this hook
+                        # is used, an exception view for Unauthorized has to merge
+                        # the state of the response and the exception instance.
+                        exc.setRealm(response.realm)
+                        response._unauthorized()
+                        response.setStatus(exc.getStatus())
 
-                retry = isinstance(exc, TransientError) and request.supports_retry()
-
-            notify(pubevents.PubBeforeAbort(request, exc_info, retry))
-            tm.abort()
-            notify(pubevents.PubFailure(request, exc_info, retry))
+                    retry = isinstance(exc, TransientError) and request.supports_retry()
+            finally:
+                notify(pubevents.PubBeforeAbort(request, exc_info, retry))
+                tm.abort()
+                notify(pubevents.PubFailure(request, exc_info, retry))
 
             if retry:
                 reraise(*exc_info)
@@ -468,13 +491,16 @@ def publish_module(environ, start_response,
         status, headers = response.finalize()
         start_response(status, headers)
 
-        if isinstance(response.body, _FILE_TYPES) or \
-           IUnboundStreamIterator.providedBy(response.body):
-            result = response.body
+        result = response.body
+        if isinstance(result, _FILE_TYPES):
+            if response.stdout.getvalue():
+                raise ValueError(
+                    'Cannot both return a file type and write to response.',
+                )
+        elif IUnboundStreamIterator.providedBy(result):
+            result = itertools.chain(result, (response.stdout.getvalue(), ))
         else:
-            # If somebody used response.write, that data will be in the
-            # response.stdout BytesIO, so we put that before the body.
-            result = (response.stdout.getvalue(), response.body)
+            result = (result, response.stdout.getvalue())
 
         for func in response.after_list:
             func()

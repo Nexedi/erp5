@@ -71,7 +71,8 @@
                 <string>destination_value_list</string>
                 <string>quantity_step</string>
                 <string>quantity_step_list</string>
-                <string>priced_quantity</string>
+                <string>quantity_unit</string>
+                <string>quantity_unit_value</string>
                 <string>start_date</string>
                 <string>stop_date</string>
                 <string>start_date_range_max</string>
@@ -82,6 +83,7 @@
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>
                 <string>destination_account</string>
+                <string>destination_account_value</string>
                 <string>destination_function</string>
                 <string>destination_function_value</string>
                 <string>destination_function_value_list</string>

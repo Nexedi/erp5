@@ -96,8 +96,74 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     self.assertEqual(len(product.contentValues(portal_type='Measure')),
                      2)
 
+class DefaultSupplyLineTestCase(ERP5TypeTestCase):
+  def _makeOne(self):
+    raise NotImplementedError()
+
+  def afterSetUp(self):
+    super(DefaultSupplyLineTestCase, self).afterSetUp()
+    if self.portal.portal_categories.quantity_unit.get('time') is None:
+      self.portal.portal_categories.quantity_unit.newContent(id='time')
+    if self.portal.portal_categories.quantity_unit.time.get('hour') is None:
+      self.portal.portal_categories.quantity_unit.time.newContent(id='hour')
+    self.resource = self._makeOne()
+
+  def test_purchase_supply_line(self):
+    self.resource.edit(purchase_supply_line_base_price=123)
+    self.assertEqual(self.resource.getPurchaseSupplyLineBasePrice(), 123)
+    self.resource.edit(purchase_supply_line_priced_quantity=2)
+    self.assertEqual(self.resource.getPurchaseSupplyLinePricedQuantity(), 2)
+    self.resource.edit(purchase_supply_line_quantity_unit='time/hour')
+    self.assertEqual(
+        self.resource.getPurchaseSupplyLineQuantityUnitValue(),
+        self.portal.portal_categories.quantity_unit.time.hour)
+    self.assertEqual(
+        self.resource.default_psl.getPortalType(), 'Purchase Supply Line')
+
+  def test_internal_supply_line(self):
+    self.resource.edit(internal_supply_line_base_price=123)
+    self.assertEqual(self.resource.getInternalSupplyLineBasePrice(), 123)
+    self.resource.edit(internal_supply_line_priced_quantity=2)
+    self.assertEqual(self.resource.getInternalSupplyLinePricedQuantity(), 2)
+    self.resource.edit(internal_supply_line_quantity_unit='time/hour')
+    self.assertEqual(
+        self.resource.getInternalSupplyLineQuantityUnitValue(),
+        self.portal.portal_categories.quantity_unit.time.hour)
+    self.assertEqual(
+        self.resource.default_isl.getPortalType(), 'Internal Supply Line')
+
+  def test_sale_supply_line(self):
+    self.resource.edit(sale_supply_line_base_price=123)
+    self.assertEqual(self.resource.getSaleSupplyLineBasePrice(), 123)
+    self.resource.edit(sale_supply_line_priced_quantity=2)
+    self.assertEqual(self.resource.getSaleSupplyLinePricedQuantity(), 2)
+    self.resource.edit(sale_supply_line_quantity_unit='time/hour')
+    self.assertEqual(
+        self.resource.getSaleSupplyLineQuantityUnitValue(),
+        self.portal.portal_categories.quantity_unit.time.hour)
+    self.assertEqual(
+        self.resource.default_ssl.getPortalType(), 'Sale Supply Line')
+
+
+class TestProductDefaultSupplyLine(DefaultSupplyLineTestCase):
+  def _makeOne(self):
+    return self.portal.product_module.newContent(portal_type='Product')
+
+
+class TestServiceDefaultSupplyLine(DefaultSupplyLineTestCase):
+  def _makeOne(self):
+    return self.portal.service_module.newContent(portal_type='Service')
+
+
+class TestComponentDefaultSupplyLine(DefaultSupplyLineTestCase):
+  def _makeOne(self):
+    return self.portal.component_module.newContent(portal_type='Component')
+
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPDMWithSecurity))
+  suite.addTest(unittest.makeSuite(TestProductDefaultSupplyLine))
+  suite.addTest(unittest.makeSuite(TestServiceDefaultSupplyLine))
+  suite.addTest(unittest.makeSuite(TestComponentDefaultSupplyLine))
   return suite

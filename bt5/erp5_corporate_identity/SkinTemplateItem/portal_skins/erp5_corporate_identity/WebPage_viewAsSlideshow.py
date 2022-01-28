@@ -172,6 +172,8 @@ doc_download = int(kw.get('document_download') or 0)
 doc_save = int(kw.get('document_save') or 0)
 doc_ooo = kw.get('remote_content') or None
 doc_content = doc_ooo or doc.getTextContent()
+if not doc_content:
+  return
 doc_is_slideshow = getSlideList(doc_content) or None
 
 override_logo_reference = kw.get('override_logo_reference', None)

@@ -9,10 +9,12 @@ payment_set = set((None,))
 payment_request_set = set((None,))
 project_set = set((None,))
 resource_set = set((context.getResource(),))
+item_set = set((None, ))
 movement_type_list = context.getPortalAccountingMovementTypeList()
 
 for line in context.getMovementList(portal_type=movement_type_list):
   resource_set.add(line.getResource())
+  item_set.add(line.getAggregate())
   if source:
     section_set.add(line.getDestinationSection())
     payment_set.add(line.getSourcePayment())
@@ -94,6 +96,9 @@ if force_project or len(project_set) > min_project_count:
     a(('getSourceProjectTitle', 'Project'))
   else:
     a(('getDestinationProjectTitle', 'Project'))
+
+if len(item_set) > 1:
+  a(('aggregate_title_list', 'Items'))
 
 if source:
   a(('source_debit', 'Debit'))

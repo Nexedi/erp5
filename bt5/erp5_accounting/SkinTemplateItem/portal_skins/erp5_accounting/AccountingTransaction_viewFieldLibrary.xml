@@ -114,6 +114,7 @@
                         <string>listbox_function</string>
                         <string>listbox_funding</string>
                         <string>my_ledger</string>
+                        <string>listbox_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>

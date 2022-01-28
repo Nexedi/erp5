@@ -250,7 +250,7 @@
                       source_reference: source_reference,
                       visible_in_html5_app_flag: 1,
                       record_revision: (gadget.options.doc.record_revision || 1),
-                      modification_date: new Date().toISOString()
+                      modification_date: new Date().toISOString().slice(0, 10).replace(/-/g, "/")
                     };
                   for (i = 0; i < submit_event.target.length; i += 1) {
                     // XXX Should check input type instead

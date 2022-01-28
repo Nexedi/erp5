@@ -18,6 +18,8 @@
 <!-- reset filter is disabled -->
 <tr><td>waitForElementPresent</td>
     <td>//input[@data-i18n="[value]Reset Filter" and @disabled]</td><td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//input[@data-i18n="[value]Reset Filter" and @disabled]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>css=#wrap2 iframe</td><td></td></tr>
@@ -25,7 +27,11 @@
     <td>css=#wrap2 iframe</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
     <td>//canvas</td><td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//canvas</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
+    <td>//div[@class="graph-content" and not(@disabled)]</td><td></td></tr>
+<tr><td>assertElementPresent</td>
     <td>//div[@class="graph-content" and not(@disabled)]</td><td></td></tr>
 
 <tr><td>storeEval</td>
@@ -149,6 +155,8 @@ and compare real click with simulated clicks.
 
 <!-- reset filter is now enabled -->
 <tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n="[value]Reset Filter" and not(@disabled)]</td><td></td></tr>
+<tr><td>assertElementPresent</td>
     <td>//input[@data-i18n="[value]Reset Filter" and not(@disabled)]</td><td></td></tr>
 <tr><td>assertTextNotPresent</td>
     <td>123dsfa</td>

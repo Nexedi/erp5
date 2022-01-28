@@ -19,7 +19,7 @@
             jio_key = (new URI(result._links.active_preference
                                      .href)).segment(2);
           }
-          return gadget.redirect({command: 'display',
+          return gadget.redirect({command: 'display_with_history',
                                   options: {jio_key: jio_key}});
         });
     })

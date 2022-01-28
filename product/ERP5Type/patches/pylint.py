@@ -291,7 +291,10 @@ register_module_extender(MANAGER, 'AccessControl.PermissionRole',
 ## Package dynamically extending the namespace of their modules with C
 ## extension symbols
 # astroid/brain/ added dynamically to sys.path by astroid __init__
-from py2gi import _gi_build_stub as build_stub
+try:
+    from brain_gi import _gi_build_stub as build_stub
+except ImportError: # BBB: old version of astroid
+    from py2gi import _gi_build_stub as build_stub
 def _register_module_extender_from_live_module(module_name, module):
     def transform():
         return AstroidBuilder(MANAGER).string_build(build_stub(module))
@@ -322,7 +325,7 @@ import lxml
 import os
 for filename in os.listdir(os.path.dirname(lxml.__file__)):
     if filename.endswith('.so'):
-        module_name = 'lxml.' + filename[:-3]
+        module_name = 'lxml.' + filename.split('.', 1)[0]
         _register_module_extender_from_live_module(
             module_name,
             __import__(module_name, fromlist=[module_name], level=0))
@@ -332,34 +335,40 @@ for filename in os.listdir(os.path.dirname(lxml.__file__)):
 # with `No name 'bigarray' in module 'wendelin' (no-name-in-module)`.
 #
 # -> Teach pylint to properly understand wendelin package nature.
-import wendelin
-def wendelin_transform(node):
-    m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
-    m.package = True
-    return m
-MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
+try:
+    import wendelin
+except ImportError:
+    pass
+else:
+    def wendelin_transform(node):
+        m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
+        m.package = True
+        return m
+    MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
 
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
 # in Zope2) as Shared (rather than Shared.DC) is considered...
 from astroid import modutils
-modutils__module_file = modutils._module_file
-def _module_file(modpath, path=None):
-    if modutils.pkg_resources is not None:
-        i = len(modpath) - 1
-        while i > 0:
-            package = '.'.join(modpath[0:i])
-            if (package in modutils.pkg_resources._namespace_packages and
-                    package in sys.modules):
-                modpath = modpath[i:]
-                path = sys.modules[package].__path__
-                break
-
-            i -= 1
-
-    return modutils__module_file(modpath, path)
-modutils._module_file = _module_file
+try: # BBB
+    modutils__module_file = modutils._module_file
+except AttributeError:
+    pass # recent astroid, anything to do ?
+else:
+    def _module_file(modpath, path=None):
+        if modutils.pkg_resources is not None:
+            i = len(modpath) - 1
+            while i > 0:
+                package = '.'.join(modpath[0:i])
+                if (package in modutils.pkg_resources._namespace_packages and
+                        package in sys.modules):
+                    modpath = modpath[i:]
+                    path = sys.modules[package].__path__
+                    break
+                i -= 1
+        return modutils__module_file(modpath, path)
+    modutils._module_file = _module_file
 
 if sys.modules['isort'] is None:
     del sys.modules['isort']

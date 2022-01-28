@@ -11,6 +11,7 @@
     default_state_json_string = JSON.stringify({
       panel_visible: false,
       service_worker_claimed: false,
+      app_reload_requested: false,
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
       ).textContent,
@@ -244,7 +245,7 @@
 
   function triggerMaximize(gadget, maximize) {
     if (gadget.props.deferred_minimize !== undefined) {
-      gadget.props.deferred_minimize.cancel();
+      gadget.props.deferred_minimize.cancel("triggerMaximize called");
       gadget.props.deferred_minimize = undefined;
     }
     hideDesktopPanel(gadget, maximize);
@@ -387,8 +388,14 @@
         .push(function (result) {
           setting_gadget = result;
           return setting_gadget.createJio({
-            type: "indexeddb",
-            database: "setting"
+            type: "fallback",
+            sub_storage: {
+              type: "indexeddb",
+              database: "setting"
+            },
+            fallback_storage: {
+              type: "memory"
+            }
           });
         })
         .push(function () {
@@ -572,8 +579,13 @@
     .allowPublicAcquisition("redirect", function redirect(param_list) {
       return route(this, 'router', 'redirect', param_list);
     })
-    .allowPublicAcquisition('reload', function reload() {
-      return location.reload();
+    .allowPublicAcquisition('reload', function reload(param_list) {
+      if (param_list[0] === true) {
+        // reload in async mode
+        this.state.app_reload_requested = true;
+      } else {
+        return location.reload();
+      }
     })
     .allowPublicAcquisition("getUrlParameter", function getUrlParameter(
       param_list
@@ -701,7 +713,8 @@
     .allowPublicAcquisition("renderApplication", function renderApplication(
       param_list
     ) {
-      if (this.state.service_worker_claimed &&
+      if ((this.state.service_worker_claimed ||
+           this.state.app_reload_requested) &&
           (this.state.notification_options === undefined)) {
         // As a new service worker claimed the client,
         // reload the page to ensure it uses the lastest gadget versions

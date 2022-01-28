@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal"
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
@@ -25,14 +24,19 @@
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
-<html>
+<!DOCTYPE html>
+<html tal:attributes="lang current_language">
   <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/" />
+  <meta name="referrer" content="same-origin">
+  <meta http-equiv="Feature-Policy" content="accelerometer 'none'; ambient-light-sensor 'none'; autoplay: 'none'; battery: 'none'; camera: 'none'; display-capture: 'none'; document-domain: 'none'; encrypted-media: 'none'; geolocation: 'none'; gyroscope: 'none'; magnetometer: 'none'; microphone: 'none'; payment: 'none'; usb: 'none'" />
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
   <title tal:content="python: here.getTranslatedTitle() or web_section.getTranslatedTitle()"></title>
   <tal:block tal:condition="favicon_url">
     <link rel="icon" tal:attributes="href favicon_url" />
   </tal:block>
+  <meta name="robots" content="index, follow" />
    <tal:block tal:condition="keyword_list">
     <meta name="keywords" tal:attributes="content python: ','.join(keyword_list)">
   </tal:block>

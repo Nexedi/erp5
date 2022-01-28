@@ -81,6 +81,9 @@ else:
   letter_version = "001"
   letter_reference = letter.getReference()
 
+if not letter_content:
+  return
+
 # overrides for tests
 if override_batch_mode:
   letter_modification_date = DateTime("1976-11-04")

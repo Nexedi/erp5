@@ -104,9 +104,10 @@ class FTPConnector(XMLObject):
     conn = self.getConnection()
     try:
       if self.isUseTemporaryFileOnWrite():
+        temp_filename = '_%s.tmp' % filename
         # Simulation transaction system
-        conn.writeFile(remotepath, '_%s.tmp' % filename, data, confirm=confirm)
-        self.activate(activity='SQLQueue').renameFile('_%s/%s.tmp' % (remotepath, filename),
+        conn.writeFile(remotepath, temp_filename, data, confirm=confirm)
+        self.activate(activity='SQLQueue').renameFile('%s/%s' % (remotepath, temp_filename),
                                                       '%s/%s' % (remotepath, filename))
       else:
         conn.writeFile(remotepath, '%s' % filename, data, confirm=confirm)

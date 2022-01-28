@@ -189,6 +189,9 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     """
     return self
 
+  def _checkIfRenderDefaultDocument(self):
+    return not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout')
+
   # Default view display
   security.declareProtected(Permissions.View, '__call__')
   def __call__(self):
@@ -217,7 +220,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     if self.REQUEST.get(self.web_section_key, MARKER) is MARKER:
       self.REQUEST[self.web_section_key] = self.getPhysicalPath()
     self.REQUEST.set('current_web_section', self)
-    if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
+    if self._checkIfRenderDefaultDocument():
       document = None
       if self.isDefaultPageDisplayed():
         # The following could be moved to a typed based method for more flexibility

@@ -10,6 +10,7 @@ if plugin_id in acl_users.plugins.getAllPlugins(plugin_type='IAuthenticationPlug
       portal_type='Person',
       activate_kw={'tag': tag, 'priority': 6},
       method_id='Person_migrateToERP5Login',
+      method_kw={'tag': tag},
     )
     portal.portal_activities.activate(after_tag=tag).ERP5Site_disableERP5UserManager()
 return error_list
