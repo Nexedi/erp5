@@ -21,6 +21,7 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
+
 <tr>
   <td>open</td>
   <td>${base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>

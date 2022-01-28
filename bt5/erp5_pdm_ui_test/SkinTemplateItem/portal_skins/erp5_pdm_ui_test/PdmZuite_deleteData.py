@@ -72,11 +72,4 @@ for transformation_id in (
     portal.transformation_module.manage_delObjects([transformation_id])
 
 
-# delete supplies
-for supply_portal_type in ('Purchase Supply', 'Sale Supply', 'Internal Supply', ):
-  module = portal.getDefaultModule(supply_portal_type)
-  for supply_id in ('erp5_pdm_ui_test_supply_1', 'erp5_pdm_ui_test_supply_2', 'erp5_pdm_ui_test_supply_3'):
-    if getattr(module, supply_id, None) is not None:
-      module.manage_delObjects([supply_id])
-
 return "Deleted Successfully."

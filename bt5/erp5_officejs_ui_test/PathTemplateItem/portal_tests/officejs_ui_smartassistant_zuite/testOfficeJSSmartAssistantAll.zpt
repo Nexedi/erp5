@@ -347,18 +347,6 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<<<<<<< HEAD
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-=======
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
@@ -368,7 +356,6 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
->>>>>>> nexedi/master
 <tr>
   <td>waitForElementPresent</td>
   <td>//pre[contains(text(), "This is a reply test")]</td>
