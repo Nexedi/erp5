@@ -52,6 +52,7 @@ class SessionToolTestCase(ERP5TypeTestCase):
 
   def setCachePlugin(self):
     raise NotImplementedError()
+
   def _changeCachePlugin(self, portal_type, storage_duration = 86400):
     """ Change current cache plugin with new one. """
     portal_caches = self.portal.portal_caches
