@@ -281,11 +281,11 @@ def allow_full_write(t):
   # (closure) directly to allow write access (using __setattr__ and __delattr__)
   # to ndarray and pandas DataFrame below.
   from RestrictedPython.Guards import full_write_guard
-  safetype = full_write_guard.func_closure[1].cell_contents.__self__
-  if isinstance(safetype, dict): # 3.6.0
-    safetype.update({t: True})
-  else: # 5.1
+  safetype = full_write_guard.func_closure[1].cell_contents
+  if isinstance(safetype, set): # 5.1
     safetype.add(t)
+  else: # 3.6
+    safetype.__self__.update({t: True})
 
 
 from AccessControl.ZopeGuards import _dict_white_list
