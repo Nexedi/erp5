@@ -269,7 +269,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     transaction.commit()
     self.abort()
 
-  def tic(self, verbose=0, stop_condition=lambda message_list: False, delay=600):
+  def tic(self, verbose=0, stop_condition=lambda message_list: False, delay=1200):
     """Execute pending activities"""
     transaction.commit()
     # Some tests like testDeferredStyle require that we use self.getPortal()
@@ -296,7 +296,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
-        if time.time() >= deadline or message_count and all(x.processing_node == -2
+        if time.time() >= deadline or message_count and any(x.processing_node == -2
                                               for x in message_list):
           # We're about to raise RuntimeError, but maybe we've reached
           # the stop condition, so check just once more:
