@@ -4,7 +4,7 @@ from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
-now = DateTime()
+today = DateTime().strftime('%d%m%Y')
 
 if not include_delivered:
   batch_simulation_state = "stopped"
@@ -52,13 +52,24 @@ for movement in portal_catalog(query = query):
       transformation_list.append(transformation)
 
   for transformation in transformation_list:
-   
+
     is_shared_data_analysis = False
+
+    data_analysis_id= "%s-%s-%s" % (today, delivery.getId(), transformation.getId())
+
     # Check if analysis already exists
     data_analysis = portal_catalog.getResultValue(
       portal_type="Data Analysis",
       specialise_relative_url = transformation.getRelativeUrl(),
       causality_relative_url = delivery.getRelativeUrl())
+    
+    # search again with ID in case data_analysis is not indexed yet
+    if data_analysis is None:
+      try:
+        data_analysis = portal.data_analysis_module[data_analysis_id]
+      except KeyError:
+        pass
+
     if data_analysis is not None:
       continue
     # for first level analysis check if same kind of data analysis with same project and same source already exists
@@ -88,7 +99,8 @@ for movement in portal_catalog(query = query):
                     source_project = delivery.getSourceProject(),
                     destination = delivery.getDestination(),
                     destination_section = delivery.getDestinationSection(),
-                    destination_project = delivery.getDestinationProject())
+                    destination_project = delivery.getDestinationProject(),
+                    id=data_analysis_id)
 
     data_analysis.checkConsistency(fixit=True)
     # create input and output lines
