@@ -23,7 +23,7 @@ for data_analysis in portal.portal_catalog(portal_type = "Data Analysis",
 # Now we will activate `executeDataOperation` on given Data Analysis documents
 for data_analysis in data_analysis_list:
   if not data_analysis.hasActivity():
-    if data_analysis.getRefreshState() == "current":
+    if data_analysis.getRefreshState() in ("current", "refresh_started"):
       consuming_analysis_list = consuming_analysis_list_dict.get(data_analysis.getRelativeUrl(), [])
       data_analysis.activate(serialization_tag=str(data_analysis.getUid()))\
         .DataAnalysis_executeDataOperation(consuming_analysis_list)
