@@ -21,7 +21,7 @@ open_assignment_list = context.CredentialRequest_closePersonAssignment(old_role_
 #Initialisation
 assignment_duration = context.portal_preferences.getPreferredCredentialAssignmentDuration()
 today = DateTime()
-if assignment_duration < 0:
+if assignment_duration <= 0:
   delay = None
   start_date = None
 else:
