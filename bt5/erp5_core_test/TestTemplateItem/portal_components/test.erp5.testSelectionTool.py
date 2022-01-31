@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import contextlib
 import unittest
 from threading import Thread
 from thread import get_ident
@@ -241,10 +242,10 @@ class TestSelectionPersistence(unittest.TestCase):
   def _runWithAnotherConnection(self, thread_func):
     """runs `thread_func` with another ZODB connection
 
-    thread_func must be a callable accepting the connection object as only
+    thread_func must be a callable accepting the connection factory as only
     argument.
     """
-    t = Thread(target=thread_func, args=(self.db.open(),))
+    t = Thread(target=thread_func, args=(self.db.open,))
     t.start()
     t.join(60)
     self.assertFalse(t.isAlive())
@@ -253,14 +254,13 @@ class TestSelectionPersistence(unittest.TestCase):
     # same user edits the same selection with two different parameters
     self.portal_selections.setSelectionParamsFor(
                        'test_selection', dict(a="b"))
-    def thread_func(cnx):
-      try:
+    def thread_func(cnx_factory):
+      with contextlib.closing(cnx_factory()) as cnx:
         portal_selections = cnx.root().portal_selections
         portal_selections.setSelectionParamsFor(
                               'test_selection', dict(a="c"))
         transaction.commit()
-      finally:
-        cnx.close()
+
     self._runWithAnotherConnection(thread_func)
 
     # This would raise a ConflictError without conflict resolution code
@@ -272,14 +272,13 @@ class TestSelectionPersistence(unittest.TestCase):
     # same user edits two different selections
     self.portal_selections.setSelectionParamsFor(
                        'test_selection2', dict(a="b"))
-    def thread_func(cnx):
-      try:
+    def thread_func(cnx_factory):
+      with contextlib.closing(cnx_factory()) as cnx:
         portal_selections = cnx.root().portal_selections
         portal_selections.setSelectionParamsFor(
                        'test_selection1', dict(a="b"))
         transaction.commit()
-      finally:
-        cnx.close()
+
     self._runWithAnotherConnection(thread_func)
 
     # This would raise a ConflictError without conflict resolution code
@@ -304,14 +303,12 @@ class TestSelectionPersistence(unittest.TestCase):
 
     self.portal_selections.setSelectionParamsFor(
                        'test_selection', dict(a="b"))
-    def thread_func(cnx):
-      try:
+    def thread_func(cnx_factory):
+      with contextlib.closing(cnx_factory()) as cnx:
         portal_selections = cnx.root().portal_selections
         portal_selections.setSelectionParamsFor(
                        'test_selection', dict(a="b"))
         transaction.commit()
-      finally:
-        cnx.close()
     self._runWithAnotherConnection(thread_func)
 
     transaction.commit()
