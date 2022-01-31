@@ -187,4 +187,6 @@ def runwsgi():
         logger=logging.getLogger("access"),
         threads=conf.zserver_threads,
         asyncore_use_poll=True,
+        # Prevent waitress from adding its own Via and Server response headers.
+        ident=None,
     ).run()
