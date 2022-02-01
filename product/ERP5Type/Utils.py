@@ -526,6 +526,9 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
       except ImportError:
         pass
       try:
+        # Note that we don't run pylint as a subprocess, but directly from
+        # ERP5 process, so that pylint can access the code from ERP5Type
+        # dynamic modules from ZODB. 
         Run(args, reporter=TextReporter(output_file), exit=False)
       finally:
         from astroid.builder import MANAGER
