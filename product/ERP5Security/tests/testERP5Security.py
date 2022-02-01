@@ -333,13 +333,13 @@ class TestUserManagement(UserManagementTestCase):
     self._assertUserExists(login, password)
 
   def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self):
-    """Tests a person with a login but no password is not a valid user."""
-    password = None
-    _, login, _ = self._makePerson(password=password)
-    self._assertUserDoesNotExists(login, password)
-    password = ''
-    _, login, self._makePerson(password=password)
-    self._assertUserDoesNotExists(login, password)
+    """Tests a person with a login but empty password is not a valid user."""
+    _, login, _ = self._makePerson(password='')
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
+    _, login, _ = self._makePerson(password=None)
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
 
   def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with empty login & password is not a valid user."""

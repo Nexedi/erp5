@@ -104,9 +104,10 @@ class EncryptedPasswordMixin:
     self._setEncodedPassword(pw_encrypt(value))
 
   def _setPassword(self, value):
-    self.checkUserCanChangePassword()
-    self.checkPasswordValueAcceptable(value)
-    self._forceSetPassword(value)
+    if value is not None:
+      self.checkUserCanChangePassword()
+      self.checkPasswordValueAcceptable(value)
+      self._forceSetPassword(value)
 
   security.declarePublic('setPassword')
   def setPassword(self, value) :
