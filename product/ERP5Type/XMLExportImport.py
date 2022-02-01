@@ -29,8 +29,10 @@
 
 from Acquisition import aq_base, aq_inner
 
+from collections import OrderedDict
 from cStringIO import StringIO
-from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap, DictionaryType
+from zodbpickle.pickle import Pickler
+from types import DictionaryType
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
@@ -46,23 +48,17 @@ marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
                                                             as_tree=True).dumps
 
 class OrderedPickler(Pickler):
-
+    """Pickler producing consistent output by saving dicts in order
+    """
     dispatch = Pickler.dispatch.copy()
 
     def save_dict(self, obj):
-        write = self.write
-        if self.bin:
-            write(EMPTY_DICT)
-        else:   # proto 0 -- can't use EMPTY_DICT
-            write(MARK + DICT)
-        self.memoize(obj)
-        item_list = obj.items()
-        item_list.sort()
-        self._batch_setitems(iter(item_list))
+        return Pickler.save_dict(
+            self,
+            OrderedDict(sorted(obj.items())))
 
     dispatch[DictionaryType] = save_dict
-    if not PyStringMap is None:
-        dispatch[PyStringMap] = save_dict
+
 
 # ERP5 specific pickle function - produces ordered pickles
 def dumps(obj, protocol=None):
