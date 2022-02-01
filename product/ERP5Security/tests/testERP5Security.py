@@ -341,6 +341,20 @@ class TestUserManagement(UserManagementTestCase):
     self._assertUserDoesNotExists(login, None)
     self._assertUserDoesNotExists(login, 'None')
 
+  def test_PersonWithLoginWithoutPasswordAreNotUsers(self):
+    """Tests a person with a login but no password set is not a valid user."""
+    # similar to _makePerson, but not passing password= to newContent
+    login = 'login_%s' % self._login_generator()
+    new_person = self.portal.person_module.newContent(portal_type='Person')
+    new_person.newContent(portal_type='Assignment').open()
+    new_person.newContent(
+        portal_type='ERP5 Login',
+        reference=login,
+    ).validate()
+    self.tic()
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
+
   def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with empty login & password is not a valid user."""
     _, login, _ = self._makePerson()
