@@ -39,7 +39,7 @@ OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
 ## Pylint transforms and plugin to generate AST for ZODB Components
 from astroid.builder import AstroidBuilder
 from astroid.exceptions import AstroidBuildingException
-from astroid import MANAGER
+from astroid import MANAGER, node_classes
 
 try:
   from astroid.builder import _guess_encoding
@@ -97,6 +97,32 @@ def string_build(self, data, modname='', path=None):
     module.file_bytes = data
     return self._post_build(module, encoding)
 AstroidBuilder.string_build = string_build
+
+# patch node_classes.const_factory not to fail on LazyModules that e.g.
+# pygolang installs for pytest and ipython into sys.modules dict:
+#
+#   https://lab.nexedi.com/nexedi/pygolang/blob/pygolang-0.1-0-g7b72d41/golang/_patch/__init__.py
+#   https://lab.nexedi.com/nexedi/pygolang/blob/pygolang-0.1-0-g7b72d41/golang/_patch/pytest_py2.py#L48-51
+#   https://lab.nexedi.com/nexedi/pygolang/blob/pygolang-0.1-0-g7b72d41/golang/_patch/ipython_py2.py#L45-48
+#
+# if we don't patch and the module is not available, upon checking sys->sys.modules
+# const_factory will fail with ImportError when accessing value.__class__.
+node_classes_const_factory = node_classes.const_factory
+def const_factory(value):
+    typ = type(value)
+    typename = ('%s.%s' % (typ.__module__, typ.__name__))
+    if typename == 'peak.util.imports.LazyModule':
+        # lazy module installed by Importing
+        # see if we can load it, and return empty placehoder if the module is not available
+        try:
+            value.__class__
+        except ImportError:
+            node = node_classes.EmptyNode()
+            node.object = None # not value
+            return node
+        # ok the module is available and is now loaded - continue via normal const_factory path
+    return node_classes_const_factory(value)
+node_classes.const_factory = const_factory
 
 from astroid import nodes
 def erp5_package_transform(node):
