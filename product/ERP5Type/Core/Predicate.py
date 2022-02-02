@@ -107,7 +107,7 @@ class Predicate(XMLObject):
       # But if we reach this it is because catalog is not up to date.
       return False
 
-    result = 1
+    result = getattr(self, 'isEmptyCriterionValid', lambda: True)()
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = PersistentMapping()
       self._range_criterion = PersistentMapping()
@@ -151,7 +151,7 @@ class Predicate(XMLObject):
         self.getMultimembershipCriterionBaseCategoryList()
       membership_criterion_base_category_list = \
         self.getMembershipCriterionBaseCategoryList()
-      tested_base_category = {}
+      tested_base_category_set = set()
 #      LOG('predicate test', 0,
 #          'categories will be tested in multi %s single %s as %s' % \
 #         (multimembership_criterion_base_category_list,
@@ -164,14 +164,15 @@ class Predicate(XMLObject):
           bc = c.split('/', 1)[0]
           if tested_base_category_list is None or bc in tested_base_category_list:
             if bc in multimembership_criterion_base_category_list:
-              if not isMemberOf(context, c, strict_membership=strict_membership):
-                return 0
+              result = isMemberOf(context, c, strict_membership=strict_membership)
+              if not result:
+                return result
             elif bc in membership_criterion_base_category_list and \
-                 not tested_base_category.get(bc):
-              tested_base_category[bc] = \
-                isMemberOf(context, c, strict_membership=strict_membership)
-      if 0 in tested_base_category.itervalues():
-        return 0
+                 bc not in tested_base_category_set:
+              tested_base_category_set.add(bc)
+              result = isMemberOf(context, c, strict_membership=strict_membership)
+              if not result:
+                return result
 
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
@@ -278,17 +279,18 @@ class Predicate(XMLObject):
     if query_list:
       return ComplexQuery(query_list, logical_operator='AND')
     elif not getattr(self, 'isEmptyCriterionValid', lambda: True)():
-      # By catalog definition, no object has uid 0, so this condition forces an
-      # empty result.
-      return SimpleQuery(uid=0)
+      return None
     return SimpleQuery(uid=0, comparison_operator='>')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
   def searchResults(self, **kw):
     """
     """
+    query = self.asQuery()
+    if query is None:
+      return []
     return self.getPortalObject().portal_catalog.searchResults(
-      predicate_internal_query=self.asQuery(),
+      predicate_internal_query=query,
       **kw
     )
 
@@ -296,8 +298,11 @@ class Predicate(XMLObject):
   def countResults(self, REQUEST=None, used=None, **kw):
     """
     """
+    query = self.asQuery()
+    if query is None:
+      return [[0]]
     return self.getPortalObject().portal_catalog.countResults(
-      predicate_internal_query=self.asQuery(),
+      predicate_internal_query=query,
       **kw
     )
 
