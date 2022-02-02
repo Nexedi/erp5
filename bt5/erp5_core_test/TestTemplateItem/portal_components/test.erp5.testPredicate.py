@@ -707,6 +707,101 @@ class TestPredicates(TestPredicateMixIn):
       [brain.getObject() for brain in self.portal.portal_catalog(
         **{'predicate_category.uid': predicate.getUid()})])
 
+  def test_emptyCriterionValid(self):
+    """
+    The empty_criterion_valid boolean property controls how an unconfigured
+    (no-criterion) predicate behaves.
+    When true (default), it will match all documents. This is especially
+    undesirable on Web Sections (which are predicates), as their Documents view
+    may then trigger a potentially very expensive query.
+    When false (explicitly set, for example in WebSection_init), such Predicate
+    matches no document at all, avoiding such expensive query.
+    """
+    empty_document_value = self.createDocument()
+    region_document_value = self.createDocument(
+      region=REGION_FRANCE_PATH,
+    )
+    self.tic()
+    region_document_path = region_document_value.getPath()
+    def countResults():
+      ((count, ), ) = predicate_value.countResults()
+      return count
+    def searchResults():
+      return [
+        x.path
+        for x in predicate_value.searchResults()
+      ]
+
+    predicate_value = self.createPredicate()
+
+    # Base feature.
+    self.assertNotEqual(predicate_value.asQuery(), None)
+    self.assertTrue(predicate_value.test(empty_document_value))
+    self.assertTrue(predicate_value.test(region_document_value))
+    self.assertNotEqual(countResults(), 0)
+    self.assertNotEqual(searchResults(), [])
+    predicate_value.setEmptyCriterionValid(False)
+    self.assertEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertFalse(predicate_value.test(region_document_value))
+    self.assertEqual(countResults(), 0)
+    self.assertEqual(searchResults(), [])
+
+    # Single membership...
+    # ...incompletely set, still counts as empty
+    predicate_value.setMembershipCriterionBaseCategoryList(['region'])
+    self.tic()
+    self.assertEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertFalse(predicate_value.test(region_document_value))
+    self.assertEqual(countResults(), 0)
+    self.assertEqual(searchResults(), [])
+    # ...completely set, not empty anymore
+    predicate_value.setMembershipCriterionCategoryList([REGION_FRANCE_PATH])
+    self.tic()
+    self.assertNotEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertTrue(predicate_value.test(region_document_value))
+    self.assertGreater(countResults(), 0)
+    self.assertIn(region_document_path, searchResults())
+    # ...incompletely set again
+    predicate_value.setMembershipCriterionBaseCategoryList([])
+    self.tic()
+    self.assertEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertFalse(predicate_value.test(region_document_value))
+    self.assertEqual(countResults(), 0)
+    self.assertEqual(searchResults(), [])
+
+    predicate_value = self.createPredicate(
+      empty_criterion_valid=False,
+    )
+
+    # Multi membership...
+    # ...incompletely set, still counts as empty
+    predicate_value.setMultimembershipCriterionBaseCategoryList(['region'])
+    self.tic()
+    self.assertEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertFalse(predicate_value.test(region_document_value))
+    self.assertEqual(countResults(), 0)
+    self.assertEqual(searchResults(), [])
+    # ...completely set, not empty anymore
+    predicate_value.setMembershipCriterionCategoryList([REGION_FRANCE_PATH])
+    self.tic()
+    self.assertNotEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertTrue(predicate_value.test(region_document_value))
+    self.assertGreater(countResults(), 0)
+    self.assertIn(region_document_path, searchResults())
+    # ...incompletely set again
+    predicate_value.setMultimembershipCriterionBaseCategoryList([])
+    self.tic()
+    self.assertEqual(predicate_value.asQuery(), None)
+    self.assertFalse(predicate_value.test(empty_document_value))
+    self.assertFalse(predicate_value.test(region_document_value))
+    self.assertEqual(countResults(), 0)
+    self.assertEqual(searchResults(), [])
 
 # TODO :
 #  multi membership category
