@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_inner
+from Acquisition import aq_inner
 from erp5.component.document.WebSection import WebSection
 from Products.ERP5Type import Permissions
 
@@ -58,7 +58,7 @@ class jIOWebSection(WebSection):
     return default
 
   security.declareProtected(Permissions.View, 'get')
-  def get(self):
+  def get(self): #pylint:disable=arguments-differ
     """
       Taken from WebSection Bobo Traverse, the difference is that
       __bobo_traverse__ from DocumentExtensibleTraversableMixin is not called

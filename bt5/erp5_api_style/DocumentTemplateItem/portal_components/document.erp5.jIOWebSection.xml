@@ -51,10 +51,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 61,  2: Arguments number differs from overridden \'get\' method (arguments-differ)</string>
-                <string>W: 31,  0: Unused aq_base imported from Acquisition (unused-import)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
