@@ -70,7 +70,7 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string>content_type="application/json"</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
