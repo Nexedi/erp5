@@ -333,12 +333,12 @@ class Alarm(XMLObject, PeriodicityMixin):
     for candidate_value in self.getDestinationValueList():
       if candidate_value.getPortalType() in domain_type_set:
         test = candidate_value.test
-        for recipient in portal.portal_catalog(
-          query=candidate_value.asQuery(),
-        ):
-          recipient_value = recipient.getObject()
-          if test(recipient_value):
-            candidate_list.append(recipient_value)
+        candidate_query = candidate_value.asQuery()
+        if candidate_query is not None:
+          for recipient in portal.portal_catalog(query=candidate_query):
+            recipient_value = recipient.getObject()
+            if test(recipient_value):
+              candidate_list.append(recipient_value)
       else:
         candidate_list.append(candidate_value)
     result_list = [x for x in active_process.getResultList() if x is not None]

@@ -1376,9 +1376,9 @@ class SelectionTool( BaseTool, SimpleItem ):
       domain_item_dict.pop(None, None)
       for key, value in domain_item_dict.iteritems():
         if getattr(aq_base(value), 'isPredicate', 0):
-          append(
-            value.asQuery(strict_membership=strict_membership),
-          )
+          query = value.asQuery(strict_membership=strict_membership)
+          if query is not None:
+            append(query)
         else:
           relation_dict[key] = [value]
       if relation_dict:
