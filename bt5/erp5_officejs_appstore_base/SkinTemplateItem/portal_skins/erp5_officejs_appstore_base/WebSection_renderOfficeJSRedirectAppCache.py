@@ -14,4 +14,5 @@ response.setHeader('Content-Type', 'text/cache-manifest')
 response.setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=360000, stale-if-error=31536000, public')
 
 return """CACHE MANIFEST
-# %s / %s""" % (context.getLayoutProperty("configuration_latest_version", default="development"), modification_date)
+CACHE:
+NETWORK:"""
