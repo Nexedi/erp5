@@ -278,17 +278,18 @@ class Predicate(XMLObject):
     if query_list:
       return ComplexQuery(query_list, logical_operator='AND')
     elif not getattr(self, 'isEmptyCriterionValid', lambda: True)():
-      # By catalog definition, no object has uid 0, so this condition forces an
-      # empty result.
-      return SimpleQuery(uid=0)
+      return None
     return SimpleQuery(uid=0, comparison_operator='>')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
   def searchResults(self, **kw):
     """
     """
+    query = self.asQuery()
+    if query is None:
+      return []
     return self.getPortalObject().portal_catalog.searchResults(
-      predicate_internal_query=self.asQuery(),
+      predicate_internal_query=query,
       **kw
     )
 
@@ -296,8 +297,11 @@ class Predicate(XMLObject):
   def countResults(self, REQUEST=None, used=None, **kw):
     """
     """
+    query = self.asQuery()
+    if query is None:
+      return [[0]]
     return self.getPortalObject().portal_catalog.countResults(
-      predicate_internal_query=self.asQuery(),
+      predicate_internal_query=query,
       **kw
     )
 
