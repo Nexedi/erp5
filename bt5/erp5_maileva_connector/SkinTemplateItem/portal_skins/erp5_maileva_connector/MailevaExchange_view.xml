@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>PaySheetTransaction_printPayslipReport</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
@@ -47,9 +47,7 @@
         </item>
         <item>
             <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
+            <value> <string>[]</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -57,7 +55,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -65,7 +63,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>bottom</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -74,10 +72,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>content</string>
+                        <string>my_request</string>
+                        <string>my_response</string>
+                        <string>my_response_detail</string>
                       </list>
                     </value>
                 </item>
@@ -85,11 +85,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_target_language</string>
-                        <string>your_international_form</string>
-                        <string>your_evoluation_remuneration</string>
-                        <string>your_taken_holiday</string>
-                        <string>your_total_holiday</string>
+                        <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_track_id</string>
+                        <string>my_source_title</string>
+                        <string>my_resource_title</string>
                       </list>
                     </value>
                 </item>
@@ -97,8 +97,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_format</string>
-                        <string>your_send_to_maileva</string>
+                        <string>my_destination_title</string>
+                        <string>my_follow_up_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -107,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_viewCorporatePrintDialog</string> </value>
+            <value> <string>MailevaExchange_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -115,11 +116,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewODTPrintDialog</string> </value>
+            <value> <string>HTTPExchange_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -131,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Print Simplified Payslip</string> </value>
+            <value> <string>Maileva Exchange</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -139,7 +140,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>PaySheetTransaction_updatePayslipReportDialog</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
