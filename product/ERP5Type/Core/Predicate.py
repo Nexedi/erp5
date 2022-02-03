@@ -111,9 +111,6 @@ class Predicate(XMLObject):
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = PersistentMapping()
       self._range_criterion = PersistentMapping()
-#    LOG('PREDICATE TEST', 0,
-#        'testing %s on context of %s' % \
-#        (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.iteritems():
       if not value:
         continue
@@ -121,25 +118,16 @@ class Predicate(XMLObject):
         result = context.getProperty(property) in value
       else:
         result = context.getProperty(property) == value
-#      LOG('predicate test', 0,
-#          '%s after prop %s : %s == %s' % \
-#          (result, property, context.getProperty(property), value))
       if not result:
         return result
     for property, (min, max) in self._range_criterion.iteritems():
       value = context.getProperty(property)
       if min is not None:
         result = value >= min
-#        LOG('predicate test', 0,
-#            '%s after prop %s : %s >= %s' % \
-#            (result, property, value, min))
         if not result:
           return result
       if max is not None:
         result = value < max
-#        LOG('predicate test', 0,
-#            '%s after prop %s : %s < %s' % \
-#            (result, property, value, max))
         if not result:
           return result
     # Test category memberships. Enable the read-only transaction cache
@@ -152,11 +140,6 @@ class Predicate(XMLObject):
       membership_criterion_base_category_list = \
         self.getMembershipCriterionBaseCategoryList()
       tested_base_category = {}
-#      LOG('predicate test', 0,
-#          'categories will be tested in multi %s single %s as %s' % \
-#         (multimembership_criterion_base_category_list,
-#         membership_criterion_base_category_list,
-#         self.getMembershipCriterionCategoryList()))
       if isMemberOf is None:
         isMemberOf = context._getCategoryTool().isMemberOf
       with readOnlyTransactionCache():
@@ -193,8 +176,6 @@ class Predicate(XMLObject):
                  ' take the predicate as argument' % (
                self.getRelativeUrl(), method.__name__), DeprecationWarning)
             result = method()
-#          LOG('predicate test', 0,
-#              '%s after method %s ' % (result, test_method_id))
           if not result:
             return result
     test_tales_expression = self.getTestTalesExpression()
