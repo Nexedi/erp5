@@ -807,17 +807,36 @@ Hé Hé Hé!""", page.asText().strip())
     Only visible web section should be returned.
     """
     portal = self.getPortal()
-    web_site_portal_type = 'Web Site'
-    web_section_portal_type = 'Web Section'
-    web_page_portal_type = 'Web Page'
 
-    # Create web site and web section
-    web_site = self.web_site_module.newContent(portal_type=web_site_portal_type)
-    web_section = web_site.newContent(portal_type=web_section_portal_type)
-    sub_web_section = web_section.newContent(portal_type=web_section_portal_type)
+    # Whatever category on a Web-Page-available relation type will do
+    relation_base_category_value = portal.portal_categories.site
+    relation_base_category_id = relation_base_category_value.getId()
+    relation_category_value = relation_base_category_value.newContent()
+    relation_category_relative_url = relation_category_value.getRelativeUrl()
 
     # Create a document
-    web_page = self.web_page_module.newContent(portal_type=web_page_portal_type)
+    web_page = self.web_page_module.newContent(
+      portal_type='Web Page',
+      **{
+        relation_base_category_id: relation_category_value.getId(),
+      }
+    )
+
+    # Create web site and web section, with some membership criterion matching
+    # the created Web Page.
+    web_site = self.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    web_section = web_site.newContent(
+      portal_type='Web Section',
+      membership_criterion_base_category_list=[relation_base_category_id],
+      membership_criterion_category_list=[relation_category_relative_url],
+    )
+    sub_web_section = web_section.newContent(
+      portal_type='Web Section',
+      membership_criterion_base_category_list=[relation_base_category_id],
+      membership_criterion_category_list=[relation_category_relative_url],
+    )
 
     # Commit transaction
     def _commit():
