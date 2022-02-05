@@ -76,8 +76,12 @@ class ShaDirMixin(object):
     }
 
     module = self.portal.web_site_module
-    self.shadir = module.newContent(portal_type='Web Site',
-      title='SHA Dir Server', skin_selection_name='SHADIR')
+    self.shadir = module.newContent(
+        portal_type='Web Site',
+        title='SHA Dir Server',
+        skin_selection_name='SHADIR',
+        empty_criterion_valid=True,
+    )
     self.shadir.publish()
     self.shadir_url = self.shadir.absolute_url()
     self.tic()
