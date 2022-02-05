@@ -43,8 +43,12 @@ class ShaCacheMixin(object):
     self.login()
     self.portal = self.getPortal()
     module = self.portal.web_site_module
-    self.shacache = module.newContent(portal_type='Web Site',
-      title='SHA Cache Server', skin_selection_name='SHACACHE')
+    self.shacache = module.newContent(
+        portal_type='Web Site',
+        title='SHA Cache Server',
+        skin_selection_name='SHACACHE',
+        empty_criterion_value=True,
+    )
     self.shacache.publish()
     self.header_dict = {
       'Content-Type': 'application/json',
