@@ -10,3 +10,4 @@ localizer = context.getPortalObject().Localizer
 context.setAvailableLanguageSet(localizer.get_supported_languages())
 context.setDefaultAvailableLanguage(localizer.get_selected_language())
 context.setStaticLanguageSelection(1)
+context.setEmptyCriterionValid(False)
