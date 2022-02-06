@@ -75,6 +75,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPurchaseSimulationScenario
       stepCheckSaleInvoiceAccountFallback
       stepCheckPurchaseInvoiceAccountFallback
+      stepCheckConsistencyAlarm
       '''
 
   SECURITY_CONFIGURATION_SEQUENCE = """
@@ -1870,6 +1871,57 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                 (3, 0, self.portal.account_module.refundable_vat, None),
                 (100, 0, self.portal.account_module.purchase, None),
             ])
+
+  def stepCheckConsistencyAlarm(self, sequence):
+    """Use erp5_administration's check_consistency alarm to verify that
+    in all modules and tools that there are no inconsistent documents after the
+    configuration.
+    """
+    self.login()
+    # clone the check consistency alarm and enable it for all modules
+    alarm = self.portal.portal_alarms.check_consistency.Base_createCloneDocument(batch_mode=True)
+    alarm.setProperty(
+        'module_list',
+        [m[1] for m in alarm.Alarm_viewConsistencyCheckConfiguration.my_module_list.get_value('items')])
+    alarm.activeSense()
+    self.tic()
+
+    constraint_message_list = sum([
+        r.constraint_message_list for r in alarm.getLastActiveProcess().getResultList()], [])
+    # We ignore some constains here:
+    #  - web sites: because web sites and web sections have some upgrader constraints that we
+    #   don't run as part as configurator. TODO: probably we should integrate more configurator
+    #   and upgrader, so that we run these constraints
+    constraint_message_list = [
+        c for c in constraint_message_list
+        if c.constraint_relative_url not in (
+            'portal_property_sheets/WebSectionUpgradeConstraint/default_page_modification_date_constraint',
+            'portal_property_sheets/WebSiteRenderJSUpgradeConstraint/translation_signature_constraint',
+        ) ]
+    #  - configurator items: because most configurator item do not implement checkConsistency
+    #   fully, they only support applying the configuration, but not comparing the current
+    #   state with the expected state.
+    #   Fixing the configurator items is a TODO, then we'll be able to enable the check here.
+    constraint_message_list = [
+        c for c in constraint_message_list
+        if c.class_name not in set((
+            'Account Configurator Item',
+            'Accounting Period Configurator Item',
+            'Business Process Configurator Item',
+            'Catalog Keyword Key Configurator Item',
+            'Category Configurator Item',
+            'Categories Spreadsheet Configurator Item',
+            'Customer BT5 Configurator Item',
+            'Organisation Configurator Item',
+            'Person Configurator Item',
+            'Portal Type Roles Spreadsheet Configurator Item',
+            'Purchase Trade Condition Configurator Item',
+            'Rule Configurator Item',
+            'Sale Trade Condition Configurator Item',
+            'Security Category Mapping Configurator Item'))]
+
+    self.maxDiff = None
+    self.assertEqual(constraint_message_list, [])
 
 
 class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
