@@ -239,27 +239,36 @@ class TestPerson(ERP5TypeTestCase):
     self.assertTrue(person.getUserId())
     self.assertFalse(self.portal.person_module._p_changed)
 
-  def testSetPasswordSecurity(self):
-    p = self._makeOne(id='person')
-    p.manage_permission(Permissions.SetOwnPassword, [], 0)
-    with self.assertRaises(Unauthorized):
-      guarded_getattr(p, 'setPassword')('secret')
-    with self.assertRaises(Unauthorized):
-      guarded_getattr(p, 'edit')(password='secret')
+  def testSetPasswordSecurityOnPerson(self):
+    self._testSetPasswordSecurity(
+        self._makeOne())
 
-    # setPassword(None) has no effect, because in the user interface we always
-    # show an empty field for password. Note that it also does not require any
-    # specific permission.
-    p.setPassword(None)
-    self.assertFalse(p.getPassword())
+  def testSetPasswordSecurityOnERP5Login(self):
+    self._testSetPasswordSecurity(
+        self._makeOne().newContent(portal_type='ERP5 Login'))
+
+  def _testSetPasswordSecurity(self, login):
+    login.manage_permission(Permissions.SetOwnPassword, [], 0)
+    with self.assertRaises(Unauthorized):
+      guarded_getattr(login, 'setPassword')('secret')
+    with self.assertRaises(Unauthorized):
+      guarded_getattr(login, 'edit')(password='secret')
+
+    # edit(password=None) has no effect. It's a special case, because in the user interface
+    # we show an empty field for password.
+    login.edit(password=None)
+    self.assertFalse(login.getPassword())
     # Make sure that edit method cannot call __setPasswordByForce and nothing
     # changes.
-    p.edit(password_by_force='waaa')
-    self.assertFalse(p.getPassword())
+    login.edit(password_by_force='waaa')
+    self.assertFalse(login.getPassword())
 
-    p.manage_permission(Permissions.SetOwnPassword, ['Anonymous'], 0)
-    p.setPassword('secret')
-    self.assertTrue(p.getPassword())
+    login.manage_permission(Permissions.SetOwnPassword, ['Anonymous'], 0)
+    login.setPassword('secret')
+    password = login.getPassword()
+    self.assertTrue(password)
+    login.edit(password=None)
+    self.assertEqual(login.getPassword(), password)
 
   def testSetUserIdSecurity(self):
     # Changing an already set user id needs "manage users" permissions,
