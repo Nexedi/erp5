@@ -39,7 +39,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
-class EncryptedPasswordMixin:
+class EncryptedPasswordMixin(object):
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -68,7 +68,7 @@ class EncryptedPasswordMixin:
     usage.
     """
     if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
-      # not a policy so basically all passwords are accceptable
+      # not policy enabled, so basically all passwords are accceptable
       return True
     if not self.isPasswordValid(value):
       raise ValueError("Password does not comply with password policy")
@@ -87,7 +87,7 @@ class EncryptedPasswordMixin:
       password = self.password = PersistentMapping()
     self.password[format] = value
 
-  security.declarePublic('setEncodedPassword')
+  security.declareProtected(Permissions.SetOwnPassword, 'setEncodedPassword')
   def setEncodedPassword(
       self,
       value,
@@ -95,26 +95,17 @@ class EncryptedPasswordMixin:
   ):
     """
     """
-    self.checkUserCanChangePassword()
     self._setEncodedPassword(value, format=format)
     self.reindexObject()
 
   def _forceSetPassword(self, value):
     self.password = PersistentMapping()
-    self._setEncodedPassword(pw_encrypt(value))
+    if value:
+      self._setEncodedPassword(pw_encrypt(value))
 
   def _setPassword(self, value):
-    self.checkUserCanChangePassword()
     self.checkPasswordValueAcceptable(value)
     self._forceSetPassword(value)
-
-  security.declarePublic('setPassword')
-  def setPassword(self, value) :
-    """
-    """
-    if value is not None:
-      self._setPassword(value)
-      self.reindexObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
   def getPassword(self, *args, **kw):
@@ -139,5 +130,18 @@ class EncryptedPasswordMixin:
         if format_ != 'default':
           password = default_password
     return password
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'edit')
+  def edit(self, *args, **kw):
+    """edit, with support for empty password for the user interface.
+
+    In the user interface, we can have a my_password field, that will not
+    be pre-filled with the current password, but will be empty. To accomodate
+    this case, we don't edit the password if it is empty.
+    """
+    if kw.get('password') is None:
+      kw.pop('password', None)
+    return super(EncryptedPasswordMixin, self).edit(*args, **kw)
+
 
 InitializeClass(EncryptedPasswordMixin)
