@@ -75,6 +75,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPurchaseSimulationScenario
       stepCheckSaleInvoiceAccountFallback
       stepCheckPurchaseInvoiceAccountFallback
+      stepCheckConsistencyAlarm
       '''
 
   SECURITY_CONFIGURATION_SEQUENCE = """
@@ -1870,6 +1871,34 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                 (3, 0, self.portal.account_module.refundable_vat, None),
                 (100, 0, self.portal.account_module.purchase, None),
             ])
+
+  def stepCheckConsistencyAlarm(self, sequence):
+    """Use erp5_administration's check_consistency alarm to verify that
+    in all modules and tools that there are no inconsistent documents after the
+    configuration.
+    """
+    self.login()
+    # clone the check consistency alarm and enable it for all modules, except:
+    #  - business_configuration_module, because most configurator item do not
+    #   implement checkConsistency fully - they only support applying the
+    #   configuration, but not comparing the current state with the expected
+    #   state. Fixing the configurator items is a TODO, then we can enable
+    #   the check here.
+    #  - web_site_module, because web sites and web sections have some upgrader
+    #   constraints that we don't run as part as configurator. TODO: probably
+    #   we should integrate more configurator and upgrader, so that we run
+    #   these.
+    alarm = self.portal.portal_alarms.check_consistency.Base_createCloneDocument(batch_mode=True)
+    alarm.setProperty(
+        'module_list',
+        [m[1] for m in alarm.Alarm_viewConsistencyCheckConfiguration.my_module_list.get_value('items')
+         if m[1] not in ('business_configuration_module', 'web_site_module',)])
+    alarm.activeSense()
+    self.tic()
+    self.maxDiff = None
+    self.assertEqual(
+        [r.constraint_message_list for r in alarm.getLastActiveProcess().getResultList()], [])
+    self.assertFalse(alarm.sense())
 
 
 class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
