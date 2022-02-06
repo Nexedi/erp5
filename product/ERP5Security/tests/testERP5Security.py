@@ -332,14 +332,45 @@ class TestUserManagement(UserManagementTestCase):
     _, _, password = self._makePerson(login=login)
     self._assertUserExists(login, password)
 
-  def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self):
+  def test_PersonWithLoginWithNonePasswordAreNotUsers(self):
+    """Tests a person with a login but None as a password is not a valid user."""
+    # check password set to None at creation
+    _, login, _ = self._makePerson(password=None)
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
+
+    # check password set to None after being set
+    user_data, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    erp5_login = self.portal.restrictedTraverse(user_data['login_list'][0]['path'])
+    erp5_login.setPassword('secret')
+    self.tic()
+    self._assertUserExists(login, 'secret')
+    erp5_login.setPassword(None)
+    self.tic()
+    self._assertUserDoesNotExists(login, 'secret')
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
+
+  def test_PersonWithLoginWithEmptyStringPasswordAreNotUsers(self):
     """Tests a person with a login but no password is not a valid user."""
-    password = None
-    _, login, _ = self._makePerson(password=password)
-    self._assertUserDoesNotExists(login, password)
-    password = ''
-    _, login, self._makePerson(password=password)
-    self._assertUserDoesNotExists(login, password)
+    _, login, _ = self._makePerson(password='')
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
+
+    # check password set to '' after being set
+    user_data, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    erp5_login = self.portal.restrictedTraverse(user_data['login_list'][0]['path'])
+    erp5_login.setPassword('secret')
+    self.tic()
+    self._assertUserExists(login, 'secret')
+    erp5_login.setPassword('')
+    self.tic()
+    self._assertUserDoesNotExists(login, 'secret')
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
 
   def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with empty login & password is not a valid user."""
