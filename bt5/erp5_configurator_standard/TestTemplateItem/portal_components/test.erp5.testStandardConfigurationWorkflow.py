@@ -75,6 +75,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPurchaseSimulationScenario
       stepCheckSaleInvoiceAccountFallback
       stepCheckPurchaseInvoiceAccountFallback
+      stepCheckConsistencyAlarm
       '''
 
   SECURITY_CONFIGURATION_SEQUENCE = """
@@ -1870,6 +1871,22 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                 (3, 0, self.portal.account_module.refundable_vat, None),
                 (100, 0, self.portal.account_module.purchase, None),
             ])
+
+  def stepCheckConsistencyAlarm(self, sequence):
+    """Use erp5_administration's check_consistency alarm to verify that
+    in all modules and tools that there are no inconsistent documents after the
+    configuration.
+    """
+    self.login()
+    # clone the check consistency alarm and enable it for all modules
+    alarm = self.portal.portal_alarms.check_consistency.Base_createCloneDocument(batch_mode=True)
+    alarm.setProperty(
+        'module_list',
+        [m[1] for m in alarm.Alarm_viewConsistencyCheckConfiguration.my_module_list.get_value('items')])
+    alarm.activeSense()
+    self.tic()
+    self.assertEqual(alarm.getLastActiveProcess().getResultList(), [])
+    self.assertFalse(alarm.sense())
 
 
 class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
