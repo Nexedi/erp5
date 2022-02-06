@@ -32,6 +32,7 @@ import mock
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
+from AccessControl.ZopeGuards import guarded_getattr
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
@@ -241,8 +242,10 @@ class TestPerson(ERP5TypeTestCase):
   def testSetPasswordSecurity(self):
     p = self._makeOne(id='person')
     p.manage_permission(Permissions.SetOwnPassword, [], 0)
-    self.assertRaises(Unauthorized, p.setPassword, 'secret')
-    self.assertRaises(Unauthorized, p.edit, password='secret')
+    with self.assertRaises(Unauthorized):
+      guarded_getattr(p, 'setPassword')('secret')
+    with self.assertRaises(Unauthorized):
+      guarded_getattr(p, 'edit')(password='secret')
 
     # setPassword(None) has no effect, because in the user interface we always
     # show an empty field for password. Note that it also does not require any
