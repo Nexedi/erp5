@@ -1560,7 +1560,7 @@ msgstr "날짜"
 msgid "Date Order"
 msgstr "날짜 순"
 
-msgid "Date has expire."
+msgid "Date has expired."
 msgstr "날짜가 지났습니다."
 
 msgid "Date is not in an opened Accounting Period for destination section."
