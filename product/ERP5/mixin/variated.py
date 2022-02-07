@@ -255,6 +255,19 @@ class VariatedMixin:
                                display_id=display_id).render([bc]))
       return result
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariationPropertyList')
+  def getVariationPropertyList(self, default=None):
+    """A list of properties which define variations
+    """
+    # This method is defined explicitly to resolve an accessor conflict
+    # between category accessor getVariationPropertyList(property_name:str), the
+    # accessor getting the value of a property on the document related with
+    # variation property, defined by portal_property_sheets/VariationRange/variation_category
+    # and getVariationPropertyList(), the property accessor defined by
+    # portal_property_sheets/VariationRange/variation_property_property
+    return self._baseGetVariationPropertyList(default=default)
+
   # Methods for matrix UI widgets
   # XXX FIXME Those method are depreciated.
   # We now use _asCellRange scripts.
