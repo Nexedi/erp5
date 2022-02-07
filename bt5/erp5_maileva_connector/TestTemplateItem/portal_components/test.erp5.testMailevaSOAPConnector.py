@@ -205,6 +205,9 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
     self.sender = sender
     self.recipient = recipient
     self.document = document
+    # Reset class varaible to simulate properly web service behavior
+    ServiceWithSuccess.get_notification_detail = False
+    ServiceWithFailure.get_notification_detail = False
     self.tic()
 
   def getTitle(self):
@@ -227,8 +230,8 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(event.getDestinationValue(), self.recipient)
       self.assertEqual(event.getFollowUpValue(), self.document)
       self.assertEqual(self.document.getSendState(), 'sending')
-      self.assertNotEqual(event.getProperty('request', ''), None)
-      self.assertEqual(event.getProperty('response', ''), 'success')
+      self.assertNotEqual(event.getRequest(), None)
+      self.assertEqual(event.getResponse(), 'success')
       self.tic()
       # check response
       event.setReference('test_tracking_id')
@@ -263,8 +266,8 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(event.getDestinationValue(), self.recipient)
       self.assertEqual(event.getFollowUpValue(), self.document)
       self.assertEqual(self.document.getSendState(), 'sending')
-      self.assertNotEqual(event.getProperty('request', ''), None)
-      self.assertEqual(event.getProperty('response', ''), 'success')
+      self.assertNotEqual(event.getRequest(), None)
+      self.assertEqual(event.getResponse(), 'success')
       self.tic()
       # check response
       event.setReference('test_tracking_id')
@@ -301,8 +304,8 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(event.getDestinationValue(), self.recipient)
       self.assertEqual(event.getFollowUpValue(), self.document)
       self.assertEqual(self.document.getSendState(), 'failed')
-      self.assertNotEqual(event.getProperty('request', ''), None)
-      self.assertTrue('exception' in event.getProperty('response', ''))
+      self.assertNotEqual(event.getRequest(), None)
+      self.assertTrue('exception' in event.getResponse())
       self.tic()
 
   def test_maileva_xml(self):

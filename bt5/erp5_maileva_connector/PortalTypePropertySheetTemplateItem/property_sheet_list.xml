@@ -3,6 +3,7 @@
   <item>Amount</item>
   <item>Arrow</item>
   <item>Event</item>
+  <item>HttpExchange</item>
  </portal_type>
  <portal_type id="Maileva SOAP Connector">
   <item>Login</item>

@@ -12,12 +12,23 @@ number = str(portal.portal_ids.generateNewId(
                      id_generator='uid')).zfill(6)
 reference="maileva-%s-%s" % (today, number)
 
-
-maileva_connector.activate().submitRequest(
-  recipient_url = recipient.getRelativeUrl(),
-  sender_url = sender.getRelativeUrl(),
-  document_url = context.getRelativeUrl(),
-  track_id = reference
+xml = maileva_connector.generateRequestXML(
+  recipient = recipient,
+  sender =sender,
+  document=context,
+  track_id=reference
 )
+
+maileva_exchange = context.system_event_module.newContent(
+  portal_type='Maileva Exchange',
+  source_value = sender,
+  destination_value = recipient,
+  resource_value = maileva_connector,
+  follow_up_value = context,
+  reference=reference,
+  request = xml
+)
+
+maileva_exchange.activate().MailevaExchange_submitMailevaRequest()
 
 context.send()

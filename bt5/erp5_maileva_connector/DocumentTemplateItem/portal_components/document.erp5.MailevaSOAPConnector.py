@@ -50,44 +50,35 @@ class MailevaSOAPConnector(XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                       )
-  def submitRequest(self, recipient_url="", sender_url="", document_url="", track_id=""):
-    portal = self.getPortalObject()
-    recipient = portal.restrictedTraverse(recipient_url)
-    sender = portal.restrictedTraverse(sender_url)
-    document = portal.restrictedTraverse(document_url)
-    request_xml = self.generateRequestXML(recipient, sender, document, track_id)
-    authenticated = HttpAuthenticated(username=self.getUserId(), password=self.getPassword())
-    maileva_exchange = portal.system_event_module.newContent(
-      portal_type='Maileva Exchange',
-      source_value = sender,
-      destination_value = recipient,
-      resource_value = self,
-      follow_up_value = document,
-      reference=track_id,
-      request = request_xml
+  def processResponse(self, response, maileva_exchange, failed=False):
+    maileva_exchange.edit(
+      response = response
     )
+    maileva_exchange.confirm()
+    # change state, no need to wait alarm check
+    if failed:
+      maileva_exchange.acknowledge()
+      maileva_exchange.getFollowUpValue().fail()
+
+  def submitRequest(self, maileva_exchange):
+    authenticated = HttpAuthenticated(username=self.getUserId(), password=self.getPassword())
     runtime_environment = self.getActivityRuntimeEnvironment()
     if runtime_environment:
       runtime_environment.edit(
         conflict_retry=False,
         max_retry=0)
     try:
-      response = suds.client.Client(url = self.getProperty('submit_url_string'), transport=authenticated).service.submit(__inject={'msg': request_xml})
+      response = suds.client.Client(url = self.getProperty('submit_url_string'), transport=authenticated).service.submit(__inject={'msg': maileva_exchange.getRequest()})
+      maileva_exchange.activate().MailevaExchange_processResponse(response)
     except socket.error, e:
       if e.errno == socket.errno.ECONNREFUSED:
         if runtime_environment:
           runtime_environment.edit(max_retry=None)
-      raise e
     except Exception, e:
-      maileva_exchange.edit(response = str(e))
-      maileva_exchange.confirm()
-      maileva_exchange.acknowledge()
-      document.fail()
-      return maileva_exchange
+      maileva_exchange.activate().MailevaExchange_processResponse(str(e), failed = True)
 
-    maileva_exchange.edit(response = response)
-    maileva_exchange.confirm()
-    return maileva_exchange
+
+
 
   def checkPendingNotifications(self):
     authenticated = HttpAuthenticated(username=self.getUserId(), password=self.getPassword())
@@ -116,7 +107,7 @@ class MailevaSOAPConnector(XMLObject):
     address_line = entity.getDefaultAddressText()
     portal_type = entity.getPortalType()
     if portal_type == 'Person':
-      address_line_list.append("%s %s" % (entity.getSocialTitleTitle(), entity.getTitle()))
+      address_line_list.append("%s" % ' '.join([x for x in [entity.getSocialTitleTitle(), entity.getTitle()] if x]))
     else:
       address_line_list.append("%s" % entity.getCorporateName())
 
