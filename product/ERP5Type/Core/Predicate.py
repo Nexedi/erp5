@@ -143,17 +143,26 @@ class Predicate(XMLObject):
       if isMemberOf is None:
         isMemberOf = context._getCategoryTool().isMemberOf
       with readOnlyTransactionCache():
-        for c in membership_criterion_category_list:
-          bc = c.split('/', 1)[0]
-          if tested_base_category_list is None or bc in tested_base_category_list:
-            if bc in multimembership_criterion_base_category_list:
-              result = isMemberOf(context, c, strict_membership=strict_membership)
+        for category in membership_criterion_category_list:
+          base_category = category.split('/', 1)[0]
+          if (
+            tested_base_category_list is None or
+            base_category in tested_base_category_list
+          ):
+            if base_category in multimembership_criterion_base_category_list:
+              result = isMemberOf(
+                context,
+                category,
+                strict_membership=strict_membership,
+              )
               if not result:
                 return result
-            elif bc in membership_criterion_base_category_list and \
-                 not tested_base_category.get(bc):
-              tested_base_category[bc] = \
-                isMemberOf(context, c, strict_membership=strict_membership)
+            elif (
+              base_category in membership_criterion_base_category_list and
+              not tested_base_category.get(base_category)
+            ):
+              tested_base_category[base_category] = \
+                isMemberOf(context, category, strict_membership=strict_membership)
       # Only override default result if something was tested
       if tested_base_category:
         result = all(tested_base_category.itervalues())
@@ -404,14 +413,14 @@ class Predicate(XMLObject):
     self._identity_criterion = PersistentMapping()
     self._range_criterion = PersistentMapping()
 
-    for c in category_list:
-      bc = c.split('/')[0]
-      if bc in base_category_id_list:
+    for category in category_list:
+      base_category = category.split('/', 1)[0]
+      if base_category in base_category_id_list:
         # This is a category
-        membership_criterion_category_list.append(c)
-        membership_criterion_base_category_list.append(bc)
+        membership_criterion_category_list.append(category)
+        membership_criterion_base_category_list.append(base_category)
       else:
-        predicate_value = category_tool.resolveCategory(c)
+        predicate_value = category_tool.resolveCategory(category)
         if predicate_value is not None:
           criterion_property_list.extend(predicate_value.getCriterionPropertyList())
           membership_criterion_category_list.extend(
