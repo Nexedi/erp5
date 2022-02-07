@@ -269,7 +269,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     transaction.commit()
     self.abort()
 
-  def tic(self, verbose=0, stop_condition=lambda message_list: False, delay=10*60):
+  def tic(self, verbose=0, stop_condition=lambda message_list: False, delay=30*60):
     """Execute pending activities.
 
     This method executes activities until all messages are executed successfully,
@@ -281,7 +281,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     to continue.
 
     If the total time spent processing activities exceeded `delay` seconds (default
-    10 minutes), then the processing is interrupted and `tic` raise a RuntimeError
+    30 minutes), then the processing is interrupted and `tic` raise a RuntimeError
     exception.
     """
     transaction.commit()
