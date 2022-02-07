@@ -574,3 +574,24 @@ class BusinessConfiguration(Item):
 
     if self.portal_workflow.isTransitionPossible(self, 'install'):
       self.activate(after_tag=kw["tag"]).install()
+
+  # Business Configuration are Item, which inherits from Amount and expect the
+  # resource category document to be an actual resource, but in the case of
+  # Business Configuration it is a Workflow.
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  def getPrice(self, *args, **kw):
+    """Business Configuration have no price
+    """
+    return None
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  def getBaseUnitPrice(self, *args, **kw):
+    """Business Configuration have no base unit price
+    """
+    return None
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVariationBaseCategoryList')
+  def getVariationBaseCategoryList(self, *args, **kw):
+    """Business Configuration have no variation base category list
+    """
+    return []
