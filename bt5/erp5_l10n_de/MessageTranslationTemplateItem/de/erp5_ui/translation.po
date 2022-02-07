@@ -1391,7 +1391,7 @@ msgstr "Datum an welchem das Bankkonto eröffnet wurde."
 msgid "Date at which the document was ingested"
 msgstr "Datum an welchem das Dokument aufgenommen wurde."
 
-msgid "Date has expire."
+msgid "Date has expired."
 msgstr "Datum ist abgelaufen."
 
 msgid "Date when the bank account was closed."

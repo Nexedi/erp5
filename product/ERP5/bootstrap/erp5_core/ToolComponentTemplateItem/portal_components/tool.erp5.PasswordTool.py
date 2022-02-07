@@ -292,8 +292,7 @@ class PasswordTool(BaseTool):
       # XXX: not descriptive enough
       return error("Bad login provided.")
     if DateTime() > expiration_date:
-      # XXX: incorrect grammar
-      return error("Date has expire.")
+      return error("Date has expired.")
     del self._password_request_dict[password_key]
     portal = self.getPortalObject()
     user_dict, = portal.acl_users.searchUsers(

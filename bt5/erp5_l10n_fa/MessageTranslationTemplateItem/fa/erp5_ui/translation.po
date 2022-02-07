@@ -1808,7 +1808,7 @@ msgstr "دیتا به روز شد."
 msgid "Date"
 msgstr "تاریخ"
 
-msgid "Date has expire."
+msgid "Date has expired."
 msgstr "تاریم منقضی شده است."
 
 msgid "Date is not in a started Accounting Period for source section."
