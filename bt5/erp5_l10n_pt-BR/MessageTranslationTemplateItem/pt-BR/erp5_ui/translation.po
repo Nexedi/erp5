@@ -1540,7 +1540,7 @@ msgstr "Data em que o documento foi inserido"
 msgid "Date at which the invoice was shipped"
 msgstr "Data em que a fatura foi enviada"
 
-msgid "Date has expire."
+msgid "Date has expired."
 msgstr "Data Expirou"
 
 msgid "Date must be defined"

@@ -3568,7 +3568,7 @@ msgstr "Date à laquelle la facture a été envoyée."
 msgid "Date at wich the document was ingested"
 msgstr "Date à laquelle le document a été ingéré."
 
-msgid "Date has expire."
+msgid "Date has expired."
 msgstr "La date a expirée"
 
 msgid "Date is not in a started Accounting Period for destination section."

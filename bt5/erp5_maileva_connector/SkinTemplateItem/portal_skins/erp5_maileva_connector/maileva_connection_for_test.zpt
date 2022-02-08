@@ -1,0 +1,15 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           tal:define="recipient_region python: options.get('recipient_region');
+                       recipient python: options.get('recipient');
+                       sender_region python: options.get('sender_region');
+                       sender_address_line_list python: options.get('sender_address_line_list');
+                       recipient_address_line_list python: options.get('recipient_address_line_list');">
+
+  <pjs:Campaign Application="connecteur_Maileva"
+                xmlns:com="http://www.maileva.fr/CommonSchema"
+                xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema"
+                xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema">
+    <tal:block metal:use-macro="here/maileva_connection_request/macros/create_request" />
+  </pjs:Campaign>
+</tal:block>
