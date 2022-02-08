@@ -137,6 +137,15 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepPortalContributionsTool
       stepConfiguredPropertySheets
       """
+
+  business_configuration = None
+  def beforeTearDown(self):
+    self.abort()
+    if self.business_configuration is not None:
+      self.business_configuration.getParentValue().manage_delObjects(
+          [self.business_configuration.getId()])
+    super(StandardConfigurationMixin, self).beforeTearDown()
+
   def stepSetFranceCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
     sequence.edit(configuration_currency_reference='EUR',
@@ -310,11 +319,11 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """
     module = self.portal.business_configuration_module
-    business_configuration = module.newContent(
+    self.business_configuration = module.newContent(
                                portal_type="Business Configuration",
                                title=self.getTitle())
     next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
+    sequence.edit(business_configuration=self.business_configuration, 
                   next_dict=next_dict)
 
   def stepCheckValidCurrencyList(self, sequence=None, sequence_list=None, **kw):
@@ -2050,6 +2059,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
   def beforeTearDown(self):
     os.remove(self.categories_file_path)
     os.remove(self.roles_file_path)
+    super(TestConsultingConfiguratorWorkflow, self).beforeTearDown()
 
   def stepCheckConfigureCategoriesForm(self, sequence=None, sequence_list=None, **kw):
     """ Check if Confire Categories step was showed """
@@ -2204,6 +2214,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
 
 class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
   """

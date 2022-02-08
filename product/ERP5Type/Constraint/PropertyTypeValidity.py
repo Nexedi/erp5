@@ -83,6 +83,13 @@ class PropertyTypeValidity(Constraint):
   message_wrong_property_dropped = "Wrong property ${property_id} dropped from object dict."
 
   def _checkConsistency(self, obj, fixit=0):
+    try:
+      return self.x_checkConsistency(obj, fixit=fixit)
+    except Exception as e:
+      import pdb; pdb.set_trace()
+      raise
+
+  def x_checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
     """
     error_list = []
