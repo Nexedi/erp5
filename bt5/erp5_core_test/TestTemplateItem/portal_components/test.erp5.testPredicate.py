@@ -606,23 +606,39 @@ class TestPredicates(TestPredicateMixIn):
     self.tic()
 
     # check that if we define the same filter than on predicate we get same result
-    self.assertEqual(len(predicate.searchResults()), 2)
-    self.assertEqual({fabien, nexedi}, {x.getObject()
-      for x in predicate.searchResults(portal_type=('Person', 'Organisation'))})
+    document_list = [
+      x.getObject()
+      for x in predicate.searchResults(portal_type=('Person', 'Organisation'))
+    ]
+    self.assertIn(fabien, document_list)
+    self.assertIn(nexedi, document_list)
 
     # check that it's possible to filter results
-    self.assertEqual([x.getObject() for x in \
-      predicate.searchResults(portal_type='Person')], [fabien])
-    self.assertEqual([x.getObject() for x in \
-        predicate.searchResults(portal_type='Organisation')], [nexedi])
+    document_list = [
+      x.getObject()
+      for x in predicate.searchResults(portal_type='Person')
+    ]
+    self.assertIn(fabien, document_list)
+    self.assertNotIn(nexedi, document_list)
+    document_list = [
+      x.getObject()
+      for x in predicate.searchResults(portal_type='Organisation')
+    ]
+    self.assertNotIn(fabien, document_list)
+    self.assertIn(nexedi, document_list)
 
     # check that if the filter define more properties, we cannot have more than
     # the one defined on the predicate
-    currency_module = self.portal.getDefaultModule('Currency')
-    currency_module.newContent(title='euro')
-
-    self.assertEqual({fabien, nexedi}, {x.getObject()
-      for x in predicate.searchResults(portal_type=('Person', 'Organisation'))})
+    currency_value = self.portal.getDefaultModule('Currency').newContent(
+      title='euro',
+    )
+    document_list = [
+      x.getObject()
+      for x in predicate.searchResults(portal_type=('Person', 'Organisation'))
+    ]
+    self.assertIn(fabien, document_list)
+    self.assertIn(nexedi, document_list)
+    self.assertNotIn(currency_value, document_list)
 
   def test_TalesExpression(self):
     # Predicates can test that a document is member of a category
