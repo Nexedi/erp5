@@ -1937,6 +1937,48 @@ class TestCalendar(ERP5ReportTestCase):
 
     self.assertEqual([], assignment.asMovementList())
 
+  def test_GroupCalendarPeriodWeeksAndMonthPeriodicity(self):
+    """Tests that combinations of periodicity weeks and months are handled correctly.
+    """
+    node = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+    group_calendar = self.portal.group_calendar_module.newContent(
+       portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+       portal_type='Group Presence Period')
+
+    group_calendar_period.setStartDate('2000/01/01 08:00:00 UTC')
+    group_calendar_period.setStopDate('2000/01/01 09:00:00 UTC')
+    group_calendar_period.setQuantity(10)
+    group_calendar_period.setResourceValue(
+       self.portal.portal_categories.calendar_period_type.type1)
+    # this group calendar repeats every days of the first week of the year and the second
+    # months, which is impossible.
+    group_calendar_period.setPeriodicityWeekList((1, ))
+    group_calendar_period.setPeriodicityMonthList((2, ))
+    self.tic()
+
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+       specialise_value=group_calendar,
+       resource_value=self.portal.portal_categories.calendar_period_type.type1,
+       start_date=DateTime('2000/01/01 08:00:00 UTC'),
+       stop_date=DateTime('2010/01/01 18:00:00 UTC'),
+       destination_value=node)
+    assignment.confirm()
+    self.tic()
+    self.assertFalse(assignment.asMovementList()) # ... and no infinite loop
+
+    # edge case, repeat every Friday of week 9 in February, this does not happen every year
+    group_calendar_period.setPeriodicityWeekList((9, ))
+    group_calendar_period.setPeriodicityMonthList((2, ))
+    group_calendar_period.setPeriodicityWeekDayList(['Friday'])
+    self.assertEqual(
+        [m.getStartDate() for m in assignment.asMovementList()], 
+        [DateTime('2003/02/28 09:00:00 UTC'),
+         DateTime('2004/02/27 09:00:00 UTC'),
+         DateTime('2008/02/29 09:00:00 UTC'),
+         DateTime('2009/02/27 09:00:00 UTC'),])
+
   def test_PersonModule_viewLeaveRequestReport(self):
     # in this test, type1 is the type for presences, type2 & type3 are types
     # for leaves.
