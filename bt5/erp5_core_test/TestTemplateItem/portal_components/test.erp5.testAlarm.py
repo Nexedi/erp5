@@ -276,6 +276,16 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
 
+  def test_week_and_month_impossible_combination(self):
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(DateTime(2000, 1, 1))
+    # week 41 can not be in January
+    alarm.setPeriodicityWeekList((41, ))
+    alarm.setPeriodicityMonthList((1, ))
+    self.tic()
+    # next alarm date never advance
+    self.checkDate(alarm, DateTime(2000, 1, 1), DateTime(2000, 1, 1), DateTime(2000, 1, 1),)
+
   def test_12_Every5Minutes(self):
     alarm = self.newAlarm(enabled=True)
     now = DateTime()

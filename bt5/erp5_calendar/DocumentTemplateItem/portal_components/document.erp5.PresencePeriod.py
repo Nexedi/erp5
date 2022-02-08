@@ -181,13 +181,19 @@ class PresencePeriod(Movement, PeriodicityMixin):
 
     timezone = self._getTimezone(next_start_date)
     next_start_date = self._getNextDay(next_start_date, timezone)
-    while 1:
+
+    # We use 366*28 below, because gregorian calendar repeat itself every 28 years, so we
+    # don't need to loop more than this if we don't find a date, because it might be an
+    # impossible combination of week and month (eg. week number 30 can not be in January) 
+    for _ in range(366 * 28):
       if (self._validateDay(next_start_date)) and \
          (self._validateWeek(next_start_date)) and \
          (self._validateMonth(next_start_date)):
         break
       else:
         next_start_date = self._getNextDay(next_start_date, timezone)
+    else:
+      return None
 
     return DateTime(
       next_start_date.year(),
