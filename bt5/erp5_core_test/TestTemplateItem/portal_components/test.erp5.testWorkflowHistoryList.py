@@ -220,5 +220,10 @@ class TestDedup(ERP5TypeTestCase):
         whl._p_deactivate()
     finally:
       Workflow.dedupStrings = orig_dedupStrings
-    self.assertEqual(deduped, [35])
-    self.assertEqual(len(list(whl)), 36)
+    # A single deduplication should have happened, as the loop exits on bucket
+    # split.
+    new_obj_length, = deduped
+    # The exact boundary does not matter much, but it should be greater than
+    # some arbitrary value considered satisfying.
+    self.assertGreaterEqual(new_obj_length, 24)
+    self.assertEqual(len(list(whl)), new_obj_length + 1)
