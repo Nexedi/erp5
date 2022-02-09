@@ -92,12 +92,17 @@
 <!-- Check project present -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='test-project']</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//span[text()='test-project']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='(Project Page)']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='test-project']</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='(Project Page)']</td>
   <td></td>
 </tr>
 <!-- check project quick view page elements -->
