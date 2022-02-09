@@ -197,7 +197,6 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_dms_ui_test',
       'erp5_font',
       'erp5_forge',
-      'erp5_full_text_mroonga_catalog',
       'erp5_gadget_interface_validator',
       'erp5_hal_json_style',
       'erp5_hr',

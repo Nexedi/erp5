@@ -186,6 +186,10 @@
             <value> <string>Unify value</string> </value>
         </item>
         <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>UnifySolver</string> </value>
+        </item>
+        <item>
             <key> <string>workflow_list</string> </key>
             <value>
               <list>

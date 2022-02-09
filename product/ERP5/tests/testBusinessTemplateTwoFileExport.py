@@ -59,7 +59,6 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
                             'erp5_property_sheets',
                             'erp5_jquery',
                             'erp5_jquery_ui',
-                            'erp5_full_text_mroonga_catalog',
                             'erp5_base',
                             'erp5_core',
                             'erp5_ingestion_mysql_innodb_catalog',

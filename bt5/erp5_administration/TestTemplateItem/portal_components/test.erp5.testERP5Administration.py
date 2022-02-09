@@ -46,7 +46,7 @@ class TestERP5Administration(InventoryAPITestCase):
     """
         Same list as for Inventory API and add erp5_administration
     """
-    return InventoryAPITestCase.getBusinessTemplateList(self) + ('erp5_full_text_mroonga_catalog', 'erp5_administration')
+    return InventoryAPITestCase.getBusinessTemplateList(self) + ('erp5_administration', )
 
   def test_01_RunCheckStockTableAlarm(self):
     """

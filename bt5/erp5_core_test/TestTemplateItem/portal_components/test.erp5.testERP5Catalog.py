@@ -202,7 +202,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     return "ERP5Catalog"
 
   def getBusinessTemplateList(self):
-    return ('erp5_full_text_mroonga_catalog', 'erp5_base',)
+    return ('erp5_base',)
 
   # Different variables used for this test
   username = 'seb'
@@ -4122,9 +4122,6 @@ VALUES
 class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
   """Tests for "upgrade schema" feature of ERP5 Catalog.
   """
-
-  def getBusinessTemplateList(self):
-    return ("erp5_full_text_mroonga_catalog",)
 
   def afterSetUp(self):
     # Add two connections

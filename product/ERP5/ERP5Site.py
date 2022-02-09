@@ -347,6 +347,14 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       self.erp5_catalog_storage,
       'erp5_jquery',
       'erp5_xhtml_style',
+
+      'erp5_full_text_mroonga_catalog',
+      'erp5_base',
+      'erp5_content_translation',
+      'erp5_web_service',
+      'erp5_session',
+      'erp5_oauth2_authorisation',
+      'erp5_oauth2_resource',
     ]
 
   security.declarePrivate('reindexObject')
@@ -2543,6 +2551,8 @@ class ERP5Generator(PortalGenerator):
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
         bt.install(**kw)
+    p.ERP5Site_checkOAuth2ResourceServerPostUpgradeConsistency(fixit=True)
+    p.ERP5Site_checkOAuth2AuthorisationServerPostUpgradeConsistency(fixit=True)
 
   def setupERP5Promise(self,p,**kw):
     """

@@ -100,7 +100,6 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_jquery',
-                            'erp5_full_text_mroonga_catalog',
                             'erp5_base',
                             'erp5_ingestion_mysql_innodb_catalog',
                             'erp5_ingestion',
