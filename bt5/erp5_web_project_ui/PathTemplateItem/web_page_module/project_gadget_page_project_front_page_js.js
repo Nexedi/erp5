@@ -305,7 +305,8 @@
       //update styles: "  div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] a" to be a smaller text
       var project_title_span = domsugar('span', {}, [project_title]),
         project_link = domsugar('a', {
-          href: project_url
+          href: project_url,
+          id: project_title + "-project_page_link"
         }, ["(Project Page)"]),
         title_div = domsugar('div', { class: "project-title" },
                              [project_title_span, project_link]),
