@@ -156,19 +156,19 @@ if book_include_reference_table:
   image_link_list = book.WebPage_createImageOverview(book_content)
   for referenced_document in book_link_list.get("reference_list", []):
     book_reference_list.append(referenced_document.get("item"))
-    book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"),1)
+    book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"))
   for applicable_document in book_link_list.get("applicable_list", []):
     book_applicable_document_list.append(applicable_document.get("item"))
-    book_content = book_content.replace(applicable_document.get("input"), applicable_document.get("output"),1)
+    book_content = book_content.replace(applicable_document.get("input"), applicable_document.get("output"))
   for abbreviation in book_link_list.get("abbreviation_list", []):
     book_abbreviation_list.append(abbreviation.get("item"))
-    book_content = book_content.replace(abbreviation.get("input"), abbreviation.get("output"),1)
+    book_content = book_content.replace(abbreviation.get("input"), abbreviation.get("output"))
   for figure in image_link_list.get("figure_list", []):
     book_image_list.append(figure.get("item"))
     book_content = book_content.replace(figure.get("input"), figure.get("output"), 1)
   for table in table_link_list.get("table_list", []):
     book_table_list.append(table.get("item"))
-    book_content = book_content.replace(table.get("input"), table.get("output"), 1)
+    book_content = book_content.replace(table.get("input"), table.get("output"))
 
   # in order for the reference tables to be in the table of content, they must
   # be added beforehand to content
