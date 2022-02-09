@@ -39,8 +39,7 @@ class TestERP5CatalogSecurityUidOptimization(ERP5TypeTestCase):
     bt5 to be installed in advance.
     XXX: Inherit from TestERP5Catalog so we test default and security_uid optmization with same tests.
   """
-  business_template_list = ['erp5_security_uid_innodb_catalog',
-                            'erp5_full_text_mroonga_catalog','erp5_base']
+  business_template_list = ['erp5_security_uid_innodb_catalog', 'erp5_base']
 
   def getBusinessTemplateList(self):
     return self.business_template_list

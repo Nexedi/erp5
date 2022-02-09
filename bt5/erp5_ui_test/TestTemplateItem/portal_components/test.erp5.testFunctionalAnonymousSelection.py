@@ -41,7 +41,7 @@ class TestAnonymousSelection(TestZeleniumCore):
     """
     Return the list of business templates.
     """
-    return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
+    return ('erp5_core_proxy_field_legacy',
             'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_crm', 'erp5_forge',
             'erp5_l10n_fa',
              )
