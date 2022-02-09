@@ -301,11 +301,14 @@
 
     function createProjectHtmlElement(project_id, project_title,
                                       project_url, supervisor, supervisor_url) {
-      var project_link = domsugar('a', {
+      //title_div will have 2 elements: span (with title text) and a link (with text "Project Page")
+      //update styles: "  div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] a" to be a smaller text
+      var project_title_span = domsugar('span', {}, [project_title]),
+        project_link = domsugar('a', {
           href: project_url
-        }, [project_title]),
+        }, ["(Project Page)"]),
         title_div = domsugar('div', { class: "project-title" },
-                             [project_link]),
+                             [project_title_span, project_link]),
         left_info_div = domsugar('div', { class: "project-left" }),
         supervisor_field_label = domsugar('label', {}, [SUPERVISOR_FIELD_TITLE]),
         supervisor_value_link = domsugar('a', {
@@ -562,6 +565,7 @@
     })
 
     .declareJob("detachRenderProjectForumLink", function () {
+      return;
       var gadget = this,
         i,
         forum_link_html,
