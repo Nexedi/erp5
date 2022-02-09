@@ -278,6 +278,22 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     PortalObjectBase.__init__(self, id)
     self.creation_date = DateTime()
 
+  security.declarePrivate('getCoreBusinessTemplateList')
+  def getCoreBusinessTemplateList(self):
+    """
+    Return the list of business templates expected to be installed when this
+    class is instanciated. Allows including these business templates in the
+    list of business templates to upgrade (ex: in upgrade unit tests) without
+    duplicating this list.
+    """
+    return [
+      'erp5_property_sheets',
+      'erp5_core',
+      self.erp5_catalog_storage,
+      'erp5_jquery',
+      'erp5_xhtml_style',
+    ]
+
   security.declarePrivate('reindexObject')
   def reindexObject(self, idxs=[]):
     """from Products.CMFDefault.Portal"""
@@ -2402,8 +2418,7 @@ class ERP5Generator(PortalGenerator):
     """
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage, 'erp5_jquery',
-                 'erp5_xhtml_style'):
+      for bt in p.getCoreBusinessTemplateList():
         if not bt:
           continue
         url = getBootstrapBusinessTemplateUrl(bt)
