@@ -33,7 +33,7 @@
                 <string>resource/product_module/7</string>
                 <string>quantity_unit/unit/piece</string>
                 <string>source_section/organisation_module/myorganisation</string>
-                <string>trade_phase/default/delivery</string>
+                <string>trade_phase/trade/delivery</string>
                 <string>delivery_mode/air</string>
                 <string>destination_decision/person_module/11</string>
                 <string>specialise/sale_trade_condition_module/1</string>

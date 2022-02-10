@@ -77,7 +77,7 @@
             <value>
               <tuple>
                 <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
-                <string>trade_phase/default/delivery</string>
+                <string>trade_phase/trade/delivery</string>
                 <string>predecessor/trade_state/ordered</string>
                 <string>successor/trade_state/delivered</string>
               </tuple>

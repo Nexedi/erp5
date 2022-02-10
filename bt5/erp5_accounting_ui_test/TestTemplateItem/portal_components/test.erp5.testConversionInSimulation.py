@@ -96,9 +96,6 @@ class TestConversionInSimulation(AccountingTestCase):
     _(category_tool.incoterm, [self.cpt_incoterm])
     _(category_tool.quantity_unit,
       [self.unit_piece_quantity_unit, self.mass_quantity_unit])
-    _(category_tool.trade_phase, ['default'])
-    _(category_tool.trade_phase.default,
-      ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
     _(category_tool.product_line, ['apparel'])
 
   def _solveDivergence(self, obj, prop, decision, group='line'):
@@ -201,13 +198,13 @@ class TestConversionInSimulation(AccountingTestCase):
     )
     trade_phase = self.getCategoryTool().trade_phase
     kw = dict(portal_type='Trade Model Path',
-              trade_date='trade_phase/default/order')
+              trade_date='trade_phase/trade/order')
     business_process.newContent(
       reference='default_path',
-      trade_phase_value_list=[x for x in trade_phase.default.objectValues()
+      trade_phase_value_list=[x for x in trade_phase.trade.objectValues()
                               if x.getId() != 'accounting'],
       **kw)
-    kw.update(trade_phase='default/accounting',
+    kw.update(trade_phase='trade/accounting',
               resource_value=resource,
               membership_criterion_base_category_list=(
                 'destination_region',

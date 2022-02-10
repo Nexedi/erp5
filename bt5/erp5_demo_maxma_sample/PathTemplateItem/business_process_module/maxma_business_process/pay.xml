@@ -77,7 +77,7 @@
             <value>
               <tuple>
                 <string>delivery_builder/portal_deliveries/payment_transaction_builder</string>
-                <string>trade_phase/default/payment</string>
+                <string>trade_phase/trade/payment</string>
                 <string>predecessor/trade_state/accounted</string>
                 <string>successor/trade_state/paid</string>
                 <string>source/account_module/bank</string>
