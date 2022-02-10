@@ -201,7 +201,7 @@ class TestConversionInSimulation(AccountingTestCase):
     )
     trade_phase = self.getCategoryTool().trade_phase
     kw = dict(portal_type='Trade Model Path',
-              trade_date='trade_phase/default/order')
+              trade_date='trade_phase/trade/order')
     business_process.newContent(
       reference='default_path',
       trade_phase_value_list=[x for x in trade_phase.default.objectValues()

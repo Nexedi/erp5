@@ -76,7 +76,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_phase/trade/invoicing</string>
                 <string>predecessor/trade_state/delivered</string>
                 <string>successor/trade_state/invoiced</string>
                 <string>delivery_builder/portal_deliveries/purchase_invoice_builder</string>

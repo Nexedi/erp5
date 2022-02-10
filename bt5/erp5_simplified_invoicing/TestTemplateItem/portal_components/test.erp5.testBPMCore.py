@@ -99,22 +99,22 @@ class TestBPMMixin(ERP5TypeTestCase):
       self.createTradeModelPath(self.business_process,
         reference='delivery_path',
         trade_phase_list=('default/delivery',),
-        trade_date='trade_phase/default/order')
+        trade_date='trade_phase/trade/order')
       self.createTradeModelPath(self.business_process,
         reference='invoice_path',
         trade_phase_list=('default/invoicing',),
-        trade_date='trade_phase/default/delivery')
+        trade_date='trade_phase/trade/delivery')
     self.createTradeModelPath(business_process,
       reference='default_path',
       trade_phase_list=('default/discount', 'default/tax'),
-      trade_date='trade_phase/default/invoicing')
+      trade_date='trade_phase/trade/invoicing')
     # A trade model path already exist for root simulation movements
     # (Accounting Transaction Root Simulation Rule).
     # The ones we are creating are for Invoice Transaction Simulation Rule
     # so we add a test on the portal type of the input movement.
     kw = dict(business_process=business_process,
               trade_phase='default/accounting',
-              trade_date='trade_phase/default/invoicing',
+              trade_date='trade_phase/trade/invoicing',
               membership_criterion_base_category='resource_use',
               criterion_property_dict={'portal_type': 'Simulation Movement'})
     self.createTradeModelPath(reference='acounting_tax1',
