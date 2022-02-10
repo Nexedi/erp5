@@ -10,7 +10,7 @@
 # - Check skin names.
 # - Check script names (from skin folders and workflows).
 import re
-ABBREVIATION_WORD_SET = ((
+ABBREVIATION_WORD_SET = set((
   "BBAN", "BIC", "BOM", "CA", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
   "EAN", "ERP5", "FAX", "FTP", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN",
   "ID", "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",
