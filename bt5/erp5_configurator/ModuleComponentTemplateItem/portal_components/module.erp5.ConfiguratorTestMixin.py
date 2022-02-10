@@ -625,7 +625,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def stepViewAccount(self, sequence=None, sequence_list=None, **kw):
     account = self.portal.account_module.newContent(
-                                      portal_type='Account')
+        portal_type='Account',
+        account_type='expense',
+    )
     # in draft state,
     self.assertEqual('draft', account.getValidationState())
     # everybody can see
@@ -687,7 +689,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepCopyPasteAccount(self, sequence=None, sequence_list=None, **kw):
     # tests copy / pasting accounts from account module
     account = self.portal.account_module.newContent(
-                                      portal_type='Account')
+        portal_type='Account',
+        account_type='expense',
+    )
     # in draft state,
     self.assertEqual('draft', account.getValidationState())
 
