@@ -242,12 +242,12 @@ class TestMRPMixin(TestBPMMixin):
     sourcing_builder = 'portal_deliveries/transformation_sourcing_internal_packing_list_builder'
     completed = 'delivered', 'started', 'stopped'
     phase_list = [
-      ('default/order', None, ('confirmed',)),
+      ('trade/order', None, ('confirmed',)),
       ('manufacturing/order', manufacturing_order_builder, ('confirmed',)),
       ('mrp/manufacturing_step_0', manufacturing_execution_builder, completed),
       ('mrp/sourcing_0', sourcing_builder, completed),
       ('mrp/manufacturing_step_1', manufacturing_execution_builder, completed),
-      ('default/delivery', production_packing_list_builder, completed)
+      ('trade/delivery', production_packing_list_builder, completed)
     ]
     predecessor = None
     for i, (phase, builder, completed) in enumerate(phase_list):
