@@ -28,7 +28,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_phase/trade/invoicing</string>
                 <string>delivery_mode/air</string>
                 <string>causality/business_process_module/maxma_business_process/invoice_path</string>
                 <string>causality/business_process_module/maxma_business_process/invoice</string>
