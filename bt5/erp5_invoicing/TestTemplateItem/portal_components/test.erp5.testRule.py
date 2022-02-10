@@ -303,11 +303,11 @@ return context.generatePredicate(
     delivery_rule.validate()
     self.tic()
     # Now since the rule has a trade_phase
-    self.assertEqual(delivery_rule.getTradePhase(), 'default/delivery')
+    self.assertEqual(delivery_rule.getTradePhase(), 'trade/delivery')
     # ...then it won't match the Simulation Movement
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 0)
     # unless it gets a trade_phase itself
-    self.sm.setTradePhase('default/delivery')
+    self.sm.setTradePhase('trade/delivery')
     self.tic()
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
     # But if the rule itself has no trade_phase...
@@ -336,7 +336,7 @@ return context.generatePredicate(
     self.tic()
     # Now since the rule has a trade_phase
     trade_phase_list = delivery_rule.getTradePhaseList()
-    self.assertEqual(trade_phase_list, ['default/delivery'])
+    self.assertEqual(trade_phase_list, ['trade/delivery'])
     # then it should be possible to find it by passing this trade_phase
     # as an additional catalog keyword
     kw = {'trade_phase_relative_url':
@@ -344,7 +344,7 @@ return context.generatePredicate(
     # XXX-Leo: Fugly catalog syntax for category search above.
     self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
     # and also not to match it if we pass a different trade_phase
-    kw['trade_phase_relative_url'] = ['trade_phase/' + 'default/order']
+    kw['trade_phase_relative_url'] = ['trade_phase/trade/order']
     self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 0)
     # but match it again if we pass an empty list for trade_phase
     # (with a warning in the log about discarding empty values)

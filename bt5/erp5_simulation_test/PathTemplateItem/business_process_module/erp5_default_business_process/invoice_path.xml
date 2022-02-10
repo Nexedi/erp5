@@ -49,8 +49,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_date/trade_phase/default/delivery</string>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_date/trade_phase/trade/delivery</string>
+                <string>trade_phase/trade/invoicing</string>
               </tuple>
             </value>
         </item>

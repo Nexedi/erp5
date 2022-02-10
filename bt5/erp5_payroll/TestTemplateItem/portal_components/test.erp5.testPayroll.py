@@ -3031,8 +3031,8 @@ class TestPayroll(TestPayrollMixin):
     self.business_process = self.createBusinessProcess()
 
     kw = dict(business_process=self.business_process,
-              trade_phase='default/accounting',
-              trade_date='trade_phase/default/invoicing',
+              trade_phase='trade/accounting',
+              trade_date='trade_phase/trade/invoicing',
               membership_criterion_base_category_list=['contribution_share',
                                                        'product_line'],
               criterion_property_dict={'portal_type': 'Simulation Movement'})
@@ -3087,7 +3087,7 @@ class TestPayroll(TestPayrollMixin):
     self.createBusinessLink(
       self.business_process,
       successor_value=invoiced,
-      trade_phase='default/accounting',
+      trade_phase='trade/accounting',
       completed_state_list=completed_state_list,
       frozen_state_list=frozen_state_list,
       delivery_builder_list=('portal_deliveries/pay_sheet_transaction_builder',))
