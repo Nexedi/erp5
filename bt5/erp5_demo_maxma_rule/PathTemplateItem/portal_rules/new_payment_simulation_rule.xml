@@ -40,7 +40,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/payment</string>
+                <string>trade_phase/trade/payment</string>
               </tuple>
             </value>
         </item>

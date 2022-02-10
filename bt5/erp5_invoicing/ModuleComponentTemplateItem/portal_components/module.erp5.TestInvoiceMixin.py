@@ -159,7 +159,7 @@ class TestInvoiceMixin(TestPackingListMixin):
         specialise=self.__class__.business_process)
       kw = dict(portal_type='Trade Model Path',
                 trade_phase='default/accounting',
-                trade_date='trade_phase/default/invoicing',
+                trade_date='trade_phase/trade/invoicing',
                 membership_criterion_base_category_list=('destination_region',
                                                          'product_line'),
                 membership_criterion_category=(

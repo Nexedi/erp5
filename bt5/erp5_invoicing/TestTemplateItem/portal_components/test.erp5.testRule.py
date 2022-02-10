@@ -303,11 +303,11 @@ return context.generatePredicate(
     delivery_rule.validate()
     self.tic()
     # Now since the rule has a trade_phase
-    self.assertEqual(delivery_rule.getTradePhase(), 'default/delivery')
+    self.assertEqual(delivery_rule.getTradePhase(), 'trade/delivery')
     # ...then it won't match the Simulation Movement
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 0)
     # unless it gets a trade_phase itself
-    self.sm.setTradePhase('default/delivery')
+    self.sm.setTradePhase('trade/delivery')
     self.tic()
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
     # But if the rule itself has no trade_phase...
@@ -336,7 +336,7 @@ return context.generatePredicate(
     self.tic()
     # Now since the rule has a trade_phase
     trade_phase_list = delivery_rule.getTradePhaseList()
-    self.assertEqual(trade_phase_list, ['default/delivery'])
+    self.assertEqual(trade_phase_list, ['trade/delivery'])
     # then it should be possible to find it by passing this trade_phase
     # as an additional catalog keyword
     kw = {'trade_phase_relative_url':

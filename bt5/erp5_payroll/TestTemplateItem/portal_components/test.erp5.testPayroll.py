@@ -3032,7 +3032,7 @@ class TestPayroll(TestPayrollMixin):
 
     kw = dict(business_process=self.business_process,
               trade_phase='default/accounting',
-              trade_date='trade_phase/default/invoicing',
+              trade_date='trade_phase/trade/invoicing',
               membership_criterion_base_category_list=['contribution_share',
                                                        'product_line'],
               criterion_property_dict={'portal_type': 'Simulation Movement'})

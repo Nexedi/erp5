@@ -78,7 +78,7 @@
               <tuple>
                 <string>delivery_builder/portal_deliveries/purchase_invoice_transaction_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_invoice_transaction_builder</string>
-                <string>trade_phase/default/accounting</string>
+                <string>trade_phase/trade/accounting</string>
                 <string>predecessor/trade_state/invoiced</string>
                 <string>successor/trade_state/accounted</string>
               </tuple>
