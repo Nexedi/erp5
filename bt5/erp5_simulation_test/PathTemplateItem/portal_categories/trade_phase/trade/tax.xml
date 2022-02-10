@@ -54,6 +54,12 @@
             </value>
         </item>
         <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>tax</string> </value>
         </item>
@@ -63,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>tax</string> </value>
+            <value> <string>Tax</string> </value>
         </item>
       </dictionary>
     </pickle>
