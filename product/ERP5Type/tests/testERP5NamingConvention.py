@@ -71,6 +71,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', 'erp5_configurator',
       'erp5_configurator_maxma_demo', 'erp5_configurator_run_my_doc', 'erp5_configurator_standard',
       'erp5_configurator_standard_solver',
+      'erp5_web_service',
       # skip l10n templates to save time.
       # 'erp5_l10n_fr', 'erp5_l10n_ja',
       # 'erp5_l10n_pl_PL', 'erp5_l10n_pt-BR',
