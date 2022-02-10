@@ -1285,10 +1285,7 @@ class ActivityTool (BaseTool):
           self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
-            # get owner of portal_catalog, so normally we should be able to
-            # have the permission to invoke all activities
-            user = self.portal_catalog.getWrappedOwner()
-            newSecurityManager(self.REQUEST, user)
+            newSecurityManager(self.REQUEST, system_user)
 
             currentNode = getCurrentNode()
             self.registerNode(currentNode)
