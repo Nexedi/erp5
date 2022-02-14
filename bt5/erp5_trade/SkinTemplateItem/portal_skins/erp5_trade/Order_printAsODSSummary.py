@@ -6,7 +6,7 @@
 # different lines
 from erp5.component.module.Log import log
 if target_language:
-  container.REQUEST['AcceptLanguage'].set(target_language, 10)
+  container.REQUEST['AcceptLanguage'].set(target_language, 100)
 
 unit_title_dict = {}
 total_quantity_dict = {}
