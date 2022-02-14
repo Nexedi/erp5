@@ -50,5 +50,12 @@
     <!-- stuff happens here -->
     <script src="js/erp5_loader.js"></script>
 
+    <script language="JavaScript">
+      console.log("officejs.com SW!");
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(
+          "gadget_erp5_serviceworker.js");
+      }
+    </script>
   </body>
 </html>
