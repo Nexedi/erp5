@@ -144,6 +144,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -177,6 +187,10 @@
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
             <value> <string>default-src \'none\'; img-src \'self\' data: *; media-src \'self\'; connect-src \'self\' mail.tiolive.com cedriclendav.node.vifib.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_precache_manifest_script</string> </key>
+            <value> <string>WebSection_getAppstoreHomePrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -445,7 +459,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>973.19266.58629.39680</string> </value>
+                      <value> <string>998.12262.37408.9745</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -463,7 +477,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1548837469.19</float>
+                              <float>1644861800.17</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
