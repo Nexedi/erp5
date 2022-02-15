@@ -107,6 +107,7 @@
           document.getElementById("selenium_myiframe").contentWindow.document.body.appendChild(text_node);
         })
         .then(undefined, function(error) {console.log(error);});
+      return '';
     };
   </td>
   <td></td>
