@@ -40,7 +40,8 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
+from Products.ERP5Type.tests.utils import FileUpload, removeZODBPythonScript, \
+  createZODBPythonScript
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
@@ -2025,6 +2026,53 @@ return result
     self.assertTrue(document is not None)
     self.assertEqual(document.getData(), data)
 
+  def test_publication_state_in_Base_viewNewFileDialog(self):
+    """
+      Checks that with type based method returning 'published',
+      we can upload with Base_viewNewFileDialog and declare the document as 'published'
+    """
+    person = self.portal.person_module.newContent(portal_type="Person")
+    method_id = "Person_getPreferredAttachedDocumentPublicationState"
+    skin_folder = self.portal.portal_skins.custom
+    
+    if not getattr(skin_folder, method_id, False):
+      createZODBPythonScript(skin_folder, method_id, "", "return")
+    skin_folder[method_id].ZPythonScript_edit('', 'return ""')
+    self.tic()
+
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
+    skin_folder[method_id].ZPythonScript_edit('', 'return None')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
+    skin_folder[method_id].ZPythonScript_edit('', 'return "published"')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list, [
+        ('', ''), ('Draft', 'draft'), ('Shared', 'shared'),
+        ('Released', 'released'), ('Published', 'published')
+      ])
+    # clean up and check if we don't have the script and published state in the list
+    removeZODBPythonScript(skin_folder, method_id)
+    self.tic()
+    self.assertEqual(
+      person.getTypeBasedMethod('getPreferredAttachedDocumentPublicationSection').getId(),
+      "Base_getPreferredAttachedDocumentPublicationSection"
+    )
+    self.portal.changeSkin(None)
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
 
 class Base_contributeMixin:
   """Tests for Base_contribute script.
@@ -2090,6 +2138,16 @@ class Base_contributeMixin:
                                      portal_type='PDF',
                                      file=makeFileUpload('TEST-en-002.odt'))
     self.assertEqual('PDF', contributed_document.getPortalType())
+
+  def test_Base_contribute_forced_publication_state(self):
+    """Test contributing while forcing the publication state.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     publication_state='published',
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.tic()
+    self.assertEqual('published', contributed_document.getValidationState())
 
   def test_Base_contribute_input_parameter_dict(self):
     """Test contributing while entering input parameters.
