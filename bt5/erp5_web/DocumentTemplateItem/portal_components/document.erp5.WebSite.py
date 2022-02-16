@@ -79,7 +79,7 @@ class WebSite(WebSection):
       if name in language_list:
         default_language = self.getDefaultAvailableLanguage()
         if request.get('AcceptLanguage') is not None:
-          request['AcceptLanguage'].set(name, 100)
+          request['AcceptLanguage'].set(name, 10)
           request.set(WEBSITE_LANGUAGE_KEY, name)
         if self.isTempObject() or name == default_language:
           redirect_path_list = [self.getOriginalDocument().absolute_url()]
