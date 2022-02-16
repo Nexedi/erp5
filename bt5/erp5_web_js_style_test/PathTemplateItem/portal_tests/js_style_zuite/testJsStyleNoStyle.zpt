@@ -83,7 +83,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//ul[@class="h-feed"]//li[@class="h-entry"]//a[@class="u-url" and @rel='permalink' and contains(@href, 'web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage')]//time[@class="dt-published" and contains(@datetime, 'T')]</td>
+  <td>//aside[@id='document_list']//ul[@class="h-feed"]//li[@class="h-entry"]//a[@class="u-url" and @rel='permalink' and contains(@href, 'web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage')]//time[@class="dt-published" and text()='Tue, 13 Dec 2011 11:22:33 +0500' and @datetime='2011-12-13T06:22:33Z']</td>
   <td></td>
 </tr>
 
