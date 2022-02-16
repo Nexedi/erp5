@@ -5708,13 +5708,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_base_category')
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeTypeMixiniList')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeTypeMixinList')
     def getTemplatePortalTypeTypeMixinList(self):
       """
       We have to set this method because we want an
       ordered list
       """
-      return self._getOrderedList('template_portal_type_type_mixin')
+      try:
+        return self._getOrderedList('template_portal_type_type_mixin')
+      # This property may not be defined if erp5_property_sheets has not been
+      # upgraded yet
+      except AttributeError:
+        return ()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateActionPathList')
     def getTemplateActionPathList(self):
