@@ -285,8 +285,12 @@ class InteractionWorkflow(Workflow):
 
       # Execute "activity" scripts
       for script in tdef.getActivateScriptValueList():
-        self.activate(activity='SQLQueue').activeScript(
-          script.getId(), ob.getRelativeUrl(), status, tdef.getId())
+        ob.activate(activity='SQLQueue').activeInteractionScript(
+          interaction_workflow_path=self.getPhysicalPath(),
+          script_name=script.getId(),
+          status=status,
+          tdef_id=tdef.getId(),
+        )
 
   def _before_commit(self, sci, script_name, security_manager):
     # check the object still exists before calling the script
@@ -307,11 +311,24 @@ class InteractionWorkflow(Workflow):
 
   security.declarePrivate('activeScript')
   def activeScript(self, script_name, ob_url, status, tdef_id):
-    ob = self.unrestrictedTraverse(ob_url)
-    tdef = self.getTransitionValueByReference(tdef_id)
-    sci = StateChangeInfo(
-          ob, self, status, tdef, None, None, None)
-    self._getOb(script_name)(sci)
+    # BBB for when an upgrade to callInterationScript still has unexecuted
+    # activeScript activities leftover from the previous code.
+    self.callInterationScript(
+      script_name=script_name,
+      ob=self.unrestrictedTraverse(ob_url),
+      status=status,
+      tdef_id=tdef_id,
+    )
+
+  security.declarePrivate('callInterationScript')
+  def callInterationScript(self, script_name, ob, status, tdef_id):
+    self._getOb(script_name)(
+      StateChangeInfo(
+        ob, self, status,
+        self.getTransitionValueByReference(tdef_id),
+        None, None, None,
+      ),
+    )
 
   security.declarePrivate('isActionSupported')
   def isActionSupported(self, ob, action, **kw):
