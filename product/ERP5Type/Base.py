@@ -1653,6 +1653,29 @@ class Base(
     """
     return self
 
+  security.declarePrivate('activeInteractionScript')
+  def activeInteractionScript(
+    self,
+    interaction_workflow_path,
+    script_name,
+    status,
+    tdef_id,
+  ):
+    """
+    Call interaction script on current document.
+    This is defined on the document involved in the interaction so that
+    CopySupport.unindexObject can find the activities involving this method
+    and flush them.
+    """
+    self.getPortalObject().unrestrictedTraverse(
+      interaction_workflow_path,
+    ).callInterationScript(
+      script_name=script_name,
+      ob=self,
+      status=status,
+      tdef_id=tdef_id,
+    )
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDocumentInstance')
   def getDocumentInstance(self):
