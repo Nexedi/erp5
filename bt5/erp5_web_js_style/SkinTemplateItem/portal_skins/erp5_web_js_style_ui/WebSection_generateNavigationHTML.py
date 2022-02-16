@@ -75,6 +75,6 @@ result_list.append('</nav>')
 
 # Documents
 if include_document:
-  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'modification_date')))
+  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'publication_date', 'modification_date')))
 
 return ''.join(result_list)
