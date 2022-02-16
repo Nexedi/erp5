@@ -2967,6 +2967,40 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
 
+  def test_publication_state_in_Base_viewNewFileDialog(self):
+    """
+      Checks that with Person_getPreferredAttachedDocumentPublicationState returning 'published',
+      we can upload with Base_viewNewFileDialog and declare the document as 'published'
+    """
+    person = self.portal.person_module.newContent(portal_type="Person", temp_object=1)
+    method_id = "Person_getPreferredAttachedDocumentPublicationState"
+    skin_folder = self.portal.portal_skins.custom
+    if not getattr(skin_folder, method_id, False):
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=method_id)
+    skin_folder[method_id].ZPythonScript_edit('', 'return None')
+    self.tic()
+
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+    skin_folder[method_id].ZPythonScript_edit('', 'return "published"')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+
+    self.assertEqual(
+      item_list, [
+        ('', ''), ('Draft', 'draft'), ('Shared', 'shared'),
+        ('Released', 'released'), ('Published', 'published')
+      ])
+    skin_folder[method_id].manage_delObjects([method_id,])
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
+
 class TestDocumentPerformance(TestDocumentMixin):
 
   def test_01_LargeOOoDocumentToImageConversion(self):
