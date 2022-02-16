@@ -82,7 +82,7 @@ def checkField(folder, form, field):
         prefix = ''
       if prefix not in ('my', 'your') and not any([field_id.startswith(x) for x in (
         'view_mode_', 'core_mode_', 'report_mode_', 'list_mode_', 'dialog_mode_',
-      )]:
+      )]):
         error_message += "%s: %s : Bad ID for a Field Library Field" % (path, field.id)
   if template_field is None:
     if field.get_value('enabled'):
