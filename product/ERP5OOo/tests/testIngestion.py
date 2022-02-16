@@ -2091,6 +2091,16 @@ class Base_contributeMixin:
                                      file=makeFileUpload('TEST-en-002.odt'))
     self.assertEqual('PDF', contributed_document.getPortalType())
 
+  def test_Base_contribute_forced_publication_state(self):
+    """Test contributing while forcing the publication state.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     publication_state='published',
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.tic()
+    self.assertEqual('published', contributed_document.getValidationState())
+
   def test_Base_contribute_input_parameter_dict(self):
     """Test contributing while entering input parameters.
     """

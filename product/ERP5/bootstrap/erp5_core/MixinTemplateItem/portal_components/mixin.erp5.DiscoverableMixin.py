@@ -195,6 +195,9 @@ class DiscoverableMixin(CachedConvertableMixin):
           document.share()
         elif publication_state == "released":
           document.release()
+        elif publication_state == "published":
+          document.publish()
+
 
     maybeChangeState(self)
     # Finish ingestion by calling method

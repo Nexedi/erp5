@@ -2856,6 +2856,39 @@ return 1
       [sub_document_value]
     )
 
+  def test_publication_state_in_Base_viewNewFileDialog(self):
+    """
+      Checks that with type based method returning 'published',
+      we can upload with Base_viewNewFileDialog and declare the document as 'published'
+    """
+    person = self.portal.person_module.newContent(portal_type="Person")
+    method_id = "Base_getPreferredAttachedDocumentPublicationState"
+    skin_folder = self.portal.portal_skins.erp5_ingestion
+    skin_folder[method_id].ZPythonScript_edit('', 'return ""')
+    self.tic()
+
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
+    skin_folder[method_id].ZPythonScript_edit('', 'return None')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
+    skin_folder[method_id].ZPythonScript_edit('', 'return "published"')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list, [
+        ('', ''), ('Draft', 'draft'), ('Shared', 'shared'),
+        ('Released', 'released'), ('Published', 'published')
+      ])
+
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
