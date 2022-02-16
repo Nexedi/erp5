@@ -2191,6 +2191,33 @@ class TestBase_contribute(IngestionTestCase, Base_contributeMixin):
   """Base_contribute tests as Manager (ie. without security restrictions)
   """
 
+  def test_publication_state_in_Base_viewNewFileDialog(self):
+    """
+      Checks that with Person_getPreferredAttachedDocumentPublicationState returning 'published',
+      we can upload with Base_viewNewFileDialog and declare the document as 'published'
+    """
+    person = self.portal.person_module.newContent(portal_type="Person")
+    self.tic()
+    method_id = "Base_getPreferredAttachedDocumentPublicationState"
+    skin_folder = self.portal.portal_skins.erp5_ingestion
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+    skin_folder[method_id].ZPythonScript_edit('', 'return None')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+    skin_folder[method_id].ZPythonScript_edit('', 'return "published"')
+    self.tic()
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list, [
+        ('', ''), ('Draft', 'draft'), ('Shared', 'shared'),
+        ('Released', 'released'), ('Published', 'published')
+      ])
 
 class TestBase_contributeWithSecurity(IngestionTestCase, Base_contributeMixin):
   """Base_contribute tests with security.
