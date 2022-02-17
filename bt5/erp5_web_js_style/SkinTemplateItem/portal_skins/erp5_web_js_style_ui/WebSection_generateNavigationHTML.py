@@ -28,6 +28,7 @@ def generateDocumentListHTML(result_list, document_list):
   if (document_list):
     result_list.append('<aside id="document_list"><ul class="h-feed">')
     for section in document_list:
+      publication_date = section['publication_date'] or section['modification_date']
       result_list.append("""
 <li class="h-entry">
   <div class="e-content">
@@ -41,8 +42,8 @@ def generateDocumentListHTML(result_list, document_list):
   ('<p class="p-summary">%s</p>' % _(section['description'])) if section.get('description') else '',
   ('<p class="p-author h-card">%s</p>' % _(section['document'].Document_getContributorTitleList()[0])),
   __(section['url']),
-  __(section['modification_date'].HTML4()),
-  _(section['modification_date'].rfc822())
+  __(publication_date.HTML4()),
+  _(publication_date.rfc822())
 ))
     result_list.append('</ul></aside>')
 
