@@ -316,6 +316,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEqual(organisation.getTitle(),self.title1)
     self.assertEqual(organisation.getDescription(),self.title1)
+    self.tic()
 
   @for_each_activity
   def testTryTwoMethodsAndFlushThem(self, activity):
