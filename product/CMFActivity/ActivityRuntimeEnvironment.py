@@ -61,7 +61,11 @@ class ActivityRuntimeEnvironment(object):
   def getPriority(self):
     result = self._priority
     if result is None:
-      return self._message.line.priority
+      message = self._message
+      line = message.line
+      if line is None:
+        return message.activity_kw.get('priority', 1)
+      return line.priority
     return result
 
   security.declarePublic('edit')
