@@ -88,7 +88,11 @@ class TestInvalidationBug(ERP5TypeTestCase):
     self.assertEqual(result_list[1], [0,0])  # activity buffer first
     self.assertEqual(result_list[-3], [1,0]) # catalog
     self.assertEqual(result_list[-2], None)  # ZODB
-    self.assertEqual(result_list[-1], [1,1]) # activity tables last
+    result_catalog_count, result_activity_count = result_list[-1]
+    # activity tables last (there may be multiple activities, but there must be
+    # at least one).
+    self.assertEqual(result_catalog_count, 1)
+    self.assertGreaterEqual(result_activity_count, 1)
 
   # TODO: - skip this test for ZEO>=5 because it's covered upstream
   #         (and later remove it)
