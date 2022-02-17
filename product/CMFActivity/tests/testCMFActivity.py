@@ -66,7 +66,9 @@ def for_each_activity(wrapped):
     for activity in ActivityTool.activity_dict:
       wrapped(self, activity)
       self.abort()
-      self.assertFalse(getMessageList())
+      self.assertFalse([
+        x.__dict__ for x in getMessageList()
+      ])
   return wraps(wrapped)(wrapper)
 
 def registerFailingTransactionManager(*args, **kw):
