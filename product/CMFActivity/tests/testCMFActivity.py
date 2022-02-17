@@ -2339,10 +2339,24 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     obj = activity_tool.newActiveProcess()
     obj.reindexObject(activate_kw={'tag': 'foo', 'after_tag': 'bar'})
     self.commit()
+    # Check that both messages were inserted.
+    # Also serves as a sanity check on indexation activities group_method_id.
+    indexation_group_metdod_id = 'portal_catalog/catalogObjectList'
+    self.assertEqual(
+      len([
+        x
+        for x in activity_tool.getMessageList(path=obj.getPath())
+        if x.activity_kw.get('group_method_id') == indexation_group_metdod_id
+      ]),
+      2,
+    )
     invoked = []
-    def invokeGroup(self, *args):
-      invoked.append(len(args[1]))
-      return ActivityTool_invokeGroup(self, *args)
+    def invokeGroup(self, method_id, message_list, *args):
+      # Ignore any other activity which may be spawned from these catalog
+      # indexations (ex: fulltext indexations).
+      if method_id == indexation_group_metdod_id:
+        invoked.append(len(message_list))
+      return ActivityTool_invokeGroup(self, method_id, message_list, *args)
     ActivityTool_invokeGroup = activity_tool.__class__.invokeGroup
     try:
       activity_tool.__class__.invokeGroup = invokeGroup
