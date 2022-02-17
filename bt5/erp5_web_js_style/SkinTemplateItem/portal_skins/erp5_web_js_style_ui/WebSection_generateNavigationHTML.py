@@ -28,7 +28,7 @@ def generateDocumentListHTML(result_list, document_list):
   if (document_list):
     result_list.append('<aside id="document_list"><ul class="h-feed">')
     for section in document_list:
-      publication_date = section['publication_date'] or section['modification_date']
+      publication_date = section['effective_date'] or section['modification_date']
       result_list.append("""
 <li class="h-entry">
   <div class="e-content">
@@ -76,6 +76,6 @@ result_list.append('</nav>')
 
 # Documents
 if include_document:
-  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'publication_date', 'modification_date')))
+  generateDocumentListHTML(result_list, web_section.WebSection_getSiteMapTree(include_subsection=False, exclude_default_document=True, depth=1, property_mapping=('translated_title', 'description', 'effective_date', 'modification_date')))
 
 return ''.join(result_list)
