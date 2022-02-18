@@ -1,8 +1,13 @@
 """
-  This script should returns always two list of Business Template.
-   - The first list is to resolve dependencies and upgrade.
-   - The second list is what you want to keep. This is useful if we want to keep 
-   a old business template without updating it and without removing it
+This script may be overridden.
+It is expected to return two lists of Business Templates:
+- The first is a tuple containing names of Business Templates to install and
+  keep up-to-date. Their dependencies are also installed and kept up-to-date.
+- The second is a list containing names of Business Templates which should be
+  kept if already installed, ignored if missing, and not be upgraded nor
+  removed.
 """
-
-return ('erp5_base',), ["erp5_upgrader"]
+return (
+  tuple(context.getPortalObject().getCoreBusinessTemplateList() + ['erp5_base']),
+  ['erp5_upgrader'],
+)
