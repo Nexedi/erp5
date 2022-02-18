@@ -1,22 +1,15 @@
-import itertools
-import time
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 
-def waitForActivities(self, delay=100, count=None):
+def waitForActivities(self, count=1000):
   """
     We wait until all activities are finished
 
     RuntimeError is raised in case there is no way
     to finish activities.
   """
-  if count is not None: # BBB
-    # completely arbitrary conversion factor: count used to default to 1000
-    # and I (just as arbitrarily) converted that into a 100s default maximum
-    # tolerable wait delay before bailing.
-    delay = count / 10.
-  deadline = time.time() + delay
   activity_tool = self.getPortalObject().portal_activities
-  for call_count in itertools.count():
+  while count > 0:
+    count -= 1
     x = activity_tool.getMessageList()
     if not x:
       return 'Done.'
@@ -25,9 +18,7 @@ def waitForActivities(self, delay=100, count=None):
         'tic is looping forever: one failing activity (%s %s)' % (x[0].object_path, x[0].method_id)
       )
     activity_tool.process_timer(None, None)
-    if time.time() > deadline:
-      break
-    if call_count % 10 == 0:
+    if count % 10 == 0:
       activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
   raise RuntimeError('tic is looping forever.')
 
