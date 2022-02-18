@@ -40,16 +40,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
 from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
 
-from Products.DCWorkflow import Guard
-def formatNameUnion(names):
-  names = list(names)
-  if len(names) == 2:
-    return ' or '.join(names)
-  elif len(names) > 2:
-    names[-1] = ' or ' + names[-1]
-  return '; '.join(names)
-Guard.formatNameUnion = formatNameUnion
-
 
 from Products.ERP5Type.Base import Base
 from typing import Callable
@@ -231,15 +221,18 @@ class SecurityTestCase(ERP5TypeTestCase):
             continue
           if wf.__class__.__name__ in ['InteractionWorkflowDefinition', 'Interaction Workflow'] :
             continue
-          for wf_transition_id in wf._getWorkflowStateOf(
-                                                document).getTransitions():
-            wf_transition = wf.getTransitionValueByReference(wf_transition_id)
-            if wf_transition.trigger_type == TRIGGER_USER_ACTION:
+          for wf_transition in wf._getWorkflowStateOf(document).getDestinationValueList():
+            if wf_transition.getTriggerType() == TRIGGER_USER_ACTION:
               workflow_transitions_description.append(
-                "%s%s[%s]: %s" % (
-                  wf_transition_id == transition and "* " or "  ",
-                  wf_transition_id, wf.getId(),
-                  wf_transition.getGuardSummary()))
+                "%s%s[%s]\n\t\tExpression: %s\n\t\tPermissions: %s\n\t\tGroups: %s" % (
+                  wf_transition.getReference() == transition and "* " or "  ",
+                  wf_transition.getReference(),
+                  wf.getId(),
+                  wf_transition.getGuardExpression() or '',
+                  ', '.join(wf_transition.getGuardPermissionList()),
+                  ', '.join(wf_transition.getGuardGroupList()),
+                )
+              )
 
           workflow_states_description.append("%s on %s" % (
                   wf._getWorkflowStateOf(document, id_only=1), wf.getId()))
