@@ -438,6 +438,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # Check the zuite page templates can be rendered, because selenium test
     # runner does not report error in case there are errors in the page
     # template.
+    if 'testFunctionalOfficeJSPyodideNotebook' in self.id():
+      self.fail('boom')
     tests_tool = self.portal.portal_tests
 
     if self.remote_code_url_list:
