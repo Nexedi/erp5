@@ -40,7 +40,8 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
+from Products.ERP5Type.tests.utils import FileUpload, removeZODBPythonScript, \
+  createZODBPythonScript
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
@@ -2059,6 +2060,19 @@ return result
         ('', ''), ('Draft', 'draft'), ('Shared', 'shared'),
         ('Released', 'released'), ('Published', 'published')
       ])
+    # clean up and check if we don't have the script and published state in the list
+    removeZODBPythonScript(skin_folder, method_id)
+    self.tic()
+    self.assertEqual(
+      person.getTypeBasedMethod('getPreferredAttachedDocumentPublicationSection').getId(),
+      "Base_getPreferredAttachedDocumentPublicationSection"
+    )
+    self.portal.changeSkin(None)
+    item_list = person.Base_viewNewFileDialog.your_publication_state.get_value("items")
+    self.assertEqual(
+      item_list,
+      [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
+
 
 class Base_contributeMixin:
   """Tests for Base_contribute script.
