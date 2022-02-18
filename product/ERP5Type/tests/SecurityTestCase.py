@@ -115,7 +115,6 @@ class SecurityTestCase(ERP5TypeTestCase):
     """set up and login as default user"""
     super(SecurityTestCase, self)._setup()
     self.login()
-    self.portal = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
 
   def tearDown(self):
@@ -219,7 +218,10 @@ class SecurityTestCase(ERP5TypeTestCase):
         for wf in self.workflow_tool.getWorkflowValueListFor(document) or []:
           if wf.getId() == 'edit_workflow':
             continue
-          if wf.__class__.__name__ in ['InteractionWorkflowDefinition', 'Interaction Workflow'] :
+          if wf.__class__.__name__ in (
+              'InteractionWorkflowDefinition',
+              'Interaction Workflow',
+            ):
             continue
           for wf_transition in wf._getWorkflowStateOf(document).getDestinationValueList():
             if wf_transition.getTriggerType() == TRIGGER_USER_ACTION:
