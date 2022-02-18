@@ -278,14 +278,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     PortalObjectBase.__init__(self, id)
     self.creation_date = DateTime()
 
-  security.declarePrivate('getCoreBusinessTemplateList')
+  security.declarePublic('getCoreBusinessTemplateList')
   def getCoreBusinessTemplateList(self):
-    """
-    Return the list of business templates expected to be installed when this
-    class is instanciated. Allows including these business templates in the
-    list of business templates to upgrade (ex: in upgrade unit tests) without
-    duplicating this list.
-    """
+    # Return the list of business templates expected to be installed when this
+    # class is instanciated. Allows including these business templates in the
+    # list of business templates to upgrade (ex: in upgrade unit tests) without
+    # duplicating this list.
     return [
       'erp5_property_sheets',
       'erp5_core',
