@@ -183,7 +183,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
     """ Make sure Installed business Templates are
         what it is expected.  """
 
-    expected_business_template_list = [
+    expected_business_template_list = self.portal.getCoreBusinessTemplateList() + [
       'erp5_accounting',
       'erp5_administration',
       'erp5_base',
@@ -191,7 +191,6 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_code_mirror',
       'erp5_configurator',
       'erp5_configurator_standard',
-      'erp5_core',
       'erp5_core_proxy_field_legacy',
       'erp5_crm',
       'erp5_dms',
@@ -218,7 +217,6 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_minipaint',
       'erp5_monaco_editor',
       'erp5_multimedia',
-      'erp5_mysql_innodb_catalog',
       'erp5_notebook',
       'erp5_officejs',
       'erp5_officejs_connector',
@@ -228,7 +226,6 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_only_office',
       'erp5_pdm',
       'erp5_project',
-      'erp5_property_sheets',
       'erp5_run_my_doc',
       'erp5_simulation',
       'erp5_slideshow_style',
@@ -246,7 +243,6 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_web_renderjs_ui_test',
       'erp5_web_renderjs_ui_test_core',
       'erp5_web_service',
-      'erp5_xhtml_style',
       'officejs_todomvc'
     ]
     self.assertSameSet(expected_business_template_list,
