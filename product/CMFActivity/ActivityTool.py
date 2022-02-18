@@ -177,6 +177,13 @@ MESSAGE_NOT_EXECUTED = 0
 MESSAGE_EXECUTED = 1
 MESSAGE_NOT_EXECUTABLE = 2
 
+_SYSTEM_USER_NAME = system_user.getUserName()
+_SUPER_USER = PrivilegedUser(
+  _SYSTEM_USER_NAME,
+  None,
+  ['manage'],
+  [],
+)
 
 class SkippedMessage(Exception):
   pass
@@ -312,7 +319,7 @@ class Message(BaseMessage):
     if user is None:
       uf = portal.aq_parent.acl_users
       user = uf.getUserById(user_name)
-    if user is None and user_name == system_user.getUserName():
+    if user is None and user_name == _SYSTEM_USER_NAME:
       # The following logic partly comes from unrestricted_apply()
       # implementation in ERP5Type.UnrestrictedMethod but we get roles
       # from the portal to have more roles.
@@ -1276,6 +1283,7 @@ class ActivityTool (BaseTool):
       """
       # Prevent TimerService from starting multiple threads in parallel
       if timerservice_lock.acquire(0):
+        portal = self.getPortalObject()
         try:
           # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
           # but on 2.2 it's by traversal, and our site probably wasn't traversed
@@ -1285,7 +1293,10 @@ class ActivityTool (BaseTool):
           self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
-            newSecurityManager(self.REQUEST, system_user)
+            newSecurityManager(
+              None,
+              _SUPER_USER.__of__(portal.acl_users),
+            )
 
             currentNode = getCurrentNode()
             self.registerNode(currentNode)
@@ -1300,7 +1311,7 @@ class ActivityTool (BaseTool):
             # portals, we clear this cache to make sure the cache doesn't
             # contains skins from another portal.
             try:
-              self.getPortalObject().portal_skins.changeSkin(None)
+              portal.portal_skins.changeSkin(None)
             except AttributeError:
               pass
 
