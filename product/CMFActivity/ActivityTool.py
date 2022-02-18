@@ -1276,6 +1276,7 @@ class ActivityTool (BaseTool):
       """
       # Prevent TimerService from starting multiple threads in parallel
       if timerservice_lock.acquire(0):
+        portal = self.getPortalObject()
         try:
           # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
           # but on 2.2 it's by traversal, and our site probably wasn't traversed
@@ -1285,7 +1286,10 @@ class ActivityTool (BaseTool):
           self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
-            newSecurityManager(self.REQUEST, system_user)
+            newSecurityManager(
+              self.REQUEST,
+              system_user.__of__(portal.acl_users),
+            )
 
             currentNode = getCurrentNode()
             self.registerNode(currentNode)
@@ -1300,7 +1304,7 @@ class ActivityTool (BaseTool):
             # portals, we clear this cache to make sure the cache doesn't
             # contains skins from another portal.
             try:
-              self.getPortalObject().portal_skins.changeSkin(None)
+              portal.portal_skins.changeSkin(None)
             except AttributeError:
               pass
 
