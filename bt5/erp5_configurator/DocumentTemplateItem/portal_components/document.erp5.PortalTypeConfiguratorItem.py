@@ -63,27 +63,32 @@ class PortalTypeConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     # arguments:
     #  * target_portal_type
     #  * add_propertysheet_list
-    type_information = getattr(portal.portal_types, self.target_portal_type)
+    portal_type_value = portal.portal_types[self.target_portal_type]
+    property_sheet_list = portal_type_value.getTypePropertySheetList()
+    extra_property_sheet_list = []
     for name in self.add_propertysheet_list:
-      if not name in type_information.property_sheet_list:
-        new_property_sheet_list = list(type_information.property_sheet_list)
-        new_property_sheet_list.append(name)
-        type_information.property_sheet_list = tuple(new_property_sheet_list)
-
-    business_configuration = self.getBusinessConfigurationValue()
-    bt5_obj = business_configuration.getSpecialiseValue()
-
-    old_property_sheet_list = bt5_obj.getTemplatePortalTypePropertySheetList()
-    new_property_sheet_list = (list(old_property_sheet_list) +
-                              ['%s | %s' % (self.target_portal_type, name)
-                                for name in self.add_propertysheet_list]
-                              )
-    if fixit:
-      bt5_obj.edit(
-        template_portal_type_property_sheet_list=new_property_sheet_list)
-    #
-    # TODO:This class must support many other features we can use in ZMI.
-    #
-
-    return ['Property Sheets configuration should be added in %s' % \
-        bt5_obj.getTitle(),]
+      if name not in property_sheet_list:
+        extra_property_sheet_list.append(name)
+    # TODO: This class must support many other portal types features.
+    business_template_value = self.getBusinessConfigurationValue().getSpecialiseValue()
+    if extra_property_sheet_list:
+      if fixit:
+        portal_type_value.setTypePropertySheetList(
+          property_sheet_list + extra_property_sheet_list,
+        )
+        business_template_value.edit(
+          template_portal_type_property_sheet_list=list(
+            business_template_value.getTemplatePortalTypePropertySheetList()
+          ) + [
+            '%s | %s' % (self.target_portal_type, name)
+            for name in extra_property_sheet_list
+          ],
+        )
+      return [
+        'Associate Property Sheets %r to %r in %r' % (
+          extra_property_sheet_list,
+          self.target_portal_type,
+          business_template_value.getTitle(),
+        ),
+      ]
+    return []
