@@ -68,7 +68,7 @@ class EncryptedPasswordMixin:
     usage.
     """
     if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
-      # not a policy so basically all passwords are accceptable
+      # not policy enabled, so basically all passwords are accceptable
       return True
     if not self.isPasswordValid(value):
       raise ValueError("Password does not comply with password policy")
