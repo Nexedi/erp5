@@ -430,6 +430,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     result = active_process.getResultList()[0]
     self.assertEqual(result.method_id , 'getTitle')
     self.assertEqual(result.result , self.title1)
+    # Execute any further activity which may have been spawned by activity
+    # execution (ex: fulltext indeation of the active process).
+    self.tic()
 
   def TryActiveProcessWithResultDict(self, activity):
     """
