@@ -60,7 +60,7 @@ class UserExistsError(
     super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
 
 
-class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMixin):
+class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMixin):
   """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,
