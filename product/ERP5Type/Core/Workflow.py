@@ -785,7 +785,7 @@ class Workflow(XMLObject):
 
     tool = self.getParentValue()
     state_var = self.getStateVariable()
-    status_dict = self.getCurrentStatusDict(ob)
+    status_dict = {}
 
     if tdef is None:
       new_state = old_state
@@ -795,7 +795,7 @@ class Workflow(XMLObject):
       new_state = tdef.getDestinationValue()
       new_state_reference = old_state_reference if new_state is None\
                             else new_state.getReference()
-      former_status = status_dict
+      former_status = self.getCurrentStatusDict(ob)
 
     # Execute the "before" script.
     before_script_success = True
