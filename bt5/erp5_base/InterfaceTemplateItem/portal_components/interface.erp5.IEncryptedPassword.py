@@ -39,12 +39,27 @@ class IEncryptedPassword(Interface):
 
   def checkPassword(value):
     """
-    Check the password, usefull when changing password
+    Check the password `value` match the current password, usefull when changing password.
     """
 
   def checkPasswordValueAcceptable(value):
     """
-    Check if the password value is acceptable - i.e. follows site rules.
+    Check if the password `value` is acceptable in regard to password policy.
+    """
+
+  def checkUserCanChangePassword():
+    """
+    Check if the current logged in user have permission to change password, on this
+    IEncryptedPassword.
+
+    Raise Products.CMFCore.exceptions.AccessControl_Unauthorized in case they don't
+    have the permission.
+    """
+
+  def setPassword(value) :
+    """
+    Set the password, only if the password is not empty and if
+    checkUserCanChangePassword don't raise any error
     """
 
   def setEncodedPassword(value, format='default'): # pylint: disable=redefined-builtin
@@ -61,17 +76,6 @@ class IEncryptedPassword(Interface):
     begins with _set*
     """
 
-  def checkUserCanChangePassword():
-    """
-    check user have permission to change his password. Raise in case he cannot.
-    """
-
-  def setPassword(value) :
-    """
-    Set the password, only if the password is not empty and if
-    checkUserCanChangePassword don't raise any error
-    """
-
   def getPassword(*args, **kw):
     """
     Retrieve password in desired format.
@@ -83,7 +87,7 @@ class IEncryptedPassword(Interface):
       Default: None
     format (string)
       String defining the format in which the password is expected.
-      If passowrd is not available in that format, KeyError will be
+      If password is not available in that format, KeyError will be
       raised.
       Default: 'default'
     """
