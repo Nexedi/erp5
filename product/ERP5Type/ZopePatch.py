@@ -20,10 +20,11 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
-from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW, MY2TO3_ACTION
 
 # Load all monkey patches
-from Products.ERP5Type.patches import my2to3_patch
+if MY2TO3_ACTION is not None:
+  from Products.ERP5Type.patches import my2to3_patch
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch

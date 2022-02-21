@@ -32,6 +32,17 @@
 """
 from __future__ import absolute_import
 from App.config import getConfiguration
+
+# Conditionally apply patches/my2to3.py
+try:
+  from my2to3.trace import apply_fixers
+  from lib2to3.pgen2.parse import ParseError
+except ImportError:
+  MY2TO3_ACTION = None
+else:
+  import os
+  MY2TO3_ACTION = os.environ.get("MY2TO3_ACTION")
+
 from .patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
