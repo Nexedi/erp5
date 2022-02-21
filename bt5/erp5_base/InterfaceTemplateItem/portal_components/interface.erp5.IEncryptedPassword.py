@@ -54,12 +54,16 @@ class IEncryptedPassword(Interface):
 
     Raise Products.CMFCore.exceptions.AccessControl_Unauthorized in case they don't
     have the permission.
+
+    This method is deprecated and is not used by IEncryptedPassword internally.
     """
 
-  def setPassword(value) :
+  def setPassword(value):
     """
-    Set the password, only if the password is not empty and if
-    checkUserCanChangePassword don't raise any error
+    Set the password to `value` (a string holding the password in clear text).
+
+    Passing an empty value (such as None or empty string) will erase previously defined
+    password, which usually prevent login with this password.
     """
 
   def setEncodedPassword(value, format='default'): # pylint: disable=redefined-builtin
@@ -67,13 +71,13 @@ class IEncryptedPassword(Interface):
     Set an already encoded password.
     """
 
-  def _forceSetPassword(value):
+  def edit(self, **kw):
     """
-    Because both _setPassword and setPassword are considered as
-    public method (they are callable from user directly or through edit method)
-    _forceSetPassword is needed to reset password without security check by
-    Password Tool. This method is not callable through edit method as it not
-    begins with _set*
+    Edit the password and other properties of the documents through user interface.
+
+    This method is responsible for supporting the case where a IEncryptedPassword is
+    edited with a my_password field that is empty by default and not resetting the password
+    when edited with password=None.
     """
 
   def getPassword(*args, **kw):

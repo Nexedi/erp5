@@ -301,9 +301,7 @@ class PasswordTool(BaseTool):
     )
     login_dict, = user_dict['login_list']
     login = portal.unrestrictedTraverse(login_dict['path'])
-    login.checkPasswordValueAcceptable(password) # this will raise if password does not match policy
-    login._forceSetPassword(password)
-    login.reindexObject()
+    login.setPassword(password) # this will raise if password does not match policy
     return redirect(REQUEST, site_url,
                     translateString("Password changed."))
 
