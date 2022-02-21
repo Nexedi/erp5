@@ -2201,10 +2201,21 @@ class Base_contributeMixin:
     self.tic()
 
     contributed_document = person.Base_contribute(
+      synchronous_metadata_discovery=False,
       publication_state='published',
       file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
     self.tic()
-    self.assertEqual('published', contributed_document.getValidationState())
+    self.assertEqual(contributed_document.getValidationState(), 'published')
+    contributed_document.setReference(None)
+    self.tic()
+
+    contributed_document = person.Base_contribute(
+      synchronous_metadata_discovery=True,
+      publication_state='published',
+      file=makeFileUpload('TEST-en-002.pdf', as_name='doc.pdf'))
+    self.tic()
+    self.assertEqual(contributed_document.getValidationState(), 'published')
+
 
 
   def test_Base_contribute_publication_state_vs_finishIngestion_script(self):
