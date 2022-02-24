@@ -609,8 +609,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                       result[0]['creation_date'].ISO())
     self.assertEqual(modification_date,
                       result[0]['modification_date'].ISO())
-    self.assertEqual(creation_date,
-                      result[0]['modification_date'].ISO())
 
     import time; time.sleep(3)
     organisation.edit(title='edited')
