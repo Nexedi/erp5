@@ -85,10 +85,12 @@ class PortalTypeConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           ],
         )
       return [
-        'Associate Property Sheets %r to %r in %r' % (
-          extra_property_sheet_list,
-          self.target_portal_type,
-          business_template_value.getTitle(),
-        ),
+        self._createConstraintMessage(
+          'Associate Property Sheets %r to %r in %r' % (
+            extra_property_sheet_list,
+            self.target_portal_type,
+            business_template_value.getTitle(),
+          )
+        )
       ]
     return []

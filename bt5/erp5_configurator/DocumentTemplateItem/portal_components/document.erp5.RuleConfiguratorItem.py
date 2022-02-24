@@ -77,4 +77,4 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       business_configuration = self.getBusinessConfigurationValue()
       self.install(rule, business_configuration)
-    return ['Rule should be defined',]
+    return [self._createConstraintMessage('Rule should be defined')]

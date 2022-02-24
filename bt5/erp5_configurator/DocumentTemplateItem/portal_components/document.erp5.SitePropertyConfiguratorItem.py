@@ -72,4 +72,4 @@ class SitePropertyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       bt = business_configuration.getSpecialiseValue()
       bt.edit(template_site_property_id_list=id_list)
 
-    return ["The property %s should set on portal" % id_ for id_ in id_list]
+    return [self._createConstraintMessage("The property %s should set on portal" % id_) for id_ in id_list]

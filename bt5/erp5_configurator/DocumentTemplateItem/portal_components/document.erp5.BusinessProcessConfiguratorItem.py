@@ -61,7 +61,8 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     )
 
   def _checkConsistency(self, fixit=False, **kw):
-    error_list = ["Business Process %s should be created" % self.getReference(),]
+    error_list = [
+        self._createConstraintMessage("Business Process %s should be created" % self.getReference())]
     if fixit:
       portal = self.getPortalObject()
       business_process = portal.business_process_module.newContent(
