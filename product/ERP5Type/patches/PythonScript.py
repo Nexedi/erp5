@@ -165,11 +165,6 @@ class _(PatchClass(PythonScript)):
   p_.PythonScript_ProxyRole_icon = \
     ImageFile('pyscript_proxyrole.gif', globals())
 
-  # Patch for displaying textearea in full window instead of
-  # remembering a quantity of lines to display in a cookie
-  manage = manage_editDocument = manage_main = ZPythonScriptHTML_editForm = \
-  manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
-  manage_editForm._setName('manage_editForm')
 
   # Guards
 
