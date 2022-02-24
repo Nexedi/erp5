@@ -1,4 +1,4 @@
-#  - Years always starts at 0h of the current year's first day  and 
+#  - Years always starts at 0h of the current year's first day and
 #    finish 0h of the next year's first day.
 
 from Products.ERP5Type.Message import translateString
@@ -27,21 +27,21 @@ if depth == 0:
   count = 0
   while   count < 12:
     # Create one Temp Object
-    o = newTempBase(portal, id='year' ,uid='new_%s' % zfill('year',4))
-    # Seting delimiter 
+    o = newTempBase(portal, id='year', uid='new_%s' % zfill('year',4))
+    # Setting delimiter
     if current_date.month() in [1, 7]:
       o.setProperty('delimiter_type', 1)
     else:
       o.setProperty('delimiter_type', 0)
-    
+
      # Setting Axis Dates start and stop
-    o.setProperty('start',current_date)
+    o.setProperty('start', current_date)
     if current_date.month() != 12:
-      stop_date = DateTime(current_date.year(),current_date.month() +1,1)
+      stop_date = DateTime(current_date.year(), current_date.month() +1, 1)
     else:
       stop_date = DateTime(year+1, 1, 1)
     o.setProperty('stop', stop_date)
-    
+
     o.setProperty('relative_position', int(current_date))
 
     title = translateString('${month_name} ${year}',
@@ -50,9 +50,9 @@ if depth == 0:
     o.setProperty('title', title)
 
     # Defining Link
-    link = '%s&bound_start=%s&lane_path=base_month_domain' % ( default_link_url, url_quote(str(current_date)))
+    link = '%s&bound_start=%s&lane_path=base_month_domain' % (default_link_url, url_quote(str(current_date)))
     o.setProperty('link', link)
-    
+
     category_list.append(o)
     current_date = DateTime(str(current_date.year()) + '/' + str((current_date.month() +1)) + '/1')
     count += 1
@@ -61,12 +61,12 @@ else:
 
 for category in category_list:
   domain = parent.generateTempDomain(id = 'sub' + category.getProperty('id'))
-  domain.edit(title = category.getTitle(),
-              membership_criterion_base_category = ('parent', ), 
-              membership_criterion_category = (category,),
-              domain_generator_method_id = script.id,
-              uid = category.getUid())
-                
+  domain.edit(title=category.getTitle(),
+              membership_criterion_base_category=('parent', ),
+              membership_criterion_category=(category, ),
+              domain_generator_method_id=script.id,
+              uid=category.getUid())
+
   domain_list.append(domain)
 
 return domain_list

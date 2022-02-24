@@ -144,12 +144,24 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
   security.declarePrivate('activeScript')
   def activeScript(self, script_name, ob_url, status, tdef_id):
-    script = self.scripts[script_name]
-    ob = self.unrestrictedTraverse(ob_url)
-    tdef = self.interactions.get(tdef_id)
-    sci = StateChangeInfo(
-                  ob, self, status, tdef, None, None, None)
-    script(sci)
+    # BBB for when an upgrade to callInterationScript still has unexecuted
+    # activeScript activities leftover from the previous code.
+    self.callInterationScript(
+      script_name=script_name,
+      ob=self.unrestrictedTraverse(ob_url),
+      status=status,
+      tdef_id=tdef_id,
+    )
+
+  security.declarePrivate('callInterationScript')
+  def callInterationScript(self, script_name, ob, status, tdef_id):
+    self.scripts[script_name](
+      StateChangeInfo(
+        ob, self, status,
+        self.interactions.get(tdef_id),
+        None, None, None,
+      ),
+    )
 
   def _checkTransitionGuard(self, t, ob, **kw):
     # This check can be implemented with a guard expression, but

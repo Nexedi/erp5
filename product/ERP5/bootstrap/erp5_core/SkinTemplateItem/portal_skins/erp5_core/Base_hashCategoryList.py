@@ -24,7 +24,8 @@ for value in value_list:
   new_dict['value'] = value
   sub_field_list.append(new_dict)
 
-sub_field_list.append(default_sub_field_property_dict)
+if not sub_field_list or default_sub_field_property_dict['editable']:
+  sub_field_list.append(default_sub_field_property_dict)
 
 sub_field_list[0]['title'] = title
 return sub_field_list

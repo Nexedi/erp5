@@ -320,7 +320,13 @@ class FunctionalTestRunner:
     password_field.clear()
     password_field.send_keys(self.password)
     login_form_url = browser.current_url
-    password_field.submit()
+    # Note: password_field.submit() (and in general, x.submit(), even if x is
+    # an <input type="submit"...>) does not work: it seems to submit only
+    # fields which have a value on their own. Which means type="submit" fields
+    # are absent, which breaks the form submission handling locic on Zope side.
+    password_field.find_element_by_xpath(
+      'ancestor::fieldset/descendant::input[@type="submit"]',
+    ).click()
     WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
     WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
 

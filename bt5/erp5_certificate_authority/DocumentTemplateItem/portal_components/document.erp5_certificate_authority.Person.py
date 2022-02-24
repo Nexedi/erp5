@@ -4,7 +4,6 @@ from Products.ERP5Type import Permissions
 
 class Person(ERP5Person):
   security = ClassSecurityInfo()
-  security.declarePublic('getCertificate')
 
   def _getCertificateLoginDocument(self):
     for _erp5_login in self.objectValues(
@@ -50,6 +49,7 @@ class Person(ERP5Person):
     return self.getPortalObject().portal_certificate_authority\
       .revokeCertificateByCommonName(self._getCertificateLoginDocument().getReference())
 
+  security.declarePublic('getCertificate')
   def getCertificate(self):
     """Returns new SSL certificate"""
     self._checkCertificateRequest()

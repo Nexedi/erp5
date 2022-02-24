@@ -441,13 +441,30 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     checkRelationUnset(self)
 
     # Test _setRegion doesn't reindex the object.
+    def getTitleFromCatalog():
+      row, = self.portal.portal_catalog(
+        select_list=['title'],
+        uid=person_object.getUid(),
+      )
+      return row.title
+    modified_title = getTitleFromCatalog() + '_not_reindexed'
+    catalog_connection = self.getSQLConnection()()
+    catalog_connection.query(
+      'UPDATE catalog SET title=%s WHERE uid=%i' % (
+        catalog_connection.string_literal(modified_title),
+        person_object.getUid(),
+      ),
+    )
+    self.commit()
+    # sanity check
+    self.assertEqual(getTitleFromCatalog(), modified_title)
+
     person_object._setRegion(category_id)
-    self.commit()
-    self.assertFalse(person_object.hasActivity())
-    person_object.setRegion(None)
-    self.commit()
-    self.assertTrue(person_object.hasActivity())
     self.tic()
+    self.assertEqual(getTitleFromCatalog(), modified_title)
+    person_object.setRegion(None)
+    self.tic()
+    self.assertNotEqual(getTitleFromCatalog(), modified_title)
 
     # category tool, base categories, properties
     # are likely to be handled specifically for accessor generation,

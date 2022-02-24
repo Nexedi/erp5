@@ -10,10 +10,10 @@
 # - Check skin names.
 # - Check script names (from skin folders and workflows).
 import re
-ABBREVIATION_WORD_SET = ((
-  "BBAN", "BIC", "BOM", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
-  "EAN", "ERP5", "FAX", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN", "ID",
-  "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",
+ABBREVIATION_WORD_SET = set((
+  "BBAN", "BIC", "BOM", "CA", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
+  "EAN", "ERP5", "FAX", "FTP", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN",
+  "ID", "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",
   "RAM", "RSS", "SMS", "SOAP", "SQL", "SVN", "TALES", "TCP", "TSV", "UBM",
   "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "XML", "ZODB",
 ))
@@ -75,8 +75,14 @@ def checkField(folder, form, field):
   template_field = getFieldFromProxyField(field)
   if path.endswith("FieldLibrary"):
     if not(template_field is field):
-      if not(1 in [field.id.startswith(x) for x in ('my_view_mode_',
-                           'my_core_mode_', 'my_report_mode_', 'my_list_mode_', 'my_dialog_mode_')]):
+      field_id = field.id
+      try:
+        prefix, field_id = field_id.split('_', 1)
+      except ValueError:
+        prefix = ''
+      if prefix not in ('my', 'your') and not any([field_id.startswith(x) for x in (
+        'view_mode_', 'core_mode_', 'report_mode_', 'list_mode_', 'dialog_mode_',
+      )]):
         error_message += "%s: %s : Bad ID for a Field Library Field" % (path, field.id)
   if template_field is None:
     if field.get_value('enabled'):

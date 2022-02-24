@@ -66,7 +66,9 @@ def for_each_activity(wrapped):
     for activity in ActivityTool.activity_dict:
       wrapped(self, activity)
       self.abort()
-      self.assertFalse(getMessageList())
+      self.assertFalse([
+        x.__dict__ for x in getMessageList()
+      ])
   return wraps(wrapped)(wrapper)
 
 def registerFailingTransactionManager(*args, **kw):
@@ -314,6 +316,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEqual(organisation.getTitle(),self.title1)
     self.assertEqual(organisation.getDescription(),self.title1)
+    self.tic()
 
   @for_each_activity
   def testTryTwoMethodsAndFlushThem(self, activity):
@@ -427,6 +430,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     result = active_process.getResultList()[0]
     self.assertEqual(result.method_id , 'getTitle')
     self.assertEqual(result.result , self.title1)
+    # Execute any further activity which may have been spawned by activity
+    # execution (ex: fulltext indeation of the active process).
+    self.tic()
 
   def TryActiveProcessWithResultDict(self, activity):
     """
@@ -456,6 +462,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     result = result_dict[3]
     self.assertEqual(result_dict[3].method_id, 'getTitle')
     self.assertEqual(result.result , self.title1)
+    # Execute any further activity which may have been spawned by activity
+    # execution (ex: fulltext indeation of the active process).
+    self.tic()
 
   @for_each_activity
   def testTryMethodAfterMethod(self, activity):
@@ -2339,10 +2348,24 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     obj = activity_tool.newActiveProcess()
     obj.reindexObject(activate_kw={'tag': 'foo', 'after_tag': 'bar'})
     self.commit()
+    # Check that both messages were inserted.
+    # Also serves as a sanity check on indexation activities group_method_id.
+    indexation_group_metdod_id = 'portal_catalog/catalogObjectList'
+    self.assertEqual(
+      len([
+        x
+        for x in activity_tool.getMessageList(path=obj.getPath())
+        if x.activity_kw.get('group_method_id') == indexation_group_metdod_id
+      ]),
+      2,
+    )
     invoked = []
-    def invokeGroup(self, *args):
-      invoked.append(len(args[1]))
-      return ActivityTool_invokeGroup(self, *args)
+    def invokeGroup(self, method_id, message_list, *args):
+      # Ignore any other activity which may be spawned from these catalog
+      # indexations (ex: fulltext indexations).
+      if method_id == indexation_group_metdod_id:
+        invoked.append(len(message_list))
+      return ActivityTool_invokeGroup(self, method_id, message_list, *args)
     ActivityTool_invokeGroup = activity_tool.__class__.invokeGroup
     try:
       activity_tool.__class__.invokeGroup = invokeGroup

@@ -197,6 +197,7 @@ class Message(BaseMessage):
   traceback = None
   document_uid = None
   is_registered = False
+  line = None
 
   def __init__(
       self,

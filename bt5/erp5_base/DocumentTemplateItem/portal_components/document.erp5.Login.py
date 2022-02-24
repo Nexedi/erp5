@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 
-class Login(XMLObject, LoginAccountProviderMixin, EncryptedPasswordMixin):
+class Login(EncryptedPasswordMixin, XMLObject, LoginAccountProviderMixin):
   meta_type = 'ERP5 Login'
   portal_type = 'Login'
   add_permission = Permissions.AddPortalContent

@@ -21,7 +21,7 @@ kw['conversion_dict'] = dict(
   header_spacing=5
 )
 kw['css_path']="payslip_css/payslip"
-kw['document_language']=target_language
+kw['document_language']=target_language or 'fr'
 kw['start_date']=context.getStartDate() or None
 kw['stop_date']=context.getStopDate() or None
 kw['get_doc_after_save'] = send_to_maileva

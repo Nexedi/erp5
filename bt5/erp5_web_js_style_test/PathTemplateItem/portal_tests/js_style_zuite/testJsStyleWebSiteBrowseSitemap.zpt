@@ -78,7 +78,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//p[contains(text(), 'Date: ') and contains(text(), 'GMT')]</td>
+  <td>//aside[@id='document_list']//p[text()='Date: Tue, 13 Dec 2011 06:22:33 GMT']</td>
   <td></td>
 </tr>
 
@@ -341,7 +341,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//aside[@id='document_list']//p[contains(text(), 'Date: ') and contains(text(), 'GMT')]</td>
+  <td>//aside[@id='document_list']//p[text()='Date: Tue, 13 Dec 2011 06:22:33 GMT']</td>
   <td></td>
 </tr>
 

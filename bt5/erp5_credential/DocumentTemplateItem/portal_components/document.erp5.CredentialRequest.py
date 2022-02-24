@@ -32,7 +32,7 @@ from erp5.component.document.Ticket import Ticket
 from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 
 
-class CredentialRequest(Ticket, EncryptedPasswordMixin):
+class CredentialRequest(EncryptedPasswordMixin, Ticket):
   """
   """
 
@@ -53,11 +53,6 @@ class CredentialRequest(Ticket, EncryptedPasswordMixin):
                     , PropertySheet.Reference
                     , PropertySheet.Url
                     )
-
-  def checkUserCanChangePassword(self):
-    # every body can change a password of a credential request as annonymous
-    # should be able to do it
-    pass
 
   def checkPasswordValueAcceptable(self, value):
     # all passwords are acceptable on Credential Request
