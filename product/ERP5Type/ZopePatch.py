@@ -88,13 +88,8 @@ from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
-  # Not needed with Zope4 and new ZMI
-  from Products.ERP5Type.patches import DTMLMethod
-  from Products.ERP5Type.patches import DTMLDocument
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
-from Products.ERP5Type.patches import DTMLMethod
-from Products.ERP5Type.patches import DTMLDocument
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
