@@ -20,6 +20,10 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
+  <type>Quantity Split Move Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
   <type>Quantity Split Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
