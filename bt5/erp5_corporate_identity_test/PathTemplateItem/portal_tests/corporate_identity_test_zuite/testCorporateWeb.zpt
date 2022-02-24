@@ -74,6 +74,11 @@
 </tr>
 <tr>
   <td>openAndWait</td>
+  <td>${base_url}/web_site_module/template_test_web_site/logout</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
   <td>${base_url}/web_site_module/template_test_web_site/login_form</td>
   <td></td>
 </tr>
