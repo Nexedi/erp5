@@ -605,26 +605,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = """select creation_date, modification_date
              from catalog where uid = %s""" % organisation.getUid()
     result = sql_connection.manage_test(sql)
-    self.assertEqual(creation_date,
-                      result[0]['creation_date'].ISO())
-    self.assertEqual(modification_date,
-                      result[0]['modification_date'].ISO())
-
+    self.assertEqual(creation_date, result[0]['creation_date'].ISO())
+    self.assertEqual(modification_date, result[0]['modification_date'].ISO())
     import time; time.sleep(3)
     organisation.edit(title='edited')
     self.tic()
     result = sql_connection.manage_test(sql)
     self.assertEqual(creation_date, result[0]['creation_date'].ISO())
     modification_date = organisation.getModificationDate().toZone('UTC').ISO()
-    self.assertNotEquals(modification_date,
-                         organisation.getCreationDate())
+    self.assertNotEqual(modification_date, organisation.getCreationDate())
     # This test was first written with a now variable initialized with
     # DateTime(). But since we are never sure of the time required in
     # order to execute some line of code
-    self.assertEqual(modification_date,
-                      result[0]['modification_date'].ISO())
-    self.assertTrue(organisation.getModificationDate()>now)
-    self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
+    self.assertEqual(modification_date, result[0]['modification_date'].ISO())
+    self.assertGreater(organisation.getModificationDate(), now)
+    self.assertLesser(result[0]['creation_date'], result[0]['modification_date'])
 
   def test_19_SearchFolderWithNonAsciiCharacter(self):
     person_module = self.getPersonModule()
