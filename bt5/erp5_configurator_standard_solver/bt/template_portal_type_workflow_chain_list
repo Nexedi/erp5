@@ -3,6 +3,7 @@ Adopt Solver | solver_workflow
 Automatic Accept Solver | solver_workflow
 Production Reduction Solver | solver_workflow
 Quantity Cancel Solver | solver_workflow
+Quantity Split Move Solver | solver_workflow
 Quantity Split Solver | solver_workflow
 Simple Quantity Split Solver | solver_workflow
 Trade Model Solver | solver_workflow
