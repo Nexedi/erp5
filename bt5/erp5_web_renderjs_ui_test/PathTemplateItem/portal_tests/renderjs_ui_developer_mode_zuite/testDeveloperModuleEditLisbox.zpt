@@ -23,13 +23,13 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_label_field.html')]/a[@href="portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href="fieldTest"]/span/strong</td>
+  <td>assertElementPresent</td>
+  <td>//a[@href="fieldTest"]/descendant-or-self::*[text()="Test"]</td>
   <td></td>
 </tr>
 <tr>
