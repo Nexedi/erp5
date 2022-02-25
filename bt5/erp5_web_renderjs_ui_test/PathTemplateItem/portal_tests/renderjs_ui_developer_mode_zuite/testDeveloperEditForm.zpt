@@ -38,18 +38,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//div[@data-gadget-scope="erp5_form"]/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href="formTest"]/span/strong</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//a[@href="formTest"]/span/strong</td>
+  <td>//a[@href="formTest"]/descendant-or-self::*[text()="Test"]</td>
   <td></td>
 </tr>
 </tbody></table>

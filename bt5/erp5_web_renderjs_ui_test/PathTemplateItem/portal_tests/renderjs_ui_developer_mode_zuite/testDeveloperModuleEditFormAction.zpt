@@ -43,8 +43,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href="ZScriptHTML_tryForm"]/span/strong</td>
+  <td>assertElementPresent</td>
+  <td>//a[@href="ZScriptHTML_tryForm"]/descendant-or-self::*[text()="Test"]</td>
   <td></td>
 </tr>
 <tr>
