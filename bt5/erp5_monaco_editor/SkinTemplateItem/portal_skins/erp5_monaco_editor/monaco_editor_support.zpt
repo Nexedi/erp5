@@ -39,7 +39,7 @@
   </style>
 </tal:block>
 
-<div id="monaco-container" style="width:100%;height:800px;border:1px solid grey;"></div>
+<div id="monaco-container" style="width:100%; border:1px solid grey;"></div>
 
 <script tal:content='python: "var portal_url=" + modules["json"].dumps(options.get("portal_url"))'></script>
 <script tal:content='python: "var field_id=" + modules["json"].dumps(options.get("field_id"))'></script>
@@ -72,8 +72,8 @@ $script.onload = function() {
     var $monacoContainer = document.getElementById("monaco-container");
     $monacoContainer.parentNode.removeChild($monacoContainer);
     $textarea.parentNode.appendChild($monacoContainer);
-    $monacoContainer.style.width = $textarea.parentNode.offsetWidth - 10 + "px";
-    $monacoContainer.style.height = $textarea.parentNode.offsetHeight + "px";
+    $monacoContainer.style.width = $textarea.parentNode.clientWidth - 10 + "px";
+    $monacoContainer.style.height = $textarea.parentNode.clientHeight + "px";
     $textarea.style.display = "none";
 
     function saveDocument() {
