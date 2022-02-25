@@ -349,7 +349,12 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>limit</string>
+                          <string>100000</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
