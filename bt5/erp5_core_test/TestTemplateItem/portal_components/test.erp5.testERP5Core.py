@@ -96,13 +96,6 @@ if 1: # BBB
       sm.registerUtility(ui_domain, ITranslationDomain, 'ui')
       del portal._save_ui_domain
 
-try:
-  import chameleon
-  EXPECTED_TRANSLATION_MAPPING = None
-except ImportError:
-  # BBB in zope2 talinterpreter is setting mapping to {}
-  EXPECTED_TRANSLATION_MAPPING = {}
-
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
 HTTP_REDIRECT = 302
@@ -342,7 +335,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish('%s/portal_templates' %
                                 self.portal_id, self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
-    self.assertTrue(('Business Template', EXPECTED_TRANSLATION_MAPPING)
+    self.assertTrue(('Business Template', {})
                     in translation_service._translated['ui'])
     self.assertTrue(
       ('Add ${portal_type}', {'portal_type': 'Business Template'}) in
@@ -362,7 +355,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish('%s/portal_templates' %
                             self.portal_id, self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
-    self.assertTrue(('Dummy Jump Action', EXPECTED_TRANSLATION_MAPPING) in
+    self.assertTrue(('Dummy Jump Action', {}) in
                       translation_service._translated['ui'])
 
   def test_error_log(self):
