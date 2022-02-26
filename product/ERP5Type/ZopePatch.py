@@ -90,6 +90,7 @@ if six.PY2:
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import CMFCoreUtils
+from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
