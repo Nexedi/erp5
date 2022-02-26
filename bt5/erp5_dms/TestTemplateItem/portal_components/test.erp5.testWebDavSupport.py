@@ -261,7 +261,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     self.assertEqual(DateTime(xml_metadata.find('{DAV:}response/'\
                       '{DAV:}propstat/{DAV:}prop/{DAV:}getlastmodified')\
                       .text).ISO8601(),
-                      document.bobobase_modification_time().toZone('UTC').ISO8601())
+                      DateTime(document._p_mtime).toZone('UTC').ISO8601())
 
   @expectedFailure
   def test_PROPFIND_on_document_bis(self):
