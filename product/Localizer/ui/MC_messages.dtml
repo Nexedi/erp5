@@ -48,7 +48,7 @@
             value=" <dtml-var "gettext('Delete')"> ">
         </form>
       <dtml-else>
-        <dtml-gettext>There are no messages.</dtml-gettext>
+        There are no messages.
         <br>
         <dtml-in languages mapping>
           <a href="<dtml-var url>"><dtml-if "code == language"><span style="font-weight: bold"><dtml-var name></span><dtml-else><dtml-var name></dtml-if></a>
@@ -93,7 +93,7 @@
             </dtml-in>
           </table>
         <dtml-else>
-          <dtml-gettext>There are no messages.</dtml-gettext>
+          There are no messages.
         </dtml-if>
       </fieldset>
     </td>
@@ -103,8 +103,8 @@
 <!-- EMPTY -->
 <dtml-else>
 <p>
-<dtml-gettext>No languages available, please add them using the
-  <a href='manage_languages'>Languages</a> tab</dtml-gettext>
+No languages available, please add them using the
+  <a href='manage_languages'>Languages</a> tab
 </p>
 </dtml-if>
 

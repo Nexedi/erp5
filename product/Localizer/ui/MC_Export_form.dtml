@@ -3,13 +3,11 @@
 
 <fieldset><legend><dtml-var "gettext('Export messages to PO file')"></legend>
 <p class="form-help">
-  <dtml-gettext>
-    You can export the messages and their translations to PO files. Check
-    <tt>locale.pot</tt> to get only the messages, without their translations.
-    Check any other option to get a PO file with the messages and their
-    translations to the selected language. Then click the <tt>Export</tt>
-    button.
-  </dtml-gettext>
+  You can export the messages and their translations to PO files. Check
+  <tt>locale.pot</tt> to get only the messages, without their translations.
+  Check any other option to get a PO file with the messages and their
+  translations to the selected language. Then click the <tt>Export</tt>
+  button.
 </p>
 
 <form action="manage_export" method="post">

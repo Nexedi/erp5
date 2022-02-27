@@ -47,44 +47,6 @@ The parameters are:
     +----------+--------------------------------------+
 
 
-dtml-gettext
-------------
-
-For long messages the tag dtml-gettext can be more comfortable::
-
-  <dtml-gettext>
-    This could be a very long message.
-  </dtml-gettext>
-
-It accepts several parameters, they're:
-
-    +------------------------------+--------------------------------+
-    | lang [#msg-catalog-rq]_      | The target language (string).  |
-    +------------------------------+--------------------------------+
-    | lang_expr [#msg-catalog-rq]_ | The target language (string    |
-    |                              | expression).                   |
-    +------------------------------+--------------------------------+
-    | verbatim                     | If set the message will be     |
-    |                              | interpreted as it is,          |
-    |                              | otherwise (default) any blank  |
-    |                              | characters will be interpreted |
-    |                              | as just one space character.   |
-    +------------------------------+--------------------------------+
-    | catalog                      | The id of the catalog from     |
-    |                              | where the translations will be |
-    |                              | obtained.                      |
-    +------------------------------+--------------------------------+
-    | data                         | If present the message will be |
-    |                              | interpreted as a formatted     |
-    |                              | string and data will contain   |
-    |                              | the tuple or dictionary to be  |
-    |                              | passed to the string.          |
-    +------------------------------+--------------------------------+
-
-
-.. [#msg-catalog-rq] Only one (or none) can be provided.
-
-
 Zope Page Templates
 -------------------
 

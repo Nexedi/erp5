@@ -3,11 +3,9 @@
 
 <fieldset><legend><dtml-var "gettext('Import translations from PO file')"></legend>
 <p class="form-help">
-  <dtml-gettext>
-    You can add new messages and translations importing a PO file. Enter the
-    filename, select the language of the translations and click the
-    <tt>Import</tt> button.
-  </dtml-gettext>
+  You can add new messages and translations importing a PO file. Enter the
+  filename, select the language of the translations and click the
+  <tt>Import</tt> button.
 </p>
 
 
