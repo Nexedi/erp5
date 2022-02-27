@@ -29,8 +29,11 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
 from PIL import Image
 import cStringIO
+import difflib
 import math
 import os.path
+import lxml.doctestcompare
+import lxml.html.html5parser
 
 
 def changeSkin(skin_name):
@@ -211,9 +214,44 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     if dump:
       expected_page.edit(text_content=html)
       self.tic()
-    self.assertEqual(
-        html.encode('UTF-8'),#.splitlines(),
-        expected_page.getData())#.splitlines())
+
+    expected = bytes(expected_page.getData()).decode('utf-8')
+
+    # We use lxml.doctestcompare to check the HTML match the expected output,
+    # while tolerating some differences in the whitespaces or the order of
+    # attributes. Because our documents use html5, we use an output checker
+    # with html5 parser.
+    class HTML5OutputChecker(lxml.doctestcompare.LHTMLOutputChecker):
+      def get_parser(self, want, got, optionflags):
+        return lxml.html.html5parser.fromstring
+
+    # To display the diff, we don't use output_difference from our
+    # outputchecker, because the output is too verbose, especially because
+    # namespaces are included in every tag. We use a simple unified diff,
+    # but this diff does not do the normalization from our outputchecker,
+    # so it may be a bit verbose.
+    msg = ''.join(difflib.unified_diff(
+        expected.splitlines(True),
+        html.splitlines(True),
+    ))
+
+    # We also save the pages in log directory, to help debugging
+    from Products.ERP5Type.tests.runUnitTest import log_directory
+    if log_directory:
+      with open(os.path.join(log_directory, '%s-expected.html' % self.id()), 'wb') as f:
+        f.write(expected.encode('utf-8'))
+      with open(os.path.join(log_directory, '%s-actual.html' % self.id()), 'wb') as f:
+        f.write(html.encode('utf-8'))
+
+    self.assertTrue(
+        HTML5OutputChecker().check_output(
+            expected,
+            html,
+            lxml.doctestcompare.PARSE_HTML,
+        ),
+        msg,
+    )
+
 
   def runPdfTestPattern(self, id1, id2, id3, **kw):
     """
