@@ -3,9 +3,7 @@
 
 <fieldset><legend><dtml-var "gettext('Add language')"></legend>
 <p class="form-help">
-  <dtml-gettext>
-    To add a language select it and click the <tt>Add</tt> button.
-  </dtml-gettext>
+  To add a language select it and click the <tt>Add</tt> button.
 </p>
 
 <dtml-let languages=get_languages>
@@ -34,9 +32,7 @@
 <dtml-let languages=get_languages_mapping>
   <dtml-if languages>
     <p class="form-help">
-      <dtml-gettext>
-        To delete a language check it and click the <tt>Delete</tt> button.
-      </dtml-gettext>
+      To delete a language check it and click the <tt>Delete</tt> button.
     </p>
 
       <form action="<dtml-var URL1>" method="post">
@@ -62,7 +58,7 @@
         </table>
       </form>
   <dtml-else>
-    <em><dtml-gettext>There are no languages</dtml-gettext></em>
+    <em>There are no languages</em>
   </dtml-if>
 </dtml-let>
 </fieldset>
@@ -72,10 +68,8 @@
     <table>
       <tr>
         <td>
-      <dtml-gettext>
-        To change the default language select it and click the
-        <tt>Change</tt> button.
-      </dtml-gettext>
+          To change the default language select it and click the
+          <tt>Change</tt> button.
         </td>
       </tr>
       <tr>

@@ -26,8 +26,6 @@ from DocumentTemplate.DT_String import String
 from .patches import get_request
 from . import Localizer, MessageCatalog
 from .LocalFiles import LocalDTMLFile
-from .GettextTag import GettextTag
-
 
 
 misc_ = {'arrow_left': ImageFile('img/arrow_left.gif', globals()),
@@ -69,5 +67,3 @@ def initialize(context):
 
     context.registerHelp()
 
-    # Register the dtml-gettext tag
-    String.commands['gettext'] = GettextTag
