@@ -56,7 +56,7 @@ for header in re.findall("<h[1-6].*?</h[1-6]>", doc_content or blank):
     html_quote(header_reference_prefix),
     '_anchor">',
     html_quote(header_reference),
-    '</div></a>']
+    '</a></div>']
   )
 
 closer = int(header_current) * '</ol>'
