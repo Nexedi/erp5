@@ -88,4 +88,4 @@ class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       ## add to customer template
       self.install(organisation, business_configuration)
-    return ['Organisation should be created',]
+    return [self._createConstraintMessage('Organisation should be created')]

@@ -69,4 +69,4 @@ class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       ## add to customer template
       business_configuration = self.getBusinessConfigurationValue()
       self.install(category, business_configuration)
-    return ['Category %s should be created' % self.getTitle(),]
+    return [self._createConstraintMessage('Category %s should be created' % self.getTitle())]

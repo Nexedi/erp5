@@ -134,7 +134,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     if self.business_link_portal_type is not None:
       business_link_list = [
         dict(reference='discount',
-             trade_phase='default/discount',
+             trade_phase='trade/discount',
              predecessor='trade_state/invoiced',
              # should successor be trade_state/discounted? There is no
              # such trade_state category
@@ -143,7 +143,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
                                'portal_deliveries/sale_invoice_transaction_trade_model_builder'],
         ),
         dict(reference='tax',
-             trade_phase='default/tax',
+             trade_phase='trade/tax',
              predecessor='trade_state/invoiced',
              # should successor be trade_state/taxed? There IS such a
              # trade_state category, but the rule that wants to match
@@ -508,12 +508,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       dict(price=self.default_discount_ratio,
            base_application='base_amount/discount',
            base_contribution='base_amount/tax',
-           trade_phase='default/discount',
+           trade_phase='trade/discount',
            resource_value=self.createServiceDiscount(),
            reference='discount'),
       dict(price=self.default_tax_ratio,
            base_application='base_amount/tax',
-           trade_phase='default/tax',
+           trade_phase='trade/tax',
            resource_value=self.createServiceTax(),
            reference='tax'),
       ))
@@ -725,30 +725,30 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       dict(price=0.2,
            base_application='base_amount/tax',
            base_contribution='base_amount/total_tax',
-           trade_phase='default/tax',
+           trade_phase='trade/tax',
            resource_value=service_tax,
            reference='service_tax'),
       dict(price=0.32,
            base_application='base_amount/discount',
            base_contribution='base_amount/total_discount',
-           trade_phase='default/discount',
+           trade_phase='trade/discount',
            resource_value=service_discount,
            reference='total_dicount_2'),
       dict(price=0.2,
            base_application='base_amount/tax',
            base_contribution='base_amount/total_tax',
-           trade_phase='default/tax',
+           trade_phase='trade/tax',
            resource_value=service_tax,
            reference='service_tax_2'),
       dict(price=0.12,
            base_application='base_amount/total_tax',
            base_contribution='base_amount/total_discount',
-           trade_phase='default/tax',
+           trade_phase='trade/tax',
            resource_value=service_tax,
            reference='tax_3'),
       dict(price=0.8,
            base_application='base_amount/total_discount',
-           trade_phase='default/discount',
+           trade_phase='trade/discount',
            resource_value=service_discount,
            reference='total_discount'),
       ]
@@ -965,7 +965,7 @@ return lambda *args, **kw: 1""")
       dict(reference='VAT',
            price=.15,
            resource_value=tax,
-           trade_phase='default/tax',
+           trade_phase='trade/tax',
            use='tax',
            base_application='base_amount/tax'),
       ))
@@ -1087,7 +1087,7 @@ return lambda *args, **kw: 1""")
       dict(reference='VAT',
            price=.15,
            resource_value=tax,
-           trade_phase='default/tax',
+           trade_phase='trade/tax',
            base_application='base_amount/tax'),
       ))
     source = self.createNode()

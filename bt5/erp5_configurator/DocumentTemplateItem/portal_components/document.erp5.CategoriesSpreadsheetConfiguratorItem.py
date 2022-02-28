@@ -104,7 +104,8 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           business_configuration = self.getBusinessConfigurationValue()
           self.install(path, business_configuration)
       else:
-        error_list.extend(["%s should be created" % category['path'] \
+        error_list.extend([
+            self._createConstraintMessage("%s should be created" % category['path'])
             for category in category_list])
 
     return error_list

@@ -72,9 +72,6 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.createCategoriesInCategory(category_tool.use,
         self.normal_resource_use_category_list + \
             self.invoicing_resource_use_category_list)
-    self.createCategoriesInCategory(category_tool.trade_phase, ['default',])
-    self.createCategoriesInCategory(category_tool.trade_phase.default,
-        ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
     self.createCategoriesInCategory(category_tool.trade_state,
         ['ordered', 'invoiced', 'delivered', 'taxed',
          'state_a', 'state_b', 'state_c', 'state_d', 'state_e'])
@@ -95,26 +92,26 @@ class TestBPMMixin(ERP5TypeTestCase):
     if create_order_to_invoice_path:
       self.createTradeModelPath(self.business_process,
         reference='order_path',
-        trade_phase_list=('default/order',))
+        trade_phase_list=('trade/order',))
       self.createTradeModelPath(self.business_process,
         reference='delivery_path',
-        trade_phase_list=('default/delivery',),
-        trade_date='trade_phase/default/order')
+        trade_phase_list=('trade/delivery',),
+        trade_date='trade_phase/trade/order')
       self.createTradeModelPath(self.business_process,
         reference='invoice_path',
-        trade_phase_list=('default/invoicing',),
-        trade_date='trade_phase/default/delivery')
+        trade_phase_list=('trade/invoicing',),
+        trade_date='trade_phase/trade/delivery')
     self.createTradeModelPath(business_process,
       reference='default_path',
-      trade_phase_list=('default/discount', 'default/tax'),
-      trade_date='trade_phase/default/invoicing')
+      trade_phase_list=('trade/discount', 'trade/tax'),
+      trade_date='trade_phase/trade/invoicing')
     # A trade model path already exist for root simulation movements
     # (Accounting Transaction Root Simulation Rule).
     # The ones we are creating are for Invoice Transaction Simulation Rule
     # so we add a test on the portal type of the input movement.
     kw = dict(business_process=business_process,
-              trade_phase='default/accounting',
-              trade_date='trade_phase/default/invoicing',
+              trade_phase='trade/accounting',
+              trade_date='trade_phase/trade/invoicing',
               membership_criterion_base_category='resource_use',
               criterion_property_dict={'portal_type': 'Simulation Movement'})
     self.createTradeModelPath(reference='acounting_tax1',
@@ -260,19 +257,19 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     # proper state
     self.order_link = self.createBusinessLink(business_process,
         successor_value = ordered,
-        trade_phase='default/order',
+        trade_phase='trade/order',
         completed_state_list = self.completed_state_list,
         frozen_state_list = self.frozen_state_list)
 
     self.delivery_link = self.createBusinessLink(business_process,
         predecessor_value = ordered, successor_value = delivered,
-        trade_phase='default/delivery',
+        trade_phase='trade/delivery',
         completed_state_list = self.completed_state_list,
         frozen_state_list = self.frozen_state_list)
 
     self.invoice_link = self.createBusinessLink(business_process,
         predecessor_value = delivered, successor_value = invoiced,
-        trade_phase='default/invoicing')
+        trade_phase='trade/invoicing')
     self.tic()
 
   def constructSimulationTreeAndDeliveries(self, simulation_depth=None,
@@ -308,7 +305,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         applied_rule.newContent(
         portal_type = 'Simulation Movement',
         delivery_value = order_line,
-        trade_phase='default/order',
+        trade_phase='trade/order',
         causality_value_list=[self.order_link, self.order_path],
         **simulation_movement_kw
         ))
@@ -322,7 +319,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
         document = setTestClassProperty(prefix, 'delivery_simulation_movement',
           document.newContent(
           portal_type='Simulation Movement',
-          trade_phase='default/delivery',
+          trade_phase='trade/delivery',
           causality_value_list=[self.delivery_link, self.delivery_path],
           **simulation_movement_kw))
 
@@ -336,7 +333,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
                         'invoicing_simulation_movement',
               document.newContent(
               portal_type='Simulation Movement',
-              trade_phase='default/invoicing',
+              trade_phase='trade/invoicing',
               causality_value_list=[self.invoice_link, self.invoice_path],
               **simulation_movement_kw))
 
@@ -352,33 +349,33 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     accounting_business_link = business_process.newContent(
         portal_type=self.business_link_portal_type,
-        trade_phase='default/accounting')
+        trade_phase='trade/accounting')
 
     delivery_business_link = business_process.newContent(
         portal_type=self.business_link_portal_type,
-        trade_phase='default/delivery')
+        trade_phase='trade/delivery')
 
     accounting_delivery_business_link = business_process.newContent(
         portal_type=self.business_link_portal_type,
-        trade_phase=('default/accounting', 'default/delivery'))
+        trade_phase=('trade/accounting', 'trade/delivery'))
 
     self.tic()
 
     self.assertSameSet(
       (accounting_business_link, accounting_delivery_business_link),
-      business_process.getBusinessLinkValueList(trade_phase='default/accounting')
+      business_process.getBusinessLinkValueList(trade_phase='trade/accounting')
     )
 
     self.assertSameSet(
       (delivery_business_link, accounting_delivery_business_link),
-      business_process.getBusinessLinkValueList(trade_phase='default/delivery')
+      business_process.getBusinessLinkValueList(trade_phase='trade/delivery')
     )
 
     self.assertSameSet(
       (accounting_delivery_business_link, delivery_business_link,
         accounting_business_link),
-      business_process.getBusinessLinkValueList(trade_phase=('default/delivery',
-        'default/accounting'))
+      business_process.getBusinessLinkValueList(trade_phase=('trade/delivery',
+        'trade/accounting'))
     )
 
   def test_BusinessLinkStandardCategoryAccessProvider(self):
@@ -482,13 +479,13 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     business_process = self.createBusinessProcess()
     business_link_order = self.createBusinessLink(business_process,
                                  title='order', id='order',
-                                 trade_phase='default/order')
+                                 trade_phase='trade/order')
     business_link_deliver = self.createBusinessLink(business_process,
                                  title='deliver', id='deliver',
-                                 trade_phase='default/delivery')
+                                 trade_phase='trade/delivery')
     business_link_invoice = self.createBusinessLink(business_process,
                                  title='invoice', id='invoice',
-                                 trade_phase='default/invoicing')
+                                 trade_phase='trade/invoicing')
     trade_state = category_tool.trade_state
     business_link_order.setSuccessorValue(trade_state.ordered)
     business_link_deliver.setPredecessorValue(trade_state.ordered)
@@ -496,7 +493,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     business_link_invoice.setPredecessorValue(trade_state.delivered)
     business_link_invoice.setSuccessorValue(trade_state.invoiced)
 
-    trade_phase = category_tool.trade_phase.default
+    trade_phase = category_tool.trade_phase.trade
 
     self.assertEqual([trade_phase.delivery,
                        trade_phase.invoicing],
@@ -519,19 +516,19 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     business_process = self.createBusinessProcess()
     business_link_order = self.createBusinessLink(business_process,
                                  title='order', id='order',
-                                 trade_phase='default/order')
+                                 trade_phase='trade/order')
     business_link_deliver = self.createBusinessLink(business_process,
                                  title='deliver', id='deliver',
-                                 trade_phase='default/delivery')
+                                 trade_phase='trade/delivery')
     business_link_invoice = self.createBusinessLink(business_process,
                                  title='invoice', id='invoice',
-                                 trade_phase='default/invoicing')
+                                 trade_phase='trade/invoicing')
     business_link_tax = self.createBusinessLink(business_process,
                                  title='tax', id='tax',
-                                 trade_phase='default/tax')
+                                 trade_phase='trade/tax')
     business_link_account = self.createBusinessLink(business_process,
                                  title='accounting', id='account',
-                                 trade_phase='default/accounting')
+                                 trade_phase='trade/accounting')
 
     trade_state = category_tool.trade_state
     business_link_order.setSuccessorValue(trade_state.ordered)
@@ -544,7 +541,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     business_link_account.setPredecessorValue(trade_state.invoiced)
     business_link_account.setSuccessorValue(trade_state.accounted)
 
-    trade_phase = category_tool.trade_phase.default
+    trade_phase = category_tool.trade_phase.trade
     def _u(trade_phase):
       return trade_phase.getCategoryRelativeUrl()
 

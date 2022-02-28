@@ -34,7 +34,7 @@
                 <string>causality/business_process_module/maxma_business_process/invoice</string>
                 <string>quantity_unit/unit/piece</string>
                 <string>source_section/organisation_module/11</string>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_phase/trade/invoicing</string>
                 <string>destination/organisation_module/myorganisation</string>
                 <string>destination_decision/person_module/5</string>
                 <string>specialise/purchase_trade_condition_module/1</string>

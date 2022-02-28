@@ -59,7 +59,7 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore )
 
   def _checkConsistency(self, fixit=False, **kw):
-    error_list = ['Roles should imported and created',]
+    error_list = [self._createConstraintMessage('Roles should imported and created')]
     if fixit:
       business_configuration = self.getBusinessConfigurationValue()
       object_list = business_configuration.ConfigurationTemplate_readOOCalcFile(self.filename)
