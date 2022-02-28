@@ -149,16 +149,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>gadget_type</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>multiple_instances_allowed</string> </value>
                   </item>
                   <item>
@@ -212,16 +202,6 @@
         <item>
             <key> <string>edit_form_id</string> </key>
             <value> <string>ERP5Site_viewContactPersonListGadgetPreferenceDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>gadget_type</string> </key>
-            <value>
-              <tuple>
-                <string>erp5_front</string>
-                <string>web_section</string>
-                <string>web_front</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

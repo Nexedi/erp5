@@ -54,6 +54,46 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>sort_index</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Delivery of goods or services</string> </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1263423600.0</float>
+                    <string>GMT+1</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>delivery</string> </value>
         </item>
@@ -62,8 +102,12 @@
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>sort_index</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>delivery</string> </value>
+            <value> <string>Delivery</string> </value>
         </item>
       </dictionary>
     </pickle>
