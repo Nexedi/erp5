@@ -43,10 +43,10 @@ class Reindex(Setter):
     # Generic Definition of Method Object
     # This is required to call the method form the Web
     # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'value') # XXX - This part should be configurable at instanciation
-    func_code.co_argcount = 2
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self', 'value') # XXX - This part should be configurable at instanciation
+    __code__.co_argcount = 2
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, accessor_id):
       self._id = id
@@ -73,16 +73,16 @@ class Dummy(Reindex):
     # Generic Definition of Method Object
     # This is required to call the method form the Web
     # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, accessor_id):
       self._id = id
       self.__name__ = id
       self._accessor_id = accessor_id
-#      self.func_code = getattr(instance, self._accessor_id).func_code
+#      self.__code__ = func_code = getattr(instance, self._accessor_id).func_code
 
     def __call__(self, instance, *args, **kw):
       method = getattr(instance, self._accessor_id)

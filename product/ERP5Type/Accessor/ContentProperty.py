@@ -50,10 +50,10 @@ class ValueGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
                  portal_type=None, storage_id=None, default=None):
@@ -93,10 +93,10 @@ class ValueListGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
                  portal_type=None, storage_id=None, default=None):
@@ -132,10 +132,10 @@ class Getter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'args', 'kw')
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self', 'args', 'kw')
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
                  portal_type=None, storage_id=None, default=None):
@@ -175,10 +175,10 @@ class Setter(Base.Setter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'value', 'args', 'kw')
-    func_code.co_argcount = 2
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self', 'value', 'args', 'kw')
+    __code__.co_argcount = 2
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
                  portal_type=None, storage_id=None):
@@ -237,10 +237,10 @@ class ListGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
                  portal_type=None, storage_id=None):
@@ -275,10 +275,10 @@ class Tester(Method):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
                  portal_type=None, storage_id=None):
