@@ -47,10 +47,10 @@ class DefaultSetter(Base.Setter):
     # Generic Definition of Method Object
     # This is required to call the method form the Web
     # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
-    func_code = func_code()
-    func_code.co_varnames = ('self','value')
-    func_code.co_argcount = 2
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self','value')
+    __code__.co_argcount = 2
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, storage_id=None):
       self._id = id
@@ -111,10 +111,10 @@ class SetSetter(Base.Setter):
     # Generic Definition of Method Object
     # This is required to call the method form the Web
     # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
-    func_code = func_code()
-    func_code.co_varnames = ('self','value')
-    func_code.co_argcount = 2
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self','value')
+    __code__.co_argcount = 2
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, storage_id=None):
       self._id = id
@@ -166,10 +166,10 @@ class DefaultGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, default=None, storage_id=None):
       self._id = id
@@ -219,10 +219,10 @@ class ListGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     _list_type_list = tuple, list, set
 

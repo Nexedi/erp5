@@ -41,10 +41,10 @@ class ListSetter(BaseSetter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'category')
-    func_code.co_argcount = 2
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self', 'category')
+    __code__.co_argcount = 2
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key):
       self._id = id
@@ -71,10 +71,10 @@ class DefaultSetter(BaseSetter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'category')
-    func_code.co_argcount = 2
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self', 'category')
+    __code__.co_argcount = 2
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key):
       self._id = id
@@ -119,10 +119,10 @@ class DefaultGetter(BaseGetter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key):
       self._id = id
@@ -143,10 +143,10 @@ class ListGetter(BaseGetter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key):
       self._id = id
@@ -178,10 +178,10 @@ class ItemListGetter(BaseGetter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'args', 'kw',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self', 'args', 'kw',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key):
       self._id = id
