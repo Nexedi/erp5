@@ -619,7 +619,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # order to execute some line of code
     self.assertEqual(modification_date, result[0]['modification_date'].ISO())
     self.assertGreater(organisation.getModificationDate(), now)
-    self.assertLesser(result[0]['creation_date'], result[0]['modification_date'])
+    self.assertLess(result[0]['creation_date'], result[0]['modification_date'])
 
   def test_19_SearchFolderWithNonAsciiCharacter(self):
     person_module = self.getPersonModule()
