@@ -153,6 +153,8 @@ class Inventory(Delivery):
     stock_append = stock_object_list.append
     to_delete_stock_uid_set = set()
     to_delete_stock_uid_add = to_delete_stock_uid_set.add
+    to_delete_list = []
+    to_delete_list_append = to_delete_list.append
 
     for inventory_calculation_dict in default_inventory_calculation_list:
 
@@ -204,8 +206,6 @@ class Inventory(Delivery):
         return value
 
       for movement in method():
-        # Make sure we remove any any value
-        to_delete_stock_uid_add(movement.getUid())
         if movement.getResourceValue() is not None and \
             movement.getInventoriatedQuantity() not in (None, ''):
 
@@ -281,6 +281,10 @@ class Inventory(Delivery):
             kwd['category_list'] = category_list
           temp_delivery_line.edit(**kwd)
           stock_append(temp_delivery_line)
+          to_delete_list_append(temp_delivery_line)
+        else:
+          # Make sure we remove any any value
+          to_delete_stock_uid_add(movement.getUid())
 
       # Now create line to remove some subvariation text not present
       # in new inventory
@@ -334,8 +338,6 @@ class Inventory(Delivery):
     # Do deletion for everything first, even if there is no need to apply correction,
     # in case we need to remove previous corrections
     to_delete_stock_uid_add(self.getUid())
-    to_delete_list = []
-    to_delete_list_append = to_delete_list.append
     for uid in to_delete_stock_uid_set:
       temp_line = temp_constructor(self, inventory_id)
       temp_line.setUid(uid)

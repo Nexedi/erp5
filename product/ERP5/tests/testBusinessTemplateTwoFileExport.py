@@ -1081,9 +1081,9 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                          "content_type": "text/html",
                          "output_encoding": "iso-8859-15"}
     skin_folder._setObject(page_template_id, ZopePageTemplate(
-      page_template_id, page_template_text, page_template_kw["content_type"],
-      # When not passed, default to iso-8859-15 on Zope2 and utf-8 on Zope4
-      output_encoding=page_template_kw["output_encoding"]))
+      page_template_id, page_template_text, page_template_kw["content_type"]))
+    skin_folder._getOb(page_template_id).manage_changeProperties(
+      output_encoding=page_template_kw["output_encoding"])
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
 
