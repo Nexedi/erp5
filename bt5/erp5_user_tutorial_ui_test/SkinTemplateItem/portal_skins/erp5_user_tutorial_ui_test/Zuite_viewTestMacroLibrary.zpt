@@ -65,23 +65,16 @@
     <td colspan="3"><b>Login as manager</b></td>
   </tr>
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_name"]</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['manager_username']"></td>
-  </tr>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_password"]</td>
-    <td tal:content="python:
-        here.Zuite_getHowToInfo()['manager_password']"></td>
-  </tr>
-  <tr>
-    <td>click</td>
-    <td>//input[@value="Login"]</td>
-    <td></td>
-  </tr>
+  <tal:block tal:define="
+    login_form_url python: None;
+    wait python: False;
+    submit_name python:'//input[@value=\'Login\']';
+  ">
+    <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+      <tal:block metal:fill-slot="username" tal:content="python: here.Zuite_getHowToInfo()['manager_username']"></tal:block>
+      <tal:block metal:fill-slot="password" tal:content="python: here.Zuite_getHowToInfo()['manager_password']"></tal:block>
+    </tal:block>
+  </tal:block>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 </tal:block>
 
@@ -151,23 +144,16 @@
 
   <!-- login with functional test user -->
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_name"]</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['functional_test_username']"></td>
-  </tr>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_password"]</td>
-    <td tal:content="python:
-        here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
-  </tr>
-  <tr>
-    <td>click</td>
-    <td>//input[@value="Login"]</td>
-    <td></td>
-  </tr>
+  <tal:block tal:define="
+    login_form_url python: None;
+    wait python: False;
+    submit_name python:'//input[@value=\'Login\']';
+  ">
+    <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+      <tal:block metal:fill-slot="username" tal:content="python: here.Zuite_getHowToInfo()['functional_test_username']"></tal:block>
+      <tal:block metal:fill-slot="password" tal:content="python: here.Zuite_getHowToInfo()['functional_test_user_password']"></tal:block>
+    </tal:block>
+  </tal:block>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
@@ -222,23 +208,16 @@
   </tr>
   <!-- login with functional test user -->
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/logout">Logout</span>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_name"]</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['functional_another_test_username']"></td>
-  </tr>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_password"]</td>
-    <td tal:content="python:
-        here.Zuite_getHowToInfo()['functional_test_user_password']"></td>
-  </tr>
-  <tr>
-    <td>click</td>
-    <td>//input[@value="Login"]</td>
-    <td></td>
-  </tr>
+  <tal:block tal:define="
+    login_form_url python: None;
+    wait python: False;
+    submit_name python:'//input[@value=\'Login\']';
+  ">
+    <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+      <tal:block metal:fill-slot="username" tal:content="python: here.Zuite_getHowToInfo()['functional_another_test_username']"></tal:block>
+      <tal:block metal:fill-slot="password" tal:content="python: here.Zuite_getHowToInfo()['functional_test_user_password']"></tal:block>
+    </tal:block>
+  </tal:block>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
   <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>
   <tr>
@@ -281,28 +260,10 @@
     <td>${base_url}/logout</td>
     <td></td>
   </tr>
-  <tr>
-    <td>openAndWait</td>
-    <td>${base_url}/login_form</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_name"]</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['person_howto_reference']"></td>
-  </tr>
-  <tr>
-    <td>type</td>
-    <td>//input[@name="__ac_password"]</td>
-    <td tal:content="python:
-          here.Zuite_getHowToInfo()['person_howto_password']"></td>
-  </tr>
-  <tr>
-    <td>clickAndWait</td>
-    <td>//input[@name="logged_in:method"]</td>
-    <td></td>
-  </tr>
+  <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+    <tal:block metal:fill-slot="username" tal:content="python: here.Zuite_getHowToInfo()['person_howto_reference']"></tal:block>
+    <tal:block metal:fill-slot="password" tal:content="python: here.Zuite_getHowToInfo()['person_howto_password']"></tal:block>
+  </tal:block>
   <tr>
     <td>openAndWait</td>
     <td>${base_url}/view</td>
