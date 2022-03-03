@@ -167,7 +167,7 @@ def getGraph(self, wf_id="", format="png", REQUEST=None):
                           '-Efontname=IPAexGothic', '-Efontsize=10',
                           '-T%s' % format),
                          stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    result = p.communicate(pot)[0]
+    result = p.communicate(result)[0]
 
     setHeader('Content-Type', 'image/%s' % format)
   else:
