@@ -50,6 +50,7 @@ from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import ProxyField
 from DateTime import DateTime
+import lxml.html
 
 from Products.Formulator.Widget import NSMAP
 ODG_XML_WRAPPING_XPATH = 'draw:text-box/text:p/text:span'
@@ -534,6 +535,8 @@ class TestListField(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.field = ListField('test_field')
+    self.field.values['items'] = [('My first Line', '1'), ('My Second Line', '2')]
+    self.field.values['default'] = '2'
     self.widget = self.field.widget
     self.createCategories()
     self.tic()
@@ -553,9 +556,6 @@ class TestListField(ERP5TypeTestCase):
                                       int_index=2)
 
   def test_render_odt(self):
-    items = [('My first Line', '1'), ('My Second Line', '2')]
-    self.field.values['items'] = items
-    self.field.values['default'] = '2'
     element = self.field.render_odt(as_string=False)
     self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
     self.assertEqual('My Second Line', element.text)
@@ -565,6 +565,44 @@ class TestListField(ERP5TypeTestCase):
     element = self.field.render_odt(as_string=False)
     self.assertEqual('??? (3)', element.text)
 
+  def test_render(self):
+    select, input_element, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    # listfields render an input to confirm that the field was posted
+    # in the form's action script
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+
+    self.assertEqual(select.tag, 'select')
+    first, second = select
+    self.assertEqual(first.tag, 'option')
+    self.assertEqual(first.text_content(), 'My first Line')
+    self.assertEqual(first.attrib['value'], '1')
+
+    self.assertEqual(second.tag, 'option')
+    self.assertEqual(second.text_content(), 'My Second Line')
+    self.assertEqual(second.attrib['value'], '2',)
+    self.assertTrue(second.attrib['selected'])
+
+  def test_render_escape_html(self):
+    self.field.values['default'] = ''
+    self.field.values['items'] = [
+        ('<script>alert("text content")</script>', '<script>alert("value")</script>'),]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+    # selected
+    self.field.values['default'] = self.field.values['items'][0][1]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+
+  def test_render_disabled(self):
+    self.field.values['default'] = ''
+    # None items are rendered as disabled
+    self.field.values['items'] = [('Disabled', None)]
+    (disabled, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertTrue(disabled.attrib['disabled'])
+    self.assertFalse(disabled.attrib.get('value'))
 
   def test_listField_value_order(self):
     '''This test check the list field value order
@@ -605,6 +643,46 @@ class TestMultiListField(ERP5TypeTestCase):
     self.widget = self.field.widget
     self.field.values['items'] = [('A', 'a',), ('B', 'b')]
     self.field.values['default'] = ['a', 'b']
+
+  def test_render(self):
+    select, input_element, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    # listfields render an input to confirm that the field was posted
+    # in the form's action script
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+
+    self.assertEqual(select.tag, 'select')
+    first, second = select
+    self.assertEqual(first.tag, 'option')
+    self.assertEqual(first.text_content(), 'A')
+    self.assertEqual(first.attrib['value'], 'a')
+    self.assertTrue(second.attrib['selected'])
+
+    self.assertEqual(second.tag, 'option')
+    self.assertEqual(second.text_content(), 'B')
+    self.assertEqual(second.attrib['value'], 'b',)
+    self.assertTrue(second.attrib['selected'])
+
+  def test_render_escape_html(self):
+    self.field.values['default'] = []
+    self.field.values['items'] = [
+        ('<script>alert("text content")</script>', '<script>alert("value")</script>')]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+    # selected
+    self.field.values['default'] = [self.field.values['items'][0][1]]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+
+  def test_render_disabled(self):
+    # None items are rendered as disabled
+    self.field.values['default'] = []
+    self.field.values['items'] = [('Disabled', None)]
+    (disabled, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertTrue(disabled.attrib['disabled'])
+    self.assertFalse(disabled.attrib.get('value'))
 
   def test_render_view(self):
     self.assertEqual('A<br />\nB', self.field.render_view(value=['a', 'b']))
