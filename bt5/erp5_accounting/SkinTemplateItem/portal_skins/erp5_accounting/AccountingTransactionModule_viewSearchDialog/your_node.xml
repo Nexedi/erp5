@@ -278,7 +278,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.ERP5Site_getAccountItemList(section_category=request.get(\'your_section_category\', preferences.getPreferredAccountingTransactionSectionCategory()), section_category_strict=request.get(\'your_section_category_strict\', preferences.getPreferredAccountingSectionCategoryStrict()), from_date=request.get(\'your_from_date\', preferences.getPreferredAccountingTransactionFromDate()))</string> </value>
+            <value> <string>python: [item for item in context.ERP5Site_getAccountItemList(section_category=request.get(\'your_section_category\', preferences.getPreferredAccountingTransactionSectionCategory()), section_category_strict=request.get(\'your_section_category_strict\', preferences.getPreferredAccountingSectionCategoryStrict()), from_date=request.get(\'your_from_date\', preferences.getPreferredAccountingTransactionFromDate())) if item[0]]</string> </value>
         </item>
       </dictionary>
     </pickle>
