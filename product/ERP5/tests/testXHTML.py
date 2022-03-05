@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import cgi
 import unittest
 import os
 import requests
@@ -34,6 +35,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
 from subprocess import Popen, PIPE
+from AccessControl import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
@@ -674,9 +676,20 @@ def makeTestMethod(validator, portal_type, view_name, bt_name):
         self.portal,
         portal_type)
     document = createSubContent(module, portal_type_list)
-    view = getattr(document, view_name)
+
+    response = self.publish(
+        '%s/%s' % (document.getPath(), view_name),
+        user=str(getSecurityManager().getUser()),
+        handle_errors=False,
+    )
+    charset = 'iso8859-15'
+    content_type = response.getHeader('content-type')
+    if content_type:
+      _, params = cgi.parse_header(content_type)
+      charset = params.get('charset', charset)
+
     self.assert_(*validate_xhtml( validator=validator,
-                                  source=view(),
+                                  source=response.getBody().decode(charset),
                                   view_name=view_name,
                                   bt_name=bt_name))
   return testMethod
