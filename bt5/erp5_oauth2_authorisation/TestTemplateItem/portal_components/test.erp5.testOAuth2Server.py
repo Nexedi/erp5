@@ -994,7 +994,7 @@ class TestOAuth2(ERP5TypeTestCase):
     oauth2_server_connector_value = self.__oauth2_server_connector_value
     portal = self.portal
     portal_path = portal.getPath()
-    portal_url = portal.absolute_url()
+    portal_url = portal.absolute_url() + '/'
     # Sanity check: there must be no valid OAuth2 session for the test user
     self.assertItemsEqual(
       self.__searchOAuth2Session(
@@ -1012,7 +1012,7 @@ class TestOAuth2(ERP5TypeTestCase):
         method='GET',
         cookie_dict=resource_server_cookie_jar,
       ),
-      reference_location=portal_url + '/login_form',
+      reference_location=portal_url + 'login_form',
     )
     self.assertEqual(cookie_dict, {})
     # Open login form, inject client_id
@@ -1148,7 +1148,7 @@ class TestOAuth2(ERP5TypeTestCase):
         cookie_dict=resource_server_cookie_jar,
         query=parsed_location.query,
       ),
-      reference_location=portal_url + '/logged_out',
+      reference_location=portal_url + 'logged_out',
     )
     # Similarly to token retrieval, we may have more than 2 cookied being deleted.
     self.assertIn(_TEST_ACCESS_COOKIE_NAME, cookie_dict)
@@ -1167,7 +1167,7 @@ class TestOAuth2(ERP5TypeTestCase):
         method='GET',
         cookie_dict=resource_server_cookie_jar,
       ),
-      reference_location=portal_url + '/login_form',
+      reference_location=portal_url + 'login_form',
     )
     # Remove the tokens
     del resource_server_cookie_jar[_TEST_ACCESS_COOKIE_NAME]
@@ -1195,14 +1195,14 @@ class TestOAuth2(ERP5TypeTestCase):
     )
     self.__query_trace = []
     portal = self.portal
-    portal_url = portal.absolute_url()
+    portal_url = portal.absolute_url() + '/'
     portal_path = portal.getPath()
     parsed_login_form_location, _, _ = self.assertIsRedirect(
       self._query(
         path=portal_path + '/index_html',
         method='GET',
       ),
-      reference_location=portal_url + '/login_form',
+      reference_location=portal_url + 'login_form',
     )
     login_form_query = urllib.urlencode(
       urlparse.parse_qsl(parsed_login_form_location.query) + [
@@ -1295,7 +1295,7 @@ class TestOAuth2(ERP5TypeTestCase):
             cookie_dict=cookie_jar,
             query=parsed_location.query,
           ),
-          reference_location=portal_url + '/logged_out',
+          reference_location=portal_url + 'logged_out',
         )
         # Similarly to token retrieval, we may have more than 2 cookied being deleted.
         self.assertIn(_TEST_ACCESS_COOKIE_NAME, cookie_dict)

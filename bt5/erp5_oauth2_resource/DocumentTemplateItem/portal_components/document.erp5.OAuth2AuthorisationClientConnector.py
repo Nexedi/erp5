@@ -726,7 +726,8 @@ class OAuth2AuthorisationClientConnector(
         )
     else:
       # Caller did not provide a came_from. Pick one for them.
-      came_from = self._getNeutralContextValue().absolute_url()
+      # Add trailing slash to make ERP5JS happy.
+      came_from = self._getNeutralContextValue().absolute_url() + '/'
     if self._getUser() is not None:
       # User is authenticated (in any way, for consistency with a local
       # Authorisation Server's /authorize endpoint), we cannot do anything
