@@ -10,6 +10,8 @@ INDEX = "index.html"
 REQUEST = context.REQUEST
 query_string = REQUEST["QUERY_STRING"]
 redirect_domain = context.getLayoutProperty("redirect_domain")
+if not redirect_domain:
+  return context.view()
 redirect_url = redirect_domain
 status_code = 301
 
