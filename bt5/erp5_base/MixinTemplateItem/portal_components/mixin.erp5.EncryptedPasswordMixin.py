@@ -40,7 +40,8 @@ from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
 class EncryptedPasswordMixin(object):
-
+  """Encrypted Password Mixin
+  """
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
