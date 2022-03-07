@@ -111,17 +111,17 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
-  function refreshHeaderAndPanel(gadget, refresh) {
-    var promise;
-    if (refresh) {
-      promise = route(gadget, "header", 'render',
-                      [gadget.props.header_argument_list]);
-    } else {
-      promise = updateHeader(gadget);
-    }
+  function refreshHeaderAndPanel(gadget, refresh, loading_delay_promise) {
     return RSVP.all([
-      promise,
-      updatePanel(gadget)
+      updatePanel(gadget),
+      new RSVP.Queue(loading_delay_promise)
+        .push(function () {
+          if (refresh) {
+            return route(gadget, "header", 'render',
+                         [gadget.props.header_argument_list]);
+          }
+          return updateHeader(gadget);
+        })
     ]);
   }
 
@@ -778,7 +778,8 @@
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
         route_result = gadget.state,
-        promise_list;
+        promise_list,
+        slow_loading_promise;
 
       if (modification_dict.hasOwnProperty('error_text')) {
         return gadget.dropGadget(MAIN_SCOPE)
@@ -856,6 +857,7 @@
         initHeaderOptions(gadget);
         initPanelOptions(gadget);
         if (!modification_dict.hasOwnProperty('first_bootstrap')) {
+          slow_loading_promise = RSVP.delay(50);
           promise_list.push(route(gadget, 'header', 'notifyLoading'));
         }
       }
@@ -880,11 +882,8 @@
               }
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
-
-              return refreshHeaderAndPanel(gadget);
-              // XXX Drop notification
-              // return header_gadget.notifyLoaded();
             }
+            return refreshHeaderAndPanel(gadget, false, slow_loading_promise);
           }));
       } else if (modification_dict.hasOwnProperty('render_timestamp')) {
         // Same subgadget
@@ -893,7 +892,7 @@
             return page_gadget.render(gadget.state.options);
           })
           .push(function () {
-            return refreshHeaderAndPanel(gadget);
+            return refreshHeaderAndPanel(gadget, false, slow_loading_promise);
           }));
       }
 
