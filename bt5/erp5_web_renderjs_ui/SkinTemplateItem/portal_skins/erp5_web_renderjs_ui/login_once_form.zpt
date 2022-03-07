@@ -2,7 +2,7 @@
                   ERP5Site python: modules['Products.ERP5.ERP5Site'];
                   has_oauth2 python: options.get('has_oauth2', True);
                   form_action python: 'logged_in_once' if has_oauth2 else 'WebSite_login';
-                  absolute_url context/absolute_url;
+                  absolute_url python: context.absolute_url() + '/';
                   portal context/getPortalObject;
                   available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
                   enable_google_login python: 'google' in available_oauth_login_list;
@@ -46,7 +46,7 @@
                     <tal:block  i18n:domain="ui" i18n:translate="">Log in</tal:block>
                 </h3>
             </section>
-            <form method="post" tal:attributes="action python: '%s/' % absolute_url" class="field_container">
+            <form method="post" tal:attributes="action python: absolute_url" class="field_container">
               <tal:block tal:condition="python: has_oauth2">
                 <input type="hidden"
                   tal:attributes="
@@ -71,7 +71,7 @@
                   </div>
                   <div class="dialog_button_container">
                     <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
-                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%sWebSite_viewRecoverAccount?%s' % (absolute_url, modules['urllib'].urlencode([('came_from', absolute_url)]))">I forgot my password!</a>
                   </div>
                   <div class="dialog_button_container" tal:condition="enable_google_login"
                        tal:define="current_url python: context.getWebSiteValue().absolute_url()">
