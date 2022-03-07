@@ -61,7 +61,7 @@
 </tr>
 <tr>
   <td>assertEval</td>
-  <td>(function() { selenium.browserbot.getCurrentWindow().document.getElementById("field_my_foo_category_title").value = "%"; return true;})()
+  <td>(function() { selenium.browserbot.getCurrentWindow().document.getElementById("field_my_foo_category_title").value = "Qua%"; return true;})()
   <td>true</td>
 </tr>
 <tr>
