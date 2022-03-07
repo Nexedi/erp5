@@ -116,13 +116,6 @@ def WebSection_putFactory(self, name, typ, body):
      - PUT /<key>
         + parameters required:
           * data:  it is the file content
-       The key is the file name.
   """
-  portal = self.getPortalObject()
-  if name is None:
-    name = 'shacache'
-  document = portal.portal_contributions.newContent(data=body,
-                                                    filename=name,
-                                                    discover_metadata=False)
-  return document
-
+  return self.getPortalObject().portal_contributions.newContent(
+    data=body, discover_metadata=False)
