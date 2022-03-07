@@ -1312,6 +1312,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if (traversed_document is None):
         response.setStatus(404)
         return ""
+      REQUEST.set('PARENTS', [site_root, portal, portal.aq_parent])
+      traversed_document = REQUEST.traverse(traversed_document.getPath())
   elif traversed_document is None:
     traversed_document = context
 
