@@ -38,7 +38,7 @@ marker_ = []
 def log(description, content=marker_, level=INFO):
     """Deprecated method
 
-    Use erp5.componement.Log instead.
+    Use erp5.component.module.Log instead.
     
     Kept for compatbility to allow instance upgrade.
     """
