@@ -111,18 +111,21 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
-  function refreshHeaderAndPanel(gadget, refresh) {
-    var promise;
-    if (refresh) {
-      promise = route(gadget, "header", 'render',
-                      [gadget.props.header_argument_list]);
-    } else {
-      promise = updateHeader(gadget);
-    }
-    return RSVP.all([
-      promise,
-      updatePanel(gadget)
-    ]);
+  function refreshHeaderAndPanel(gadget, refresh, delay_promise) {
+    return new RSVP.Queue(delay_promise)
+      .push(function () {
+        var promise;
+        if (refresh) {
+          promise = route(gadget, "header", 'render',
+                          [gadget.props.header_argument_list]);
+        } else {
+          promise = updateHeader(gadget);
+        }
+        return RSVP.all([
+          promise,
+          updatePanel(gadget)
+        ]);
+      });
   }
 
   function callJioGadget(gadget, method, param_list) {
@@ -735,7 +738,8 @@
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
         route_result = gadget.state,
-        promise_list;
+        promise_list,
+        slow_loading_promise;
 
       if (modification_dict.hasOwnProperty('error_text')) {
         return gadget.dropGadget(MAIN_SCOPE)
@@ -813,6 +817,7 @@
         initHeaderOptions(gadget);
         initPanelOptions(gadget);
         if (!modification_dict.hasOwnProperty('first_bootstrap')) {
+          slow_loading_promise = RSVP.delay(100);
           promise_list.push(route(gadget, 'header', 'notifyLoading'));
         }
       }
@@ -837,10 +842,6 @@
               }
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
-
-              return refreshHeaderAndPanel(gadget);
-              // XXX Drop notification
-              // return header_gadget.notifyLoaded();
             }
           }));
       } else if (modification_dict.hasOwnProperty('render_timestamp')) {
@@ -848,11 +849,12 @@
         promise_list.push(gadget.getDeclaredGadget(MAIN_SCOPE)
           .push(function (page_gadget) {
             return page_gadget.render(gadget.state.options);
-          })
-          .push(function () {
-            return refreshHeaderAndPanel(gadget);
           }));
       }
+
+      promise_list.push(function () {
+        return refreshHeaderAndPanel(gadget, false, slow_loading_promise);
+      });
 
       // Update the panel state
       if (modification_dict.hasOwnProperty('panel_visible')) {
