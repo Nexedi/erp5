@@ -32,6 +32,7 @@ import base64
 import json
 import os
 import httplib
+from contextlib import contextmanager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
@@ -146,26 +147,30 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     self.assertEqual(302, result.status)
 
   def test_external_post_with_wrong_data(self):
-    """
-      The data which is sent to the server must follow a JSON schema.
-      If the data does not follow the schema it must return the error.
-    """
-    # Removing a required property
-    data = json.loads(self.data)
-    data[0] = json.loads(data[0])
-    data[0].pop('file')
-    data[0] = json.dumps(data[0])
-    data = json.dumps(data)
-
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
-    try:
-      connection.request('PUT', self.path, data, self.header_dict)
-      result = connection.getresponse()
-      self.tic()
-      data = result.read()
-    finally:
-      connection.close()
-    self.assertTrue("Required field 'file' is missing" in data, data)
-    self.assertEqual(500, result.status)
-    self.assertEqual('text/html; charset=utf-8',
-                                         result.getheader("content-type"))
+    @contextmanager
+    def check():
+      metadata, signature = json.loads(self.data)
+      data = [json.loads(metadata), signature]
+      yield data
+      data[0] = json.dumps(data[0])
+      data = json.dumps(data)
+      connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+      try:
+        connection.request('PUT', self.path, data, self.header_dict)
+        result = connection.getresponse()
+        self.tic()
+        data = result.read()
+      finally:
+        connection.close()
+      self.assertEqual(500, result.status)
+      self.assertEqual('text/html; charset=utf-8',
+                       result.getheader("content-type"))
+    with check() as data:
+      del data[0]['sha512']
+    with check() as data:
+      data[0]['sha512'] = '1234'
+    for x in 123, 'foo':
+      with check() as data:
+        data[0]['sha512'] = x
+      with check() as data:
+        data[1] = x
