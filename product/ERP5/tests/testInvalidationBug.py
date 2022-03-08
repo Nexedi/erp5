@@ -172,7 +172,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
       unpatch()
       activity_tool.manage_addToProcessingList(node_list)
       self.commit()
-    ## When the bug is not fixed, we get a -3 failed activity
+    ## When the bug is not fixed, we get a failed activity
     ## which would cause tic to fail
     self.tic()
 
