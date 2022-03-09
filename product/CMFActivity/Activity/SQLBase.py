@@ -181,37 +181,42 @@ def _validate_after_tag_and_method_id(value, render_string):
 #   same order as the dependency value items expected by the next item
 # - callable rendering given values into an SQL condition
 #   (value, render_string) -> str
+# - minimal applicable processing_node value (excluded)
 _DEPENDENCY_TESTER_DICT = {
   'after_method_id': (
     ('method_id', ),
     sqltest_dict['method_id'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_path': (
     ('path', ),
     sqltest_dict['path'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_message_uid': (
     ('uid', ),
     sqltest_dict['uid'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_path_and_method_id': (
     ('path', 'method_id'),
     _validate_after_path_and_method_id,
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_tag': (
     ('tag', ),
     sqltest_dict['tag'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_tag_and_method_id': (
     ('tag', 'method_id'),
     _validate_after_tag_and_method_id,
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'serialization_tag': (
     ('serialization_tag', ),
-    lambda value, render_string: (
-      'processing_node > -1 AND ' +
-      sqltest_dict['serialization_tag'](value, render_string)
-    ),
+    sqltest_dict['serialization_tag'],
+    -1,
   ),
 }
 
@@ -460,7 +465,7 @@ CREATE TABLE %s (
         dependency_value,
       ) in message.activity_kw.iteritems():
         try:
-          column_list, _ = dependency_tester_dict[dependency_name]
+          column_list, _, _ = dependency_tester_dict[dependency_name]
         except KeyError:
           continue
         # There are 2 types of dependencies:
@@ -569,14 +574,16 @@ CREATE TABLE %s (
       if not dependency_value_dict:
         # No more non-blocked message for this dependency, skip it.
         continue
-      column_list, to_sql = dependency_tester_dict[dependency_name]
+      column_list, to_sql, min_processing_node = dependency_tester_dict[
+        dependency_name
+      ]
       row2key = (
         _ITEMGETTER0
         if len(column_list) == 1 else
         _IDENTITY
       )
       base_sql_suffix = ' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
-        DEPENDENCY_IGNORED_ERROR_STATE,
+        min_processing_node,
       )
       sql_suffix_list = [
         base_sql_suffix % to_sql(dependency_value, quote)
