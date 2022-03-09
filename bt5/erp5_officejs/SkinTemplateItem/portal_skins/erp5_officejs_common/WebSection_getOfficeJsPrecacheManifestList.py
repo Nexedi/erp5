@@ -1,5 +1,4 @@
 url_list = [
-  "favicon.ico",
   "font-awesome/font-awesome.css",
   "URI.js",
   "dygraph.js",
