@@ -184,13 +184,19 @@ def runwsgi():
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
 
-    event_log_handler = logging.FileHandler(args.event_log_file)
+    if args.event_log_file is None:
+      event_log_handler = logging.StreamHandler(sys.stdout)
+    else:
+      event_log_handler = logging.FileHandler(args.event_log_file)
     event_log_handler.setFormatter(logging.Formatter(
       "------\n%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
       "%Y-%m-%d %H:%M:%S"))
     root_logger.addHandler(event_log_handler)
 
-    access_log_handler = logging.FileHandler(args.access_log_file)
+    if args.access_log_file is None:
+      access_log_handler = logging.StreamHandler(sys.stdout)
+    else:
+      access_log_handler = logging.FileHandler(args.access_log_file)
     access_log_handler.setLevel(logging.INFO)
     access_log_logger = logging.getLogger('access')
     access_log_logger.propagate = False
