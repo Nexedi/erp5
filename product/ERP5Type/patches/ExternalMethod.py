@@ -61,7 +61,6 @@ class _(PatchClass(ExternalMethod)):
         if component_module is None:
             # Fall back on filesystem
             if not reload:
-                # TODO Zope4: DevelopmentMode is True ( on Zope2 Globals.DevelopmentMode was False )
                 from Products.ERP5Type.Globals import DevelopmentMode
                 if DevelopmentMode:
                     try:
