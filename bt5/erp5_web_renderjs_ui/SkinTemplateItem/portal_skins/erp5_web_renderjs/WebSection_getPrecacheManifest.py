@@ -2,7 +2,6 @@ web_section = context
 
 # Add all ERP5JS gadget
 url_list = [
-  'favicon.ico',
   'font-awesome/font-awesome-webfont.eot',
   'font-awesome/font-awesome-webfont.woff',
   'font-awesome/font-awesome-webfont.woff2',
