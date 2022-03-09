@@ -164,6 +164,8 @@ def createServer(application, logger, **kw):
 
 def runwsgi():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--event-log-file', help='Event log file')
+    parser.add_argument('--access-log-file', help='Access log file')
     parser.add_argument('-w', '--webdav', action='store_true')
     parser.add_argument('address', help='<ip>:<port>')
     parser.add_argument('zope_conf', help='path to zope.conf')
@@ -176,6 +178,37 @@ def runwsgi():
     else: # BBB
       schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
+
+    # Configure logging previously handled by ZConfig/ZServer
+    logging.captureWarnings(True)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+
+    if args.event_log_file is None:
+      event_log_handler = logging.StreamHandler(sys.stdout)
+    else:
+      event_log_handler = logging.FileHandler(args.event_log_file)
+    event_log_handler.setFormatter(logging.Formatter(
+      "------\n%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+      "%Y-%m-%d %H:%M:%S"))
+    root_logger.addHandler(event_log_handler)
+
+    if args.access_log_file is None:
+      access_log_handler = logging.StreamHandler(sys.stdout)
+    else:
+      access_log_handler = logging.FileHandler(args.access_log_file)
+    access_log_handler.setLevel(logging.INFO)
+    access_log_logger = logging.getLogger('access')
+    access_log_logger.propagate = False
+    access_log_logger.addHandler(access_log_handler)
+
+    if conf.debug_mode:
+      console_handler = logging.StreamHandler(sys.stderr)
+      console_handler.setFormatter(logging.Formatter(
+        "%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+        "%Y-%m-%d %H:%M:%S"))
+      console_handler.setLevel(logging.NOTSET)
+      root_logger.addHandler(console_handler)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
@@ -200,7 +233,7 @@ def runwsgi():
           large_file_threshold=getattr(conf, 'large_file_threshold', None),
           webdav_ports=[port] if args.webdav else ()),
         listen=args.address,
-        logger=logging.getLogger("access"),
+        logger=access_log_logger,
         threads=getattr(conf, 'zserver_threads', 4),
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
