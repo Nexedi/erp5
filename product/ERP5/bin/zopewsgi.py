@@ -81,7 +81,7 @@ class TransLogger(object):
             'HTTP_USER_AGENT': environ.get('HTTP_USER_AGENT', '-'),
             }
         message = self.format % d
-        self.logger.warn(message)
+        self.logger.info(message)
 
 
 def app_wrapper(large_file_threshold=10<<20, webdav_ports=()):
