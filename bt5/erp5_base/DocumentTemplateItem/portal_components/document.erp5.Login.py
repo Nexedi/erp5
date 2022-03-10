@@ -34,6 +34,8 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 
 class Login(EncryptedPasswordMixin, XMLObject, LoginAccountProviderMixin):
+  """Login
+  """
   meta_type = 'ERP5 Login'
   portal_type = 'Login'
   add_permission = Permissions.AddPortalContent
