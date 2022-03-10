@@ -12,6 +12,8 @@ def getSubFieldDict():
     for item in item_list:
       # Get value of the item
       item_value = item[int(not is_right_display)]
+      if item_value is None:
+        continue
 
       # Hash key from item_value
       item_split = item_value.split('/')
