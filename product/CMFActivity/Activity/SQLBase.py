@@ -68,6 +68,12 @@ UID_SAFE_BITSIZE = 63
 # enough while yielding one order of magnitude collision probability
 # improvement.
 UID_ALLOCATION_TRY_COUNT = 10
+# Limit the number of UNION-joined subqueries per query when looking for
+# blocking activities. Used to take a slice from a list.
+# XXX: 5000 is known to work on a case on "after_tag" dependency, which fails
+# at 5400 with:
+#   ProgrammingError: (1064, "memory exhausted near [...]")
+_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -592,22 +598,30 @@ CREATE TABLE %s (
       base_sql_prefix = '(SELECT %s FROM ' % (
         ','.join(column_list),
       )
-      for row in db.query(
-        ' UNION '.join(
-          base_sql_prefix + table_name + sql_suffix
-          for table_name in table_name_list
-          for sql_suffix in sql_suffix_list
-        ),
-        max_rows=0,
-      )[1]:
-        # Each row is a value which blocks some activities.
-        dependent_message_set = dependency_value_dict[row2key(row)]
-        # queue blocked messages for processing in the beginning of next
-        # outermost iteration.
-        new_blocked_message_set.update(dependent_message_set)
-        # ...but update result immediately, in case there is no next
-        # outermost iteration.
-        result.difference_update(dependent_message_set)
+      subquery_list = [
+        base_sql_prefix + table_name + sql_suffix
+        for table_name in table_name_list
+        for sql_suffix in sql_suffix_list
+      ]
+      while subquery_list:
+        # Join queries with a UNION, to reduce per-query latency.
+        # Also, limit the number of subqueries per query, as their number can
+        # largely exceed the number of activities being considered multiplied
+        # by the number of activty tables: it is also proportional to the
+        # number of distinct values being looked for in the current column.
+        for row in db.query(
+          ' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
+          max_rows=0,
+        )[1]:
+          # Each row is a value which blocks some activities.
+          dependent_message_set = dependency_value_dict[row2key(row)]
+          # queue blocked messages for processing in the beginning of next
+          # outermost iteration.
+          new_blocked_message_set.update(dependent_message_set)
+          # ...but update result immediately, in case there is no next
+          # outermost iteration.
+          result.difference_update(dependent_message_set)
+        subquery_list = subquery_list[:_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT]
       dependency_value_dict.clear()
     return result
 
