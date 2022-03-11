@@ -45,6 +45,7 @@
                 <string>non_discountable_additional_price</string>
                 <string>priced_quantity</string>
                 <string>base_unit_price</string>
+                <string>quantity_unit</string>
               </tuple>
             </value>
         </item>
