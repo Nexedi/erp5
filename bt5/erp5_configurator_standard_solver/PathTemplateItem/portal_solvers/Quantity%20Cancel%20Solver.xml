@@ -146,6 +146,14 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Cancel Quantity</string> </value>
         </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <list>
+                <string>solver_workflow</string>
+              </list>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
