@@ -316,8 +316,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       <ns0:submit>
         <campaign Version="5.0" Application="connecteur_Maileva">
           <pjs:Requests>
-            <pjs:Request MediaType="DIGITAL"
-                         TrackId="test_track_id">
+            <pjs:Request MediaType="DIGITAL" TrackId="test_track_id">
               <pjs:Recipients>
                 <pjs:Internal>
                   <pjs:Recipient Id="1">
