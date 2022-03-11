@@ -173,18 +173,7 @@
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>ERP5 Annotation Line</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-              <string>ERP5 Pay Sheet Line</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -193,48 +182,6 @@
     </pickle>
     <pickle>
       <none/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>26</string>
-              <int>1</int>
-              <string>overtime_annotation_line</string>
-              <int>1</int>
-              <string>work_time_annotation_line</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>2</string>
-              <int>1</int>
-              <string>3</string>
-              <int>1</int>
-              <string>4</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
     </pickle>
   </record>
 </ZopeData>
