@@ -68,6 +68,12 @@ UID_SAFE_BITSIZE = 63
 # enough while yielding one order of magnitude collision probability
 # improvement.
 UID_ALLOCATION_TRY_COUNT = 10
+# Limit the number of UNION-joined subqueries per query when looking for
+# blocking activities. Used to take a slice from a list.
+# XXX: 5000 is known to work on a case on "after_tag" dependency, which fails
+# at 5400 with:
+#   ProgrammingError: (1064, "memory exhausted near [...]")
+_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -181,37 +187,42 @@ def _validate_after_tag_and_method_id(value, render_string):
 #   same order as the dependency value items expected by the next item
 # - callable rendering given values into an SQL condition
 #   (value, render_string) -> str
+# - minimal applicable processing_node value (excluded)
 _DEPENDENCY_TESTER_DICT = {
   'after_method_id': (
     ('method_id', ),
     sqltest_dict['method_id'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_path': (
     ('path', ),
     sqltest_dict['path'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_message_uid': (
     ('uid', ),
     sqltest_dict['uid'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_path_and_method_id': (
     ('path', 'method_id'),
     _validate_after_path_and_method_id,
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_tag': (
     ('tag', ),
     sqltest_dict['tag'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'after_tag_and_method_id': (
     ('tag', 'method_id'),
     _validate_after_tag_and_method_id,
+    DEPENDENCY_IGNORED_ERROR_STATE,
   ),
   'serialization_tag': (
     ('serialization_tag', ),
-    lambda value, render_string: (
-      'processing_node > -1 AND ' +
-      sqltest_dict['serialization_tag'](value, render_string)
-    ),
+    sqltest_dict['serialization_tag'],
+    -1,
   ),
 }
 
@@ -460,7 +471,7 @@ CREATE TABLE %s (
         dependency_value,
       ) in message.activity_kw.iteritems():
         try:
-          column_list, _ = dependency_tester_dict[dependency_name]
+          column_list, _, _ = dependency_tester_dict[dependency_name]
         except KeyError:
           continue
         # There are 2 types of dependencies:
@@ -569,14 +580,16 @@ CREATE TABLE %s (
       if not dependency_value_dict:
         # No more non-blocked message for this dependency, skip it.
         continue
-      column_list, to_sql = dependency_tester_dict[dependency_name]
+      column_list, to_sql, min_processing_node = dependency_tester_dict[
+        dependency_name
+      ]
       row2key = (
         _ITEMGETTER0
         if len(column_list) == 1 else
         _IDENTITY
       )
       base_sql_suffix = ' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
-        DEPENDENCY_IGNORED_ERROR_STATE,
+        min_processing_node,
       )
       sql_suffix_list = [
         base_sql_suffix % to_sql(dependency_value, quote)
@@ -585,22 +598,30 @@ CREATE TABLE %s (
       base_sql_prefix = '(SELECT %s FROM ' % (
         ','.join(column_list),
       )
-      for row in db.query(
-        ' UNION '.join(
-          base_sql_prefix + table_name + sql_suffix
-          for table_name in table_name_list
-          for sql_suffix in sql_suffix_list
-        ),
-        max_rows=0,
-      )[1]:
-        # Each row is a value which blocks some activities.
-        dependent_message_set = dependency_value_dict[row2key(row)]
-        # queue blocked messages for processing in the beginning of next
-        # outermost iteration.
-        new_blocked_message_set.update(dependent_message_set)
-        # ...but update result immediately, in case there is no next
-        # outermost iteration.
-        result.difference_update(dependent_message_set)
+      subquery_list = [
+        base_sql_prefix + table_name + sql_suffix
+        for table_name in table_name_list
+        for sql_suffix in sql_suffix_list
+      ]
+      while subquery_list:
+        # Join queries with a UNION, to reduce per-query latency.
+        # Also, limit the number of subqueries per query, as their number can
+        # largely exceed the number of activities being considered multiplied
+        # by the number of activty tables: it is also proportional to the
+        # number of distinct values being looked for in the current column.
+        for row in db.query(
+          ' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
+          max_rows=0,
+        )[1]:
+          # Each row is a value which blocks some activities.
+          dependent_message_set = dependency_value_dict[row2key(row)]
+          # queue blocked messages for processing in the beginning of next
+          # outermost iteration.
+          new_blocked_message_set |= dependent_message_set
+          # ...but update result immediately, in case there is no next
+          # outermost iteration.
+          result -= dependent_message_set
+        del subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]
       dependency_value_dict.clear()
     return result
 

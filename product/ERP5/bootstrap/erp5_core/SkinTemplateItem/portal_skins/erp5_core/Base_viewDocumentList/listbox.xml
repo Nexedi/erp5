@@ -117,10 +117,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>language</string>
-                          <string>Language</string>
-                        </tuple>
-                        <tuple>
                           <string>revision</string>
                           <string>Revision</string>
                         </tuple>
@@ -184,6 +180,10 @@
                         <tuple>
                           <string>version</string>
                           <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
                           <string>description</string>

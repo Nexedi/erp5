@@ -22,7 +22,11 @@
     .declareMethod("render", function () {
       var gadget = this;
 
-      return new RSVP.Queue()
+      return new RSVP.Queue(
+	  // Stabilise UI tests with a tiny delay, which should be unnoticeable
+	  // to users.
+          RSVP.delay(200)
+        )
         .push(function () {
           return RSVP.all([
             gadget.getUrlForList([{command: 'history_previous'}]),

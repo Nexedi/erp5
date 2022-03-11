@@ -88,7 +88,11 @@ class TestInvalidationBug(ERP5TypeTestCase):
     self.assertEqual(result_list[1], [0,0])  # activity buffer first
     self.assertEqual(result_list[-3], [1,0]) # catalog
     self.assertEqual(result_list[-2], None)  # ZODB
-    self.assertEqual(result_list[-1], [1,1]) # activity tables last
+    result_catalog_count, result_activity_count = result_list[-1]
+    # activity tables last (there may be multiple activities, but there must be
+    # at least one).
+    self.assertEqual(result_catalog_count, 1)
+    self.assertGreaterEqual(result_activity_count, 1)
 
   # TODO: - skip this test for ZEO>=5 because it's covered upstream
   #         (and later remove it)
@@ -168,8 +172,9 @@ class TestInvalidationBug(ERP5TypeTestCase):
       unpatch()
       activity_tool.manage_addToProcessingList(node_list)
       self.commit()
-    ## When the bug is not fixed, we get a -3 failed activity
-    self.assertNoPendingMessage()
+    ## When the bug is not fixed, we get a failed activity
+    ## which would cause tic to fail
+    self.tic()
 
   def _testReindex(self):
     print("To reproduce bugs easily, distribution step should be skipped for"
