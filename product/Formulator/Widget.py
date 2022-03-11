@@ -1277,21 +1277,25 @@ class RadioWidget(SingleItemsWidget):
       return string.join(rendered_items, "<br />")
 
   def render_item(self, text, value, key, css_class, extra_item):
-    return self.render_element('input',
-                          type="radio",
-                          css_class=css_class,
-                          name=key,
-                          value=value,
-                          extra=extra_item) + text
+    return render_element(
+        'label',
+        contents=self.render_element('input',
+            type="radio",
+            css_class=css_class,
+            name=key,
+            value=value,
+            extra=extra_item) + text)
 
   def render_selected_item(self, text, value, key, css_class, extra_item):
-    return self.render_element('input',
-                          type="radio",
-                          css_class=css_class,
-                          name=key,
-                          value=value,
-                          checked=None,
-                          extra=extra_item) + text
+    return render_element(
+        'label',
+        contents=self.render_element('input',
+            type="radio",
+            css_class=css_class,
+            name=key,
+            value=value,
+            checked=None,
+            extra=extra_item) + text)
 
 RadioWidgetInstance = RadioWidget()
 
@@ -1322,21 +1326,26 @@ class MultiCheckBoxWidget(MultiItemsWidget):
         return string.join(rendered_items, "<br />")
 
     def render_item(self, text, value, key, css_class, extra_item):
-        return self.render_element('input',
-                              type="checkbox",
-                              css_class=css_class,
-                              name=key,
-                              value=value,
-                              extra=extra_item) + text
+        return render_element(
+            'label',
+            contents=self.render_element('input',
+                type="checkbox",
+                css_class=css_class,
+                name=key,
+                value=value,
+                extra=extra_item) + text)
 
     def render_selected_item(self, text, value, key, css_class, extra_item):
-        return self.render_element('input',
-                              type="checkbox",
-                              css_class=css_class,
-                              name=key,
-                              value=value,
-                              checked=None,
-                              extra=extra_item) + text
+        return render_element(
+            'label',
+            contents=self.render_element('input',
+                type="checkbox",
+                css_class=css_class,
+                name=key,
+                value=value,
+                checked=None,
+                extra=extra_item) + text)
+
 
 MultiCheckBoxWidgetInstance = MultiCheckBoxWidget()
 
