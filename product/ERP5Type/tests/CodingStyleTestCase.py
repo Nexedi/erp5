@@ -28,9 +28,13 @@
 ##############################################################################
 
 import collections
+import difflib
+import filecmp
+import fnmatch
 import glob
 import os
-import tarfile
+import shutil
+import tempfile
 
 from Acquisition import aq_base
 from Testing import ZopeTestCase
@@ -105,29 +109,84 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     for business_template in self._getTestedBusinessTemplateValueList():
       self.assertEqual(business_template.BusinessTemplate_getPythonSourceCodeMessageList(), [])
 
+
+  # Paths for which we ignore differences when re-exporting business templates
+  rebuild_business_template_ignored_path = """
+  # portal_transforms seem to be always different
+  erp5_core/ToolTemplateItem/portal_transforms.xml
+
+  # Empty messages are exported in message catalog, so they can be different because of
+  # empty messages. Reindexing during creation for example insert entries for all workflow
+  # states, so this change often.
+  */MessageTranslationTemplateItem/*/*/translation.po
+
+  # This seem to be a copy of
+  # bt5/erp5_configurator_standard/PathTemplateItem/business_configuration_module/default_standard_configuration.xml
+  # that was modified. When re-exporting it is different, but since this is test data we ignore it for now.
+  erp5_scalability_test/PathTemplateItem/business_configuration_module/default_standard_configuration.xml
+  erp5_scalability_test/PathTemplateItem/business_configuration_module/default_standard_configuration/*
+
+  # This is different for some unknown reason, because it's test data we ignore for now
+  erp5_payroll_l10n_fr_test/PathTemplateItem/accounting_module/trainee_january.xml
+  erp5_payroll_l10n_fr_test/PathTemplateItem/accounting_module/trainee_january/*
+  """
   def test_rebuild_business_template(self):
-    """Try to rebuild business template to catch packaging errors.
+    """Try to rebuild business template to catch packaging errors and make sur output is stable.
     """
+    self.maxDiff = None
     template_tool = self.portal.portal_templates
     for bt_title in self.getTestedBusinessTemplateList():
       bt = template_tool.getInstalledBusinessTemplate(bt_title, strict=True)
       # make sure we can rebuild
       bt.build()
 
-      # check we don't add or remove members.
-      # first, build a set of files that were on the original business template repository
-      base_path, local_path = self.portal.portal_templates.getLastestBTOnRepos(bt_title)
-      existing_files = set([os.path.relpath(y, base_path)
-        for x in os.walk(os.path.join(base_path, local_path))
-            for y in glob.glob(os.path.join(x[0], '*')) if os.path.isfile(y)])
+      # Compute the differences between the reference business template
+      # from the working copy and the newly exported business template.
+      bt_base_path, bt_local_path = self.portal.portal_templates.getLastestBTOnRepos(bt_title)
+      bt_dir = os.path.join(bt_base_path, bt_local_path)
+      export_base_path = tempfile.mkdtemp()
+      self.addCleanup(shutil.rmtree, export_base_path)
+      export_dir = os.path.join(export_base_path, bt_local_path)
+      bt.export(export_dir, local=True)
 
-      # then compare this with the files in the newly exported business template.
-      bt_file = bt.export()
-      bt_file.seek(0) # XXX this StringIO was already read...
-      new_files = set(tarfile.open(fileobj=bt_file, mode='r:gz').getnames())
+      ignored_paths = {
+          p.strip() for p in self.rebuild_business_template_ignored_path.splitlines()
+          if p and not p.strip().startswith("#")}
 
-      self.maxDiff = None
-      self.assertEqual(existing_files, new_files)
+      diff_line_list = []
+      def get_differences(dcmp, base):
+        for name in dcmp.left_only:
+          yield 'removed: ' + os.path.join(base, name)
+        for name in dcmp.right_only:
+          yield 'added: ' + os.path.join(base, name)
+        for name in dcmp.funny_files:
+          yield 'funny: ' + os.path.join(base, name)
+        for name in dcmp.diff_files:
+          path = os.path.join(base, name)
+          if not any(fnmatch.fnmatch(path, ignored_path) for ignored_path in ignored_paths):
+            yield 'modified: ' + path
+            with open(os.path.join(bt_base_path, path)) as ff, \
+                open(os.path.join(export_base_path, path)) as tf:
+              diff_line_list.extend(
+                  difflib.unified_diff(
+                      ff.readlines(),
+                      tf.readlines(),
+                      os.path.join('git', path),
+                      os.path.join('bt5', path),
+                  ))
+              diff_line_list.append('\n')
+        for sub_path, sub_dcmp in dcmp.subdirs.iteritems():
+          for diff in get_differences(sub_dcmp, os.path.join(base, sub_path)):
+            yield diff
+
+      diff_files = list(get_differences(filecmp.dircmp(bt_dir, export_dir), bt_local_path))
+      # dump a diff in log directory, to help debugging
+      from Products.ERP5Type.tests.runUnitTest import log_directory
+      if log_directory and diff_line_list:
+        with open(os.path.join(log_directory, '%s.diff' % self.id()), 'w') as f:
+          f.writelines(diff_line_list)
+      self.assertEqual(diff_files, [])
+
 
   def test_run_upgrader(self):
     # Check that pre and post upgrade do not raise problems.
