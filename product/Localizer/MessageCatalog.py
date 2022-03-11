@@ -174,7 +174,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         self.id = id
 
         self.title = title
-        self.policy = self.POLICY_ADD_TRUE
+        self.policy = self.POLICY_ADD_LOG
 
         # Language Manager data
         self._languages = tuple(languages)
