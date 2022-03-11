@@ -164,7 +164,7 @@
             <key> <string>membership_criterion_category</string> </key>
             <value>
               <tuple>
-                <string/>
+                <string></string>
               </tuple>
             </value>
         </item>
