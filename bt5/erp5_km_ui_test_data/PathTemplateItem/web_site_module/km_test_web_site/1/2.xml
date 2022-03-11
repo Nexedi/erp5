@@ -54,6 +54,61 @@
             </value>
         </item>
         <item>
+            <key> <string>__before_publishing_traverse__</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_defined_in_class</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hookname</string> </key>
+                        <value> <string>__before_publishing_traverse__</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_list</string> </key>
+                        <value>
+                          <list>
+                            <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                          </list>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_prior</string> </key>
+                        <value>
+                          <none/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>__before_traverse__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key>
+                      <tuple>
+                        <int>99</int>
+                        <string>ERP5 Web Section/2</string>
+                      </tuple>
+                    </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>__translation_dict</string> </key>
             <value>
               <dictionary/>
@@ -134,6 +189,14 @@
             <value> <int>1</int> </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
+    </pickle>
+    <pickle>
+      <dictionary/>
     </pickle>
   </record>
 </ZopeData>
