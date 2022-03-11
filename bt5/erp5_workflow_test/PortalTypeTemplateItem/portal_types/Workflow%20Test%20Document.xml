@@ -78,16 +78,6 @@
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>workflow_list</string> </key>
-            <value>
-              <tuple>
-                <string>testing_erp5_workflow</string>
-                <string>testing_erp5_interaction_workflow</string>
-                <string>edit_workflow</string>
-              </tuple>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
