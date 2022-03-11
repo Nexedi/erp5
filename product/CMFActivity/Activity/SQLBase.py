@@ -617,10 +617,10 @@ CREATE TABLE %s (
           dependent_message_set = dependency_value_dict[row2key(row)]
           # queue blocked messages for processing in the beginning of next
           # outermost iteration.
-          new_blocked_message_set.update(dependent_message_set)
+          new_blocked_message_set |= dependent_message_set
           # ...but update result immediately, in case there is no next
           # outermost iteration.
-          result.difference_update(dependent_message_set)
+          result -= dependent_message_set
         del subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]
       dependency_value_dict.clear()
     return result
