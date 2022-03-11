@@ -231,6 +231,14 @@
             <key> <string>type_class</string> </key>
             <value> <string>QuantitySplitSolver</string> </value>
         </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <list>
+                <string>solver_workflow</string>
+              </list>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
