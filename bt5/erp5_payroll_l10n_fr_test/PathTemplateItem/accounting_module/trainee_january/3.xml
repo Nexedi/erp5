@@ -77,16 +77,7 @@
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>ERP5 Pay Sheet Cell</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -110,7 +101,7 @@
                 <item>
                     <key> <string>movement</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -120,25 +111,6 @@
     </pickle>
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>movement_0</string>
-              <int>1</int>
-              <string>movement_1</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -151,7 +123,7 @@
                 <item>
                     <key> <int>0</int> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -160,7 +132,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
