@@ -8,7 +8,7 @@ from __future__ import absolute_import
 from past.builtins import basestring
 from builtins import object
 import os
-import rfc822
+import email.utils
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
@@ -148,8 +148,8 @@ class BaseMailTemplate(object):
             v = values.get(key)
             if v:
                 if isinstance(v, basestring):
-                    v = [rfc822.dump_address_pair(addr) for addr \
-                            in rfc822.AddressList(v)]
+                    v = [email.utils.formataddr(addr) for addr \
+                            in email.utils.getaddresses([v])]
                 to_addrs += tuple(v)
 
         self._send(values['mfrom'], to_addrs, msg)
