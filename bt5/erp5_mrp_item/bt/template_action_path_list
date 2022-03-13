@@ -1,9 +1,9 @@
+Manufacturing Execution Line | item_creation
+Manufacturing Execution Line | select_item_fast_input
+Manufacturing Execution | aggregate_item
 Production Order Line | item_creation
 Production Order Line | select_item_fast_input
 Production Order | aggregate_item
 Production Packing List Line | item_creation
 Production Packing List Line | select_item_fast_input
 Production Packing List | aggregate_item
-Manufacturing Execution Line | item_creation
-Manufacturing Execution Line | select_item_fast_input
-Manufacturing Execution | aggregate_item
