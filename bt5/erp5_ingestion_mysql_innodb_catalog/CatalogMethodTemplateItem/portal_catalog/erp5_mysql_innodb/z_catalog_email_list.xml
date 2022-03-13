@@ -29,12 +29,6 @@ getPortalType</string> </value>
             </value>
         </item>
         <item>
-            <key> <string>expression_instance</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>filtered</string> </key>
             <value> <int>1</int> </value>
         </item>
@@ -55,19 +49,6 @@ getPortalType</string> </value>
             <value>
               <tuple/>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: context.getPortalType() in (\'Email\', \'Fax\', \'Telephone\')</string> </value>
         </item>
       </dictionary>
     </pickle>
